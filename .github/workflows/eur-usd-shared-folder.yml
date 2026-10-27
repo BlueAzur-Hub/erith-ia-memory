@@ -1,0 +1,71 @@
+name: Shared directory - exact EUR USD two-file ZIP
+on:
+  push:
+    branches:
+      - test/eur-usd-unified-historical-quotes
+    paths:
+      - '.github/workflows/eur-usd-shared-folder.yml'
+permissions:
+  contents: write
+jobs:
+  place-shared-zip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout shared directory target based on main
+        uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-shared-zip-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_EUR_USD_GITHUB_ROOT_2_FILES.zip
+          path: shared
+      - name: Checkout exactly the two approved application files
+        uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-unified-historical-quotes
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          path: candidate
+      - name: Create checked two-file ZIP in shared GitHub directory
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          import hashlib,subprocess
+          files={
+           'public/agent_crypto_erith_ia/administrator/app.js':'edd211448c1babc6c5f13838dadaa735a2e1b8e3',
+           'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js':'76cf098509c4ebb295bca3d38392b74acf91396b',
+          }
+          dest=Path('shared/coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_EUR_USD_GITHUB_ROOT_2_FILES.zip')
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          with ZipFile(dest,'w',ZIP_DEFLATED,compresslevel=9) as zipfile:
+            for name,expected in files.items():
+              src=Path('candidate')/name
+              assert src.is_file(),name
+              sha=subprocess.check_output(['git','hash-object',str(src)],text=True).strip()
+              assert sha==expected,(name,sha)
+              zipfile.write(src,arcname=name)
+          with ZipFile(dest) as z:
+            assert len(z.namelist())==2
+            assert set(z.namelist())==set(files)
+            assert not any(n.lower().endswith('.zip') for n in z.namelist())
+            assert z.testzip() is None
+          print('ZIP_FILE_COUNT=2')
+          print('ZIP_BYTES='+str(dest.stat().st_size))
+          print('ZIP_SHA256='+hashlib.sha256(dest.read_bytes()).hexdigest())
+          PY
+      - name: Save only the ZIP in the shared-directory staging branch
+        run: |
+          cd shared
+          git config user.name 'erith-ci'
+          git config user.email 'erith-ci@users.noreply.github.com'
+          git add --sparse coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_EUR_USD_GITHUB_ROOT_2_FILES.zip
+          test "$(git diff --cached --name-only | wc -l)" -eq 1
+          git diff --cached --check
+          git commit -m "archive(agent-crypto): déposer ZIP EUR USD à deux fichiers dans le répertoire partagé"
+          git push origin HEAD:refs/heads/test/eur-usd-shared-zip-20261027
