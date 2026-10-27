@@ -1,4 +1,4 @@
-# Trigger shared ZIP publication for the current tested Administrator candidate.
+# Publish immutable, revision-labelled test ZIPs to the shared GitHub directory.
 name: Agent Crypto - deliver clean bundle to shared GitHub directory
 on:
   push:
@@ -6,6 +6,8 @@ on:
       - test/euro-first-then-usd-integrity-20261027
     paths:
       - .github/workflows/agent-crypto-shared-delivery.yml
+      - public/agent_crypto_erith_ia/administrator/app.js
+      - public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
   workflow_dispatch:
 
 permissions:
@@ -61,7 +63,10 @@ jobs:
               'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js'
           ]
           shared.mkdir(parents=True, exist_ok=True)
-          zip_file = shared / 'AGENT_CRYPTO_CLEAN_UPLOAD.zip'
+          branch_sha = subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip()
+          short_sha = branch_sha[:12]
+          stem = f'AGENT_CRYPTO_ADMIN_TEST_{short_sha}'
+          zip_file = shared / f'{stem}.zip'
           with ZipFile(zip_file, 'w', ZIP_DEFLATED, compresslevel=9) as archive:
               for relative in paths:
                   source = root / relative
@@ -71,10 +76,10 @@ jobs:
               assert archive.namelist() == paths, 'Unexpected ZIP members'
               assert archive.testzip() is None, 'ZIP integrity failure'
           digest = sha256(zip_file.read_bytes()).hexdigest()
-          branch_sha = subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip()
-          (shared / 'AGENT_CRYPTO_CLEAN_UPLOAD.md').write_text(
+          (shared / f'{stem}.md').write_text(
               '# Agent-Crypto — livraison légère de la branche TEST\n\n'
               '**Statut : paquet de test, NON validé en production ni par Firefox utilisateur.**\n\n'
+              'Archive unique : `' + zip_file.name + '` (nom stable par revision Git).\n\n'
               'Le ZIP de ce répertoire contient uniquement les deux fichiers applicatifs ci-dessous, '
               'avec leur arborescence GitHub ROOT inchangée :\n\n'
               + ''.join('- `' + item + '`\n' for item in paths)
@@ -87,12 +92,24 @@ jobs:
                 'du site publié.\n',
               encoding='utf-8'
           )
-          print(f'ZIP_READY size={zip_file.stat().st_size} sha256={digest} source={branch_sha}')
+          (shared / 'AGENT_CRYPTO_LATEST_TEST.md').write_text(
+              '# Agent-Crypto — derniere livraison TEST\n\n'
+              + '**ZIP actuel :** [`' + zip_file.name + '`](./' + zip_file.name + ')\n\n'
+              + '**Manifeste :** [`' + stem + '.md`](./' + stem + '.md)\n\n'
+              + '**Commit source :** `' + branch_sha + '`\n\n'
+              + '**SHA-256 :** `' + digest + '`\n\n'
+              + '**Statut : TEST, non valide par Firefox utilisateur.**\n', encoding='utf-8'
+          )
+          print(f'ZIP_READY name={zip_file.name} size={zip_file.stat().st_size} sha256={digest} source={branch_sha}')
           PY
           git -C shared config user.name "github-actions[bot]"
           git -C shared config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git -C shared add --sparse -- coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_CLEAN_UPLOAD.zip coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_CLEAN_UPLOAD.md
+          SHORT_SHA="$(git -C candidate rev-parse --short=12 HEAD)"
+          git -C shared add --sparse -- \
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMIN_TEST_${SHORT_SHA}.zip" \
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMIN_TEST_${SHORT_SHA}.md" \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_LATEST_TEST.md
           git -C shared diff --cached --check
-          git -C shared commit -m "Deliver two-file Administrator test bundle to shared coordination"
+          git -C shared commit -m "Deliver uniquely named Administrator test bundle to shared coordination"
           git -C shared pull --rebase origin main
           git -C shared push origin HEAD:main
