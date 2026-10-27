@@ -1,0 +1,53 @@
+name: EUR preserved then USD source quote display
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - '.github/workflows/eur-first-usd-formatter.yml'
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/euro-first-then-usd-integrity-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+            /public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
+            /.github/validation/test_top3_eur_sources.cjs
+            /.github/validation/test_top5_eur_sources.cjs
+            /.github/validation/test_scanners_eur_sources.cjs
+            /.github/validation/test_usd_formatter_ownership.cjs
+            /.github/validation/remove_usd_global_format_override.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Demonstrate original USD global formatter override bug
+        run: |
+          if node --test .github/validation/test_usd_formatter_ownership.cjs; then
+            echo "Regression not reproduced"; exit 1
+          fi
+      - name: Remove USD relabel and global EUR formatter swap in original code owner
+        run: python3 .github/validation/remove_usd_global_format_override.py
+      - name: Verify all EUR histories and original USD module behavior
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --test .github/validation/test_top3_eur_sources.cjs .github/validation/test_top5_eur_sources.cjs .github/validation/test_scanners_eur_sources.cjs .github/validation/test_usd_formatter_ownership.cjs
+          (cd public/agent_crypto_erith_ia/administrator/js && node --test test-graph-native-usd-tooltip.cjs)
+          test "$(git diff --name-only)" = "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+          git diff --check
+      - name: Commit exactly one USD module file to TEST branch
+        run: |
+          git config user.name 'erith-ci'
+          git config user.email 'erith-ci@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          git commit -m "fix(agent-crypto): ne plus reecrire EUR en USD apres rendu du graphique"
+          git push origin HEAD:refs/heads/test/euro-first-then-usd-integrity-20261027
