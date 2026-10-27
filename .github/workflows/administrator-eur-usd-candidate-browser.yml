@@ -43,6 +43,14 @@ jobs:
             /public/agent_crypto_erith_ia/data/news/latest.json
             /public/agent_crypto_erith_ia/trader/*.js
           path: source
+      - name: Archive exact previous Aerith candidate for offline comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: erith-eur-usd-original-candidate-two-files
+          path: |
+            source/public/agent_crypto_erith_ia/administrator/app.js
+            source/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          retention-days: 14
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -55,14 +63,6 @@ jobs:
           node --check source/public/agent_crypto_erith_ia/administrator/app.js
           node --check source/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           test "$(git -C source rev-parse HEAD)" = '951f8906d0a13de183c226970a85970537ed1e6d'
-      - name: Archive exact previous Aerith candidate for offline comparison
-        uses: actions/upload-artifact@v4
-        with:
-          name: erith-eur-usd-original-candidate-two-files
-          path: |
-            source/public/agent_crypto_erith_ia/administrator/app.js
-            source/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
-          retention-days: 14
       - name: Start isolated HTTP server
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 --directory source > /tmp/erith-server.log 2>&1 &
