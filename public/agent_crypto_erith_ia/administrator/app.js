@@ -15917,9 +15917,7 @@ function atlasScannerStoredHistory(coin, period, tx = null) {
     current && Array.isArray(current.series) && current.series.length ? current : null,
     atlasGetStoredChartResult(coin, period, "binance"),
     atlasGetStoredChartResult(coin, period, "coingecko"),
-    // Native Kraken EUR candles are cached under their own verified family.
-    // Do not re-fetch them on each scanner switch when the window is current.
-    atlasGetStoredChartResult(coin, period, "kraken"),
+    // Reuse Kraken EUR candles under their separately verified source family.
     atlasGetStoredChartResult(coin, period, "kraken")
   ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
 
