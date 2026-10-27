@@ -5,6 +5,7 @@ on:
       - test/euro-first-then-usd-integrity-20261027
     paths:
       - .github/workflows/agent-crypto-firefox-remote-preview-proof.yml
+      - public/agent_crypto_erith_ia/administrator/app.js
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      TEST_URL: https://rawcdn.githack.com/BlueAzur-Hub/erith-ia-memory/20ed38e3f6bd8d1796b6e4e5489277548d36dbbe/public/agent_crypto_erith_ia/administrator/index.html
+      TEST_URL: https://rawcdn.githack.com/BlueAzur-Hub/erith-ia-memory/${{ github.sha }}/public/agent_crypto_erith_ia/administrator/index.html
     steps:
       - uses: actions/setup-node@v4
         with:
