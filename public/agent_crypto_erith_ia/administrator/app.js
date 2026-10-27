@@ -15921,12 +15921,21 @@ function atlasScannerStoredHistory(coin, period, tx = null) {
     atlasGetStoredChartResult(coin, period, "kraken")
   ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
 
-  candidates.sort((a, b) => {
-    const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
-    const bTime = Number(b?.savedAt || b?.integrity?.metrics?.lastTimestamp || 0);
-    return bTime - aTime;
-  });
-  return candidates[0] || null;
+  // Data quality comes from the actual price timestamps and coverage, not
+  // from when a stale cache was copied into localStorage or a comparison.
+  const windowContext = tx || { period, windowEnd: Date.now() };
+  const actualEnd = result => {
+    const rows = Array.isArray(result?.series) ? result.series : [];
+    return Number(rows[rows.length - 1]?.[0]) || 0;
+  };
+  const newest = rows => [...rows].sort((a, b) => actualEnd(b) - actualEnd(a))[0] || null;
+  const usable = candidates.filter(result =>
+    !atlasChartNeedsRefresh(result, period)
+    && atlasScannerSeriesCoversWindow(result, windowContext).ok
+  );
+  // Keep a genuinely current Kraken/Binance/CoinGecko source even when a
+  // different provider left behind a newer cache-write timestamp.
+  return newest(usable) || newest(candidates);
 }
 
 async function atlasScannerYieldToUi(tx) {
