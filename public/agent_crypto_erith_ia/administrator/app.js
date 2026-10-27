@@ -4345,8 +4345,15 @@ function atlasChartPreferredProviderLabel(coinOrId) {
   return atlasChartPreferredSourceFamily(coinOrId) === "binance" ? "Binance" : "CoinGecko";
 }
 
-function atlasChartStorageKey(c, days, family = atlasChartPreferredSourceFamily(c)) {
-  return `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}:${family}`;
+function atlasChartDisplayCurrency() {
+  const currency = String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase();
+  return currency === "USD" ? "USD" : "EUR";
+}
+
+function atlasChartStorageKey(c, days, family = atlasChartPreferredSourceFamily(c), quoteCurrency = null) {
+  const base = `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}:${family}`;
+  const quote = String(quoteCurrency || "").toUpperCase();
+  return quote === "EUR" || quote === "USD" ? `${base}:${quote}` : base;
 }
 
 function atlasChartWorstFreshness(result = null, period = Number(state.chartPeriodDays || 1)) {
@@ -4724,9 +4731,10 @@ function atlasCryptoCanvasGradient(ctx, coin, fallbackIndex = 0, width = 980) {
 function atlasExpectedChartContextKey(ids = atlasComparisonIds(), period = Number(state.chartPeriodDays || 1)) {
   const normalizedIds = Array.isArray(ids) ? ids.filter(Boolean).slice(0, ATLAS_COMPARISON_MAX_SERIES) : [];
   const days = Number(period || 1);
-  if (!normalizedIds.length) return `empty:${days}`;
-  if (normalizedIds.length === 1) return `single:${normalizedIds[0]}:${days}`;
-  return `comparison:${normalizedIds.join(",")}:${days}`;
+  const quote = atlasChartDisplayCurrency();
+  if (!normalizedIds.length) return `empty:${days}:${quote}`;
+  if (normalizedIds.length === 1) return `single:${normalizedIds[0]}:${days}:${quote}`;
+  return `comparison:${normalizedIds.join(",")}:${days}:${quote}`;
 }
 
 function atlasChartContextMatches(chart = state.dataBroker?.chart) {
@@ -5589,7 +5597,7 @@ function atlasWriteChartMaxTruth(result, coin) {
 function atlasChartApiDays(days){ return Number(days||1)===36500 ? "max" : String(Number(days||1)); }
 
 function atlasChartKey(c, days) {
-  return atlasChartStorageKey(c, days, atlasChartPreferredSourceFamily(c));
+  return atlasChartStorageKey(c, days, atlasChartPreferredSourceFamily(c), atlasChartDisplayCurrency());
 }
 
 function atlasSanitizeChartRows(rows = []) {
@@ -5795,7 +5803,10 @@ function atlasWriteLocalChartStore(store) {
 function atlasStoreChartResult(c, days, result, familyOverride = null) {
   if (!result || result.blocked || !Array.isArray(result.series) || !result.series.length) return;
   const family = familyOverride || atlasChartResultSourceFamily(result) || atlasChartPreferredSourceFamily(c);
-  const key = atlasChartStorageKey(c, days, family);
+  const quote = atlasHistoricalDisplayQuote(result).currency;
+  // Only native-proven EUR/USD is written to a quote-scoped slot. Existing
+  // legacy entries remain in place and are never renamed to another currency.
+  const key = atlasChartStorageKey(c, days, family, quote);
   const savedAt = Date.now();
   const originalSourceMode = result.originalSourceMode
     || (result.sourceMode && result.sourceMode !== "browser-cache" ? result.sourceMode : null)
@@ -5809,49 +5820,55 @@ function atlasStoreChartResult(c, days, result, familyOverride = null) {
   atlasWriteLocalChartStore(local);
 }
 
-function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFamily(c)) {
-  const key = atlasChartStorageKey(c, days, family);
-  const memory = state.chartCache[key]?.result;
-  const candidates = [];
+function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFamily(c), expectedCurrency = atlasChartDisplayCurrency()) {
+  const wanted = String(expectedCurrency || "").toUpperCase();
+  if (wanted !== "EUR" && wanted !== "USD") return null;
+  const keys = [
+    atlasChartStorageKey(c, days, family, wanted),
+    atlasChartStorageKey(c, days, family)
+  ];
+  const local = atlasReadLocalChartStore();
   const cacheLabel = family === "binance"
     ? "Cache navigateur · chandelles Binance"
     : "Cache navigateur · série CoinGecko";
 
-  if (memory) candidates.push({
-    ...memory,
-    originalSource: memory.originalSource || memory.source,
-    sourceFamily: memory.sourceFamily || family,
-    originalSourceMode: memory.originalSourceMode || (memory.sourceMode !== "browser-cache" ? memory.sourceMode : null) || `${family}-cache-family`,
-    sourceMode: "browser-cache",
-    source: cacheLabel
-  });
-  const local = atlasReadLocalChartStore()[key];
-  if (local) candidates.push({
-    ...local,
-    originalSource: local.originalSource || local.source,
-    sourceFamily: local.sourceFamily || family,
-    originalSourceMode: local.originalSourceMode || (local.sourceMode !== "browser-cache" ? local.sourceMode : null) || `${family}-cache-family`,
-    sourceMode: "browser-cache",
-    source: cacheLabel
-  });
-
-  for (const candidate of candidates) {
-    const prices = atlasNormalizeChartPayload({ prices: candidate?.series });
-    const quote = atlasHistoryQuoteProvenance(candidate, family);
-    const integrity = atlasValidateChartSeries({ c, days, prices, sourceMode: "browser-cache",
-      quoteCurrency: quote.quoteCurrency, historySourceFamily: quote.historySourceFamily,
-      historyInstrument: quote.historyInstrument });
-    if (!integrity.ok) continue;
-    return {
-      ...candidate,
-      sourceFamily: candidate.sourceFamily || family,
-      series: prices,
-      blocked: false,
-      integrity,
-      periodDays: Number(days || 1),
-      sourceMode: "browser-cache",
-      source: candidate.source || cacheLabel
-    };
+  // Read the quote-scoped slot first, then legacy without deleting or
+  // relabelling it. Legacy data is only reusable if its native quote is proven.
+  for (const key of keys) {
+    const candidates = [];
+    const memory = state.chartCache[key]?.result;
+    if (memory) candidates.push(memory);
+    if (local[key]) candidates.push(local[key]);
+    for (const original of candidates) {
+      const candidate = {
+        ...original,
+        originalSource: original.originalSource || original.source,
+        sourceFamily: original.sourceFamily || family,
+        originalSourceMode: original.originalSourceMode
+          || (original.sourceMode !== "browser-cache" ? original.sourceMode : null)
+          || `${family}-cache-family`,
+        sourceMode: "browser-cache",
+        source: cacheLabel
+      };
+      const quote = atlasHistoryQuoteProvenance(candidate, family);
+      if (quote.quoteConflict || quote.quoteCurrency !== wanted || !quote.historySourceFamily) continue;
+      const prices = atlasNormalizeChartPayload({ prices: candidate.series });
+      const integrity = atlasValidateChartSeries({
+        c, days, prices, sourceMode: "browser-cache",
+        quoteCurrency: quote.quoteCurrency,
+        historySourceFamily: quote.historySourceFamily,
+        historyInstrument: quote.historyInstrument
+      });
+      if (!integrity.ok) continue;
+      return {
+        ...candidate,
+        sourceFamily: candidate.sourceFamily || family,
+        series: prices,
+        blocked: false,
+        integrity,
+        periodDays: Number(days || 1)
+      };
+    }
   }
   return null;
 }
@@ -10811,19 +10828,26 @@ function atlasOracleHistoryFromCache(coin){
   const preferred=atlasChartPreferredSourceFamily(coin);
   const families=[preferred,preferred==="binance"?"coingecko":"binance"];
 
-  // First use already-materialized memory cache: zero localStorage parse.
+  // Oracle follows the selected quote; older unsuffixed cache entries remain
+  // readable only after their historical currency is verified.
+  const quote = atlasChartDisplayCurrency();
   for(const period of periods){for(const family of families){
-    const key=atlasChartStorageKey(coin,period,family);
-    const result=atlasOracleValidateCachedCandidate(coin,period,family,state.chartCache?.[key]?.result);
-    if(result)return {result,period,source:`memory-cache:${family}`};
+    for(const key of [atlasChartStorageKey(coin,period,family,quote),atlasChartStorageKey(coin,period,family)]){
+      const candidate=state.chartCache?.[key]?.result;
+      if(atlasHistoricalDisplayQuote(candidate).currency!==quote)continue;
+      const result=atlasOracleValidateCachedCandidate(coin,period,family,candidate);
+      if(result)return {result,period,source:`memory-cache:${family}`};
+    }
   }}
 
-  // If necessary, read the local chart store ONCE, then probe all keys.
   const local=atlasOracleLocalStore();
   for(const period of periods){for(const family of families){
-    const key=atlasChartStorageKey(coin,period,family);
-    const result=atlasOracleValidateCachedCandidate(coin,period,family,local?.[key]);
-    if(result)return {result,period,source:`browser-cache:${family}`};
+    for(const key of [atlasChartStorageKey(coin,period,family,quote),atlasChartStorageKey(coin,period,family)]){
+      const candidate=local?.[key];
+      if(atlasHistoricalDisplayQuote(candidate).currency!==quote)continue;
+      const result=atlasOracleValidateCachedCandidate(coin,period,family,candidate);
+      if(result)return {result,period,source:`browser-cache:${family}`};
+    }
   }}
   return null;
 }
