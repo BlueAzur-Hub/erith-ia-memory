@@ -15,6 +15,29 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
   const ctx=await browser.newContext({viewport:{width:1450,height:900},locale:"fr-FR"});
   await ctx.route("**/chart.js@4.4.9/**",route=>route.fulfill({path:chart,contentType:"application/javascript"}));
   const page=await ctx.newPage();
+  let activeStep="boot";
+  const providerRequest=(rawUrl)=>{
+    try {
+      const u=new URL(rawUrl);
+      const marketChart=u.pathname.match(/^\/api\/v3\/coins\/([^/]+)\/market_chart$/);
+      if(u.hostname==="api.coingecko.com"&&marketChart)
+        return {provider:"CoinGecko",coinId:decodeURIComponent(marketChart[1]),route:"market_chart"};
+      if(/(^|\.)binance\.(com|vision)$/.test(u.hostname)&&u.pathname==="/api/v3/klines")
+        return {provider:"Binance",instrument:u.searchParams.get("symbol")||null,route:"klines"};
+    } catch {};
+    return null;
+  };
+  const network=[];
+  page.on("response",response=>{
+    const source=providerRequest(response.url());
+    if(source&&activeStep!=="boot"&&network.length<120)
+      network.push({step:activeStep,...source,status:response.status()});
+  });
+  page.on("requestfailed",request=>{
+    const source=providerRequest(request.url());
+    if(source&&activeStep!=="boot"&&network.length<120)
+      network.push({step:activeStep,...source,status:null,failure:String(request.failure()?.errorText||"network-failed")});
+  });
   page.on("pageerror",err=>{if(entry.errors.length<20)entry.errors.push(err.message)});
   entry.http=(await page.goto(url,{waitUntil:"domcontentloaded",timeout:60000}))?.status()||0;
   await page.waitForTimeout(11000);
@@ -27,6 +50,7 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
   for(const [label,selector,preset] of [
     ["Baisses5","#btnChartLosers","losers"],["Volumes5","#btnChartVolume5","volume"]
   ]){
+    activeStep=label;
     await page.locator(selector).click({timeout:20000});
     await page.waitForTimeout(70000);
     const data=await page.evaluate(()=>{
@@ -58,7 +82,8 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
       &&Number.isFinite(d.firstPrice)&&d.firstPrice>0&&Number.isFinite(d.lastPrice)&&d.lastPrice>0);
     const passed=data.displayCurrency==="EUR"&&data.preset===preset&&data.chart&&data.datasets.length===5
       &&unique&&sourceValid;
-    entry.steps.push({label,passed,unique,sourceValid,...data});
+    entry.steps.push({label,passed,unique,sourceValid,...data,
+      providerRequests:network.filter(row=>row.step===label)});
     await page.screenshot({path:join(out,name+"-"+label+".png"),timeout:25000});
   }
   await ctx.close();
@@ -73,7 +98,7 @@ const lines=["Baisses 5 EUR 24h: "+(report.baisses5?"PASS":"NOT PROVEN"),
  "Volumes 5 EUR 24h: "+(report.volumes5?"PASS":"NOT PROVEN"),
  ...report.browsers.flatMap(b=>[
  b.name+" JS errors="+b.errors.length+(b.fatal?" FATAL "+b.fatal:""),
- ...b.steps.map(s=>b.name+" "+s.label+": "+s.datasets.length+"/5 "+s.displayCurrency+" quote="+s.datasets.map(d=>d.quote||"?").join(",")+" raw-valid="+s.sourceValid+" missing="+(s.scanner?.unavailableIds||[]).join(",")+" rejected="+JSON.stringify(s.scanner?.rejected||[]).slice(0,2400))
+ ...b.steps.map(s=>b.name+" "+s.label+": "+s.datasets.length+"/5 "+s.displayCurrency+" quote="+s.datasets.map(d=>d.quote||"?").join(",")+" raw-valid="+s.sourceValid+" missing="+(s.scanner?.unavailableIds||[]).join(",")+" rejected="+JSON.stringify(s.scanner?.rejected||[]).slice(0,2400)+" provider-errors="+JSON.stringify((s.providerRequests||[]).filter(r=>r.status===null||r.status>=400)).slice(0,2400))
  ])];
 await writeFile(join(out,"SUMMARY.md"),lines.join("\n")+"\n");
 console.log(lines.join("\n"));
