@@ -15364,6 +15364,22 @@ function atlasScannerMarketBasis(period) {
   };
 }
 
+// One source clock for the Market ranking. A historical ranking must not
+// pretend to be current when its market snapshot is hours old.
+function atlasScannerMarketFreshness(frame, now = Date.now()) {
+  const timestamp = Date.parse(String(frame?.timestamp || ""));
+  const mode = String(frame?.mode || "");
+  const maxAge = mode === "github-public"
+    ? ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS
+    : ATLAS_ANALYSIS_MAX_AGE_MS;
+  const age = Number(now) - timestamp;
+  if (frame?.status !== "ready" || !Number.isFinite(timestamp)
+      || !Number.isFinite(age) || age < -120000 || age > maxAge) {
+    return { ok: false, reason: `Market trop ancien ou non daté · source ${mode || "absente"} · ${frame?.timestamp || "horodatage absent"}` };
+  }
+  return { ok: true, age, timestamp, mode };
+}
+
 function atlasScannerPool(preset, period) {
   // LIVE canonical selection: read the active Market universe, never stale Frame baskets.
   // The Market Frame remains provenance, not the owner of candidate identities.
@@ -15469,7 +15485,9 @@ function atlasScannerDecorateEntry(tx, coin, result, source) {
     coin,
     result: series === result.series ? result : { ...result, series },
     source,
-    atlasMarketMetric: atlasScannerMarketMetric(tx.preset, coin, tx.period),
+    // Frozen at ranking time: a later Spot pulse must not silently rewrite
+    // the numerical criterion after the five candidate IDs are selected.
+    atlasMarketMetric: tx.candidateMetrics?.[coin.id] ?? atlasScannerMarketMetric(tx.preset, coin, tx.period),
     atlasMarketMetricLabel: atlasScannerMarketMetricLabel(tx.preset, tx.period),
     atlasHistoryKind: historyKind,
     atlasMarketRank: Number(coin?.rank || 0)
@@ -15644,6 +15662,27 @@ function atlasScannerRestoreSnapshot(snapshot) {
   atlasSetCleanLensCollapsed(snapshot.detailCollapsed, false);
 }
 
+// Historical Base 100 uses the EUR OHLC window, whereas the Market ranking
+// uses a dated quote. Both are real but MUST NOT be declared directionally
+// coherent when one has risen and the other has fallen.
+function atlasScannerDirectionConflicts(tx, entries) {
+  if (Number(tx?.period) !== 1 || !["gainers", "losers"].includes(tx?.preset)) return [];
+  return (entries || []).flatMap(entry => {
+    const market = Number(entry?.atlasMarketMetric);
+    const history = atlasComparisonCurveChange(entry);
+    const inverted = tx.preset === "gainers"
+      ? !(market > 0) || history < -0.05
+      : !(market < 0) || history > 0.05;
+    if (!Number.isFinite(market) || !Number.isFinite(history) || inverted) {
+      const symbol = String(entry?.coin?.symbol || entry?.coin?.id || "?").toUpperCase();
+      const marketText = Number.isFinite(market) ? fmtPct(market) : "indisponible";
+      const historyText = Number.isFinite(history) ? fmtPct(history) : "indisponible";
+      return [`${symbol} : Market ${marketText} / historique ${historyText}`];
+    }
+    return [];
+  });
+}
+
 function atlasScannerCommit(tx, finalEntries, rejected) {
   if (!atlasScannerCurrent(tx) || !Array.isArray(finalEntries) || !finalEntries.length) {
     return false;
@@ -15662,6 +15701,27 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   if (!prevalidated.length || prevalidated.length > ATLAS_SCANNER_TARGET
       || positions.some((position, index) => position === undefined
         || (index > 0 && position <= positions[index - 1]))) return false;
+
+  // Validate the same market frame that chose these exact five IDs, including
+  // after a slow network fetch. Never publish a stale or directionally false
+  // "Hausses 5"/"Baisses 5" as a successful five-series comparison.
+  const activeFrame = atlasCurrentMarketFrame();
+  const freshness = atlasScannerMarketFreshness(activeFrame);
+  const changedFrame = !activeFrame
+    || activeFrame.id !== tx.marketFrameId
+    || activeFrame.fingerprint !== tx.marketFrameFingerprint;
+  const conflicts = atlasScannerDirectionConflicts(tx, prevalidated);
+  if (!freshness.ok || changedFrame || conflicts.length) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(
+      tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · classement et historique non cohérents`,
+      [!freshness.ok ? freshness.reason : null,
+       changedFrame ? "Market actualisé pendant la collecte : relancer le scanner" : null,
+       ...conflicts].filter(Boolean).join(" · ")
+    );
+  }
 
   const ids = prevalidated.map(entry => entry.coin.id);
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
@@ -16197,6 +16257,15 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = requestedPeriod;
+    const marketFrame = atlasCurrentMarketFrame();
+    const freshness = atlasScannerMarketFreshness(marketFrame);
+    if (!freshness.ok) {
+      return atlasScannerVisibleFailure(
+        preset,
+        `${label} non validé · Market trop ancien pour un classement actuel`,
+        `${freshness.reason}. Actualiser le Market / Livecheck puis relancer.`
+      );
+    }
     const pool = atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
@@ -16206,10 +16275,6 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       );
     }
 
-    const marketFrame = atlasCurrentMarketFrame();
-    if (!marketFrame) {
-      return atlasScannerVisibleFailure(preset, `${label} refusé · Market Frame indisponible`);
-    }
     const marketMode = String(
       marketFrame.mode
       || state.sourceLock?.mode
@@ -16233,6 +16298,10 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       marketMode,
       marketBasisLabel,
       candidateIds: pool.map(coin => coin.id),
+      // Values and IDs are from the same Market selection instant.
+      candidateMetrics: Object.fromEntries(pool.map(coin => [
+        coin.id, atlasScannerMarketMetric(preset, coin, period)
+      ])),
       // Freeze the exact Market candidates, not the potentially stale state.coins copy.
       candidateCoins: pool.map(coin => ({ ...coin })),
       cacheChecked: 0,

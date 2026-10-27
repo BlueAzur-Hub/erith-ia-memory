@@ -1,0 +1,31 @@
+name: Agent Crypto - scanner market history integrity TEST
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - .github/workflows/agent-crypto-scanner-integrity.yml
+      - .github/validation/scanner-market-history-integrity.cjs
+      - public/agent_crypto_erith_ia/administrator/app.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  node-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/validation/scanner-market-history-integrity.cjs
+            /public/agent_crypto_erith_ia/administrator/app.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check actual Administrator runtime
+        run: node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Prove ranking clock and historical sign contracts
+        run: node --test .github/validation/scanner-market-history-integrity.cjs
