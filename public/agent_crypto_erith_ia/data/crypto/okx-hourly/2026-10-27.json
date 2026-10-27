@@ -16852,6 +16852,1533 @@
       "orders_enabled": false,
       "account_access": false,
       "note": "Public snapshots; Spot listed pair != verified CoinGecko token contract. No guaranteed fill."
+    },
+    {
+      "schema": "erith.radar.okx-hourly-spot.v1",
+      "record_kind": "public_hourly_market_observation_not_trades",
+      "source": "OKX_EEA_PUBLIC_REST",
+      "observed_at_utc": "2026-10-27T20:57:16Z",
+      "hour_utc": "2026-10-27T20Z",
+      "instrument_type": "SPOT",
+      "quote_currencies": [
+        "USDC",
+        "USDT",
+        "EUR"
+      ],
+      "markets_expected": 18,
+      "markets_verified": 18,
+      "status": "READY",
+      "markets": [
+        {
+          "pair": "BTC-USDC",
+          "base": "BTC",
+          "quote": "USDC",
+          "rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:15Z",
+            "last": "80689.6",
+            "bid": "80676.3",
+            "ask": "80676.4",
+            "volume24h_base": "298.06075545",
+            "volume24h_quote": "23868708.194832757"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:16Z",
+            "bids": [
+              [
+                "80678.4",
+                "0.05672066"
+              ],
+              [
+                "80675.7",
+                "0.024985"
+              ],
+              [
+                "80674.1",
+                "0.00124"
+              ],
+              [
+                "80672.4",
+                "0.22562605"
+              ],
+              [
+                "80672.3",
+                "0.03459029"
+              ]
+            ],
+            "asks": [
+              [
+                "80678.5",
+                "0.0103"
+              ],
+              [
+                "80680.4",
+                "0.03065166"
+              ],
+              [
+                "80682.4",
+                "0.03613507"
+              ],
+              [
+                "80682.5",
+                "0.0394154"
+              ],
+              [
+                "80682.8",
+                "1.8"
+              ]
+            ],
+            "spread_bps": "0.01",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": {
+            "time_utc": "2026-10-27T20:56:00Z",
+            "open": "80687.9",
+            "high": "80691.2",
+            "low": "80687.9",
+            "close": "80689.6",
+            "volume_base": "0.0649818"
+          },
+          "recent_trades": [
+            {
+              "time_utc": "2026-10-27T20:56:51Z",
+              "side": "sell",
+              "price": "80689.6",
+              "quantity_base": "0.00160946"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:47Z",
+              "side": "sell",
+              "price": "80689.6",
+              "quantity_base": "0.00229273"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:40Z",
+              "side": "sell",
+              "price": "80691",
+              "quantity_base": "0.01941389"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:40Z",
+              "side": "sell",
+              "price": "80691",
+              "quantity_base": "0.0103"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:32Z",
+              "side": "buy",
+              "price": "80691.2",
+              "quantity_base": "0.00161108"
+            }
+          ],
+          "missing": []
+        },
+        {
+          "pair": "BTC-USDT",
+          "base": "BTC",
+          "quote": "USDT",
+          "rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:16Z",
+            "last": "80763.6",
+            "bid": "80768.3",
+            "ask": "80768.4",
+            "volume24h_base": "3101.54298375",
+            "volume24h_quote": "248661755.560990903"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:17Z",
+            "bids": [
+              [
+                "80768.3",
+                "0.6298"
+              ],
+              [
+                "80766.3",
+                "0.36"
+              ],
+              [
+                "80766.2",
+                "0.45621725"
+              ],
+              [
+                "80766.1",
+                "0.36"
+              ],
+              [
+                "80766",
+                "0.20711778"
+              ]
+            ],
+            "asks": [
+              [
+                "80768.4",
+                "0.66930068"
+              ],
+              [
+                "80768.5",
+                "0.33797637"
+              ],
+              [
+                "80769",
+                "0.00200971"
+              ],
+              [
+                "80769.3",
+                "0.0000102"
+              ],
+              [
+                "80769.9",
+                "0.05880189"
+              ]
+            ],
+            "spread_bps": "0.01",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "BTC-EUR",
+          "base": "BTC",
+          "quote": "EUR",
+          "rules": {
+            "minSz": "0.0001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:17Z",
+            "last": "72494.8",
+            "bid": "72480.9",
+            "ask": "72485",
+            "volume24h_base": "47.10898128",
+            "volume24h_quote": "3381199.474197111"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:17Z",
+            "bids": [
+              [
+                "72480.9",
+                "0.01847"
+              ],
+              [
+                "72478.2",
+                "0.0020807"
+              ],
+              [
+                "72477.2",
+                "0.00731705"
+              ],
+              [
+                "72471.1",
+                "0.00277434"
+              ],
+              [
+                "72471",
+                "0.00731705"
+              ]
+            ],
+            "asks": [
+              [
+                "72485",
+                "0.09996853"
+              ],
+              [
+                "72485.4",
+                "0.00731705"
+              ],
+              [
+                "72491.1",
+                "0.07440258"
+              ],
+              [
+                "72491.2",
+                "0.00731705"
+              ],
+              [
+                "72494.2",
+                "0.1239329"
+              ]
+            ],
+            "spread_bps": "0.57",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "ETH-USDC",
+          "base": "ETH",
+          "quote": "USDC",
+          "rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:17Z",
+            "last": "2342.2",
+            "bid": "2341.79",
+            "ask": "2341.8",
+            "volume24h_base": "6025.832155",
+            "volume24h_quote": "14000674.47832173"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:18Z",
+            "bids": [
+              [
+                "2341.79",
+                "1.067933"
+              ],
+              [
+                "2341.43",
+                "0.381316"
+              ],
+              [
+                "2341.42",
+                "8"
+              ],
+              [
+                "2341.39",
+                "0.410011"
+              ],
+              [
+                "2341.34",
+                "2.136273"
+              ]
+            ],
+            "asks": [
+              [
+                "2341.8",
+                "0.538011"
+              ],
+              [
+                "2341.94",
+                "0.16598"
+              ],
+              [
+                "2342.05",
+                "8"
+              ],
+              [
+                "2342.07",
+                "3.629268"
+              ],
+              [
+                "2342.37",
+                "1.708058"
+              ]
+            ],
+            "spread_bps": "0.04",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": {
+            "time_utc": "2026-10-27T20:56:00Z",
+            "open": "2341.9",
+            "high": "2342.56",
+            "low": "2341.9",
+            "close": "2342.2",
+            "volume_base": "1.218201"
+          },
+          "recent_trades": [
+            {
+              "time_utc": "2026-10-27T20:56:38Z",
+              "side": "sell",
+              "price": "2342.2",
+              "quantity_base": "0.063974"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:32Z",
+              "side": "sell",
+              "price": "2342.56",
+              "quantity_base": "1.067582"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:27Z",
+              "side": "buy",
+              "price": "2342.27",
+              "quantity_base": "0.001"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:20Z",
+              "side": "buy",
+              "price": "2342.3",
+              "quantity_base": "0.064039"
+            },
+            {
+              "time_utc": "2026-10-27T20:56:06Z",
+              "side": "buy",
+              "price": "2341.9",
+              "quantity_base": "0.021606"
+            }
+          ],
+          "missing": []
+        },
+        {
+          "pair": "ETH-USDT",
+          "base": "ETH",
+          "quote": "USDT",
+          "rules": {
+            "minSz": "0.0001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:18Z",
+            "last": "2344.49",
+            "bid": "2344.48",
+            "ask": "2344.49",
+            "volume24h_base": "69653.952466",
+            "volume24h_quote": "162178637.42848407"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:19Z",
+            "bids": [
+              [
+                "2344.48",
+                "2.473715"
+              ],
+              [
+                "2344.45",
+                "0.000429"
+              ],
+              [
+                "2344.42",
+                "0.2"
+              ],
+              [
+                "2344.38",
+                "0.00015"
+              ],
+              [
+                "2344.34",
+                "0.000429"
+              ]
+            ],
+            "asks": [
+              [
+                "2344.49",
+                "18.626173"
+              ],
+              [
+                "2344.5",
+                "1.02"
+              ],
+              [
+                "2344.53",
+                "1"
+              ],
+              [
+                "2344.54",
+                "3.282031"
+              ],
+              [
+                "2344.55",
+                "1"
+              ]
+            ],
+            "spread_bps": "0.04",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "ETH-EUR",
+          "base": "ETH",
+          "quote": "EUR",
+          "rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:18Z",
+            "last": "2103.93",
+            "bid": "2103.69",
+            "ask": "2103.88",
+            "volume24h_base": "1430.604818",
+            "volume24h_quote": "2980814.50315708"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:19Z",
+            "bids": [
+              [
+                "2103.69",
+                "0.768073"
+              ],
+              [
+                "2103.68",
+                "2.563852"
+              ],
+              [
+                "2103.49",
+                "0.874631"
+              ],
+              [
+                "2103.48",
+                "25.627294"
+              ],
+              [
+                "2103.47",
+                "25.627416"
+              ]
+            ],
+            "asks": [
+              [
+                "2103.88",
+                "2.870072"
+              ],
+              [
+                "2104.01",
+                "2.56345"
+              ],
+              [
+                "2104.02",
+                "0.874631"
+              ],
+              [
+                "2104.18",
+                "0.874631"
+              ],
+              [
+                "2104.22",
+                "2.561828"
+              ]
+            ],
+            "spread_bps": "0.90",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "SOL-USDC",
+          "base": "SOL",
+          "quote": "USDC",
+          "rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:18Z",
+            "last": "100.96",
+            "bid": "100.94",
+            "ask": "100.95",
+            "volume24h_base": "26906.90583",
+            "volume24h_quote": "2697740.8367299"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:19Z",
+            "bids": [
+              [
+                "100.94",
+                "5.13252"
+              ],
+              [
+                "100.93",
+                "4.92973"
+              ],
+              [
+                "100.92",
+                "236.78725"
+              ],
+              [
+                "100.91",
+                "5.74383"
+              ],
+              [
+                "100.9",
+                "67.83212"
+              ]
+            ],
+            "asks": [
+              [
+                "100.95",
+                "9.0169"
+              ],
+              [
+                "100.96",
+                "184.45046"
+              ],
+              [
+                "100.97",
+                "59.92196"
+              ],
+              [
+                "100.98",
+                "42.897"
+              ],
+              [
+                "101",
+                "72.10607"
+              ]
+            ],
+            "spread_bps": "0.99",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": {
+            "time_utc": "2026-10-27T20:56:00Z",
+            "open": "100.96",
+            "high": "100.96",
+            "low": "100.96",
+            "close": "100.96",
+            "volume_base": "0.0198"
+          },
+          "recent_trades": [
+            {
+              "time_utc": "2026-10-27T20:56:13Z",
+              "side": "buy",
+              "price": "100.96",
+              "quantity_base": "0.0198"
+            },
+            {
+              "time_utc": "2026-10-27T20:55:31Z",
+              "side": "sell",
+              "price": "100.92",
+              "quantity_base": "1.97206"
+            },
+            {
+              "time_utc": "2026-10-27T20:55:31Z",
+              "side": "sell",
+              "price": "100.92",
+              "quantity_base": "3.07325"
+            },
+            {
+              "time_utc": "2026-10-27T20:55:31Z",
+              "side": "sell",
+              "price": "100.92",
+              "quantity_base": "2.6467"
+            },
+            {
+              "time_utc": "2026-10-27T20:55:30Z",
+              "side": "buy",
+              "price": "100.94",
+              "quantity_base": "0.99058"
+            }
+          ],
+          "missing": []
+        },
+        {
+          "pair": "SOL-USDT",
+          "base": "SOL",
+          "quote": "USDT",
+          "rules": {
+            "minSz": "0.01",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:19Z",
+            "last": "101.06",
+            "bid": "101.05",
+            "ask": "101.06",
+            "volume24h_base": "482025.07128",
+            "volume24h_quote": "48412710.79504688"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:20Z",
+            "bids": [
+              [
+                "101.05",
+                "18.048115"
+              ],
+              [
+                "101.04",
+                "367.100411"
+              ],
+              [
+                "101.03",
+                "534.247114"
+              ],
+              [
+                "101.02",
+                "526.239508"
+              ],
+              [
+                "101.01",
+                "276.558075"
+              ]
+            ],
+            "asks": [
+              [
+                "101.06",
+                "212.086053"
+              ],
+              [
+                "101.07",
+                "471.297939"
+              ],
+              [
+                "101.08",
+                "868.630481"
+              ],
+              [
+                "101.09",
+                "464.852246"
+              ],
+              [
+                "101.1",
+                "598.823922"
+              ]
+            ],
+            "spread_bps": "0.99",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "SOL-EUR",
+          "base": "SOL",
+          "quote": "EUR",
+          "rules": {
+            "minSz": "0.01",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:19Z",
+            "last": "90.71",
+            "bid": "90.68",
+            "ask": "90.69",
+            "volume24h_base": "5440.0562",
+            "volume24h_quote": "489363.95064078"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:20Z",
+            "bids": [
+              [
+                "90.67",
+                "59.25776"
+              ],
+              [
+                "90.66",
+                "59.460071"
+              ],
+              [
+                "90.64",
+                "266.747269"
+              ],
+              [
+                "90.63",
+                "198.178376"
+              ],
+              [
+                "90.6",
+                "6.946044"
+              ]
+            ],
+            "asks": [
+              [
+                "90.69",
+                "0.998423"
+              ],
+              [
+                "90.7",
+                "81.924285"
+              ],
+              [
+                "90.71",
+                "59.427296"
+              ],
+              [
+                "90.73",
+                "128.759141"
+              ],
+              [
+                "90.74",
+                "135.059166"
+              ]
+            ],
+            "spread_bps": "2.21",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "XRP-USDC",
+          "base": "XRP",
+          "quote": "USDC",
+          "rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:19Z",
+            "last": "1.3197",
+            "bid": "1.3194",
+            "ask": "1.3197",
+            "volume24h_base": "2378588.36",
+            "volume24h_quote": "3103934.9068501"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:21Z",
+            "bids": [
+              [
+                "1.3194",
+                "14159.467"
+              ],
+              [
+                "1.3192",
+                "628.929"
+              ],
+              [
+                "1.3191",
+                "856.274"
+              ],
+              [
+                "1.319",
+                "10015.261"
+              ],
+              [
+                "1.3189",
+                "628.882"
+              ]
+            ],
+            "asks": [
+              [
+                "1.3197",
+                "1656.643"
+              ],
+              [
+                "1.3198",
+                "699.03"
+              ],
+              [
+                "1.3199",
+                "471.696"
+              ],
+              [
+                "1.32",
+                "14065.527"
+              ],
+              [
+                "1.3201",
+                "3132.015"
+              ]
+            ],
+            "spread_bps": "2.27",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": [
+            {
+              "time_utc": "2026-10-27T20:48:53Z",
+              "side": "buy",
+              "price": "1.3186",
+              "quantity_base": "437.179"
+            },
+            {
+              "time_utc": "2026-10-27T20:48:51Z",
+              "side": "sell",
+              "price": "1.3184",
+              "quantity_base": "55.274"
+            },
+            {
+              "time_utc": "2026-10-27T20:48:50Z",
+              "side": "buy",
+              "price": "1.3182",
+              "quantity_base": "437.164"
+            },
+            {
+              "time_utc": "2026-10-27T20:48:50Z",
+              "side": "buy",
+              "price": "1.3183",
+              "quantity_base": "437.146"
+            },
+            {
+              "time_utc": "2026-10-27T20:48:50Z",
+              "side": "sell",
+              "price": "1.3188",
+              "quantity_base": "1.1"
+            }
+          ],
+          "missing": [
+            "last_closed_1m:ValueError"
+          ]
+        },
+        {
+          "pair": "XRP-USDT",
+          "base": "XRP",
+          "quote": "USDT",
+          "rules": {
+            "minSz": "1",
+            "lotSz": "0.000001",
+            "tickSz": "0.0001"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:20Z",
+            "last": "1.3212",
+            "bid": "1.321",
+            "ask": "1.3211",
+            "volume24h_base": "16179841.748857",
+            "volume24h_quote": "21201327.3064057846"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:21Z",
+            "bids": [
+              [
+                "1.321",
+                "2590.6"
+              ],
+              [
+                "1.3209",
+                "5986.75211"
+              ],
+              [
+                "1.3208",
+                "16400.092951"
+              ],
+              [
+                "1.3207",
+                "1548.912717"
+              ],
+              [
+                "1.3206",
+                "3944.170729"
+              ]
+            ],
+            "asks": [
+              [
+                "1.3211",
+                "4333.262"
+              ],
+              [
+                "1.3212",
+                "17437.834121"
+              ],
+              [
+                "1.3213",
+                "12584.589302"
+              ],
+              [
+                "1.3214",
+                "16465.473114"
+              ],
+              [
+                "1.3215",
+                "9549.482774"
+              ]
+            ],
+            "spread_bps": "0.76",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "XRP-EUR",
+          "base": "XRP",
+          "quote": "EUR",
+          "rules": {
+            "minSz": "1",
+            "lotSz": "0.0001",
+            "tickSz": "0.0001"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:21Z",
+            "last": "1.1856",
+            "bid": "1.1854",
+            "ask": "1.1856",
+            "volume24h_base": "575291.5204",
+            "volume24h_quote": "675962.43097198"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:22Z",
+            "bids": [
+              [
+                "1.1854",
+                "333.4064"
+              ],
+              [
+                "1.1853",
+                "4550.101"
+              ],
+              [
+                "1.1851",
+                "2579.9619"
+              ],
+              [
+                "1.1849",
+                "3411.8037"
+              ],
+              [
+                "1.1848",
+                "8952.303"
+              ]
+            ],
+            "asks": [
+              [
+                "1.1856",
+                "4854.8125"
+              ],
+              [
+                "1.1857",
+                "2273.193"
+              ],
+              [
+                "1.1859",
+                "3409.7895"
+              ],
+              [
+                "1.186",
+                "4546.386"
+              ],
+              [
+                "1.1861",
+                "5682.9825"
+              ]
+            ],
+            "spread_bps": "1.69",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "OKB-USDC",
+          "base": "OKB",
+          "quote": "USDC",
+          "rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:22Z",
+            "last": "109.29",
+            "bid": "109.24",
+            "ask": "109.27",
+            "volume24h_base": "2576.30873",
+            "volume24h_quote": "279949.169607"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:22Z",
+            "bids": [
+              [
+                "109.24",
+                "0.95"
+              ],
+              [
+                "109.21",
+                "0.91"
+              ],
+              [
+                "109.2",
+                "0.19602"
+              ],
+              [
+                "109.18",
+                "0.2104"
+              ],
+              [
+                "109.16",
+                "0.20725"
+              ]
+            ],
+            "asks": [
+              [
+                "109.27",
+                "0.24537"
+              ],
+              [
+                "109.29",
+                "0.18163"
+              ],
+              [
+                "109.31",
+                "0.20008"
+              ],
+              [
+                "109.32",
+                "0.14027"
+              ],
+              [
+                "109.34",
+                "0.14242"
+              ]
+            ],
+            "spread_bps": "2.75",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": {
+            "time_utc": "2026-10-27T20:54:00Z",
+            "open": "109.25",
+            "high": "109.29",
+            "low": "109.25",
+            "close": "109.29",
+            "volume_base": "0.74995"
+          },
+          "recent_trades": [
+            {
+              "time_utc": "2026-10-27T20:54:43Z",
+              "side": "buy",
+              "price": "109.29",
+              "quantity_base": "0.02745"
+            },
+            {
+              "time_utc": "2026-10-27T20:54:43Z",
+              "side": "buy",
+              "price": "109.28",
+              "quantity_base": "0.01857"
+            },
+            {
+              "time_utc": "2026-10-27T20:54:43Z",
+              "side": "buy",
+              "price": "109.28",
+              "quantity_base": "0.04602"
+            },
+            {
+              "time_utc": "2026-10-27T20:54:43Z",
+              "side": "buy",
+              "price": "109.28",
+              "quantity_base": "0.04602"
+            },
+            {
+              "time_utc": "2026-10-27T20:54:43Z",
+              "side": "buy",
+              "price": "109.28",
+              "quantity_base": "0.00012"
+            }
+          ],
+          "missing": []
+        },
+        {
+          "pair": "OKB-USDT",
+          "base": "OKB",
+          "quote": "USDT",
+          "rules": {
+            "minSz": "0.01",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:22Z",
+            "last": "109.34",
+            "bid": "109.34",
+            "ask": "109.35",
+            "volume24h_base": "40760.995286",
+            "volume24h_quote": "4434429.27978914"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:23Z",
+            "bids": [
+              [
+                "109.34",
+                "0.684019"
+              ],
+              [
+                "109.32",
+                "2.55537"
+              ],
+              [
+                "109.31",
+                "3"
+              ],
+              [
+                "109.3",
+                "14.323949"
+              ],
+              [
+                "109.28",
+                "3"
+              ]
+            ],
+            "asks": [
+              [
+                "109.35",
+                "7.050052"
+              ],
+              [
+                "109.36",
+                "7.327"
+              ],
+              [
+                "109.37",
+                "7.327"
+              ],
+              [
+                "109.38",
+                "10.327"
+              ],
+              [
+                "109.39",
+                "18.315018"
+              ]
+            ],
+            "spread_bps": "0.91",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "OKB-EUR",
+          "base": "OKB",
+          "quote": "EUR",
+          "rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:23Z",
+            "last": "98.16",
+            "bid": "97.99",
+            "ask": "98.23",
+            "volume24h_base": "81.78078",
+            "volume24h_quote": "7945.4661879"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:23Z",
+            "bids": [
+              [
+                "97.99",
+                "13.80462"
+              ],
+              [
+                "97.96",
+                "17.25593"
+              ],
+              [
+                "97.93",
+                "0.21806"
+              ],
+              [
+                "97.91",
+                "20.72161"
+              ],
+              [
+                "97.88",
+                "24.28048"
+              ]
+            ],
+            "asks": [
+              [
+                "98.23",
+                "0.04311"
+              ],
+              [
+                "98.24",
+                "14.14097"
+              ],
+              [
+                "98.27",
+                "0.01249"
+              ],
+              [
+                "98.29",
+                "17.21377"
+              ],
+              [
+                "98.32",
+                "0.22989"
+              ]
+            ],
+            "spread_bps": "24.46",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "CT-USDC",
+          "base": "CT",
+          "quote": "USDC",
+          "rules": {
+            "minSz": "10",
+            "lotSz": "0.01",
+            "tickSz": "0.0001"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:23Z",
+            "last": "0.1699",
+            "bid": "0.1697",
+            "ask": "0.1699",
+            "volume24h_base": "4616674.95",
+            "volume24h_quote": "771124.54329"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:24Z",
+            "bids": [
+              [
+                "0.1697",
+                "551.86"
+              ],
+              [
+                "0.1696",
+                "8008.54"
+              ],
+              [
+                "0.1695",
+                "62094.16"
+              ],
+              [
+                "0.1694",
+                "10267.2"
+              ],
+              [
+                "0.1693",
+                "60117.16"
+              ]
+            ],
+            "asks": [
+              [
+                "0.1699",
+                "8803.35"
+              ],
+              [
+                "0.17",
+                "2259.48"
+              ],
+              [
+                "0.1701",
+                "10206.36"
+              ],
+              [
+                "0.1702",
+                "6311.03"
+              ],
+              [
+                "0.1703",
+                "14851.05"
+              ]
+            ],
+            "spread_bps": "11.78",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": {
+            "time_utc": "2026-10-27T20:56:00Z",
+            "open": "0.1699",
+            "high": "0.1699",
+            "low": "0.1699",
+            "close": "0.1699",
+            "volume_base": "288.39"
+          },
+          "recent_trades": [
+            {
+              "time_utc": "2026-10-27T20:56:43Z",
+              "side": "buy",
+              "price": "0.1699",
+              "quantity_base": "288.39"
+            },
+            {
+              "time_utc": "2026-10-27T20:53:24Z",
+              "side": "sell",
+              "price": "0.1696",
+              "quantity_base": "221.54"
+            },
+            {
+              "time_utc": "2026-10-27T20:53:24Z",
+              "side": "sell",
+              "price": "0.1696",
+              "quantity_base": "910.53"
+            },
+            {
+              "time_utc": "2026-10-27T20:53:24Z",
+              "side": "sell",
+              "price": "0.1696",
+              "quantity_base": "69.52"
+            },
+            {
+              "time_utc": "2026-10-27T20:53:24Z",
+              "side": "sell",
+              "price": "0.1696",
+              "quantity_base": "288.48"
+            }
+          ],
+          "missing": []
+        },
+        {
+          "pair": "CT-USDT",
+          "base": "CT",
+          "quote": "USDT",
+          "rules": {
+            "minSz": "10",
+            "lotSz": "0.1",
+            "tickSz": "0.00001"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:24Z",
+            "last": "0.17007",
+            "bid": "0.16989",
+            "ask": "0.17",
+            "volume24h_base": "48318331.8",
+            "volume24h_quote": "8166167.559098"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:24Z",
+            "bids": [
+              [
+                "0.16989",
+                "385"
+              ],
+              [
+                "0.16988",
+                "710.2"
+              ],
+              [
+                "0.16987",
+                "646.3"
+              ],
+              [
+                "0.16985",
+                "646.3"
+              ],
+              [
+                "0.16984",
+                "529.9"
+              ]
+            ],
+            "asks": [
+              [
+                "0.17",
+                "510"
+              ],
+              [
+                "0.17001",
+                "710.2"
+              ],
+              [
+                "0.17002",
+                "500"
+              ],
+              [
+                "0.17003",
+                "7296"
+              ],
+              [
+                "0.1701",
+                "26633.5"
+              ]
+            ],
+            "spread_bps": "6.47",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        },
+        {
+          "pair": "CT-EUR",
+          "base": "CT",
+          "quote": "EUR",
+          "rules": {
+            "minSz": "10",
+            "lotSz": "0.01",
+            "tickSz": "0.0001"
+          },
+          "status": "VERIFIED_PUBLIC_BOOK",
+          "ticker": {
+            "source_at_utc": "2026-10-27T20:57:24Z",
+            "last": "0.1528",
+            "bid": "0.1523",
+            "ask": "0.1529",
+            "volume24h_base": "881584.61",
+            "volume24h_quote": "130542.354568"
+          },
+          "book5": {
+            "source_at_utc": "2026-10-27T20:57:25Z",
+            "bids": [
+              [
+                "0.1523",
+                "4708.23"
+              ],
+              [
+                "0.1522",
+                "24193.16"
+              ],
+              [
+                "0.1521",
+                "23718.79"
+              ],
+              [
+                "0.152",
+                "2246.1"
+              ],
+              [
+                "0.1518",
+                "15.88"
+              ]
+            ],
+            "asks": [
+              [
+                "0.1529",
+                "2362.21"
+              ],
+              [
+                "0.153",
+                "2231.42"
+              ],
+              [
+                "0.1533",
+                "15.86"
+              ],
+              [
+                "0.1538",
+                "15.86"
+              ],
+              [
+                "0.1543",
+                "15.86"
+              ]
+            ],
+            "spread_bps": "39.32",
+            "market_fill_proven": false
+          },
+          "last_closed_1m": null,
+          "recent_trades": null,
+          "missing": []
+        }
+      ],
+      "no_quote_conversion": true,
+      "no_coin_contract_identity_inferred": true,
+      "prices_not_trade_executions": true,
+      "real_orders": 0,
+      "paper_fills": 0,
+      "orders_enabled": false,
+      "account_access": false,
+      "note": "Public snapshots; Spot listed pair != verified CoinGecko token contract. No guaranteed fill."
     }
   ]
 }
