@@ -19,21 +19,30 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
   const page=await ctx.newPage();
   page.on("pageerror",e=>{if(r.errors.length<15)r.errors.push(e.message)});
   r.http=(await page.goto(url,{waitUntil:"domcontentloaded",timeout:60000}))?.status()||0;
-  await page.waitForTimeout(17000);
+  await page.waitForTimeout(11000);
+  // The Administrator deliberately disables graph selection until Livecheck is confirmed.
+  // Running it against public snapshot fixtures is required before UI comparisons.
+  await page.locator("#btnLivecheck").click({timeout:20000});
+  await page.waitForTimeout(18000);
+  await page.locator("#btnRefresh").click({timeout:20000});
+  await page.waitForTimeout(12000);
   await page.locator('[data-aqca="EUR"]').click({timeout:20000});
   await page.waitForTimeout(2000);
   for(const [preset,selector,expected] of [["Top3","#btnChartTop3",3],["Top5","#btnChartTop5",5]]){
    await page.locator(selector).click({timeout:20000});
    await page.waitForTimeout(26000);
    const obs=await page.evaluate(()=>{
-     const canvas=document.getElementById("mainChart"),graph=globalThis.Chart?.getChart?.(canvas)||null;
+     const canvas=document.getElementById("mainChart");
+     const appState=typeof state==="object"&&state?state:null;
+     const graph=appState?.chartEngineV2?.realChart||globalThis.Chart?.getChart?.(canvas)||null;
      const datasets=(graph?.data?.datasets||[]).filter(x=>x?.atlasCoin?.id).map(x=>({
        coinId:x.atlasCoin.id,quote:x.atlasHistoricalQuote?.currency||null,
        source:String(x.atlasHistoricalQuote?.source||""),points:Array.isArray(x.data)?x.data.length:0,
        lastRaw:Number(x.data?.[x.data.length-1]?.rawPrice)
      }));
      return {selected:globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||null,
-       preset:globalThis.state?.dataBroker?.comparison?.preset||null,
+       preset:appState?.dataBroker?.comparison?.preset||null,
+       liveOk:appState?.liveOk||false, coinCount:appState?.coins?.length||0,
        chart:!!graph,datasets};
    });
    const proven=obs.selected==="EUR"&&obs.chart&&obs.datasets.length===expected
