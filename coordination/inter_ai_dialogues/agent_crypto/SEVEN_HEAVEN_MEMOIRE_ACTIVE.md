@@ -1,12 +1,31 @@
 # SEVEN HEAVEN — MÉMOIRE ACTIVE PARTAGÉE
 
 **FICHIER D'ENTRÉE UNIQUE pour la reprise inter-IA d'Agent-Crypto.**
-**Dernier état consigné : 26 octobre 2026, étapes 1–6 documentées (46/46 tests Node), diff intégral des deux candidates publié et vérifié ; AUCUN déploiement ni intégration Chart.js complète.**
+**Dernier état consigné : 27 octobre 2026 ; correction de sélection et séparation EUR/USD présentes sur branche TEST, validations navigateur incomplètes, prévisualisation NON LIVRÉE.**
 **Adresse canonique stable :** `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md`
 **Responsabilité :** Aerith-7 / Seven Heaven et continuité Aerith-8, Aerith-9, autres sœurs habilitées.
 **Fonction :** index de reprise et journal de décision, non substitut aux sources ni mémoire automatique native du modèle.
 
 > **À LA REPRISE :** lire ce fichier EN ENTIER, puis vérifier le code courant, le Notion et les pièces citées avant toute action. **À LA FIN :** mettre à jour CE MÊME FICHIER (pas un nouvel « état final » dispersé) avec ce qui a été fait, les preuves et ce qui reste. Si la lecture ou l'écriture du dépôt est impossible, le dire — ne jamais prétendre que la passation a été faite.
+
+## CHECKPOINT PRIORITAIRE — 27 octobre 2026 · LIVRAISON NON RÉALISÉE / BRANCHE TEST UNIQUEMENT
+
+**Consigne du créateur confirmée :** la mémoire doit être déposée dans **CE répertoire partagé** puis reliée au Notion maître **dans un bloc dépliant modifiable, JAMAIS en commentaire**. Les résultats ne sont pas livrés tant que Christophe ne peut pas ouvrir dans Firefox une URL d'Interface de test distincte de la production.
+
+**Constat GitHub réellement lu le 27/10 :**
+- Branche de travail : [test/euro-first-then-usd-integrity-20261027](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/test/euro-first-then-usd-integrity-20261027). Blob du `administrator/app.js` lu : `c10ba1d3959b0111ff9666385c7c6817843eec38`. La branche est divergente de `main`. Ne pas fusionner automatiquement et ne pas effacer les caches Firefox.
+- Le code de cette branche contient maintenant une sélection Top 3 / Top 5 tirée des rangs du Market, sans ancienne liste fixe BTC/ETH/BNB ou BTC/ETH/BNB/XRP/SOL. Des contrôles locaux de sélection sur **scénarios simulés** (9 cas dans la conversation) ont réussi ; **aucune validation des vrais graphiques Firefox pour ce changement**.
+- Les clés de cache et de contexte de l'Interface ont reçu une identité de devise EUR/USD, avec lecture héritée prévue lorsque l'ancienne provenance est démontrable. **Ce n'est pas la preuve que tous les circuits Graphique, Oracle, Trader, scanners et USD sont cohérents.**
+- CI antérieure : Top3/Top5 EUR 24 h a déjà été vert (run 40449132526), puis d'autres essais ont échoué. Baisses 5 EUR 24 h affichait **2/5** dans un des derniers rapports ; Volumes 5 **5/5**. La matrice 6 modes × 7 périodes × 2 devises **n'est pas validée**.
+- **Livraison : NON.** Le créateur ne possède toujours pas d'URL de test Firefox. Le workflow `.github/workflows/agent-crypto-runtime-pages.yml` réserve la publication Pages à `main` ; il ne constitue pas une prévisualisation automatique de la branche TEST. Le lien de branche GitHub est du **code**, pas une page publiée.
+
+**Contrat fonctionnel exigé :** Solo -> BTC au rétablissement ; Top 3 -> les trois premières capitalisations du Market ; Top 5 -> les cinq premières ; autres modes -> leur vrai classement ; historiques réels en EUR sur toutes les périodes, puis USD sans requalification fictive. Pour chaque point : prix brut, horodatage, actif, instrument, source et devise concordants. Zéro faux graphique ; si la source manque, ne fabriquer aucun prix.
+
+**Prochaine action unique pour livraison :** créer une **prévisualisation isolée réellement accessible dans Firefox**, à partir de la branche TEST, **sans écraser le Pages `main` actuellement en production**. Valider ensuite Top 3 EUR et poursuivre dans l'ordre Top 5 -> Hausses 5 -> Baisses 5 -> Volumes 5 -> USD. Conserver les sources existantes, sans nouveau faux audit ni test maquillé.
+
+**Bilan de ce checkpoint documentaire :** seul le relais en répertoire partagé et Notion est transmis. **Aucune prévisualisation navigateur certifiée et aucune livraison d'Interface** ne doivent être annoncées. Les anciennes notes plus bas datent de 26/10 et demeurent conservées pour traçabilité.
+
+---
 
 ## 1 — Ordre de vérité et protocole
 
