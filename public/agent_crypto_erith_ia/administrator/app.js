@@ -5150,10 +5150,10 @@ function atlasBestComparisonCoin(coins, field) {
 // Monetary comparisons are valid only within the chart's own quote currency.
 // Prefer the result's explicit native quote; otherwise use a verified display mode.
 function atlasChartQuoteBasis(result = null) {
-  const explicit = String(result?.quoteCurrency || result?.currency || "").toUpperCase();
-  if (explicit === "USD" || explicit === "EUR") return explicit;
-  const display = String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "").toUpperCase();
-  return display === "USD" || display === "EUR" ? display : null;
+  // A selected display currency cannot qualify an historical source.
+  // Unknown or conflicting history has no monetary comparison basis.
+  const historical = atlasHistoricalDisplayQuote(result);
+  return historical.currency === "EUR" || historical.currency === "USD" ? historical.currency : null;
 }
 
 function atlasDetailReferenceSpot(coin, currency, spot = null) {
@@ -6991,14 +6991,14 @@ function atlasExternalChartTooltip(context) {
         color: dataset.atlasPrimaryColor || dataset.borderColor,
         gradientCss: dataset.atlasGradientCss || "",
         rawPrice: live.price,
-        quoteCurrency: "EUR", // atlasExchangeQuoteForCoin delivers Binance direct/derived EUR
-        historicalSource: String(live.quote?.source || "Binance WebSocket"),
+        quoteCurrency: live.quote?.kind === "coingecko-usd-explicit" ? "USD" : "EUR",
+        historicalSource: String(live.quote?.source || "Source spot"),
         baseValue: 100 + live.change24h,
         timestamp: Number(live.quote?.timestamp || Date.now()),
         isLiveEndpoint: true,
         liveSource: String(live.quote?.source || "Binance WebSocket"),
         liveStatus: String(live.quote?.status || "live"),
-        liveKind: "live-binance",
+        liveKind: live.quote?.kind === "coingecko-usd-explicit" ? "snapshot" : "live-binance",
         liveObservedAt: Number(live.quote?.timestamp || Date.now()),
         virtualLivePresentation: true,
         virtualIndex: index
@@ -15829,7 +15829,9 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 // Reuse the same exact-ID native USD history already acquired by Solo.
 // Keep this storage isolated from the legacy EUR chart family.
 function atlasScannerNativeUsdRequested(tx) {
-  if (Number(tx?.period) !== 1) return false;
+  // All scanner periods share the one USD historical identity contract.
+  // EUR/legacy caches cannot be reused simply because the period is not 24h.
+  if (![1,7,30,60,90,365,36500].includes(Number(tx?.period))) return false;
   try {
     return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "USD";
   } catch { return false; }
@@ -17898,14 +17900,22 @@ function atlasExternalChartDetail(coin,period,result=null,mode="loading"){
   const lastPrice=metrics.lastPrice==null?NaN:Number(metrics.lastPrice);
   const lastAt=Number(metrics.lastTimestamp);
   const firstAt=Number(metrics.firstTimestamp);
-  const preference=String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"EUR").toUpperCase();
-  const currency=["USD","EUR","USDC"].includes(String(result?.currency||"").toUpperCase())
-    ?String(result.currency).toUpperCase()
-    :(preference==="USD"?"USD":"EUR");
-  const rawPrice=currency==="USDC"?NaN:currency==="USD"?coin?.priceUsd:(coin?.priceEur??coin?.price);
+  // Display choice belongs to the market snapshot only. The historical series
+  // must carry its own verified source/quote; an unknown quote is never inferred.
+  const preference=String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase();
+  const displayCurrency=preference==="EUR"?"EUR":"USD";
+  const rawPrice=displayCurrency==="USD"?coin?.priceUsd:(coin?.priceEur??coin?.price);
   const priceNow=rawPrice==null?NaN:Number(rawPrice);
-  const formatExternalPrice=value=>Number.isFinite(value)
-    ?atlasFormatNativeChartQuote(value,currency):"—";
+  const historicalQuote=atlasHistoricalDisplayQuote(result);
+  const historyCurrency=historicalQuote.currency;
+  const historyCurrencyLabel=historyCurrency||"devise non qualifiée";
+  const historicalSource=historyCurrency
+    ?String(historicalQuote.source||result?.source||"Source non qualifiée")
+    :"Source non qualifiée";
+  const formatSnapshotPrice=value=>Number.isFinite(value)
+    ?atlasFormatNativeChartQuote(value,displayCurrency):"—";
+  const formatHistoricalPrice=value=>historyCurrency&&Number.isFinite(value)
+    ?atlasFormatNativeChartQuote(value,historyCurrency):"—";
 
   setText(els.selectedAssetTitle,`${coin.name} — ${coin.symbol} · HORS TOP 250`);
   atlasRenderCompactDetailSummary(coin);
@@ -17915,12 +17925,12 @@ function atlasExternalChartDetail(coin,period,result=null,mode="loading"){
       <div><b>Actif</b><span>${escapeHtml(coin.name)} (${escapeHtml(coin.symbol)})</span></div>
       <div><b>Statut</b><span>Hors Top 250 · contexte graphique externe</span></div>
       <div><b>Rang snapshot</b><span>${escapeHtml(String(coin.rank??"—"))}</span></div>
-      <div><b>Prix snapshot ${currency}</b><span>${escapeHtml(formatExternalPrice(priceNow))}</span></div>
+      <div><b>Prix snapshot ${displayCurrency}</b><span>${escapeHtml(formatSnapshotPrice(priceNow))}</span></div>
       <div><b>Période graphique</b><span>${escapeHtml(periodLabel)}</span></div>
-      <div><b>Source historique</b><span>${escapeHtml(result?.source||"CoinGecko market_chart EUR")}</span></div>
+      <div><b>Source historique</b><span>${escapeHtml(historicalSource)}</span></div>
       <div><b>Points / couverture</b><span>${points||"—"} · ${escapeHtml(coverage)}</span></div>
       <div><b>Premier point</b><span>${Number.isFinite(firstAt)?escapeHtml(atlasChartLabelFull(firstAt)):"—"}</span></div>
-      <div><b>Dernier point (${currency})</b><span>${escapeHtml(formatExternalPrice(lastPrice))} · ${Number.isFinite(lastAt)?escapeHtml(atlasChartLabelFull(lastAt)):"—"}</span></div>
+      <div><b>Dernier point (${historyCurrencyLabel})</b><span>${escapeHtml(formatHistoricalPrice(lastPrice))} · ${Number.isFinite(lastAt)?escapeHtml(atlasChartLabelFull(lastAt)):"—"}</span></div>
       <div><b>Intégrité</b><span>${mode==="valid"?"Validée":mode==="blocked"?"Indisponible":"Chargement"}</span></div>
       <div><b>Oracle</b><span>Isolé · non alimenté par cet actif externe</span></div>
       <div><b>Comparaison</b><span>Non injecté dans le panier canonique</span></div>`;
