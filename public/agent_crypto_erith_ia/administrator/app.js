@@ -14438,7 +14438,9 @@ function atlasMarketFrameScannerIds(coins, preset, periodKey) {
   let rows = [...(coins || [])]
     .filter(coin => Number.isFinite(Number(coin?.rank)))
     .filter(coin => Number(coin.rank) >= 1 && Number(coin.rank) <= ATLAS_MARKET_REQUESTED_ASSETS)
-    .filter(coin => atlasHasPositiveQuote(coin?.priceEur ?? coin?.price));
+    .filter(coin => atlasHasPositiveQuote(coin?.priceEur)
+      || atlasHasPositiveQuote(coin?.priceUsd)
+      || atlasHasPositiveQuote(coin?.price));
 
   if (preset === "volume") {
     rows = rows
@@ -15346,7 +15348,9 @@ function atlasScannerPool(preset, period) {
   let rows = atlasMarketUniverseCoins(limit)
     .filter(coin => Number.isFinite(Number(coin?.rank)))
     .filter(coin => Number(coin.rank) >= 1 && Number(coin.rank) <= limit)
-    .filter(coin => atlasHasPositiveQuote(coin?.priceEur ?? coin?.price))
+    .filter(coin => atlasHasPositiveQuote(coin?.priceEur)
+      || atlasHasPositiveQuote(coin?.priceUsd)
+      || atlasHasPositiveQuote(coin?.price))
     .filter(coin => matchAssetFilter(coin))
     .filter(coin => !query || atlasMarketSearchMatches(coin, query));
 
@@ -15906,8 +15910,12 @@ async function atlasScannerYieldToUi(tx) {
 async function atlasScannerRun(tx) {
   const accepted = [];
   const rejected = [];
+  // The Market universe owns selection. state.coins may lag its latest snapshot.
+  const selectedMarketCoins = Array.isArray(tx.candidateCoins)
+    ? tx.candidateCoins
+    : (Array.isArray(state.coins) ? state.coins : []);
   const coins = tx.candidateIds
-    .map(id => state.coins.find(coin => coin.id === id))
+    .map(id => selectedMarketCoins.find(coin => coin.id === id))
     .filter(Boolean);
   const networkQueue = [];
   const archiveFallback = [];
@@ -16185,6 +16193,8 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       marketMode,
       marketBasisLabel,
       candidateIds: pool.map(coin => coin.id),
+      // Freeze the exact Market candidates, not the potentially stale state.coins copy.
+      candidateCoins: pool.map(coin => ({ ...coin })),
       cacheChecked: 0,
       cacheHits: 0,
       examined: 0,
