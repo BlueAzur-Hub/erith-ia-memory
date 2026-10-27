@@ -5,6 +5,7 @@ on:
       - test/euro-first-then-usd-integrity-20261027
     paths:
       - '.github/workflows/top3-top5-eur-browser.yml'
+      - '.github/validation/browser_top3_top5_eur.mjs'
 permissions:
   contents: read
 jobs:
@@ -22,7 +23,7 @@ jobs:
           path: harness
       - uses: actions/checkout@v4
         with:
-          ref: test/eur-usd-web-2files-20261027
+          ref: test/euro-first-then-usd-integrity-20261027
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |

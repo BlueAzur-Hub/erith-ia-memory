@@ -8,7 +8,7 @@ await mkdir(out,{recursive:true});
 const chart=join(here,"node_modules/chart.js/dist/chart.umd.js");
 await stat(chart);
 const url="http://127.0.0.1:8765/public/agent_crypto_erith_ia/administrator/index.html";
-const results={candidate:"test/eur-usd-web-2files-20261027",scope:"Firefox/Chromium actual EUR Top3 and Top5 under public data limitations",browsers:[]};
+const results={candidate:"test/euro-first-then-usd-integrity-20261027",scope:"Firefox/Chromium actual EUR Top3 and Top5 under public data limitations",browsers:[]};
 for(const [name,engine] of Object.entries({chromium,firefox})){
  const r={name,steps:[],errors:[]};
  let browser=null;
@@ -54,8 +54,8 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
  }catch(e){r.fatal=String(e.stack||e).slice(0,1800)}
  finally{if(browser)await browser.close();results.browsers.push(r)}
 }
-results.top3EurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Top3")?.proven);
-results.top5EurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Top5")?.proven);
+results.top3EurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="rank-3")?.proven);
+results.top5EurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="rank-5")?.proven);
 await writeFile(join(out,"report.json"),JSON.stringify(results,null,2)+"\n");
 const lines=["EUR Top3 Firefox/Chromium: "+(results.top3EurProven?"PASS":"NOT PROVEN"),
  "EUR Top5 Firefox/Chromium: "+(results.top5EurProven?"PASS":"NOT PROVEN"),
