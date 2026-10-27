@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-10-26",
+  "latest_archive_day_utc": "2026-10-27",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,23 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "figure-heloc",
-      "symbol": "FIGR_HELOC",
-      "rank": 9,
-      "observed_at": "2026-08-28T18:45:18.192Z",
-      "price_usd": 1.037211153515179,
-      "change24h_pct": 4.07908,
-      "change7d_pct": 0.8,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-04",
-      "observed_followup_at": "2026-09-04T22:22:21.580Z",
-      "observed_followup_price_usd": 1.0377581395915827,
-      "followup_change_pct": 0.05,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-08-28.jsonl",
-      "followup_source_path": "data/history/2026-09-04.jsonl"
-    },
     {
       "id": "uniswap",
       "symbol": "UNI",
@@ -2340,7 +2323,7 @@
       "observed_followup_at": null,
       "observed_followup_price_usd": null,
       "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "followup_status": "ASSET_NOT_IN_TOP50",
       "source_path": "data/history/2026-10-20.jsonl",
       "followup_source_path": null
     },
@@ -2354,12 +2337,12 @@
       "change7d_pct": 3.6998,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-10-27",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-10-27T13:15:04.271Z",
+      "observed_followup_price_usd": 1265.8639698297661,
+      "followup_change_pct": 0.63,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-20.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-10-27.jsonl"
     },
     {
       "id": "bitway",
@@ -2371,12 +2354,12 @@
       "change7d_pct": 1.8286,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-10-27",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-10-27T13:15:04.271Z",
+      "observed_followup_price_usd": 1.4624717677045616,
+      "followup_change_pct": -27.92,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-20.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-10-27.jsonl"
     },
     {
       "id": "ethena",
