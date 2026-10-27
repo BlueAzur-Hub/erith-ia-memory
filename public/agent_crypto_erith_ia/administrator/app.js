@@ -14497,24 +14497,22 @@ function atlasMarketFrameScannerCoins(preset, period = Number(state.chartPeriodD
   return ids.map(id => byId.get(id)).filter(Boolean);
 }
 
-const ATLAS_CURATED_TOP3_IDS = Object.freeze([
-  "bitcoin",
-  "ethereum",
-  "binancecoin"
-]);
-
-const ATLAS_CURATED_TOP5_IDS = Object.freeze([
-  "bitcoin",
-  "ethereum",
-  "binancecoin",
-  "ripple",
-  "solana"
-]);
-
+// Top 3 and Top 5 follow the actual Market capitalization rank, not a
+// hard-coded basket. The Market Frame is the identity authority for presets.
 function atlasCuratedTopIds(limit = 5) {
-  return Number(limit) <= 3
-    ? [...ATLAS_CURATED_TOP3_IDS]
-    : [...ATLAS_CURATED_TOP5_IDS];
+  const count = Number(limit) <= 3 ? 3 : 5;
+  const frame = atlasCurrentMarketFrame();
+  const fromFrame = frame?.baskets?.[count === 3 ? "top3" : "top5"];
+  if (Array.isArray(fromFrame) && fromFrame.length === count) {
+    return [...fromFrame];
+  }
+  // Before the first complete frame, use only real ranked Market identities.
+  // Never silently fill a capitalisation basket with unrelated fixed IDs.
+  const ranked = (Array.isArray(state.coins) ? state.coins : [])
+    .filter(coin => coin?.id && Number.isFinite(Number(coin.rank)) && Number(coin.rank) > 0)
+    .sort((a, b) => Number(a.rank) - Number(b.rank)
+      || String(a.id).localeCompare(String(b.id)));
+  return [...new Set(ranked.map(coin => coin.id))].slice(0, count);
 }
 
 function atlasCuratedTopCoins(limit = 5) {
@@ -16936,10 +16934,11 @@ function atlasBuildMarketFrame(snapshot, mode = "none") {
   const byId = new Map(ranked.map(coin => [coin.id, coin]));
   const timestamp = snapshot?.timestamp || new Date().toISOString();
   const frameId = snapshot?.snapshotId || `coingecko-top250-eur_${timestamp}`;
-  const curated = ids => Object.freeze(ids.filter(id => byId.has(id)));
+  const capitalized = ranked.filter(coin =>
+    coin?.id && Number.isFinite(Number(coin.rank)) && Number(coin.rank) > 0);
   const baskets = Object.freeze({
-    top3: curated(ATLAS_CURATED_TOP3_IDS),
-    top5: curated(ATLAS_CURATED_TOP5_IDS),
+    top3: atlasMarketFrameUniqueIds(capitalized, 3),
+    top5: atlasMarketFrameUniqueIds(capitalized, 5),
     top50: atlasMarketFrameUniqueIds(ranked, 50),
     top100: atlasMarketFrameUniqueIds(ranked, 100),
     all: atlasMarketFrameUniqueIds(ranked, ATLAS_MARKET_REQUESTED_ASSETS),
@@ -46776,8 +46775,8 @@ function atlasGraphSessionV4IntentSemantic(control) {
 
   if (control.id === "btnChartTop5") {
     return !!atlasGraphSessionV4PatchMarket({
-      selectedCoinId: ATLAS_CURATED_TOP5_IDS[0],
-      comparisonIds: [...ATLAS_CURATED_TOP5_IDS],
+      selectedCoinId: atlasCuratedTopIds(5)[0],
+      comparisonIds: atlasCuratedTopIds(5),
       comparisonPreset: "rank-5",
       selectionCleared: false,
       selectionIntent: "selected"
@@ -46785,8 +46784,8 @@ function atlasGraphSessionV4IntentSemantic(control) {
   }
   if (control.id === "btnChartTop3") {
     return !!atlasGraphSessionV4PatchMarket({
-      selectedCoinId: ATLAS_CURATED_TOP3_IDS[0],
-      comparisonIds: [...ATLAS_CURATED_TOP3_IDS],
+      selectedCoinId: atlasCuratedTopIds(3)[0],
+      comparisonIds: atlasCuratedTopIds(3),
       comparisonPreset: "rank-3",
       selectionCleared: false,
       selectionIntent: "selected"
@@ -46927,8 +46926,8 @@ function atlasGraphContextV7NeutralMarket() {
   const deck = document.getElementById("analyste");
   return {
     period: 1,
-    selectedCoinId: ATLAS_CURATED_TOP5_IDS[0],
-    comparisonIds: [...ATLAS_CURATED_TOP5_IDS],
+    selectedCoinId: atlasCuratedTopIds(5)[0],
+    comparisonIds: atlasCuratedTopIds(5),
     comparisonPreset: "rank-5",
     selectionCleared: false,
     selectionIntent: "selected",
