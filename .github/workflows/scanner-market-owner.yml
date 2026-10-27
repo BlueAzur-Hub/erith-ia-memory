@@ -1,0 +1,48 @@
+name: Scanner Market owner - isolated code commit
+on:
+  push:
+    branches:
+      - test/scanner-market-candidate-identity
+    paths:
+      - '.github/workflows/scanner-market-owner.yml'
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/scanner-market-candidate-identity
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /.github/validation/fix-scanner-market-ownership.py
+            /.github/validation/test_scanner_market_owner.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reproduce issue on exact main source (expected failure)
+        run: |
+          if node .github/validation/test_scanner_market_owner.cjs; then
+            echo 'Expected test to fail before fix'; exit 1
+          fi
+      - name: Repair only Market candidate ownership
+        run: python3 .github/validation/fix-scanner-market-ownership.py
+      - name: Verify exact file, syntax and behavior
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node .github/validation/test_scanner_market_owner.cjs
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = 'public/agent_crypto_erith_ia/administrator/app.js'
+          git diff --check
+      - name: Commit exactly one application file to TEST branch
+        run: |
+          git config user.name 'erith-ci'
+          git config user.email 'erith-ci@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/app.js
+          test "$(git diff --cached --name-only | wc -l)" -eq 1
+          git commit -m "fix(scanner): preserve all five Market candidates despite stale state coins"
+          git push origin HEAD:refs/heads/test/scanner-market-candidate-identity
