@@ -50578,7 +50578,8 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const top3Eur = preset === "rank-3"
     && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "EUR";
   const quoteMatchesTop3 = result => !top3Eur || atlasHistoricalDisplayQuote(result)?.currency === "EUR";
-  if (Number(period || 1) === 1 && preset === "rank-5") {
+  if (Number(period || 1) === 1 && preset === "rank-5"
+      && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "EUR") {
     try {
       await atlasRespectComparisonRequestSpacing(signal, period);
       const result = await atlasFetchTargetTop5BinanceEur24hTruth(coin, {
@@ -50590,7 +50591,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
     } catch (error) {
       if (atlasComparisonAbortError(error)) throw error;
       const storedTruth = atlasGetStoredChartResult(coin, period, "binance");
-      if (storedTruth?.series?.length) {
+      if (storedTruth?.series?.length && atlasHistoricalDisplayQuote(storedTruth)?.currency === "EUR") {
         return {
           coin,
           result: {
@@ -50605,18 +50606,44 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
           source: "binance-eur-direct-24h-preserved-cache-40369"
         };
       }
+      // Preserve the five selected assets. Switch providers only, never currencies.
+      let backupFailure = "";
+      try {
+        await atlasRespectComparisonRequestSpacing(signal, period);
+        const backup = await fetchCoinGeckoChartDirect(coin, period, {
+          signal, timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
+        });
+        if (atlasHistoricalDisplayQuote(backup)?.currency !== "EUR")
+          throw new Error("CoinGecko historique non certifie EUR");
+        atlasStoreChartResult(coin, period, backup, "coingecko");
+        return { coin, result: backup, attempts: 2, source: "coingecko-eur-direct-after-binance" };
+      } catch (fallbackError) {
+        if (atlasComparisonAbortError(fallbackError)) throw fallbackError;
+        backupFailure = String(fallbackError?.message || fallbackError || "indisponible");
+      }
+      const preservedEur = atlasGetStoredChartResult(coin, period, "coingecko");
+      if (preservedEur?.series?.length && atlasHistoricalDisplayQuote(preservedEur)?.currency === "EUR") {
+        return {
+          coin, result: {
+            ...preservedEur,
+            sourceMode: "browser-cache",
+            refreshWarning: "Binance et CoinGecko directs indisponibles - historique EUR conserve",
+            technicalReason: backupFailure
+          },
+          attempts: 2, source: "coingecko-eur-verified-cache"
+        };
+      }
       return {
         coin,
         result: {
-          series: [],
-          blocked: true,
+          series: [], blocked: true,
           sourceFamily: "binance",
           sourceMode: "binance-direct-klines",
-          reason: `24h Binance EUR direct indisponible · ${String(error?.message || error || "erreur inconnue")}`,
-          technicalReason: String(error?.message || error || "erreur inconnue")
+          reason: "Top 5 EUR 24h : aucune serie EUR certifiee disponible",
+          technicalReason: "Binance : " + String(error?.message || error || "inconnue")
+            + " / CoinGecko : " + backupFailure
         },
-        attempts: 1,
-        source: "binance-eur-direct-24h-truth-failed"
+        attempts: 2, source: "eur-source-unavailable"
       };
     }
   }
