@@ -55,9 +55,11 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
  }catch(e){r.fatal=String(e.stack||e).slice(0,1800)}
  finally{if(browser)await browser.close();results.browsers.push(r)}
 }
-results.top3EurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="rank-3")?.proven);
-results.top5EurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="rank-5")?.proven);
-results.haussesEurProven=results.browsers.length===2&&results.browsers.every(r=>r.steps.find(s=>s.preset==="gainers")?.proven);
+// Read recorded step labels; dataBroker preset values are validated inside each observation.
+const evidenceComplete=results.browsers.length===2&&results.browsers.every(r=>!r.fatal&&r.errors.length===0);
+results.top3EurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Top3")?.proven===true);
+results.top5EurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Top5")?.proven===true);
+results.haussesEurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Hausses5")?.proven===true);
 await writeFile(join(out,"report.json"),JSON.stringify(results,null,2)+"\n");
 const lines=["EUR Top3 Firefox/Chromium: "+(results.top3EurProven?"PASS":"NOT PROVEN"),
  "EUR Top5 Firefox/Chromium: "+(results.top5EurProven?"PASS":"NOT PROVEN"),
