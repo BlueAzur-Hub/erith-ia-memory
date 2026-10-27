@@ -15892,7 +15892,7 @@ function atlasScannerStoredHistory(coin, period, tx = null) {
     current && Array.isArray(current.series) && current.series.length ? current : null,
     atlasGetStoredChartResult(coin, period, "binance"),
     atlasGetStoredChartResult(coin, period, "coingecko")
-  ].filter(Boolean);
+  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
 
   candidates.sort((a, b) => {
     const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
@@ -54273,6 +54273,8 @@ async function atlasScannerFetchDirect(tx, coin) {
       signal: tx.controller.signal,
       timeoutMs: 12000
     });
+    if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+      throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
     if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
       throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
     }
@@ -54292,6 +54294,8 @@ async function atlasScannerFetchDirect(tx, coin) {
         timeoutMs: ATLAS_SCANNER_BRIDGE_FAST_TIMEOUT_MS,
         allowBinance: false
       });
+      if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+        throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
       if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
         throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
       }
@@ -54321,6 +54325,8 @@ async function atlasScannerFetchDirect(tx, coin) {
         signal: tx.controller.signal,
         timeoutMs: 12000
       });
+      if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+        throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
       if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
         throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
       }
