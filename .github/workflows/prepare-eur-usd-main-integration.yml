@@ -1,0 +1,67 @@
+name: Prepare EUR-USD main integration - two files only
+on:
+  push:
+    branches:
+      - test/eur-usd-unified-historical-quotes
+    paths:
+      - '.github/workflows/prepare-eur-usd-main-integration.yml'
+permissions:
+  contents: write
+jobs:
+  stage-two-files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout target from current main - no other files modified
+        uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-main-integration-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          path: target
+      - name: Checkout two tested code files and tests
+        uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-unified-historical-quotes
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+            /public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
+            /.github/validation/test_quote_integrity.cjs
+          path: candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assert exact expected previous and new SHA before staging
+        run: |
+          test "$(git -C target hash-object public/agent_crypto_erith_ia/administrator/app.js)" = "c7a8905d956462c3944933558a110ca2742ac1eb"
+          test "$(git -C target hash-object public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js)" = "caee917bd36816e48960009bc1db4a9c75fc21c7"
+          test "$(git -C candidate hash-object public/agent_crypto_erith_ia/administrator/app.js)" = "edd211448c1babc6c5f13838dadaa735a2e1b8e3"
+          test "$(git -C candidate hash-object public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js)" = "76cf098509c4ebb295bca3d38392b74acf91396b"
+      - name: Copy corrected sources, verify syntax and quote behavior
+        run: |
+          cp candidate/public/agent_crypto_erith_ia/administrator/app.js target/public/agent_crypto_erith_ia/administrator/app.js
+          cp candidate/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js target/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --check target/public/agent_crypto_erith_ia/administrator/app.js
+          node --check target/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          cp candidate/.github/validation/test_quote_integrity.cjs target/test_quote_integrity.cjs
+          cp candidate/public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs target/public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
+          (cd target && node --test test_quote_integrity.cjs)
+          (cd target/public/agent_crypto_erith_ia/administrator/js && node --test test-graph-native-usd-tooltip.cjs)
+          rm target/test_quote_integrity.cjs
+          rm target/public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
+      - name: Commit exactly two app files to the main-derived TEST branch
+        run: |
+          cd target
+          git config user.name 'erith-ci'
+          git config user.email 'erith-ci@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          test "$(git diff --cached --name-only | wc -l)" -eq 2
+          git diff --cached --check
+          git commit -m "fix(agent-crypto): corriger les historiques EUR USD du graphique et du scanner"
+          git push origin HEAD:refs/heads/test/eur-usd-main-integration-20261027
