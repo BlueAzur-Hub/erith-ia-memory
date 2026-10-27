@@ -1,0 +1,52 @@
+name: Browser actual EUR Top3 Top5 on clean two-file candidate
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - '.github/workflows/top3-top5-eur-browser.yml'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/euro-first-then-usd-integrity-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/validation/browser_top3_top5_eur.mjs
+          path: harness
+      - uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-web-2files-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/
+            /public/agent_crypto_erith_ia/trader/
+          path: source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install chart and browsers
+        run: |
+          npm install --prefix harness/.github/validation --no-save --no-package-lock playwright@1.56.1 chart.js@4.4.9
+          npx --prefix harness/.github/validation playwright install --with-deps chromium firefox
+      - name: Start production-shaped local static server, no deployment
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory source > /tmp/erith-server.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/public/agent_crypto_erith_ia/administrator/index.html >/dev/null && break || sleep 1; done
+      - name: Assert historical EUR price datasets for Top3 and Top5 in both browsers
+        run: node harness/.github/validation/browser_top3_top5_eur.mjs browser-results
+      - name: Save browser observations and screenshots even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-eur-top3-top5-evidence
+          path: browser-results/
+          if-no-files-found: warn
+          retention-days: 14
