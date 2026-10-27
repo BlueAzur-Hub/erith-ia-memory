@@ -1,11 +1,11 @@
 # Agent-Crypto — derniere livraison TEST
 
-**ZIP actuel :** [`AGENT_CRYPTO_ADMIN_TEST_41db4d979f74.zip`](./AGENT_CRYPTO_ADMIN_TEST_41db4d979f74.zip)
+**ZIP actuel :** [`AGENT_CRYPTO_ADMIN_TEST_6702ae1fe31c.zip`](./AGENT_CRYPTO_ADMIN_TEST_6702ae1fe31c.zip)
 
-**Manifeste :** [`AGENT_CRYPTO_ADMIN_TEST_41db4d979f74.md`](./AGENT_CRYPTO_ADMIN_TEST_41db4d979f74.md)
+**Manifeste :** [`AGENT_CRYPTO_ADMIN_TEST_6702ae1fe31c.md`](./AGENT_CRYPTO_ADMIN_TEST_6702ae1fe31c.md)
 
-**Commit source :** `41db4d979f748b96683b0970958038d48c36eb49`
+**Commit source :** `6702ae1fe31c6747a766cdd3454f12298db93064`
 
-**SHA-256 :** `e64cae9ebd59ce5112cb4b89df8b251817cb1a93756b056a59f42f902d2dda91`
+**SHA-256 :** `95c8acc98d7eacc6a9e44e02c6a4a8568d1543519e2660b580ae312c78e0eb9a`
 
 **Statut : TEST, non valide par Firefox utilisateur.**
