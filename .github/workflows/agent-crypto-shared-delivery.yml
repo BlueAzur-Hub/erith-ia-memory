@@ -31,6 +31,7 @@ jobs:
           sparse-checkout: |
             /public/agent_crypto_erith_ia/administrator/app.js
             /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+            /public/agent_crypto_erith_ia/administrator/index.html
           path: candidate
 
       - name: Validate application JavaScript without altering it
@@ -55,6 +56,8 @@ jobs:
           from zipfile import ZipFile, ZIP_DEFLATED
           from hashlib import sha256
           import subprocess
+          import os
+          import re
 
           root = Path('candidate')
           shared = Path('shared/coordination/inter_ai_dialogues/agent_crypto')
@@ -64,8 +67,13 @@ jobs:
           ]
           shared.mkdir(parents=True, exist_ok=True)
           branch_sha = subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip()
-          short_sha = branch_sha[:12]
-          stem = f'AGENT_CRYPTO_ADMIN_TEST_{short_sha}'
+          html = (root / 'public/agent_crypto_erith_ia/administrator/index.html').read_text(encoding='utf-8')
+          match = re.search(r'build:"(\d+\.\d+\.\d+)"', html)
+          assert match, 'Missing canonical Administrator build in index.html'
+          version = match.group(1)
+          revision = int(os.environ['GITHUB_RUN_NUMBER'])
+          stem = f'Agent-Crypto-{version}-TEST-R{revision:02d}'
+          Path('delivery_stem.txt').write_text(stem, encoding='utf-8')
           zip_file = shared / f'{stem}.zip'
           with ZipFile(zip_file, 'w', ZIP_DEFLATED, compresslevel=9) as archive:
               for relative in paths:
@@ -79,7 +87,7 @@ jobs:
           (shared / f'{stem}.md').write_text(
               '# Agent-Crypto — livraison légère de la branche TEST\n\n'
               '**Statut : paquet de test, NON validé en production ni par Firefox utilisateur.**\n\n'
-              'Archive unique : `' + zip_file.name + '` (nom stable par revision Git).\n\n'
+              'Archive unique : `' + zip_file.name + '` (version et numéro de livraison lisibles).\n\n'
               + 'Le ZIP de ce répertoire contient uniquement les deux fichiers applicatifs ci-dessous, '
               'avec leur arborescence GitHub ROOT inchangée :\n\n'
               + ''.join('- `' + item + '`\n' for item in paths)
@@ -104,10 +112,10 @@ jobs:
           PY
           git -C shared config user.name "github-actions[bot]"
           git -C shared config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          SHORT_SHA="$(git -C candidate rev-parse --short=12 HEAD)"
+          STEM="$(cat delivery_stem.txt)"
           git -C shared add --sparse -- \
-            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMIN_TEST_${SHORT_SHA}.zip" \
-            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMIN_TEST_${SHORT_SHA}.md" \
+            "coordination/inter_ai_dialogues/agent_crypto/${STEM}.zip" \
+            "coordination/inter_ai_dialogues/agent_crypto/${STEM}.md" \
             coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_LATEST_TEST.md
           git -C shared diff --cached --check
           git -C shared commit -m "Deliver uniquely named Administrator test bundle to shared coordination"
