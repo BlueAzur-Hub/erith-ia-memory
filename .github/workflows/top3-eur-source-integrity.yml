@@ -1,0 +1,47 @@
+name: Top 3 EUR - verify historical source identity
+on:
+  push:
+    branches:
+      - test/top3-eur-source-integrity-20261027
+    paths:
+      - '.github/workflows/top3-eur-source-integrity.yml'
+permissions:
+  contents: write
+jobs:
+  fix-top3-eur:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/top3-eur-source-integrity-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /.github/validation/apply_top3_eur_integrity.py
+            /.github/validation/test_top3_eur_sources.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify regression exists before correction
+        run: |
+          if node --test .github/validation/test_top3_eur_sources.cjs; then
+            echo "Regression not reproduced on original code"
+            exit 1
+          fi
+      - name: Patch EUR Top 3 native source owner only
+        run: python3 .github/validation/apply_top3_eur_integrity.py
+      - name: Test EUR Top 3 and ensure exactly one application file changed
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --test .github/validation/test_top3_eur_sources.cjs
+          test "$(git diff --name-only)" = "public/agent_crypto_erith_ia/administrator/app.js"
+          git diff --check
+      - name: Commit tested Top 3 EUR code on isolated branch
+        run: |
+          git config user.name 'erith-ci'
+          git config user.email 'erith-ci@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/app.js
+          git commit -m "fix(agent-crypto): préserver la provenance historique EUR du Top 3"
+          git push origin HEAD:refs/heads/test/top3-eur-source-integrity-20261027
