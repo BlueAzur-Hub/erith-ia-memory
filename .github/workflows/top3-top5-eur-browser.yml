@@ -28,6 +28,9 @@ jobs:
           sparse-checkout: |
             /public/agent_crypto_erith_ia/administrator/
             /public/agent_crypto_erith_ia/trader/
+            /public/agent_crypto_erith_ia/data/crypto/latest.json
+            /public/agent_crypto_erith_ia/data/crypto/status.json
+            /public/agent_crypto_erith_ia/data/news/latest.json
           path: source
       - uses: actions/setup-node@v4
         with:
