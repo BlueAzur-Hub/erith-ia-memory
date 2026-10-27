@@ -1,0 +1,59 @@
+name: EUR-USD core candidate - isolated integration and commit
+on:
+  push:
+    branches:
+      - test/eur-usd-unified-historical-quotes
+    paths:
+      - '.github/workflows/eur-usd-core-candidate.yml'
+permissions:
+  contents: write
+jobs:
+  integrate-core:
+    if: github.ref == 'refs/heads/test/eur-usd-unified-historical-quotes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-unified-historical-quotes
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/validation/apply_quote_integrity.cjs
+            /.github/validation/test_quote_integrity.cjs
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+            /public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm unchanged base candidate app.js
+        run: |
+          test "$(git hash-object public/agent_crypto_erith_ia/administrator/app.js)" = 'c363b03c42803a5d1e66de8a441090150c5ef45d'
+      - name: Apply deterministic correction to the real source file
+        run: node .github/validation/apply_quote_integrity.cjs
+      - name: Syntax and behavioral tests
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --test .github/validation/test_quote_integrity.cjs
+          cd public/agent_crypto_erith_ia/administrator/js
+          node --test test-graph-native-usd-tooltip.cjs
+      - name: Commit the two actual corrected application files to TEST branch only
+        run: |
+          test "$GITHUB_REF" = 'refs/heads/test/eur-usd-unified-historical-quotes'
+          git config user.name 'erith-ci'
+          git config user.email 'erith-ci@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          git diff --cached --check
+          git commit -m "fix(currency): enforce dual-quote identity across all chart modes"
+          git push origin HEAD:refs/heads/test/eur-usd-unified-historical-quotes
+      - name: Preserve candidate files even if Git push is denied
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erith-dual-quote-core-candidate
+          path: |
+            public/agent_crypto_erith_ia/administrator/app.js
+            public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          retention-days: 14
