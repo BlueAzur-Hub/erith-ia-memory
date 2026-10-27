@@ -41,7 +41,17 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
       }));
       return {displayCurrency:globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||null,
         preset:s?.dataBroker?.comparison?.preset||null,liveOk:s?.liveOk||false,
-        chart:!!g,datasets};
+        chart:!!g,datasets,
+        scanner:s?.dataBroker?.chart?.result?.scanner ? {
+          requestedIds:s.dataBroker.chart.result.scanner.requestedIds||[],
+          unavailableIds:s.dataBroker.chart.result.scanner.unavailableIds||[],
+          rejected:s.dataBroker.chart.result.scanner.rejected||[],
+          historySummary:s.dataBroker.chart.result.scanner.historySummary||null
+        }:null,
+        comparisonStatus:s?.dataBroker?.comparison?.status||null,
+        scannerTransaction:typeof atlasScannerTransaction!=="undefined"&&atlasScannerTransaction
+         ? {phase:atlasScannerTransaction.phase,examined:atlasScannerTransaction.examined,directAttempts:atlasScannerTransaction.directAttempts,candidateIds:atlasScannerTransaction.candidateIds}
+         : null};
     });
     const unique=new Set(data.datasets.map(d=>d.id)).size===5;
     const sourceValid=data.datasets.every(d=>d.quote==="EUR"&&d.source.length>0&&d.points>=3
@@ -63,7 +73,7 @@ const lines=["Baisses 5 EUR 24h: "+(report.baisses5?"PASS":"NOT PROVEN"),
  "Volumes 5 EUR 24h: "+(report.volumes5?"PASS":"NOT PROVEN"),
  ...report.browsers.flatMap(b=>[
  b.name+" JS errors="+b.errors.length+(b.fatal?" FATAL "+b.fatal:""),
- ...b.steps.map(s=>b.name+" "+s.label+": "+s.datasets.length+"/5 "+s.displayCurrency+" quote="+s.datasets.map(d=>d.quote||"?").join(",")+" raw-valid="+s.sourceValid)
+ ...b.steps.map(s=>b.name+" "+s.label+": "+s.datasets.length+"/5 "+s.displayCurrency+" quote="+s.datasets.map(d=>d.quote||"?").join(",")+" raw-valid="+s.sourceValid+" missing="+(s.scanner?.unavailableIds||[]).join(",")+" rejected="+JSON.stringify(s.scanner?.rejected||[]).slice(0,2400))
  ])];
 await writeFile(join(out,"SUMMARY.md"),lines.join("\n")+"\n");
 console.log(lines.join("\n"));
