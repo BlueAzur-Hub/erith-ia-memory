@@ -113,5 +113,15 @@ jobs:
             coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_LATEST_TEST.md
           git -C shared diff --cached --check
           git -C shared commit -m "Deliver uniquely named Administrator test bundle to shared coordination"
-          git -C shared pull --rebase origin main
-          git -C shared push origin HEAD:main
+          # The main branch is also updated by market snapshot automation.
+          # Retry a compare-and-push race without force-pushing production.
+          for attempt in 1 2 3 4 5; do
+            git -C shared fetch origin main
+            git -C shared rebase origin/main
+            if git -C shared push origin HEAD:main; then
+              exit 0
+            fi
+            sleep "$(( attempt * 2 ))"
+          done
+          echo "Shared bundle was not published: main moved during all retries" >&2
+          exit 1
