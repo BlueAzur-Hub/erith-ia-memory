@@ -15892,7 +15892,7 @@ function atlasScannerStoredHistory(coin, period, tx = null) {
     current && Array.isArray(current.series) && current.series.length ? current : null,
     atlasGetStoredChartResult(coin, period, "binance"),
     atlasGetStoredChartResult(coin, period, "coingecko")
-  ].filter(Boolean);
+  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
 
   candidates.sort((a, b) => {
     const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
@@ -50572,7 +50572,14 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   // Bridge or CoinGecko fallback can influence the picture. Renderer, Base100,
   // workspace and Atlas remain untouched.
   const preset = String(state.dataBroker?.comparison?.preset || "");
-  if (Number(period || 1) === 1 && preset === "rank-5") {
+  // Top 3 EUR: the history must be EUR at source, independently of UI labels.
+  // Reject USD/USDT caches or transport responses rather than treating them as euros.
+  // Other modes retain their existing acquisition routes unchanged.
+  const top3Eur = preset === "rank-3"
+    && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "EUR";
+  const quoteMatchesTop3 = result => !top3Eur || atlasHistoricalDisplayQuote(result)?.currency === "EUR";
+  if (Number(period || 1) === 1 && preset === "rank-5"
+      && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "EUR") {
     try {
       await atlasRespectComparisonRequestSpacing(signal, period);
       const result = await atlasFetchTargetTop5BinanceEur24hTruth(coin, {
@@ -50584,7 +50591,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
     } catch (error) {
       if (atlasComparisonAbortError(error)) throw error;
       const storedTruth = atlasGetStoredChartResult(coin, period, "binance");
-      if (storedTruth?.series?.length) {
+      if (storedTruth?.series?.length && atlasHistoricalDisplayQuote(storedTruth)?.currency === "EUR") {
         return {
           coin,
           result: {
@@ -50599,18 +50606,44 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
           source: "binance-eur-direct-24h-preserved-cache-40369"
         };
       }
+      // Preserve the five selected assets. Switch providers only, never currencies.
+      let backupFailure = "";
+      try {
+        await atlasRespectComparisonRequestSpacing(signal, period);
+        const backup = await fetchCoinGeckoChartDirect(coin, period, {
+          signal, timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
+        });
+        if (atlasHistoricalDisplayQuote(backup)?.currency !== "EUR")
+          throw new Error("CoinGecko historique non certifie EUR");
+        atlasStoreChartResult(coin, period, backup, "coingecko");
+        return { coin, result: backup, attempts: 2, source: "coingecko-eur-direct-after-binance" };
+      } catch (fallbackError) {
+        if (atlasComparisonAbortError(fallbackError)) throw fallbackError;
+        backupFailure = String(fallbackError?.message || fallbackError || "indisponible");
+      }
+      const preservedEur = atlasGetStoredChartResult(coin, period, "coingecko");
+      if (preservedEur?.series?.length && atlasHistoricalDisplayQuote(preservedEur)?.currency === "EUR") {
+        return {
+          coin, result: {
+            ...preservedEur,
+            sourceMode: "browser-cache",
+            refreshWarning: "Binance et CoinGecko directs indisponibles - historique EUR conserve",
+            technicalReason: backupFailure
+          },
+          attempts: 2, source: "coingecko-eur-verified-cache"
+        };
+      }
       return {
         coin,
         result: {
-          series: [],
-          blocked: true,
+          series: [], blocked: true,
           sourceFamily: "binance",
           sourceMode: "binance-direct-klines",
-          reason: `24h Binance EUR direct indisponible · ${String(error?.message || error || "erreur inconnue")}`,
-          technicalReason: String(error?.message || error || "erreur inconnue")
+          reason: "Top 5 EUR 24h : aucune serie EUR certifiee disponible",
+          technicalReason: "Binance : " + String(error?.message || error || "inconnue")
+            + " / CoinGecko : " + backupFailure
         },
-        attempts: 1,
-        source: "binance-eur-direct-24h-truth-failed"
+        attempts: 2, source: "eur-source-unavailable"
       };
     }
   }
@@ -50620,7 +50653,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const storedCandidates = [storedBinance, storedCoinGecko]
     .filter(Boolean)
     .sort((a, b) => Number(b.savedAt || 0) - Number(a.savedAt || 0));
-  const freshStored = storedCandidates.find(result => !atlasChartNeedsRefresh(result, period));
+  const freshStored = storedCandidates.find(result => quoteMatchesTop3(result) && !atlasChartNeedsRefresh(result, period));
   if (freshStored) return { coin, result: freshStored, attempts: 0, source: "fresh-cache" };
 
   let attempts = 0;
@@ -50634,6 +50667,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
         signal,
         timeoutMs: 7_000
       });
+      if (!quoteMatchesTop3(result)) throw new Error("Top 3 EUR : devise historique Bridge non certifiée EUR");
       const family = String(result?.bridgeHistory?.provider || "").toLowerCase() === "binance"
         ? "binance"
         : "coingecko";
@@ -50652,6 +50686,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
       signal,
       timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
     });
+    if (!quoteMatchesTop3(result)) throw new Error("Top 3 EUR : devise historique Binance non certifiée EUR");
     atlasStoreChartResult(coin, period, result, "binance");
     return { coin, result, attempts, source: "binance-direct" };
   } catch (error) {
@@ -50671,6 +50706,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
         signal,
         timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
       });
+      if (!quoteMatchesTop3(result)) throw new Error("Top 3 EUR : devise historique CoinGecko non certifiée EUR");
       atlasStoreChartResult(coin, period, result, "coingecko");
       return { coin, result, attempts, source: "coingecko-direct" };
     } catch (error) {
@@ -50681,7 +50717,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
     }
   }
 
-  const stored = storedCandidates[0] || null;
+  const stored = storedCandidates.find(quoteMatchesTop3) || null;
   if (stored) {
     const family = atlasChartResultSourceFamily(stored);
     return {
@@ -54237,6 +54273,8 @@ async function atlasScannerFetchDirect(tx, coin) {
       signal: tx.controller.signal,
       timeoutMs: 12000
     });
+    if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+      throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
     if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
       throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
     }
@@ -54256,6 +54294,8 @@ async function atlasScannerFetchDirect(tx, coin) {
         timeoutMs: ATLAS_SCANNER_BRIDGE_FAST_TIMEOUT_MS,
         allowBinance: false
       });
+      if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+        throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
       if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
         throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
       }
@@ -54285,6 +54325,8 @@ async function atlasScannerFetchDirect(tx, coin) {
         signal: tx.controller.signal,
         timeoutMs: 12000
       });
+      if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+        throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
       if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
         throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
       }

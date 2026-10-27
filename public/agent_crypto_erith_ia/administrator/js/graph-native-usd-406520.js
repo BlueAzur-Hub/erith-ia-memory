@@ -6,7 +6,6 @@ const canonicalTop5History=(period=null)=>{if(usd())return false;try{const p=Num
 const money=v=>{const n=Number(v);if(!Number.isFinite(n))return"—";const a=Math.abs(n),d=a>=1000?2:a>=1?4:a>=.01?6:a>=.0001?8:10;return new Intl.NumberFormat("fr-FR",{style:"currency",currency:"USD",minimumFractionDigits:Math.min(2,d),maximumFractionDigits:d}).format(n)};
 const storage=(c,d,f="coingecko")=>`${String(c?.id||"unknown").toLowerCase()}:USD:${String(f||"coingecko").toLowerCase()}:${Number(d||1)}`;
 const context=(ids=[],d=1)=>{const x=(Array.isArray(ids)?ids:[]).filter(Boolean),p=Number(d||1);return !x.length?`empty:${p}:USD`:x.length===1?`single:${x[0]}:${p}:USD`:`comparison:${x.join(",")}:${p}:USD`};
-const text=v=>!usd()?v:String(v??"").replaceAll("Prix EUR","Prix USD").replaceAll("PRIX EUR","PRIX USD").replaceAll("CoinGecko EUR","CoinGecko USD").replaceAll("Binance EUR DIRECT","CoinGecko USD DIRECT");
 async function fetchUsd(c,d,opt={}){if(!c?.id)throw Error("actif absent");const p=Number(d||1),api=typeof atlasChartApiDays==="function"?atlasChartApiDays(p):(p===36500?"max":String(p)),url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=usd&days=${encodeURIComponent(api)}&precision=full`,payload=await atlasFetchJson(url,{signal:opt.signal||null,timeoutMs:Number(opt.timeoutMs||ATLAS_CHART_DIRECT_TIMEOUT_MS)}),series=atlasNormalizeChartPayload(payload),volumeSeries=atlasNormalizeVolumePayload(payload),integrity=atlasValidateChartSeries({c,days:p,prices:series,payload,sourceMode:"coingecko-direct",quoteCurrency:"USD",historySourceFamily:"coingecko",historyInstrument:"market_chart?vs_currency=usd"});if(!integrity.ok)throw Error(`série CoinGecko USD refusée · ${integrity.reason}`);return{series,volumeSeries,source:"CoinGecko market_chart USD · direct",sourceFamily:"coingecko",currency:"USD",quoteCurrency:"USD",blocked:false,kind:"coingecko-direct",sourceMode:"coingecko-direct",periodDays:p,apiDays:api,pointCount:series.length,generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),integrity}}
 function historicalUsdCertified(result){
  if(!result||result.blocked||!Array.isArray(result.series)||!result.series.length)return false;
@@ -17,7 +16,6 @@ async function cmp(c,p,opt={}){try{if(typeof atlasRespectComparisonRequestSpacin
 async function scan(tx,c){try{if(typeof atlasRespectComparisonRequestSpacing==="function")await atlasRespectComparisonRequestSpacing(tx?.controller?.signal||null,tx?.period);const result=await fetchUsd(c,tx?.period,{signal:tx?.controller?.signal||null,timeoutMs:12000});atlasStoreChartResult(c,tx?.period,result,"coingecko");return{result,source:"direct",provider:"coingecko-usd-browser"}}catch(e){if(e?.name==="AbortError"||tx?.controller?.signal?.aborted)throw e;const s=atlasGetStoredChartResult(c,tx?.period,"coingecko");return historicalUsdCertified(s)?{result:{...s,source:"Cache navigateur · série CoinGecko USD"},source:"cache",provider:"coingecko-usd-cache"}:{result:null,source:"blocked",error:e}}}
 function live(c,p=1){if(!c||Number(p||1)!==1)return null;const price=c.priceUsd==null?NaN:Number(c.priceUsd),change24h=c.change24h==null||String(c.change24h).trim()===""?NaN:Number(c.change24h);if(!(Number.isFinite(price)&&price>0&&Number.isFinite(change24h)))return null;const t=Date.parse(String(c.spotUpdatedAt||c.lastUpdated||c.timestamp||"")),timestamp=Number.isFinite(t)?t:Date.now();return{quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:c.id||null,price,change24h,bid:null,ask:null,timestamp,source:"CoinGecko USD snapshot"},price,change24h}}
 function wrap(n,f){const o=globalThis[n];if(typeof o!=="function")return false;if(o[W])return true;O[n]=o;const x=f(o);Object.defineProperty(x,W,{value:true});globalThis[n]=x;return true}
-function withFmt(cb){if(!usd()||typeof globalThis.atlasFormatEUR!=="function")return cb();const s=globalThis.atlasFormatEUR;try{globalThis.atlasFormatEUR=money;return cb()}finally{globalThis.atlasFormatEUR=s}}
 const compactUsd=v=>{const n=Number(v);return Number.isFinite(n)?new Intl.NumberFormat("fr-FR",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:2}).format(n):"—"};
 
 /* Canonical Top 5 has EUR historical series. The floatboard may show a real
@@ -222,7 +220,8 @@ wrap("atlasChartOverlaySolo",o=>function(...a){
    && Number(state?.chartPeriodDays||1)===1;
  const parity=usd()&&!verified&&legacyPreset&&!verifiedUsdChart;
  if(usd()&&parity)return top5Tooltip.call(this,o,a);
- const r=parity?o.apply(this,a):withFmt(()=>o.apply(this,a));
+ // The app.js renderer owns currency-qualified values. Never swap a global EUR formatter.
+ const r=o.apply(this,a);
  if(usd()&&typeof document!=="undefined"){
   const root=document.getElementById("atlasChartTooltip");
   if(verified&&root&&!root.hidden){
