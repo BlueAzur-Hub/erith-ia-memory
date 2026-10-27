@@ -8,6 +8,14 @@
 
 > **À LA REPRISE :** lire ce fichier EN ENTIER, puis vérifier le code courant, le Notion et les pièces citées avant toute action. **À LA FIN :** mettre à jour CE MÊME FICHIER (pas un nouvel « état final » dispersé) avec ce qui a été fait, les preuves et ce qui reste. Si la lecture ou l'écriture du dépôt est impossible, le dire — ne jamais prétendre que la passation a été faite.
 
+## POINT D'EXÉCUTION — 27 octobre 2026 · Firefox EUR : preuves fournisseur en cours
+
+- Le code existant a été relu à partir du **blob réel de la branche TEST** (`administrator/app.js` blob `c10ba1d3959b0111ff9666385c7c6817843eec38`), sans reprise d'archive ZIP ancienne et sans télécharger tout le dépôt.
+- Le rapport brut Firefox/Chromium du run [40450584955](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40450584955) confirme **Baisses 5 EUR 24h = 2/5** (GRAM/NEAR) et **Volumes 5 EUR 24h = 5/5** ; il ne donne pas les réponses HTTP des tentatives sur **RAIN, CC, CRO**. L'identité CoinGecko `the-open-network` et les bougies `GRAM/USDT` sont cohérentes avec le changement officiel TON → GRAM réalisé par Binance le 2 juillet 2026 : ne pas les rejeter comme conflit d'identité sans nouvelle preuve.
+- **Modification réelle et minimale** : un seul fichier de test existant `.github/validation/browser_baisses_volumes_eur.mjs` enrichi de la collecte des réponses CoinGecko/Binance et erreurs réseau, commit [f0db66a](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/f0db66a718222bfeba24d38e8d4fb27b8aa8b60b) sur **test/euro-first-then-usd-integrity-20261027**. Pas de modification d'`app.js`, Market Core, caches, production ou archives.
+- Le workflow Firefox/Chromium a démarré : [run 40479292994](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40479292994) ; **en cours à la dernière vérification, aucune issue positive revendiquée**. Une PR de diagnostic devenue redondante (#694) a été fermée sans fusion.
+- **Suite justifiée, pas hypothétique** : lire les motifs par actif dans l'artefact du run, puis corriger exclusivement le trajet d'acquisition qui échoue, sans abaisser les critères de validité et sans substitution de crypto ; poursuivre les modes EUR puis USD. **Prévisualisation Firefox isolée toujours NON LIVRÉE.**
+
 ## CHECKPOINT PRIORITAIRE — 27 octobre 2026 · LIVRAISON NON RÉALISÉE / BRANCHE TEST UNIQUEMENT
 
 **Consigne du créateur confirmée :** la mémoire doit être déposée dans **CE répertoire partagé** puis reliée au Notion maître **dans un bloc dépliant modifiable, JAMAIS en commentaire**. Les résultats ne sont pas livrés tant que Christophe ne peut pas ouvrir dans Firefox une URL d'Interface de test distincte de la production.
