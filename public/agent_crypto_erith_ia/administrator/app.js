@@ -50572,6 +50572,12 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   // Bridge or CoinGecko fallback can influence the picture. Renderer, Base100,
   // workspace and Atlas remain untouched.
   const preset = String(state.dataBroker?.comparison?.preset || "");
+  // Top 3 EUR: the history must be EUR at source, independently of UI labels.
+  // Reject USD/USDT caches or transport responses rather than treating them as euros.
+  // Other modes retain their existing acquisition routes unchanged.
+  const top3Eur = preset === "rank-3"
+    && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "EUR";
+  const quoteMatchesTop3 = result => !top3Eur || atlasHistoricalDisplayQuote(result)?.currency === "EUR";
   if (Number(period || 1) === 1 && preset === "rank-5") {
     try {
       await atlasRespectComparisonRequestSpacing(signal, period);
@@ -50620,7 +50626,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const storedCandidates = [storedBinance, storedCoinGecko]
     .filter(Boolean)
     .sort((a, b) => Number(b.savedAt || 0) - Number(a.savedAt || 0));
-  const freshStored = storedCandidates.find(result => !atlasChartNeedsRefresh(result, period));
+  const freshStored = storedCandidates.find(result => quoteMatchesTop3(result) && !atlasChartNeedsRefresh(result, period));
   if (freshStored) return { coin, result: freshStored, attempts: 0, source: "fresh-cache" };
 
   let attempts = 0;
@@ -50634,6 +50640,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
         signal,
         timeoutMs: 7_000
       });
+      if (!quoteMatchesTop3(result)) throw new Error("Top 3 EUR : devise historique Bridge non certifiée EUR");
       const family = String(result?.bridgeHistory?.provider || "").toLowerCase() === "binance"
         ? "binance"
         : "coingecko";
@@ -50652,6 +50659,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
       signal,
       timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
     });
+    if (!quoteMatchesTop3(result)) throw new Error("Top 3 EUR : devise historique Binance non certifiée EUR");
     atlasStoreChartResult(coin, period, result, "binance");
     return { coin, result, attempts, source: "binance-direct" };
   } catch (error) {
@@ -50671,6 +50679,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
         signal,
         timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
       });
+      if (!quoteMatchesTop3(result)) throw new Error("Top 3 EUR : devise historique CoinGecko non certifiée EUR");
       atlasStoreChartResult(coin, period, result, "coingecko");
       return { coin, result, attempts, source: "coingecko-direct" };
     } catch (error) {
@@ -50681,7 +50690,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
     }
   }
 
-  const stored = storedCandidates[0] || null;
+  const stored = storedCandidates.find(quoteMatchesTop3) || null;
   if (stored) {
     const family = atlasChartResultSourceFamily(stored);
     return {
