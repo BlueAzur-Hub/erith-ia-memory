@@ -4337,6 +4337,7 @@ function atlasChartProviderLabel(result = null) {
   const family = atlasChartResultSourceFamily(result);
   if (family === "okx") return "OKX Spot";
   if (family === "binance") return "Binance";
+  if (family === "kraken") return "Kraken";
   if (family === "mixed") return "Sources mixtes";
   return "CoinGecko";
 }
@@ -5684,15 +5685,17 @@ function atlasHistoryQuoteProvenance(record, expectedFamily = null) {
   const directPair = binance && source.match(/\b[A-Z0-9]{2,15}\/?(EUR)\b/i);
   const derivedEur = binance && /derived-klines/.test(mode) && /\bEUR\/USDT\b/i.test(source);
   const instrumentEur = declaredFamily === "binance" && /^[A-Z0-9]{2,15}EUR$/.test(instrument);
+  const krakenEur = declaredFamily === "kraken" && /kraken/i.test(source) && /^[A-Z0-9]{2,15}\/EUR$/.test(instrument);
   const sourceCurrency = cg ? cg[1].toUpperCase()
-    : directPair || derivedEur || instrumentEur ? "EUR" : null;
+    : directPair || derivedEur || instrumentEur || krakenEur ? "EUR" : null;
   const claims = new Set([...explicit, ...(sourceCurrency ? [sourceCurrency] : [])]);
   const conflict = claims.size > 1;
   const currency = conflict || claims.size !== 1 ? null : [...claims][0];
   const sourceFamily = currency && sourceCurrency === currency && cg
     && (declaredFamily === "coingecko" || !declaredFamily) ? "coingecko"
     : currency && sourceCurrency === currency && (directPair || derivedEur || instrumentEur)
-      && (declaredFamily === "binance" || !declaredFamily) ? "binance" : null;
+      && (declaredFamily === "binance" || !declaredFamily) ? "binance"
+      : currency && sourceCurrency === currency && krakenEur ? "kraken" : null;
   return { quoteCurrency: currency, historySourceFamily: sourceFamily, historyInstrument: instrument || null,
     quoteConflict: conflict, sourceDeclared: !!sourceFamily };
 }
@@ -5829,6 +5832,7 @@ function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFa
   const local = atlasReadLocalChartStore();
   const cacheLabel = family === "binance"
     ? "Cache navigateur · chandelles Binance"
+    : family === "kraken" ? "Cache navigateur · chandelles Kraken"
     : "Cache navigateur · série CoinGecko";
 
   // Read the quote-scoped slot first, then legacy without deleting or
@@ -13793,7 +13797,7 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
       volume: Number.isFinite(Number(entry?.atlasMarketMetric)) && preset === "volume"
         ? Number(entry.atlasMarketMetric)
         : Number(marketCoin?.volume24h),
-      timestamp: Number(metrics.lastTimestamp || 0),
+      timestamp: Number(metrics.firstTimestamp || entry?.result?.series?.[0]?.[0] || 0),
       points: Number(metrics.pointCount || entry?.result?.series?.length || 0),
     };
   });
@@ -15912,7 +15916,8 @@ function atlasScannerStoredHistory(coin, period, tx = null) {
   const candidates = [
     current && Array.isArray(current.series) && current.series.length ? current : null,
     atlasGetStoredChartResult(coin, period, "binance"),
-    atlasGetStoredChartResult(coin, period, "coingecko")
+    atlasGetStoredChartResult(coin, period, "coingecko"),
+    atlasGetStoredChartResult(coin, period, "kraken")
   ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
 
   candidates.sort((a, b) => {
@@ -49097,13 +49102,14 @@ function atlasChartPreferredSourceFamily(coinOrId) {
 
 function atlasChartResultSourceFamily(result = null) {
   const explicitFamily = String(result?.sourceFamily || "").toLowerCase();
-  if (explicitFamily === "binance" || explicitFamily === "coingecko" || explicitFamily === "okx") return explicitFamily;
+  if (["binance", "coingecko", "okx", "kraken"].includes(explicitFamily)) return explicitFamily;
   if (result?.comparison && Array.isArray(result.entries)) {
     const families = new Set(result.entries.map(entry => atlasChartResultSourceFamily(entry?.result)));
     return families.size === 1 ? [...families][0] : "mixed";
   }
   const mode = String(result?.originalSourceMode || result?.sourceMode || "").toLowerCase();
   if (mode.includes("binance")) return "binance";
+  if (mode.includes("kraken")) return "kraken";
   if (mode.includes("coingecko")) return "coingecko";
   return "coingecko";
 }
@@ -49128,7 +49134,8 @@ function atlasChartSourceMode(result = null) {
     "binance-direct-klines",
     "binance-derived-klines",
     "binance-scanner-direct-klines",
-    "binance-scanner-derived-klines"
+    "binance-scanner-derived-klines",
+    "kraken-scanner-direct-ohlc"
   ].includes(mode)) return "direct";
   if (mode.startsWith("bridge-")) {
     const cache = result?.bridgeHistory?.cache;
@@ -54254,6 +54261,73 @@ async function atlasFetchBridgeHistory(c, days, options = {}) {
   }
 }
 
+// Native public EUR candles are a final, asset-checked historical source when
+// CoinGecko is rate-limited and the existing Binance route has no usable pair.
+// Never fill absent trades, borrow another token's data, or relabel USD as EUR.
+async function atlasScannerFetchKrakenEur(coin, days, options = {}) {
+  const period = Number(days || 1);
+  const intervals = { 1: 5, 7: 15, 30: 60, 60: 240, 90: 240, 365: 1440 };
+  const interval = intervals[period];
+  if (!interval) throw new Error("Kraken OHLC : historique indisponible pour cette période");
+  const symbol = atlasScannerSafeExchangeSymbol(coin);
+  if (!symbol) throw new Error("Kraken OHLC : symbole Market ambigu");
+  const referencePrice = Number(coin?.priceEur);
+  if (!Number.isFinite(referencePrice) || referencePrice <= 0)
+    throw new Error("Kraken OHLC : prix de référence Market EUR absent");
+
+  const registry = await atlasFetchJson(
+    "https://api.kraken.com/0/public/AssetPairs?pair=" + encodeURIComponent(symbol + "EUR"),
+    options
+  );
+  if (!registry || (Array.isArray(registry.error) && registry.error.length))
+    throw new Error("Kraken AssetPairs : " + String(registry?.error?.join(", ") || "indisponible"));
+  const pairs = Object.entries(registry.result || {}).filter(([, entry]) =>
+    String(entry?.wsname || "").toUpperCase() === symbol + "/EUR"
+    && String(entry?.status || "online").toLowerCase() === "online"
+  );
+  if (pairs.length !== 1) throw new Error("Kraken : paire EUR absente ou ambiguë");
+  const [pairCode, pair] = pairs[0];
+
+  const since = Math.floor(Date.now() / 1000) - period * 86400 - interval * 120;
+  const payload = await atlasFetchJson(
+    "https://api.kraken.com/0/public/OHLC?pair=" + encodeURIComponent(pairCode)
+    + "&interval=" + interval + "&since=" + since,
+    options
+  );
+  if (!payload || (Array.isArray(payload.error) && payload.error.length))
+    throw new Error("Kraken OHLC : " + String(payload?.error?.join(", ") || "indisponible"));
+  const marketKeys = Object.keys(payload.result || {}).filter(key => key !== "last");
+  if (marketKeys.length !== 1) throw new Error("Kraken OHLC : marché non identifiable");
+  const candles = payload.result[marketKeys[0]];
+  if (!Array.isArray(candles)) throw new Error("Kraken OHLC : chandelles absentes");
+
+  const series = atlasSanitizeChartRows(candles.map(row => [
+    Number(row?.[0]) * 1000, Number(row?.[4])
+  ]));
+  const volumeSeries = candles.map(row => [
+    Number(row?.[0]) * 1000, Number(row?.[6]) * Number(row?.[5])
+  ]).filter(point => Number.isFinite(point[0]) && point[0] > 0
+    && Number.isFinite(point[1]) && point[1] >= 0);
+  const lastPrice = Number(series[series.length - 1]?.[1]);
+  if (!Number.isFinite(lastPrice) || Math.abs(lastPrice / referencePrice - 1) > 0.15)
+    throw new Error("Kraken OHLC : prix final incompatible avec le Market EUR");
+  const instrument = String(pair.wsname).toUpperCase();
+  const integrity = atlasValidateChartSeries({
+    c: coin, days: period, prices: series, sourceMode: "kraken-scanner-direct-ohlc",
+    quoteCurrency: "EUR", historySourceFamily: "kraken", historyInstrument: instrument
+  });
+  if (!integrity.ok) throw new Error("Kraken OHLC : " + integrity.reason);
+  return {
+    series, volumeSeries, source: "Kraken Spot " + instrument + " · OHLC public EUR",
+    sourceFamily: "kraken", sourceMode: "kraken-scanner-direct-ohlc",
+    currency: "EUR", quoteCurrency: "EUR", historyInstrument: instrument,
+    periodDays: period, apiDays: period, interval: String(interval) + "m",
+    pointCount: series.length,
+    generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(),
+    integrity
+  };
+}
+
 async function atlasScannerFetchDirect(tx, coin) {
   await atlasRespectComparisonRequestSpacing(tx.controller.signal, tx.period);
   const errors = [];
@@ -54380,6 +54454,23 @@ async function atlasScannerFetchDirect(tx, coin) {
     }
   } else {
     errors.push("Binance : paire non validée pour cet actif (aucune substitution)");
+  }
+
+  // Real Kraken EUR candles, after the existing acquisition routes failed.
+  // This route cannot select another coin and cannot manufacture missing rows.
+  try {
+    const result = await atlasScannerFetchKrakenEur(coin, tx.period, {
+      signal: tx.controller.signal, timeoutMs: 12000
+    });
+    if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+      throw new Error("Kraken : provenance EUR non certifiée");
+    const coverage = atlasScannerSeriesCoversWindow(result, tx);
+    if (!coverage.ok) throw new Error(coverage.reason);
+    atlasStoreChartResult(coin, tx.period, result, "kraken");
+    return { result, source: "direct", provider: "kraken-browser" };
+  } catch (error) {
+    if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+    errors.push("Kraken navigateur : " + String(error?.message || error));
   }
 
   if (errors.some(message => /429|too many/i.test(message))) {
