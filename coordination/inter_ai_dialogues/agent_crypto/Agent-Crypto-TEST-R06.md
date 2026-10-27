@@ -2,7 +2,7 @@
 
 **Statut : paquet de test, NON validé en production ni par Firefox utilisateur.**
 
-Archive unique : `Agent-Crypto-TEST-R06.zip` (version et numéro de livraison lisibles).
+Archive unique : `AGENT_CRYPTO_ADMINISTRATOR_40.6.640_KRAKEN_EUR_HISTORICAL_OHLC_CACHE_FRESHNESS_TEST_2_FILES.zip` (version et numéro de livraison lisibles).
 
 Le ZIP de ce répertoire contient uniquement les deux fichiers applicatifs ci-dessous, avec leur arborescence GitHub ROOT inchangée :
 

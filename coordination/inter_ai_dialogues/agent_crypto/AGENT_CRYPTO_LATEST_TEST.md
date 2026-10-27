@@ -1,6 +1,6 @@
 # Agent-Crypto — derniere livraison TEST
 
-**ZIP actuel :** [`Agent-Crypto-TEST-R06.zip`](./Agent-Crypto-TEST-R06.zip)
+**ZIP actuel :** [`AGENT_CRYPTO_ADMINISTRATOR_40.6.640_KRAKEN_EUR_HISTORICAL_OHLC_CACHE_FRESHNESS_TEST_2_FILES.zip`](./AGENT_CRYPTO_ADMINISTRATOR_40.6.640_KRAKEN_EUR_HISTORICAL_OHLC_CACHE_FRESHNESS_TEST_2_FILES.zip)
 
 **Manifeste :** [`Agent-Crypto-TEST-R06.md`](./Agent-Crypto-TEST-R06.md)
 
