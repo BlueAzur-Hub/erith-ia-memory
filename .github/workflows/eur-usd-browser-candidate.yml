@@ -1,0 +1,63 @@
+name: EUR-USD dual-quote candidate - Firefox and Chromium
+on:
+  push:
+    branches:
+      - test/eur-usd-unified-historical-quotes
+    paths:
+      - '.github/workflows/eur-usd-browser-candidate.yml'
+permissions:
+  contents: read
+jobs:
+  verify-rendered-quote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout smoke verifier
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/validation/eur_usd_browser_check.mjs
+          path: harness
+      - name: Checkout real corrected Administrator from isolated branch
+        uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-unified-historical-quotes
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/index.html
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/*.css
+            /public/agent_crypto_erith_ia/administrator/build.json
+            /public/agent_crypto_erith_ia/administrator/js/
+            /public/agent_crypto_erith_ia/administrator/css/
+            /public/agent_crypto_erith_ia/administrator/assets/aether/
+            /public/agent_crypto_erith_ia/administrator/views/
+            /public/agent_crypto_erith_ia/data/crypto/latest.json
+            /public/agent_crypto_erith_ia/data/crypto/status.json
+            /public/agent_crypto_erith_ia/data/news/latest.json
+            /public/agent_crypto_erith_ia/trader/*.js
+          path: source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser and chart dependencies
+        run: |
+          npm install --prefix harness/.github/validation --no-save --no-package-lock playwright@1.56.1 chart.js@4.4.9
+          npx --prefix harness/.github/validation playwright install --with-deps chromium firefox
+      - name: Serve production-shaped build locally without deployment
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory source > /tmp/erith-server.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/public/agent_crypto_erith_ia/administrator/index.html >/dev/null && break || sleep 1; done
+      - name: Inspect dataset quote identity through UI selector in both browsers
+        run: node harness/.github/validation/eur_usd_browser_check.mjs browser-results
+      - name: Preserve failures and screenshots, never deploy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erith-eur-usd-dual-quote-browser-results
+          path: browser-results/
+          if-no-files-found: warn
+          retention-days: 14
