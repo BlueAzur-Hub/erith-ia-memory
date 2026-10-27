@@ -31,7 +31,6 @@ jobs:
           sparse-checkout: |
             /public/agent_crypto_erith_ia/administrator/app.js
             /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
-            /public/agent_crypto_erith_ia/administrator/index.html
           path: candidate
 
       - name: Validate application JavaScript without altering it
@@ -57,7 +56,6 @@ jobs:
           from hashlib import sha256
           import subprocess
           import os
-          import re
 
           root = Path('candidate')
           shared = Path('shared/coordination/inter_ai_dialogues/agent_crypto')
@@ -67,12 +65,8 @@ jobs:
           ]
           shared.mkdir(parents=True, exist_ok=True)
           branch_sha = subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip()
-          html = (root / 'public/agent_crypto_erith_ia/administrator/index.html').read_text(encoding='utf-8')
-          match = re.search(r'build:"(\d+\.\d+\.\d+)"', html)
-          assert match, 'Missing canonical Administrator build in index.html'
-          version = match.group(1)
           revision = int(os.environ['GITHUB_RUN_NUMBER'])
-          stem = f'Agent-Crypto-{version}-TEST-R{revision:02d}'
+          stem = f'Agent-Crypto-TEST-R{revision:02d}'
           Path('delivery_stem.txt').write_text(stem, encoding='utf-8')
           zip_file = shared / f'{stem}.zip'
           with ZipFile(zip_file, 'w', ZIP_DEFLATED, compresslevel=9) as archive:
