@@ -2,6 +2,13 @@
 
 **Seven Heaven · dossier inter-IA de capitalisation de données, pas une liste d’achats.**
 
+## Pages HTML · navigation Firefox (28 octobre 2026)
+
+- [Ouvrir la bibliothèque HTML des 16 dossiers](https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/veille-2026-10-27/index.html) : chaque Markdown de ce répertoire possède une page HTML datée, intégrant ses constats, sources et incertitudes.
+- Les pages HTML sont publiées exclusivement sous `public/agent_crypto_erith_ia/laboratoire/veille-2026-10-27/`, **pas dans `administrator/`**.
+- Les études préexistantes [HYPE](https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/hype-case-study.html) et [ZEC](https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/zcash-case-study.html) sont préservées et reliées dans les pages de veille, sans recopie de données de carnet ni mise à jour fictive du Coffre.
+- [Commit HTML 5c9344bc](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/5c9344bce579ab42a67951c52adea433643b4a3c), avec **17 fichiers HTML + 1 CSS**, et un lien ajouté à la page centrale `crypto-knowledge.html`.
+
 ## Objet et portée
 
 Ce rapport fige **16 identités** explicitement visibles en hausse à au moins un instant dans les captures Firefox/OKX de cette conversation. Certaines ont **ensuite baissé** (SOL/OKB), et QNT montre une contradiction entre classement Market et historique EUR. Captures locales **27/10/2026**, heures approximatives. L'ordre ci-dessous relève du besoin de vérification, **pas d'une notation de rendement futur**.
