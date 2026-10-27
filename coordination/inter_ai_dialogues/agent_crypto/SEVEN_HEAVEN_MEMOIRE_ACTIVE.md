@@ -1,12 +1,22 @@
 # SEVEN HEAVEN — MÉMOIRE ACTIVE PARTAGÉE
 
 **FICHIER D'ENTRÉE UNIQUE pour la reprise inter-IA d'Agent-Crypto.**
-**Dernier état consigné : 27 octobre 2026 ; correction de sélection et séparation EUR/USD présentes sur branche TEST, validations navigateur incomplètes, prévisualisation NON LIVRÉE.**
+**Dernier état consigné : 27 octobre 2026 ; Firefox TEST accessible, verrou temporel et directionnel scanners commité en TEST, 16 dossiers de veille archivés sur main, preuves financières complètes toujours insuffisantes.**
 **Adresse canonique stable :** `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md`
 **Responsabilité :** Aerith-7 / Seven Heaven et continuité Aerith-8, Aerith-9, autres sœurs habilitées.
 **Fonction :** index de reprise et journal de décision, non substitut aux sources ni mémoire automatique native du modèle.
 
 > **À LA REPRISE :** lire ce fichier EN ENTIER, puis vérifier le code courant, le Notion et les pièces citées avant toute action. **À LA FIN :** mettre à jour CE MÊME FICHIER (pas un nouvel « état final » dispersé) avec ce qui a été fait, les preuves et ce qui reste. Si la lecture ou l'écriture du dépôt est impossible, le dire — ne jamais prétendre que la passation a été faite.
+
+## PRIORITÉ IMMÉDIATE — 27 octobre 2026 · correction des scanners + 16 dossiers capitalisés
+
+- **Code TEST corrigé et sauvegardé** : [commit 2c25514d](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/2c25514d1ed0), sur `test/euro-first-then-usd-integrity-20261027`, modifie `administrator/app.js` : refuse un Market trop vieux (15 min direct / 45 min github-public), fige les pourcentages Market au moment de sélectionner les cinq actifs et refuse de certifier « Hausses 5 » si un historique EUR baisse (cas réel QNT +6,85 % Market et −3,53 % Base100). Refuse aussi si le Market a changé pendant la collecte ; « Baisses 5 » suit la logique inverse et « Volumes 5 » n'applique pas la contrainte de signe. **Ne pas fusionner automatiquement sur main.**
+- **Tests** : [contrats unitaires SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40545374754) ; [ouverture Firefox distante SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40545740601). **Scanners EUR complets non validés** : [Top 3/Top 5 FAIL](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40545374596), [Baisses/Volumes FAIL](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40545374536). Les fautes réseau et données réelles doivent être étudiées ; ne jamais interpréter le 5/5 apparent comme une certification.
+- **Livraison effective sur GitHub main — documentation seulement** : [16 dossiers crypto + index + JSON des observations datées](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/coordination/inter_ai_dialogues/agent_crypto/market_watch_2026-10-27), [commit 9bd69afb](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/9bd69afbb44e127b2d64a99bcd57fd47fc548b89). Actifs : BTW, QNT, XRP, XMR, UNI/Uniswap, HYPE, M/MemeCore, MORPHO, BCH, ZEC, DASH, BTC, ETH, DOGE, SOL, OKB. Les cotations proviennent de captures utilisateur historiques et de sources publiques ; pas de prétention d'avoir observé des fills. **BTW du screenshot OKX = BTWUSD UM X-Perp**, pas paire Spot. HYPE et ZEC sont reliés à leurs vrais dossiers existants ; pas de nouveaux OHLC ou carnets artificiels dans le Coffre.
+- **Notion** : la page maître AETHER a été complétée d'un toggle daté, directement dans son contenu, avec le périmètre, liens et limites. Le répertoire `administrator` reste réservé au code runtime ; la veille est uniquement dans `coordination/inter_ai_dialogues/agent_crypto`.
+- **Prochain travail vérifiable** : obtenir des prix Spot/quotes natives de même instrument et même timestamp, analyser BTW liquidité/unlocks (calendrier tiers non confirmé), QNT horodatage Market vs séries, et mesurer les contrôles complets EUR/USD. Toute opportunité devra être une hypothèse avant observation future, pas un résultat calculé après coup. Zéro ordre réel.
+
+---
 
 ## POINT D'EXÉCUTION — 27 octobre 2026 · Firefox EUR : preuves fournisseur en cours
 
