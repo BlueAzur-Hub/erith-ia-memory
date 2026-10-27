@@ -5017,11 +5017,10 @@ function atlasSelectTopComparison(limit = 3) {
   const coins = atlasCuratedTopCoins(count);
   const ids = coins.map(coin => coin.id);
 
-  if (ids.length < 2) {
+  // A Top 3/5 chart must never present fewer curves as a complete rank basket.
+  if (ids.length !== count || expectedIds.length !== count) {
     if (els.chartCaption) {
-      atlasSetChartCaptionText(
-        `Preset Top ${count} indisponible · ${ids.length}/${expectedIds.length} actifs canoniques reçus.`
-      );
+      atlasSetChartCaptionText(`Top ${count} · classement en cours de mise à jour`);
     }
     return;
   }
@@ -46552,7 +46551,7 @@ function atlasOperatorGraphIntentCommitSemantic(control) {
   }
 
   if (control.id === "btnChartSolo") {
-    const coin = getSelectedCoin() || state.coins?.[0] || null;
+    const coin = (state.coins || []).find(coin => coin.id === "bitcoin") || null;
     if (!coin?.id) return false;
     return atlasOperatorGraphIntentPatch({ selectedCoinId: coin.id, comparisonIds: [coin.id], comparisonPreset: "solo", selectionCleared: false, selectionIntent: "selected" }, "user-solo");
   }
@@ -57505,7 +57504,7 @@ els.btnChartSolo?.addEventListener("click", () => {
   state.chartViewV2.oracle = false;
   atlasGraphContextV7SetSurface("market", "handler-solo-explicit-market");
   atlasChartV2SyncControls();
-  atlasResetComparison(getSelectedCoin() || state.coins?.[0] || null);
+  atlasResetComparison((state.coins || []).find(coin => coin.id === "bitcoin") || null);
   atlasGraphContextV7CommitMarket("handler-solo");
 });
 
