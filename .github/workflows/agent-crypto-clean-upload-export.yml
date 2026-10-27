@@ -1,0 +1,55 @@
+name: Agent Crypto - export two changed Administrator files
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - .github/workflows/agent-crypto-clean-upload-export.yml
+      - public/agent_crypto_erith_ia/administrator/app.js
+      - public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+      - name: Check both JavaScript files
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+      - name: Package only two modified files with exact GitHub root paths
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          paths = [
+            "public/agent_crypto_erith_ia/administrator/app.js",
+            "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js",
+          ]
+          Path("out").mkdir(exist_ok=True)
+          destination = Path("out/AGENT_CRYPTO_CLEAN_UPLOAD.zip")
+          with ZipFile(destination, "w", ZIP_DEFLATED, compresslevel=9) as archive:
+              for relative in paths:
+                  item = Path(relative)
+                  assert item.is_file(), f"Missing: {relative}"
+                  archive.write(item, arcname=relative)
+          print(f"CREATED {destination} containing {len(paths)} exact files; no historical vault")
+          PY
+          cd out
+          sha256sum AGENT_CRYPTO_CLEAN_UPLOAD.zip > AGENT_CRYPTO_CLEAN_UPLOAD.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-clean-upload-two-files
+          path: |
+            out/AGENT_CRYPTO_CLEAN_UPLOAD.zip
+            out/AGENT_CRYPTO_CLEAN_UPLOAD.zip.sha256
+          retention-days: 14
