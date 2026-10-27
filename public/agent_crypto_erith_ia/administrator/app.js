@@ -16086,9 +16086,13 @@ async function atlasScannerRun(tx) {
       }
     };
 
+    // EUR historical requests share one public CoinGecko rate budget.
+    // Keep the existing native USD scanner concurrency.
+    const scannerConcurrency = atlasScannerNativeUsdRequested(tx)
+      ? ATLAS_SCANNER_NETWORK_CONCURRENCY : 1;
     await Promise.all(
       Array.from(
-        { length: Math.min(ATLAS_SCANNER_NETWORK_CONCURRENCY, networkQueue.length || 1) },
+        { length: Math.min(scannerConcurrency, networkQueue.length || 1) },
         () => worker()
       )
     );
@@ -54287,24 +54291,40 @@ async function atlasScannerFetchDirect(tx, coin) {
     return { result: null, source: "blocked", error: new Error(errors.join(" · ")) };
   }
 
-  // CoinGecko owns the worldwide Top 250 classification and coin IDs.
-  // It is also the first historical source: a Binance Spot pair is NOT
-  // required for an asset to be selected or charted.
-  try {
-    const result = await fetchCoinGeckoChartDirect(coin, tx.period, {
-      signal: tx.controller.signal,
-      timeoutMs: 12000
-    });
-    if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
-      throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
-    if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
-      throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
+  // CoinGecko owns these Market IDs and the historical EUR quote.
+  // Keep EUR scanner calls below the public request budget; one optional
+  // retry is allowed only for rate limits or opaque browser network errors.
+  // Never replace an asset or manufacture an historical price.
+  let coinGeckoError = null;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const elapsed = Date.now() - Number(tx.lastCoinGeckoEurRequestAt || 0);
+    const waitMs = Math.max(0, 10000 - elapsed);
+    if (waitMs) await atlasWaitWithSignal(waitMs, tx.controller.signal);
+    tx.lastCoinGeckoEurRequestAt = Date.now();
+    try {
+      const result = await fetchCoinGeckoChartDirect(coin, tx.period, {
+        signal: tx.controller.signal,
+        timeoutMs: 12000
+      });
+      if (atlasHistoricalDisplayQuote(result)?.currency !== "EUR")
+        throw new Error("Scanner EUR : historique sans provenance EUR certifiee");
+      const coverage = atlasScannerSeriesCoversWindow(result, tx);
+      if (!coverage.ok) throw new Error(coverage.reason);
+      atlasStoreChartResult(coin, tx.period, result, "coingecko");
+      return { result, source: "direct", provider: "coingecko-browser" };
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      coinGeckoError = error;
+      const temporary = error?.status === 429
+        || /429|too many requests|rate limit|failed to fetch|networkerror/i.test(
+          String(error?.message || error || "")
+        );
+      if (!temporary || attempt > 0) break;
+      await atlasWaitWithSignal(20000, tx.controller.signal);
     }
-    atlasStoreChartResult(coin, tx.period, result, "coingecko");
-    return { result, source: "direct", provider: "coingecko-browser" };
-  } catch (error) {
-    if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
-    errors.push(`CoinGecko navigateur : ${String(error?.message || error || "indisponible")}`);
+  }
+  if (coinGeckoError) {
+    errors.push(`CoinGecko navigateur : ${String(coinGeckoError?.message || coinGeckoError)}`);
   }
 
   // Bridge may bypass browser CORS/rate limiting, and still uses the exact
