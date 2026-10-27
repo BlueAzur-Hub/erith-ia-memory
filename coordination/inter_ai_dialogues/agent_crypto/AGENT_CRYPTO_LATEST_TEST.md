@@ -1,11 +1,11 @@
 # Agent-Crypto — derniere livraison TEST
 
-**ZIP actuel :** [`AGENT_CRYPTO_ADMINISTRATOR_40.6.640_KRAKEN_EUR_HISTORICAL_OHLC_CACHE_FRESHNESS_TEST_2_FILES.zip`](./AGENT_CRYPTO_ADMINISTRATOR_40.6.640_KRAKEN_EUR_HISTORICAL_OHLC_CACHE_FRESHNESS_TEST_2_FILES.zip)
+**ZIP actuel :** [`Agent-Crypto-TEST-R07.zip`](./Agent-Crypto-TEST-R07.zip)
 
-**Manifeste :** [`Agent-Crypto-TEST-R06.md`](./Agent-Crypto-TEST-R06.md)
+**Manifeste :** [`Agent-Crypto-TEST-R07.md`](./Agent-Crypto-TEST-R07.md)
 
-**Commit source :** `20ed38e3f6bd8d1796b6e4e5489277548d36dbbe`
+**Commit source :** `2c25514d1ed072bdd31d5d79447f82d356e92d29`
 
-**SHA-256 :** `612118c1647ee0481a1a73266654f75586f19e41264b96e862cf6404e26aa8ed`
+**SHA-256 :** `324f37bdd0f957805353c95de17bd9d3c3630d6c04415b87e5fde61a057a53bd`
 
 **Statut : TEST, non valide par Firefox utilisateur.**
