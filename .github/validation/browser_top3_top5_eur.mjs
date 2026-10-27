@@ -28,9 +28,9 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
   await page.waitForTimeout(12000);
   await page.locator('[data-aqca="EUR"]').click({timeout:20000});
   await page.waitForTimeout(2000);
-  for(const [preset,selector,expected] of [["Top3","#btnChartTop3",3],["Top5","#btnChartTop5",5],["Hausses5","#btnChartGainers",5]]){
+  for(const [preset,selector,expected] of [["Top3","#btnChartTop3",3],["Top5","#btnChartTop5",5],["Hausses5","#btnChartGainers",5],["Baisses5","#btnChartLosers",5]]){
    await page.locator(selector).click({timeout:20000});
-   await page.waitForTimeout(preset==="Hausses5"?65000:26000);
+   await page.waitForTimeout(["Hausses5","Baisses5"].includes(preset)?65000:26000);
    const obs=await page.evaluate(()=>{
      const canvas=document.getElementById("mainChart");
      const appState=typeof state==="object"&&state?state:null;
@@ -45,10 +45,10 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
        liveOk:appState?.liveOk||false, coinCount:appState?.coins?.length||0,
        chart:!!graph,datasets};
    });
-   const expectedPreset={Top3:"rank-3",Top5:"rank-5",Hausses5:"gainers"}[preset];
+   const expectedPreset={Top3:"rank-3",Top5:"rank-5",Hausses5:"gainers",Baisses5:"losers"}[preset];
    const proven=obs.selected==="EUR"&&obs.preset===expectedPreset&&obs.chart&&obs.datasets.length===expected
      &&obs.datasets.every(x=>x.quote==="EUR"&&x.points>=3&&Number.isFinite(x.lastRaw)&&x.lastRaw>0);
-   r.steps.push({preset,expected,proven,...obs});
+   r.steps.push({...obs,activePreset:obs.preset,preset,expected,proven});
    await page.screenshot({path:join(out,name+"-"+preset+".png"),timeout:25000});
   }
   await ctx.close();
@@ -60,13 +60,15 @@ const evidenceComplete=results.browsers.length===2&&results.browsers.every(r=>!r
 results.top3EurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Top3")?.proven===true);
 results.top5EurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Top5")?.proven===true);
 results.haussesEurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Hausses5")?.proven===true);
+results.baissesEurProven=evidenceComplete&&results.browsers.every(r=>r.steps.find(s=>s.preset==="Baisses5")?.proven===true);
 await writeFile(join(out,"report.json"),JSON.stringify(results,null,2)+"\n");
 const lines=["EUR Top3 Firefox/Chromium: "+(results.top3EurProven?"PASS":"NOT PROVEN"),
  "EUR Top5 Firefox/Chromium: "+(results.top5EurProven?"PASS":"NOT PROVEN"),
  "EUR Hausses5 Firefox/Chromium: "+(results.haussesEurProven?"PASS":"NOT PROVEN"),
+ "EUR Baisses5 Firefox/Chromium: "+(results.baissesEurProven?"PASS":"NOT PROVEN"),
  ...results.browsers.flatMap(b=>[
  b.name+" JS errors="+b.errors.length+(b.fatal?" FATAL "+b.fatal:""),
  ...b.steps.map(s=>b.name+" "+s.preset+": "+s.datasets.length+"/"+s.expected+" EUR series ("+s.datasets.map(d=>d.quote||"?").join(",")+")")
  ])];
 await writeFile(join(out,"SUMMARY.md"),lines.join("\n")+"\n");console.log(lines.join("\n"));
-if(!results.top3EurProven||!results.top5EurProven||!results.haussesEurProven)process.exitCode=1;
+if(!results.top3EurProven||!results.top5EurProven||!results.haussesEurProven||!results.baissesEurProven)process.exitCode=1;
