@@ -80,7 +80,7 @@ jobs:
               '# Agent-Crypto — livraison légère de la branche TEST\n\n'
               '**Statut : paquet de test, NON validé en production ni par Firefox utilisateur.**\n\n'
               'Archive unique : `' + zip_file.name + '` (nom stable par revision Git).\n\n'
-              'Le ZIP de ce répertoire contient uniquement les deux fichiers applicatifs ci-dessous, '
+              + 'Le ZIP de ce répertoire contient uniquement les deux fichiers applicatifs ci-dessous, '
               'avec leur arborescence GitHub ROOT inchangée :\n\n'
               + ''.join('- `' + item + '`\n' for item in paths)
               + '\n**Source GitHub TEST :** `' + branch_sha + '`\n'
