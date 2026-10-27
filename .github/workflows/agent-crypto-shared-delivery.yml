@@ -1,0 +1,97 @@
+name: Agent Crypto - deliver clean bundle to shared GitHub directory
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - .github/workflows/agent-crypto-shared-delivery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-shared-delivery
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout two test-branch application files only
+        uses: actions/checkout@v4
+        with:
+          ref: test/euro-first-then-usd-integrity-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          path: candidate
+
+      - name: Validate application JavaScript without altering it
+        run: |
+          node --check candidate/public/agent_crypto_erith_ia/administrator/app.js
+          node --check candidate/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+
+      - name: Checkout only the shared coordination metadata from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md
+          path: shared
+
+      - name: Create one small ZIP and delivery record in the actual shared directory
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          from hashlib import sha256
+          import subprocess
+
+          root = Path('candidate')
+          shared = Path('shared/coordination/inter_ai_dialogues/agent_crypto')
+          paths = [
+              'public/agent_crypto_erith_ia/administrator/app.js',
+              'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js'
+          ]
+          shared.mkdir(parents=True, exist_ok=True)
+          zip_file = shared / 'AGENT_CRYPTO_CLEAN_UPLOAD.zip'
+          with ZipFile(zip_file, 'w', ZIP_DEFLATED, compresslevel=9) as archive:
+              for relative in paths:
+                  source = root / relative
+                  assert source.is_file(), f'Missing application file: {relative}'
+                  archive.write(source, arcname=relative)
+          with ZipFile(zip_file) as archive:
+              assert archive.namelist() == paths, 'Unexpected ZIP members'
+              assert archive.testzip() is None, 'ZIP integrity failure'
+          digest = sha256(zip_file.read_bytes()).hexdigest()
+          branch_sha = subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip()
+          (shared / 'AGENT_CRYPTO_CLEAN_UPLOAD.md').write_text(
+              '# Agent-Crypto — livraison légère de la branche TEST\n\n'
+              '**Statut : paquet de test, NON validé en production ni par Firefox utilisateur.**\n\n'
+              'Le ZIP de ce répertoire contient uniquement les deux fichiers applicatifs ci-dessous, '
+              'avec leur arborescence GitHub ROOT inchangée :\n\n'
+              + ''.join('- `' + item + '`\n' for item in paths)
+              + '\n**Source GitHub TEST :** `' + branch_sha + '`\n'
+              + '\n**SHA-256 ZIP :** `' + digest + '`\n'
+              + '\n**Taille :** ' + str(zip_file.stat().st_size) + ' octets.\n'
+              + '\n**Consigne :** ne pas appliquer sur `main` avant validation de Solo, Top 3, '
+                'Top 5, scanners EUR/USD et Firefox. Aucune archive historique, donnée du Coffre '
+                'ou image n’est incluse. Ce commit dans `main` ne modifie PAS le code '
+                'du site publié.\n',
+              encoding='utf-8'
+          )
+          print(f'ZIP_READY size={zip_file.stat().st_size} sha256={digest} source={branch_sha}')
+          PY
+          git -C shared config user.name "github-actions[bot]"
+          git -C shared config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C shared add --sparse -- coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_CLEAN_UPLOAD.zip coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_CLEAN_UPLOAD.md
+          git -C shared diff --cached --check
+          git -C shared commit -m "Deliver two-file Administrator test bundle to shared coordination"
+          git -C shared pull --rebase origin main
+          git -C shared push origin HEAD:main
