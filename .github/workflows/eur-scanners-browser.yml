@@ -1,0 +1,56 @@
+name: Browser EUR Baisses5 and Volumes5 - genuine raw quote
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - '.github/workflows/eur-scanners-browser.yml'
+      - '.github/validation/browser_baisses_volumes_eur.mjs'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/euro-first-then-usd-integrity-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/validation/browser_baisses_volumes_eur.mjs
+          path: harness
+      - uses: actions/checkout@v4
+        with:
+          ref: test/euro-first-then-usd-integrity-20261027
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/
+            /public/agent_crypto_erith_ia/trader/
+            /public/agent_crypto_erith_ia/data/crypto/latest.json
+            /public/agent_crypto_erith_ia/data/crypto/status.json
+            /public/agent_crypto_erith_ia/data/news/latest.json
+          path: source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser harness
+        run: |
+          npm install --prefix harness/.github/validation --no-save --no-package-lock playwright@1.56.1 chart.js@4.4.9
+          npx --prefix harness/.github/validation playwright install --with-deps chromium firefox
+      - name: Start production-shaped public static server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory source > /tmp/erith-server.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/public/agent_crypto_erith_ia/administrator/index.html >/dev/null && break || sleep 1; done
+      - name: Verify two scanner charts display five genuine EUR histories
+        run: node harness/.github/validation/browser_baisses_volumes_eur.mjs scanner-results
+      - name: Preserve raw evidence and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-eur-baisses-volumes-evidence
+          path: scanner-results/
+          retention-days: 14
+          if-no-files-found: warn
