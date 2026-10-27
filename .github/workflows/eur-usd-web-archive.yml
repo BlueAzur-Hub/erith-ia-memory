@@ -1,0 +1,67 @@
+name: EUR-USD Administrator - ZIP de livraison web
+on:
+  push:
+    branches:
+      - test/eur-usd-unified-historical-quotes
+    paths:
+      - '.github/workflows/eur-usd-web-archive.yml'
+permissions:
+  contents: read
+jobs:
+  package-web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout exact corrected web sources
+        uses: actions/checkout@v4
+        with:
+          ref: test/eur-usd-unified-historical-quotes
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build deployable Administrator folder backup - no Windows launcher
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          import hashlib,subprocess
+          folder=Path('public/agent_crypto_erith_ia/administrator')
+          assert (folder/'index.html').is_file() and (folder/'app.js').is_file()
+          for name in ('app.js','js/graph-native-usd-406520.js'):
+            f=folder/name
+            subprocess.run(['node','--check',str(f)],check=True)
+          expected={'app.js':'edd211448c1babc6c5f13838dadaa735a2e1b8e3',
+                    'js/graph-native-usd-406520.js':'76cf098509c4ebb295bca3d38392b74acf91396b'}
+          for name,blob in expected.items():
+            actual=subprocess.check_output(['git','hash-object',str(folder/name)],text=True).strip()
+            if actual!=blob:raise RuntimeError('Wrong candidate: '+name+' '+actual)
+          files=sorted(p for p in folder.rglob('*') if p.is_file())
+          forbidden=[p for p in files if p.suffix.lower() in ('.cmd','.bat','.exe','.ps1')]
+          if forbidden:raise RuntimeError('Unexpected executable/launcher: '+str(forbidden))
+          dest=Path('ERITH_IA_ADMINISTRATOR_EUR_USD_WEB.zip')
+          with ZipFile(dest,'w',ZIP_DEFLATED,compresslevel=6) as z:
+            for p in files:
+              z.write(p,arcname='administrator/'+p.relative_to(folder).as_posix())
+          with ZipFile(dest) as z:
+            if z.testzip():raise RuntimeError('Damaged ZIP')
+            if any(n.lower().endswith('.cmd') for n in z.namelist()):
+              raise RuntimeError('Unexpected CMD')
+          digest=hashlib.sha256(dest.read_bytes()).hexdigest()
+          print('ARCHIVE='+str(dest))
+          print('FILES='+str(len(files)))
+          print('BYTES='+str(dest.stat().st_size))
+          print('SHA256='+digest)
+          print('SOURCE_BRANCH=test/eur-usd-unified-historical-quotes')
+          print('MAIN_PAGES_UNCHANGED=true')
+          PY
+      - name: Upload web archive to GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: ERITH_IA_ADMINISTRATOR_EUR_USD_WEB
+          path: ERITH_IA_ADMINISTRATOR_EUR_USD_WEB.zip
+          retention-days: 30
+          if-no-files-found: error
