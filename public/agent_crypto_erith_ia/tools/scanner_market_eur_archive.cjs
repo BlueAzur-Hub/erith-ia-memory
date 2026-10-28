@@ -119,8 +119,10 @@ function appendEvidence({plan,batchIndex,envelope,previous={},asOfMs=Date.now()}
       &&Array.isArray(old.entries),'Stored archive integrity/identity error');
     const records=old?old.entries.slice():[];
     if(checkObservation(item,asOfMs)){
-      const entry={frameId:envelope.frameId,requestedIds:envelope.requestedIds,
-        envelopeSha256:envelope.sha256,requestedAt:item.requestedAt,result:item};
+      const entry={frameId:envelope.frameId,requestedIds:[...envelope.requestedIds],
+        envelopeSha256:envelope.sha256,requestedAt:item.requestedAt,
+        // Never alias a mutable transport object into persistent evidence.
+        result:structuredClone(item)};
       if(!records.some(r=>r.envelopeSha256===entry.envelopeSha256
         &&r.requestedAt===entry.requestedAt))records.push(entry);
     }
