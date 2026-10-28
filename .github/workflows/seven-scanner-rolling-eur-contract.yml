@@ -6,6 +6,8 @@ on:
       - "public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs"
       - "public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs"
       - "public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs"
       - ".github/workflows/seven-scanner-rolling-eur-contract.yml"
 permissions:
   contents: read
@@ -22,4 +24,16 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs
           node --check public/agent_crypto_erith_ia/tools/scanner_rolling_eur_history.cjs
-          node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs
+          node --check public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs
+      - name: Verify dynamic selection against actual public Market snapshot
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const {planMarket}=require('./public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs');
+          const s=JSON.parse(fs.readFileSync('public/agent_crypto_erith_ia/data/crypto/latest.json','utf8'));
+          const p=planMarket(s,{universe:100,budget:20,offset:0,nowMs:Date.parse(s.generated_at)+30000});
+          if(p.ids.length!==20||p.batches.length!==4)throw Error('Market dynamic plan inconsistent');
+          console.log(JSON.stringify({snapshotId:p.snapshotId,requested:p.ids.length,
+            firstBatch:p.batches[0].ids,rankQuote:p.rankingQuote,historyQuote:p.historyQuote}));
+          NODE
