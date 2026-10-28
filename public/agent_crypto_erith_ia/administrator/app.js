@@ -12366,6 +12366,7 @@ function atlasRenderComparisonDetail(entries, period) {
   const coins = entries.map(entry => entry.coin);
   const primary = getSelectedCoin() || coins[0];
   atlasBrokerSeedSpot(primary);
+  atlasRenderCompactDetailSummary(primary);
   const preset = String(state.dataBroker?.comparison?.preset || "manual");
   const volumeMode = preset === "volume";
   const ranked = entries
