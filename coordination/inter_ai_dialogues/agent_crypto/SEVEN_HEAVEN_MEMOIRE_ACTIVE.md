@@ -1,12 +1,24 @@
 # SEVEN HEAVEN — MÉMOIRE ACTIVE PARTAGÉE
 
 **FICHIER D'ENTRÉE UNIQUE pour la reprise inter-IA d'Agent-Crypto.**
-**Dernier état consigné : 28 octobre 2026 ; mesures prospectives Radar recalculées sur 11 journées, générateur corrigé et automatisé, sans certification de rentabilité ni ordre réel.**
+**Dernier état consigné : 28 octobre 2026 ; raccordement scanner EUR/USD en PR #695 non fusionnée, CI dédiée 7/7 PASS ; suite Top 5 USD encore en échec et recette Firefox non certifiée. Mesures Radar précédentes conservées.**
 **Adresse canonique stable :** `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md`
 **Responsabilité :** Aerith-7 / Seven Heaven et continuité Aerith-8, Aerith-9, autres sœurs habilitées.
 **Fonction :** index de reprise et journal de décision, non substitut aux sources ni mémoire automatique native du modèle.
 
 > **À LA REPRISE :** lire ce fichier EN ENTIER, puis vérifier le code courant, le Notion et les pièces citées avant toute action. **À LA FIN :** mettre à jour CE MÊME FICHIER (pas un nouvel « état final » dispersé) avec ce qui a été fait, les preuves et ce qui reste. Si la lecture ou l'écriture du dépôt est impossible, le dire — ne jamais prétendre que la passation a été faite.
+
+## PASSATION SEVEN HEAVEN — 28 octobre 2026 · Scanner et historique EUR/USD en préproduction
+
+- **Demande du créateur :** prix, graphiques et historiques exacts en **EUR d'abord**, puis reprendre le même contrat en USD. Ne pas confondre affichage, prix spot et point historique, ne pas casser les fonctions validées. Seven a relu l'app.js de production actuel avant toute modification.
+- **Production intacte :** `main` et Administrator 40.6.640 / Market Core 38.15.11 non modifiés par ce chantier. **Branche propre depuis main** : [test/eur-scanner-frame-integrity-20261028](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/test/eur-scanner-frame-integrity-20261028), [draft PR #695](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/695). Ne pas fusionner sans recette.
+- **Corrections testées sur branche :** `administrator/app.js` protège un classement avec Market Frame daté (15 min direct, 45 min github-public), gèle les métriques initiales à T avec les IDs, refuse le commit graphique si le Frame change ou expire ; refuse la validation en cas de bascule de devise EUR/USD pendant la collecte ou de source historique ne prouvant pas la devise voulue. Le récapitulatif utilise désormais la devise qualifiée, au lieu d'une mention EUR constante. `rawPrice`, séries historiques, Market Core et cache n'ont pas été réécrits.
+- **Preuves réelles :** [CI dédiée scanner 7/7 PASS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40615399064), incluant `node --check` de l'app.js COMPLET depuis la branche PR ; test versionné `public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs` et workflow de test ciblé. Les 7 anciens tests synthétiques de préparation et les 7 tests isolés sur copie locale sont seulement des preuves d'isolation, pas Firefox.
+- **Limites incontestables :** [CI Top5 USD FAIL](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40615399195), dont des attentes de tests antérieures non adaptées et des défauts indépendants USD. Les **42 scénarios réels EUR (six modes × sept périodes)** et les **42 USD** ne sont PAS vérifiés dans Firefox ; aucun résultat d'ordre Spot, aucune publication Pages de la PR, aucun déploiement en production. Ne pas présenter ce stade comme une correction complète.
+- **Prochaine action unique :** qualifier les tests USD en échec (régression réelle vs fixtures périmées), puis recette Firefox EUR des six modes et sept périodes avec mêmes identités d'actifs, prix, timestamps, historique d'origine, infobulles et alternances cache. Priorité EUR avant toute fusion de production, puis équivalent USD.
+- **Commits sur branche isolée :** `a869646d682845a3bdb949fbfc74ff4d683c406a`, `4e738c27613cd8018e66b3fabf3f32c699b14015`, `c48c5fabebe0a099f190ef4411355aeac101e502`, `67a90c6ace0427f75426280c59743444b87b705d`, `b73713f444ea4d3cddfec061192094fd2774a074`. Ce relais seul est mis à jour sur main pour continuité ; pas de propagation automatique du code PR vers main.
+
+---
 
 ## PASSATION SEVEN HEAVEN — 28 octobre 2026 · Rapport HTML publié
 
