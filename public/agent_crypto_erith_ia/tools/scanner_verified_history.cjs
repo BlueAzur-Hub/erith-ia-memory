@@ -17,6 +17,7 @@ const BASE = 'https://api.coingecko.com/api/v3';
 const MIN_POINTS = 40;
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 const BOUNDARY_MS = 12 * 60 * 1000;
+const MAX_INTERIOR_GAP_MS = 30 * 60 * 1000;
 const MAX_RESPONSE_BYTES = 4_000_000;
 
 function exactIds(ids) {
@@ -45,6 +46,9 @@ function validatePoints(prices, anchorMs) {
     if (!Number.isSafeInteger(time) || !Number.isFinite(price) || price <= 0
         || time <= prev || time > anchorMs + BOUNDARY_MS) {
       return {ok:false,reason:'Invalid price, timestamp, order or future point'};
+    }
+    if (Number.isFinite(prev) && time - prev > MAX_INTERIOR_GAP_MS) {
+      return {ok:false,reason:'Historical series contains an interior gap',gapMs:time-prev};
     }
     prev = time;
   }
