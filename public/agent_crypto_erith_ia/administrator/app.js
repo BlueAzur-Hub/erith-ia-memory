@@ -15360,6 +15360,21 @@ function atlasScannerMarketBasis(period) {
   };
 }
 
+// Reject scanner rankings backed by expired Market frames.
+function atlasScannerMarketFreshness(frame, now = Date.now()) {
+  const timestamp = Date.parse(String(frame?.timestamp || ""));
+  const mode = String(frame?.mode || "");
+  const maxAge = mode === "github-public"
+    ? ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS
+    : ATLAS_ANALYSIS_MAX_AGE_MS;
+  const age = Number(now) - timestamp;
+  if (frame?.status !== "ready" || !Number.isFinite(timestamp)
+      || !Number.isFinite(age) || age < -120000 || age > maxAge) {
+    return { ok: false, reason: `Market trop ancien ou non daté · source ${mode || "absente"} · ${frame?.timestamp || "horodatage absent"}` };
+  }
+  return { ok: true, age, timestamp, mode };
+}
+
 function atlasScannerPool(preset, period) {
   // LIVE canonical selection: read the active Market universe, never stale Frame baskets.
   // The Market Frame remains provenance, not the owner of candidate identities.
@@ -15465,7 +15480,7 @@ function atlasScannerDecorateEntry(tx, coin, result, source) {
     coin,
     result: series === result.series ? result : { ...result, series },
     source,
-    atlasMarketMetric: atlasScannerMarketMetric(tx.preset, coin, tx.period),
+    atlasMarketMetric: Number(tx?.candidateMetrics?.[coin.id]),
     atlasMarketMetricLabel: atlasScannerMarketMetricLabel(tx.preset, tx.period),
     atlasHistoryKind: historyKind,
     atlasMarketRank: Number(coin?.rank || 0)
@@ -15658,6 +15673,24 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   if (!prevalidated.length || prevalidated.length > ATLAS_SCANNER_TARGET
       || positions.some((position, index) => position === undefined
         || (index > 0 && position <= positions[index - 1]))) return false;
+
+  // Protect the existing chart if the Market changed during historical acquisition.
+  const activeFrame = atlasCurrentMarketFrame();
+  const freshness = atlasScannerMarketFreshness(activeFrame);
+  const changedFrame = !activeFrame
+    || activeFrame.id !== tx.marketFrameId
+    || activeFrame.fingerprint !== tx.marketFrameFingerprint;
+  if (!freshness.ok || changedFrame) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(
+      tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · Market changé ou périmé`,
+      [!freshness.ok ? freshness.reason : null,
+       changedFrame ? "Market actualisé pendant la collecte : relancer le scanner" : null]
+        .filter(Boolean).join(" · ")
+    );
+  }
 
   const ids = prevalidated.map(entry => entry.coin.id);
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
@@ -16182,6 +16215,15 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = requestedPeriod;
+    const marketFrame = atlasCurrentMarketFrame();
+    const freshness = atlasScannerMarketFreshness(marketFrame);
+    if (!freshness.ok) {
+      return atlasScannerVisibleFailure(
+        preset,
+        `${label} non validé · Market trop ancien pour un classement actuel`,
+        `${freshness.reason}. Actualiser le Market / Livecheck puis relancer.`
+      );
+    }
     const pool = atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
@@ -16191,10 +16233,6 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       );
     }
 
-    const marketFrame = atlasCurrentMarketFrame();
-    if (!marketFrame) {
-      return atlasScannerVisibleFailure(preset, `${label} refusé · Market Frame indisponible`);
-    }
     const marketMode = String(
       marketFrame.mode
       || state.sourceLock?.mode
@@ -16220,6 +16258,9 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       candidateIds: pool.map(coin => coin.id),
       // Freeze the exact Market candidates, not the potentially stale state.coins copy.
       candidateCoins: pool.map(coin => ({ ...coin })),
+      candidateMetrics: Object.fromEntries(pool.map(coin => [
+        coin.id, atlasScannerMarketMetric(preset, coin, period)
+      ])),
       cacheChecked: 0,
       cacheHits: 0,
       examined: 0,
