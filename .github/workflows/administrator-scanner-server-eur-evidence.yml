@@ -1,0 +1,57 @@
+name: Administrator scanner server EUR evidence (isolated)
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs"
+      - ".github/workflows/administrator-scanner-server-eur-evidence.yml"
+  workflow_dispatch:
+    inputs:
+      five_coingecko_ids:
+        description: "Five frozen exact CoinGecko IDs, comma separated"
+        required: true
+        type: string
+      market_frame_id:
+        description: "Frozen Market Frame identity; no live reselection"
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check source syntax
+        run: node --check public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs
+      - name: Run deterministic fail-closed evidence tests
+        run: node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs
+  acquire:
+    if: github.event_name == 'workflow_dispatch'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch exact five histories to an isolated evidence artifact only
+        env:
+          SCAN_IDS: ${{ inputs.five_coingecko_ids }}
+          SCAN_FRAME: ${{ inputs.market_frame_id }}
+          COINGECKO_DEMO_API_KEY: ${{ secrets.COINGECKO_DEMO_API_KEY }}
+        run: |
+          mkdir -p evidence
+          node public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs \
+            "--ids=${SCAN_IDS}" "--frame=${SCAN_FRAME}" "--output=evidence/scanner_server_history.json"
+      - name: Archive independently verifiable evidence, never publish to main
+        uses: actions/upload-artifact@v4
+        with:
+          name: scanner-eur-evidence
+          path: evidence/scanner_server_history.json
+          if-no-files-found: error
+          retention-days: 7
