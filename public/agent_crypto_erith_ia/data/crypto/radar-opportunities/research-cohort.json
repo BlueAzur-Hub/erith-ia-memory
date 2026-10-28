@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-28T14:20:02Z",
+  "source_qualification_at_utc": "2026-10-28T15:04:27Z",
   "source_observation_date_utc": "2026-10-28",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -30,6 +30,33 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
+      "coin_id": "ark",
+      "symbol": "ARK",
+      "name": "ARK",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 624,
+      "change24h_pct_at_snapshot": 8.16447,
+      "change7d_pct_at_snapshot": -4.7675,
+      "volume24h_aggregate_usd": 3200669,
+      "spot": {
+        "venue": "Binance",
+        "pair": "ARKUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 17.9265,
+        "roundtrip_cost_pct_assumed": 0.37865
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
       "coin_id": "dappos",
       "symbol": "DOS",
       "name": "DAPPOS",
@@ -43,8 +70,8 @@
         "venue": "OKX",
         "pair": "DOS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.37624,
-        "roundtrip_cost_pct_assumed": 0.32334
+        "spread_bps_at_snapshot": 15.35862,
+        "roundtrip_cost_pct_assumed": 0.35306
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -52,32 +79,6 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "extreme_24h_move"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "ethereum-pow-iou",
-      "symbol": "ETHW",
-      "name": "EthereumPoW",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 712,
-      "change24h_pct_at_snapshot": 16.98751,
-      "change7d_pct_at_snapshot": 6.1365,
-      "volume24h_aggregate_usd": 10309393,
-      "spot": {
-        "venue": "OKX",
-        "pair": "ETHW-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 15.69859,
-        "roundtrip_cost_pct_assumed": 0.37747
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -96,8 +97,8 @@
         "venue": "Bitget",
         "pair": "ICNTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.34661,
-        "roundtrip_cost_pct_assumed": 0.34127
+        "spread_bps_at_snapshot": 5.03145,
+        "roundtrip_cost_pct_assumed": 0.31126
       },
       "detections_archived": 6,
       "j1_observed": 4,
@@ -122,8 +123,8 @@
         "venue": "Binance",
         "pair": "INITUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.66382,
-        "roundtrip_cost_pct_assumed": 0.33337
+        "spread_bps_at_snapshot": 11.43075,
+        "roundtrip_cost_pct_assumed": 0.33291
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -150,8 +151,8 @@
         "venue": "Bitget",
         "pair": "LABUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.20289,
-        "roundtrip_cost_pct_assumed": 0.24512
+        "spread_bps_at_snapshot": 2.19756,
+        "roundtrip_cost_pct_assumed": 0.25158
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -176,8 +177,8 @@
         "venue": "Binance",
         "pair": "OPGUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 16.6251,
-        "roundtrip_cost_pct_assumed": 0.36568
+        "spread_bps_at_snapshot": 16.43385,
+        "roundtrip_cost_pct_assumed": 0.36378
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -203,8 +204,8 @@
         "venue": "OKX",
         "pair": "PONS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.61759,
-        "roundtrip_cost_pct_assumed": 0.30581
+        "spread_bps_at_snapshot": 7.05467,
+        "roundtrip_cost_pct_assumed": 0.29491
       },
       "detections_archived": 3,
       "j1_observed": 1,
@@ -229,8 +230,8 @@
         "venue": "Binance",
         "pair": "SNDKBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.21952,
-        "roundtrip_cost_pct_assumed": 0.21078
+        "spread_bps_at_snapshot": 0.7293,
+        "roundtrip_cost_pct_assumed": 0.20718
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -256,8 +257,8 @@
         "venue": "Binance",
         "pair": "SOXLBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.96205,
-        "roundtrip_cost_pct_assumed": 0.2095
+        "spread_bps_at_snapshot": 1.92957,
+        "roundtrip_cost_pct_assumed": 0.21916
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -283,8 +284,8 @@
         "venue": "Binance",
         "pair": "SKHYBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.47893,
-        "roundtrip_cost_pct_assumed": 0.23051
+        "spread_bps_at_snapshot": 2.47051,
+        "roundtrip_cost_pct_assumed": 0.22455
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -297,28 +298,27 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "ark",
-      "symbol": "ARK",
-      "name": "ARK",
+      "coin_id": "ethereum-pow-iou",
+      "symbol": "ETHW",
+      "name": "EthereumPoW",
       "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 624,
-      "change24h_pct_at_snapshot": 8.16447,
-      "change7d_pct_at_snapshot": -4.7675,
-      "volume24h_aggregate_usd": 3200669,
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 712,
+      "change24h_pct_at_snapshot": 16.98751,
+      "change7d_pct_at_snapshot": 6.1365,
+      "volume24h_aggregate_usd": 10309393,
       "spot": {
-        "venue": "Binance",
-        "pair": "ARKUSDT",
+        "venue": "OKX",
+        "pair": "ETHW-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 17.68347,
-        "roundtrip_cost_pct_assumed": 0.38849
+        "spread_bps_at_snapshot": 15.80403,
+        "roundtrip_cost_pct_assumed": 0.39802
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -337,8 +337,8 @@
         "venue": "Binance",
         "pair": "PEPEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.68252,
-        "roundtrip_cost_pct_assumed": 0.4061
+        "spread_bps_at_snapshot": 20.55498,
+        "roundtrip_cost_pct_assumed": 0.40483
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -364,8 +364,8 @@
         "venue": "Binance",
         "pair": "SOLVUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.18163,
-        "roundtrip_cost_pct_assumed": 0.59201
+        "spread_bps_at_snapshot": 20.30457,
+        "roundtrip_cost_pct_assumed": 0.40233
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -391,8 +391,8 @@
         "venue": "Binance",
         "pair": "FLUXUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 29.85075,
-        "roundtrip_cost_pct_assumed": 0.49737
+        "spread_bps_at_snapshot": 29.5421,
+        "roundtrip_cost_pct_assumed": 0.4943
       },
       "detections_archived": 1,
       "j1_observed": 0,
