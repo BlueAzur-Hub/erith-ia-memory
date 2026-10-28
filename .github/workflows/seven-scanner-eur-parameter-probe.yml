@@ -18,6 +18,7 @@ jobs:
       - name: Examine upstream native EUR request without precision override
         run: |
           node <<'NODE'
+          (async()=>{
           const {validatePoints}=require('./public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs');
           const fs=require('node:fs');
           const time=Date.now(),url='https://api.coingecko.com/api/v3/coins/figure-heloc/market_chart?vs_currency=eur&days=1';
@@ -40,6 +41,7 @@ jobs:
           console.log('FIGR EUR DIAGNOSTIC '+JSON.stringify(row));
           fs.mkdirSync('evidence',{recursive:true});
           fs.writeFileSync('evidence/figr-eur-parameter-probe.json',JSON.stringify(row,null,2)+'\n');
+          })().catch(e=>{console.error(e);process.exitCode=1});
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
