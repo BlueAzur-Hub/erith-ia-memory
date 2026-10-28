@@ -1,0 +1,68 @@
+name: Agent Crypto - refresh read-only signal evidence
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_radar_signal_evidence.py'
+      - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json'
+      - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/historical-top50-forward.json'
+      - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json'
+      - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/okx-hurdle-followups.json'
+      - '.github/workflows/agent-crypto-signal-evidence-refresh.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-signal-evidence-refresh
+  cancel-in-progress: false
+jobs:
+  refresh-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py
+            /public/agent_crypto_erith_ia/tools/test_build_radar_signal_evidence.py
+            /public/agent_crypto_erith_ia/data/crypto/radar-opportunities/
+            /public/agent_crypto_erith_ia/data/historical_archive_prototype/okx_verified_daily/index.json
+      - name: Validate the evidence builder and the observation archive
+        run: |
+          set -euo pipefail
+          python -m unittest public/agent_crypto_erith_ia/tools/test_build_radar_signal_evidence.py
+          python public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/data/crypto/radar-opportunities')
+          raw=json.loads((root/'dynamic-followups.json').read_text())
+          evidence=json.loads((root/'signal-evidence.json').read_text())
+          for group in ('momentum_24h_7d','rebound_24h_only'):
+              n=sum(o['group']==group for o in raw['observations'])
+              assert evidence['radar_forward_j1']['buckets'][group]['signals_total']==n
+          scout=sum(o['group']=='seven_capital_scout' for o in raw['observations'])
+          assert evidence['radar_forward_j1']['excluded_other_groups']['seven_capital_scout']==scout
+          assert evidence['strategy_certified'] is False
+          assert evidence['real_orders']==evidence['paper_fills']==0
+          print('SIGNAL_EVIDENCE_RECONCILED: counts match; no executable returns claimed.')
+          PY
+      - name: Publish only the audited research report if changed
+        run: |
+          set -euo pipefail
+          FILE=public/agent_crypto_erith_ia/data/crypto/radar-opportunities/signal-evidence.json
+          if git diff --quiet -- "$FILE"; then
+            echo 'Signal evidence already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$FILE"
+          git commit -m 'Refresh Radar evidence from dated public observations'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main

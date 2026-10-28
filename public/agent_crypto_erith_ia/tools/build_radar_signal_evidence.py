@@ -24,6 +24,8 @@ VALIDATION = "2026-09-27"  # 7-calendar-day embargo: 20-26 September
 COSTS = (0.8, 1.2, 1.6)
 TOP50_RULE = "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER"
 GROUPS = ("momentum_24h_7d", "rebound_24h_only")
+# The scout group must remain a separate prospective cohort, not a new Radar model.
+OTHER_GROUPS = ("seven_capital_scout",)
 
 
 def require(ok, reason):
@@ -171,7 +173,7 @@ def strict_dynamic(doc):
         d = day(r.get("first_seen_date_utc"))
         coin = r.get("id")
         group = r.get("group")
-        require(at.date() == d and d.isoformat() in dates and group in GROUPS
+        require(at.date() == d and d.isoformat() in dates and group in (*GROUPS, *OTHER_GROUPS)
                 and isinstance(coin, str) and coin and
                 number(r.get("initial_price_usd")) and r["initial_price_usd"] > 0,
                 "Signal Radar Top1000 incomplet")
@@ -200,9 +202,11 @@ def strict_dynamic(doc):
                     and follow.get("price_usd") is None
                     and follow.get("change_pct") is None,
                     "Suivi J+1 absent mais prétendument mesuré")
-        records.append({"entry_day_utc": d.isoformat(), "coin_id": coin,
-                        "group": group, "observed_return_pct": change,
-                        "status": follow.get("status")})
+        # Validate all cohorts; only score the two pre-registered Radar groups.
+        if group in GROUPS:
+            records.append({"entry_day_utc": d.isoformat(), "coin_id": coin,
+                            "group": group, "observed_return_pct": change,
+                            "status": follow.get("status")})
     return dates, records
 
 
@@ -267,6 +271,11 @@ def okx_context(qualification, journal, vault):
 def build(history, dynamic, qualification, journal=None, vault=None):
     past = strict_top50(history)
     dates, recent = strict_dynamic(dynamic)
+    radar_j1 = dynamic_eval(dates, recent)
+    radar_j1["excluded_other_groups"] = {
+        group: sum(r.get("group") == group for r in dynamic["observations"])
+        for group in OTHER_GROUPS
+    }
     return {
         "schema": SCHEMA, "kind": "RESEARCH_AUDIT_NOT_STRATEGY_SELECTION",
         "orders_enabled": False, "strategy_certified": False,
@@ -280,7 +289,7 @@ def build(history, dynamic, qualification, journal=None, vault=None):
             "vault": "data/historical_archive_prototype/okx_verified_daily/index.json"
         },
         "top50_retro_7d": top50_eval(past),
-        "radar_forward_j1": dynamic_eval(dates, recent),
+        "radar_forward_j1": radar_j1,
         "okx_context": okx_context(qualification, journal, vault),
         "cautions": [
             "Chronological Top50 split assembled retrospectively; not a truly unseen holdout.",

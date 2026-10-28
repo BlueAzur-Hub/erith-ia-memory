@@ -127,6 +127,25 @@ class SignalEvidenceTests(unittest.TestCase):
         self.assertEqual(out["okx_context"]["okx_pairs_observed"], 2)
         self.assertTrue(out["okx_context"]["no_executable_returns_derived_from_usd"])
 
+    def test_known_scout_cohort_does_not_block_or_pollute_radar(self):
+        source = dynamic()
+        scout = copy.deepcopy(source["observations"][0])
+        scout["id"] = "seven-test-id"
+        scout["group"] = "seven_capital_scout"
+        source["observations"].append(scout)
+        report = build(history(), source, qualification())
+        radar = report["radar_forward_j1"]
+        self.assertEqual(radar["excluded_other_groups"]["seven_capital_scout"], 1)
+        self.assertEqual(radar["buckets"]["momentum_24h_7d"]["signals_total"], 2)
+        self.assertEqual(radar["buckets"]["rebound_24h_only"]["signals_total"], 1)
+        self.assertFalse(report["strategy_certified"])
+
+    def test_unknown_cohort_still_fails_closed(self):
+        source = dynamic()
+        source["observations"][0]["group"] = "UNRECOGNIZED_GROUP"
+        with self.assertRaises(ValueError):
+            strict_dynamic(source)
+
     def test_unknown_radar_status_does_not_become_return(self):
         bad = dynamic()
         bad["observations"][0]["followup_1d"]["status"] = "FAKE_WIN"
