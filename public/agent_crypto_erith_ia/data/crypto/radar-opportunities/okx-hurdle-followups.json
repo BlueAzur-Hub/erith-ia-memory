@@ -34,6 +34,15 @@
       "cost_evaluable": 3,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-10-28|2026-10-28T14:20:02Z",
+      "qualified_at_utc": "2026-10-28T14:20:02Z",
+      "candidates": 20,
+      "okx_pairs": 5,
+      "cost_evaluable": 3,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -270,6 +279,63 @@
           "elapsed_hours": 53.03
         }
       ]
+    },
+    {
+      "id": "pepe|2026-10-28",
+      "coin_id": "pepe",
+      "symbol": "PEPE",
+      "pair": "PEPE-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-28T14:20:19Z",
+      "entry_bid_usdt": "0.0000048371",
+      "entry_ask_usdt": "0.0000048387",
+      "entry_investment_usdt": "99.9999995834718",
+      "net_sellable_qty": "20604831.0",
+      "break_even_bid_rise_pct": 0.6354,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "pons|2026-10-28",
+      "coin_id": "pons",
+      "symbol": "PONS",
+      "pair": "PONS-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-28T14:20:19Z",
+      "entry_bid_usdt": "0.2823",
+      "entry_ask_usdt": "0.2825",
+      "entry_investment_usdt": "99.99837255",
+      "net_sellable_qty": "352.91",
+      "break_even_bid_rise_pct": 0.6753,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "dappos|2026-10-28",
+      "coin_id": "dappos",
+      "symbol": "DOS",
+      "pair": "DOS-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-28T14:20:19Z",
+      "entry_bid_usdt": "0.3242",
+      "entry_ask_usdt": "0.3246",
+      "entry_investment_usdt": "99.99786654",
+      "net_sellable_qty": "307.14",
+      "break_even_bid_rise_pct": 0.7271,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
     }
   ]
 }
