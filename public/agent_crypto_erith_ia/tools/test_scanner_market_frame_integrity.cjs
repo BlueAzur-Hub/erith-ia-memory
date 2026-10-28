@@ -19,6 +19,8 @@ function setup() {
     ATLAS_SCANNER_TARGET: 5,
     atlasScannerTransaction: {id: 7},
     atlasScannerCurrent: () => true,
+    atlasChartDisplayCurrency: () => ctx.displayCurrency || 'EUR',
+    atlasHistoricalDisplayQuote: result => ({currency: result?.currency || null}),
     atlasScannerAligned: rows => rows,
     atlasScannerSetTransactionFlag: () => {},
     atlasScannerLabel: p => p,
@@ -38,9 +40,9 @@ function setup() {
 const frame = (age, mode='direct', id='f1') => ({id,fingerprint:id,status:'ready',mode,
   timestamp:new Date(Date.now()-age).toISOString()});
 const tx = () => ({preset:'gainers', period:1,candidateIds:['btw'],
-  marketFrameId:'f1',marketFrameFingerprint:'f1',candidateMetrics:{btw:44.75},
+  marketFrameId:'f1',marketFrameFingerprint:'f1',candidateMetrics:{btw:44.75},displayCurrency:'EUR',
   controller:{signal:{aborted:false}}});
-const entry = () => ({coin:{id:'btw',symbol:'BTW'},result:{series:[[1,1],[2,2]]},data:[{y:100},{y:110}]});
+const entry = () => ({coin:{id:'btw',symbol:'BTW'},result:{series:[[1,1],[2,2]],currency:'EUR',source:'CoinGecko market_chart EUR · direct'},data:[{y:100},{y:110}]});
 
 test('market date: direct 15 min and public 45 min, no undated/future frame', () => {
   const c=setup(), f=c.atlasScannerMarketFreshness;
@@ -65,15 +67,26 @@ test('Market unchanged: commit may continue to chart owner', () => {
   const c=setup(); c.frame=frame(60_000);
   assert.equal(c.atlasScannerCommit(tx(),[entry()],[]),true);
 });
+test('currency changed during acquisition or unsupported historical quote blocks commitment', () => {
+  const c=setup(); c.frame=frame(60_000); c.displayCurrency='USD';
+  assert.equal(c.atlasScannerCommit(tx(),[entry()],[]),false);
+  assert.match(c.lastFailure.msg,/devises/);
+  c.displayCurrency='EUR';
+  const other=entry();other.result.currency='USD';
+  assert.equal(c.atlasScannerCommit(tx(),[other],[]),false);
+  assert.match(c.lastFailure.details,/BTW/);
+});
 test('frozen metric follows selected BTW even if coin snapshot later changes', () => {
   const c=setup(); const e=c.atlasScannerDecorateEntry(tx(),{id:'btw',change24h:99},entry().result,'cache');
   assert.equal(e.atlasMarketMetric,44.75);
   assert.match(source,/candidateMetrics: Object\.fromEntries\(pool\.map/);
+  assert.match(source,/displayCurrency: atlasChartDisplayCurrency\(\)/);
 });
 test('freshness is checked before ranking and without overwriting the main historical quote', () => {
   const i=source.indexOf('function atlasScannerStart(');
   const p=source.slice(i,source.indexOf('function atlasHandleGainersClick',i));
   assert.ok(p.indexOf('const freshness = atlasScannerMarketFreshness(marketFrame);') < p.indexOf('const pool = atlasScannerPool('));
   assert.match(source,/rawPrice: row\.price/);
+  assert.match(source,/historiques \$\{scannerQuote\}/);
   assert.match(source,/chartQuote === "EUR" \? c\?\.priceEur : chartQuote === "USD" \? c\?\.priceUsd/);
 });
