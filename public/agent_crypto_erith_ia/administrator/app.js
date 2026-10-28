@@ -15968,12 +15968,21 @@ function atlasScannerNativeUsdStore(coin, period, result) {
 }
 function atlasScannerStoredHistory(coin, period, tx = null) {
   if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period);
+  const requestedPeriod = Number(period || 1);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The displayed comparison may belong to another period after a horizon switch.
+  // The exact-key Binance/CoinGecko caches remain eligible after quote verification.
+  const currentPeriod = Number(current?.periodDays ?? current?.apiDays);
+  const currentForPeriod = Number.isFinite(currentPeriod) && currentPeriod === requestedPeriod
+    ? current : null;
   const candidates = [
-    current && Array.isArray(current.series) && current.series.length ? current : null,
+    currentForPeriod && Array.isArray(currentForPeriod.series) && currentForPeriod.series.length
+      ? currentForPeriod : null,
     atlasGetStoredChartResult(coin, period, "binance"),
     atlasGetStoredChartResult(coin, period, "coingecko")
-  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
+  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR"
+    && (result.periodDays == null || Number(result.periodDays) === requestedPeriod)
+    && (!result.coinId || String(result.coinId) === String(coin?.id)));
 
   candidates.sort((a, b) => {
     const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
