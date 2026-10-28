@@ -6,6 +6,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs'
       - '.github/workflows/administrator-scanner-integrity.yml'
   workflow_dispatch:
 
@@ -24,10 +25,11 @@ jobs:
             /public/agent_crypto_erith_ia/administrator/app.js
             /public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs
             /public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs
+            /public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - name: Verify syntax and scanner market-frame regression
         run: |
           node --check public/agent_crypto_erith_ia/administrator/app.js
-          node --test public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs
