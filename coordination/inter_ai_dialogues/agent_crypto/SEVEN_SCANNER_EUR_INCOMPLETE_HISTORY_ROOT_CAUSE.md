@@ -96,3 +96,16 @@ La PR #703 contient désormais :
 - **À faire lors de la prochaine session :** valider avec supervision la première exécution réseau bornée, enregistrer durablement les vrais fichiers d'archives en respectant le budget de requêtes, puis définir un lecteur qui vérifie l'ID, le Market Frame et les timestamps avant affichage. La mise en place d'une programmation GitHub Actions et l'intégration navigateur restent des étapes distinctes, exigeant validation.
 
 **Passation :** PR #703 conservée **OPEN / DRAFT / UNMERGED**, tête `4dd730970079e8ef6ef47daf77d9bb5174bfaad7` ; documentation publique mise à jour sans modifier les circuits financiers.
+
+## 28 octobre 2026 — PREMIÈRE ACQUISITION END-TO-END RÉELLE DU PRODUCTEUR DYNAMIQUE (09:06 UTC)
+
+**La PR #703 produit maintenant des archives natives EUR sur données réelles, sans identifiants codés en dur.** Test isolé sur Github Actions [#40661468562](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40661468562), **SUCCESS**.
+
+- Source figée automatiquement au moment du run : snapshot public `coingecko-top250-usd-ecb-eur-github_2026-10-28T09:02:58.438Z` (le snapshot a changé depuis le test offline antérieur de 07:25). Classement public USD, séries historiques demandées et validées en **EUR natif**.
+- Producteur lancé sur **5 actifs maximum**, avec opt-in réseau explicite et sans commit ni modification de l'Interface, méthode `--mode=collect --network=yes --universe=100 --budget=5 --offset=0` + `ERITH_EUR_ARCHIVE_NETWORK=1`.
+- Identités choisies dynamiquement : **bitway, pepe, memecore, layerzero, near**, dans cet ordre ; source HTTP CoinGecko pour chacune ; pas d'actif substitué.
+- **5/5 séries de 288 points EUR natives**, intégrité temporelle validée ; chaque fichier `assets/<id>.json` possède son propre hash SHA-256 vérifié par Node.js sur les octets JSON canoniques. Pas de conflit de prix, pas de trou intérieur supérieur à 5 min, couverture 23h54–23h55 observée.
+- Un manifeste `last-run.json` répertorie les cinq identités et leurs empreintes, ainsi que le snapshot source et la devise. Artefact brut [seven-dynamic-eur-archive-pilot (ID 12803746933)](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40661468562/artifacts/12803746933), ZIP SHA-256 `daba9bf40f0a4f08b5b27d313154458a74cff6bf407e0e49e861c3f8770cb7af` ; rétention provisoire GitHub, donc conserver le rapport permanent.
+- Le workflow **ponctuel** a été retiré de la PR après succès : commit `7ef1d5e72e2662dc0369e316485ae676bd7c192b`. Le producteur reste en PR #703 **DRAFT et non fusionnée**. Pas de programmation, pas d'ordres, pas de changement de l'Administrator public.
+
+**Interprétation correcte :** c'est la première preuve complète **de la chaîne serveur sélection dynamique → collecte native EUR → validation → archivage de cinq fichiers et manifeste**, sur un snapshot réel. Ce n'est **pas** encore un correctif de Baisses 5 ou un lecteur Firefox, et cette réussite ne garantit pas que chaque sélection future de 1 000 actifs possède une couverture suffisante. La prochaine étape à valider est la persistance d'archives sur une branche de données contrôlée, la rotation des groupes et le lecteur de graphiques exact-ID/provenance, sans modifier le noyau Market ni imposer un affichage 5/5 artificiel.
