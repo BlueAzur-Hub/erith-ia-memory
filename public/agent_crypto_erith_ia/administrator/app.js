@@ -15640,7 +15640,64 @@ function atlasScannerRestoreSnapshot(snapshot) {
   atlasSetCleanLensCollapsed(snapshot.detailCollapsed, false);
 }
 
-function atlasScannerCommit(tx, finalEntries, rejected) {
+
+let atlasScannerLastPartialDiagnostic = null;
+function atlasScannerDiagnosticSignature(tx, quoteCurrency) {
+  return JSON.stringify([
+    tx.preset, Number(tx.period), String(quoteCurrency || ""),
+    String(tx.marketFrameFingerprint || tx.marketFrameId || ""),
+    ...(tx.candidateIds || [])
+  ]);
+}
+function atlasScannerExplainMissing(tx, displayedIds, rejected, acceptedEntries) {
+  const drawn = new Set(displayedIds || []);
+  const entries = Array.isArray(acceptedEntries) ? acceptedEntries : [];
+  const failures = Array.isArray(rejected) ? rejected : [];
+  return (tx.candidateIds || []).filter(id => !drawn.has(id)).map(id => {
+    const coin = (tx.candidateCoins || []).find(candidate => candidate.id === id);
+    const accepted = entries.find(entry => entry.coin?.id === id);
+    const failure = failures.find(row => row.id === id);
+    let kind = "undetermined";
+    let reason = "historique absent des séries acceptées ; cause non enregistrée";
+    if (accepted) {
+      const coverage = atlasScannerSeriesCoversWindow(accepted.result, tx);
+      if (!coverage.ok) {
+        kind = "coverage";
+        reason = coverage.reason;
+      } else if (!atlasScannerAligned([accepted], tx.period, [id], tx.windowEnd).length) {
+        kind = "individual-alignment";
+        reason = "série isolée insuffisante pour la période demandée";
+      } else {
+        kind = "joint-alignment";
+        reason = "série valide seule mais incompatible avec la fenêtre commune retenue";
+      }
+    } else if (failure) {
+      kind = "fetch-or-validation";
+      reason = String(failure.reason || "collecte ou validation refusée");
+    }
+    return {
+      id,
+      symbol: String(coin?.symbol || failure?.symbol || id).toUpperCase(),
+      kind,
+      reason: String(reason).slice(0, 400)
+    };
+  });
+}
+function atlasScannerDiagnosticCaption(rows) {
+  const labels = {
+    coverage: "24 h non couvertes",
+    "individual-alignment": "série insuffisante",
+    "joint-alignment": "horodatages incompatibles",
+    "fetch-or-validation": "collecte/validation",
+    undetermined: "cause non déterminée"
+  };
+  return (rows || []).map(row =>
+    row.symbol + ": " + (labels[row.kind] || row.kind) + " · " +
+    String(row.reason).slice(0, 160)
+  ).join(" ; ");
+}
+
+function atlasScannerCommit(tx, finalEntries, rejected, acceptedEntries = finalEntries) {
   if (!atlasScannerCurrent(tx) || !Array.isArray(finalEntries) || !finalEntries.length) {
     return false;
   }
@@ -15663,6 +15720,12 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
   const availableCount = ids.length;
   const missingCount = Math.max(0, ATLAS_SCANNER_TARGET - availableCount);
+  const missingReasons = missingCount
+    ? atlasScannerExplainMissing(tx, ids, rejected, acceptedEntries) : [];
+  const diagnosticSignature = atlasScannerDiagnosticSignature(tx, atlasChartDisplayCurrency());
+  const previousPartial = !missingCount
+    && atlasScannerLastPartialDiagnostic?.signature === diagnosticSignature
+      ? atlasScannerLastPartialDiagnostic : null;
   const canonicalKey = atlasExpectedChartContextKey(ids, tx.period);
   const snapshot = tx.displayedSnapshot || atlasScannerStateSnapshot();
   const commitEpoch = atlasScannerInvalidateChartWork(`commit:${tx.preset}`);
@@ -15734,7 +15797,12 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
         targetCount: ATLAS_SCANNER_TARGET,
         unavailableIds: [...unavailableIds],
         requestedIds: [...tx.candidateIds],
-        rejected: [...rejected]
+        rejected: [...rejected],
+        missingReasons,
+        previousPartial: previousPartial ? {
+          recordedAt: previousPartial.recordedAt,
+          missingReasons: previousPartial.missingReasons
+        } : null
       }
     },
     error: missingCount
@@ -15818,6 +15886,11 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       + ` · ${marketValues}`
       + ` · historiques ${historySummary || "CoinGecko"}`
       + ` · marché ${tx.marketMode} ${atlasExactTimestampLabel(tx.marketTimestamp)}.`
+      + (missingCount
+        ? " · Diagnostic 4/5 : " + atlasScannerDiagnosticCaption(missingReasons)
+        : previousPartial
+          ? " · Chargement précédent : " + atlasScannerDiagnosticCaption(previousPartial.missingReasons) + " · maintenant 5/5"
+          : "")
     );
 
     const saved = atlasWorkspaceWrite();
@@ -15827,6 +15900,15 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       );
     }
 
+    if (missingCount) {
+      atlasScannerLastPartialDiagnostic = {
+        signature: diagnosticSignature,
+        recordedAt: new Date().toISOString(),
+        missingReasons
+      };
+    } else if (previousPartial) {
+      atlasScannerLastPartialDiagnostic = null;
+    }
     atlasHideChartRefresh();
 
     window.setTimeout(() => {
@@ -16112,7 +16194,7 @@ async function atlasScannerRun(tx) {
     );
 
     if (finalEntries.length > 0) {
-      return atlasScannerCommit(tx, finalEntries, rejected);
+      return atlasScannerCommit(tx, finalEntries, rejected, accepted);
     }
 
     const missingIds = tx.candidateIds.filter(id =>
