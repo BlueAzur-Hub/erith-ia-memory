@@ -5839,6 +5839,11 @@ function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFa
     if (memory) candidates.push(memory);
     if (local[key]) candidates.push(local[key]);
     for (const original of candidates) {
+      // The cache key cannot override a contradictory recorded period or coin.
+      // Keep legacy undated metadata readable only through its exact key.
+      if (original?.periodDays != null
+          && Number(original.periodDays) !== Number(days || 1)) continue;
+      if (original?.coinId && String(original.coinId) !== String(c?.id)) continue;
       const candidate = {
         ...original,
         originalSource: original.originalSource || original.source,
@@ -15360,6 +15365,21 @@ function atlasScannerMarketBasis(period) {
   };
 }
 
+// Reject scanner rankings backed by expired Market frames.
+function atlasScannerMarketFreshness(frame, now = Date.now()) {
+  const timestamp = Date.parse(String(frame?.timestamp || ""));
+  const mode = String(frame?.mode || "");
+  const maxAge = mode === "github-public"
+    ? ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS
+    : ATLAS_ANALYSIS_MAX_AGE_MS;
+  const age = Number(now) - timestamp;
+  if (frame?.status !== "ready" || !Number.isFinite(timestamp)
+      || !Number.isFinite(age) || age < -120000 || age > maxAge) {
+    return { ok: false, reason: `Market trop ancien ou non daté · source ${mode || "absente"} · ${frame?.timestamp || "horodatage absent"}` };
+  }
+  return { ok: true, age, timestamp, mode };
+}
+
 function atlasScannerPool(preset, period) {
   // LIVE canonical selection: read the active Market universe, never stale Frame baskets.
   // The Market Frame remains provenance, not the owner of candidate identities.
@@ -15465,7 +15485,7 @@ function atlasScannerDecorateEntry(tx, coin, result, source) {
     coin,
     result: series === result.series ? result : { ...result, series },
     source,
-    atlasMarketMetric: atlasScannerMarketMetric(tx.preset, coin, tx.period),
+    atlasMarketMetric: Number(tx?.candidateMetrics?.[coin.id]),
     atlasMarketMetricLabel: atlasScannerMarketMetricLabel(tx.preset, tx.period),
     atlasHistoryKind: historyKind,
     atlasMarketRank: Number(coin?.rank || 0)
@@ -15659,6 +15679,37 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       || positions.some((position, index) => position === undefined
         || (index > 0 && position <= positions[index - 1]))) return false;
 
+  // Protect the existing chart if the Market changed during historical acquisition.
+  const activeFrame = atlasCurrentMarketFrame();
+  const freshness = atlasScannerMarketFreshness(activeFrame);
+  const changedFrame = !activeFrame
+    || activeFrame.id !== tx.marketFrameId
+    || activeFrame.fingerprint !== tx.marketFrameFingerprint;
+  if (!freshness.ok || changedFrame) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(
+      tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · Market changé ou périmé`,
+      [!freshness.ok ? freshness.reason : null,
+       changedFrame ? "Market actualisé pendant la collecte : relancer le scanner" : null]
+        .filter(Boolean).join(" · ")
+    );
+  }
+
+  // A currency switch during acquisition cannot re-label the frozen Market basket.
+  const scannerQuote = String(tx?.displayCurrency || "").toUpperCase();
+  const activeQuote = atlasChartDisplayCurrency();
+  const unqualified = prevalidated.filter(entry =>
+    atlasHistoricalDisplayQuote(entry?.result).currency !== scannerQuote);
+  if (!["EUR", "USD"].includes(scannerQuote) || activeQuote !== scannerQuote || unqualified.length) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · devises incompatibles`,
+      `sélection ${scannerQuote || "?"} · affichage ${activeQuote} · historiques non qualifiés ${unqualified.map(entry => entry.coin?.symbol || entry.coin?.id).join(", ")}`);
+  }
+
   const ids = prevalidated.map(entry => entry.coin.id);
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
   const availableCount = ids.length;
@@ -15718,7 +15769,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       sourceMode: availableCount > 1
         ? "comparison-base100"
         : prevalidated[0]?.result?.sourceMode || "scanner-single",
-      source: "Classement Market CoinGecko + historiques Bridge/Binance/CoinGecko EUR",
+      source: `Classement Market CoinGecko + historiques ${scannerQuote} · provenance par série`,
       scanner: {
         preset: tx.preset,
         marketBasisLabel: tx.marketBasisLabel,
@@ -15867,16 +15918,25 @@ function atlasScannerNativeUsdKey(coin, period) {
 function atlasScannerNativeUsdStored(coin, period) {
   const key = atlasScannerNativeUsdKey(coin, period);
   if (!key) return null;
+  const requestedPeriod = Number(period || 1);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The comparison owner can still hold a different horizon after a period switch.
+  // Its series is not a candidate unless the acquisition period is explicit.
+  const currentPeriod = Number(current?.periodDays ?? current?.apiDays);
   const candidates = [
-    current,
+    Number.isFinite(currentPeriod) && currentPeriod === requestedPeriod ? current : null,
     state.chartCache?.[key]?.result,
     atlasReadLocalChartStore()?.[key]
   ].filter(result => result && result.currency === "USD" && result.quoteCurrency === "USD"
+    && (result.periodDays == null || Number(result.periodDays) === requestedPeriod)
+    && (!result.coinId || String(result.coinId) === String(coin?.id))
     && Array.isArray(result.series) && result.series.length);
   for (const result of candidates) {
-    const series = atlasNormalizeChartPayload({ prices: result.series });
     const quote = atlasHistoryQuoteProvenance(result, "coingecko");
+    // Self-declared USD metadata is insufficient: reject EUR-origin and unknown caches.
+    if (quote.quoteConflict || quote.quoteCurrency !== "USD"
+        || quote.historySourceFamily !== "coingecko") continue;
+    const series = atlasNormalizeChartPayload({ prices: result.series });
     const integrity = atlasValidateChartSeries({
       c: coin, days: period, prices: series, sourceMode: "browser-cache",
       quoteCurrency: quote.quoteCurrency, historySourceFamily: quote.historySourceFamily,
@@ -15891,7 +15951,12 @@ function atlasScannerNativeUsdStored(coin, period) {
 }
 function atlasScannerNativeUsdStore(coin, period, result) {
   const key = atlasScannerNativeUsdKey(coin, period);
-  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD") {
+  const quote = atlasHistoryQuoteProvenance(result, "coingecko");
+  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD"
+      || Number(result?.periodDays) !== Number(period)
+      || (result?.coinId && String(result.coinId) !== String(coin?.id))
+      || quote.quoteConflict || quote.quoteCurrency !== "USD"
+      || quote.historySourceFamily !== "coingecko") {
     throw new Error("Historique USD natif sans identité de devise vérifiable");
   }
   const savedAt = Date.now();
@@ -15908,12 +15973,21 @@ function atlasScannerNativeUsdStore(coin, period, result) {
 }
 function atlasScannerStoredHistory(coin, period, tx = null) {
   if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period);
+  const requestedPeriod = Number(period || 1);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The displayed comparison may belong to another period after a horizon switch.
+  // The exact-key Binance/CoinGecko caches remain eligible after quote verification.
+  const currentPeriod = Number(current?.periodDays ?? current?.apiDays);
+  const currentForPeriod = Number.isFinite(currentPeriod) && currentPeriod === requestedPeriod
+    ? current : null;
   const candidates = [
-    current && Array.isArray(current.series) && current.series.length ? current : null,
+    currentForPeriod && Array.isArray(currentForPeriod.series) && currentForPeriod.series.length
+      ? currentForPeriod : null,
     atlasGetStoredChartResult(coin, period, "binance"),
     atlasGetStoredChartResult(coin, period, "coingecko")
-  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
+  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR"
+    && (result.periodDays == null || Number(result.periodDays) === requestedPeriod)
+    && (!result.coinId || String(result.coinId) === String(coin?.id)));
 
   candidates.sort((a, b) => {
     const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
@@ -16182,6 +16256,15 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = requestedPeriod;
+    const marketFrame = atlasCurrentMarketFrame();
+    const freshness = atlasScannerMarketFreshness(marketFrame);
+    if (!freshness.ok) {
+      return atlasScannerVisibleFailure(
+        preset,
+        `${label} non validé · Market trop ancien pour un classement actuel`,
+        `${freshness.reason}. Actualiser le Market / Livecheck puis relancer.`
+      );
+    }
     const pool = atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
@@ -16191,10 +16274,6 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       );
     }
 
-    const marketFrame = atlasCurrentMarketFrame();
-    if (!marketFrame) {
-      return atlasScannerVisibleFailure(preset, `${label} refusé · Market Frame indisponible`);
-    }
     const marketMode = String(
       marketFrame.mode
       || state.sourceLock?.mode
@@ -16207,6 +16286,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       id: ++atlasScannerSequence,
       preset,
       period,
+      displayCurrency: atlasChartDisplayCurrency(),
       // Every candidate is evaluated against the same acquisition clock.
       windowEnd: Date.now(),
       universeSize: marketFrame.validatedAssets,
@@ -16220,6 +16300,9 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       candidateIds: pool.map(coin => coin.id),
       // Freeze the exact Market candidates, not the potentially stale state.coins copy.
       candidateCoins: pool.map(coin => ({ ...coin })),
+      candidateMetrics: Object.fromEntries(pool.map(coin => [
+        coin.id, atlasScannerMarketMetric(preset, coin, period)
+      ])),
       cacheChecked: 0,
       cacheHits: 0,
       examined: 0,
