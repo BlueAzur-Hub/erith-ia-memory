@@ -1,0 +1,25 @@
+name: Seven scanner rolling EUR evidence contract
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/tools/scanner_rolling_eur_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs"
+      - ".github/workflows/seven-scanner-rolling-eur-contract.yml"
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check read-only generic collector and merger
+        run: |
+          node --check public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs
+          node --check public/agent_crypto_erith_ia/tools/scanner_rolling_eur_history.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs
