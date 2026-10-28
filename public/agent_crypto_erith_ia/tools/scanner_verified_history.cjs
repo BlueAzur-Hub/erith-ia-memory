@@ -60,39 +60,79 @@ function validatePoints(prices, anchorMs) {
   return {ok:true,first,last,pointCount:prices.length,spanMs:last-first};
 }
 
-async function requestCoin(fetchFn,id,anchorMs,opts={}) {
-  const endpoint = '/coins/'+encodeURIComponent(id)+'/market_chart';
-  const query = '?vs_currency=eur&days=1&precision=full';
-  const origin = opts.baseUrl || BASE;
-  const url = origin + endpoint + query;
-  const headers = {'Accept':'application/json','User-Agent':'agent-crypto-seven-history/1'};
-  // A key must never be written to evidence or publicly committed.
-  if (opts.demoKey) headers['x-cg-demo-api-key'] = opts.demoKey;
-  const controller = new AbortController();
-  let timer;
-  const empty = {id,quoteCurrency:'EUR',periodDays:1,source:'coingecko-market-chart',
-    endpoint,requestedAt:new Date(anchorMs).toISOString(),status:'unavailable'};
-  try {
-    timer=setTimeout(()=>controller.abort(),opts.timeoutMs||25000);
-    const response=await fetchFn(url,{headers,signal:controller.signal});
-    const code=Number(response?.status);
-    if (!response?.ok) {
-      return {...empty,httpStatus:Number.isInteger(code)?code:null,
-        error:code===429?'CoinGecko HTTP 429 rate limit':'CoinGecko HTTP '+(code || 'unknown')};
+// Preserve authentic but incomplete EUR samples as evidence. They must never be
+// passed to charts as "series" before a separately verified rolling union.
+function validateObservations(rows,anchorMs) {
+  if (!Array.isArray(rows) || rows.length < 2 || rows.length > 10000)
+    return {ok:false,reason:'No bounded genuine observations'};
+  let previous=-Infinity;
+  for (const row of rows) {
+    if (!Array.isArray(row) || row.length < 2 || !Number.isSafeInteger(row[0])
+        || !Number.isFinite(row[1]) || row[1] <= 0 || row[0] <= previous
+        || row[0] > anchorMs + BOUNDARY_MS) {
+      return {ok:false,reason:'Invalid raw observation'};
     }
-    const body=await response.text();
-    if (body.length>MAX_RESPONSE_BYTES) return {...empty,httpStatus:code,error:'Oversized upstream response'};
-    let json;
-    try {json=JSON.parse(body)} catch {return {...empty,httpStatus:code,error:'Invalid upstream JSON'}}
-    const validity=validatePoints(json?.prices,anchorMs);
-    if (!validity.ok) return {...empty,httpStatus:code,error:validity.reason,
-      coverage:validity};
-    return {...empty,status:'ready',httpStatus:code,receivedAt:new Date().toISOString(),
-      provenance:{provider:'CoinGecko',method:'GET',endpoint,query:{vs_currency:'eur',days:'1',precision:'full'}},
-      coverage:validity,series:json.prices};
-  } catch(error) {
-    return {...empty,httpStatus:null,error:error?.name==='AbortError'?'Upstream timeout':safeError(error)};
-  } finally {clearTimeout(timer)}
+    previous=row[0];
+  }
+  return {ok:true,first:rows[0][0],last:rows.at(-1)[0],pointCount:rows.length};
+}
+
+async function requestCoin(fetchFn,id,anchorMs,opts={}) {
+  const endpoint='/coins/'+encodeURIComponent(id)+'/market_chart';
+  const origin=opts.baseUrl||BASE;
+  const headers={'Accept':'application/json','User-Agent':'agent-crypto-seven-history/1'};
+  if (opts.demoKey) headers['x-cg-demo-api-key']=opts.demoKey;
+  const empty={id,quoteCurrency:'EUR',periodDays:1,source:'coingecko-market-chart',
+    endpoint,requestedAt:new Date(anchorMs).toISOString(),status:'unavailable'};
+  const attempts=opts.precisionFallback===false?['full']:['full','default'];
+  let best=null,last=null;
+  for (const variant of attempts) {
+    const query='?vs_currency=eur&days=1'+(variant==='full'?'&precision=full':'');
+    const url=origin+endpoint+query;
+    const controller=new AbortController();
+    let timer=null;
+    try {
+      timer=setTimeout(()=>controller.abort(),opts.timeoutMs||25000);
+      const response=await fetchFn(url,{headers,signal:controller.signal});
+      const code=Number(response?.status);
+      if (!response?.ok) {
+        last={...empty,httpStatus:Number.isInteger(code)?code:null,
+          error:code===429?'CoinGecko HTTP 429 rate limit':'CoinGecko HTTP '+(code||'unknown')};
+        // HTTP failure must not produce a fake series or silently bypass an API rate limit.
+        return best||last;
+      }
+      const body=await response.text();
+      if (body.length>MAX_RESPONSE_BYTES) {
+        last={...empty,httpStatus:code,error:'Oversized upstream response'};
+        return best||last;
+      }
+      let json;
+      try {json=JSON.parse(body)} catch {
+        last={...empty,httpStatus:code,error:'Invalid upstream JSON'};
+        return best||last;
+      }
+      const observed=validateObservations(json?.prices,anchorMs);
+      const valid=validatePoints(json?.prices,anchorMs);
+      const provenance={provider:'CoinGecko',method:'GET',endpoint,
+        query:{vs_currency:'eur',days:'1',...(variant==='full'?{precision:'full'}:{})}};
+      if (valid.ok) {
+        return {...empty,status:'ready',httpStatus:code,receivedAt:new Date().toISOString(),
+          provenance,coverage:valid,series:json.prices};
+      }
+      last={...empty,httpStatus:code,error:valid.reason,coverage:valid,
+        ...(observed.ok?{receivedAt:new Date().toISOString(),
+          provenance,observedSeries:json.prices,observationCoverage:observed}:{})};
+      // Prefer the widest genuine observation interval, never fabricated points.
+      if (observed.ok && (!best || observed.last-observed.first >
+          best.observationCoverage.last-best.observationCoverage.first)) best=last;
+      if (variant==='default') return best||last;
+    } catch(error) {
+      last={...empty,httpStatus:null,
+        error:error?.name==='AbortError'?'Upstream timeout':safeError(error)};
+      // Retry only a network/timeout failure, not an explicit provider HTTP rejection.
+    } finally {clearTimeout(timer)}
+  }
+  return best||last||{...empty,httpStatus:null,error:'Source unavailable'};
 }
 
 async function collect({ids,frameId,fetchFn=fetch,now=Date.now(),timeoutMs=25000,demoKey,
