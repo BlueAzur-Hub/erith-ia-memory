@@ -1,0 +1,31 @@
+name: Administrator scanner frame and currency integrity
+
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs'
+      - '.github/workflows/administrator-scanner-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scanner-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify syntax and scanner market-frame regression
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs
