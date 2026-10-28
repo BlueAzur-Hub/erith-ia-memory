@@ -5839,6 +5839,11 @@ function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFa
     if (memory) candidates.push(memory);
     if (local[key]) candidates.push(local[key]);
     for (const original of candidates) {
+      // The cache key cannot override a contradictory recorded period or coin.
+      // Keep legacy undated metadata readable only through its exact key.
+      if (original?.periodDays != null
+          && Number(original.periodDays) !== Number(days || 1)) continue;
+      if (original?.coinId && String(original.coinId) !== String(c?.id)) continue;
       const candidate = {
         ...original,
         originalSource: original.originalSource || original.source,
