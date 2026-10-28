@@ -1,0 +1,42 @@
+name: Administrator scanner EUR combined verification
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/app.js"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs"
+      - ".github/workflows/administrator-scanner-eur-combined-verification.yml"
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Parse full Administrator JavaScript
+        run: node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Verify EUR/USD identity, market frame and partial diagnostics
+        run: |
+          node --test \
+            public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs \
+            public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs
+      - name: Verify Technical Reading is updated on confirmed comparison
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const source=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+          const start=source.indexOf('function atlasRenderComparisonDetail(entries, period)');
+          const end=source.indexOf('function ',start+9);
+          if(start<0 || end<0 || !source.slice(start,end).includes('atlasRenderCompactDetailSummary(primary);')){
+            throw Error('Technical Reading compact detail is not synchronized');
+          }
+          console.log('Technical Reading comparison sync present');
+          NODE
