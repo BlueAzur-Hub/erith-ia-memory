@@ -105,6 +105,9 @@ function mountCommitRuntime(config = {}) {
   };
   Object.assign(scope, {
     atlasScannerCurrent: tx => tx?.cancelled !== true,
+    atlasCurrentMarketFrame: () => ({ id: 'market-frame-1', fingerprint: 'market-frame-1', status: 'ready' }),
+    atlasScannerMarketFreshness: frame => ({ ok:frame?.status==='ready', reason:'invalid market frame' }),
+    atlasHistoricalDisplayQuote: () => ({currency:'EUR'}),
     atlasScannerAligned: entries => entries,
     atlasScannerSeriesCoversWindow: () => ({ok:true}),
     atlasChartDisplayCurrency: () => scope.displayCurrency,
@@ -157,7 +160,7 @@ const runtimeEntry = id => ({
   }
 });
 const runtimeTx = (overrides = {}) => ({
-  preset:"gainers",period:1,
+  preset:"gainers",period:1,displayCurrency:"EUR",
   candidateIds:ids,candidateCoins:ids.map(id => ({id,symbol:id.toUpperCase()})),
   marketFrameFingerprint:"market-frame-1",marketFrameId:"market-frame-1",
   marketTimestamp:"2026-10-28T04:00:00Z",marketMode:"direct",
@@ -199,7 +202,7 @@ test("real commit: EUR partial cannot become a USD or new-frame diagnostic", () 
   c.commitScanner(runtimeTx(),all,[],all);
   assert.equal(c.state.dataBroker.chart.result.scanner.previousPartial,null);
   c.displayCurrency = "EUR";
-  c.commitScanner(runtimeTx({marketFrameFingerprint:"market-frame-2"}),all,[],all);
+  assert.equal(c.commitScanner(runtimeTx({marketFrameFingerprint:"market-frame-2"}),all,[],all),false);
   assert.equal(c.state.dataBroker.chart.result.scanner.previousPartial,null);
 });
 test("real commit: aligned-out coin with available source is a time-compatibility rejection", () => {
