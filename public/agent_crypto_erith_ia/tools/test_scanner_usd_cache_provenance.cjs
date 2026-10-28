@@ -34,7 +34,7 @@ function setup() {
 }
 const sample = (sourceLabel, fields = {}) => ({
   currency: "USD", quoteCurrency: "USD", sourceFamily: "coingecko",
-  source: sourceLabel, sourceMode: "coingecko-direct",
+  source: sourceLabel, sourceMode: "coingecko-direct", periodDays: 1,
   series: [[1, 80100], [2, 80200]], ...fields
 });
 
@@ -75,4 +75,38 @@ test("USD writer stores verified source only, without touching EUR slots", () =>
   assert.equal(c.local["bitcoin:1:coingecko:EUR"], eur);
   assert.equal(c.local["bitcoin:USD:coingecko:1"].series[0][1], 80100);
   assert.equal(c.read({ id: "bitcoin" }, 1)?.series[1][1], 80200);
+});
+
+
+test("a seven-day comparison cannot be reused as the one-day USD history", () => {
+  const c = setup(), wrong = sample("CoinGecko market_chart USD · direct", { periodDays: 7 });
+  c.state.dataBroker.comparison.results.bitcoin = wrong;
+  assert.equal(c.read({ id: "bitcoin" }, 1), null);
+  c.local["bitcoin:USD:coingecko:1"] =
+    sample("CoinGecko market_chart USD · direct", { periodDays: 1 });
+  assert.equal(c.read({ id: "bitcoin" }, 1)?.periodDays, 1);
+});
+
+test("active comparison without an acquisition period cannot displace the exact slot", () => {
+  const c = setup();
+  c.state.dataBroker.comparison.results.bitcoin =
+    sample("CoinGecko market_chart USD · direct", { periodDays: undefined, series: [[1, 99], [2, 99]] });
+  c.local["bitcoin:USD:coingecko:1"] =
+    sample("CoinGecko market_chart USD · direct");
+  assert.equal(c.read({ id: "bitcoin" }, 1)?.series[1][1], 80200);
+});
+
+test("different coin identity cannot lend its USD cached prices", () => {
+  const c = setup();
+  c.local["bitcoin:USD:coingecko:1"] =
+    sample("CoinGecko market_chart USD · direct", { coinId: "ethereum" });
+  assert.equal(c.read({ id: "bitcoin" }, 1), null);
+});
+
+test("USD cache writer refuses a source from a different acquisition period", () => {
+  const c = setup();
+  assert.throws(() => c.write({ id: "bitcoin" }, 1,
+    sample("CoinGecko market_chart USD · direct", { periodDays: 7 })),
+    /historique USD natif/i);
+  assert.equal(Object.keys(c.local).length, 0);
 });
