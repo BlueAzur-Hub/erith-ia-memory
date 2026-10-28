@@ -1,12 +1,23 @@
 # SEVEN HEAVEN — MÉMOIRE ACTIVE PARTAGÉE
 
 **FICHIER D'ENTRÉE UNIQUE pour la reprise inter-IA d'Agent-Crypto.**
-**Dernier état consigné : 27 octobre 2026 ; Firefox TEST accessible, verrou temporel et directionnel scanners commité en TEST, 16 dossiers de veille archivés sur main, preuves financières complètes toujours insuffisantes.**
+**Dernier état consigné : 28 octobre 2026 ; mesures prospectives Radar recalculées sur 11 journées, générateur corrigé et automatisé, sans certification de rentabilité ni ordre réel.**
 **Adresse canonique stable :** `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md`
 **Responsabilité :** Aerith-7 / Seven Heaven et continuité Aerith-8, Aerith-9, autres sœurs habilitées.
 **Fonction :** index de reprise et journal de décision, non substitut aux sources ni mémoire automatique native du modèle.
 
 > **À LA REPRISE :** lire ce fichier EN ENTIER, puis vérifier le code courant, le Notion et les pièces citées avant toute action. **À LA FIN :** mettre à jour CE MÊME FICHIER (pas un nouvel « état final » dispersé) avec ce qui a été fait, les preuves et ce qui reste. Si la lecture ou l'écriture du dépôt est impossible, le dire — ne jamais prétendre que la passation a été faite.
+
+## Mesure de valeur des signaux · 28 octobre 2026 — FIABILITÉ MESURÉE, RENTABILITÉ NON PROUVÉE
+
+- **Source de vérité actualisée** : [signal-evidence.json](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/signal-evidence.json), régénérée depuis [dynamic-followups.json](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json). Problème racine corrigé : le constructeur refusait le groupe ajouté `seven_capital_scout`, laissant le rapport bloqué à **6 dates** malgré **11 dates** dans la source. Correctif [18d328fd](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/18d328fd905c475173504e0fe7d8191e49936d1) : valider les données Seven, mais **ne pas mélanger** cette cohorte aux règles momentum/rebond gelées ; tests de non-régression. [CI réussie 40609492268](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40609492268) ; régénération automatique ciblée avec sparse checkout, déclenchée par les vrais changements de données.
+- **Radar dynamique prospectif descriptif J+1** : momentum 24h+7j **130 signaux, 93 suivis, 37 sans résultat, 31/93 positifs, médiane −4,24 %** ; rebond 24h **101, 65 suivis, 36 sans résultat, 31/65 positifs, médiane −0,08 %**. Après exclusion des 24 résultats **encore en attente de leur date future**, couverture sur les observations mûres **158/207 = 76,3 %**. Source USD CoinGecko, aucun coût ni carnet Spot exécuté. **Six observations Seven Capital** conservées séparément et jamais comptées comme l'un des deux groupes.
+- **À J+7** : calcul direct des séries déjà archivées : momentum **10/56 positifs, médiane −13,12 %**, rebond **17/50 positifs, médiane −3,685 %** ; beaucoup de dates futures encore en attente. **Top50 historique 7 j** : période tardive **47/63 suivis, 10/47 positifs, moyenne −5,94 %, médiane −6,69 %**, étude rétrospective chronologique, **PAS** holdout invisible/validation prospective.
+- **Radar20 prospectif indépendant** : **13/90 journées**, modèle A coût fictif 0,8 % : valeur 378,007/400 USDT et 14 trades clôturés (3 gagnants) ; modèle B : 381,995/400 USDT et 4 clôturés (0 gagnant). Les six variantes sont en recul, source Binance Spot USDT ; **aucun P&L réel**, aucun ajustement des règles gelées.
+- **Qualité des sources** : 11 dates archivées du 16 au 27 octobre (date absente : **22/10**). Qualification OKX Spot du **20/10/2026 18:37 UTC** : périmée, 11 paires/règles/carnets publics observés mais **aucune identité contrat↔CoinGecko certifiée** ; ne pas évaluer un gain après frais sur ces seuls prix. CoinGecko `total_volume` et variations 24 h sont **glissants** ; un rang Market 24 h n'est pas la variation OHLC d'une autre fenêtre. [CoinGecko explication](https://www.coingecko.com/learn/coingecko-api-troubleshooting-guide-and-solutions) ; [OKX carnet avec horodatage exchange](https://app.okx.com/docs-v5/en).
+- **Garde-fou** : `5/5 séries` prouve uniquement cinq historiques techniquement compatibles, **pas cinq opportunités rentables**. Aucune comparaison USD↔USDT↔USDC↔EUR silencieuse, aucune position exécutée. Continuer à relever le temps initial T et les résultats réellement postérieurs T+1h/T+4h/T+24h/T+48h, aux sources/paires identiques, avec spread, profondeur et coût réellement justifiés. Fichiers runtime Administrator, Trading et Coffre inchangés lors de cette mesure.
+
+---
 
 ## PRIORITÉ IMMÉDIATE — 27 octobre 2026 · correction des scanners + 16 dossiers capitalisés
 
