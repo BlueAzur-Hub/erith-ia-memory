@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.target-coverage-and-queue.v1",
-  "as_of_observed_at_utc": "2026-10-28T01:29:48Z",
-  "latest_hour_utc": "2026-10-28T01Z",
+  "as_of_observed_at_utc": "2026-10-28T05:57:45Z",
+  "latest_hour_utc": "2026-10-28T05Z",
   "source_daily_files": [
     {
       "date_utc": "2026-10-27",
@@ -9,13 +9,13 @@
     },
     {
       "date_utc": "2026-10-28",
-      "sha256": "803ae3cec7a5bf80c9d20fccda7fff9ea644de7fb3d86699f6df829ea6dce9ed"
+      "sha256": "5888b867e308165a1a5f272c0e23cf75d3ef844d36fc142d549ec3607c62f1d2"
     }
   ],
   "coverage": {
-    "hours_archived": 17,
-    "expected_hours_since_first": 26,
-    "hours_without_archive": 9,
+    "hours_archived": 18,
+    "expected_hours_since_first": 30,
+    "hours_without_archive": 12,
     "markets_observed_latest": 3,
     "target_count": 3,
     "window_max_hours": 48
@@ -28,15 +28,15 @@
       "quote": "USDT",
       "contract": "0xff7d6a96ae471bbcd7713af9cb1feeb16cf56b41",
       "platform": "binance-smart-chain",
-      "hours_observed": 17,
+      "hours_observed": 18,
       "hours_unavailable": 0,
-      "hours_unarchived": 9,
+      "hours_unarchived": 12,
       "first_hour_utc": "2026-10-27T00Z",
-      "last_hour_utc": "2026-10-28T01Z",
+      "last_hour_utc": "2026-10-28T05Z",
       "latest_hour_observed": true,
-      "latest_real_price_usdt": "0.4991",
-      "latest_spread_bps": "14.01",
-      "change_last_consecutive_hour_pct": "0.950647249190938511326860800",
+      "latest_real_price_usdt": "0.4831",
+      "latest_spread_bps": "12.42",
+      "change_last_consecutive_hour_pct": null,
       "reversal_certified": false,
       "fill_certified": false
     },
@@ -47,15 +47,15 @@
       "quote": "USDT",
       "contract": "0xea37a8de1de2d9d10772eeb569e28bfa5cb17707",
       "platform": "binance-smart-chain",
-      "hours_observed": 17,
+      "hours_observed": 18,
       "hours_unavailable": 0,
-      "hours_unarchived": 9,
+      "hours_unarchived": 12,
       "first_hour_utc": "2026-10-27T00Z",
-      "last_hour_utc": "2026-10-28T01Z",
+      "last_hour_utc": "2026-10-28T05Z",
       "latest_hour_observed": true,
-      "latest_real_price_usdt": "0.008546",
-      "latest_spread_bps": "12.85",
-      "change_last_consecutive_hour_pct": "7.672924278694720927302507200",
+      "latest_real_price_usdt": "0.007217",
+      "latest_spread_bps": "9.72",
+      "change_last_consecutive_hour_pct": null,
       "reversal_certified": false,
       "fill_certified": false
     },
@@ -66,15 +66,15 @@
       "quote": "USDT",
       "contract": "0x62d0a8458ed7719fdaf978fe5929c6d342b0bfce",
       "platform": "ethereum",
-      "hours_observed": 17,
+      "hours_observed": 18,
       "hours_unavailable": 0,
-      "hours_unarchived": 9,
+      "hours_unarchived": 12,
       "first_hour_utc": "2026-10-27T00Z",
-      "last_hour_utc": "2026-10-28T01Z",
+      "last_hour_utc": "2026-10-28T05Z",
       "latest_hour_observed": true,
-      "latest_real_price_usdt": "0.003322",
-      "latest_spread_bps": "15.05",
-      "change_last_consecutive_hour_pct": "-0.0902255639097744360902255600",
+      "latest_real_price_usdt": "0.003338",
+      "latest_spread_bps": "8.95",
+      "change_last_consecutive_hour_pct": null,
       "reversal_certified": false,
       "fill_certified": false
     }
