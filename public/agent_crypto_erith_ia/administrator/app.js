@@ -15913,12 +15913,18 @@ function atlasScannerNativeUsdKey(coin, period) {
 function atlasScannerNativeUsdStored(coin, period) {
   const key = atlasScannerNativeUsdKey(coin, period);
   if (!key) return null;
+  const requestedPeriod = Number(period || 1);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The comparison owner can still hold a different horizon after a period switch.
+  // Its series is not a candidate unless the acquisition period is explicit.
+  const currentPeriod = Number(current?.periodDays ?? current?.apiDays);
   const candidates = [
-    current,
+    Number.isFinite(currentPeriod) && currentPeriod === requestedPeriod ? current : null,
     state.chartCache?.[key]?.result,
     atlasReadLocalChartStore()?.[key]
   ].filter(result => result && result.currency === "USD" && result.quoteCurrency === "USD"
+    && (result.periodDays == null || Number(result.periodDays) === requestedPeriod)
+    && (!result.coinId || String(result.coinId) === String(coin?.id))
     && Array.isArray(result.series) && result.series.length);
   for (const result of candidates) {
     const quote = atlasHistoryQuoteProvenance(result, "coingecko");
@@ -15942,6 +15948,8 @@ function atlasScannerNativeUsdStore(coin, period, result) {
   const key = atlasScannerNativeUsdKey(coin, period);
   const quote = atlasHistoryQuoteProvenance(result, "coingecko");
   if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD"
+      || Number(result?.periodDays) !== Number(period)
+      || (result?.coinId && String(result.coinId) !== String(coin?.id))
       || quote.quoteConflict || quote.quoteCurrency !== "USD"
       || quote.historySourceFamily !== "coingecko") {
     throw new Error("Historique USD natif sans identité de devise vérifiable");
