@@ -64,3 +64,35 @@ En bref : tests réussis ne signifient pas historique disponible ; **5/5 honnêt
 - [GitHub Actions réel #40655342900](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40655342900), [preuve ZIP 12801431448](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40655342900/artifacts/12801431448) : QNT, RAIN, ENA, HBAR historiques EUR 24 h `ready` ; **FIGR_HELOC HTTP 200 et 245 points EUR authentiques couvrant 20,306 h**, statut `unavailable` / `Frozen 24 h window not covered`. Ces 245 points sont maintenant gardés en `observedSeries` dans le JSON : une première pierre d'archive, **pas un 5/5**. ZIP à durée de conservation limitée.
 - Les deux workflows de sondage réseau ponctuels ont été retirés de la branche après production des artefacts, pour éviter d'émettre des requêtes répétées à chaque commit. La PR #703 reste **DRAFT, NON FUSIONNÉE**. Aucun changement du graphique public, Trader, Bridge, Coffre ou Market Core.
 - **Prochaine porte réelle et unique :** stockage automatique et cumulatif des `observedSeries` authentifiées côté serveur (enveloppes horodatées, partition par ID/devise, rétention bornée), qualification d'une fenêtre 24 h depuis plusieurs collectes, puis lecture graphique sur preuve fraîche du Market Frame, sans liste figée de tokens. La qualité des données sources et les limites d'API rendent impossible de garantir 5/5 sur tous les actifs en toute circonstance.
+
+## 28 octobre 2026 — Relais autonome après demande de pause (PR #703, CI validée)
+
+**Contexte :** après environ 21 heures consacrées au projet, le créateur a demandé que Seven reprenne seule la recherche et l'architecture commune, sans nouveau test Firefox ni corrections par crypto. La dernière capture publique « Hausses 5 » affichait 5/5 historiques mais seulement **1 direct + 4 caches récents** ; ce n'est pas un contrat de collecte pour le prochain panier.
+
+### Sources recoupées
+
+- Relu le grand fil `Fil.Inteface.Crypto.GPT(20261028-064512).md`, notamment les règles de continuité et de correction à la racine (CM-REL-0078/0079), plus les échanges récents du présent fil.
+- Bureau Notion canonique : [AETHER · AGENT-CRYPTO INTERFACE](https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099).
+- Dépôt : [PR #703](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/703) et les scripts serveur déjà présents, avec validation contre le vrai [snapshot Market](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/latest.json).
+- CoinGecko confirme [la granularité automatiquement variable du plan public](https://support.coingecko.com/articles/5723073761-what-granularity-do-you-support-for-historical-data) : une demande historique 24 h et une demande 48 h ne fournissent pas les mêmes pas temporels. Il est interdit de présenter l'échantillonnage plus grossier comme un historique haute résolution complet.
+- GitHub confirme que les [workflows programmés ne s'exécutent que sur la branche par défaut](https://github.com/github/docs/blob/main/content/actions/how-tos/troubleshoot-workflows.md) : une PR test ne vaut pas mise en service d'un collecteur périodique.
+
+### Production réelle sur la branche d'essai
+
+La PR #703 contient désormais :
+
+1. `tools/scanner_verified_history.cjs` : conserve les observations partielles EUR natives en `observedSeries`, sans valider artificiellement une couverture de 24 h.
+2. `tools/scanner_rolling_eur_history.cjs` : union temporelle par ID exact, sans interpolation ni conversion de devise, avec refus des trous et des contradictions.
+3. `tools/scanner_market_eur_archive.cjs` : planifie depuis le vrai snapshot du Market les paniers dynamiques Hausses 5 / Baisses 5 / Volumes 5, puis des actifs supplémentaires par rotation ; lots de cinq, quota 5–25, intégrité SHA-256 de chaque enveloppe, archivage strictement natif EUR par identifiant, conservation maximale de 24 captures sur 48 h. **Aucun identifiant de crypto n'est codé en dur.**
+4. `tools/run_scanner_market_eur_archive.cjs` : point d'entrée **plan seul par défaut, zéro réseau**. Une acquisition impose simultanément `--mode=collect`, `--network=yes` et `ERITH_EUR_ARCHIVE_NETWORK=1`. Écriture limitée au dossier dédié `data/crypto/scanner_eur_archives`. Pas de commit automatique, pas d'ordre, pas de modification navigateur.
+5. Tests unitaires et workflow CI isolé `.github/workflows/seven-scanner-rolling-eur-contract.yml`.
+
+**Validation vérifiée :** [run GitHub Actions #40661110044](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40661110044) : **40 tests PASS / 0 FAIL** et vérification du planificateur sur le snapshot réel. Ce snapshot est daté du **28/10/2026 07:25:28 UTC**, et le plan de 20 ID se décompose en quatre groupes de cinq. Premier groupe de ce snapshot : `bitway`, `memecore`, `pepe`, `zcash`, `layerzero`. Ce résultat **ne garantit pas** une correspondance avec la sélection live Firefox une heure plus tard.
+
+### Interdits et prochaine porte
+
+- **Non déployé :** le producteur n'est ni programmé ni raccordé au navigateur. Pas de série 5/5 réelle nouvelle démontrée aujourd'hui ; pas de modifications `main` dans les fichiers d'Administrator/Trader/Bridge/Coffre.
+- **Non garanti :** 1000 actifs ne sont pas acquis en un seul cycle ; le Market public inspecté contient 250 actifs. Le planificateur refuse un univers de rangs plus large que la source réellement disponible.
+- **À faire lors de la prochaine session :** valider avec supervision la première exécution réseau bornée, enregistrer durablement les vrais fichiers d'archives en respectant le budget de requêtes, puis définir un lecteur qui vérifie l'ID, le Market Frame et les timestamps avant affichage. La mise en place d'une programmation GitHub Actions et l'intégration navigateur restent des étapes distinctes, exigeant validation.
+
+**Passation :** PR #703 conservée **OPEN / DRAFT / UNMERGED**, tête `4dd730970079e8ef6ef47daf77d9bb5174bfaad7` ; documentation publique mise à jour sans modifier les circuits financiers.
