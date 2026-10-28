@@ -15692,6 +15692,19 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     );
   }
 
+  // A currency switch during acquisition cannot re-label the frozen Market basket.
+  const scannerQuote = String(tx?.displayCurrency || "").toUpperCase();
+  const activeQuote = atlasChartDisplayCurrency();
+  const unqualified = prevalidated.filter(entry =>
+    atlasHistoricalDisplayQuote(entry?.result).currency !== scannerQuote);
+  if (!["EUR", "USD"].includes(scannerQuote) || activeQuote !== scannerQuote || unqualified.length) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · devises incompatibles`,
+      `sélection ${scannerQuote || "?"} · affichage ${activeQuote} · historiques non qualifiés ${unqualified.map(entry => entry.coin?.symbol || entry.coin?.id).join(", ")}`);
+  }
+
   const ids = prevalidated.map(entry => entry.coin.id);
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
   const availableCount = ids.length;
@@ -15751,7 +15764,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       sourceMode: availableCount > 1
         ? "comparison-base100"
         : prevalidated[0]?.result?.sourceMode || "scanner-single",
-      source: "Classement Market CoinGecko + historiques Bridge/Binance/CoinGecko EUR",
+      source: `Classement Market CoinGecko + historiques ${scannerQuote} · provenance par série`,
       scanner: {
         preset: tx.preset,
         marketBasisLabel: tx.marketBasisLabel,
@@ -16245,6 +16258,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       id: ++atlasScannerSequence,
       preset,
       period,
+      displayCurrency: atlasChartDisplayCurrency(),
       // Every candidate is evaluated against the same acquisition clock.
       windowEnd: Date.now(),
       universeSize: marketFrame.validatedAssets,
