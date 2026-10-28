@@ -13772,7 +13772,9 @@ function atlasChartOverlayTitleHtml(context, mode, truthLabel) {
 function atlasChartOverlayComparison(chart, period, options = {}) {
   const result = chart?.result || {};
   const entries = atlasChartOverlayOrderedEntries(result);
-  const selectedCount = Number(options.selectedCount || atlasComparisonIds().length || entries.length);
+  const scannerTarget = Number(result?.scanner?.targetCount || 0);
+  const selectedCount = scannerTarget > 0 && scannerTarget <= ATLAS_SCANNER_TARGET && scannerTarget >= entries.length
+    ? scannerTarget : Number(options.selectedCount || atlasComparisonIds().length || entries.length);
   const periodLabel = atlasChartPeriodLabel(period);
   const preset = String(options.preset || state.dataBroker?.comparison?.preset || "manual");
   const truth = atlasChartOverlayTruth(
@@ -13950,6 +13952,19 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     secondarySummaryItems.unshift({
       className: "atlas-hud-detail",
       text: `sélection libre Top 5 ${manualTop5Drift.selectedIds.length}/5 · manquant ${manualTop5Drift.missingSymbols.join("/")} · Target Top 5 = restaurer`
+    });
+  }
+
+  const missingRows = Array.isArray(result?.scanner?.missingReasons) ? result.scanner.missingReasons : [];
+  if (missingRows.length) {
+    secondarySummaryItems.unshift({
+      className: "atlas-hud-detail",
+      text: "INCOMPLET " + entries.length + "/" + selectedCount + " · manquant : " +
+        missingRows.map(row => String(row?.symbol || row?.id || "?").toUpperCase() +
+          " (" + (row.kind === "fetch-or-validation" ? "collecte réseau"
+            : row.kind === "coverage" ? "couverture 24 h"
+            : String(row.kind || "").includes("alignment") ? "alignement"
+            : "cause non déterminée") + ")").join(" ; ")
     });
   }
 
@@ -16756,8 +16771,9 @@ const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
 });
 
 const ATLAS_PUBLIC_CRYPTO_MARKET_PATHS = Object.freeze({
-  latest: "../data/crypto/latest.json",
-  status: "../data/crypto/status.json",
+  // Preview-only: use the latest verified public Market, not a commit-frozen JSON file.
+  latest: "https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/latest.json",
+  status: "https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/status.json",
   // The lightweight Pages deployment excludes /data/; public market archives live in GitHub RAW.
   extended: "https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/extended.json",
   extendedStatus: "../data/crypto/extended_status.json"
