@@ -81,13 +81,21 @@ const commitStart = source.indexOf("let atlasScannerLastPartialDiagnostic = null
 const commitEnd = source.indexOf("// Reuse the same exact-ID native USD", commitStart);
 assert.ok(commitStart >= 0 && commitEnd > commitStart, "Scanner commit owner not found");
 const commitSource = source.slice(commitStart, commitEnd);
+const freshnessStart = source.indexOf("function atlasScannerMarketFreshness(");
+const freshnessEnd = source.indexOf("function atlasScannerPool(", freshnessStart);
+assert.ok(freshnessStart >= 0 && freshnessEnd > freshnessStart, "Combined Market freshness owner not found");
+const freshnessSource = source.slice(freshnessStart, freshnessEnd);
 
 function mountCommitRuntime(config = {}) {
   const noop = () => {};
   const scope = {
     Date, Number, Math, Map, Set, Array,
     ATLAS_SCANNER_TARGET: 5,
+    ATLAS_ANALYSIS_MAX_AGE_MS: 15 * 60 * 1000,
+    ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS: 45 * 60 * 1000,
     ATLAS_CANONICAL_MARKET_SOURCE: "market",
+    frame: {id:"market-frame-1",fingerprint:"market-frame-1",status:"ready",
+      mode:"direct",timestamp:new Date().toISOString()},
     atlasScannerCommitEpoch: 0,
     atlasScannerUiState: {status:"idle"},
     atlasScannerTransaction: null,
@@ -108,6 +116,8 @@ function mountCommitRuntime(config = {}) {
     atlasScannerAligned: entries => entries,
     atlasScannerSeriesCoversWindow: () => ({ok:true}),
     atlasChartDisplayCurrency: () => scope.displayCurrency,
+    atlasCurrentMarketFrame: () => scope.frame,
+    atlasHistoricalDisplayQuote: result => ({currency: result?.currency || "EUR"}),
     atlasExpectedChartContextKey: (coins,days) => coins.join(":") + ":" + days,
     atlasScannerStateSnapshot: () => ({detailCollapsed:false}),
     atlasScannerInvalidateChartWork: () => ++scope.atlasScannerCommitEpoch,
@@ -143,7 +153,7 @@ function mountCommitRuntime(config = {}) {
     fmtCompactEUR: {format:amount => String(amount)}
   });
   vm.createContext(scope);
-  vm.runInContext(commitSource +
+  vm.runInContext(freshnessSource + "\n" + commitSource +
     "\nthis.commitScanner = atlasScannerCommit; this.getPartialRecord = () => atlasScannerLastPartialDiagnostic;",
     scope);
   return scope;
@@ -160,7 +170,7 @@ const runtimeTx = (overrides = {}) => ({
   preset:"gainers",period:1,
   candidateIds:ids,candidateCoins:ids.map(id => ({id,symbol:id.toUpperCase()})),
   marketFrameFingerprint:"market-frame-1",marketFrameId:"market-frame-1",
-  marketTimestamp:"2026-10-28T04:00:00Z",marketMode:"direct",
+  marketTimestamp:new Date().toISOString(),marketMode:"direct",displayCurrency:"EUR",
   marketBasisLabel:"Market 24 h",marketRequestedAssets:250,
   marketValidatedAssets:250,windowEnd:1720000000000,...overrides
 });
