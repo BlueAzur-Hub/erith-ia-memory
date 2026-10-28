@@ -25,6 +25,8 @@ function scope() {
     state: { chartCache: {} },
     cache: {},
     atlasChartPreferredSourceFamily: () => "coingecko",
+    // Match the application's default quote when the scanner reads stored EUR history.
+    atlasChartDisplayCurrency: () => "EUR",
     atlasReadLocalChartStore: () => c.cache,
     atlasNormalizeChartPayload: ({prices}) => prices,
     atlasValidateChartSeries: ({prices}) => ({
