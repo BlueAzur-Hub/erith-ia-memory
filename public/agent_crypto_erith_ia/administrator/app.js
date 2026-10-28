@@ -15921,8 +15921,11 @@ function atlasScannerNativeUsdStored(coin, period) {
   ].filter(result => result && result.currency === "USD" && result.quoteCurrency === "USD"
     && Array.isArray(result.series) && result.series.length);
   for (const result of candidates) {
-    const series = atlasNormalizeChartPayload({ prices: result.series });
     const quote = atlasHistoryQuoteProvenance(result, "coingecko");
+    // Self-declared USD metadata is insufficient: reject EUR-origin and unknown caches.
+    if (quote.quoteConflict || quote.quoteCurrency !== "USD"
+        || quote.historySourceFamily !== "coingecko") continue;
+    const series = atlasNormalizeChartPayload({ prices: result.series });
     const integrity = atlasValidateChartSeries({
       c: coin, days: period, prices: series, sourceMode: "browser-cache",
       quoteCurrency: quote.quoteCurrency, historySourceFamily: quote.historySourceFamily,
@@ -15937,7 +15940,10 @@ function atlasScannerNativeUsdStored(coin, period) {
 }
 function atlasScannerNativeUsdStore(coin, period, result) {
   const key = atlasScannerNativeUsdKey(coin, period);
-  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD") {
+  const quote = atlasHistoryQuoteProvenance(result, "coingecko");
+  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD"
+      || quote.quoteConflict || quote.quoteCurrency !== "USD"
+      || quote.historySourceFamily !== "coingecko") {
     throw new Error("Historique USD natif sans identité de devise vérifiable");
   }
   const savedAt = Date.now();
