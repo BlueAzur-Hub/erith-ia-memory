@@ -5,7 +5,7 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-26T11:31:22.350Z",
   "release_months": 117,
-  "release_count": 438,
+  "release_count": 441,
   "excluded_historical_owners_outside_frozen_top250": 3,
   "excluded_historical_ids_sample": [
     "golem",
@@ -13,7 +13,7 @@
     "orca"
   ],
   "archived_assets": 126,
-  "native_1m_candles": 251134560,
+  "native_1m_candles": 251219520,
   "groups": [
     {
       "top": 10,
@@ -1022,6 +1022,13 @@
     },
     {
       "month": "2023-01",
+      "release": "crypto-spot-bulk-add-2023-01-1m-ae527384ddf0",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 44640
+    },
+    {
+      "month": "2023-01",
       "release": "crypto-spot-bulk-add-2023-01-1m-dd119f454c94",
       "verified": 3,
       "unavailable": 0,
@@ -1057,6 +1064,13 @@
     },
     {
       "month": "2023-02",
+      "release": "crypto-spot-bulk-add-2023-02-1m-ae527384ddf0",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 40320
+    },
+    {
+      "month": "2023-02",
       "release": "crypto-spot-bulk-add-2023-02-1m-dd119f454c94",
       "verified": 3,
       "unavailable": 0,
@@ -1081,6 +1095,13 @@
       "release": "crypto-spot-bulk-add-2023-03-1m-adba5915caaa",
       "verified": 0,
       "unavailable": 2,
+      "candles": 0
+    },
+    {
+      "month": "2023-03",
+      "release": "crypto-spot-bulk-add-2023-03-1m-ae527384ddf0",
+      "verified": 0,
+      "unavailable": 1,
       "candles": 0
     },
     {
@@ -59953,6 +59974,22 @@
       "market_status": "spot_candidate_identity_unverified",
       "months": [
         {
+          "month": "2023-01",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2023-01.zip",
+          "sha256": "44571da645371fc1f88f473408cd661267226fd253be407973c841421af61730",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2023-01-1m-ae527384ddf0"
+        },
+        {
+          "month": "2023-02",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2023-02.zip",
+          "sha256": "60c6e0d45409cd705e8e10fe685026f2a3a770ca96952abc5cb9559c0073d5db",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-add-2023-02-1m-ae527384ddf0"
+        },
+        {
           "month": "2023-04",
           "pair": "SUPERUSDT",
           "file": "SUPERUSDT-1m-2023-04.zip",
@@ -60303,9 +60340,10 @@
         "2020-10",
         "2020-11",
         "2020-12",
-        "2021-01"
+        "2021-01",
+        "2023-03"
       ],
-      "candles": 1841760
+      "candles": 1926720
     },
     {
       "id": "midas-fasanara-global-open",
