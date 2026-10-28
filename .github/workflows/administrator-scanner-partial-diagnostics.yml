@@ -1,0 +1,20 @@
+name: Administrator scanner partial diagnostics
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs'
+      - '.github/workflows/administrator-scanner-partial-diagnostics.yml'
+  workflow_dispatch:
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Administrator JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Test partial scanner diagnostics
+        run: node --test public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs

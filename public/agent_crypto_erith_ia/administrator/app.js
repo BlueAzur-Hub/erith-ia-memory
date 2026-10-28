@@ -15640,7 +15640,46 @@ function atlasScannerRestoreSnapshot(snapshot) {
   atlasSetCleanLensCollapsed(snapshot.detailCollapsed, false);
 }
 
-function atlasScannerCommit(tx, finalEntries, rejected) {
+
+let atlasScannerLastPartialDiagnostic = null;
+
+// Read-only, session-local diagnostic. No price, identity or chart edits.
+function atlasScannerExplainMissing(tx, displayedIds, rejected, acceptedEntries) {
+  const drawn = new Set(displayedIds || []);
+  const entries = Array.isArray(acceptedEntries) ? acceptedEntries : [];
+  const failures = Array.isArray(rejected) ? rejected : [];
+  return (tx.candidateIds || []).filter(id => !drawn.has(id)).map(id => {
+    const coin = (tx.candidateCoins || []).find(candidate => candidate.id === id);
+    const accepted = entries.find(entry => entry.coin?.id === id);
+    const failure = failures.find(row => row.id === id);
+    let kind = "not-accepted";
+    let reason = "aucun historique accepté après les contrôles";
+    if (accepted) {
+      const coverage = atlasScannerSeriesCoversWindow(accepted.result, tx);
+      if (!coverage.ok) {
+        kind = "coverage";
+        reason = coverage.reason;
+      } else if (!atlasScannerAligned([accepted], tx.period, [id], tx.windowEnd).length) {
+        kind = "individual-alignment";
+        reason = "historique reçu, mais points ou durée exploitables insuffisants après alignement";
+      } else {
+        kind = "joint-alignment";
+        reason = "historique reçu, mais incompatible avec la fenêtre commune des autres courbes";
+      }
+    } else if (failure) {
+      kind = "fetch-or-validation";
+      reason = String(failure.reason || "échec de collecte ou validation");
+    }
+    return {
+      id,
+      symbol: String(coin?.symbol || failure?.symbol || id).toUpperCase(),
+      kind,
+      reason: String(reason).slice(0, 420)
+    };
+  });
+}
+
+function atlasScannerCommit(tx, finalEntries, rejected, acceptedEntries = finalEntries) {
   if (!atlasScannerCurrent(tx) || !Array.isArray(finalEntries) || !finalEntries.length) {
     return false;
   }
@@ -15663,6 +15702,13 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
   const availableCount = ids.length;
   const missingCount = Math.max(0, ATLAS_SCANNER_TARGET - availableCount);
+  const missingReasons = missingCount
+    ? atlasScannerExplainMissing(tx, ids, rejected, acceptedEntries) : [];
+  const diagnosticSignature = [tx.preset, tx.period, atlasChartDisplayCurrency(),
+    ...(tx.candidateIds || [])].join('|');
+  const previousPartial = !missingCount
+    && atlasScannerLastPartialDiagnostic?.signature === diagnosticSignature
+      ? atlasScannerLastPartialDiagnostic : null;
   const canonicalKey = atlasExpectedChartContextKey(ids, tx.period);
   const snapshot = tx.displayedSnapshot || atlasScannerStateSnapshot();
   const commitEpoch = atlasScannerInvalidateChartWork(`commit:${tx.preset}`);
@@ -15734,7 +15780,12 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
         targetCount: ATLAS_SCANNER_TARGET,
         unavailableIds: [...unavailableIds],
         requestedIds: [...tx.candidateIds],
-        rejected: [...rejected]
+        rejected: [...rejected],
+        missingReasons,
+        previousPartial: previousPartial ? {
+          recordedAt: previousPartial.recordedAt,
+          missingReasons: previousPartial.missingReasons
+        } : null
       }
     },
     error: missingCount
@@ -15818,6 +15869,11 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       + ` · ${marketValues}`
       + ` · historiques ${historySummary || "CoinGecko"}`
       + ` · marché ${tx.marketMode} ${atlasExactTimestampLabel(tx.marketTimestamp)}.`
+      + (missingCount
+        ? ` · Diagnostic ${availableCount}/5 : ${missingReasons.map(row => `${row.symbol} (${row.kind}) ${row.reason}`).join(" ; ")}`
+        : previousPartial
+          ? ` · Précédent scan incomplet : ${previousPartial.missingReasons.map(row => `${row.symbol} (${row.kind}) ${row.reason}`).join(" ; ")} · maintenant 5/5`
+          : "")
     );
 
     const saved = atlasWorkspaceWrite();
@@ -15827,6 +15883,13 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       );
     }
 
+    if (missingCount) {
+      atlasScannerLastPartialDiagnostic = {
+        signature: diagnosticSignature,
+        recordedAt: new Date().toISOString(),
+        missingReasons
+      };
+    }
     atlasHideChartRefresh();
 
     window.setTimeout(() => {
@@ -16112,7 +16175,7 @@ async function atlasScannerRun(tx) {
     );
 
     if (finalEntries.length > 0) {
-      return atlasScannerCommit(tx, finalEntries, rejected);
+      return atlasScannerCommit(tx, finalEntries, rejected, accepted);
     }
 
     const missingIds = tx.candidateIds.filter(id =>
