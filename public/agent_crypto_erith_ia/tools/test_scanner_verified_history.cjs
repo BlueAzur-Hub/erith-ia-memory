@@ -80,3 +80,33 @@ test('USD/USDT substitution is never attempted',async()=>{
 test('reject missing frame metadata',async()=>{
  await assert.rejects(()=>run(mock(200,{prices:points()}),{frameId:''}),/Frame identity/);
 });
+
+test('incomplete upstream 20h remains native EUR evidence but never a chart series',async()=>{
+ const partial=points().slice(48);
+ const calls=[];
+ const fetchFn=async(url,options)=>{
+   calls.push(url);return mock(200,{prices:partial})(url,options);
+ };
+ const r=await requestCoin(fetchFn,'figure-heloc',now,{timeoutMs:1000});
+ assert.equal(r.status,'unavailable');assert.equal(r.httpStatus,200);
+ assert.equal(r.series,undefined);
+ assert.equal(r.observedSeries.length,partial.length);
+ assert.equal(r.quoteCurrency,'EUR');
+ assert.equal(r.provenance.provider,'CoinGecko');
+ assert.equal(calls.length,2);
+ assert.match(calls[0],/precision=full/);
+ assert.doesNotMatch(calls[1],/precision=/);
+});
+test('generic precision fallback accepts genuine complete EUR data for any ID',async()=>{
+ const partial=points().slice(48);
+ const requests=[];
+ const fetchFn=async(url,options)=>{
+   requests.push(url);
+   return mock(200,{prices:url.includes('precision=full')?partial:points()})(url,options);
+ };
+ const r=await requestCoin(fetchFn,'any-valid-coin-id',now,{timeoutMs:1000});
+ assert.equal(r.status,'ready');assert.equal(r.series.length,289);
+ assert.equal(r.provenance.query.vs_currency,'eur');
+ assert.equal(r.provenance.query.precision,undefined);
+ assert.equal(requests.length,2);
+});
