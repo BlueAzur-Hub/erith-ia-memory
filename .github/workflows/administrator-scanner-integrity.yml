@@ -5,6 +5,7 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs'
       - '.github/workflows/administrator-scanner-integrity.yml'
   workflow_dispatch:
 
@@ -22,10 +23,11 @@ jobs:
           sparse-checkout: |
             /public/agent_crypto_erith_ia/administrator/app.js
             /public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs
+            /public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - name: Verify syntax and scanner market-frame regression
         run: |
           node --check public/agent_crypto_erith_ia/administrator/app.js
-          node --test public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs
