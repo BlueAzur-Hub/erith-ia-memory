@@ -89,3 +89,51 @@ test("USDT and USDC sources never masquerade as native USD historical records", 
     assert.equal(c.qualify(fake).currency,null);
   }
 });
+
+
+function eurScannerScope() {
+  const c = scope();
+  c.state.dataBroker = { comparison: { results: {} } };
+  c.atlasScannerNativeUsdRequested = () => false;
+  c.atlasScannerNativeUsdStored = () => null;
+  vm.runInContext(cut("function atlasScannerStoredHistory(",
+    "\nasync function atlasScannerYieldToUi(")
+    + "\nthis.scannerStored = atlasScannerStoredHistory;", c);
+  return c;
+}
+
+test("EUR scanner rejects a seven-day comparison when a one-day series is requested", () => {
+  const c=eurScannerScope(), coin={id:"bitcoin"};
+  c.state.dataBroker.comparison.results.bitcoin = {
+    ...record("EUR",7), series:[[1,70000],[2,70001]], savedAt:9999
+  };
+  c.cache[c.storageKey(coin,1,"coingecko","EUR")] = {
+    ...record("EUR",1), savedAt:1
+  };
+  const selected=c.scannerStored(coin,1,{period:1});
+  assert.equal(selected?.periodDays,1);
+  assert.equal(selected?.series[1][1],125.65);
+});
+
+test("EUR scanner does not reuse an unqualified or cross-asset active comparison", () => {
+  const c=eurScannerScope(), coin={id:"bitcoin"};
+  c.state.dataBroker.comparison.results.bitcoin = {
+    ...record("EUR",1), coinId:"ethereum", savedAt:9999
+  };
+  assert.equal(c.scannerStored(coin,1,{period:1}),null);
+  c.state.dataBroker.comparison.results.bitcoin = {
+    ...record("EUR",1), periodDays:undefined, apiDays:undefined, savedAt:9999
+  };
+  assert.equal(c.scannerStored(coin,1,{period:1}),null);
+});
+
+test("EUR scanner fallback retains the exact EUR series and never adopts an USD cache", () => {
+  const c=eurScannerScope(), coin={id:"bitcoin"};
+  c.state.dataBroker.comparison.results.bitcoin = {
+    ...record("EUR",7), savedAt:9999
+  };
+  c.cache[c.storageKey(coin,1,"coingecko","USD")] = record("USD",1);
+  assert.equal(c.scannerStored(coin,1,{period:1}),null);
+  c.cache[c.storageKey(coin,1,"coingecko","EUR")] = record("EUR",1);
+  assert.equal(c.scannerStored(coin,1,{period:1})?.currency,"EUR");
+});
