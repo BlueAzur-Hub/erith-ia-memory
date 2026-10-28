@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-28T15:04:27Z",
+  "source_qualification_at_utc": "2026-10-28T19:50:27Z",
   "source_observation_date_utc": "2026-10-28",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -17,9 +17,9 @@
     "2026-10-28"
   ],
   "count": 20,
-  "spot_documented": 14,
-  "additional_spot": 4,
-  "unpaired": 6,
+  "spot_documented": 13,
+  "additional_spot": 3,
+  "unpaired": 7,
   "reference": {
     "coin_id": "bitcoin",
     "role": "benchmark",
@@ -43,8 +43,8 @@
         "venue": "Binance",
         "pair": "ARKUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 17.9265,
-        "roundtrip_cost_pct_assumed": 0.37865
+        "spread_bps_at_snapshot": 11.9976,
+        "roundtrip_cost_pct_assumed": 0.31956
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -52,33 +52,6 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "dappos",
-      "symbol": "DOS",
-      "name": "DAPPOS",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 384,
-      "change24h_pct_at_snapshot": 28.63336,
-      "change7d_pct_at_snapshot": 43.1305,
-      "volume24h_aggregate_usd": 43524023,
-      "spot": {
-        "venue": "OKX",
-        "pair": "DOS-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 15.35862,
-        "roundtrip_cost_pct_assumed": 0.35306
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "extreme_24h_move"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -97,8 +70,8 @@
         "venue": "Bitget",
         "pair": "ICNTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.03145,
-        "roundtrip_cost_pct_assumed": 0.31126
+        "spread_bps_at_snapshot": 10.58201,
+        "roundtrip_cost_pct_assumed": 0.34191
       },
       "detections_archived": 6,
       "j1_observed": 4,
@@ -123,8 +96,8 @@
         "venue": "Binance",
         "pair": "INITUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 11.43075,
-        "roundtrip_cost_pct_assumed": 0.33291
+        "spread_bps_at_snapshot": 11.82061,
+        "roundtrip_cost_pct_assumed": 0.3178
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -151,8 +124,8 @@
         "venue": "Bitget",
         "pair": "LABUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.19756,
-        "roundtrip_cost_pct_assumed": 0.25158
+        "spread_bps_at_snapshot": 2.14938,
+        "roundtrip_cost_pct_assumed": 0.24597
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -177,8 +150,8 @@
         "venue": "Binance",
         "pair": "OPGUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 16.43385,
-        "roundtrip_cost_pct_assumed": 0.36378
+        "spread_bps_at_snapshot": 16.57001,
+        "roundtrip_cost_pct_assumed": 0.36513
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -204,8 +177,8 @@
         "venue": "OKX",
         "pair": "PONS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.05467,
-        "roundtrip_cost_pct_assumed": 0.29491
+        "spread_bps_at_snapshot": 10.35018,
+        "roundtrip_cost_pct_assumed": 0.30314
       },
       "detections_archived": 3,
       "j1_observed": 1,
@@ -230,8 +203,8 @@
         "venue": "Binance",
         "pair": "SNDKBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.7293,
-        "roundtrip_cost_pct_assumed": 0.20718
+        "spread_bps_at_snapshot": 0.21467,
+        "roundtrip_cost_pct_assumed": 0.21163
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -257,8 +230,8 @@
         "venue": "Binance",
         "pair": "SOXLBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.92957,
-        "roundtrip_cost_pct_assumed": 0.21916
+        "spread_bps_at_snapshot": 1.87406,
+        "roundtrip_cost_pct_assumed": 0.2186
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -284,8 +257,35 @@
         "venue": "Binance",
         "pair": "SKHYBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.47051,
-        "roundtrip_cost_pct_assumed": 0.22455
+        "spread_bps_at_snapshot": 0.60959,
+        "roundtrip_cost_pct_assumed": 0.20598
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "zelcash",
+      "symbol": "FLUX",
+      "name": "Flux",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 699,
+      "change24h_pct_at_snapshot": 7.22989,
+      "change7d_pct_at_snapshot": -4.9513,
+      "volume24h_aggregate_usd": 5102464,
+      "spot": {
+        "venue": "Binance",
+        "pair": "FLUXUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 14.63058,
+        "roundtrip_cost_pct_assumed": 0.34581
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -311,8 +311,8 @@
         "venue": "OKX",
         "pair": "ETHW-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.80403,
-        "roundtrip_cost_pct_assumed": 0.39802
+        "spread_bps_at_snapshot": 16.28664,
+        "roundtrip_cost_pct_assumed": 0.37797
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -337,8 +337,8 @@
         "venue": "Binance",
         "pair": "PEPEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.55498,
-        "roundtrip_cost_pct_assumed": 0.40483
+        "spread_bps_at_snapshot": 20.18163,
+        "roundtrip_cost_pct_assumed": 0.40111
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -364,39 +364,12 @@
         "venue": "Binance",
         "pair": "SOLVUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.30457,
-        "roundtrip_cost_pct_assumed": 0.40233
+        "spread_bps_at_snapshot": 20.85506,
+        "roundtrip_cost_pct_assumed": 0.40782
       },
       "detections_archived": 2,
       "j1_observed": 1,
       "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "zelcash",
-      "symbol": "FLUX",
-      "name": "Flux",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 699,
-      "change24h_pct_at_snapshot": 7.22989,
-      "change7d_pct_at_snapshot": -4.9513,
-      "volume24h_aggregate_usd": 5102464,
-      "spot": {
-        "venue": "Binance",
-        "pair": "FLUXUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 29.5421,
-        "roundtrip_cost_pct_assumed": 0.4943
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -420,6 +393,27 @@
       "j7_observed": 1,
       "risks_and_missing_evidence": [
         "ambiguous_symbol_no_spot_attribution"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "dappos",
+      "symbol": "DOS",
+      "name": "DAPPOS",
+      "group": "spot_evidence_incomplete",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 384,
+      "change24h_pct_at_snapshot": 28.63336,
+      "change7d_pct_at_snapshot": 43.1305,
+      "volume24h_aggregate_usd": 43524023,
+      "spot": null,
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 1,
+      "risks_and_missing_evidence": [
+        "spot_pair_observed_market_data_missing",
+        "extreme_24h_move"
       ],
       "identity_certified": false,
       "trade_authorized": false
