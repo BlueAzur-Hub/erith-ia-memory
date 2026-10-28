@@ -25,6 +25,13 @@ test('no stale 24h partial-series qualification',()=>{
  assert.equal(validatePoints(points().slice(22),now).ok,false);
  assert.equal(validatePoints(points().slice(0,265),now).ok,false);
 });
+test('reject missing interior intervals even with complete endpoints',()=>{
+ const s=points();
+ s.splice(50,12);
+ const v=validatePoints(s,now);
+ assert.equal(v.ok,false);
+ assert.match(v.reason,/interior gap/);
+});
 test('server request retains exact ID, EUR query and original values',async()=>{
  let observed;
  const f=async(url,options)=>{observed={url,options};return mock(200,{prices:points()})(url,options)};
