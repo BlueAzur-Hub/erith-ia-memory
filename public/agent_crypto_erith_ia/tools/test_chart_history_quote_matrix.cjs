@@ -139,3 +139,18 @@ test("EUR scanner fallback retains the exact EUR series and never adopts an USD 
   c.cache[c.storageKey(coin,1,"coingecko","EUR")] = record("EUR",1);
   assert.equal(c.scannerStored(coin,1,{period:1})?.currency,"EUR");
 });
+
+test("cache reader refuses a different recorded period or asset even in an exact EUR key", () => {
+  const c=scope(), coin={id:"bitcoin"};
+  const key=c.storageKey(coin,1,"coingecko","EUR");
+  // An incorrect file placed in a valid key must not acquire the key's identity.
+  c.cache[key]={...record("EUR",7),coinId:"bitcoin"};
+  assert.equal(c.getStored(coin,1,"coingecko","EUR"),null);
+  c.cache[key]={...record("EUR",1),coinId:"ethereum"};
+  assert.equal(c.getStored(coin,1,"coingecko","EUR"),null);
+  c.cache[key]={...record("EUR",1),coinId:"bitcoin"};
+  const matched=c.getStored(coin,1,"coingecko","EUR");
+  assert.equal(matched?.periodDays,1);
+  assert.equal(matched?.currency,"EUR");
+  assert.equal(matched?.series[1][1],125.65);
+});
