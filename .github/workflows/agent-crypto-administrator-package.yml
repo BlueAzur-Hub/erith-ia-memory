@@ -36,7 +36,7 @@ jobs:
             'public/agent_crypto_erith_ia/administrator/build.json',
             'public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js',
             'public/agent_crypto_erith_ia/tools/test_market_graph_consistency.cjs',
-            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.644_HANDOFF.md'
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.645_HANDOFF.md'
           ]
           with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as f:
             for path in names: f.write(root/path,arcname=path)
@@ -48,6 +48,6 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.644_MARKET_HISTORY_TRUTH_OHLC_6_FILES.zip*
-          git diff --cached --quiet || git commit -m 'Archive Administrator 40.6.644 market graph consistency delivery'
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.645_MARKET_HISTORY_TRUTH_OHLC_6_FILES.zip*
+          git diff --cached --quiet || git commit -m 'Archive Administrator 40.6.645 market graph consistency delivery'
           git push origin HEAD:main

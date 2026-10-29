@@ -7118,7 +7118,7 @@ function atlasRenderComparisonCaption(
     ? unavailableItems.length
     : Number(unavailableItems || 0);
   const selectedCount = Number(
-    requestedCount || atlasComparisonIds().length || entries.length
+    state.dataBroker?.chart?.result?.scanner?.targetCount || requestedCount || atlasComparisonIds().length || entries.length
   );
   const complete =
     entries.length === selectedCount
@@ -11901,6 +11901,33 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
 
   if (!prepared.length) return [];
 
+
+  // 40.6.645: Preserve each individually verified 24h history on the real
+  // timestamp axis. CoinGecko hourly and 5m data need not share exact minutes.
+  // Do not interpolate, invent observations or discard a valid fifth asset.
+  const scannerNative = Number(period) === 1 && prepared.every(e =>
+    e.atlasScannerVerified24h === true
+    && Number.isFinite(Number(e.atlasScannerWindowEnd))
+    && Math.abs(Number(e.atlasScannerWindowEnd)
+      - Number(prepared[0].atlasScannerWindowEnd)) < 1000
+  );
+  if (scannerNative) {
+    const plotted = prepared.map(e => {
+      const rows = atlasDownsampleNativeComparisonRows(e.rows, maximumPoints);
+      const first = Number(rows[0]?.price);
+      if (!Number.isFinite(first) || first <= 0 || rows.length < minimum) return null;
+      const data = rows.map(r => ({x:r.t,y:r.price/first*100,rawPrice:r.price}))
+        .filter(r => Number.isFinite(r.x) && Number.isFinite(r.y)
+          && Number.isFinite(r.rawPrice) && r.rawPrice > 0);
+      if (data.length < minimum) return null;
+      return {...e,rows,first,data,nativePointCount:e.rows.length,
+        sampledPointCount:data.length,missingPointCount:0};
+    }).filter(Boolean);
+    if (plotted.length !== prepared.length) return [];
+    const alignedTimeline = atlasBuildNativeComparisonTimeline(plotted, maximumPoints);
+    return plotted.map(e => ({...e,alignedTimeline}));
+  }
+
   const commonStart = Math.max(...prepared.map(entry => entry.rows[0].t));
   const commonEnd = Math.min(...prepared.map(entry => entry.rows[entry.rows.length - 1].t));
   if (!Number.isFinite(commonStart) || !Number.isFinite(commonEnd) || commonEnd <= commonStart) return [];
@@ -13771,7 +13798,7 @@ function atlasChartOverlayTitleHtml(context, mode, truthLabel) {
 function atlasChartOverlayComparison(chart, period, options = {}) {
   const result = chart?.result || {};
   const entries = atlasChartOverlayOrderedEntries(result);
-  const selectedCount = Number(options.selectedCount || atlasComparisonIds().length || entries.length);
+  const selectedCount = Number(result?.scanner?.targetCount || options.selectedCount || atlasComparisonIds().length || entries.length);
   const periodLabel = atlasChartPeriodLabel(period);
   const preset = String(options.preset || state.dataBroker?.comparison?.preset || "manual");
   const truth = atlasChartOverlayTruth(
@@ -13859,6 +13886,13 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     secondarySummaryItems.push({
       className: "atlas-hud-detail",
       text: `classement ${scannerMarketBasis}`
+    });
+  }
+
+  if (Number(period) === 1 && (preset === "gainers" || preset === "losers")) {
+    secondarySummaryItems.push({
+      className: "atlas-hud-detail",
+      text: "Courbes EUR : horaires reels de chaque actif, sans alignement fictif"
     });
   }
 
@@ -15526,6 +15560,8 @@ function atlasScannerDecorateEntry(tx, coin, result, source) {
     coin,
     result: series === result.series ? result : { ...result, series },
     source,
+    atlasScannerVerified24h: Number(tx?.period) === 1 && range.ok === true,
+    atlasScannerWindowEnd: Number(tx?.windowEnd),
     atlasMarketMetric: atlasScannerMarketMetric(tx.preset, coin, tx.period),
     atlasMarketMetricLabel: atlasScannerMarketMetricLabel(tx.preset, tx.period),
     atlasHistoryKind: historyKind,
@@ -15596,8 +15632,15 @@ function atlasScannerAligned(entries, period, candidateIds, windowEnd = null) {
 
   if (!prepared.length) return [];
 
-  // Try the full group first; if unavailable, keep the largest compatible subset
-  // in Market order. This MUST NOT add assets ranked below the five candidates.
+  // All five individually qualified histories can be displayed directly,
+  // without forcing a shared 23h30 crop.
+  if (Number(period) === 1 && prepared.length === ATLAS_SCANNER_TARGET
+      && prepared.every(x => x.entry?.atlasScannerVerified24h === true)) {
+    const five = atlasBuildAlignedComparisonEntries(prepared.map(x => x.entry), period);
+    if (five.length === ATLAS_SCANNER_TARGET) return five;
+  }
+
+  // Genuinely missing histories retain partial diagnostics in Market order.
   for (let target = Math.min(ATLAS_SCANNER_TARGET, prepared.length); target >= 1; target--) {
     let exactResult = null;
     const search = (startIndex, chosen) => {
