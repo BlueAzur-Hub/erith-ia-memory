@@ -5,7 +5,7 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-26T11:31:22.350Z",
   "release_months": 117,
-  "release_count": 453,
+  "release_count": 456,
   "excluded_historical_owners_outside_frozen_top250": 3,
   "excluded_historical_ids_sample": [
     "golem",
@@ -13,7 +13,7 @@
     "orca"
   ],
   "archived_assets": 126,
-  "native_1m_candles": 252004320,
+  "native_1m_candles": 252312480,
   "groups": [
     {
       "top": 10,
@@ -685,6 +685,13 @@
       "candles": 89280
     },
     {
+      "month": "2021-10",
+      "release": "crypto-spot-bulk-add-2021-10-1m-c01abe762b35",
+      "verified": 3,
+      "unavailable": 56,
+      "candles": 133920
+    },
+    {
       "month": "2021-11",
       "release": "crypto-spot-bulk-2021-11-1m",
       "verified": 56,
@@ -699,11 +706,25 @@
       "candles": 86400
     },
     {
+      "month": "2021-11",
+      "release": "crypto-spot-bulk-add-2021-11-1m-c01abe762b35",
+      "verified": 3,
+      "unavailable": 56,
+      "candles": 129600
+    },
+    {
       "month": "2021-12",
       "release": "crypto-spot-bulk-2021-12-1m",
       "verified": 49,
       "unavailable": 66,
       "candles": 2187360
+    },
+    {
+      "month": "2021-12",
+      "release": "crypto-spot-bulk-add-2021-12-1m-1749bec06d04",
+      "verified": 1,
+      "unavailable": 62,
+      "candles": 44640
     },
     {
       "month": "2021-12",
@@ -25224,6 +25245,9 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -26207,6 +26231,9 @@
         "2020-04",
         "2020-05",
         "2020-06",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -26480,6 +26507,9 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -26568,6 +26598,30 @@
           "sha256": "549374ebf7b34a032b9ec411d52637d73ea70b7c068245759362ef5b682cf94a",
           "candles": 44640,
           "release": "crypto-spot-bulk-2020-05-1m"
+        },
+        {
+          "month": "2021-10",
+          "pair": "ATOMUSDT",
+          "file": "ATOMUSDT-1m-2021-10.zip",
+          "sha256": "70155cd74b811b028388a808945e99aeee70609b22ff55af1ce882c0a2f1f3f3",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2021-10-1m-c01abe762b35"
+        },
+        {
+          "month": "2021-11",
+          "pair": "ATOMUSDT",
+          "file": "ATOMUSDT-1m-2021-11.zip",
+          "sha256": "226b273c1c51ed3c231dc07b2233a7d0a5699f350029ccdc4ff7cc57c91e14a2",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2021-11-1m-c01abe762b35"
+        },
+        {
+          "month": "2021-12",
+          "pair": "ATOMUSDT",
+          "file": "ATOMUSDT-1m-2021-12.zip",
+          "sha256": "0e6522e8cb3c9f0a63259b71df0a3815d886595327549ba864ca1d3697dca286",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2021-12-1m-1749bec06d04"
         },
         {
           "month": "2022-01",
@@ -27057,7 +27111,7 @@
         "2020-06",
         "2023-03"
       ],
-      "candles": 2718720
+      "candles": 2851200
     },
     {
       "id": "pi-network",
@@ -31608,6 +31662,22 @@
       "market_status": "spot_candidate_identity_unverified",
       "months": [
         {
+          "month": "2021-10",
+          "pair": "STXUSDT",
+          "file": "STXUSDT-1m-2021-10.zip",
+          "sha256": "bbf13185cd10093475b5ffac3ab8a5873cb46d08742e59946be2e5d51f00b8dc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2021-10-1m-c01abe762b35"
+        },
+        {
+          "month": "2021-11",
+          "pair": "STXUSDT",
+          "file": "STXUSDT-1m-2021-11.zip",
+          "sha256": "ffc6e1ee310e7e444a2130e6a89cdf84ccb3bd28652102c7525c6595e828985d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2021-11-1m-c01abe762b35"
+        },
+        {
           "month": "2022-01",
           "pair": "STXUSDT",
           "file": "STXUSDT-1m-2022-01.zip",
@@ -32085,9 +32155,10 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2021-12",
         "2023-03"
       ],
-      "candles": 2452320
+      "candles": 2540160
     },
     {
       "id": "vechain",
@@ -50656,6 +50727,9 @@
         "2021-06",
         "2021-07",
         "2021-08",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -51839,6 +51913,9 @@
         "2020-11",
         "2020-12",
         "2021-01",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -53382,6 +53459,9 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -54135,6 +54215,9 @@
         "2020-11",
         "2020-12",
         "2021-01",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -58752,6 +58835,9 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -60031,6 +60117,9 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2021-10",
+        "2021-11",
+        "2021-12",
         "2022-01",
         "2022-02",
         "2022-03",
@@ -60132,6 +60221,22 @@
       "name": "SuperVerse",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2021-10",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2021-10.zip",
+          "sha256": "af859d7dfcb6ae26d1952ce5b5ddda622fb1e2ab1e6244033b1129abd773326b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2021-10-1m-c01abe762b35"
+        },
+        {
+          "month": "2021-11",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2021-11.zip",
+          "sha256": "370008bd37c0cd470cb5a1d5de841962c785e2ebf7c4a6d81ab8bf2d8dbb67c7",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2021-11-1m-c01abe762b35"
+        },
         {
           "month": "2022-01",
           "pair": "SUPERUSDT",
@@ -60596,9 +60701,10 @@
         "2020-11",
         "2020-12",
         "2021-01",
+        "2021-12",
         "2023-03"
       ],
-      "candles": 2452320
+      "candles": 2540160
     },
     {
       "id": "midas-fasanara-global-open",
