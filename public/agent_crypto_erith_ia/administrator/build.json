@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.647",
+  "build": "40.6.648",
   "engine": "38.15.11",
-  "release": "HAUSSES 5 · EUR 24H PRECEDING REAL ANCHOR BASE100 FIX",
+  "release": "HAUSSES 5 · REMOVE OBSTRUCTIVE ANALYSIS SUMMARY",
   "published": true,
-  "status": "PUBLISHED_MAIN_AWAITING_SOURCE_VERIFICATION",
-  "parent_build": "40.6.646",
+  "status": "PUBLISHED_MAIN_AWAITING_USER_FIREFOX_VALIDATION",
+  "parent_build": "40.6.647",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.647",
-  "build_label": "Build 40.6.647 · Administrator",
+  "administrator_build": "40.6.648",
+  "build_label": "Build 40.6.648 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -11016,5 +11016,14 @@
     "source_certified": false,
     "firefox_certified": false,
     "offline_tests": "6 previous + 5 previous + 6 new = 17 check groups passed"
+  },
+  "analysis_overlay_406648": {
+    "scope": "Hausses 5",
+    "root_cause": "Expanded analysis summary masked large part of chart",
+    "fix": "Hide expanded summary content and collapse its node in Hausses 5; retain title and five MKT/HIST rows",
+    "financial_history_changed": false,
+    "market_core_modified": false,
+    "other_presets_unchanged": true,
+    "firefox_verified": false
   }
 }
