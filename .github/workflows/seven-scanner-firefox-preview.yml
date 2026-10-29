@@ -1,0 +1,39 @@
+name: Seven scanner Firefox combined preview
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs'
+      - '.github/workflows/seven-scanner-firefox-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs
+            /public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs
+            /public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs
+            /public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check complete Administrator syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Verify combined scanner market-frame, currency and partial reasons
+        run: |
+          node --test \
+            public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs \
+            public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs

@@ -1,0 +1,78 @@
+name: Seven Agent-Crypto Administrator scanner test ZIP delivery
+on:
+  push:
+    branches:
+      - test/seven-scanner-server-browser-20261028
+    paths:
+      - '.github/workflows/seven-scanner-zip-delivery.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Build 3-file ZIP and publish only in the shared folder
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ZIP_NAME: AGENT_CRYPTO_ADMINISTRATOR_40.6.640_SCANNER_EUR_USD_COMBINED_FIREFOX_PREVIEW_3_FILES.zip
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64,hashlib,io,json,os,urllib.request,urllib.error,zipfile
+          repo=os.environ['GITHUB_REPOSITORY']
+          sha=os.environ['GITHUB_SHA']
+          token=os.environ['GITHUB_TOKEN']
+          name=os.environ['ZIP_NAME']
+          paths=[
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js'
+          ]
+          def request(url,method='GET',payload=None):
+              headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json',
+                       'X-GitHub-Api-Version':'2022-11-28','User-Agent':'Seven-Agent-Crypto-delivery'}
+              data=json.dumps(payload).encode('utf-8') if payload is not None else None
+              if data is not None:headers['Content-Type']='application/json'
+              return urllib.request.urlopen(urllib.request.Request(url,data=data,headers=headers,method=method),timeout=50)
+          source={}
+          for path in paths:
+              url='https://raw.githubusercontent.com/'+repo+'/'+sha+'/'+path
+              with urllib.request.urlopen(url,timeout=50) as res: source[path]=res.read()
+              if len(source[path])<1000: raise RuntimeError('Missing input: '+path)
+          output=io.BytesIO()
+          with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for path in paths: z.writestr(path,source[path])
+          raw=output.getvalue()
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              if z.namelist()!=paths or z.testzip() is not None:
+                  raise RuntimeError('Invalid ZIP')
+              for path in paths:
+                  if z.read(path)!=source[path]:raise RuntimeError('ZIP mismatch: '+path)
+          digest=hashlib.sha256(raw).hexdigest()
+          print('ZIP',name,'bytes',len(raw),'SHA256',digest,'source',sha)
+          target='coordination/inter_ai_dialogues/agent_crypto/'+name
+          api='https://api.github.com/repos/'+repo+'/contents/'+target+'?ref=main'
+          try:
+              with request(api) as res: existing=json.load(res)
+          except urllib.error.HTTPError as err:
+              if err.code!=404:raise
+              existing=None
+          if existing is not None:
+              with request('https://raw.githubusercontent.com/'+repo+'/main/'+target) as res:
+                  already=res.read()
+              if already!=raw:raise RuntimeError('Existing ZIP path has different bytes')
+              print('Already published exact identical ZIP',target)
+          else:
+              payload={'message':'Deliver Administrator EUR USD scanner Firefox preview ZIP',
+                       'content':base64.b64encode(raw).decode('ascii'),'branch':'main'}
+              with request('https://api.github.com/repos/'+repo+'/contents/'+target,'PUT',payload) as res:
+                  result=json.load(res)
+              print('PUBLISHED',target,'COMMIT',result['commit']['sha'])
+              with request('https://api.github.com/repos/'+repo+'/contents/'+target+'?ref=main') as res:
+                  stored=json.load(res)
+              decoded=base64.b64decode(stored['content'])
+              if decoded!=raw:raise RuntimeError('GitHub published ZIP differs')
+              print('VERIFIED',target,'bytes',len(decoded),'SHA256',hashlib.sha256(decoded).hexdigest())
+          PY

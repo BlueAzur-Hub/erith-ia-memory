@@ -1,0 +1,45 @@
+name: Seven scanner rolling EUR evidence contract
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/tools/scanner_rolling_eur_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs"
+      - "public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs"
+      - "public/agent_crypto_erith_ia/tools/run_scanner_market_eur_archive.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_run_scanner_market_eur_archive.cjs"
+      - "public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_eur_archive_browser_reader.cjs"
+      - ".github/workflows/seven-scanner-rolling-eur-contract.yml"
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check read-only generic collector and merger
+        run: |
+          node --check public/agent_crypto_erith_ia/tools/scanner_verified_history.cjs
+          node --check public/agent_crypto_erith_ia/tools/scanner_rolling_eur_history.cjs
+          node --check public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs
+          node --check public/agent_crypto_erith_ia/tools/run_scanner_market_eur_archive.cjs
+          node --check public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs public/agent_crypto_erith_ia/tools/test_run_scanner_market_eur_archive.cjs public/agent_crypto_erith_ia/tools/test_scanner_eur_archive_browser_reader.cjs
+      - name: Verify dynamic selection against actual public Market snapshot
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const {planMarket}=require('./public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs');
+          const s=JSON.parse(fs.readFileSync('public/agent_crypto_erith_ia/data/crypto/latest.json','utf8'));
+          const p=planMarket(s,{universe:100,budget:20,offset:0,nowMs:Date.parse(s.generated_at)+30000});
+          if(p.ids.length!==20||p.batches.length!==4)throw Error('Market dynamic plan inconsistent');
+          console.log(JSON.stringify({snapshotId:p.snapshotId,requested:p.ids.length,
+            firstBatch:p.batches[0].ids,rankQuote:p.rankingQuote,historyQuote:p.historyQuote}));
+          NODE
