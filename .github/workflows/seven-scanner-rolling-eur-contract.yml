@@ -10,6 +10,8 @@ on:
       - "public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs"
       - "public/agent_crypto_erith_ia/tools/run_scanner_market_eur_archive.cjs"
       - "public/agent_crypto_erith_ia/tools/test_run_scanner_market_eur_archive.cjs"
+      - "public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js"
+      - "public/agent_crypto_erith_ia/tools/test_scanner_eur_archive_browser_reader.cjs"
       - ".github/workflows/seven-scanner-rolling-eur-contract.yml"
 permissions:
   contents: read
@@ -28,7 +30,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/tools/scanner_rolling_eur_history.cjs
           node --check public/agent_crypto_erith_ia/tools/scanner_market_eur_archive.cjs
           node --check public/agent_crypto_erith_ia/tools/run_scanner_market_eur_archive.cjs
-          node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs public/agent_crypto_erith_ia/tools/test_run_scanner_market_eur_archive.cjs
+          node --check public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js
+          node --test public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs public/agent_crypto_erith_ia/tools/test_run_scanner_market_eur_archive.cjs public/agent_crypto_erith_ia/tools/test_scanner_eur_archive_browser_reader.cjs
       - name: Verify dynamic selection against actual public Market snapshot
         run: |
           node - <<'NODE'
