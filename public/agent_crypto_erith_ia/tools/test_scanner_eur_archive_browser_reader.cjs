@@ -51,10 +51,20 @@ test('load exactly five real EUR archive identities, with exact frame and signed
 test('stale archive is not promoted to live Firefox chart',async()=>{
  await assert.rejects(()=>run(fixture(),{now:NOW+30*60000}),/stale/);
 });
-test('Market Frame mismatch blocks all series before individual HTTP requests',async()=>{
+test('new Market Frame may reuse fresh, signed EUR archives by exact coin ID',async()=>{
  const visited=[];
- await assert.rejects(()=>run(fixture(),{marketFrameId:'other-market-frame',
-   fetchFn:requestFor(fixture(),visited)}),/Market Frame/);
+ const r=await run(fixture(),{marketFrameId:'next-market-frame',
+   fetchFn:requestFor(fixture(),visited)});
+ assert.equal(r.status,'ready');assert.equal(r.readyCount,5);
+ assert.equal(r.frameMatch,false);
+ assert.equal(r.frameId,'next-market-frame');
+ assert.equal(r.archiveSnapshotId,FRAME);
+ assert.equal(visited.length,6);
+});
+test('missing archive source provenance is rejected before asset requests',async()=>{
+ const f=fixture();delete f['last-run.json'].sourceSnapshot;
+ const visited=[];
+ await assert.rejects(()=>run(f,{fetchFn:requestFor(f,visited)}),/provenance/);
  assert.equal(visited.length,1);
 });
 test('wrong native quote, inconsistent manifest and tampering fail closed',async()=>{
