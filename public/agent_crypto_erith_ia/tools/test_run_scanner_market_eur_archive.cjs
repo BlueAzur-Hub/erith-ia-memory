@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
-const {run,parseArgs,readJson}=require('./run_scanner_market_eur_archive.cjs');
+const {run,parseArgs,readJson,mergeManifestEntries}=require('./run_scanner_market_eur_archive.cjs');
 test('default producer is offline and cannot make network requests',async()=>{
  const a=parseArgs([]);
  assert.equal(a.mode,'plan');assert.equal(a.network,'off');
@@ -35,4 +35,28 @@ test('oversized/corrupted local evidence is not silently accepted',()=>{
    assert.throws(()=>readJson(f),SyntaxError);
    assert.throws(()=>readJson(path.join(root,'no.json')), /ENOENT/);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+
+test('new Market basket retains verified older native EUR evidence by identity',()=>{
+ const hash='sha256:'+'a'.repeat(64);
+ const previous={schema:'agent_crypto_scanner_native_eur_archive_manifest_v1',
+   quote:'EUR',rankingQuote:'USD',source:'CoinGecko',sourceSnapshot:'prior-frame',
+   entries:{oldcoin:{sha256:hash,status:'ready',pointCount:289}}};
+ const current={newcoin:{sha256:'sha256:'+'b'.repeat(64),status:'ready'}};
+ const seen=[];
+ const result=mergeManifestEntries(current,previous,(id,e)=>{
+   seen.push(id);return id==='oldcoin'&&e.sha256===hash;
+ });
+ assert.deepEqual(seen,['oldcoin']);
+ assert.equal(Object.keys(result).length,2);
+ assert.equal(result.oldcoin.sourceSnapshot,'prior-frame');
+ assert.equal(result.newcoin.status,'ready');
+});
+test('rotating archive refuses unverified old assets or incompatible manifest',()=>{
+ const previous={schema:'agent_crypto_scanner_native_eur_archive_manifest_v1',
+   quote:'EUR',rankingQuote:'USD',source:'CoinGecko',sourceSnapshot:'old',
+   entries:{untrusted:{sha256:'sha256:'+'1'.repeat(64)}}};
+ assert.throws(()=>mergeManifestEntries({},previous,()=>false),/Unverified/);
+ assert.throws(()=>mergeManifestEntries({}, {...previous,quote:'USD'},()=>true),/Incompatible/);
+ assert.throws(()=>mergeManifestEntries({}, {...previous,entries:{'../escape':{sha256:'sha256:'+'1'.repeat(64)}}},()=>true),/Unverified/);
 });
