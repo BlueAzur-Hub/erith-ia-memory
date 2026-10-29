@@ -71,7 +71,7 @@ check("07 downsampling retains a high and a low",()=>{
  const reduced=f(series,281);assert.ok(reduced.length<=281);assert.equal(Math.max(...reduced.map(p=>p.price)),150);assert.equal(Math.min(...reduced.map(p=>p.price)),50);
 });
 check("08 Solo historical endpoint remains historical",()=>{
- const body=fnSlice(app,"function atlasExternalChartTooltip(","const atlasTooltipPointerPlugin");
+ const body=fnSlice(app,"function atlasExternalChartTooltip(","\nfunction ");
  assert.doesNotMatch(body,/if \(atHistoricalEndpoint && !comparison\)/);
  assert.match(body,/rawPrice: Number\(point\.raw\?\.rawPrice\)/);
 });
