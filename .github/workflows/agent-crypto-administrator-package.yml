@@ -41,7 +41,7 @@ jobs:
           with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as f:
             for path in names: f.write(root/path,arcname=path)
           digest=hashlib.sha256(target.read_bytes()).hexdigest()
-          (target.parent/(name+'.sha256')).write_text(digest+'  '+name+'\\n')
+          (target.parent/(name+'.sha256')).write_text(digest+'  '+name+'\n')
           print(name,target.stat().st_size,digest)
           PY
       - name: Archive ZIP and SHA-256 to main
