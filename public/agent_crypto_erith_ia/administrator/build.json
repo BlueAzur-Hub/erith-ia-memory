@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.646",
+  "build": "40.6.647",
   "engine": "38.15.11",
-  "release": "HAUSSES 5 · EUR 24H BASE100 STABILITY AND BOUNDED RETRY",
+  "release": "HAUSSES 5 · EUR 24H PRECEDING REAL ANCHOR BASE100 FIX",
   "published": true,
-  "status": "PUBLISHED_MAIN_AWAITING_USER_FIREFOX_VALIDATION",
-  "parent_build": "40.6.645",
+  "status": "PUBLISHED_MAIN_AWAITING_SOURCE_VERIFICATION",
+  "parent_build": "40.6.646",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.646",
-  "build_label": "Build 40.6.646 · Administrator",
+  "administrator_build": "40.6.647",
+  "build_label": "Build 40.6.647 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -11004,5 +11004,17 @@
     "offline_regressions": "6/6 + 5/5 passed",
     "source_and_firefox_verified": false,
     "release_status": "PUBLISHED_MAIN_PENDING_USER_FIREFOX_VALIDATION"
+  },
+  "scanner_406647": {
+    "scope": "Hausses/Baisses/Volumes 5, 24h EUR",
+    "parent": "40.6.646",
+    "fix": "Prefer genuine preceding EUR anchor at the scan's single 24h reference time; disclose actual observed timestamp and offset; reject unusable temporal coverage",
+    "root_cause": "40.6.646 discarded valid preceding hourly reference and rebased a later tick to 100, falsely hiding movement between native samples",
+    "no_interpolation": true,
+    "no_market_rank_change": true,
+    "no_ohlc_or_decorative_change": true,
+    "source_certified": false,
+    "firefox_certified": false,
+    "offline_tests": "6 previous + 5 previous + 6 new = 17 check groups passed"
   }
 }

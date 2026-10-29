@@ -38,3 +38,7 @@ Investigate and correct first-click 4/5 vs post-reset 5/5 in scanner transaction
 
 ## Continuity instruction for the next AI
 Read this file and current build.json/main code, review latest screenshot findings, and state what is verified vs hypothetical. Do not manufacture a version number or pretend a new version exists until published.
+
+
+## Build 40.6.647 (2026-10-29)
+Corrected 40.6.646 EUR 24h Base100 reference defect: previously ignored a real pre-window hourly price and silently rebased first post-window price. Reproduced 100/104 case; new tests fail on 646 and pass on 647. Native prior quote (within bounded cadence tolerance) is now the as-of reference, with real timestamp and direction disclosed. Static/synthetic tests only; no Firefox or real CoinGecko financial certification. Archive generation via GitHub Actions: AGENT_CRYPTO_ADMINISTRATOR_40.6.647_HAUSSES5_EUR_REAL_ANCHOR_4_FILES.zip and .sha256. See AGENT_CRYPTO_ADMINISTRATOR_40.6.647_HAUSSES5_EUR_REAL_ANCHOR_RELEASE_NOTES.md. No further frontend changes until source verification.

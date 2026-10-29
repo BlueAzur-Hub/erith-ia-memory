@@ -11919,13 +11919,21 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
       const rowsInWindow = e.rows.filter(row =>
         Number(row.t) >= targetStart && Number(row.t) <= targetEnd
       );
-      // Direct 1d CoinGecko has ~5 minute ticks; the authenticated 2d
-      // fallback has hourly ticks. An anchor is ALWAYS an actual observation.
-      const hourly = e.result?.atlasNativeEurTwoDay?.cadence === "hourly-native";
-      const maxAnchorOffset = hourly ? 90 * 60000 : 12 * 60000;
-      const anchor = rowsInWindow[0];
+      // An actual observation at/before targetStart is a valid as-of anchor.
+      // 40.6.646 discarded it, then treated a later hourly tick (up to 90m
+      // after the target) as if the five histories shared a baseline clock.
+      // Direct 1d responses without a preceding tick may use their earliest
+      // post-start native sample, but the exact offset is explicitly disclosed.
+      const hourly = e.result?.atlasNativeEurTwoDay?.cadence === "hourly-native"
+        && e.result?.atlasNativeEurTwoDay?.nativeCurrency === "EUR";
+      const maxAnchorAge = hourly ? 90 * 60000 : 12 * 60000;
+      const before = e.rows.filter(row => row.t <= targetStart).at(-1);
+      const after = rowsInWindow[0];
+      const anchoredBefore = before && targetStart - before.t <= maxAnchorAge;
+      const anchor = anchoredBefore ? before : after;
+      const anchorDirection = anchoredBefore ? "as-of-before" : "first-after";
       if (!anchor || rowsInWindow.length < minimum
-        || anchor.t - targetStart > maxAnchorOffset) return null;
+        || (anchorDirection === "first-after" && anchor.t - targetStart > maxAnchorAge)) return null;
       const sampledRows = atlasDownsampleNativeComparisonRows(rowsInWindow, maximumPoints);
       const first = Number(anchor.price);
       if (!Number.isFinite(first) || first <= 0) return null;
@@ -11939,6 +11947,9 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
         baselineTargetAt: targetStart,
         baselineObservedAt: anchor.t,
         baselineOffsetMs: anchor.t - targetStart,
+        baselineAnchorDirection: anchorDirection,
+        baselineAnchorQuality: anchorDirection === "as-of-before" ? "NATIVE_AS_OF" : "NATIVE_FIRST_AFTER",
+        baselineNativeCadence: hourly ? "1h" : "native-1d",
         nativePointCount: rowsInWindow.length,
         sampledPointCount: data.length, missingPointCount: 0
       };
@@ -12126,7 +12137,15 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
   const comparisonSourceTruth = targetTop5EurDirect && comparisonCurrencyLabel === "EUR"
     ? `Binance EUR DIRECT${comparisonIntervals.length === 1 ? ` · ${comparisonIntervals[0]}` : ""} · ${normalizedEntries.length}/5`
     : `${comparisonProvider} · ${comparisonCurrencyLabel}${comparisonOrigin === "cache" ? " · cache" : comparisonOrigin === "direct" ? " · direct" : ""}`;
-  const summary = `${atlasComparisonSummary(normalizedEntries)} · ${normalizedEntries.length} séries · ${comparisonSourceTruth}`;
+  const scannerAnchors = normalizedEntries.filter(entry =>
+    entry.atlasScannerVerified24h === true && entry.baselineAnchorDirection
+  );
+  const anchorDisclosure = scannerAnchors.length
+    ? ` · Base 100 EUR : ${scannerAnchors.filter(e => e.baselineAnchorDirection === "as-of-before").length} ancrage(s) antérieur(s)`
+      + `, ${scannerAnchors.filter(e => e.baselineAnchorDirection === "first-after").length} postérieur(s)`
+      + ` · écart max ${Math.round(Math.max(...scannerAnchors.map(e => Math.abs(e.baselineOffsetMs))) / 60000)} min`
+    : "";
+  const summary = `${atlasComparisonSummary(normalizedEntries)} · ${normalizedEntries.length} séries · ${comparisonSourceTruth}${anchorDisclosure}`;
 
   const comparisonFingerprint =
     atlasComparisonResultFingerprint(
@@ -15522,12 +15541,22 @@ function atlasScannerSeriesCoversWindow(result, tx) {
     && result?.sourceFamily === "coingecko"
     && result?.currency === "EUR";
   const tolerance = verifiedHourly ? 90 * 60000 : 12 * 60000;
-  if (points.length < atlasChartRules(1).minPoints || !Number.isFinite(first)
-      || !Number.isFinite(last) || first > start + tolerance
+  const before = points.filter(p => p[0] <= start).at(-1);
+  const after = points.find(p => p[0] >= start && p[0] <= end);
+  const beforeUsable = !!before && start - before[0] <= tolerance;
+  const afterUsable = !!after && after[0] - start <= tolerance;
+  const insideCount = points.filter(p => p[0] >= start && p[0] <= end).length;
+  if (points.length < atlasChartRules(1).minPoints || insideCount < atlasChartRules(1).minPoints
+      || !Number.isFinite(first) || !Number.isFinite(last)
+      || first > start + tolerance || !afterUsable
+      || (!beforeUsable && !afterUsable)
       || last < end - tolerance || last > Date.now() + tolerance) {
-    return { ok: false, reason: `24 h non couvertes · ${points.length} points · début ${Number.isFinite(first) ? new Date(first).toISOString() : "absent"} · fin ${Number.isFinite(last) ? new Date(last).toISOString() : "absente"}` };
+    return { ok: false, reason: `24 h non couvertes · ${insideCount} points dans la fenêtre · début ${Number.isFinite(first) ? new Date(first).toISOString() : "absent"} · fin ${Number.isFinite(last) ? new Date(last).toISOString() : "absente"}` };
   }
-  return { ok: true, reason: "24h-covered", start, end };
+  return { ok: true, reason: "24h-covered", start, end,
+    anchorSource: beforeUsable ? "as-of-before" : "first-after",
+    anchorTimestamp: beforeUsable ? before[0] : after[0],
+    anchorOffsetMs: (beforeUsable ? before[0] : after[0]) - start };
 }
 
 /* 40.6.643 — fallback only. Accept real 2-day CoinGecko EUR hourly ticks
