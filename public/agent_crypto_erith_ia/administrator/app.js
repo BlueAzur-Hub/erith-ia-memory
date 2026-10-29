@@ -5605,26 +5605,9 @@ function atlasSanitizeChartRows(rows = []) {
     .filter(point => Number.isFinite(point[0]) && point[0] > 0 && Number.isFinite(point[1]) && point[1] > 0)
     .sort((a, b) => a[0] - b[0]);
 
-  if (ordered.length < 3) return ordered;
-
-  const sanitized = [];
-  for (const point of ordered) {
-    const previous = sanitized[sanitized.length - 1];
-    if (!previous) {
-      sanitized.push(point);
-      continue;
-    }
-
-    const ratio = point[1] / previous[1];
-    if (!Number.isFinite(ratio) || ratio <= 0) continue;
-
-    // Une multiplication/division instantanée par 8 entre deux points adjacents
-    // est traitée comme une donnée corrompue, jamais comme une trajectoire réelle.
-    if (ratio > 8 || ratio < 0.125) continue;
-    sanitized.push(point);
-  }
-
-  return sanitized.length >= 2 ? sanitized : ordered;
+  // Retain authentic observations; the validator blocks suspicious jumps,
+  // never silently erases extrema from financial time series.
+  return ordered;
 }
 
 function atlasNormalizeChartPayload(payload) {
@@ -5717,6 +5700,29 @@ function atlasValidateChartSeries({ c, days, prices, payload = null, sourceMode 
   if (!Number.isFinite(firstPrice) || firstPrice <= 0 || !Number.isFinite(lastPrice) || lastPrice <= 0) return fail("prix invalides");
   if (coverageHours < rules.minCoverageHours) return fail(`couverture insuffisante : ${coverageHours.toFixed(1)} h/${rules.minCoverageHours} h minimum`, { coverageHours });
   if (lastTimestamp > Date.now() + ATLAS_CHART_MAX_FUTURE_MS) return fail("dernier point daté dans le futur");
+  // Real 24h interior coverage is required; two valid endpoints are not enough.
+  const intervals = [];
+  for (let i = 1; i < prices.length; i++) {
+    const delta = Number(prices[i][0]) - Number(prices[i-1][0]);
+    const previous = Number(prices[i-1][1]);
+    const current = Number(prices[i][1]);
+    if (!Number.isFinite(delta) || delta <= 0) return fail("horodatages non croissants", { pointIndex: i });
+    if (!Number.isFinite(previous) || previous <= 0 || !Number.isFinite(current) || current <= 0)
+      return fail("prix intermédiaire invalide", { pointIndex: i });
+    const ratio = current / previous;
+    if (!Number.isFinite(ratio) || ratio > 8 || ratio < 0.125)
+      return fail("saut de prix suspect non certifié; observation conservée", { pointIndex: i, ratio });
+    intervals.push(delta);
+  }
+  if (period === 1 && intervals.length) {
+    const sorted = [...intervals].sort((a,b)=>a-b);
+    const medianMs = sorted[Math.floor(sorted.length / 2)];
+    const allowedGapMs = Math.min(100*60000, Math.max(20*60000, medianMs*2.5));
+    const largestGapMs = Math.max(...intervals);
+    if (largestGapMs > allowedGapMs)
+      return fail("historique 24h discontinu; trou non certifié", { largestGapMs, allowedGapMs, coverageHours });
+  }
+
 
   if (sourceMode === "github-cache") {
     if (payload?.live_ok !== true) return fail("cache GitHub non validé");
@@ -6984,44 +6990,8 @@ function atlasExternalChartTooltip(context) {
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
 
-  // 40.1.52 — virtual live endpoint for PRESENTATION only, on every horizon.
-  // The historical canvas remains pure: no synthetic point is pushed into any
-  // Chart.js dataset and no scale/update is triggered. At the last verified
-  // historical point, the external value board may show current Binance 5/5
-  // with the live 24h variation, independently of the selected chart horizon.
-  const hoveredData = Array.isArray(point?.dataset?.data) ? point.dataset.data : [];
-  const hoveredIndex = Number(point?.dataIndex);
-  const atHistoricalEndpoint = hoveredData.length > 0
-    && Number.isInteger(hoveredIndex)
-    && hoveredIndex >= hoveredData.length - 1;
-  // In comparison modes the last historical point remains historical.
-  // Single-mode virtual live presentation retains its explicit LIVE label.
-  if (atHistoricalEndpoint && !comparison) {
-    const datasets = atlasChartPriceDatasets(chart);
-    const virtual = datasets.map((dataset, index) => {
-      const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
-      const live = atlasChartLivePresentation(coin, 1);
-      if (!coin || !live) return null;
-      return {
-        coin,
-        color: dataset.atlasPrimaryColor || dataset.borderColor,
-        gradientCss: dataset.atlasGradientCss || "",
-        rawPrice: live.price,
-        quoteCurrency: live.quote?.kind === "coingecko-usd-explicit" ? "USD" : "EUR",
-        historicalSource: String(live.quote?.source || "Source spot"),
-        baseValue: 100 + live.change24h,
-        timestamp: Number(live.quote?.timestamp || Date.now()),
-        isLiveEndpoint: true,
-        liveSource: String(live.quote?.source || "Binance WebSocket"),
-        liveStatus: String(live.quote?.status || "live"),
-        liveKind: live.quote?.kind === "coingecko-usd-explicit" ? "snapshot" : "live-binance",
-        liveObservedAt: Number(live.quote?.timestamp || Date.now()),
-        virtualLivePresentation: true,
-        virtualIndex: index
-      };
-    }).filter(Boolean);
-    if (virtual.length && virtual.length === datasets.length) rows = virtual;
-  }
+  // In Solo as in comparison, the hovered historical point is immutable.
+  // Spot prices remain in the existing live quote panel, never in this tooltip.
 
   if (!rows.length) {
     atlasHideChartTooltip();
@@ -11865,14 +11835,24 @@ function atlasComparisonMaximumPoints(period) {
 
 function atlasDownsampleNativeComparisonRows(rows, maximumPoints) {
   const source = Array.isArray(rows) ? rows : [];
-  const limit = Math.max(32, Number(maximumPoints || 640));
+  const limit = Math.max(32, Math.floor(Number(maximumPoints || 640)));
   if (source.length <= limit) return source;
-  const stride = Math.max(1, Math.ceil((source.length - 2) / Math.max(1, limit - 2)));
-  return source.filter((_, index) =>
-    index === 0
-    || index === source.length - 1
-    || index % stride === 0
-  );
+  // Keep chronological extremes of each bucket instead of skipping real peaks.
+  const buckets = Math.max(1, Math.floor((limit-2)/2));
+  const interior = source.length-2;
+  const selected = new Set([0,source.length-1]);
+  for (let k=0;k<buckets;k++){
+    const from=1+Math.floor(k*interior/buckets);
+    const to=1+Math.floor((k+1)*interior/buckets);
+    if(from>=to)continue;
+    let lo=from,hi=from;
+    for(let i=from+1;i<to;i++){
+      if(Number(source[i]?.price)<Number(source[lo]?.price))lo=i;
+      if(Number(source[i]?.price)>Number(source[hi]?.price))hi=i;
+    }
+    selected.add(lo);selected.add(hi);
+  }
+  return [...selected].sort((x,y)=>x-y).map(i=>source[i]);
 }
 
 function atlasBuildNativeComparisonTimeline(entries, maximumPoints = 720) {
@@ -12415,13 +12395,20 @@ function atlasComparisonRetryableError(error) {
 
 async function atlasRespectComparisonRequestSpacing(signal = null, period = Number(state.chartPeriodDays || 1)) {
   const comparison = state.dataBroker.comparison;
-  const minimumSpacing = Number(period || 1) >= 60
-    ? ATLAS_COMPARISON_LONG_HORIZON_SPACING_MS
-    : ATLAS_COMPARISON_REQUEST_SPACING_MS;
-  const elapsed = Date.now() - Number(comparison.lastDirectRequestAt || 0);
-  const waitMs = Math.max(0, minimumSpacing - elapsed);
-  if (waitMs) await atlasWaitWithSignal(waitMs, signal);
-  comparison.lastDirectRequestAt = Date.now();
+  const prior = comparison.directRequestSpacingQueue || Promise.resolve();
+  const current = prior.catch(() => {}).then(async () => {
+    if (signal?.aborted) throw atlasChartAbortError();
+    const minimumSpacing = Number(period || 1) >= 60
+      ? ATLAS_COMPARISON_LONG_HORIZON_SPACING_MS
+      : ATLAS_COMPARISON_REQUEST_SPACING_MS;
+    const elapsed = Date.now() - Number(comparison.lastDirectRequestAt || 0);
+    const waitMs = Math.max(0, minimumSpacing - elapsed);
+    if (waitMs) await atlasWaitWithSignal(waitMs, signal);
+    if (signal?.aborted) throw atlasChartAbortError();
+    comparison.lastDirectRequestAt = Date.now();
+  });
+  comparison.directRequestSpacingQueue = current.catch(() => {});
+  return current;
 }
 
 function atlasRenderComparisonDetail(entries, period) {
@@ -12570,12 +12557,19 @@ async function renderComparisonAnalystPanel(options = {}) {
   atlasRenderComparisonControls();
   atlasPatchMarketSelectionState();
 
-  const fetched = [];
-  for (let index = 0; index < coins.length; index += 1) {
+  const fetched = new Array(coins.length);
+  let nextCoinIndex = 0;
+  const loadWorker = async () => {
+  while (nextCoinIndex < coins.length) {
+    const index = nextCoinIndex++;
     if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
     const coin = coins[index];
 
-    if (preservedChart && !strictAtomicComparison) {
+    if (strictAtomicComparison && els.chartCaption) {
+      atlasSetChartCaptionText(
+        `Top ${coins.length} · chargement série ${index + 1}/${coins.length} · ${coin.symbol} · précédent graphique conservé`
+      );
+    } else if (preservedChart && !strictAtomicComparison) {
       atlasUpdateChartRefresh(`Série ${index + 1}/${coins.length} · ${coin.symbol}`);
     } else if (!strictAtomicComparison && els.chartCaption) {
       atlasSetChartCaptionText(
@@ -12603,7 +12597,7 @@ async function renderComparisonAnalystPanel(options = {}) {
       };
     }
 
-    fetched.push(fetchedItem);
+    fetched[index] = fetchedItem;
     state.dataBroker.comparison.pendingIds =
       (state.dataBroker.comparison.pendingIds || [])
         .filter(id => id !== coin.id);
@@ -12629,6 +12623,12 @@ async function renderComparisonAnalystPanel(options = {}) {
 
     atlasPatchMarketSelectionState();
   }
+  };
+  // Bound concurrency to two for canonical Top 3/5; scanned ranks keep their
+  // independent acquisition budget and ordering. Commit remains atomic.
+  const concurrency = ["rank-3", "rank-5"].includes(comparisonPreset)
+    ? Math.min(2, coins.length) : 1;
+  await Promise.all(Array.from({ length: concurrency }, () => loadWorker()));
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
 
@@ -14564,22 +14564,13 @@ function atlasMarketFrameScannerCoins(preset, period = Number(state.chartPeriodD
   return ids.map(id => byId.get(id)).filter(Boolean);
 }
 
-// Top 3 and Top 5 follow the actual Market capitalization rank, not a
-// hard-coded basket. The Market Frame is the identity authority for presets.
+// Canonical operator-defined basket; scanners retain their dynamic rankings.
+const ATLAS_CURATED_TOP3_IDS = Object.freeze(["bitcoin", "ethereum", "binancecoin"]);
+const ATLAS_CURATED_TOP5_IDS = Object.freeze([
+  "bitcoin", "ethereum", "binancecoin", "ripple", "solana"
+]);
 function atlasCuratedTopIds(limit = 5) {
-  const count = Number(limit) <= 3 ? 3 : 5;
-  const frame = atlasCurrentMarketFrame();
-  const fromFrame = frame?.baskets?.[count === 3 ? "top3" : "top5"];
-  if (Array.isArray(fromFrame) && fromFrame.length === count) {
-    return [...fromFrame];
-  }
-  // Before the first complete frame, use only real ranked Market identities.
-  // Never silently fill a capitalisation basket with unrelated fixed IDs.
-  const ranked = (Array.isArray(state.coins) ? state.coins : [])
-    .filter(coin => coin?.id && Number.isFinite(Number(coin.rank)) && Number(coin.rank) > 0)
-    .sort((a, b) => Number(a.rank) - Number(b.rank)
-      || String(a.id).localeCompare(String(b.id)));
-  return [...new Set(ranked.map(coin => coin.id))].slice(0, count);
+  return Number(limit) <= 3 ? [...ATLAS_CURATED_TOP3_IDS] : [...ATLAS_CURATED_TOP5_IDS];
 }
 
 function atlasCuratedTopCoins(limit = 5) {
@@ -14850,10 +14841,9 @@ function atlasSyncTargetTopFiveCycleLabel() {
     ? "automatic"
     : "manual";
 
-  label.textContent = display.label;
-  symbols.textContent = manualTop5Drift
-    ? `${symbolLine || manualTop5Drift.selectedSymbols.join(" · ")} · manque ${manualTop5Drift.missingSymbols.join("/")}`
-    : (symbolLine || "BTC · ETH · BNB · XRP · SOL");
+  // The ribbon identity never changes when the graph moves to Solo.
+  label.textContent = "TARGET TOP 5 LIVE";
+  symbols.textContent = "BTC · ETH · BNB · XRP · SOL";
 
   root.dataset.top5Recovery = manualTop5Drift ? "true" : "false";
   root.title = manualTop5Drift
@@ -17109,11 +17099,10 @@ function atlasBuildMarketFrame(snapshot, mode = "none") {
   const byId = new Map(ranked.map(coin => [coin.id, coin]));
   const timestamp = snapshot?.timestamp || new Date().toISOString();
   const frameId = snapshot?.snapshotId || `coingecko-top250-eur_${timestamp}`;
-  const capitalized = ranked.filter(coin =>
-    coin?.id && Number.isFinite(Number(coin.rank)) && Number(coin.rank) > 0);
+  const curated = ids => Object.freeze(ids.filter(id => byId.has(id)));
   const baskets = Object.freeze({
-    top3: atlasMarketFrameUniqueIds(capitalized, 3),
-    top5: atlasMarketFrameUniqueIds(capitalized, 5),
+    top3: curated(ATLAS_CURATED_TOP3_IDS),
+    top5: curated(ATLAS_CURATED_TOP5_IDS),
     top50: atlasMarketFrameUniqueIds(ranked, 50),
     top100: atlasMarketFrameUniqueIds(ranked, 100),
     all: atlasMarketFrameUniqueIds(ranked, ATLAS_MARKET_REQUESTED_ASSETS),
@@ -17492,7 +17481,12 @@ function atlasMergeSpotBookIntoCoins() {
       price: eur,
       priceEur: eur,
       priceUsd: atlasHasPositiveQuote(quote.usd) ? Number(quote.usd) : coin.priceUsd,
-      change24h: Number.isFinite(Number(quote.change24hEur)) ? Number(quote.change24hEur) : coin.change24h,
+      change24h: quote.change24hEur != null && Number.isFinite(Number(quote.change24hEur))
+        ? Number(quote.change24hEur) : coin.change24h,
+      change24hUsd: atlasHasPositiveQuote(quote.usd) && quote.change24hUsd != null
+        && Number.isFinite(Number(quote.change24hUsd))
+        ? Number(quote.change24hUsd) : null,
+      usdUpdatedAt: atlasHasPositiveQuote(quote.usd) ? quote.timestamp || null : coin.usdUpdatedAt || null,
       lastUpdated: quote.timestamp || coin.lastUpdated,
       spotUpdatedAt: quote.timestamp || null,
       source: ATLAS_CANONICAL_MARKET_SOURCE

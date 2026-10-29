@@ -1,0 +1,60 @@
+name: Administrator 40.6.650 isolated canonical recovery
+on:
+  push:
+    branches:
+      - test/administrator-40.6.650-canonical-recovery
+    paths:
+      - public/agent_crypto_erith_ia/administrator/app.js
+      - public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+      - public/agent_crypto_erith_ia/administrator/index.html
+      - public/agent_crypto_erith_ia/administrator/build.json
+      - public/agent_crypto_erith_ia/tools/test_administrator_406650_recovery.cjs
+      - .github/workflows/agent-crypto-administrator-406650-isolated.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: administrator-406650-isolated-verification
+  cancel-in-progress: false
+jobs:
+  verify-and-archive:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Check syntax, financial guards and canonical selection
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --check public/agent_crypto_erith_ia/tools/test_administrator_406650_recovery.cjs
+          node public/agent_crypto_erith_ia/tools/test_administrator_406650_recovery.cjs
+      - name: Package six verified files
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir="coordination/inter_ai_dialogues/agent_crypto"
+          name="AGENT_CRYPTO_ADMINISTRATOR_40.6.650_CANONICAL_TOP5_FINANCIAL_RECOVERY_6_FILES.zip"
+          zip -9 -q "$dir/$name" \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js \
+            public/agent_crypto_erith_ia/tools/test_administrator_406650_recovery.cjs \
+            "$dir/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_CANONICAL_TOP5_FINANCIAL_RECOVERY_HANDOFF.md"
+          (cd "$dir" && sha256sum "$name" > "$name.sha256")
+          unzip -t -qq "$dir/$name"
+      - name: Commit archive only on isolated test branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_CANONICAL_TOP5_FINANCIAL_RECOVERY_6_FILES.zip*
+          git diff --cached --quiet && exit 0
+          git commit -m "Archive Administrator 40.6.650 canonical Top5 recovery with SHA256"
+          git pull --rebase origin test/administrator-40.6.650-canonical-recovery
+          git push origin HEAD:test/administrator-40.6.650-canonical-recovery
