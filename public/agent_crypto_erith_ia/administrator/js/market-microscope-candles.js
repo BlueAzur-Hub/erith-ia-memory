@@ -6,12 +6,12 @@
    Explicit loading remains; the shared Trader/Interface 1m view also refreshes every minute while visible. */
 (()=>{
   "use strict";
-  const BUILD="40.6.623";
+  const BUILD="40.6.643";
   const HISTORICAL_CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
   const REST="https://eea.okx.com";
-  const BARS=Object.freeze({"1m":"1m","5m":"5m","15m":"15m","1h":"1H","4h":"4H","1j":"1D"});
+  const BARS=Object.freeze({"1m":"1m","5m":"5m","15m":"15m","30m":"30m","1h":"1H","4h":"4H","1j":"1D"});
   const INDICATOR_KEYS=Object.freeze(["ma","ema","sr","supertrend","boll","sar","vwap","vp"]);
   const INDICATOR_DEFAULTS=Object.freeze({ma:true,ema:false,sr:true,supertrend:false,boll:false,sar:false,vwap:false,vp:false});
   const INDICATOR_STORAGE_KEY="agentCrypto.marketMicroscope.indicators.v1";
@@ -372,7 +372,7 @@
     return Object.freeze({support:enrich(support,"support"),resistance:enrich(resistance,"resistance"),current,tolerance,method:"PIVOTS_VISIBLES_W2",bar:activeBar(),instrument:activeInstrument(),window:rows.length});
   }
   function barDurationMs(bar=activeBar()){
-    return ({"1m":60000,"5m":300000,"15m":900000,"1h":3600000,"4h":14400000,"1j":86400000})[bar]||900000;
+    return ({"1m":60000,"5m":300000,"15m":900000,"30m":1800000,"1h":3600000,"4h":14400000,"1j":86400000})[bar]||900000;
   }
   function candleChangePct(row){
     const open=Number(row?.o),close=Number(row?.c);
@@ -582,10 +582,42 @@
     const rows=requireUsableRows(parseRows(j.data),inst);
     return {rows,source:"OKX public candles",transport:transport.label};
   }
+
+  // 40.6.643: real CoinGecko OHLC in native EUR, never derived from line samples.
+  // OHLC has no native volume; indicators requiring volume remain unavailable.
+  async function fetchCoinGeckoMarketEurOhlc({signal}={}) {
+    if (displayCurrency() !== "EUR" || externalContext().active)
+      throw codedError("CG_OHLC_CONTEXT","CoinGecko OHLC limité au Market EUR");
+    const coin=typeof globalThis.getSelectedCoin==="function"
+      ?globalThis.getSelectedCoin():null;
+    const id=String(coin?.id||"").trim(),symbol=String(coin?.symbol||"").trim().toUpperCase();
+    if (!id || !/^[a-z0-9_-]{2,128}$/i.test(id) || symbol!==selectedSymbol())
+      throw codedError("CG_OHLC_IDENTITY","Identité CoinGecko du Market non certifiée");
+    const url="https://api.coingecko.com/api/v3/coins/"+
+      encodeURIComponent(id)+"/ohlc?vs_currency=eur&days=1";
+    let response;
+    try {response=await fetch(url,{cache:"no-store",signal});}
+    catch(error){if(signal?.aborted)throw error;
+      throw codedError("CG_OHLC_NETWORK","CoinGecko OHLC EUR inaccessible");}
+    if(!response.ok)throw codedError("CG_OHLC_HTTP","CoinGecko OHLC EUR : HTTP "+response.status);
+    const data=await response.json();
+    if(!Array.isArray(data))throw codedError("CG_OHLC_INVALID","Réponse OHLC absente");
+    const rows=data.map(r=>normalizeCandle({t:r?.[0],o:r?.[1],h:r?.[2],l:r?.[3],c:r?.[4],v:null}))
+      .filter(Boolean).sort((a,b)=>a.t-b.t);
+    if(rows.length<20 || new Set(rows.map(r=>r.t)).size!==rows.length
+       || rows[rows.length-1].t-rows[0].t<20*3600000
+       || rows[rows.length-1].t<Date.now()-2*3600000
+       || rows.some(r=>r.t>Date.now()+12*60000))
+      throw codedError("CG_OHLC_INCOMPLETE","Bougies EUR 24h réelles insuffisantes ou périmées");
+    if(symbol!==selectedSymbol()||String(globalThis.getSelectedCoin?.()?.id||"")!==id)
+      throw codedError("CG_OHLC_CONTEXT_CHANGED","Sélection Market modifiée pendant le chargement");
+    return {rows,bar:"30m",instrument:symbol+"-EUR",
+      source:"CoinGecko OHLC EUR natif 24h · 30m · volume indisponible"};
+  }
   async function load(options={}){
     mount();
     const isBtcAnnual=btcAnnualRequested();
-    const requestedBar=isBtcAnnual?"1j":BARS[options.bar]?options.bar:state.bar;
+    let requestedBar=isBtcAnnual?"1j":BARS[options.bar]?options.bar:state.bar;
     if(!isBtcAnnual)state.bar=requestedBar;
     state.requestedBar=requestedBar;
     state.requestedArchivePeriod=isBtcAnnual?"1an":null;
@@ -625,19 +657,21 @@
           return false;
         }
         if(!resolution?.available){
-          state.instrument=`${selectedSymbol()}-${displayCurrency()}`;
-          state.requestedInstrument=state.instrument;
-          throw codedError("MARKET_INSTRUMENT_UNAVAILABLE",`${selectedSymbol()} · ${resolution?.reason||"aucune paire de bougies compatible"}`);
+          const fallback=await fetchCoinGeckoMarketEurOhlc({signal:controller.signal});
+          rows=fallback.rows;inst=fallback.instrument;source=fallback.source;
+          requestedBar=fallback.bar;state.requestedBar=requestedBar;
+          primary=inst;state.requestedInstrument=inst;
+        }else{
+          primary=resolution.instrument;
+          state.requestedInstrument=primary;
+          if(!state.rows.length&&!state.loadedInstrument)state.instrument=primary;
+          renderState();
+          const pack=await resolver.fetchCandles({resolution,bar:requestedBar,limit:300,signal:controller.signal});
+          requireCandleContext(resolution,pack);
+          rows=requireUsableRows((pack.rows||[]).map(normalizeCandle).filter(Boolean).sort((a,b)=>a.t-b.t),pack.instrument||primary);
+          inst=String(pack.instrument||primary).toUpperCase();
+          source=`${pack.providerLabel||resolution.providerLabel||resolution.provider||"MARKET"} public candles`;
         }
-        primary=resolution.instrument;
-        state.requestedInstrument=primary;
-        if(!state.rows.length&&!state.loadedInstrument)state.instrument=primary;
-        renderState();
-        const pack=await resolver.fetchCandles({resolution,bar:requestedBar,limit:300,signal:controller.signal});
-        requireCandleContext(resolution,pack);
-        rows=requireUsableRows((pack.rows||[]).map(normalizeCandle).filter(Boolean).sort((a,b)=>a.t-b.t),pack.instrument||primary);
-        inst=String(pack.instrument||primary).toUpperCase();
-        source=`${pack.providerLabel||resolution.providerLabel||resolution.provider||"MARKET"} public candles`;
       }else{
         let lastPairError=null;
         for(let index=0;index<candidates.length;index++){
