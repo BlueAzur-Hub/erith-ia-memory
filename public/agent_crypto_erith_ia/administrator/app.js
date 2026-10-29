@@ -13865,14 +13865,11 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     };
   });
 
-  const showsMarketAndHistory = Number(period) === 1
-    && (preset === "gainers" || preset === "losers");
+  // Keep Market rank metrics in data; display the observed curve return only.
   const seriesLine = rows.map((row, index) => {
     const value = preset === "volume"
       ? (Number.isFinite(row.volume) ? fmtCompactEUR.format(row.volume) : "non mesuré")
-      : showsMarketAndHistory
-        ? `MKT ${Number.isFinite(row.marketChange) ? fmtPct(row.marketChange) : "—"} · HIST ${Number.isFinite(row.change) ? fmtPct(row.change) : "—"}`
-        : (Number.isFinite(row.change) ? fmtPct(row.change) : "non mesuré");
+      : (Number.isFinite(row.change) ? fmtPct(row.change) : "non mesuré");
     return atlasChartOverlayCoinHtml(row, index, value);
   }).join("");
 
@@ -13913,23 +13910,16 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     }
   ];
 
-  if (scannerHistorySummary) {
+  if (scannerHistorySummary && preset !== "gainers" && preset !== "losers") {
     secondarySummaryItems.push({
       className: "atlas-hud-detail",
       text: `historiques ${scannerHistorySummary}`
     });
   }
-  if (scannerMarketBasis) {
+  if (scannerMarketBasis && preset !== "gainers" && preset !== "losers") {
     secondarySummaryItems.push({
       className: "atlas-hud-detail",
       text: `classement ${scannerMarketBasis}`
-    });
-  }
-
-  if (Number(period) === 1 && (preset === "gainers" || preset === "losers")) {
-    secondarySummaryItems.push({
-      className: "atlas-hud-detail",
-      text: "Courbes EUR : horaires reels de chaque actif, sans alignement fictif"
     });
   }
 
@@ -13995,11 +13985,11 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
       primarySummaryItems = [
         {
           className: "atlas-hud-leader",
-          text: `Leader historique ${leaders} ${fmtPct(max)}`
+          text: `Leader ${leaders} ${fmtPct(max)}`
         },
         {
           className: "atlas-hud-laggard",
-          text: `retard historique ${laggards} ${fmtPct(min)}`
+          text: `retard ${laggards} ${fmtPct(min)}`
         },
         {
           className: "atlas-hud-detail",
@@ -14020,20 +14010,6 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
         }
       ];
     }
-  }
-
-  if (showsMarketAndHistory) {
-    const rawMarketTime = result?.scanner?.marketTimestamp;
-    const marketTimeMs = typeof rawMarketTime === "number"
-      ? rawMarketTime : Date.parse(String(rawMarketTime || ""));
-    const marketClock = Number.isFinite(marketTimeMs) && marketTimeMs > 0
-      ? atlasExactTimestampLabel(marketTimeMs) : "date Market indisponible";
-    const mismatched = rows.filter(row => Number.isFinite(row.marketChange)
-      && Number.isFinite(row.change) && Math.abs(row.marketChange-row.change) > 0.5);
-    secondarySummaryItems.push({
-      className: "atlas-hud-detail",
-      text: `MKT = variation du classement Market (${marketClock}) · HIST = variation réelle des courbes EUR (${oldestText}) · ${mismatched.length} écart(s) > 0,5 pt · mesures à heures différentes`
-    });
   }
 
   const manualTop5Drift = atlasManualCanonicalTop5Drift();
@@ -14105,7 +14081,7 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
   atlasChartOverlaySet(
     titleHtml,
     seriesLine || '<span class="atlas-hud-detail">Mesures non disponibles</span>',
-    preset === "gainers" ? "" : summaryHtml,
+    summaryHtml,
     options.preserved ? "cache retardé" : truthLabel,
     "comparison"
   );
