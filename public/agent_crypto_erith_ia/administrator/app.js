@@ -11901,10 +11901,11 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
 
   if (!prepared.length) return [];
 
-
-  // 40.6.645: Preserve each individually verified 24h history on the real
-  // timestamp axis. CoinGecko hourly and 5m data need not share exact minutes.
-  // Do not interpolate, invent observations or discard a valid fifth asset.
+  // Hausses/Baisses/Volumes 24h: one immutable target window per scanner click.
+  // Compare only observed EUR samples inside that window. NEVER interpolate a
+  // missing quote, backfill from another coin, or turn USD into EUR.
+  // This SAME path applies to 4/5 and 5/5: obtaining a fifth history must not
+  // redefine the Base 100 of the first four histories.
   const scannerNative = Number(period) === 1 && prepared.every(e =>
     e.atlasScannerVerified24h === true
     && Number.isFinite(Number(e.atlasScannerWindowEnd))
@@ -11912,22 +11913,44 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
       - Number(prepared[0].atlasScannerWindowEnd)) < 1000
   );
   if (scannerNative) {
+    const targetEnd = Number(prepared[0].atlasScannerWindowEnd);
+    const targetStart = targetEnd - 24 * 3600000;
     const plotted = prepared.map(e => {
-      const rows = atlasDownsampleNativeComparisonRows(e.rows, maximumPoints);
-      const first = Number(rows[0]?.price);
-      if (!Number.isFinite(first) || first <= 0 || rows.length < minimum) return null;
-      const data = rows.map(r => ({x:r.t,y:r.price/first*100,rawPrice:r.price}))
-        .filter(r => Number.isFinite(r.x) && Number.isFinite(r.y)
-          && Number.isFinite(r.rawPrice) && r.rawPrice > 0);
+      const rowsInWindow = e.rows.filter(row =>
+        Number(row.t) >= targetStart && Number(row.t) <= targetEnd
+      );
+      // Direct 1d CoinGecko has ~5 minute ticks; the authenticated 2d
+      // fallback has hourly ticks. An anchor is ALWAYS an actual observation.
+      const hourly = e.result?.atlasNativeEurTwoDay?.cadence === "hourly-native";
+      const maxAnchorOffset = hourly ? 90 * 60000 : 12 * 60000;
+      const anchor = rowsInWindow[0];
+      if (!anchor || rowsInWindow.length < minimum
+        || anchor.t - targetStart > maxAnchorOffset) return null;
+      const sampledRows = atlasDownsampleNativeComparisonRows(rowsInWindow, maximumPoints);
+      const first = Number(anchor.price);
+      if (!Number.isFinite(first) || first <= 0) return null;
+      const data = sampledRows.map(r => ({
+        x: r.t, y: r.price / first * 100, rawPrice: r.price
+      })).filter(r => Number.isFinite(r.x) && Number.isFinite(r.y)
+        && Number.isFinite(r.rawPrice) && r.rawPrice > 0);
       if (data.length < minimum) return null;
-      return {...e,rows,first,data,nativePointCount:e.rows.length,
-        sampledPointCount:data.length,missingPointCount:0};
-    }).filter(Boolean);
-    if (plotted.length !== prepared.length) return [];
+      return {
+        ...e, rows: sampledRows, first, data,
+        baselineTargetAt: targetStart,
+        baselineObservedAt: anchor.t,
+        baselineOffsetMs: anchor.t - targetStart,
+        nativePointCount: rowsInWindow.length,
+        sampledPointCount: data.length, missingPointCount: 0
+      };
+    });
+    // Fail closed: no partial or fabricated output from this transformer.
+    if (plotted.some(item => !item)) return [];
     const alignedTimeline = atlasBuildNativeComparisonTimeline(plotted, maximumPoints);
-    return plotted.map(e => ({...e,alignedTimeline}));
+    return plotted.map(e => ({ ...e, alignedTimeline }));
   }
 
+  // Non-scanner/manual comparisons preserve the established common-overlap
+  // route. This correction is scoped to the authenticated 24h scanner route.
   const commonStart = Math.max(...prepared.map(entry => entry.rows[0].t));
   const commonEnd = Math.min(...prepared.map(entry => entry.rows[entry.rows.length - 1].t));
   if (!Number.isFinite(commonStart) || !Number.isFinite(commonEnd) || commonEnd <= commonStart) return [];
@@ -11950,24 +11973,18 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
     );
     if (data.length < minimum) return null;
     return {
-      ...entry,
-      rows: sampledRows,
-      first,
-      data,
+      ...entry, rows: sampledRows, first, data,
       nativePointCount: overlapRows.length,
-      sampledPointCount: data.length,
-      missingPointCount: 0
+      sampledPointCount: data.length, missingPointCount: 0
     };
   }).filter(Boolean);
 
   if (!nativeEntries.length) return [];
   const nativeTimeline = atlasBuildNativeComparisonTimeline(nativeEntries, maximumPoints);
   return nativeEntries.map(entry => ({
-    ...entry,
-    alignedTimeline: nativeTimeline
+    ...entry, alignedTimeline: nativeTimeline
   }));
 }
-
 function atlasBuildBestAlignedComparisonEntries(entries, period, targetCount = ATLAS_COMPARISON_MAX_SERIES) {
   const source = Array.isArray(entries) ? entries.filter(Boolean).slice(0, ATLAS_COMPARISON_MAX_SERIES) : [];
   const maximum = Math.min(Math.max(1, Number(targetCount || source.length)), source.length);
@@ -15632,12 +15649,15 @@ function atlasScannerAligned(entries, period, candidateIds, windowEnd = null) {
 
   if (!prepared.length) return [];
 
-  // All five individually qualified histories can be displayed directly,
-  // without forcing a shared 23h30 crop.
-  if (Number(period) === 1 && prepared.length === ATLAS_SCANNER_TARGET
-      && prepared.every(x => x.entry?.atlasScannerVerified24h === true)) {
-    const five = atlasBuildAlignedComparisonEntries(prepared.map(x => x.entry), period);
-    if (five.length === ATLAS_SCANNER_TARGET) return five;
+  // Use the SAME native 24h clock path for every qualified subset.
+  // The old 5/5-only branch could rebase 4/5 on a different overlap window.
+  if (Number(period) === 1 && prepared.every(x =>
+      x.entry?.atlasScannerVerified24h === true
+      && Number.isFinite(Number(x.entry?.atlasScannerWindowEnd))
+      && (windowEnd === null || Math.abs(Number(x.entry.atlasScannerWindowEnd)
+        - Number(windowEnd)) < 1000))) {
+    const native = atlasBuildAlignedComparisonEntries(prepared.map(x => x.entry), period);
+    if (native.length === prepared.length) return native;
   }
 
   // Genuinely missing histories retain partial diagnostics in Market order.
@@ -16019,12 +16039,16 @@ function atlasScannerStoredHistory(coin, period, tx = null) {
     atlasGetStoredChartResult(coin, period, "coingecko")
   ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
 
-  candidates.sort((a, b) => {
+  const compatible = tx && Number(tx.period) === 1
+    ? candidates.filter(result => atlasScannerSeriesCoversWindow(result, tx).ok)
+    : candidates;
+  const pool = compatible.length ? compatible : candidates;
+  pool.sort((a, b) => {
     const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
     const bTime = Number(b?.savedAt || b?.integrity?.metrics?.lastTimestamp || 0);
     return bTime - aTime;
   });
-  return candidates[0] || null;
+  return pool[0] || null;
 }
 
 async function atlasScannerYieldToUi(tx) {
@@ -16203,6 +16227,43 @@ async function atlasScannerRun(tx) {
 
     if (!atlasScannerCurrent(tx)) return false;
 
+    // Bounded first-click recovery: retry at most two genuinely transient
+    // missing histories, after the other selected market IDs were attempted.
+    // The scanner stays on its frozen candidate set and transaction clock.
+    const retryableFailures = coins.filter(coin =>
+      !accepted.some(entry => entry.coin?.id === coin.id)
+      && rejected.some(item => item.id === coin.id
+        && /429|rate limit|too many|network|failed to fetch|timeout|timed out|non couvertes|coverage/i.test(
+          String(item.reason || "")))
+    ).slice(0, Number(tx.retryBudget || 0));
+    for (const coin of retryableFailures) {
+      if (!atlasScannerCurrent(tx) || tx.validCount >= ATLAS_SCANNER_TARGET
+        || tx.directAttempts >= tx.directLimit) break;
+      tx.phase = `seconde chance ${coin.symbol}`;
+      tx.directAttempts += 1;
+      atlasScannerProgress(tx, coin.symbol);
+      let attempt = null;
+      try {
+        attempt = await atlasScannerFetchDirect(tx, coin);
+      } catch (error) {
+        if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) return false;
+      }
+      if (!atlasScannerCurrent(tx)) return false;
+      if (attempt?.result && Array.isArray(attempt.result.series)
+        && attempt.result.series.length
+        && atlasScannerSeriesCoversWindow(attempt.result, tx).ok) {
+        accepted.push(atlasScannerDecorateEntry(
+          tx, coin, attempt.result, attempt.source === "cache" ? "cache" : "direct"
+        ));
+        for (let index = rejected.length - 1; index >= 0; index -= 1) {
+          if (rejected[index].id === coin.id) rejected.splice(index, 1);
+        }
+        tx.validCount = Math.min(ATLAS_SCANNER_TARGET, atlasScannerAligned(
+          accepted, tx.period, tx.candidateIds, tx.windowEnd
+        ).length);
+      }
+    }
+
     // Network failures never erase already held histories. Preserve validated
     // delayed local archives as explicitly dated fallback, never label them direct.
     for (const archived of archiveFallback) {
@@ -16331,7 +16392,8 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       validCount: 0,
       phase: "initialisation",
       displayedSnapshot,
-      directLimit: Math.min(ATLAS_SCANNER_DIRECT_LIMIT, pool.length),
+      directLimit: Math.min(ATLAS_SCANNER_DIRECT_LIMIT, pool.length + 2),
+      retryBudget: 2,
       cancelled: false,
       controller: new AbortController()
     };
