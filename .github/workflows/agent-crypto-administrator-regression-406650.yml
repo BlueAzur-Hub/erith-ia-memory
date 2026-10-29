@@ -8,7 +8,7 @@ jobs:
   regression:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,3 +19,44 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node public/agent_crypto_erith_ia/tools/test_administrator_406650_regression.cjs
+
+      - name: Package tested source, regression and handoff with SHA-256
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib, zipfile
+          root = pathlib.Path(".")
+          dest = root / "coordination/inter_ai_dialogues/agent_crypto"
+          name = "AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_TOP5_EUR_USD_INTEGRITY_RECOVERY_7_FILES.zip"
+          paths = [
+              "public/agent_crypto_erith_ia/administrator/app.js",
+              "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js",
+              "public/agent_crypto_erith_ia/administrator/index.html",
+              "public/agent_crypto_erith_ia/administrator/build.json",
+              "public/agent_crypto_erith_ia/tools/test_administrator_406650_regression.cjs",
+              ".github/workflows/agent-crypto-administrator-regression-406650.yml",
+              "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_RECOVERY_HANDOFF.md",
+          ]
+          with zipfile.ZipFile(dest / name, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+              for p in paths:
+                  z.write(root / p, p)
+          digest = hashlib.sha256((dest / name).read_bytes()).hexdigest()
+          (dest / (name + ".sha256")).write_text(digest + "  " + name + "\\n", encoding="utf8")
+          with zipfile.ZipFile(dest / name) as z:
+              assert len(z.namelist()) == 7
+              assert z.testzip() is None
+          print("PACKAGE_SHA256", digest, "size", (dest / name).stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_TOP5_EUR_USD_INTEGRITY_RECOVERY_7_FILES
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_TOP5_EUR_USD_INTEGRITY_RECOVERY_7_FILES.zip
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_TOP5_EUR_USD_INTEGRITY_RECOVERY_7_FILES.zip.sha256
+          if-no-files-found: error
+      - name: Persist package and checksum on test branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_TOP5_EUR_USD_INTEGRITY_RECOVERY_7_FILES.zip coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.650_AUDIT_FIRST_TOP5_EUR_USD_INTEGRITY_RECOVERY_7_FILES.zip.sha256
+          git commit -m "Archive tested Administrator 40.6.650 source and SHA-256 on isolated branch"
+          git push origin HEAD:refs/heads/test/administrator-406650-regression-recovery-20261029
