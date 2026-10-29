@@ -1,0 +1,69 @@
+name: Seven Agent-Crypto Administrator scanner test ZIP delivery
+on:
+  push:
+    branches:
+      - test/seven-scanner-server-browser-20261028
+    paths:
+      - '.github/workflows/seven-scanner-zip-delivery.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and verify exact 3-file Administrator preview ZIP
+        env:
+          ZIP_NAME: AGENT_CRYPTO_ADMINISTRATOR_40.6.640_SCANNER_EUR_USD_COMBINED_FIREFOX_PREVIEW_3_FILES.zip
+        run: |
+          python - <<'PY'
+          import os, pathlib, zipfile, hashlib
+          paths = [
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js'
+          ]
+          name=os.environ['ZIP_NAME']
+          dest=pathlib.Path('/tmp')/name
+          for p in paths:
+              if not pathlib.Path(p).is_file() or pathlib.Path(p).stat().st_size<1000:
+                  raise SystemExit('Missing or empty source: '+p)
+          with zipfile.ZipFile(dest,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
+              for p in paths:
+                  archive.write(p,arcname=p)
+          with zipfile.ZipFile(dest) as archive:
+              if archive.namelist()!=paths or archive.testzip() is not None:
+                  raise SystemExit('ZIP verification failed')
+              for p in paths:
+                  if archive.read(p)!=pathlib.Path(p).read_bytes():
+                      raise SystemExit('Different ZIP content: '+p)
+          checksum=hashlib.sha256(dest.read_bytes()).hexdigest()
+          print('ZIP:',name)
+          print('BYTES:',dest.stat().st_size)
+          print('SHA256:',checksum)
+          print('FILES:',len(paths))
+          with open('/tmp/agent_crypto_delivery_checksum.txt','w') as out:
+              out.write(checksum+'  '+name+'\n')
+          PY
+      - name: Publish ZIP only to the canonical shared GitHub directory
+        env:
+          ZIP_NAME: AGENT_CRYPTO_ADMINISTRATOR_40.6.640_SCANNER_EUR_USD_COMBINED_FIREFOX_PREVIEW_3_FILES.zip
+        run: |
+          set -eu
+          git fetch origin main
+          git checkout -B seven-zip-shared origin/main
+          mkdir -p coordination/inter_ai_dialogues/agent_crypto
+          cp "/tmp/$ZIP_NAME" "coordination/inter_ai_dialogues/agent_crypto/$ZIP_NAME"
+          git add "coordination/inter_ai_dialogues/agent_crypto/$ZIP_NAME"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Deliver Administrator scanner EUR USD Firefox preview ZIP"
+          git push origin HEAD:main
+      - name: Print auditable delivery identity
+        env:
+          ZIP_NAME: AGENT_CRYPTO_ADMINISTRATOR_40.6.640_SCANNER_EUR_USD_COMBINED_FIREFOX_PREVIEW_3_FILES.zip
+        run: |
+          echo "Uploaded to coordination/inter_ai_dialogues/agent_crypto/$ZIP_NAME"
+          cat /tmp/agent_crypto_delivery_checksum.txt
