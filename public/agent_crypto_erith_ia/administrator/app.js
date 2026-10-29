@@ -5839,6 +5839,11 @@ function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFa
     if (memory) candidates.push(memory);
     if (local[key]) candidates.push(local[key]);
     for (const original of candidates) {
+      // The cache key cannot override a contradictory recorded period or coin.
+      // Keep legacy undated metadata readable only through its exact key.
+      if (original?.periodDays != null
+          && Number(original.periodDays) !== Number(days || 1)) continue;
+      if (original?.coinId && String(original.coinId) !== String(c?.id)) continue;
       const candidate = {
         ...original,
         originalSource: original.originalSource || original.source,
@@ -12366,6 +12371,7 @@ function atlasRenderComparisonDetail(entries, period) {
   const coins = entries.map(entry => entry.coin);
   const primary = getSelectedCoin() || coins[0];
   atlasBrokerSeedSpot(primary);
+  atlasRenderCompactDetailSummary(primary);
   const preset = String(state.dataBroker?.comparison?.preset || "manual");
   const volumeMode = preset === "volume";
   const ranked = entries
@@ -15360,6 +15366,21 @@ function atlasScannerMarketBasis(period) {
   };
 }
 
+// Reject scanner rankings backed by expired Market frames.
+function atlasScannerMarketFreshness(frame, now = Date.now()) {
+  const timestamp = Date.parse(String(frame?.timestamp || ""));
+  const mode = String(frame?.mode || "");
+  const maxAge = mode === "github-public"
+    ? ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS
+    : ATLAS_ANALYSIS_MAX_AGE_MS;
+  const age = Number(now) - timestamp;
+  if (frame?.status !== "ready" || !Number.isFinite(timestamp)
+      || !Number.isFinite(age) || age < -120000 || age > maxAge) {
+    return { ok: false, reason: `Market trop ancien ou non daté · source ${mode || "absente"} · ${frame?.timestamp || "horodatage absent"}` };
+  }
+  return { ok: true, age, timestamp, mode };
+}
+
 function atlasScannerPool(preset, period) {
   // LIVE canonical selection: read the active Market universe, never stale Frame baskets.
   // The Market Frame remains provenance, not the owner of candidate identities.
@@ -15465,7 +15486,7 @@ function atlasScannerDecorateEntry(tx, coin, result, source) {
     coin,
     result: series === result.series ? result : { ...result, series },
     source,
-    atlasMarketMetric: atlasScannerMarketMetric(tx.preset, coin, tx.period),
+    atlasMarketMetric: Number(tx?.candidateMetrics?.[coin.id]),
     atlasMarketMetricLabel: atlasScannerMarketMetricLabel(tx.preset, tx.period),
     atlasHistoryKind: historyKind,
     atlasMarketRank: Number(coin?.rank || 0)
@@ -15640,7 +15661,64 @@ function atlasScannerRestoreSnapshot(snapshot) {
   atlasSetCleanLensCollapsed(snapshot.detailCollapsed, false);
 }
 
-function atlasScannerCommit(tx, finalEntries, rejected) {
+
+let atlasScannerLastPartialDiagnostic = null;
+function atlasScannerDiagnosticSignature(tx, quoteCurrency) {
+  return JSON.stringify([
+    tx.preset, Number(tx.period), String(quoteCurrency || ""),
+    String(tx.marketFrameFingerprint || tx.marketFrameId || ""),
+    ...(tx.candidateIds || [])
+  ]);
+}
+function atlasScannerExplainMissing(tx, displayedIds, rejected, acceptedEntries) {
+  const drawn = new Set(displayedIds || []);
+  const entries = Array.isArray(acceptedEntries) ? acceptedEntries : [];
+  const failures = Array.isArray(rejected) ? rejected : [];
+  return (tx.candidateIds || []).filter(id => !drawn.has(id)).map(id => {
+    const coin = (tx.candidateCoins || []).find(candidate => candidate.id === id);
+    const accepted = entries.find(entry => entry.coin?.id === id);
+    const failure = failures.find(row => row.id === id);
+    let kind = "undetermined";
+    let reason = "historique absent des séries acceptées ; cause non enregistrée";
+    if (accepted) {
+      const coverage = atlasScannerSeriesCoversWindow(accepted.result, tx);
+      if (!coverage.ok) {
+        kind = "coverage";
+        reason = coverage.reason;
+      } else if (!atlasScannerAligned([accepted], tx.period, [id], tx.windowEnd).length) {
+        kind = "individual-alignment";
+        reason = "série isolée insuffisante pour la période demandée";
+      } else {
+        kind = "joint-alignment";
+        reason = "série valide seule mais incompatible avec la fenêtre commune retenue";
+      }
+    } else if (failure) {
+      kind = "fetch-or-validation";
+      reason = String(failure.reason || "collecte ou validation refusée");
+    }
+    return {
+      id,
+      symbol: String(coin?.symbol || failure?.symbol || id).toUpperCase(),
+      kind,
+      reason: String(reason).slice(0, 400)
+    };
+  });
+}
+function atlasScannerDiagnosticCaption(rows) {
+  const labels = {
+    coverage: "24 h non couvertes",
+    "individual-alignment": "série insuffisante",
+    "joint-alignment": "horodatages incompatibles",
+    "fetch-or-validation": "collecte/validation",
+    undetermined: "cause non déterminée"
+  };
+  return (rows || []).map(row =>
+    row.symbol + ": " + (labels[row.kind] || row.kind) + " · " +
+    String(row.reason).slice(0, 160)
+  ).join(" ; ");
+}
+
+function atlasScannerCommit(tx, finalEntries, rejected, acceptedEntries = finalEntries) {
   if (!atlasScannerCurrent(tx) || !Array.isArray(finalEntries) || !finalEntries.length) {
     return false;
   }
@@ -15659,10 +15737,47 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       || positions.some((position, index) => position === undefined
         || (index > 0 && position <= positions[index - 1]))) return false;
 
+  // Protect the existing chart if the Market changed during historical acquisition.
+  const activeFrame = atlasCurrentMarketFrame();
+  const freshness = atlasScannerMarketFreshness(activeFrame);
+  const changedFrame = !activeFrame
+    || activeFrame.id !== tx.marketFrameId
+    || activeFrame.fingerprint !== tx.marketFrameFingerprint;
+  if (!freshness.ok || changedFrame) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(
+      tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · Market changé ou périmé`,
+      [!freshness.ok ? freshness.reason : null,
+       changedFrame ? "Market actualisé pendant la collecte : relancer le scanner" : null]
+        .filter(Boolean).join(" · ")
+    );
+  }
+
+  // A currency switch during acquisition cannot re-label the frozen Market basket.
+  const scannerQuote = String(tx?.displayCurrency || "").toUpperCase();
+  const activeQuote = atlasChartDisplayCurrency();
+  const unqualified = prevalidated.filter(entry =>
+    atlasHistoricalDisplayQuote(entry?.result).currency !== scannerQuote);
+  if (!["EUR", "USD"].includes(scannerQuote) || activeQuote !== scannerQuote || unqualified.length) {
+    atlasScannerTransaction = null;
+    atlasScannerSetTransactionFlag(false);
+    return atlasScannerVisibleFailure(tx.preset,
+      `${atlasScannerLabel(tx.preset)} non validé · devises incompatibles`,
+      `sélection ${scannerQuote || "?"} · affichage ${activeQuote} · historiques non qualifiés ${unqualified.map(entry => entry.coin?.symbol || entry.coin?.id).join(", ")}`);
+  }
+
   const ids = prevalidated.map(entry => entry.coin.id);
   const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
   const availableCount = ids.length;
   const missingCount = Math.max(0, ATLAS_SCANNER_TARGET - availableCount);
+  const missingReasons = missingCount
+    ? atlasScannerExplainMissing(tx, ids, rejected, acceptedEntries) : [];
+  const diagnosticSignature = atlasScannerDiagnosticSignature(tx, atlasChartDisplayCurrency());
+  const previousPartial = !missingCount
+    && atlasScannerLastPartialDiagnostic?.signature === diagnosticSignature
+      ? atlasScannerLastPartialDiagnostic : null;
   const canonicalKey = atlasExpectedChartContextKey(ids, tx.period);
   const snapshot = tx.displayedSnapshot || atlasScannerStateSnapshot();
   const commitEpoch = atlasScannerInvalidateChartWork(`commit:${tx.preset}`);
@@ -15718,7 +15833,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       sourceMode: availableCount > 1
         ? "comparison-base100"
         : prevalidated[0]?.result?.sourceMode || "scanner-single",
-      source: "Classement Market CoinGecko + historiques Bridge/Binance/CoinGecko EUR",
+      source: `Classement Market CoinGecko + historiques ${scannerQuote} · provenance par série`,
       scanner: {
         preset: tx.preset,
         marketBasisLabel: tx.marketBasisLabel,
@@ -15734,7 +15849,12 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
         targetCount: ATLAS_SCANNER_TARGET,
         unavailableIds: [...unavailableIds],
         requestedIds: [...tx.candidateIds],
-        rejected: [...rejected]
+        rejected: [...rejected],
+        missingReasons,
+        previousPartial: previousPartial ? {
+          recordedAt: previousPartial.recordedAt,
+          missingReasons: previousPartial.missingReasons
+        } : null
       }
     },
     error: missingCount
@@ -15818,6 +15938,11 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       + ` · ${marketValues}`
       + ` · historiques ${historySummary || "CoinGecko"}`
       + ` · marché ${tx.marketMode} ${atlasExactTimestampLabel(tx.marketTimestamp)}.`
+      + (missingCount
+        ? " · Diagnostic 4/5 : " + atlasScannerDiagnosticCaption(missingReasons)
+        : previousPartial
+          ? " · Chargement précédent : " + atlasScannerDiagnosticCaption(previousPartial.missingReasons) + " · maintenant 5/5"
+          : "")
     );
 
     const saved = atlasWorkspaceWrite();
@@ -15827,6 +15952,15 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       );
     }
 
+    if (missingCount) {
+      atlasScannerLastPartialDiagnostic = {
+        signature: diagnosticSignature,
+        recordedAt: new Date().toISOString(),
+        missingReasons
+      };
+    } else if (previousPartial) {
+      atlasScannerLastPartialDiagnostic = null;
+    }
     atlasHideChartRefresh();
 
     window.setTimeout(() => {
@@ -15867,16 +16001,25 @@ function atlasScannerNativeUsdKey(coin, period) {
 function atlasScannerNativeUsdStored(coin, period) {
   const key = atlasScannerNativeUsdKey(coin, period);
   if (!key) return null;
+  const requestedPeriod = Number(period || 1);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The comparison owner can still hold a different horizon after a period switch.
+  // Its series is not a candidate unless the acquisition period is explicit.
+  const currentPeriod = Number(current?.periodDays ?? current?.apiDays);
   const candidates = [
-    current,
+    Number.isFinite(currentPeriod) && currentPeriod === requestedPeriod ? current : null,
     state.chartCache?.[key]?.result,
     atlasReadLocalChartStore()?.[key]
   ].filter(result => result && result.currency === "USD" && result.quoteCurrency === "USD"
+    && (result.periodDays == null || Number(result.periodDays) === requestedPeriod)
+    && (!result.coinId || String(result.coinId) === String(coin?.id))
     && Array.isArray(result.series) && result.series.length);
   for (const result of candidates) {
-    const series = atlasNormalizeChartPayload({ prices: result.series });
     const quote = atlasHistoryQuoteProvenance(result, "coingecko");
+    // Self-declared USD metadata is insufficient: reject EUR-origin and unknown caches.
+    if (quote.quoteConflict || quote.quoteCurrency !== "USD"
+        || quote.historySourceFamily !== "coingecko") continue;
+    const series = atlasNormalizeChartPayload({ prices: result.series });
     const integrity = atlasValidateChartSeries({
       c: coin, days: period, prices: series, sourceMode: "browser-cache",
       quoteCurrency: quote.quoteCurrency, historySourceFamily: quote.historySourceFamily,
@@ -15891,7 +16034,12 @@ function atlasScannerNativeUsdStored(coin, period) {
 }
 function atlasScannerNativeUsdStore(coin, period, result) {
   const key = atlasScannerNativeUsdKey(coin, period);
-  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD") {
+  const quote = atlasHistoryQuoteProvenance(result, "coingecko");
+  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD"
+      || Number(result?.periodDays) !== Number(period)
+      || (result?.coinId && String(result.coinId) !== String(coin?.id))
+      || quote.quoteConflict || quote.quoteCurrency !== "USD"
+      || quote.historySourceFamily !== "coingecko") {
     throw new Error("Historique USD natif sans identité de devise vérifiable");
   }
   const savedAt = Date.now();
@@ -15908,12 +16056,21 @@ function atlasScannerNativeUsdStore(coin, period, result) {
 }
 function atlasScannerStoredHistory(coin, period, tx = null) {
   if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period);
+  const requestedPeriod = Number(period || 1);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The displayed comparison may belong to another period after a horizon switch.
+  // The exact-key Binance/CoinGecko caches remain eligible after quote verification.
+  const currentPeriod = Number(current?.periodDays ?? current?.apiDays);
+  const currentForPeriod = Number.isFinite(currentPeriod) && currentPeriod === requestedPeriod
+    ? current : null;
   const candidates = [
-    current && Array.isArray(current.series) && current.series.length ? current : null,
+    currentForPeriod && Array.isArray(currentForPeriod.series) && currentForPeriod.series.length
+      ? currentForPeriod : null,
     atlasGetStoredChartResult(coin, period, "binance"),
     atlasGetStoredChartResult(coin, period, "coingecko")
-  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR");
+  ].filter(result => result && atlasHistoricalDisplayQuote(result)?.currency === "EUR"
+    && (result.periodDays == null || Number(result.periodDays) === requestedPeriod)
+    && (!result.coinId || String(result.coinId) === String(coin?.id)));
 
   candidates.sort((a, b) => {
     const aTime = Number(a?.savedAt || a?.integrity?.metrics?.lastTimestamp || 0);
@@ -16112,7 +16269,7 @@ async function atlasScannerRun(tx) {
     );
 
     if (finalEntries.length > 0) {
-      return atlasScannerCommit(tx, finalEntries, rejected);
+      return atlasScannerCommit(tx, finalEntries, rejected, accepted);
     }
 
     const missingIds = tx.candidateIds.filter(id =>
@@ -16182,6 +16339,15 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = requestedPeriod;
+    const marketFrame = atlasCurrentMarketFrame();
+    const freshness = atlasScannerMarketFreshness(marketFrame);
+    if (!freshness.ok) {
+      return atlasScannerVisibleFailure(
+        preset,
+        `${label} non validé · Market trop ancien pour un classement actuel`,
+        `${freshness.reason}. Actualiser le Market / Livecheck puis relancer.`
+      );
+    }
     const pool = atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
@@ -16191,10 +16357,6 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       );
     }
 
-    const marketFrame = atlasCurrentMarketFrame();
-    if (!marketFrame) {
-      return atlasScannerVisibleFailure(preset, `${label} refusé · Market Frame indisponible`);
-    }
     const marketMode = String(
       marketFrame.mode
       || state.sourceLock?.mode
@@ -16207,6 +16369,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       id: ++atlasScannerSequence,
       preset,
       period,
+      displayCurrency: atlasChartDisplayCurrency(),
       // Every candidate is evaluated against the same acquisition clock.
       windowEnd: Date.now(),
       universeSize: marketFrame.validatedAssets,
@@ -16220,6 +16383,9 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       candidateIds: pool.map(coin => coin.id),
       // Freeze the exact Market candidates, not the potentially stale state.coins copy.
       candidateCoins: pool.map(coin => ({ ...coin })),
+      candidateMetrics: Object.fromEntries(pool.map(coin => [
+        coin.id, atlasScannerMarketMetric(preset, coin, period)
+      ])),
       cacheChecked: 0,
       cacheHits: 0,
       examined: 0,
