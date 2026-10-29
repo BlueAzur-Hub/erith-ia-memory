@@ -1,0 +1,21 @@
+name: Administrator 40.6.650 regression evidence
+on:
+  push:
+    branches:
+      - test/administrator-406650-regression-recovery-20261029
+  workflow_dispatch:
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax and targeted behavioral contracts
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node public/agent_crypto_erith_ia/tools/test_administrator_406650_regression.cjs

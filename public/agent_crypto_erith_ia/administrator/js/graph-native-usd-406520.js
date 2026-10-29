@@ -14,7 +14,21 @@ function historicalUsdCertified(result){
 }
 async function cmp(c,p,opt={}){try{if(typeof atlasRespectComparisonRequestSpacing==="function")await atlasRespectComparisonRequestSpacing(opt.signal||null,p);const result=await fetchUsd(c,p,{signal:opt.signal||null,timeoutMs:typeof ATLAS_COMPARISON_DIRECT_TIMEOUT_MS!=="undefined"?ATLAS_COMPARISON_DIRECT_TIMEOUT_MS:12000});atlasStoreChartResult(c,p,result,"coingecko");return{coin:c,result,attempts:1,source:"coingecko-usd-direct"}}catch(e){if(e?.name==="AbortError")throw e;const stored=atlasGetStoredChartResult(c,p,"coingecko"),fresh=historicalUsdCertified(stored)&&!(typeof atlasChartNeedsRefresh==="function"&&atlasChartNeedsRefresh(stored,p));if(fresh)return{coin:c,result:{...stored,source:"Cache navigateur · série CoinGecko USD",refreshWarning:"CoinGecko USD direct indisponible · cache USD récent conservé"},attempts:1,source:"coingecko-usd-cache-fresh"};return{coin:c,result:{series:[],blocked:true,currency:"USD",quoteCurrency:"USD",sourceFamily:"coingecko",sourceMode:"coingecko-direct",reason:stored?.series?.length?"Historique CoinGecko USD obsolète refusé.":"Historique CoinGecko USD indisponible.",technicalReason:String(e?.message||e)},attempts:1,source:stored?.series?.length?"coingecko-usd-stale-cache-refused":"coingecko-usd-blocked"}}}
 async function scan(tx,c){try{if(typeof atlasRespectComparisonRequestSpacing==="function")await atlasRespectComparisonRequestSpacing(tx?.controller?.signal||null,tx?.period);const result=await fetchUsd(c,tx?.period,{signal:tx?.controller?.signal||null,timeoutMs:12000});atlasStoreChartResult(c,tx?.period,result,"coingecko");return{result,source:"direct",provider:"coingecko-usd-browser"}}catch(e){if(e?.name==="AbortError"||tx?.controller?.signal?.aborted)throw e;const s=atlasGetStoredChartResult(c,tx?.period,"coingecko");return historicalUsdCertified(s)?{result:{...s,source:"Cache navigateur · série CoinGecko USD"},source:"cache",provider:"coingecko-usd-cache"}:{result:null,source:"blocked",error:e}}}
-function live(c,p=1){if(!c||Number(p||1)!==1)return null;const price=c.priceUsd==null?NaN:Number(c.priceUsd),change24h=c.change24h==null||String(c.change24h).trim()===""?NaN:Number(c.change24h);if(!(Number.isFinite(price)&&price>0&&Number.isFinite(change24h)))return null;const t=Date.parse(String(c.spotUpdatedAt||c.lastUpdated||c.timestamp||"")),timestamp=Number.isFinite(t)?t:Date.now();return{quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:c.id||null,price,change24h,bid:null,ask:null,timestamp,source:"CoinGecko USD snapshot"},price,change24h}}
+function live(c,p=1){
+  if(!c||Number(p||1)!==1)return null;
+  // A value pair MUST originate from the same native-USD observation.
+  // Never borrow c.change24h: atlasMergeSpotBookIntoCoins assigns EUR there.
+  const observation=c.usdObservation;
+  if(!observation)return null;
+  const price=Number(observation.price),change24h=Number(observation.change24h);
+  const rawTime=observation.timestamp;
+  const timestamp=typeof rawTime==="number"?rawTime:Date.parse(String(rawTime||""));
+  if(!(Number.isFinite(price)&&price>0&&Number.isFinite(change24h)
+     &&Number.isFinite(timestamp)&&timestamp>0))return null;
+  return{quote:{status:"snapshot",kind:"coingecko-usd-explicit",
+    coinId:c.id||null,price,change24h,bid:null,ask:null,timestamp,
+    source:String(observation.source||"CoinGecko native USD snapshot")},price,change24h};
+}
 function wrap(n,f){const o=globalThis[n];if(typeof o!=="function")return false;if(o[W])return true;O[n]=o;const x=f(o);Object.defineProperty(x,W,{value:true});globalThis[n]=x;return true}
 const compactUsd=v=>{const n=Number(v);return Number.isFinite(n)?new Intl.NumberFormat("fr-FR",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:2}).format(n):"—"};
 
@@ -192,7 +206,8 @@ function patchUsdOverlay(layout="solo",chart=null){
  let preset="";try{preset=String(state?.dataBroker?.comparison?.preset||"")}catch(_){}if(preset!=="volume")return;const rows=[];series?.querySelectorAll?.(".atlas-hud-coin")?.forEach(item=>{const symbol=String(item.querySelector("b")?.textContent||"").trim().toUpperCase();let coin=null;try{coin=state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()===symbol)||null}catch(_){}const value=Number(coin?.volume24hUsd);if(Number.isFinite(value)&&value>=0){const em=item.querySelector("em");if(em)em.textContent=compactUsd(value);rows.push({symbol,value})}});rows.sort((a,b)=>b.value-a.value);const leader=summary?.querySelector?.(".atlas-hud-leader"),laggard=summary?.querySelector?.(".atlas-hud-laggard");if(leader&&rows.length)leader.textContent=`Volume supérieur ${rows[0].symbol} ${compactUsd(rows[0].value)}`;if(laggard&&rows.length>1){const row=rows[rows.length-1];laggard.textContent=`inférieur ${row.symbol} ${compactUsd(row.value)}`}patchUsdLegend()}
 function install(){if(installed)return snapshot();
 wrap("atlasChartPreferredSourceFamily",o=>function(...a){return usd()&&!canonicalTop5History()?"coingecko":o.apply(this,a)});wrap("atlasComparisonPreferredSourceFamily",o=>function(...a){return usd()&&!canonicalTop5History()?"coingecko":o.apply(this,a)});
-wrap("atlasChartStorageKey",o=>function(c,d,f){return usd()&&!canonicalTop5History(d)?storage(c,d,f||"coingecko"):o.apply(this,arguments)});
+// A single canonical cache-key owner is responsible for the explicit quote.
+// Do not wrap atlasChartStorageKey: the old wrapper discarded quoteCurrency.
 wrap("atlasExpectedChartContextKey",o=>function(ids,p){const d=p===undefined?(typeof state!=="undefined"?Number(state.chartPeriodDays||1):1):p;const tx=typeof atlasScannerTransaction!=="undefined"?atlasScannerTransaction:null;if(!usd()||canonicalTop5History(d))return o.apply(this,arguments);const x=ids===undefined?(typeof atlasComparisonIds==="function"?atlasComparisonIds():[]):ids;return context(x,d)});
 wrap("fetchCoinGeckoChartDirect",o=>async function(c,d,opt={}){return usd()&&!canonicalTop5History(d)?fetchUsd(c,d,opt):o.apply(this,arguments)});wrap("atlasFetchComparisonSeriesResilient",o=>async function(c,p,opt={}){return usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)});wrap("atlasScannerFetchDirect",o=>async function(tx,c){return usd()&&!canonicalTop5History(tx?.period)?scan(tx,c):o.apply(this,arguments)});
 wrap("atlasChartAxisPriceLabel",o=>function(...args){
