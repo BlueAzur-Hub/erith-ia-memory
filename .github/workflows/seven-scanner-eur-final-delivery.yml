@@ -1,0 +1,183 @@
+name: Seven Agent-Crypto EUR 24h final delivery
+on:
+  push:
+    branches:
+      - release/agent-crypto-eur-history-20261029
+    paths:
+      - '.github/workflows/seven-scanner-eur-final-delivery.yml'
+permissions:
+  contents: write
+jobs:
+  build-verify-deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Produce versioned final Administrator source with generic native EUR coverage recovery
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          app=base/'app.js'
+          original=app.read_text(encoding='utf-8')
+          anchor='  if (coinGeckoError) {\n    errors.push(`CoinGecko navigateur : ${String(coinGeckoError?.message || coinGeckoError)}`);'
+          # Match exact existing scanner site, not unrelated code.
+          if original.count(anchor)!=1:raise SystemExit('Scanner EUR anchor has changed; refusing release')
+          repair="""  // FINAL 40.6.641: same-ID native EUR coverage recovery for any rotating
+          // Hausses/Baisses/Volumes 5 basket. Never fall back to USD or another coin.
+          // Only try alternative sampling when upstream returned insufficient real
+          // 24h evidence. Keep temporal, quote, source and gap gates intact.
+          if (Number(tx.period) === 1 && coinGeckoError
+              && /24 h non couvertes|couverture insuffisante|série trop courte/i.test(
+                String(coinGeckoError?.message || coinGeckoError))) {
+            for (const days of [1, 2]) {
+              if (tx.controller.signal.aborted) throw atlasChartAbortError();
+              const delay = Math.max(0,
+                10000 - (Date.now() - Number(tx.lastCoinGeckoEurRequestAt || 0)));
+              if (delay) await atlasWaitWithSignal(delay, tx.controller.signal);
+              tx.lastCoinGeckoEurRequestAt = Date.now();
+              try {
+                const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(coin.id)}/market_chart?vs_currency=eur&days=${days}`;
+                const payload = await atlasFetchJson(url,
+                  {signal:tx.controller.signal,timeoutMs:12000});
+                const series = atlasNormalizeChartPayload(payload);
+                const integrity = atlasValidateChartSeries({
+                  c:coin, days:1, prices:series, payload,
+                  sourceMode:"coingecko-direct",
+                  quoteCurrency:"EUR",historySourceFamily:"coingecko",
+                  historyInstrument:"market_chart:eur"
+                });
+                if (!integrity.ok) throw new Error(integrity.reason);
+                const result = {
+                  series,volumeSeries:atlasNormalizeVolumePayload(payload),
+                  source:"CoinGecko market_chart EUR · direct",
+                  blocked:false,kind:"coingecko-direct",
+                  sourceMode:"coingecko-direct",sourceFamily:"coingecko",
+                  currency:"EUR",quoteCurrency:"EUR",
+                  historyInstrument:"market_chart:eur",periodDays:1,apiDays:days,
+                  pointCount:series.length,
+                  generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),
+                  integrity
+                };
+                const coverage=atlasScannerSeriesCoversWindow(result,tx);
+                if (!coverage.ok) throw new Error(coverage.reason);
+                const subset=series.filter(point=>point[0]>=tx.windowEnd-86400000-720000
+                  &&point[0]<=tx.windowEnd+720000);
+                if (subset.length<40 || subset.some((point,index)=>
+                     index>0 && point[0]-subset[index-1][0]>1800000))
+                  throw new Error("Historique EUR 24h incomplet ou trou supérieur à 30 minutes");
+                atlasStoreChartResult(coin,tx.period,result,"coingecko");
+                return {result,source:"direct",provider:"coingecko-eur-native-coverage-recovery"};
+              } catch (error) {
+                if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+                errors.push(`CoinGecko EUR échantillonnage ${days}j : ${String(error?.message||error)}`);
+                if (/429|rate limit|too many requests/i.test(String(error?.message||error))) break;
+              }
+            }
+          }
+
+          """
+          updated=original.replace(anchor,repair+anchor,1)
+          if 'FINAL 40.6.641: same-ID native EUR coverage recovery' not in updated:
+              raise SystemExit('Missing final recovery')
+          updated=updated.replace('40.6.640','40.6.641')
+          app.write_text(updated,encoding='utf-8')
+          index=base/'index.html'
+          html=index.read_text(encoding='utf-8')
+          html=html.replace('40.6.640','40.6.641')
+          html=html.replace('<title>Agent-Crypto @erith.IA — Seven EUR test 29-10 · Build 40.6.641</title>',
+             '<title>Agent-Crypto @erith.IA — Administrator 40.6.641 · EUR 24h FINAL</title>')
+          html=html.replace('  <!-- Read-only diagnostic reader: archive loading remains opt-in, no chart override. -->\n  <script defer src="./js/scanner-eur-archive-reader.js" data-seven-eur-archive-preview="readonly"></script>\n','')
+          if 'Administrator 40.6.641 · EUR 24h FINAL' not in html:
+              raise SystemExit('Missing final browser build identity')
+          index.write_text(html,encoding='utf-8')
+          shell=base/'runtime-shell.html'
+          sh=shell.read_text(encoding='utf-8')
+          if '40.6.640' not in sh:raise SystemExit('Runtime shell build identity missing')
+          shell.write_text(sh.replace('40.6.640','40.6.641'),encoding='utf-8')
+          import json
+          build=base/'build.json'
+          data=json.loads(build.read_text(encoding='utf-8'))
+          if data.get('build')!='40.6.640':raise SystemExit('Unexpected base build')
+          data['build']='40.6.641'
+          data['administrator_build']='40.6.641'
+          data['build_label']='Build 40.6.641 · Administrator'
+          data['parent_build']='40.6.640'
+          data['release']='NATIVE EUR 24H GENERIC RECOVERY FINAL'
+          data['status']='DELIVERED_FINAL_PENDING_FIREFOX_ACCEPTANCE'
+          data['terrain_verified']=False
+          data['terrain_pending']=True
+          data['terrain_proof']='PENDING_FIREFOX_OPERATOR_406641'
+          data['real_order']=False
+          build.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('FINAL_SOURCE_READY build 40.6.641; files app/index/runtime-shell/build')
+          PY
+      - name: Validate browser JavaScript and all scanner regressions
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/scanner-eur-archive-reader.js
+          node --test \
+            public/agent_crypto_erith_ia/tools/test_scanner_market_frame_integrity.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_usd_cache_provenance.cjs \
+            public/agent_crypto_erith_ia/tools/test_chart_history_quote_matrix.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_partial_diagnostics.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_verified_history.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_rolling_eur_history.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_market_eur_archive.cjs \
+            public/agent_crypto_erith_ia/tools/test_run_scanner_market_eur_archive.cjs \
+            public/agent_crypto_erith_ia/tools/test_scanner_eur_archive_browser_reader.cjs
+      - name: Commit exact FINAL application source to isolated release branch
+        run: |
+          set -eu
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/runtime-shell.html \
+            public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m 'Deliver Administrator 40.6.641 native EUR history recovery final'
+          git push origin HEAD:release/agent-crypto-eur-history-20261029
+          git rev-parse HEAD > /tmp/seven_source_commit
+      - name: Build verified ZIP preserving the Administrator directory tree
+        env:
+          ZIP_NAME: AGENT_CRYPTO_ADMINISTRATOR_40.6.641_NATIVE_EUR_24H_GENERIC_RECOVERY_FINAL_4_FILES.zip
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib,os
+          base='public/agent_crypto_erith_ia/administrator/'
+          paths=[base+'app.js',base+'index.html',base+'runtime-shell.html',base+'build.json']
+          name=os.environ['ZIP_NAME']
+          zpath=Path('/tmp')/name
+          with zipfile.ZipFile(zpath,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for p in paths:
+                  if not Path(p).is_file():raise SystemExit('Missing '+p)
+                  z.write(p,p)
+          with zipfile.ZipFile(zpath) as z:
+              if z.namelist()!=paths or z.testzip():raise SystemExit('Bad ZIP')
+              for p in paths:
+                  if z.read(p)!=Path(p).read_bytes():raise SystemExit('Mismatched '+p)
+          digest=hashlib.sha256(zpath.read_bytes()).hexdigest()
+          print('FINAL_ZIP',name,'BYTES',zpath.stat().st_size,'SHA256',digest)
+          Path('/tmp/seven_final_sha256').write_text(digest)
+          PY
+      - name: Publish one immutable FINAL ZIP in shared GitHub directory (no production code)
+        env:
+          ZIP_NAME: AGENT_CRYPTO_ADMINISTRATOR_40.6.641_NATIVE_EUR_24H_GENERIC_RECOVERY_FINAL_4_FILES.zip
+        run: |
+          set -eu
+          git fetch origin main
+          git checkout -B seven-final-shared origin/main
+          mkdir -p coordination/inter_ai_dialogues/agent_crypto
+          cp "/tmp/$ZIP_NAME" "coordination/inter_ai_dialogues/agent_crypto/$ZIP_NAME"
+          git add "coordination/inter_ai_dialogues/agent_crypto/$ZIP_NAME"
+          git commit -m 'Publish Administrator 40.6.641 native EUR 24h FINAL ZIP'
+          git push origin HEAD:main
+          echo 'FINAL_SOURCE_COMMIT:'; cat /tmp/seven_source_commit
+          echo 'FINAL_ZIP_SHA256:'; cat /tmp/seven_final_sha256
+          echo 'FINAL_ZIP_PATH:'"coordination/inter_ai_dialogues/agent_crypto/$ZIP_NAME"
