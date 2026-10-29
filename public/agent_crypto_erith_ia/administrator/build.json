@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.640",
+  "build": "40.6.643",
   "engine": "38.15.11",
-  "release": "COFFRE · HISTORIQUE VISIBLE ET CONTEXTE CT",
-  "published": true,
-  "status": "TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
-  "parent_build": "40.6.639",
+  "release": "MARKET GAINERS 5 EUR HOURLY & NATIVE OHLC FALLBACK",
+  "published": false,
+  "status": "ISOLATED_TEST_BRANCH_PENDING_FIREFOX",
+  "parent_build": "40.6.640",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.640",
-  "build_label": "Build 40.6.640 · Administrator",
+  "administrator_build": "40.6.643",
+  "build_label": "Build 40.6.643 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_CHRISTOPHE_406624",
+  "terrain_proof": "PENDING_FIREFOX_406643",
   "release_notes": "GRAPH_PARITY_TOP5_24H_406624.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10954,5 +10954,19 @@
     "depth_changed": false,
     "real_order": false,
     "terrain": "PENDING_FIREFOX"
+  },
+  "scanner_eur_406643": {
+    "scope": "Market Top250 selected five, EUR 24h",
+    "base_build": "40.6.640",
+    "source": "CoinGecko native EUR",
+    "hourly_2day_fallback": true,
+    "verified_hourly_last_tick_tolerance_minutes": 90,
+    "quote_conversion": false,
+    "synthetic_prices": false,
+    "altered_market_rankings": false,
+    "candles": "CoinGecko native EUR OHLC only if resolver reports no available instrument",
+    "candle_volume": "unavailable",
+    "terrain_verified": false,
+    "main_unchanged": true
   }
 }

@@ -1,0 +1,48 @@
+name: Agent-Crypto 40.6.643 isolated build
+on:
+  push:
+    branches:
+      - test/agent-crypto-406643-gainers-market-eur
+permissions:
+  contents: write
+jobs:
+  package:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate JavaScript and scanner invariants
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+          node public/agent_crypto_erith_ia/tools/test_scanner_406643.cjs
+      - name: Package exact branch files into shared GitHub folder
+        run: |
+          python3 - <<'PY'
+          import zipfile,hashlib,pathlib
+          root=pathlib.Path(".")
+          name="AGENT_CRYPTO_ADMINISTRATOR_40.6.643_MARKET_TOP250_EUR_HOURLY_OHLC_6_FILES.zip"
+          target=root/"coordination/inter_ai_dialogues/agent_crypto"/name
+          paths=[
+            "public/agent_crypto_erith_ia/administrator/app.js",
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js",
+            "public/agent_crypto_erith_ia/tools/test_scanner_406643.cjs",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.643_HANDOFF.md"
+          ]
+          with zipfile.ZipFile(target,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as out:
+            for path in paths: out.write(root/path,arcname=path)
+          digest=hashlib.sha256(target.read_bytes()).hexdigest()
+          (target.parent/(name+".sha256")).write_text(digest+"  "+name+"\n")
+          print(name, target.stat().st_size, digest)
+          PY
+      - name: Commit package to isolated branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.643_MARKET_TOP250_EUR_HOURLY_OHLC_6_FILES.zip*
+          git diff --cached --quiet || git commit -m "Package Administrator 40.6.643 isolated Firefox build"
+          git push origin HEAD:test/agent-crypto-406643-gainers-market-eur

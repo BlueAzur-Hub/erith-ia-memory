@@ -15443,7 +15443,13 @@ function atlasScannerSeriesCoversWindow(result, tx) {
   const last = Number(points[points.length - 1]?.[0]);
   const end = Number(tx.windowEnd);
   const start = end - 24 * 3600000;
-  const tolerance = 12 * 60000;
+  // 40.6.643: hourly native EUR has a documented coarse cadence. Do not
+  // apply a five-minute last-tick gate to a verified hourly response.
+  const verifiedHourly = result?.atlasNativeEurTwoDay?.cadence === "hourly-native"
+    && result?.atlasNativeEurTwoDay?.nativeCurrency === "EUR"
+    && result?.sourceFamily === "coingecko"
+    && result?.currency === "EUR";
+  const tolerance = verifiedHourly ? 90 * 60000 : 12 * 60000;
   if (points.length < atlasChartRules(1).minPoints || !Number.isFinite(first)
       || !Number.isFinite(last) || first > start + tolerance
       || last < end - tolerance || last > Date.now() + tolerance) {
@@ -15452,14 +15458,48 @@ function atlasScannerSeriesCoversWindow(result, tx) {
   return { ok: true, reason: "24h-covered", start, end };
 }
 
+/* 40.6.643 — fallback only. Accept real 2-day CoinGecko EUR hourly ticks
+   when they provide an anchored and sufficiently recent 24h window.
+   Never interpolate, rename USD, or substitute a lower-ranked coin. */
+function atlasScannerQualifyNativeEurTwoDay(rows, tx) {
+  const fail = reason => ({ ok: false, reason });
+  const end = Number(tx?.windowEnd);
+  if (Number(tx?.period) !== 1 || !Number.isFinite(end))
+    return fail("Fenêtre scanner 24h non définie");
+  const start = end - 24 * 3600000;
+  const maxGap = 90 * 60000;
+  const ordered = atlasSanitizeChartRows(rows);
+  const previous = ordered.filter(p => p[0] < start).at(-1);
+  const inside = ordered.filter(p => p[0] >= start && p[0] <= end + 12 * 60000);
+  if (!previous || start - previous[0] > maxGap)
+    return fail("Ancrage EUR antérieur à 24h indisponible");
+  const series = [previous, ...inside];
+  if (series.length < atlasChartRules(1).minPoints)
+    return fail("Historique EUR horaire trop court");
+  const last = Number(series[series.length - 1][0]);
+  if (last < end - maxGap || last > Date.now() + 12 * 60000)
+    return fail("Dernière observation EUR horaire trop ancienne ou future");
+  if (last - Number(previous[0]) < 23.5 * 3600000)
+    return fail("Couverture EUR inférieure à 23h30");
+  for (let i = 1; i < series.length; i++) {
+    const gap = Number(series[i][0]) - Number(series[i-1][0]);
+    if (gap <= 0 || gap > maxGap)
+      return fail("Trou horaire EUR : " + Math.round(gap / 60000) + " minutes");
+  }
+  return {ok:true,series,first:series[0][0],last,cadence:"hourly-native",precedingRealAnchor:true};
+}
+
 function atlasScannerDecorateEntry(tx, coin, result, source) {
   const historyKind = atlasScannerHistoryKind(result, tx.period, source);
   // Keep full original histories in storage. Only the in-memory chart view is
   // cropped, so a 7-day or earlier cache can never stretch a 24h comparison.
   const range = atlasScannerSeriesCoversWindow(result, tx);
+  const boundaryAllowance = result?.atlasNativeEurTwoDay?.cadence === "hourly-native"
+    && result?.atlasNativeEurTwoDay?.precedingRealAnchor === true
+    && result?.currency === "EUR" ? 90 * 60000 : 12 * 60000;
   const series = range.ok && Number(tx?.period) === 1 && Number.isFinite(range.start)
     ? atlasSanitizeChartRows(result.series).filter(point =>
-        point[0] >= range.start - 12 * 60000 && point[0] <= range.end + 12 * 60000)
+        point[0] >= range.start - boundaryAllowance && point[0] <= range.end + 12 * 60000)
     : result.series;
   return {
     coin,
@@ -54321,6 +54361,45 @@ async function atlasScannerFetchDirect(tx, coin) {
         );
       if (!temporary || attempt > 0) break;
       await atlasWaitWithSignal(20000, tx.controller.signal);
+    }
+  }
+  // 40.6.643: an authentic EUR hourly second chance after a failed 1d route.
+  // Same selected CoinGecko ID, no quote conversion and no synthetic samples.
+  if (Number(tx.period) === 1 && coinGeckoError
+      && !/429|rate limit|too many requests/i.test(String(coinGeckoError?.message || coinGeckoError))) {
+    try {
+      const elapsed = Date.now() - Number(tx.lastCoinGeckoEurRequestAt || 0);
+      if (elapsed < 10000) await atlasWaitWithSignal(10000 - elapsed, tx.controller.signal);
+      tx.lastCoinGeckoEurRequestAt = Date.now();
+      const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(coin.id)}/market_chart?vs_currency=eur&days=2`;
+      const payload = await atlasFetchJson(url, {signal:tx.controller.signal,timeoutMs:12000});
+      const hourly = atlasScannerQualifyNativeEurTwoDay(atlasNormalizeChartPayload(payload),tx);
+      if (!hourly.ok) throw new Error(hourly.reason);
+      const integrity = atlasValidateChartSeries({
+        c:coin,days:1,prices:hourly.series,payload,
+        sourceMode:"coingecko-direct",quoteCurrency:"EUR",
+        historySourceFamily:"coingecko",historyInstrument:"market_chart:eur"
+      });
+      if (!integrity.ok) throw new Error(integrity.reason);
+      const result = {
+        series:hourly.series,
+        volumeSeries:atlasNormalizeVolumePayload(payload).filter(point =>
+          Number(point?.[0]) >= hourly.first && Number(point?.[0]) <= hourly.last),
+        source:"CoinGecko market_chart EUR · 2j horaire · direct",
+        blocked:false,kind:"coingecko-direct",sourceMode:"coingecko-direct",
+        sourceFamily:"coingecko",currency:"EUR",quoteCurrency:"EUR",
+        historyInstrument:"market_chart:eur",coinId:coin.id,periodDays:1,apiDays:2,
+        pointCount:hourly.series.length,generatedAt:new Date(hourly.last).toISOString(),
+        atlasNativeEurTwoDay:{cadence:"hourly-native",precedingRealAnchor:true,
+          nativeCurrency:"EUR",sourceId:coin.id},integrity
+      };
+      const coverage = atlasScannerSeriesCoversWindow(result,tx);
+      if (!coverage.ok) throw new Error(coverage.reason);
+      atlasStoreChartResult(coin,1,result,"coingecko");
+      return {result,source:"direct",provider:"coingecko-eur-native-2day-hourly"};
+    } catch(error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      errors.push("CoinGecko EUR 2j horaire : " + String(error?.message || error));
     }
   }
   if (coinGeckoError) {
