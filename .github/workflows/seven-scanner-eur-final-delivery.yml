@@ -115,6 +115,13 @@ jobs:
           data['terrain_proof']='PENDING_FIREFOX_OPERATOR_406641'
           data['real_order']=False
           build.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          # Authorization must fail closed before rejecting a historical Market fixture.
+          runner=Path('public/agent_crypto_erith_ia/tools/run_scanner_market_eur_archive.cjs')
+          runner_src=runner.read_text(encoding='utf-8')
+          existing="async function run(config,opts={}){\n const snapshot=readJson(config.snapshot,8_000_000);"
+          replacement="async function run(config,opts={}){\n if(config.mode==='collect' && (config.network!=='yes' || process.env.ERITH_EUR_ARCHIVE_NETWORK!=='1'))\n   throw Error('No network: explicit --network=yes and ERITH_EUR_ARCHIVE_NETWORK=1 required');\n const snapshot=readJson(config.snapshot,8_000_000);"
+          if runner_src.count(existing)!=1:raise SystemExit('Authorization guard anchor changed')
+          runner.write_text(runner_src.replace(existing,replacement,1),encoding='utf-8')
           print('FINAL_SOURCE_READY build 40.6.641; files app/index/runtime-shell/build')
           PY
       - name: Validate browser JavaScript and all scanner regressions
@@ -136,6 +143,7 @@ jobs:
           set -eu
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/tools/run_scanner_market_eur_archive.cjs \
           git add public/agent_crypto_erith_ia/administrator/app.js \
             public/agent_crypto_erith_ia/administrator/index.html \
             public/agent_crypto_erith_ia/administrator/runtime-shell.html \
