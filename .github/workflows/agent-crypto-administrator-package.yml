@@ -1,0 +1,53 @@
+name: Agent-Crypto Administrator packaged Main delivery
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/tools/test_market_graph_consistency.cjs'
+      - '.github/workflows/agent-crypto-administrator-package.yml'
+permissions:
+  contents: write
+jobs:
+  verify-and-package:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript and scanner invariants
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+          node public/agent_crypto_erith_ia/tools/test_market_graph_consistency.cjs
+      - name: Produce versioned ZIP in shared directory
+        run: |
+          python3 - <<'PY'
+          import pathlib, zipfile,hashlib,json
+          root=pathlib.Path('.')
+          version=json.loads((root/'public/agent_crypto_erith_ia/administrator/build.json').read_text())['build']
+          name=f'AGENT_CRYPTO_ADMINISTRATOR_{version}_MARKET_HISTORY_TRUTH_OHLC_6_FILES.zip'
+          target=root/'coordination/inter_ai_dialogues/agent_crypto'/name
+          names=[
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js',
+            'public/agent_crypto_erith_ia/tools/test_market_graph_consistency.cjs',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.644_HANDOFF.md'
+          ]
+          with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as f:
+            for path in names: f.write(root/path,arcname=path)
+          digest=hashlib.sha256(target.read_bytes()).hexdigest()
+          (target.parent/(name+'.sha256')).write_text(digest+'  '+name+'\\n')
+          print(name,target.stat().st_size,digest)
+          PY
+      - name: Archive ZIP and SHA-256 to main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.644_MARKET_HISTORY_TRUTH_OHLC_6_FILES.zip*
+          git diff --cached --quiet || git commit -m 'Archive Administrator 40.6.644 market graph consistency delivery'
+          git push origin HEAD:main

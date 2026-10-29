@@ -6,7 +6,7 @@
    Explicit loading remains; the shared Trader/Interface 1m view also refreshes every minute while visible. */
 (()=>{
   "use strict";
-  const BUILD="40.6.643";
+  const BUILD="40.6.644";
   const HISTORICAL_CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
@@ -660,6 +660,8 @@
           const fallback=await fetchCoinGeckoMarketEurOhlc({signal:controller.signal});
           rows=fallback.rows;inst=fallback.instrument;source=fallback.source;
           requestedBar=fallback.bar;state.requestedBar=requestedBar;
+          // The CoinGecko 24h OHLC response is inherently 30m, not the previously requested 1h.
+          state.bar=requestedBar;syncControls();
           primary=inst;state.requestedInstrument=inst;
         }else{
           primary=resolution.instrument;
@@ -710,6 +712,8 @@
         (isBtcAnnual&&selectedSymbol()!=="BTC"))
         throw codedError("MARKET_CANDLES_PERIOD_CHANGED","Période ou actif changé pendant la lecture du Coffre");
       state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.archivePeriod=isBtcAnnual?"1an":null;state.source=source||"Market public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"PAIR_FALLBACK":null;state.lastLoadedAt=new Date().toISOString();
+      // Match the highlighted interval to the actual loaded OHLC resolution.
+      state.bar=requestedBar;syncControls();
       resetView(false);renderState();if(state.mode==="candles")draw();accepted=true;return true;
     }catch(error){
       if(token!==requestToken)return false;
@@ -737,7 +741,7 @@
       if(meta)meta.textContent="BTC/USDT · 1j · 365 véritables bougies · Binance Spot · archive terminée septembre 2026";
       if(status)status.textContent="COFFRE VÉRIFIÉ · BTCUSDT Spot · 365 OHLCV · USDT, pas USD · historique clôturé au 30/09/2026 UTC · pas de données live · aucun ordre";
       return;
-    }const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=state.mode==="hybrid"?(ext.active?"NEW LISTING · LIGNE + BOUGIES":"MARKET · LIGNE + BOUGIES"):ext.active?(candleModeActive()?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${state.rows.length} bougies · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;st.title=state.error||"";}}
+    }const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=state.mode==="hybrid"?(ext.active?"NEW LISTING · LIGNE + BOUGIES":"MARKET · LIGNE + BOUGIES"):ext.active?(candleModeActive()?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${state.rows.length} bougies · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":/^CoinGecko OHLC EUR/i.test(state.source||"")?"COINGECKO PUBLIC · NAVIGATEUR":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;st.title=state.error||"";}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));

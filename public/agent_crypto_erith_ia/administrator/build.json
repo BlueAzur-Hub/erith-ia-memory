@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.643",
+  "build": "40.6.644",
   "engine": "38.15.11",
-  "release": "MARKET GAINERS 5 EUR HOURLY & NATIVE OHLC FALLBACK",
-  "published": false,
-  "status": "ISOLATED_TEST_BRANCH_PENDING_FIREFOX",
-  "parent_build": "40.6.640",
+  "release": "HAUSSES 5 · MARKET / HISTORICAL PRICE TRUTH · CANDLE INTERVAL OWNER",
+  "published": true,
+  "status": "PUBLISHED_MAIN_AWAITING_USER_FIREFOX_VALIDATION",
+  "parent_build": "40.6.643",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.643",
-  "build_label": "Build 40.6.643 · Administrator",
+  "administrator_build": "40.6.644",
+  "build_label": "Build 40.6.644 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406643",
+  "terrain_proof": "PENDING_USER_FIREFOX_406644",
   "release_notes": "GRAPH_PARITY_TOP5_24H_406624.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10968,5 +10968,18 @@
     "candle_volume": "unavailable",
     "terrain_verified": false,
     "main_unchanged": true
+  },
+  "market_history_truth_406644": {
+    "market_ranking_owner": "Market Snapshot 24h",
+    "market_metric": "captured scanner entry.atlasMarketMetric",
+    "historical_metric": "actual normalized EUR series",
+    "presentation": "MKT and HIST shown separately with independent timestamps",
+    "fabricated_prices": false,
+    "market_core_modified": false,
+    "ohlc_market_eur_actual_interval": "30m",
+    "ohlc_volume_fabricated": false,
+    "bridge_relabel_for_coingecko": false,
+    "firefox_user_validation": "PENDING",
+    "rollback_commit": "a81e780189ef15153b0782c13b6b2eaf9d086758"
   }
 }
