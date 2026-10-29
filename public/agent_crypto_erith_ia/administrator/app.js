@@ -54489,6 +54489,59 @@ async function atlasScannerFetchDirect(tx, coin) {
       await atlasWaitWithSignal(20000, tx.controller.signal);
     }
   }
+  // FINAL 40.6.641: same-ID native EUR coverage recovery for any rotating
+// Hausses/Baisses/Volumes 5 basket. Never fall back to USD or another coin.
+// Only try alternative sampling when upstream returned insufficient real
+// 24h evidence. Keep temporal, quote, source and gap gates intact.
+if (Number(tx.period) === 1 && coinGeckoError
+    && /24 h non couvertes|couverture insuffisante|série trop courte/i.test(
+      String(coinGeckoError?.message || coinGeckoError))) {
+  for (const days of [1, 2]) {
+    if (tx.controller.signal.aborted) throw atlasChartAbortError();
+    const delay = Math.max(0,
+      10000 - (Date.now() - Number(tx.lastCoinGeckoEurRequestAt || 0)));
+    if (delay) await atlasWaitWithSignal(delay, tx.controller.signal);
+    tx.lastCoinGeckoEurRequestAt = Date.now();
+    try {
+      const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(coin.id)}/market_chart?vs_currency=eur&days=${days}`;
+      const payload = await atlasFetchJson(url,
+        {signal:tx.controller.signal,timeoutMs:12000});
+      const series = atlasNormalizeChartPayload(payload);
+      const integrity = atlasValidateChartSeries({
+        c:coin, days:1, prices:series, payload,
+        sourceMode:"coingecko-direct",
+        quoteCurrency:"EUR",historySourceFamily:"coingecko",
+        historyInstrument:"market_chart:eur"
+      });
+      if (!integrity.ok) throw new Error(integrity.reason);
+      const result = {
+        series,volumeSeries:atlasNormalizeVolumePayload(payload),
+        source:"CoinGecko market_chart EUR · direct",
+        blocked:false,kind:"coingecko-direct",
+        sourceMode:"coingecko-direct",sourceFamily:"coingecko",
+        currency:"EUR",quoteCurrency:"EUR",
+        historyInstrument:"market_chart:eur",periodDays:1,apiDays:days,
+        pointCount:series.length,
+        generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),
+        integrity
+      };
+      const coverage=atlasScannerSeriesCoversWindow(result,tx);
+      if (!coverage.ok) throw new Error(coverage.reason);
+      const subset=series.filter(point=>point[0]>=tx.windowEnd-86400000-720000
+        &&point[0]<=tx.windowEnd+720000);
+      if (subset.length<40 || subset.some((point,index)=>
+           index>0 && point[0]-subset[index-1][0]>1800000))
+        throw new Error("Historique EUR 24h incomplet ou trou supérieur à 30 minutes");
+      atlasStoreChartResult(coin,tx.period,result,"coingecko");
+      return {result,source:"direct",provider:"coingecko-eur-native-coverage-recovery"};
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      errors.push(`CoinGecko EUR échantillonnage ${days}j : ${String(error?.message||error)}`);
+      if (/429|rate limit|too many requests/i.test(String(error?.message||error))) break;
+    }
+  }
+}
+
   if (coinGeckoError) {
     errors.push(`CoinGecko navigateur : ${String(coinGeckoError?.message || coinGeckoError)}`);
   }

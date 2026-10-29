@@ -64,6 +64,8 @@ function mergeManifestEntries(current,previous,verifyStored=()=>true){
  return result;
 }
 async function run(config,opts={}){
+ if(config.mode==='collect' && (config.network!=='yes' || process.env.ERITH_EUR_ARCHIVE_NETWORK!=='1'))
+   throw Error('No network: explicit --network=yes and ERITH_EUR_ARCHIVE_NETWORK=1 required');
  const snapshot=readJson(config.snapshot,8_000_000);
  const actualNow=Number.isSafeInteger(opts.nowMs)?opts.nowMs:Date.now();
  const clock=config.mode==='plan'?Date.parse(snapshot.generated_at)+1000:actualNow;
