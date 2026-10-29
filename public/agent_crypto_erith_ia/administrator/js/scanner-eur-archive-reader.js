@@ -70,8 +70,12 @@ async function verifyManifest(manifest,marketFrameId,now){
   insist(manifest?.schema===MANIFEST&&manifest.quote==='EUR'
     &&manifest.source==='CoinGecko'&&manifest.rankingQuote==='USD',
     'Unverified archive manifest/source/quotes');
+  // Market rankings rotate independently of previously collected native EUR evidence.
+  // Keep the requested frame as provenance, but qualify each requested coin by
+  // exact ID, EUR quote, current 24h window and manifest-bound SHA-256 instead.
   insist(typeof marketFrameId==='string'&&marketFrameId.length>0
-    &&manifest.sourceSnapshot===marketFrameId,'Archive does not match Market Frame');
+    &&typeof manifest.sourceSnapshot==='string'&&manifest.sourceSnapshot.length>0,
+    'Market Frame provenance missing');
   const generated=Date.parse(manifest.generatedAt||'');
   insist(Number.isFinite(now)&&Number.isFinite(generated)&&generated<=now+120000
     &&now-generated<=BOUNDARY,'Archive manifest stale');
@@ -109,7 +113,9 @@ async function loadFive({ids,marketFrameId,archiveBaseUrl,now=Date.now(),
     }
   }
   return {schema:'agent_crypto_scanner_eur_archive_read_result_v1',
-    frameId:marketFrameId,quoteCurrency:'EUR',requestedIds:exact,
+    frameId:marketFrameId,archiveSnapshotId:manifest.sourceSnapshot,
+    frameMatch:manifest.sourceSnapshot===marketFrameId,
+    quoteCurrency:'EUR',requestedIds:exact,
     readyCount:exact.length-missing.length,
     status:missing.length?'partial':'ready',records,missing};
 }
