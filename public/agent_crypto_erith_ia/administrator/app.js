@@ -54254,6 +54254,35 @@ async function atlasFetchBridgeHistory(c, days, options = {}) {
   }
 }
 
+// 40.6.642 — Native EUR recovery with cadence-aware 24h proof.
+// Hourly two-day CoinGecko data is real history, not a missing 5-minute series.
+function atlasScannerEur24hSamplingProof406642(series, tx) {
+  const rows = atlasNormalizeChartPayload({ prices: series });
+  const end = Number(tx?.windowEnd);
+  if (!Number.isFinite(end) || !rows.length) return { ok: false, reason: "Fenêtre 24h ou points absents" };
+  const start = end - 86400000;
+  const near = rows.filter(row => row[0] >= start - 7200000 && row[0] <= end + 720000);
+  const gaps = near.slice(1).map((row, index) => row[0] - near[index][0]);
+  const sorted = gaps.filter(gap => gap > 0).sort((a, b) => a - b);
+  if (!sorted.length) return { ok: false, reason: "Cadence historique indéterminée" };
+  const cadenceMs = sorted[Math.floor(sorted.length / 2)];
+  if (cadenceMs > 4500000) return { ok: false, reason: "Cadence historique trop espacée" };
+  const maxGap = Math.min(5400000, Math.max(1800000, cadenceMs * 1.5));
+  const before = near.filter(row => row[0] <= start).at(-1);
+  const after = near.find(row => row[0] >= start);
+  const last = near.filter(row => row[0] <= end + 720000).at(-1);
+  const windowRows = near.filter(row => row[0] >= start && row[0] <= end + 720000);
+  if (windowRows.length < atlasChartRules(1).minPoints)
+    return { ok: false, reason: `Historique réel insuffisant : ${windowRows.length} points` };
+  if (!before || start - before[0] > maxGap || !after || after[0] - start > maxGap)
+    return { ok: false, reason: "Début de la fenêtre 24h non démontré" };
+  if (!last || end - last[0] > maxGap)
+    return { ok: false, reason: "Fin de la fenêtre 24h non démontrée" };
+  if (gaps.some(gap => gap > maxGap))
+    return { ok: false, reason: "Trou dans l'historique supérieur à la cadence autorisée" };
+  return { ok: true, cadenceMinutes: Math.round(cadenceMs / 60000), points24h: windowRows.length };
+}
+
 async function atlasScannerFetchDirect(tx, coin) {
   await atlasRespectComparisonRequestSpacing(tx.controller.signal, tx.period);
   const errors = [];
@@ -54323,6 +54352,46 @@ async function atlasScannerFetchDirect(tx, coin) {
       await atlasWaitWithSignal(20000, tx.controller.signal);
     }
   }
+  // 40.6.642: generic native-EUR recovery when the first 24h response is short.
+  // Never substitute an asset, derive EUR from USD, or fabricate samples.
+  if (Number(tx.period) === 1 && coinGeckoError
+      && /24 h non couvertes|couverture insuffisante|série trop courte/i.test(
+        String(coinGeckoError?.message || coinGeckoError))) {
+    try {
+      const elapsed = Date.now() - Number(tx.lastCoinGeckoEurRequestAt || 0);
+      const waitMs = Math.max(0, 10000 - elapsed);
+      if (waitMs) await atlasWaitWithSignal(waitMs, tx.controller.signal);
+      tx.lastCoinGeckoEurRequestAt = Date.now();
+      const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(coin.id)}/market_chart?vs_currency=eur&days=2&precision=full`;
+      const payload = await atlasFetchJson(url, { signal: tx.controller.signal, timeoutMs: 12000 });
+      const series = atlasNormalizeChartPayload(payload);
+      const sampling = atlasScannerEur24hSamplingProof406642(series, tx);
+      if (!sampling.ok) throw new Error(sampling.reason);
+      const integrity = atlasValidateChartSeries({
+        c: coin, days: 1, prices: series, payload,
+        sourceMode: "coingecko-direct", quoteCurrency: "EUR",
+        historySourceFamily: "coingecko", historyInstrument: "market_chart:eur"
+      });
+      if (!integrity.ok) throw new Error(integrity.reason);
+      const result = {
+        series, volumeSeries: atlasNormalizeVolumePayload(payload),
+        source: `CoinGecko market_chart EUR · direct · ${sampling.cadenceMinutes} min`,
+        blocked: false, kind: "coingecko-direct", sourceMode: "coingecko-direct",
+        sourceFamily: "coingecko", currency: "EUR", quoteCurrency: "EUR",
+        historyInstrument: "market_chart:eur", periodDays: 1, apiDays: 2,
+        samplingMinutes: sampling.cadenceMinutes, pointCount: series.length,
+        generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(), integrity
+      };
+      const coverage = atlasScannerSeriesCoversWindow(result, tx);
+      if (!coverage.ok) throw new Error(coverage.reason);
+      atlasStoreChartResult(coin, tx.period, result, "coingecko");
+      return { result, source: "direct", provider: "coingecko-eur-native-hourly-recovery" };
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      errors.push(`CoinGecko EUR reprise native 2j : ${String(error?.message || error)}`);
+    }
+  }
+
   if (coinGeckoError) {
     errors.push(`CoinGecko navigateur : ${String(coinGeckoError?.message || coinGeckoError)}`);
   }
