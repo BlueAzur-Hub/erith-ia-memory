@@ -42,6 +42,27 @@ function parseArgs(argv){
  return {mode,universe,budget,offset,snapshot:args.snapshot||DATA_REL+'/latest.json',
    network:args.network||'off',root:args.root||ARCHIVE_REL};
 }
+// Manifest entries survive subsequent Market rotations, but remain independently
+// subject to the browser's current-window, EUR and SHA checks before use.
+function mergeManifestEntries(current,previous,verifyStored=()=>true){
+ const result={...current};
+ if(!previous)return result;
+ if(previous.schema!=='agent_crypto_scanner_native_eur_archive_manifest_v1'
+   ||previous.quote!=='EUR'||previous.rankingQuote!=='USD'
+   ||previous.source!=='CoinGecko'||typeof previous.sourceSnapshot!=='string'
+   ||!previous.entries||typeof previous.entries!=='object'
+   ||Array.isArray(previous.entries))throw Error('Incompatible previous EUR manifest');
+ const older=Object.entries(previous.entries);
+ if(older.length>1500)throw Error('Archive manifest exceeds bounded asset inventory');
+ for(const [id,entry] of older){
+   if(Object.hasOwn(result,id))continue;
+   if(!/^[a-z0-9][a-z0-9-]{0,99}$/.test(id)
+     ||!/^sha256:[0-9a-f]{64}$/.test(String(entry?.sha256||''))
+     ||!verifyStored(id,entry))throw Error('Unverified retained EUR archive: '+id);
+   result[id]={...entry,sourceSnapshot:entry.sourceSnapshot||previous.sourceSnapshot};
+ }
+ return result;
+}
 async function run(config,opts={}){
  const snapshot=readJson(config.snapshot,8_000_000);
  const actualNow=Number.isSafeInteger(opts.nowMs)?opts.nowMs:Date.now();
@@ -80,6 +101,22 @@ async function run(config,opts={}){
    groups.push({frameId:batch.frameId,ids:batch.ids,status:envelope.status,
      readyCount:envelope.readyCount,sha256:envelope.sha256});
  }
+ // Before writing, verify previously catalogued assets and retain their IDs.
+ // An older asset stays indexed for future rotations, not automatically 'ready'.
+ const previousPath=path.join(target,'last-run.json');
+ const previous=fs.existsSync(previousPath)?readJson(previousPath,1_500_000):null;
+ const currentEntries=Object.fromEntries(Object.entries(perId).map(([id,record])=>[id,{
+   sha256:record.sha256,status:record.rolling.status,
+   pointCount:record.rolling.pointCount,sourceCount:record.entries.length,
+   sourceSnapshot:plan.snapshotId
+ }]));
+ const catalogue=mergeManifestEntries(currentEntries,previous,(id,entry)=>{
+   const file=path.join(target,'assets',id+'.json');
+   if(!fs.existsSync(file))return false;
+   const old=readJson(file,5_000_000);
+   return old?.id===id&&old?.quoteCurrency==='EUR'&&old?.periodDays===1
+     &&old?.sha256===entry.sha256&&exactSHA(old);
+ });
  // No sources are overwritten unless every batch's integrity gate succeeded.
  for(const [id,record] of Object.entries(perId)){
    atomicJson(path.join(target,'assets',id+'.json'),record);
@@ -87,11 +124,7 @@ async function run(config,opts={}){
  const manifest={schema:'agent_crypto_scanner_native_eur_archive_manifest_v1',
    generatedAt:new Date().toISOString(),sourceSnapshot:plan.snapshotId,
    quote:'EUR',source:'CoinGecko',rankingQuote:'USD',groups,
-   entries:Object.fromEntries(Object.entries(perId).map(([id,record])=>[id,{
-     sha256:record.sha256,status:record.rolling.status,
-     pointCount:record.rolling.pointCount,
-     sourceCount:record.entries.length
-   }])),durationMs:Date.now()-start};
+   entries:catalogue,durationMs:Date.now()-start};
  // Historical manifest is evidence; it never asserts an active Firefox frame.
  atomicJson(path.join(target,'last-run.json'),manifest);
  return {...summary,network:true,manifest};
@@ -100,4 +133,4 @@ if(require.main===module){
  run(parseArgs(process.argv.slice(2))).then(x=>process.stdout.write(JSON.stringify(x)+'\n'))
  .catch(e=>{process.stderr.write(String(e?.message||e)+'\n');process.exitCode=1});
 }
-module.exports={run,parseArgs,readJson,atomicJson,ARCHIVE_REL};
+module.exports={run,parseArgs,readJson,atomicJson,mergeManifestEntries,ARCHIVE_REL};
