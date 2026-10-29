@@ -13768,6 +13768,7 @@ function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "
   titleNode.innerHTML = titleHtml;
   seriesNode.innerHTML = seriesHtml;
   summaryNode.innerHTML = summaryHtml;
+  summaryNode.style.display = summaryHtml ? "" : "none";
   overlay.dataset.truth = atlasChartOverlayTruthKey(truthLabel);
   overlay.dataset.layout = layout;
   const chartShell = overlay.closest(".chart-shell");
@@ -14104,7 +14105,7 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
   atlasChartOverlaySet(
     titleHtml,
     seriesLine || '<span class="atlas-hud-detail">Mesures non disponibles</span>',
-    summaryHtml,
+    preset === "gainers" ? "" : summaryHtml,
     options.preserved ? "cache retardé" : truthLabel,
     "comparison"
   );
