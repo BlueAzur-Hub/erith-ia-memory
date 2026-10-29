@@ -22,7 +22,7 @@
 
 ## Known limits / no overclaiming
 - URL preview is a branch checkout, not production deployment and not a substitute for Firefox verification.
-- Network latency remains potentially high because five comparison histories are fetched sequentially; no claim of performance repair.
+- The five comparison histories now use up to three workers with sequentially reserved rate-limit slots. This is an optimization, **not a measured latency guarantee**. Data integrity stays atomic and a historical chart is explicitly labeled while replacement histories load.
 - No comprehensive full-app CI run is claimed. The new targeted Node regression is included.
 - New strict gap and spike checks can reject incomplete or unverified histories; preserve source observations in acquisition diagnostics rather than silently inventing points.
 - 5/5 is not promised when providers cannot prove five complete histories.
@@ -36,3 +36,8 @@
 4. Last historical Solo hover stays historical; sampled historical peak survives.
 5. No regression in Base100 and restored legacy Analyse (no MKT/HIST).
 6. Test Firefox including cold and warm caches and rapid EUR→USD switches before considering a merge.
+
+## Follow-up patch on same branch
+- Bounded comparison workers (maximum 3); acquired results committed in original basket order.
+- Provider request pacing reserves each slot synchronously to avoid parallel rate-limit bursts.
+- Loading status identifies when the previous graph is still on screen; still requires Firefox performance test.

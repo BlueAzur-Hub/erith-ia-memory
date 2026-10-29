@@ -12457,10 +12457,12 @@ async function atlasRespectComparisonRequestSpacing(signal = null, period = Numb
   const minimumSpacing = Number(period || 1) >= 60
     ? ATLAS_COMPARISON_LONG_HORIZON_SPACING_MS
     : ATLAS_COMPARISON_REQUEST_SPACING_MS;
-  const elapsed = Date.now() - Number(comparison.lastDirectRequestAt || 0);
-  const waitMs = Math.max(0, minimumSpacing - elapsed);
-  if (waitMs) await atlasWaitWithSignal(waitMs, signal);
-  comparison.lastDirectRequestAt = Date.now();
+  // Reserve request slots synchronously so concurrent workers never
+  // collapse the same rate-limit wait into simultaneous provider requests.
+  const now = Date.now();
+  const nextSlot = Math.max(now, Number(comparison.lastDirectRequestAt || 0) + minimumSpacing);
+  comparison.lastDirectRequestAt = nextSlot;
+  if (nextSlot > now) await atlasWaitWithSignal(nextSlot - now, signal);
 }
 
 function atlasRenderComparisonDetail(entries, period) {
@@ -12609,14 +12611,21 @@ async function renderComparisonAnalystPanel(options = {}) {
   atlasRenderComparisonControls();
   atlasPatchMarketSelectionState();
 
-  const fetched = [];
-  for (let index = 0; index < coins.length; index += 1) {
+  const fetched = new Array(coins.length);
+  let nextIndex = 0;
+  const worker = async () => {
+    while (nextIndex < coins.length) {
+    const index = nextIndex++;
+
     if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
     const coin = coins[index];
 
-    if (preservedChart && !strictAtomicComparison) {
-      atlasUpdateChartRefresh(`Série ${index + 1}/${coins.length} · ${coin.symbol}`);
-    } else if (!strictAtomicComparison && els.chartCaption) {
+    if (preservedChart) {
+      atlasUpdateChartRefresh(
+        `Comparaison ${periodLabel} · lecture ${index + 1}/${coins.length} · ${coin.symbol}`
+        + (strictAtomicComparison ? " · ancien graphique conservé" : "")
+      );
+    } else if (els.chartCaption) {
       atlasSetChartCaptionText(
         `Comparaison ${periodLabel} · lecture ${index + 1}/${coins.length} · ${coin.symbol}.`
       );
@@ -12642,7 +12651,7 @@ async function renderComparisonAnalystPanel(options = {}) {
       };
     }
 
-    fetched.push(fetchedItem);
+    fetched[index] = fetchedItem;
     state.dataBroker.comparison.pendingIds =
       (state.dataBroker.comparison.pendingIds || [])
         .filter(id => id !== coin.id);
@@ -12667,7 +12676,13 @@ async function renderComparisonAnalystPanel(options = {}) {
     }
 
     atlasPatchMarketSelectionState();
-  }
+    }
+  };
+  // At most three concurrent series. Source calls are still individually
+  // spaced and every result is restored in the canonical basket order.
+  await Promise.all(Array.from(
+    { length: Math.min(3, coins.length) }, () => worker()
+  ));
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
 
