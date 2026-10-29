@@ -523,13 +523,22 @@
         "executed_order": false,
         "exit_price_usdt": null,
         "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
         "trade_count": 0
       },
       "spot": {
         "contract_identity_proven": false,
         "early_public_spot_book": null,
-        "later_spot_qualification": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "LABUSDT",
+          "public_spread_bps_at_snapshot": 2.14938,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-10-28T19:50:27Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Bitget"
+        },
         "quote_conversion_usd_to_usdt_proven": false
       },
       "symbol": "LAB"
@@ -681,8 +690,8 @@
   "note": "Variations CoinGecko USD sur deux jours ≠ rendement Spot USDT exécuté. Qualif Spot du dernier jour = preuve TARDIVE, jamais preuve à l'entrée. Toutes les entrées PAPER restent bloquées en l'absence d'identité de contrat certifiée, carnet au bon instant et hypothèses de frais vérifiables. Les baisses et dossiers sans cotation restent visibles.",
   "orders_enabled": false,
   "paper_trades_opened": 0,
-  "public_spot_evidence_candidates": 0,
-  "qualification_observed_at_utc": null,
+  "public_spot_evidence_candidates": 1,
+  "qualification_observed_at_utc": "2026-10-28T19:50:27Z",
   "qualification_time_is_not_entry_time": true,
   "read_only": true,
   "schema": "erith.radar.spot-paper-decision-audit.v1",
