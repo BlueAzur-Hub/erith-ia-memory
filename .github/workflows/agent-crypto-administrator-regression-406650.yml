@@ -45,7 +45,7 @@ jobs:
               assert len(z.namelist()) == 7
               assert z.testzip() is None
           import subprocess
-          subprocess.run(["sha256sum", "-c", str(dest / (name + ".sha256"))], check=True)
+          subprocess.run(["sha256sum", "-c", name + ".sha256"], cwd=dest, check=True)
           print("PACKAGE_SHA256", digest, "size", (dest / name).stat().st_size)
           PY
       - uses: actions/upload-artifact@v4
