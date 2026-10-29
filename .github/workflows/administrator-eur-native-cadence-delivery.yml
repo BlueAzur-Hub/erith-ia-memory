@@ -1,0 +1,59 @@
+name: Administrator EUR native cadence delivery
+on:
+  push:
+    branches:
+      - delivery/eur-native-24h-cadence-20261029
+    paths:
+      - '.github/workflows/administrator-eur-native-cadence-delivery.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate actual Administrator source and regression suite
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node public/agent_crypto_erith_ia/tools/test_scanner_eur_native_cadence.cjs
+          python - <<'PY'
+          import json,pathlib
+          base=pathlib.Path('public/agent_crypto_erith_ia/administrator')
+          manifest=json.loads((base/'build.json').read_text())
+          assert manifest['build']=='40.6.642'
+          assert manifest['terrain_verified'] is False
+          html=(base/'index.html').read_text()
+          assert 'app.js?v=40.6.642' in html
+          assert 'build:"40.6.642",loaded_build:"40.6.642"' in html
+          code=(base/'app.js').read_text()
+          assert 'atlasScannerEur24hSamplingProof406642' in code
+          assert 'vs_currency=eur&days=2&precision=full' in code
+          print('Build, entrypoint, EUR-only acquisition assertions PASS')
+          PY
+      - name: Package complete branch build, verify and publish to shared directory
+        run: |
+          python - <<'PY'
+          import hashlib,io,pathlib,zipfile
+          paths=[
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/runtime-shell.html',
+            'public/agent_crypto_erith_ia/administrator/build.json'
+          ]
+          name='AGENT_CRYPTO_ADMINISTRATOR_40.6.642_SCANNER_NATIVE_EUR_24H_CADENCE_RECOVERY_4_FILES.zip'
+          target=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto')/name
+          target.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for path in paths:z.write(path,arcname=path)
+          with zipfile.ZipFile(target) as z:
+            assert z.namelist()==paths and z.testzip() is None
+            for path in paths: assert z.read(path)==pathlib.Path(path).read_bytes()
+          print('VERIFIED ZIP',target,'bytes',target.stat().st_size,'SHA256',hashlib.sha256(target.read_bytes()).hexdigest())
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.642_SCANNER_NATIVE_EUR_24H_CADENCE_RECOVERY_4_FILES.zip
+          git diff --cached --quiet || git commit -m "Publish verified Administrator EUR native cadence ZIP"
+          git push origin HEAD:delivery/eur-native-24h-cadence-20261029
