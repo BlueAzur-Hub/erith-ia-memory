@@ -40,10 +40,12 @@ jobs:
               for p in paths:
                   z.write(root / p, p)
           digest = hashlib.sha256((dest / name).read_bytes()).hexdigest()
-          (dest / (name + ".sha256")).write_text(digest + "  " + name + "\\n", encoding="utf8")
+          (dest / (name + ".sha256")).write_text(digest + "  " + name + "\n", encoding="utf8")
           with zipfile.ZipFile(dest / name) as z:
               assert len(z.namelist()) == 7
               assert z.testzip() is None
+          import subprocess
+          subprocess.run(["sha256sum", "-c", str(dest / (name + ".sha256"))], check=True)
           print("PACKAGE_SHA256", digest, "size", (dest / name).stat().st_size)
           PY
       - uses: actions/upload-artifact@v4
