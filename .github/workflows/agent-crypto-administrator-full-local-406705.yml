@@ -22,7 +22,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs
-      - name: Package complete administrator subtree and verify all relative entry resources
+      - name: Package Administrator subtree only and verify local entry resources
         run: |
           python3 - <<'PY'
           import pathlib, re, zipfile, hashlib, json
@@ -42,10 +42,10 @@ jobs:
             target=(admin/url).resolve()
             if target.is_relative_to(pathlib.Path.cwd().resolve()) and not target.exists():
               missing.append(url)
-          # Include the full Agent Crypto directory to preserve cross-directory dependencies.
-          files=[p for p in base.rglob('*') if p.is_file() and '.git' not in p.parts]
+          # Include only the Administrator runtime tree, never all of Agent Crypto.
+          files=[p for p in admin.rglob('*') if p.is_file() and '.git' not in p.parts and 'releases' not in p.relative_to(admin).parts]
           assert len(files)>50, len(files)
-          out=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip')
+          out=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_ADMINISTRATOR_LOCAL_ONLY.zip')
           with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=6,allowZip64=True) as z:
             for p in sorted(files):
               z.write(p,p.as_posix())
