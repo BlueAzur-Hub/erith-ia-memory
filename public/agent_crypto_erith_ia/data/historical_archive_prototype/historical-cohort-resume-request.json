@@ -1,0 +1,18 @@
+{
+  "schema": "aerith.public.ohlcv.spot.cohort.resume.once.v1",
+  "action": "collect_once_on_addition_to_main",
+  "source": "Binance Spot",
+  "quote": "USDT",
+  "cohorts": [
+    "universe/cohorts/top50",
+    "universe/cohorts/top50-additional"
+  ],
+  "expected_original_assets": 12,
+  "expected_additional_assets": 7,
+  "max_rows_per_series": 288,
+  "restricted_to": "existing verified Spot instruments, original OHLCV only",
+  "orders_allowed": false,
+  "synthetic_candles_allowed": false,
+  "requested_date_utc": "2026-10-30",
+  "note": "One strictly bounded collect on first addition to main, never on PR or normal push. Existing collector validates all source pairs, open times, SHA-256, and atomic archive publication. Later scheduled collections remain independent."
+}
