@@ -289,6 +289,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-10-30",
+      "date_utc": "2026-10-30",
+      "first_seen_at_utc": "2026-10-30T06:10:30.755Z",
+      "source_times_utc": [
+        "2026-10-30T05:44:10.149Z",
+        "2026-10-30T05:59:48.187Z"
+      ],
+      "universe_eligible": 448,
+      "policy_matches": 5,
+      "selected": [
+        {
+          "coin_id": "beam-2",
+          "symbol": "BEAM",
+          "source_at_utc": "2026-10-30T05:44:10.149Z",
+          "rank": 173,
+          "price_usd": 0.0038080562686473424
+        },
+        {
+          "coin_id": "wink",
+          "symbol": "WIN",
+          "source_at_utc": "2026-10-30T05:59:48.187Z",
+          "rank": 382,
+          "price_usd": 0.00006547647403560612
+        },
+        {
+          "coin_id": "sun-token",
+          "symbol": "SUN",
+          "source_at_utc": "2026-10-30T05:44:10.149Z",
+          "rank": 131,
+          "price_usd": 0.016676397894172974
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -676,6 +711,27 @@
       "sha256": "d52b6f66190feca81f5ed1224462992f17d1eba347c95f660d6b5e34f96a4e46",
       "recorded_at_utc": "2026-10-29T21:18:24.380Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-28",
+      "file": "observations/2026-10-30T061030755Z--2026-10-28.json",
+      "sha256": "dd9cda6a92109656ec214e659e70359d711bdcde16ed8dc926da0378e53dda90",
+      "recorded_at_utc": "2026-10-30T06:10:30.755Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-29",
+      "file": "observations/2026-10-30T061030755Z--2026-10-29.json",
+      "sha256": "4985d29d3b5d54de21b21852618b99a2f8c413f0e7ee1bd2aad4523309c97ab0",
+      "recorded_at_utc": "2026-10-30T06:10:30.755Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-30",
+      "file": "observations/2026-10-30T061030755Z--2026-10-30.json",
+      "sha256": "9f3aa2072de6a6b50984ee72e3b10de043a6ab777062090255fdc7193373a63e",
+      "recorded_at_utc": "2026-10-30T06:10:30.755Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
