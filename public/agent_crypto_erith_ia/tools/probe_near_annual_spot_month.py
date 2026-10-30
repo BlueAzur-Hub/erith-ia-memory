@@ -9,10 +9,14 @@ alters a source index, invents OHLCV or places orders.
 """
 from __future__ import annotations
 import argparse
+import csv
 import hashlib
+import io
 import json
+import math
 from pathlib import Path
 import tempfile
+import zipfile
 
 import import_historical_bulk as bulk
 import orchestrate_historical_bulk as older
@@ -69,6 +73,98 @@ def choose(year, approved):
     return owners
 
 
+
+def inspect_original_partial_source(asset, month, getter=bulk.download):
+    """Verify the original official checksum, valid observed bars and true gaps.
+
+    No timestamp is inserted, extrapolated or altered; no OHLCV is persisted.
+    An incomplete original month is useful provenance, NOT a certified year.
+    """
+    name, url = bulk.url_for(asset["pair"], month, "1m")
+    raw = getter(url)
+    checksum = getter(url + ".CHECKSUM", cap=8192)
+    digest = hashlib.sha256(raw).hexdigest()
+    official = checksum.decode("utf-8").strip().split()[0].lower()
+    require(len(official) == 64 and official == digest,
+            "Original Binance monthly ZIP CHECKSUM mismatch")
+    start, expected, end = bulk.bounds(month, "1m")
+    step = 60_000
+    with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+        csv_name = name[:-4] + ".csv"
+        require(archive.namelist() == [csv_name], "Unexpected monthly CSV members")
+        info = archive.getinfo(csv_name)
+        require(info.file_size <= 160_000_000 and info.compress_size > 0
+                and info.file_size <= max(200 * info.compress_size, 160_000),
+                "CSV size or compression ratio unsafe")
+        count = 0
+        gaps = 0
+        first_ms = None
+        last_ms = None
+        unit = None
+        gap_examples = []
+        with archive.open(info) as handle:
+            rows = csv.reader(io.TextIOWrapper(handle, encoding="utf-8-sig", newline=""))
+            for fields in rows:
+                require(len(fields) == 12, "Invalid official OHLCV columns")
+                timestamp = int(fields[0])
+                source_unit = "us" if timestamp >= 10**15 else "ms"
+                require(unit is None or unit == source_unit, "Mixed source timestamp units")
+                unit = source_unit
+                current = timestamp // 1000 if unit == "us" else timestamp
+                require(start <= current < end and (current - start) % step == 0,
+                        "Source open outside exact monthly 1m UTC grid")
+                require(last_ms is None or current > last_ms,
+                        "Original source minutes not strictly increasing")
+                if last_ms is None:
+                    first_ms = current
+                else:
+                    missing = (current - last_ms) // step - 1
+                    if missing and len(gap_examples) < 20:
+                        gap_examples.append({"after_ms": last_ms,
+                                             "before_ms": current,
+                                             "missing_minutes": missing})
+                    gaps += missing
+                closed = int(fields[6])
+                close_ms = closed // 1000 if unit == "us" else closed
+                require(current <= close_ms < current + step,
+                        "Source close outside original minute")
+                prices = [float(fields[i]) for i in (1,2,3,4)]
+                volume = float(fields[5])
+                quote_volume = float(fields[7])
+                require(all(math.isfinite(x) for x in (*prices,volume,quote_volume))
+                        and all(x > 0 for x in prices)
+                        and prices[2] <= min(prices[0],prices[3])
+                        and max(prices[0],prices[3]) <= prices[1]
+                        and volume >= 0 and quote_volume >= 0
+                        and int(fields[8]) >= 0,
+                        "Untrusted original Spot OHLCV")
+                count += 1
+                last_ms = current
+                require(count <= expected, "Original source exceeds monthly grid")
+    require(count > 0, "No original native minute bars in claimed source")
+    before = (first_ms - start) // step
+    after = (end - step - last_ms) // step
+    require(count + before + gaps + after == expected,
+            "Calendar slots do not reconcile with original source rows")
+    return {
+        "source_zip": name, "source_url": url,
+        "source_sha256": digest, "official_checksum_sha256": official,
+        "quote": "USDT", "native_resolution": "1m",
+        "full_month_native_minutes_expected": expected,
+        "original_native_minutes_observed": count,
+        "missing_before_first_original": before,
+        "missing_inside_original_span": gaps,
+        "missing_after_last_original": after,
+        "first_original_open_ms": first_ms,
+        "last_original_open_ms": last_ms,
+        "timestamp_unit_in_source": unit,
+        "internal_gap_examples": gap_examples,
+        "has_full_month": count == expected,
+        "public_source_release_created": False,
+        "source_status": "ORIGINAL_ZIP_CHECKSUM_AND_OHLCV_VERIFIED_PARTIAL",
+    }
+
+
 def run(source_path=SOURCE, probe=False):
     original = source_path.read_bytes()
     year = json.loads(original)
@@ -103,6 +199,14 @@ def run(source_path=SOURCE, probe=False):
                             and bulk.sha256((root / result["file"]).read_bytes())
                                 == result["sha256"],
                             "Original source bytes or month count changed")
+                if result["status"] == "unavailable":
+                    try:
+                        result["original_partial_source"] = inspect_original_partial_source(
+                            asset, TARGET_MONTH)
+                    except (OSError, ValueError, RuntimeError,
+                            UnicodeError, zipfile.BadZipFile, csv.Error) as error:
+                        result["original_partial_evidence_error"] = (
+                            type(error).__name__ + ": " + str(error)[:160])
                 report["assets"].append(result)
         # Temporary original ZIP bytes are discarded, not published.
     else:
@@ -116,6 +220,9 @@ def run(source_path=SOURCE, probe=False):
     report["verified_assets"] = sum(x.get("status") == "verified"
                                      for x in report["assets"])
     report["all_requested_source_months_verified"] = (probe and report["verified_assets"] == len(owners))
+    report["verified_original_minutes_in_incomplete_sources"] = sum(
+        x.get("original_partial_source", {}).get("original_native_minutes_observed", 0)
+        for x in report["assets"])
     report["verified_original_minutes"] = sum(x.get("candles", 0)
                                                 for x in report["assets"])
     require(source_path.read_bytes() == original, "Source index mutated")
