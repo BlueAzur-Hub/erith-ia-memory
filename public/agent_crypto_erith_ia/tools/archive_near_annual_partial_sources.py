@@ -149,6 +149,17 @@ def verify(folder:Path):
                  "Staged original source asset digest mismatch")
         need(row["zip_sha256"]==row["original_source"]["official_checksum_sha256"],
              "Staged ZIP does not match official checksum")
+        original_url = row["original_source"]["source_url"]
+        def local_get(url, cap=bulk.MAX_ZIP):
+            if url == original_url:
+                return (folder/row["zip_filename"]).read_bytes()
+            if url == original_url+".CHECKSUM":
+                return (folder/row["checksum_filename"]).read_bytes()
+            raise ValueError("Unexpected local source URL")
+        rechecked = probe.inspect_original_partial_source(
+            {"id": aid,"pair": row["pair"]},probe.TARGET_MONTH,getter=local_get)
+        need(rechecked == row["original_source"],
+             "Replayed staged OHLCV differs from approved original-source evidence")
     need(owned==set(EXPECTED) and found=={x.name for x in folder.iterdir()},
          "Source-only Release directory contains unexpected files")
     return r
