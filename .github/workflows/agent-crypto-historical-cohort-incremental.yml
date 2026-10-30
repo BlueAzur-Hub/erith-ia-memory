@@ -20,6 +20,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_additional_incremental_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_historical_remaining.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-additional-incremental-bootstrap.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-resume-request.json'
       - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions.py'
       - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
@@ -32,6 +33,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_additional_incremental_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_historical_remaining.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-additional-incremental-bootstrap.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-resume-request.json'
       - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions.py'
       - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
@@ -67,6 +69,36 @@ jobs:
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --plan > "$RUNNER_TEMP/top50-incremental-plan.json"
           cat "$RUNNER_TEMP/top50-incremental-plan.json"
           python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+      - name: Authorize one bounded Top50 catch-up only on new request file
+        id: resume
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-resume-request.json
+          change=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$change" != A ]]; then
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-resume-request.json')
+          r=json.loads(p.read_text())
+          assert set(r)=={'schema','action','source','quote','cohorts',
+                         'expected_original_assets','expected_additional_assets',
+                         'max_rows_per_series','restricted_to','orders_allowed',
+                         'synthetic_candles_allowed','requested_date_utc','note'}
+          assert r['schema']=='aerith.public.ohlcv.spot.cohort.resume.once.v1'
+          assert r['action']=='collect_once_on_addition_to_main'
+          assert r['source']=='Binance Spot' and r['quote']=='USDT'
+          assert r['cohorts']==['universe/cohorts/top50','universe/cohorts/top50-additional']
+          assert r['expected_original_assets']==12 and r['expected_additional_assets']==7
+          assert r['max_rows_per_series']==288
+          assert r['orders_allowed'] is False and r['synthetic_candles_allowed'] is False
+          PY
+          echo 'approved=true' >> "$GITHUB_OUTPUT"
       - name: Verify permission for a single new additional archive append
         id: bootstrap
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -92,12 +124,12 @@ jobs:
           test ! -e public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional/incremental/index.json
           echo 'approved=true' >> "$GITHUB_OUTPUT"
       - name: Execute scheduled or explicitly requested bounded Binance append
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect')
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.resume.outputs.approved == 'true')
         run: |
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --collect --enable-network
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --verify
       - name: Append verified OHLCV for the additional seven from the same engine
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.resume.outputs.approved == 'true') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
         run: |
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --output-dir public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional --collect --enable-network
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --output-dir public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional --verify
@@ -119,7 +151,7 @@ jobs:
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional/index.json \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional/blocks/
       - name: Commit ONLY verified Top 50 cumulative files on collect
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.resume.outputs.approved == 'true') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
         shell: bash
         run: |
           set -euo pipefail
