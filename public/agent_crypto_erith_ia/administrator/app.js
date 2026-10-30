@@ -4756,6 +4756,8 @@ function atlasChartContextStatus() {
 
 function atlasComparisonIds() {
   const validIds = new Set((state.coins || []).map(coin => coin.id));
+  const canonical = atlasCanonicalPresetIds(String(state.dataBroker?.comparison?.preset || ""));
+  if (canonical) return canonical.filter(id => validIds.has(id));
   const raw = Array.isArray(state.dataBroker?.comparison?.ids) ? state.dataBroker.comparison.ids : [];
   const ids = [];
   for (const id of raw) {
@@ -4812,8 +4814,10 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   }
   atlasClearComparisonCompletionTimer();
   const validIds = new Set((state.coins || []).map(coin => coin.id));
+  const requestedPreset = String(options.preset || state.dataBroker.comparison.preset || "");
+  const canonical = atlasCanonicalPresetIds(requestedPreset);
   const unique = [];
-  for (const id of ids || []) {
+  for (const id of canonical || ids || []) {
     if (validIds.has(id) && !unique.includes(id)) unique.push(id);
     if (unique.length >= ATLAS_COMPARISON_MAX_SERIES) break;
   }
@@ -4841,13 +4845,14 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   }
 
   state.graphSelectionCleared = false;
-  const primary = validIds.has(primaryId) && unique.includes(primaryId)
-    ? primaryId
-    : validIds.has(state.selectedCoinId) && unique.includes(state.selectedCoinId)
-      ? state.selectedCoinId
-      : unique[0];
+  const primary = canonical ? unique[0]
+    : validIds.has(primaryId) && unique.includes(primaryId)
+      ? primaryId
+      : validIds.has(state.selectedCoinId) && unique.includes(state.selectedCoinId)
+        ? state.selectedCoinId
+        : unique[0];
   const index = unique.indexOf(primary);
-  if (index > 0) {
+  if (!canonical && index > 0) {
     unique.splice(index, 1);
     unique.unshift(primary);
   }
@@ -14627,10 +14632,9 @@ function atlasMarketFrameScannerCoins(preset, period = Number(state.chartPeriodD
   return ids.map(id => byId.get(id)).filter(Boolean);
 }
 
-// Top 3 and Top 5 follow the actual Market capitalization rank, not a
-// hard-coded basket. The Market Frame is the identity authority for presets.
-// Operator-protected reference baskets, independent from stablecoin ranks.
-// Scanners remain Market-driven. Do not silently change this contract.
+// Operator-approved reference baskets: Top 5 = BTC/ETH/BNB/XRP/SOL.
+// Never derive the canonical Top 5 from capitalization ranks or saved USDT.
+// Scanners (Hausses/Baisses/Volumes) and manual selections stay dynamic.
 const ATLAS_CURATED_TOP3_IDS = Object.freeze(["bitcoin", "ethereum", "binancecoin"]);
 const ATLAS_CURATED_TOP5_IDS = Object.freeze([
   "bitcoin", "ethereum", "binancecoin", "ripple", "solana"
@@ -14639,6 +14643,14 @@ function atlasCuratedTopIds(limit = 5) {
   return Number(limit) <= 3
     ? [...ATLAS_CURATED_TOP3_IDS]
     : [...ATLAS_CURATED_TOP5_IDS];
+}
+
+// One canonical contract for clicks, restored sessions and comparison reads.
+// Never replace a missing canonical asset with a stablecoin or another rank.
+function atlasCanonicalPresetIds(preset) {
+  if (preset === "rank-5") return atlasCuratedTopIds(5);
+  if (preset === "rank-3") return atlasCuratedTopIds(3);
+  return null;
 }
 
 function atlasCuratedTopCoins(limit = 5) {
@@ -14886,9 +14898,12 @@ function atlasSyncTargetTopFiveCycleLabel() {
     && atlasChartContextMatches(state.dataBroker.chart)
     && !!state.chartEngineV2?.realChart;
 
+  // While another basket is loading, label the last visible basket rather
+  // than presenting a new preset over the previous chart.
   const displayedPreset = chartReady
     ? String(state.dataBroker?.comparison?.preset || "manual")
-    : String(state.dataBroker?.comparison?.preset || "rank-5");
+    : String(root.dataset.displayedPreset || "rank-5");
+  if (chartReady) root.dataset.displayedPreset = displayedPreset;
 
   const cyclePreset = atlasTargetCycleCurrentPreset();
   const manualTop5Drift = atlasManualCanonicalTop5Drift();
@@ -48895,10 +48910,14 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   const validIds = new Set(state.coins.map(coin => coin.id));
   const period = ATLAS_WORKSPACE_PERIODS.includes(Number(graphSaved.period)) ? Number(graphSaved.period) : 1;
-  const rawIds = Array.isArray(graphSaved.comparisonIds) ? graphSaved.comparisonIds : [];
+  const restoredPreset = ATLAS_WORKSPACE_PRESETS.includes(graphSaved.comparisonPreset)
+    ? graphSaved.comparisonPreset : "";
+  const canonicalRestoredIds = atlasCanonicalPresetIds(restoredPreset);
+  const rawIds = canonicalRestoredIds || (Array.isArray(graphSaved.comparisonIds) ? graphSaved.comparisonIds : []);
   let ids = rawIds.filter(id => validIds.has(id)).filter((id,index,list)=>list.indexOf(id)===index).slice(0,ATLAS_COMPARISON_MAX_SERIES);
 
-  const savedPrimary = validIds.has(graphSaved.selectedCoinId) ? graphSaved.selectedCoinId : null;
+  const savedPrimary = canonicalRestoredIds ? ids[0] || null
+    : validIds.has(graphSaved.selectedCoinId) ? graphSaved.selectedCoinId : null;
   if (!ids.length && savedPrimary) ids = [savedPrimary];
   if (!ids.length && graphSaved.selectionCleared !== true) {
     const fallback = state.coins.find(coin => coin.id === "bitcoin") || state.coins[0];
