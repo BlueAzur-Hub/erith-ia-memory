@@ -11951,6 +11951,15 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
     && Math.abs(Number(e.atlasScannerWindowEnd)
       - Number(prepared[0].atlasScannerWindowEnd)) < 1000
   );
+  // A scanner basket is never a manual comparison. Falling back to manual
+  // overlap when one entry loses its 24h-window proof silently re-bases the
+  // first four curves when the fifth arrives. Require one certified clock
+  // for every scanner entry; partial sets are diagnosed by the caller.
+  const scannerMarked = Number(period) === 1 && prepared.some(e =>
+    Object.prototype.hasOwnProperty.call(e, "atlasScannerVerified24h")
+    || Object.prototype.hasOwnProperty.call(e, "atlasScannerWindowEnd")
+  );
+  if (scannerMarked && !scannerNative) return [];
   if (scannerNative) {
     const targetEnd = Number(prepared[0].atlasScannerWindowEnd);
     const targetStart = targetEnd - 24 * 3600000;
