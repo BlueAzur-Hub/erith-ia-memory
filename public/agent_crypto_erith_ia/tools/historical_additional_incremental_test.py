@@ -23,10 +23,33 @@ def copy_source(where):
     root = Path(where) / "top50-additional"
     shutil.copytree(additional.OUTPUT, root)
     baseline = (root / "index.json").read_bytes()
+    # The repository now has genuine incremental OHLCV and a persisted ledger.
+    # These fresh-append regression cases must begin at the immutable original
+    # snapshot, not at a production journal that has advanced beyond it.
+    # Remove only the temporary TEST COPY, never the published source ledger.
+    shutil.rmtree(root / "incremental", ignore_errors=True)
     return root, baseline, json.loads(baseline)["snapshot_end_ms"]
 
 
 class AdditionalIncrementalTests(unittest.TestCase):
+    def test_published_incremental_journal_stays_verified_and_untouched(self):
+        # Verify current real archive independently of the isolated fresh-copy
+        # scenarios below: no deletion, rewrite, synthetic OHLCV or network.
+        path = additional.OUTPUT / "incremental/index.json"
+        self.assertTrue(path.is_file(), "Committed incremental source must exist")
+        original = path.read_bytes()
+        ledger, approved, originals, tips = incremental.inspect(additional.OUTPUT)
+        self.assertEqual(len(approved), 7)
+        self.assertEqual(len(originals), 21)
+        self.assertTrue(len(ledger["chunks"]) or ledger.get("partitions"))
+        self.assertEqual(len(tips), 21)
+        self.assertEqual(path.read_bytes(), original)
+        _, windows = incremental.plan(additional.OUTPUT,
+                                      max(tips.values()) + 24 * 3_600_000, 288)
+        self.assertEqual(len(windows), 21)
+        self.assertTrue(all(0 <= window["count"] <= 288
+                            for window in windows))
+
     def test_existing_seven_real_owners_are_verified(self):
         ledger, approved, originals, latest = incremental.inspect(additional.OUTPUT)
         self.assertEqual(len(approved), 7)
