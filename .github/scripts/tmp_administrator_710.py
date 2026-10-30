@@ -96,6 +96,7 @@ one(V/"verify_administrator_canonical_top5_integrity.cjs",'assert.equal(build.bu
 # The existing native USD module contains a storage-key wrapper protected by a
 # Top5 canonical-history guard. Verify the guard instead of banning all wrappers.
 one(V/"verify_administrator_canonical_top5_integrity.cjs",r'if (usd !== null) assert.doesNotMatch(usd,/wrap\("atlasChartStorageKey"/);',r'if (usd !== null) assert.match(usd,/wrap\("atlasChartStorageKey",o=>function\(c,d,f\)\{return usd\(\)&&!canonicalTop5History\(d\)/);')
+one(V/"verify_administrator_canonical_top5_integrity.cjs",r'assert.match(usd,/const change24h=c\.change24hUsd/);',r'assert.match(usd,/[,;]change24h=c\.change24hUsd/);')
 one(V/"verify_administrator_top5_restore.cjs","const ATLAS_RELEASE='Build 40.6.709'","const ATLAS_RELEASE='Build 40.6.710'")
 # Legacy native-USD snapshot must not mislabel a currency-unspecific Market percent.
 one(N,'change24h=c.change24h==null||String(c.change24h).trim()===""?NaN:Number(c.change24h)','change24h=c.change24hUsd==null||String(c.change24hUsd).trim()===""?NaN:Number(c.change24hUsd)')
@@ -105,7 +106,7 @@ expected={
  B:"06c1afa27a7f111d94c3ccfd15d6a53b6dcf901c",
  I:"c42c9c1c9c339896baa845df628c0c1679ee2750",
  T:"c9091f3823131d7cd12ab6b75fe731b8e233a9dc",
- V/"verify_administrator_canonical_top5_integrity.cjs":"f6c70da1f55931615a530a483e57fa17068120fb",
+ V/"verify_administrator_canonical_top5_integrity.cjs":"7974e2124189f85ac96a2f406f64066d4ff9912a",
  V/"verify_administrator_top5_restore.cjs":"f6e89c37848898d36e180c8736bdf3e1f5b0247a",
  N:"88fa3eb2acea988613283bf5b5019870303418a7"}
 for p,h in expected.items():
