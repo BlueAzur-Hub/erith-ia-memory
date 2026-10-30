@@ -1,4 +1,4 @@
-name: Agent Crypto Historical Coverage — Top 50 truth audit
+name: Agent Crypto Historical Coverage — Top50 and Top250 source truth
 on:
   workflow_dispatch:
   pull_request:
@@ -6,12 +6,22 @@ on:
       - '.github/workflows/agent-crypto-historical-coverage.yml'
       - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
       - 'public/agent_crypto_erith_ia/tools/historical_coverage_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-historical-coverage.yml'
       - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
       - 'public/agent_crypto_erith_ia/tools/historical_coverage_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
 permissions:
   contents: read
 jobs:
@@ -37,10 +47,25 @@ jobs:
               if not item["archived"]:
                   print(item["rank"], item["id"], item["symbol"], item["status"])
           PY
+      - name: Read-only Top250 exact-ID native source union and year-depth audit
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/audit_vault_source_union_test.py
+          python public/agent_crypto_erith_ia/tools/audit_vault_source_union.py \
+            --output "$GITHUB_WORKSPACE/historical-top250-source-union.json"
+          python - <<'PY'
+          import json
+          j=json.load(open("historical-top250-source-union.json"))
+          s=j["summary"]
+          assert s["indexed_1m_or_1d_assets_inside_top250"] + s["no_indexed_1m_or_1d_asset_inside_top250"] == 250
+          print("TOP250 READONLY VERIFIED INDEX UNION",json.dumps(s,sort_keys=True))
+          print("NEAR TWELVE MONTHS",json.dumps(j["near_verified_12_months"],ensure_ascii=False))
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: historical-top50-coverage-audit
           path: |
             historical-top50-coverage.json
             historical-top50-unarchived.json
+            historical-top250-source-union.json
           retention-days: 30
