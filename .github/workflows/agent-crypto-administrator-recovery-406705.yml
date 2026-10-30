@@ -1,0 +1,26 @@
+name: Administrator 40.6.705 recovery regression
+on:
+  push:
+    branches:
+      - test/administrator-40.6.705-recovery
+  workflow_dispatch:
+jobs:
+  recovery-regression:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax verification
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --check public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs
+      - name: Targeted financial integrity regression
+        run: node public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs
+      - name: Verify preview build metadata
+        run: |
+          node -e 'const b=require("./public/agent_crypto_erith_ia/administrator/build.json"); if(b.build!=="40.6.705"||b.published!==false||b.parent_build!=="40.6.650") process.exit(1)'
