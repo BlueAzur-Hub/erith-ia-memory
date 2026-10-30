@@ -50,7 +50,7 @@ jobs:
           import json
           from pathlib import Path
           j=json.loads(Path('/tmp/near-year-real-proof.json').read_text())
-          assert j['source_month_is_verified'] is False
+          assert j['all_requested_source_months_verified'] == (j['verified_assets'] == 3)
           assert j['new_releases']==0 and j['new_catalog_rows']==0
           assert j['requested_identities']==3
           assert j['verified_original_minutes']==j['verified_assets']*44640
