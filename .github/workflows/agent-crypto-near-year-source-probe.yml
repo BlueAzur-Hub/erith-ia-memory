@@ -1,0 +1,76 @@
+name: Agent Crypto Near-Year Binance Spot Source Verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-near-year-source-probe.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py'
+      - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-near-year-source-probe.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py'
+      - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month_test.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original-month:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact owner identity, year-gap and no-archive-mutation tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py
+          python public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month_test.py
+          python public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py --plan \
+            --output /tmp/near-year-plan.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/near-year-plan.json').read_text())
+          assert j['requested_identities']==3
+          assert j['expected_native_1m_per_full_month']==44640
+          assert j['new_releases']==0 and j['new_catalog_rows']==0
+          assert all(x['status']=='NOT_YET_PROBED' for x in j['assets'])
+          print('NEAR-YEAR GAP SOURCE PLAN',[(a['asset_id'],a['pair']) for a in j['assets']])
+          PY
+      - name: PR-only verify official October 2025 original monthly ZIP and checksum
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py --probe \
+            --output /tmp/near-year-real-proof.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/near-year-real-proof.json').read_text())
+          assert j['source_month_is_verified'] is False
+          assert j['new_releases']==0 and j['new_catalog_rows']==0
+          assert j['requested_identities']==3
+          assert j['verified_original_minutes']==j['verified_assets']*44640
+          print('REAL BINANCE 2025-10 PROBES',json.dumps([
+            {k:a.get(k) for k in ('asset_id','pair','status','candles','reason','sha256')}
+            for a in j['assets']],sort_keys=True))
+          PY
+      - name: Ensure no source data or trading app was rewritten
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/ \
+            public/agent_crypto_erith_ia/core/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: near-year-2025-10-original-spot-source-proof
+          path: |
+            /tmp/near-year-plan.json
+            /tmp/near-year-real-proof.json
+          if-no-files-found: warn
+          retention-days: 30
