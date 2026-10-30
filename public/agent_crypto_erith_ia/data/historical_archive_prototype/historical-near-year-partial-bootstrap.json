@@ -1,0 +1,22 @@
+{
+  "schema": "aerith.public.ohlcv.spot.near-year-partial.bootstrap.v1",
+  "action": "publish_immutable_original_partial_sources_once",
+  "month": "2025-10",
+  "coin_ids": [
+    "aster-2",
+    "morpho",
+    "doublezero"
+  ],
+  "source": "Binance Spot official public monthly 1m ZIPs",
+  "quote": "USDT",
+  "expected_original_native_candles": 120000,
+  "expected_prelisting_slots": 13920,
+  "expected_internal_missing_slots": 0,
+  "release_tag": "crypto-spot-binance-near-year-partial-2025-10",
+  "no_overwrite": true,
+  "annual_months_promoted": 0,
+  "synthetic_candles": 0,
+  "trade_orders": false,
+  "source_data_outside_git_history": true,
+  "note": "One-time, post-review publication only; re-download and verify exact official ZIP/CHECKSUM and native observed OHLCV at publication. Full-month index unchanged. No future automatic retries from this marker."
+}
