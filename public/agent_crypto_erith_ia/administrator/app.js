@@ -55000,6 +55000,7 @@ const atlasScannerCollectorRuntime = {
   lastSavedAt: 0,
   bridgeBackoffUntil: 0,
   bridgeFailures: 0,
+  bridgeAuthRejected: false,
   parsedStores40331: Object.create(null),
   deferredCaptureReason40461: "",
   deferredFlush40461: false,
@@ -55260,10 +55261,12 @@ function atlasScannerCollectorLatest() {
 }
 
 function atlasScannerCollectorSnapshotIsUsable(snapshot) {
+  const collectedAt = Date.parse(String(snapshot?.collected_at || ""));
   return !!snapshot
     && snapshot.schema === ATLAS_SCANNER_COLLECTOR_SCHEMA
-    && snapshot.baskets
-    && typeof snapshot.baskets === "object";
+    && snapshot.baskets && typeof snapshot.baskets === "object"
+    && snapshot.market?.quote_currency === "EUR"
+    && Number.isFinite(collectedAt) && collectedAt <= Date.now() + 60_000;
 }
 
 function atlasScannerCollectorAcceptBridgeSnapshot(snapshot) {
@@ -55275,8 +55278,13 @@ function atlasScannerCollectorAcceptBridgeSnapshot(snapshot) {
 
 function atlasScannerCollectorEffectiveLatest() {
   const bridge = atlasScannerCollectorRuntime.latestBridgeSnapshot;
-  if (atlasScannerCollectorSnapshotIsUsable(bridge)) return bridge;
-  return atlasScannerCollectorLatest();
+  const local = atlasScannerCollectorLatest();
+  const bridgeOk = atlasScannerCollectorSnapshotIsUsable(bridge);
+  const localOk = atlasScannerCollectorSnapshotIsUsable(local);
+  if (!bridgeOk) return localOk ? local : null;
+  if (!localOk) return bridge;
+  // Do not replace a newer local observation with an older Bridge readback.
+  return Date.parse(bridge.collected_at) > Date.parse(local.collected_at) ? bridge : local;
 }
 
 function atlasScannerCollectorBasketKeyForPreset(preset) {
@@ -55301,10 +55309,12 @@ function atlasScannerCollectorFindAsset(coin, preset = "") {
   for (const key of keys) {
     const assets = snapshot.baskets?.[key]?.assets;
     if (!Array.isArray(assets)) continue;
-    const match = assets.find(asset =>
-      (coinId && String(asset?.coin_id || "").toLowerCase() === coinId)
-      || (symbol && String(asset?.symbol || "").toUpperCase() === symbol)
-    );
+    const match = assets.find(asset => {
+      const assetId = String(asset?.coin_id || "").toLowerCase();
+      if (coinId) return assetId === coinId;
+      // A symbol is not an identity substitute for two different coin IDs.
+      return !assetId && !!symbol && String(asset?.symbol || "").toUpperCase() === symbol;
+    });
     if (match) return { ...match, basket: key, snapshot };
   }
   return null;
@@ -55315,6 +55325,10 @@ function atlasScannerCollectorQuoteForCoin(coin, preset = "") {
   const price = Number(asset?.observed_price_eur);
   if (!Number.isFinite(price) || price <= 0) return null;
   const timestamp = Date.parse(asset?.observed_at || asset?.snapshot?.collected_at || "");
+  // A dated EUR observation may inform the active chart; stale data cannot
+  // masquerade as the current spot price while a source has gone silent.
+  if (!Number.isFinite(timestamp) || timestamp > Date.now() + 60_000
+      || Date.now() - timestamp > 15 * 60_000) return null;
   return {
     price,
     change24h: Number.isFinite(Number(asset?.observed_change_24h_pct))
@@ -55322,7 +55336,7 @@ function atlasScannerCollectorQuoteForCoin(coin, preset = "") {
       : null,
     source: String(asset?.observed_source || "CoinGecko collecté"),
     status: String(asset?.observed_status || "collected"),
-    timestamp: Number.isFinite(timestamp) ? timestamp : Date.now(),
+    timestamp,
     kind: /binance/i.test(String(asset?.observed_source || ""))
       ? "scanner-binance-observed"
       : "scanner-coingecko-observed",
@@ -55331,18 +55345,47 @@ function atlasScannerCollectorQuoteForCoin(coin, preset = "") {
   };
 }
 
+/* 40.6.713 — scanner transport is optional and authenticated. Market chart
+   collection and local snapshot persistence remain independent of the Bridge.
+   No automatic login, private key handling or elevated network permission. */
+function atlasScannerCollectorBridgeToken(capability = "scanner.read") {
+  if (!atlasDeviceComputeAllowed() || !atlasAccessIsAuthorized()
+      || atlasScannerCollectorRuntime.bridgeAuthRejected) return "";
+  const auth = atlasBridgeAuthLocalState();
+  if (!auth?.valid) return "";
+  const caps = atlasBridgeAuthCapabilities();
+  if (caps.length && !caps.includes(capability)) return "";
+  return atlasBridgeAuthToken();
+}
+
+function atlasScannerCollectorBridgeDenied(status, attemptedToken) {
+  if (status !== 401 && status !== 403) return false;
+  atlasScannerCollectorRuntime.latestBridgeSnapshot = null;
+  atlasScannerCollectorRuntime.latestBridgeReadAt = 0;
+  if (status === 401 && attemptedToken === atlasBridgeAuthToken()) {
+    // Never clear a concurrently renewed session.
+    atlasBridgeAuthClear();
+  } else if (status === 403) {
+    // A capability refusal remains paused until a new operator login.
+    atlasScannerCollectorRuntime.bridgeAuthRejected = true;
+  }
+  return true;
+}
+
 async function atlasScannerCollectorFetchLatest(options = {}) {
-  if (!atlasDeviceComputeAllowed()) return false;
-  if (atlasScannerCollectorRuntime.latestBusy) return false;
+  const token = atlasScannerCollectorBridgeToken("scanner.read");
+  if (!token || atlasScannerCollectorRuntime.latestBusy) return false;
   atlasScannerCollectorRuntime.latestBusy = true;
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), 6000);
   try {
     const response = await fetch(ATLAS_SCANNER_COLLECTOR_LATEST_URL, {
       method: "GET",
+      headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` },
       cache: "no-store",
       signal: controller.signal
     });
+    if (atlasScannerCollectorBridgeDenied(response.status, token)) return false;
     if (!response.ok) return false;
     const payload = await response.json();
     return atlasScannerCollectorAcceptBridgeSnapshot(payload?.snapshot || null);
@@ -55358,17 +55401,19 @@ async function atlasScannerCollectorFetchLatest(options = {}) {
 }
 
 async function atlasScannerCollectorPost(snapshot) {
-  if (!atlasDeviceComputeAllowed()) return false;
+  const token = atlasScannerCollectorBridgeToken("scanner.write");
+  if (!token) return false;
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), 14_000);
   try {
     const response = await fetch(ATLAS_SCANNER_COLLECTOR_BRIDGE_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       body: JSON.stringify(snapshot),
       cache: "no-store",
       signal: controller.signal
     });
+    if (atlasScannerCollectorBridgeDenied(response.status, token)) return false;
     if (!response.ok) throw new Error(`Bridge collector HTTP ${response.status}`);
     const payload = await response.json();
     if (!payload?.ok) throw new Error(payload?.error || "Bridge collector a refusé le snapshot");
@@ -55386,6 +55431,8 @@ async function atlasScannerCollectorFlush() {
     return false;
   }
   if (atlasScannerCollectorRuntime.busy) return false;
+  // No network request or backoff timer when not authenticated.
+  if (!atlasScannerCollectorBridgeToken("scanner.write")) return false;
   if (Date.now() < Number(atlasScannerCollectorRuntime.bridgeBackoffUntil || 0)) return false;
   const pending = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_PENDING_KEY);
   if (!pending.length) return true;
@@ -55395,7 +55442,8 @@ async function atlasScannerCollectorFlush() {
     const batch = pending.slice(0, 6);
     const sent = new Set();
     for (const snapshot of batch) {
-      await atlasScannerCollectorPost(snapshot);
+      const result = await atlasScannerCollectorPost(snapshot);
+      if (!result?.ok) return false; // Preserve every unsent snapshot.
       sent.add(snapshot.snapshot_id);
     }
     const remaining = pending.filter(row => !sent.has(row?.snapshot_id));
@@ -65322,7 +65370,15 @@ function atlasBridgeCapabilityHas(name){return atlasBridgeAuthCapabilities().inc
 const atlasBridgeAuthRemember40375Base=atlasBridgeAuthRemember;
 atlasBridgeAuthRemember=function atlasBridgeAuthRemember4037540376(payload){
   const ok=atlasBridgeAuthRemember40375Base(payload);
-  if(ok)queueMicrotask(()=>void atlasBridgeCapabilityRefresh());
+  if(ok){
+    queueMicrotask(()=>void atlasBridgeCapabilityRefresh());
+    queueMicrotask(()=>{
+      atlasScannerCollectorRuntime.bridgeAuthRejected = false;
+      atlasScannerCollectorRuntime.bridgeBackoffUntil = 0;
+      void atlasScannerCollectorFlush();
+      void atlasScannerCollectorFetchLatest({silent:true});
+    });
+  }
   return ok;
 };
 
