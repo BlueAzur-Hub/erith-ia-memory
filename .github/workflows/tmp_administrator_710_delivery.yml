@@ -80,3 +80,5 @@ jobs:
           git rm .github/scripts/tmp_administrator_710.py .github/workflows/tmp_administrator_710_delivery.yml
           git commit -m "Release Administrator 40.6.710 USD integrity and preserved chart currency"
           git push origin HEAD:main
+
+# rerun after correcting exact SHA guard escape
