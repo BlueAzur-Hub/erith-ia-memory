@@ -32,6 +32,7 @@ function setup({currency="USD",outdated=false,mismatch=false,preset="rank-5"}={}
  const ctx={state,Intl,Date:Clock,Number,Math,JSON,Array,document:{},requestAnimationFrame:fn=>fn(),
   atlasHasPositiveQuote:v=>v!==null&&v!==undefined&&Number.isFinite(Number(v))&&Number(v)>0,
   atlasChartTooltipNode:()=>node,atlasHideChartTooltip:()=>{node.hidden=true;},
+  atlasComparisonCurrencyTransition:()=>null,
   atlasComparisonTooltipRows:()=>coins.map(coin=>({coin,rawPrice:90000,baseValue:101,color:"cyan"})),
   atlasChartPriceDatasets:()=>chart.data.datasets,atlasChartLivePresentation:()=>null,
   atlasCryptoPalette:()=>({primary:"cyan"}),atlasCryptoGradientCss:()=>"",
@@ -181,7 +182,7 @@ test("Scanner refuses incomplete/wrong-order graph and refreshes dated caches",(
  const end=app.indexOf("\nfunction atlasScannerStoredHistory(",begin);
  assert.ok(begin>0 && end>begin);
  const commit=app.slice(begin,end);
- assert.match(commit,/prevalidated\.length > ATLAS_SCANNER_TARGET/);
+ assert.match(commit,/prevalidated\.length !== ATLAS_SCANNER_TARGET/);
  assert.match(commit,/canonicalPositions\.get\(entry\.coin\?\.id\)/);
  const runStart=app.indexOf("async function atlasScannerRun(");
  const runEnd=app.indexOf("\nfunction atlasScannerStart(",runStart);
@@ -190,7 +191,7 @@ test("Scanner refuses incomplete/wrong-order graph and refreshes dated caches",(
  assert.match(run,/!atlasChartNeedsRefresh\(stored, tx\.period\)/);
  assert.match(run,/const queued = new Set\(networkQueue\.map\(coin => coin\.id\)\)/);
  assert.match(run,/if \(existing >= 0\) accepted\[existing\] = refreshed/);
- assert.match(run,/if \(finalEntries\.length > 0\)/);
+ assert.match(run,/if \(finalEntries\.length === ATLAS_SCANNER_TARGET/);
  assert.match(run,/archiveFallback/);
  assert.match(run,/Séries non affichées/);
 });

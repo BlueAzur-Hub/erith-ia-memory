@@ -179,7 +179,7 @@ test("Top 5 reads the fresh Market universe when state.coins is stale",()=>{
 });
 
 
-test("Top 3 USD 24h canonical Base100 matches the comparison engine key",()=>{
+test("Top 3 USD 24h preserves currency-isolated USD comparison context",()=>{
  const fs=require("node:fs"),vm=require("node:vm");
  const script=fs.readFileSync(require.resolve(source),"utf8");
  function check(preset,currency,period=1){
@@ -212,7 +212,7 @@ test("Top 3 USD 24h canonical Base100 matches the comparison engine key",()=>{
  const raw="comparison:bitcoin,ethereum,binancecoin:1";
  const top3usd=check("rank-3","USD");
  assert.equal(top3usd.context,raw+":USD");
- assert.equal(top3usd.canonical,true);
+ assert.equal(top3usd.canonical,false);
  assert.equal(top3usd.source,"binance");
  assert.ok(top3usd.cache.startsWith("EUR:"));
  const top3eur=check("rank-3","EUR");
