@@ -32,6 +32,8 @@ function build(opts={}){
    atlasChartPriceDatasets(){return coins.map(c=>({atlasCoin:c,data:[1,2,3]}));},
    atlasExternalChartTooltip(){return "legacy-rendered";},
    atlasFetchComparisonSeriesResilient(){return "canonical-broker";},
+   atlasGetStoredChartResult(){return null;},
+   atlasFetchJson:async()=>{throw Error("Offline test: no verified USD historical series");},
    atlasChartLivePresentation(){return null;},
    AgentCryptoQuoteCurrencyArchitecture:{snapshot(){return {displayCurrency:"USD"};}},
    Intl,Number,String,Array,Object,Map,Set,Math,RegExp,Symbol,console};
@@ -53,7 +55,12 @@ test("Top5 maps five fresh USD snapshots to the right symbols even when DOM orde
  assert.equal(m.root.dataset.usdQuotesVerified,"5");
  assert.match(m.title.textContent,/5\/5 vérifiées/);
  assert.match(m.title.textContent,/distinctes des courbes historiques Base 100/);
- assert.equal(await m.context.atlasFetchComparisonSeriesResilient({id:"bitcoin"},1),"canonical-broker");
+ const history=await m.context.atlasFetchComparisonSeriesResilient({id:"bitcoin"},1);
+ assert.equal(history.source,"coingecko-usd-blocked");
+ assert.equal(history.result.blocked,true);
+ assert.equal(history.result.currency,"USD");
+ assert.equal(history.result.quoteCurrency,"USD");
+ assert.equal(history.result.series.length,0);
 });
 test("A stale USD quote never leaks an old EUR price or erases unrelated USD rows",()=>{
  const m=build({rows:[1,0,2,3,4],staleId:"bitcoin",noCoins:true});
