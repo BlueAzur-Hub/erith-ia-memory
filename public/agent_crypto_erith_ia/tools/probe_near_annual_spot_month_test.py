@@ -85,7 +85,7 @@ class NearAnnualSourceTests(unittest.TestCase):
             probe.inspect_original_partial_source(
                 asset, "2025-10", lambda url,cap=45_000_000:
                 b"0"*64 if url.endswith(".CHECKSUM") else raw)
-        duplicate = original_zip(second=start+120_000)
+        duplicate = original_zip(second=120_000)
         digest = hashlib.sha256(duplicate).hexdigest()
         with self.assertRaisesRegex(ValueError, "not strictly increasing"):
             probe.inspect_original_partial_source(
