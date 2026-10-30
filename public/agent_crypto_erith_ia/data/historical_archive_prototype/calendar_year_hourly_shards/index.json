@@ -7,7 +7,7 @@
   "source_catalog_archived": 126,
   "materialized_assets": 126,
   "remaining_archived_assets": 0,
-  "year_shards": 962,
+  "year_shards": 965,
   "max_is_all_time": false,
   "first_exchange_trade_date_not_proven": true,
   "assets": [
@@ -22095,8 +22095,8 @@
       "symbol": "ATOM",
       "pair": "ATOMUSDT",
       "quote": "USDT",
-      "source_signature": "4d54a227a66123f6b464cad41dbcf1beb683f520654f45173d1575f4b41eeed7",
-      "verified_months": 65,
+      "source_signature": "b4a7bd51271c05bd43a01d644bebf00b0ca25c4c4da024609a35f63c694eaab0",
+      "verified_months": 66,
       "shards": [
         {
           "file": "cosmos-2019-span0-0ef2f45aaeddc79b2906024acee4f7f3da6ace7437ec69ea58c61584a8ffd8ca.json.gz",
@@ -22210,9 +22210,30 @@
           "bytes": 20215
         },
         {
-          "file": "cosmos-2021-span4-47626c6b7ca11175a43e29f242a3f3fe78ae281ec287729fc8cf11847f209c5f.json.gz",
+          "file": "cosmos-2021-span4-5ff4ea0867e3c05e516d719ed23cd8c39f215ff0c9bdb954647e6da4645a1584.json.gz",
           "year": 2021,
           "span": 4,
+          "first_open_ms": 1625097600000,
+          "last_open_ms": 1627772400000,
+          "first_month": "2021-07",
+          "last_month": "2021-07",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2021-07",
+              "release": "crypto-spot-bulk-add-2021-07-1m-6c262cd4bf12",
+              "source_zip_sha256": "4546860562cfe84649fcb29239c1d851ef57c27d9e8b40fff9bcfd64dcc0822e",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "5ff4ea0867e3c05e516d719ed23cd8c39f215ff0c9bdb954647e6da4645a1584",
+          "bytes": 23674
+        },
+        {
+          "file": "cosmos-2021-span5-cdacc22ba1688795851cd41705310238c53810386c04e70904b46fe9d04b50af.json.gz",
+          "year": 2021,
+          "span": 5,
           "first_open_ms": 1633046400000,
           "last_open_ms": 1640991600000,
           "first_month": "2021-10",
@@ -22239,13 +22260,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "47626c6b7ca11175a43e29f242a3f3fe78ae281ec287729fc8cf11847f209c5f",
+          "sha256": "cdacc22ba1688795851cd41705310238c53810386c04e70904b46fe9d04b50af",
           "bytes": 62700
         },
         {
-          "file": "cosmos-2022-span4-8a9dcc3069f9a19b8aef54ad8368356d3dd5f422d57ce948d7dc443f75231d19.json.gz",
+          "file": "cosmos-2022-span5-89edf6ddf8c240bc96bd2fd2118a8f0d39fb027a389d04a4fb2ecb87e2ac76a6.json.gz",
           "year": 2022,
-          "span": 4,
+          "span": 5,
           "first_open_ms": 1640995200000,
           "last_open_ms": 1672527600000,
           "first_month": "2022-01",
@@ -22326,13 +22347,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "8a9dcc3069f9a19b8aef54ad8368356d3dd5f422d57ce948d7dc443f75231d19",
-          "bytes": 247552
+          "sha256": "89edf6ddf8c240bc96bd2fd2118a8f0d39fb027a389d04a4fb2ecb87e2ac76a6",
+          "bytes": 247550
         },
         {
-          "file": "cosmos-2023-span4-e04eb24e6f0a10745e0ab869b777c5d9a16b028566f5d23b32eaa8e75d005691.json.gz",
+          "file": "cosmos-2023-span5-8b436627cb146cb0478f0b0a58b8893cbb2062f422c2becf9f2e3e8de9ace669.json.gz",
           "year": 2023,
-          "span": 4,
+          "span": 5,
           "first_open_ms": 1672531200000,
           "last_open_ms": 1677625200000,
           "first_month": "2023-01",
@@ -22353,13 +22374,13 @@
               "native_1m_count": 40320
             }
           ],
-          "sha256": "e04eb24e6f0a10745e0ab869b777c5d9a16b028566f5d23b32eaa8e75d005691",
+          "sha256": "8b436627cb146cb0478f0b0a58b8893cbb2062f422c2becf9f2e3e8de9ace669",
           "bytes": 41811
         },
         {
-          "file": "cosmos-2023-span5-e248a4898662d799d693143fbed458ed9f94a9705fb0b597e709510c24b5f027.json.gz",
+          "file": "cosmos-2023-span6-be26dda95fe8025e92410651847ebdc2cd7d8ca5251bd55fe29b07cdbf29d680.json.gz",
           "year": 2023,
-          "span": 5,
+          "span": 6,
           "first_open_ms": 1680307200000,
           "last_open_ms": 1704063600000,
           "first_month": "2023-04",
@@ -22422,13 +22443,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "e248a4898662d799d693143fbed458ed9f94a9705fb0b597e709510c24b5f027",
+          "sha256": "be26dda95fe8025e92410651847ebdc2cd7d8ca5251bd55fe29b07cdbf29d680",
           "bytes": 182310
         },
         {
-          "file": "cosmos-2024-span5-784141b3a9954d2365090749ecff5cf1cf0170b48a70daba16cc67514dcbfe81.json.gz",
+          "file": "cosmos-2024-span6-c33cc31ac7e07cd745021f519f6b98bc6c2b5da280c5fdf2cd7573e5aa7a161e.json.gz",
           "year": 2024,
-          "span": 5,
+          "span": 6,
           "first_open_ms": 1704067200000,
           "last_open_ms": 1735686000000,
           "first_month": "2024-01",
@@ -22509,13 +22530,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "784141b3a9954d2365090749ecff5cf1cf0170b48a70daba16cc67514dcbfe81",
-          "bytes": 246655
+          "sha256": "c33cc31ac7e07cd745021f519f6b98bc6c2b5da280c5fdf2cd7573e5aa7a161e",
+          "bytes": 246653
         },
         {
-          "file": "cosmos-2025-span5-31f1b139809c01a978ed36d22b7fc6db3d4248d5d88b7160673ff33136242d63.json.gz",
+          "file": "cosmos-2025-span6-0123ec0d435c7bcc97483d8cbaa76a3721c29aad399d4e015745ecef7f3b4f72.json.gz",
           "year": 2025,
-          "span": 5,
+          "span": 6,
           "first_open_ms": 1735689600000,
           "last_open_ms": 1767222000000,
           "first_month": "2025-01",
@@ -22596,13 +22617,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "31f1b139809c01a978ed36d22b7fc6db3d4248d5d88b7160673ff33136242d63",
-          "bytes": 233221
+          "sha256": "0123ec0d435c7bcc97483d8cbaa76a3721c29aad399d4e015745ecef7f3b4f72",
+          "bytes": 233223
         },
         {
-          "file": "cosmos-2026-span5-c35bb2e535f5714e5dfb1194780ef4f043149cdcf81e078dabb8ad026925179c.json.gz",
+          "file": "cosmos-2026-span6-135dfd6d9b89fe2e18009e8678b2d200273ba0f6f60ecfbaded5eb2cf90e3c9d.json.gz",
           "year": 2026,
-          "span": 5,
+          "span": 6,
           "first_open_ms": 1767225600000,
           "last_open_ms": 1790809200000,
           "first_month": "2026-01",
@@ -22665,7 +22686,7 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "c35bb2e535f5714e5dfb1194780ef4f043149cdcf81e078dabb8ad026925179c",
+          "sha256": "135dfd6d9b89fe2e18009e8678b2d200273ba0f6f60ecfbaded5eb2cf90e3c9d",
           "bytes": 160822
         }
       ]
@@ -25989,13 +26010,34 @@
       "symbol": "STX",
       "pair": "STXUSDT",
       "quote": "USDT",
-      "source_signature": "b1f7da46764050006bbc28eb1b05964a9769252ffdac390021c08d50be977bda",
-      "verified_months": 58,
+      "source_signature": "e2fdf501ef50b512e8120027cc2624bd325bb84f1d9f7c97706d72dc0f658a99",
+      "verified_months": 59,
       "shards": [
         {
-          "file": "blockstack-2021-span0-5efcb83423434483cb52112c7ee67d16500e0772281fde37bc07f63aa9d96d22.json.gz",
+          "file": "blockstack-2021-span0-6a94cee3bd40ac1410a414139646617861561a9138273fd01752f9c73ae357b7.json.gz",
           "year": 2021,
           "span": 0,
+          "first_open_ms": 1625097600000,
+          "last_open_ms": 1627772400000,
+          "first_month": "2021-07",
+          "last_month": "2021-07",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2021-07",
+              "release": "crypto-spot-bulk-add-2021-07-1m-6c262cd4bf12",
+              "source_zip_sha256": "9a1b2cb16f370f021a85cb3f4c49ccf939f1613ae0072102c28a58974524acd2",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "6a94cee3bd40ac1410a414139646617861561a9138273fd01752f9c73ae357b7",
+          "bytes": 23228
+        },
+        {
+          "file": "blockstack-2021-span1-d94d4adbcc9c03b2e9176aeb834e13a9c9978b90667196c35bc36e9522c08ab6.json.gz",
+          "year": 2021,
+          "span": 1,
           "first_open_ms": 1633046400000,
           "last_open_ms": 1638313200000,
           "first_month": "2021-10",
@@ -26016,13 +26058,13 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "5efcb83423434483cb52112c7ee67d16500e0772281fde37bc07f63aa9d96d22",
-          "bytes": 39132
+          "sha256": "d94d4adbcc9c03b2e9176aeb834e13a9c9978b90667196c35bc36e9522c08ab6",
+          "bytes": 39131
         },
         {
-          "file": "blockstack-2022-span1-66b1016201d1005b966b889fb9b63668e8ab1532735782312acc8dba94d5ad25.json.gz",
+          "file": "blockstack-2022-span2-1b5d6cffe4ea2f711dfd7bf7dffd4e52d1d215b167ea4a78efceb5d1600ee9dc.json.gz",
           "year": 2022,
-          "span": 1,
+          "span": 2,
           "first_open_ms": 1640995200000,
           "last_open_ms": 1672527600000,
           "first_month": "2022-01",
@@ -26103,13 +26145,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "66b1016201d1005b966b889fb9b63668e8ab1532735782312acc8dba94d5ad25",
-          "bytes": 194730
+          "sha256": "1b5d6cffe4ea2f711dfd7bf7dffd4e52d1d215b167ea4a78efceb5d1600ee9dc",
+          "bytes": 194732
         },
         {
-          "file": "blockstack-2023-span1-d31058698618580a6e4cf4ba1aaa28e1e62ee511a17ec742fe03e0b814801a87.json.gz",
+          "file": "blockstack-2023-span2-94dda8eb141e0c57c5bfd3987c730b299332419b9e903ec62a299306340a40ec.json.gz",
           "year": 2023,
-          "span": 1,
+          "span": 2,
           "first_open_ms": 1672531200000,
           "last_open_ms": 1677625200000,
           "first_month": "2023-01",
@@ -26130,13 +26172,13 @@
               "native_1m_count": 40320
             }
           ],
-          "sha256": "d31058698618580a6e4cf4ba1aaa28e1e62ee511a17ec742fe03e0b814801a87",
-          "bytes": 34116
+          "sha256": "94dda8eb141e0c57c5bfd3987c730b299332419b9e903ec62a299306340a40ec",
+          "bytes": 34117
         },
         {
-          "file": "blockstack-2023-span2-c944f3fc8d4fc987551c856762c7d164c0c4a360db3f3a52b15c80b0fa7ce00c.json.gz",
+          "file": "blockstack-2023-span3-2254d5c8246244aefb739da040c32266e3fa655c7cec77a5032966d25005f86b.json.gz",
           "year": 2023,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1680307200000,
           "last_open_ms": 1704063600000,
           "first_month": "2023-04",
@@ -26199,13 +26241,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "c944f3fc8d4fc987551c856762c7d164c0c4a360db3f3a52b15c80b0fa7ce00c",
-          "bytes": 186363
+          "sha256": "2254d5c8246244aefb739da040c32266e3fa655c7cec77a5032966d25005f86b",
+          "bytes": 186361
         },
         {
-          "file": "blockstack-2024-span2-de8e8262f6e7b9c83cbd8eb114cfafa4ac8bff4365b35f4f126febb330460912.json.gz",
+          "file": "blockstack-2024-span3-677c2280631df687f40e03b185cf285345e22524df3051a64c12ba3b08dcbeba.json.gz",
           "year": 2024,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1704067200000,
           "last_open_ms": 1735686000000,
           "first_month": "2024-01",
@@ -26286,13 +26328,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "de8e8262f6e7b9c83cbd8eb114cfafa4ac8bff4365b35f4f126febb330460912",
+          "sha256": "677c2280631df687f40e03b185cf285345e22524df3051a64c12ba3b08dcbeba",
           "bytes": 247670
         },
         {
-          "file": "blockstack-2025-span2-7b0bf9d25c3363e31087959092a8c6875cc1d380f512c5f952762abed8310306.json.gz",
+          "file": "blockstack-2025-span3-9958928cae37eab664e934d442cbba5f94ec6654b8e0850d569b4844e21a51b6.json.gz",
           "year": 2025,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1735689600000,
           "last_open_ms": 1767222000000,
           "first_month": "2025-01",
@@ -26373,13 +26415,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "7b0bf9d25c3363e31087959092a8c6875cc1d380f512c5f952762abed8310306",
+          "sha256": "9958928cae37eab664e934d442cbba5f94ec6654b8e0850d569b4844e21a51b6",
           "bytes": 214056
         },
         {
-          "file": "blockstack-2026-span2-57aaad2ea767f2d63404b454db39bb472f52724a81491ef3b6c37bbe8cf9d5ba.json.gz",
+          "file": "blockstack-2026-span3-dfe145d787d0059fcfd19f558985b54c8ff4594d30e3f00069e1dbca774eb9a2.json.gz",
           "year": 2026,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1767225600000,
           "last_open_ms": 1790809200000,
           "first_month": "2026-01",
@@ -26442,8 +26484,8 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "57aaad2ea767f2d63404b454db39bb472f52724a81491ef3b6c37bbe8cf9d5ba",
-          "bytes": 163694
+          "sha256": "dfe145d787d0059fcfd19f558985b54c8ff4594d30e3f00069e1dbca774eb9a2",
+          "bytes": 163693
         }
       ]
     },
@@ -50019,13 +50061,34 @@
       "symbol": "SUPER",
       "pair": "SUPERUSDT",
       "quote": "USDT",
-      "source_signature": "1f8a0225f622ad20a331cb31a694ab0979f427f9cdeee081ab63e7cbd05a91db",
-      "verified_months": 58,
+      "source_signature": "651e2b5912e7b319146de8e8c6e19f003dde693160b4216cf621475ad771df43",
+      "verified_months": 59,
       "shards": [
         {
-          "file": "superfarm-2021-span0-43396757454422f2b601ce231b19fa8250fade3605f43155b819957af9ebd74c.json.gz",
+          "file": "superfarm-2021-span0-fc1bdbaf4191188ff3919371b8071fafebc8867fa37f9b23b73a8b07904a8a35.json.gz",
           "year": 2021,
           "span": 0,
+          "first_open_ms": 1625097600000,
+          "last_open_ms": 1627772400000,
+          "first_month": "2021-07",
+          "last_month": "2021-07",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2021-07",
+              "release": "crypto-spot-bulk-add-2021-07-1m-6c262cd4bf12",
+              "source_zip_sha256": "222a43ebcf38e5a09cd57dbe0d3f669f14f2a6cf0b290b40ca5f2d2898231f50",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "fc1bdbaf4191188ff3919371b8071fafebc8867fa37f9b23b73a8b07904a8a35",
+          "bytes": 22169
+        },
+        {
+          "file": "superfarm-2021-span1-fdeb239df907fc186dc5873bc0484caa06941315b8a85a469b342d320f2cf4ae.json.gz",
+          "year": 2021,
+          "span": 1,
           "first_open_ms": 1633046400000,
           "last_open_ms": 1638313200000,
           "first_month": "2021-10",
@@ -50046,13 +50109,13 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "43396757454422f2b601ce231b19fa8250fade3605f43155b819957af9ebd74c",
-          "bytes": 42109
+          "sha256": "fdeb239df907fc186dc5873bc0484caa06941315b8a85a469b342d320f2cf4ae",
+          "bytes": 42108
         },
         {
-          "file": "superfarm-2022-span1-4eb82987b73cfd11ad851f5ad23bea7f3b26040dfdd71ac455c41efb85dffa4e.json.gz",
+          "file": "superfarm-2022-span2-7fc77dbe66e91baa5df72e57801978ffd28c76ed8e94e36e60ff53ba77f5bb42.json.gz",
           "year": 2022,
-          "span": 1,
+          "span": 2,
           "first_open_ms": 1640995200000,
           "last_open_ms": 1672527600000,
           "first_month": "2022-01",
@@ -50133,13 +50196,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "4eb82987b73cfd11ad851f5ad23bea7f3b26040dfdd71ac455c41efb85dffa4e",
-          "bytes": 212470
+          "sha256": "7fc77dbe66e91baa5df72e57801978ffd28c76ed8e94e36e60ff53ba77f5bb42",
+          "bytes": 212471
         },
         {
-          "file": "superfarm-2023-span1-67583f1a2d9bee0e01d040ed713d0db6fc1c49deeb8cf68366fcbedd3de9576c.json.gz",
+          "file": "superfarm-2023-span2-601ca4784a6ce754d95170f57c1e13214a8818591cd17b35c61ad2c5074fc465.json.gz",
           "year": 2023,
-          "span": 1,
+          "span": 2,
           "first_open_ms": 1672531200000,
           "last_open_ms": 1677625200000,
           "first_month": "2023-01",
@@ -50160,13 +50223,13 @@
               "native_1m_count": 40320
             }
           ],
-          "sha256": "67583f1a2d9bee0e01d040ed713d0db6fc1c49deeb8cf68366fcbedd3de9576c",
-          "bytes": 33293
+          "sha256": "601ca4784a6ce754d95170f57c1e13214a8818591cd17b35c61ad2c5074fc465",
+          "bytes": 33295
         },
         {
-          "file": "superfarm-2023-span2-1913de5dbe12d8bf10c76d531b008fc79d46018ff0ef3b7318b66cfd3760457f.json.gz",
+          "file": "superfarm-2023-span3-51cbb0e4819fe8d18dad8d1b9fad7c5f233736658db6c22ce8cb8b3258334895.json.gz",
           "year": 2023,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1680307200000,
           "last_open_ms": 1704063600000,
           "first_month": "2023-04",
@@ -50229,13 +50292,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "1913de5dbe12d8bf10c76d531b008fc79d46018ff0ef3b7318b66cfd3760457f",
-          "bytes": 152716
+          "sha256": "51cbb0e4819fe8d18dad8d1b9fad7c5f233736658db6c22ce8cb8b3258334895",
+          "bytes": 152714
         },
         {
-          "file": "superfarm-2024-span2-5d48e54209fb501976fdf1f1c8ca815dc7fa8687dc955b525ae527eb4f87ebb2.json.gz",
+          "file": "superfarm-2024-span3-2df6f330587034c3e7e823f3b1b299f2a7f76a5380d2b91388211a6949715179.json.gz",
           "year": 2024,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1704067200000,
           "last_open_ms": 1735686000000,
           "first_month": "2024-01",
@@ -50316,13 +50379,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "5d48e54209fb501976fdf1f1c8ca815dc7fa8687dc955b525ae527eb4f87ebb2",
+          "sha256": "2df6f330587034c3e7e823f3b1b299f2a7f76a5380d2b91388211a6949715179",
           "bytes": 234587
         },
         {
-          "file": "superfarm-2025-span2-6aee3310900e83e418ec01f2395f96e6fb5a0cd3dcbd993b37d8b9420ff45a1d.json.gz",
+          "file": "superfarm-2025-span3-aeefe40b1175fece42fbd2a48ec55815e31f409bcca3235e0da66fbdc67b16f8.json.gz",
           "year": 2025,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1735689600000,
           "last_open_ms": 1767222000000,
           "first_month": "2025-01",
@@ -50403,13 +50466,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "6aee3310900e83e418ec01f2395f96e6fb5a0cd3dcbd993b37d8b9420ff45a1d",
+          "sha256": "aeefe40b1175fece42fbd2a48ec55815e31f409bcca3235e0da66fbdc67b16f8",
           "bytes": 225239
         },
         {
-          "file": "superfarm-2026-span2-4fa9d9b5f044a5b49f0f31651de722a550a540cdf606333654e37d6e08aea893.json.gz",
+          "file": "superfarm-2026-span3-6e957834324a656de85c3f51452ecd83057b14e2ed5f0be3dd8093779acb8994.json.gz",
           "year": 2026,
-          "span": 2,
+          "span": 3,
           "first_open_ms": 1767225600000,
           "last_open_ms": 1790809200000,
           "first_month": "2026-01",
@@ -50472,8 +50535,8 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "4fa9d9b5f044a5b49f0f31651de722a550a540cdf606333654e37d6e08aea893",
-          "bytes": 145848
+          "sha256": "6e957834324a656de85c3f51452ecd83057b14e2ed5f0be3dd8093779acb8994",
+          "bytes": 145843
         }
       ]
     }
