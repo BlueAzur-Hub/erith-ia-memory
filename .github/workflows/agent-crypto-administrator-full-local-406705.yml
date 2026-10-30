@@ -66,15 +66,15 @@ jobs:
       - name: Verify SHA-256
         run: |
           cd coordination/inter_ai_dialogues/agent_crypto
-          sha256sum -c AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip.sha256
+          sha256sum -c AGENT_CRYPTO_ADMINISTRATOR_40.6.705_ADMINISTRATOR_LOCAL_ONLY.zip.sha256
       - name: Upload complete local archive and proof as GitHub Actions artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.705_ADMINISTRATOR_LOCAL_ONLY
           path: |
-            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip
-            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip.sha256
-            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.audit.json
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_ADMINISTRATOR_LOCAL_ONLY.zip
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_ADMINISTRATOR_LOCAL_ONLY.zip.sha256
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_ADMINISTRATOR_LOCAL_ONLY.audit.json
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
