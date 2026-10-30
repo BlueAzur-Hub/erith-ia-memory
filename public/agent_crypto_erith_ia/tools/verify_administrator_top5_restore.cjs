@@ -18,7 +18,7 @@ const ATLAS_WORKSPACE_PRESETS=['solo','rank-3','rank-5','gainers','losers','volu
 const ATLAS_WORKSPACE_PERIODS=[1,7,30,60,90,365,36500];
 const ATLAS_ADMIN_GRAPH_MODES=['normal'];
 const ATLAS_SCANNER_PRESETS=new Set(['gainers','losers','volume']);
-const ATLAS_RELEASE='Build 40.6.707';
+const ATLAS_RELEASE='Build 40.6.708';
 const atlasGraphContextV7DetailWindowsNormalize=()=>({});
 ${get('atlasCuratedTopIds')}
 ${get('atlasCanonicalPresetSelection')}

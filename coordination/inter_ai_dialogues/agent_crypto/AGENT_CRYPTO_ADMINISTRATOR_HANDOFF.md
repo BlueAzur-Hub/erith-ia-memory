@@ -1,47 +1,50 @@
-# Agent-Crypto Administrator — Technical handoff
+# Agent-Crypto — Administrator delivery handoff
 
-Build under review: **40.6.707** (30 October 2026). Parent: isolated **40.6.706** candidate.
+**Candidate:** Administrator 40.6.708 (30 October 2026).  **Parent:** 40.6.707, published by the operator at `902daaa02393e56575769e17aac324f95047f32a` on `main`.
 
-## Immutable functional contract
+**Status:** Local deliverable. JavaScript syntax and Node verification passed. No Firefox, network provider, EUR/USD rendering or new deployment confirmation. No GitHub mutation by this delivery.
 
-- Top 5: **BTC / ETH / BNB / XRP / SOL** in this exact order; zero stablecoins.
-- Top 3: **BTC / ETH / BNB**. Gainers / losers / volume scanners and manual selections remain independent.
-- Real, full-window 24h histories with native currency provenance. No fabricated series, no mixed EUR / USD and no silently substituted asset.
-- Preserve last committed coherent comparison during refresh; one chart transaction only when all five series qualify.
-- Do not modify Market Core 38.15.11, Trader, Bridge, live orders or production automatically.
+## Evidence and cause
 
-## Audited problems in parent
+- Firefox screenshots of 40.6.707: five correct Top 5 assets BTC / ETH / BNB / XRP / SOL, no stablecoin. On switch to USD, the operator button changes immediately while the chart displays retained historical EUR prices and labels; the banner says `HISTORIQUE CONSERVÉ` / `mise à jour 24h en cours`. This is **not evidence** that the EUR values were actually converted into USD; it proves incomplete disclosure of the pending transition.
+- In `administrator/js/quote-currency-architecture-406497.js`, the display selection updates immediately. `administrator/js/graph-native-usd-406520.js` starts a separate USD historical fetch. `administrator/app.js` deliberately retains the previous chart until it can replace the full basket. The selection and rendered history therefore can temporarily differ.
+- `app.js` also hardcoded the source phrase `historiques EUR · Base 100` in both comparison commit and workspace restore. This remained incorrect for native USD series. The EUR label in the actual tooltip was correctly reflecting the EUR source, rather than proving that the USD network acquisition succeeded.
+- The earlier 40.6.707 change targeted EUR history acquisition/cache; it did not modify the USD module. A claim that it introduced the entire USD defect is not established.
 
-1. New functions and regression tests carried redundant version numbers in identifiers / filenames: stable code names and stable verification filenames now replace those introduced in 40.6.705/706. Git history carries the actual version.
-2. The Top 5 EUR 24h acquisition always started direct Binance network requests before examining recent verified local EUR history. Five assets plus fallback timeouts compounded needless waiting.
-3. The 706 bundle tests referred to an existing legacy USD module not included in the patch. Tests now run standalone and optionally verify that existing asset when checked out inside the full repository.
+## Exact changes (no new overlay module)
 
-## Candidate changes
+- `administrator/app.js`: source metadata now derives currency from **all native historical series**; unknown or mixed source is disclosed, never silently asserted as EUR.
+- The operator's requested EUR/USD is captured for each comparison request, separately from the quote that owns the already-rendered canvas. Async results for an old currency cannot commit after a switch.
+- All new comparison results must carry independently verified native currency matching the requested currency, before any canonical 5/5 atomic draw; incompatible or unknown native quotes are refused. Mixed/unknown quotes cannot satisfy the full-basket commitment.
+- When native EUR remains visible after an USD click (or vice versa), the existing refresh banner explicitly says the historic **old currency remains on screen while requested currency loads**. On failure the old chart is not relabelled or fabricated; the failure and retained source are shown. Tooltip title also labels the mismatch explicitly; each numeric historical price retains its actual native currency.
+- V7/workspace cached comparison restore rejects source series whose native quote disagrees with the requested display currency, preventing cross-currency restoration. Scanner and manual selection identity rules unchanged.
+- The scanner's Base 100 explanatory phrase derives its currency from the verified plotted sources rather than assuming EUR.
+- No change in `graph-native-usd-406520.js`, quote architecture module, Market Core 38.15.11, Trader, Bridge, wallet/order controls, asset identity or cache acquisition timeouts.
 
-- `app.js`: stable `atlasCanonicalPresetSelection` (no suffix), normalized local identifiers of the previous repair; `runSchoolPractice` preserves the existing interactive learning exercise. No unrelated historical runtime identifiers renamed: doing so without full dependency audit risks breaking scripts.
-- `app.js`: `atlasVerifiedReferenceHistoryCache` prefers only locally stored, integrity-qualified EUR 24h market histories with a genuine native EUR label and current full-day first/last timestamps. This is **not** a synthetic price shortcut. A cache with insufficient full-day coverage is rejected even when stale fallback is considered. A stale cache can only be exposed in the already existing explicit preserved-fallback state.
-- `app.js`: total Binance mirror budget bounded to 12 seconds (not 12 seconds per host), and CoinGecko timeout bounded to 14 seconds for this specific Top 5 EUR 24h fetch, with the original per-provider spacing and 3-worker concurrency unchanged. Failure remains explicit and prevents an incomplete atomic basket.
-- `index.html` / `build.json`: consistent 40.6.707 preview build metadata, **not** a published build claim.
-- `tools/`: 4 verification scripts with stable, versionless filenames and no "test" in their names. No verification scripts or handoff files added under the Administrator runtime folder.
+## Verification
 
-## Execution and evidence
+Run from repository root after upload:
 
-Node syntax and four focused checks can be executed with `node --check public/agent_crypto_erith_ia/administrator/app.js` and each stable file under `public/agent_crypto_erith_ia/tools/`.
-These checks are **local logic / code verifications**. They do not prove live network speed, 5/5 exchange availability, visual stability on Firefox, cross-currency historical synchronization, or live trading behavior. Initial load may remain slower when no current verified history exists or providers time out.
+```sh
+node --check public/agent_crypto_erith_ia/administrator/app.js
+node public/agent_crypto_erith_ia/tools/verify_administrator_currency_integrity.cjs
+node public/agent_crypto_erith_ia/tools/verify_administrator_canonical_top5_integrity.cjs
+node public/agent_crypto_erith_ia/tools/verify_administrator_history_cache.cjs
+node public/agent_crypto_erith_ia/tools/verify_administrator_scanner_window_integrity.cjs
+node public/agent_crypto_erith_ia/tools/verify_administrator_top5_restore.cjs
+```
 
-## Upload policy / cleanup
+The new currency verifier executes the actual tooltip and provenance helpers with isolated native EUR/USD fixtures, including USD requested while EUR stays on canvas and the reverse, and checks the strict source and cache gates. These are synthetic verification cases; real network timing cannot be certified from them.
 
-This ZIP is an incremental upload to the existing repository **root**, preserving paths. It is **not** a standalone web app. It contains eight files (runtime 3, tests 4, handoff 1) and NO newly created version-numbered source filename. The ZIP itself may carry a version because it is an offline delivery artifact; the stable handoff inside GitHub does not.
+## Field acceptance (not yet completed)
 
-GitHub browser upload does **not** delete obsolete files. If older versioned verification files have already been committed on the chosen target branch, remove them with a separate GitHub deletion or git rm when the stable replacement is validated; do not leave permanent duplicates. Do not delete historical artifacts from the shared coordination archive without checking dependencies; only stop introducing new versioned source filenames.
+1. In Firefox, select Top 5 on 24 h, then EUR. Confirm canonical five historical EUR series, matching title, tooltips, cache/native sources and coherent timestamps.
+2. Select USD. If EUR canvas remains during acquisition, confirm explicit `USD demandé · historique EUR conservé`. After completion, confirm 5/5 USD quotes, native USD historical prices, title and samples; never the old euro figures with dollar symbols.
+3. Select EUR again and verify the reverse disclosure, cached restore and no mixed snapshots. Simulate unavailable USD if practical: previous EUR remains honest, USD marked unavailable.
+4. Confirm Target Top 5 live, cards add/remove, Top 3, Hausses/Baisses/Volumes 5, Analyse, Bougies, Lecture Technique and source/candle provenance. Measure first-load/cache timing without erasing the existing V7 profile.
 
-## Firefox acceptance
+**Commit suggestion:** `fix administrator historical currency transitions and provenance`
 
-After isolated upload: 1) Top 5 24h EUR, then USD; 2) prior V7 session intact; 3) five correct names and five histories (or explicitly missing), no USDT/USDC; 4) cycle, card clicks, Analyse / Math, cartouche; 5) first-load and cache timings; 6) watch whether curves change behind the user's back. No merge/promotion before user approval.
+**Stable internal paths:** No new version numbers or `test` tokens in added filenames or function names. The ZIP container alone has a delivery build number. Legacy versioned owner filenames remain untouched; renaming them without following all dependent references would introduce an unrelated regression. Old source files are not deleted by an upload; cleanup requires a separate proven action.
 
-## Naming discipline and legacy dependency boundary
-
-- **Repository source filenames included in this patch have no build numbers and no `test` prefix.** The only numbered filename is the offline distribution ZIP (not uploaded as a repository source file).
-- Four verification programs live at `tools/verify_administrator_*.cjs`; all added application functions have stable, descriptive names. `runSchoolTest` and the transient local variable with a build suffix were renamed without altering their behaviour.
-- Earlier legacy code still contains historic version-bearing function identifiers and the previously deployed `js/graph-native-usd-406520.js` asset. These are not newly introduced. Their removal needs a separate full-dependency rename-and-delete commit (especially because GitHub browser upload **never deletes existing files**). Deleting them while uploading this incremental patch risks breaking historical runtime bindings.
-- Avoid putting the ZIP itself into the GitHub source tree: extract it locally and upload only its inner paths. Commit message: `fix administrator top five history cache and use stable verification names`.
+**Safety:** Upload only the listed internal paths after extraction. No archive binary in the active source directory. Revert by restoring `app.js`, `index.html`, and `build.json` from commit `902daaa` if field verification fails.
