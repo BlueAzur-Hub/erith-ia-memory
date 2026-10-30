@@ -1,4 +1,4 @@
-name: Administrator 40.6.705 recovery regression
+name: Administrator 40.6.705 regression and archive
 on:
   push:
     branches:
@@ -6,9 +6,10 @@ on:
   workflow_dispatch:
 jobs:
   recovery-regression:
+    if: "!contains(github.event.head_commit.message, 'Archive verified 40.6.705 recovery ZIP')"
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,3 +25,34 @@ jobs:
       - name: Verify preview build metadata
         run: |
           node -e 'const b=require("./public/agent_crypto_erith_ia/administrator/build.json"); if(b.build!=="40.6.705"||b.published!==false||b.parent_build!=="40.6.650") process.exit(1)'
+      - name: Package six source and proof files
+        run: |
+          python3 - <<'PY'
+          import zipfile, pathlib
+          files = [
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/app.js",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js",
+            "public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_RECOVERY_HANDOFF.md",
+          ]
+          dst=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip")
+          with zipfile.ZipFile(dst,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for file in files:
+              assert pathlib.Path(file).is_file(), file
+              z.write(file)
+          with zipfile.ZipFile(dst) as z:
+            assert z.testzip() is None
+            assert len(z.namelist()) == len(files)
+          PY
+          cd coordination/inter_ai_dialogues/agent_crypto
+          sha256sum AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip > AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip.sha256
+          sha256sum -c AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip.sha256
+      - name: Archive verified package on this test branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip*
+          git commit -m "Archive verified 40.6.705 recovery ZIP and SHA-256"
+          git push origin HEAD:test/administrator-40.6.705-recovery
