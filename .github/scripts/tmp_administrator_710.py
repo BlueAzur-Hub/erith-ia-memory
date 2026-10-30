@@ -6,6 +6,7 @@ A=Path("public/agent_crypto_erith_ia/administrator/app.js")
 B=Path("public/agent_crypto_erith_ia/administrator/build.json")
 I=Path("public/agent_crypto_erith_ia/administrator/index.html")
 V=Path("public/agent_crypto_erith_ia/tools")
+N=Path("public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js")
 def sha(p):
     b=p.read_bytes()
     return hashlib.sha1(f"blob {len(b)}\0".encode()+b).hexdigest()
@@ -24,7 +25,8 @@ prior={
  I:"ea881d2811232650a1cbf87a1bf269144fea8951",
  V/"verify_administrator_annual_usd_integrity.cjs":"bfd57d6a45bd6c2f15e46a997dc98eb36812087d",
  V/"verify_administrator_canonical_top5_integrity.cjs":"d9becaf4ef80788f4cd3baa8ec027dab68901b63",
- V/"verify_administrator_top5_restore.cjs":"9b28e82dc441c717bb7b86ed060193706e28ef54"}
+ V/"verify_administrator_top5_restore.cjs":"9b28e82dc441c717bb7b86ed060193706e28ef54",
+ N:"c0fe07336fd2e2d0634d1b132d79ced20ed5442e"}
 for p,h in prior.items():
     if sha(p)!=h:raise RuntimeError(f"ABORT: {p} diverged from verified 40.6.709; no overwrites")
 helper=r'''// Annual native USD requests only: retry known transient failures, never an
@@ -95,13 +97,17 @@ one(V/"verify_administrator_canonical_top5_integrity.cjs",'assert.equal(build.bu
 # Top5 canonical-history guard. Verify the guard instead of banning all wrappers.
 one(V/"verify_administrator_canonical_top5_integrity.cjs",r'if (usd !== null) assert.doesNotMatch(usd,/wrap\("atlasChartStorageKey"/);',r'if (usd !== null) assert.match(usd,/wrap\("atlasChartStorageKey",o=>function\(c,d,f\)\{return usd\(\)&&!canonicalTop5History\(d\)/);')
 one(V/"verify_administrator_top5_restore.cjs","const ATLAS_RELEASE='Build 40.6.709'","const ATLAS_RELEASE='Build 40.6.710'")
+# Legacy native-USD snapshot must not mislabel a currency-unspecific Market percent.
+one(N,'change24h=c.change24h==null||String(c.change24h).trim()===""?NaN:Number(c.change24h)','change24h=c.change24hUsd==null||String(c.change24hUsd).trim()===""?NaN:Number(c.change24hUsd)')
+one(N,'priceUsd:84772.17,change24h:.29,lastUpdated:','priceUsd:84772.17,change24hUsd:.29,lastUpdated:')
 expected={
  A:"13744cd712fc2787335169449a06946e87a80318",
  B:"06c1afa27a7f111d94c3ccfd15d6a53b6dcf901c",
  I:"c42c9c1c9c339896baa845df628c0c1679ee2750",
  T:"c9091f3823131d7cd12ab6b75fe731b8e233a9dc",
  V/"verify_administrator_canonical_top5_integrity.cjs":"f6c70da1f55931615a530a483e57fa17068120fb",
- V/"verify_administrator_top5_restore.cjs":"f6e89c37848898d36e180c8736bdf3e1f5b0247a"}
+ V/"verify_administrator_top5_restore.cjs":"f6e89c37848898d36e180c8736bdf3e1f5b0247a",
+ N:"88fa3eb2acea988613283bf5b5019870303418a7"}
 for p,h in expected.items():
     if sha(p)!=h:raise RuntimeError(f"FAILED EXACT OUTPUT: {p} got {sha(p)} expected {h}")
 print("EXACT PASS: six files byte-identical to tested 40.6.710.")
