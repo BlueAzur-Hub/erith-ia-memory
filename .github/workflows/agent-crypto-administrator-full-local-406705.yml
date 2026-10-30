@@ -1,0 +1,77 @@
+name: Administrator 40.6.705 complete local delivery
+on:
+  push:
+    branches: [test/administrator-40.6.705-recovery]
+    paths:
+      - ".github/workflows/agent-crypto-administrator-full-local-406705.yml"
+  workflow_dispatch:
+jobs:
+  full-local-package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JS syntax and inherited targeted regression
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs
+      - name: Package complete administrator subtree and verify all relative entry resources
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, zipfile, hashlib, json
+          base=pathlib.Path('public/agent_crypto_erith_ia')
+          admin=base/'administrator'
+          assert admin.is_dir()
+          html=(admin/'index.html').read_text(encoding='utf-8')
+          missing=[]
+          # Extract static local HTML assets, resolve against the actual file tree.
+          for url in re.findall(r'''(?:src|href)\s*=\s*["']([^"']+)''',html,re.I):
+            url=url.split('?',1)[0].split('#',1)[0].strip()
+            if not url or url.startswith(('http:', 'https:', '//', 'data:', '#','javascript:', 'mailto:')):
+              continue
+            if url.startswith('/'):
+              # Root-relative links need their GitHub Pages hosting root and cannot be universally resolved offline.
+              continue
+            target=(admin/url).resolve()
+            if target.is_relative_to(pathlib.Path.cwd().resolve()) and not target.exists():
+              missing.append(url)
+          # Include the full Agent Crypto directory to preserve cross-directory dependencies.
+          files=[p for p in base.rglob('*') if p.is_file() and '.git' not in p.parts]
+          assert len(files)>50, len(files)
+          out=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=6,allowZip64=True) as z:
+            for p in sorted(files):
+              z.write(p,p.as_posix())
+          with zipfile.ZipFile(out) as z:
+            assert z.testzip() is None
+            assert len(z.namelist())==len(files)
+            assert 'public/agent_crypto_erith_ia/administrator/index.html' in z.namelist()
+            assert 'public/agent_crypto_erith_ia/administrator/app.js' in z.namelist()
+            assert 'public/agent_crypto_erith_ia/administrator/build.json' in z.namelist()
+          audit={'file_count':len(files),'missing_static_relative_entry_resources':sorted(set(missing)), 'root_relative_urls_require_local_http_host': True,'build':'40.6.705','source_branch':'test/administrator-40.6.705-recovery','test_scope':'static and Node, not Firefox'}
+          audit_path=out.with_suffix('.audit.json')
+          audit_path.write_text(json.dumps(audit,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          assert not missing, 'Missing relative assets: '+repr(missing)
+          sha=hashlib.sha256(out.read_bytes()).hexdigest()
+          out.with_name(out.name+'.sha256').write_text(sha+'  '+out.name+'\n')
+          print('ZIP:',out,'files:',len(files),'bytes:',out.stat().st_size,'SHA256:',sha)
+          PY
+      - name: Publish verified full archive only if within GitHub file size limit
+        run: |
+          ARCHIVE=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip
+          test "$(stat -c%s "$ARCHIVE")" -lt 95000000 || { echo "ZIP too large for GitHub repository; archive remains available only as Actions artifact after upload step"; exit 1; }
+          cd coordination/inter_ai_dialogues/agent_crypto
+          sha256sum -c AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip.sha256
+          cd ../../..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ARCHIVE" "$ARCHIVE.sha256" "$ARCHIVE.audit.json"
+          git commit -m "Archive verified Administrator 40.6.705 complete local tree"
+          git push origin HEAD:test/administrator-40.6.705-recovery
