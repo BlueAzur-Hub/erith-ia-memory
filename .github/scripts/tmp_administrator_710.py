@@ -27,7 +27,7 @@ prior={
  V/"verify_administrator_top5_restore.cjs":"9b28e82dc441c717bb7b86ed060193706e28ef54"}
 for p,h in prior.items():
     if sha(p)!=h:raise RuntimeError(f"ABORT: {p} diverged from verified 40.6.709; no overwrites")
-helper='''// Annual native USD requests only: retry known transient failures, never an
+helper=r'''// Annual native USD requests only: retry known transient failures, never an
 // integrity rejection or an unclassified HTTP 4xx. The shared comparison
 // retry policy is intentionally untouched for the other chart modes.
 function atlasAnnualUsdRetryableError(error) {
