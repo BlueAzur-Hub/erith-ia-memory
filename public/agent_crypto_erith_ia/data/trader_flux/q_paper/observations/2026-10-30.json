@@ -1,0 +1,38 @@
+{
+  "schema": "erith.quack-ai.spot-paper.observations.v1",
+  "date_utc": "2026-10-30",
+  "coin_id": "quack-ai",
+  "observations": [
+    {
+      "at_utc": "2026-10-30T02:11:28Z",
+      "coin_id": "quack-ai",
+      "symbol": "Q",
+      "venue": "Bitget",
+      "market": "QUSDT",
+      "instrument_type": "SPOT",
+      "quote": "USDT",
+      "identity_status": "SYMBOL_SPOT_CONFIRMED_CONTRACT_EXTERNAL",
+      "candles": {
+        "last_closed_hour_utc": "2026-10-30T01:00:00Z",
+        "close_usdt": 0.0473318,
+        "change_close_20h_pct": -21.36308,
+        "last_hour_volume_q": 4730040.6,
+        "last_hour_quote_volume_usdt": 225800.817472,
+        "median_prior_20h_volume_q": 4378734.05,
+        "last_21_bars_contiguous": true
+      },
+      "book": {
+        "best_bid_usdt": 0.0458943,
+        "best_ask_usdt": 0.0459584,
+        "spread_bps": 13.95713,
+        "book_timestamp_utc": "2026-10-30T02:11:28Z",
+        "book_age_seconds": 0,
+        "bid_top20_notional_usdt": 4479.8145,
+        "ask_top20_notional_usdt": 6874.8791
+      },
+      "source": "Bitget v3 public Spot",
+      "paper_only": true,
+      "executed_order": false
+    }
+  ]
+}
