@@ -8,6 +8,13 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_coverage_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union.py'
       - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_missing_identities.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_missing_identities_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-venue-audit.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/wbt_private_status.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
@@ -19,6 +26,13 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_coverage_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union.py'
       - 'public/agent_crypto_erith_ia/tools/audit_vault_source_union_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_missing_identities.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_vault_missing_identities_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-venue-audit.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/wbt_private_status.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
@@ -61,6 +75,20 @@ jobs:
           print("TOP250 READONLY VERIFIED INDEX UNION",json.dumps(s,sort_keys=True))
           print("NEAR TWELVE MONTHS",json.dumps(j["near_verified_12_months"],ensure_ascii=False))
           PY
+      - name: Check uncovered source IDs without approving unsafe ticker matches
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/audit_vault_missing_identities_test.py
+          python public/agent_crypto_erith_ia/tools/audit_vault_missing_identities.py \
+            --output "$GITHUB_WORKSPACE/historical-top250-uncovered-identity.json"
+          python - <<'PY'
+          import json
+          j=json.load(open("historical-top250-uncovered-identity.json"))
+          assert j["uncovered_identities"] == sum(j["categories"].values())
+          assert not any(r["automatic_collection_approved"] for r in j["records"])
+          print("TOP250 UNQUALIFIED SPOT EVIDENCE", json.dumps(j["categories"],sort_keys=True))
+          print("MARKET EVIDENCE IS NEVER SOURCE OHLCV")
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: historical-top50-coverage-audit
@@ -68,4 +96,5 @@ jobs:
             historical-top50-coverage.json
             historical-top50-unarchived.json
             historical-top250-source-union.json
+            historical-top250-uncovered-identity.json
           retention-days: 30
