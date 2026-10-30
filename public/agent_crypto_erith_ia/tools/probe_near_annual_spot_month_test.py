@@ -45,7 +45,7 @@ class NearAnnualSourceTests(unittest.TestCase):
         with patch.object(bulk, "fetch_asset",
                           side_effect=AssertionError("Offline plan used network")):
             value = probe.run(probe=False)
-        self.assertFalse(value["source_month_is_verified"])
+        self.assertFalse(value["all_requested_source_months_verified"])
         self.assertEqual(value["verified_assets"], 0)
         self.assertEqual(value["new_releases"], 0)
         self.assertEqual(value["new_catalog_rows"], 0)
@@ -69,7 +69,7 @@ class NearAnnualSourceTests(unittest.TestCase):
             result = probe.run(probe=True)
         self.assertEqual(result["verified_assets"], 3)
         self.assertEqual(result["verified_original_minutes"], 3 * expected)
-        self.assertFalse(result["source_month_is_verified"])
+        self.assertTrue(result["all_requested_source_months_verified"])
         self.assertEqual(result["new_releases"], 0)
         self.assertEqual(result["new_catalog_rows"], 0)
 
