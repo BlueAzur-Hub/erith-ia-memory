@@ -54,7 +54,7 @@ test('Every full-window scanner acquisition is checked before being cached',()=>
  const end=app.indexOf('\nconst ATLAS_SCANNER_COLLECTOR_SCHEMA',start);
  assert(start>0&&end>start);
  const route=app.slice(start,end);
- const checks=(route.match(/atlasScannerSeriesCoversWindow\(result, tx\)\.ok/g)||[]).length;
- assert.equal(checks,3,'CoinGecko, Bridge and Binance each have a full-window quality gate');
+ const checks=(route.match(/atlasScannerSeriesCoversWindow\(result,\s*tx\)/g)||[]).length;
+ assert.equal(checks,7,'USD, CoinGecko EUR direct and hourly fallback, Bridge and Binance each verify coverage');
  assert(route.indexOf('fetchCoinGeckoChartDirect(')<route.indexOf('atlasFetchBridgeHistory('));
 });

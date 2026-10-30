@@ -23,6 +23,11 @@ function context({fetch,mode="USD"}={}) {
       usdStorageKey:(coin,period,family)=>`${coin.id}:USD:${family}:${period}`,
       fetchCoinGeckoUsd:async (...args)=>{calls++;return fetch(...args);}
     },
+    atlasHistoryQuoteProvenance:result=>({
+      quoteCurrency:result.quoteCurrency,
+      historySourceFamily:"coingecko",
+      historyInstrument:"market_chart?vs_currency=usd"
+    }),
     atlasReadLocalChartStore:()=>cache,
     atlasWriteLocalChartStore:()=>{stored++;},
     atlasNormalizeChartPayload:({prices})=>prices,
@@ -50,7 +55,8 @@ test("24h USD scanner reads Solo's verified cache without calling EUR family",()
   assert.equal(c.atlasScannerNativeUsdRequested(tx),true);
   assert.equal(c.atlasScannerNativeUsdStored(coin,1).quoteCurrency,"USD");
   assert.equal(c.atlasScannerStoredHistory(coin,1,tx).series.length,2);
-  assert.equal(c.atlasScannerNativeUsdRequested({period:7}),false);
+  assert.equal(c.atlasScannerNativeUsdRequested({period:7}),true);
+  assert.equal(c.atlasScannerNativeUsdRequested({period:3}),false);
   cache[key]={series,currency:"EUR",quoteCurrency:"EUR",savedAt:Date.now()};
   assert.equal(c.atlasScannerNativeUsdStored(coin,1),null,"EUR cache cannot masquerade as USD");
 });

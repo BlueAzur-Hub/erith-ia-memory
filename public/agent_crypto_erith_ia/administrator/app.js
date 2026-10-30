@@ -12699,6 +12699,18 @@ async function renderComparisonAnalystPanel(options = {}) {
     return renderAnalystPanel({ ...options, forceSingle: true });
   }
 
+  // 40.6.712 — do not restart an identical in-flight comparison.
+  const atlasComparisonRequestKey712 = JSON.stringify([
+    String(state.dataBroker?.comparison?.preset || "manual"),
+    coins.map(coin => coin.id), Number(state.chartPeriodDays || 1),
+    atlasRequestedHistoricalCurrency()
+  ]);
+  if (state.chartEngineV2?.loading
+      && state.chartEngineV2.activeRequestKey === atlasComparisonRequestKey712
+      && state.chartEngineV2.controller
+      && !state.chartEngineV2.controller.signal.aborted) return;
+  const atlasComparisonStartedAt712 = Date.now();
+  const atlasComparisonDurations712 = new Array(coins.length);
   atlasClearChartRetryTimer();
   atlasClearComparisonCompletionTimer();
 
@@ -12711,6 +12723,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   const controller = new AbortController();
   state.chartEngineV2.controller = controller;
   state.chartEngineV2.loading = true;
+  state.chartEngineV2.activeRequestKey = atlasComparisonRequestKey712;
 
   const period = Number(state.chartPeriodDays || 1);
   const periodLabel = atlasChartPeriodLabel(period);
@@ -12810,6 +12823,7 @@ async function renderComparisonAnalystPanel(options = {}) {
     }
 
     let fetchedItem;
+    const atlasCoinStart712 = Date.now();
     try {
       fetchedItem = canonicalPresetRequest === "rank-5" && requestedCurrency === "USD" && period === 365
         ? await atlasFetchCanonicalAnnualUsdHistory(coin, period, {signal: controller.signal})
@@ -12827,6 +12841,12 @@ async function renderComparisonAnalystPanel(options = {}) {
       };
     }
 
+    atlasComparisonDurations712[index] = {
+      coinId: coin.id, elapsedMs: Math.max(0, Date.now() - atlasCoinStart712),
+      source: String(fetchedItem?.source || "unavailable").slice(0, 96),
+      attempts: Math.max(0, Number(fetchedItem?.attempts || 0)),
+      receivedHistory: !!(fetchedItem?.result?.series?.length && !fetchedItem?.result?.blocked)
+    };
     fetched[index] = fetchedItem;
     state.dataBroker.comparison.pendingIds =
       (state.dataBroker.comparison.pendingIds || [])
@@ -12934,7 +12954,11 @@ async function renderComparisonAnalystPanel(options = {}) {
         entries: drawnEntries,
         periodDays: period,
         sourceMode: "comparison-base100",
-        source: atlasComparisonSourceDescription(drawnEntries)
+        source: atlasComparisonSourceDescription(drawnEntries),
+         diagnostics712: {
+           totalAcquisitionMs: Math.max(0, Date.now() - atlasComparisonStartedAt712),
+           assetAcquisitions: atlasComparisonDurations712.filter(Boolean)
+         }
       };
       const retryCount = fetched.reduce(
         (sum, item) => sum + Math.max(0, Number(item?.attempts || 0) - 1),
@@ -12951,9 +12975,9 @@ async function renderComparisonAnalystPanel(options = {}) {
           ? new Date(latestTimestamp).toISOString()
           : null,
         pointCount,
-        latencyMs: null,
-        retryCount,
-        contextKey: chartKey,
+        latencyMs: Math.max(0, Date.now() - atlasComparisonStartedAt712),
+         retryCount,
+         contextKey: chartKey,
         result: comparisonResult,
         error: finalUnavailableIds.length
           ? `${finalUnavailableIds.length} série(s) non affichable(s)`
@@ -13067,6 +13091,8 @@ async function renderComparisonAnalystPanel(options = {}) {
   atlasPatchMarketSelectionState();
   atlasChartSetPeriodButtons(period, false);
   state.chartEngineV2.loading = false;
+  if (state.chartEngineV2.activeRequestKey === atlasComparisonRequestKey712)
+    state.chartEngineV2.activeRequestKey = null;
   atlasRenderBrokerStrip();
   renderMultiHorizon();
   renderAtlasMathCore();
@@ -16066,7 +16092,9 @@ function atlasScannerRestoreSnapshot(snapshot) {
 }
 
 function atlasScannerCommit(tx, finalEntries, rejected) {
-  if (!atlasScannerCurrent(tx) || !Array.isArray(finalEntries) || !finalEntries.length) {
+  // 40.6.712 — only five native histories from the exact frozen Market set.
+  if (!atlasScannerCurrent(tx) || !Array.isArray(finalEntries)
+      || finalEntries.length !== ATLAS_SCANNER_TARGET) {
     return false;
   }
 
@@ -16080,7 +16108,8 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   // the frozen Top 5 selection, in the same relative Market order.
   const canonicalPositions = new Map(tx.candidateIds.map((id, index) => [id, index]));
   const positions = prevalidated.map(entry => canonicalPositions.get(entry.coin?.id));
-  if (!prevalidated.length || prevalidated.length > ATLAS_SCANNER_TARGET
+  if (prevalidated.length !== ATLAS_SCANNER_TARGET
+      || prevalidated.some((entry, index) => entry.coin?.id !== tx.candidateIds[index])
       || positions.some((position, index) => position === undefined
         || (index > 0 && position <= positions[index - 1]))) return false;
 
@@ -16577,7 +16606,8 @@ async function atlasScannerRun(tx) {
           tx.windowEnd
     );
 
-    if (finalEntries.length > 0) {
+    if (finalEntries.length === ATLAS_SCANNER_TARGET
+        && finalEntries.every((entry, index) => entry.coin?.id === tx.candidateIds[index])) {
       return atlasScannerCommit(tx, finalEntries, rejected);
     }
 
