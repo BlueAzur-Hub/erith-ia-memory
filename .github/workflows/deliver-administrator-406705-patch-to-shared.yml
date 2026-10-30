@@ -1,0 +1,76 @@
+name: Deliver Administrator 40.6.705 verified patch to shared folder
+on:
+  push:
+    branches:
+      - test/administrator-40.6.705-recovery
+    paths:
+      - .github/workflows/deliver-administrator-406705-patch-to-shared.yml
+  workflow_dispatch:
+jobs:
+  publish-patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Verify targeted regression and bundle before publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs
+          cd coordination/inter_ai_dialogues/agent_crypto
+          sha256sum -c AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip.sha256
+          python3 - <<'PY'
+          import zipfile,json,pathlib,hashlib
+          name="AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip"
+          expected=[
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/app.js",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js",
+            "public/agent_crypto_erith_ia/tools/test_administrator_canonical_top5_integrity_406650.cjs",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_RECOVERY_HANDOFF.md",
+          ]
+          with zipfile.ZipFile(name) as z:
+            assert z.testzip() is None,"corrupt zip"
+            assert sorted(z.namelist())==sorted(expected),z.namelist()
+            build=json.loads(z.read("public/agent_crypto_erith_ia/administrator/build.json"))
+            assert build["build"]=="40.6.705" and build["published"] is False
+            for file in expected:
+              b=z.read(file)
+              source=pathlib.Path("../../../")/file
+              assert source.is_file(),file
+              assert hashlib.sha256(b).digest()==hashlib.sha256(source.read_bytes()).digest(),file+" differs from source branch"
+          print("Verified exact 6 files and build metadata:",pathlib.Path(name).stat().st_size,"bytes")
+          PY
+      - name: Publish only ZIP and SHA into main shared directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git worktree add --detach /tmp/agent-crypto-406705-main origin/main
+          src="$GITHUB_WORKSPACE/coordination/inter_ai_dialogues/agent_crypto"
+          dst="/tmp/agent-crypto-406705-main/coordination/inter_ai_dialogues/agent_crypto"
+          mkdir -p "$dst"
+          cp "$src/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip" "$dst/"
+          cp "$src/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip.sha256" "$dst/"
+          cd /tmp/agent-crypto-406705-main
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_CANONICAL_RECOVERY_6_FILES.zip*
+          git commit -m "Archive Administrator 40.6.705 six-file verified patch"
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "PUBLISHED TO MAIN SHARED FOLDER"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Unable to push to main" >&2
+          exit 1
