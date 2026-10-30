@@ -1,4 +1,4 @@
-name: Archive Administrator current presentation delivery
+name: Package Administrator current release
 on:
   push:
     branches: [main]
@@ -6,58 +6,72 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/tools/test_analysis_legacy_406649.cjs'
+      - 'public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs'
       - '.github/workflows/agent-crypto-administrator-package.yml'
   workflow_dispatch:
 permissions:
   contents: write
 concurrency:
-  group: administrator-legacy-649-release
+  group: administrator-release-package
   cancel-in-progress: false
 jobs:
   verify-and-package:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Validate JavaScript and legacy Analyse renderer
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Administrator source and scanner Bridge contract
         run: |
           node --check public/agent_crypto_erith_ia/administrator/app.js
-          node public/agent_crypto_erith_ia/tools/test_analysis_legacy_406649.cjs
-      - name: Produce release ZIP and SHA-256
+          node --test public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_canonical_top5_integrity.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_network_latency.cjs
+      - name: Produce versioned release archive and SHA-256
         shell: bash
         run: |
           python3 - <<'PY'
-          import pathlib,json,zipfile,hashlib
-          root=pathlib.Path('.')
-          base=root/'public/agent_crypto_erith_ia/administrator'
-          version=json.loads((base/'build.json').read_text(encoding='utf-8'))['build']
-          if version!='40.6.649': raise SystemExit('Wrong active build: '+version)
+          from pathlib import Path
+          import json, hashlib, zipfile
+          root=Path('.')
+          app=root/'public/agent_crypto_erith_ia/administrator'
+          tools=root/'public/agent_crypto_erith_ia/tools'
           shared=root/'coordination/inter_ai_dialogues/agent_crypto'
-          name=f'AGENT_CRYPTO_ADMINISTRATOR_{version}_ANALYSE_LEGACY_RESTORE_5_FILES.zip'
-          paths=[base/'app.js',base/'index.html',base/'build.json',
-            root/'public/agent_crypto_erith_ia/tools/test_analysis_legacy_406649.cjs',
-            shared/f'AGENT_CRYPTO_ADMINISTRATOR_{version}_ANALYSE_LEGACY_RESTORE_HANDOFF.md']
-          with zipfile.ZipFile(shared/name,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
-            for p in paths:z.write(p,arcname=p.name)
-          with zipfile.ZipFile(shared/name) as z:
-            bad=z.testzip()
-            if bad: raise SystemExit('ZIP integrity failure: '+bad)
-          digest=hashlib.sha256((shared/name).read_bytes()).hexdigest()
+          version=json.loads((app/'build.json').read_text(encoding='utf-8'))['build']
+          if version != '40.6.713': raise SystemExit('Unexpected build: '+version)
+          name='AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_7_FILES.zip'
+          paths=[app/'app.js',app/'index.html',app/'build.json',
+            tools/'verify_administrator_712_atomic_and_dedup.cjs',
+            tools/'verify_administrator_canonical_top5_integrity.cjs',
+            tools/'verify_administrator_bridge_scanner_auth.cjs',
+            shared/'AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_REPORT.md']
+          manifest=''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.as_posix()+'\n' for p in paths)
+          out=shared/name
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for p in paths:z.write(p,p.as_posix())
+            z.writestr('SHA256SUMS.txt',manifest)
+          with zipfile.ZipFile(out) as z:
+            if z.testzip(): raise SystemExit('ZIP CRC failure')
+          digest=hashlib.sha256(out.read_bytes()).hexdigest()
           (shared/(name+'.sha256')).write_text(digest+'  '+name+'\n',encoding='utf-8')
           print(name,digest)
           PY
-      - name: Commit release ZIP and checksum
+      - name: Save ZIP and checksum to shared repository on main
         shell: bash
         run: |
           set -euo pipefail
+          dest=coordination/inter_ai_dialogues/agent_crypto
+          name=AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_7_FILES.zip
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.649_ANALYSE_LEGACY_RESTORE_5_FILES.zip*
+          git add "$dest/$name" "$dest/$name.sha256"
           git diff --cached --quiet && exit 0
-          git commit -m "Archive Administrator 40.6.649 legacy Analyse restoration with SHA256"
+          git commit -m "Archive Administrator 40.6.713 scanner Bridge release with SHA256"
           for i in 1 2 3; do
             git pull --rebase origin main
             if git push origin HEAD:main; then exit 0; fi
