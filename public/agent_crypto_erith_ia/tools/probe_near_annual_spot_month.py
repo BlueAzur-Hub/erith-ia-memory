@@ -85,7 +85,7 @@ def run(source_path=SOURCE, probe=False):
         "expected_native_1m_per_full_month": expect,
         "first_open_ms": start,
         "end_exclusive_ms": end,
-        "source_month_is_verified": False,
+        "all_requested_source_months_verified": False,
         "new_releases": 0,
         "new_catalog_rows": 0,
         "automatic_orders": False,
@@ -115,6 +115,7 @@ def run(source_path=SOURCE, probe=False):
                 "status": "NOT_YET_PROBED"})
     report["verified_assets"] = sum(x.get("status") == "verified"
                                      for x in report["assets"])
+    report["all_requested_source_months_verified"] = (probe and report["verified_assets"] == len(owners))
     report["verified_original_minutes"] = sum(x.get("candles", 0)
                                                 for x in report["assets"])
     require(source_path.read_bytes() == original, "Source index mutated")
