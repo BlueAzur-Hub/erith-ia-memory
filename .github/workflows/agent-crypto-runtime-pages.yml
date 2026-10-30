@@ -1,4 +1,7 @@
 # Market data on main MUST NOT redeploy this static frontend.
+# Agent-Crypto 40.6.710: explicit Pages republish after validated GitHub Actions bot release.
+# GitHub Actions bot commits do not ordinarily emit a new workflow-triggering push.
+# Keep the release checked out from main; avoid changes to application or vault data.
 # Pages Source is configured as GitHub Actions by the site owner.
 # Publish only frontend-code changes on main. Data-only commits never trigger Pages.
 name: Agent Crypto - lightweight multisite Pages
