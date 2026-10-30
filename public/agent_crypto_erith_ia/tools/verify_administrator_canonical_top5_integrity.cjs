@@ -1,4 +1,4 @@
-/* Administrator 40.6.708 static+semantic regression tests. Run with Node.js. */
+/* Administrator current static+semantic regression tests. Run with Node.js. */
 "use strict";
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -34,14 +34,14 @@ assert.match(app,/historique 24 h discontinu : trou temporel détecté/);
 assert.match(app,/pic de prix non qualifié/);
 assert.match(app,/point\?\.raw\?\.atlasLiveEndpoint === true/);
 assert.match(app,/showTargetIdentity = displayedPreset === "solo"/);
-assert.match(app,/length: Math.min\(3, coins.length\)/);
+assert.match(app,/length: annualUsdBasket \? 1 : Math\.min\(3, coins\.length\)/);
 assert.match(app,/comparison.lastDirectRequestAt = nextSlot/);
 assert.match(app,/fetched\[index\] = fetchedItem/);
 if (usd !== null) assert.doesNotMatch(usd,/wrap\("atlasChartStorageKey"/);
 if (usd !== null) assert.match(usd,/const change24h=c\.change24hUsd/);
 if (usd !== null) assert.doesNotMatch(usd,/const price=c\.priceUsd[^\n]*change24h=c\.change24h\b/);
 const build=JSON.parse(fs.readFileSync(path.join(root,"build.json"),"utf8"));
-assert.equal(build.build,"40.6.708");
+assert.equal(build.build,"40.6.709");
 assert.equal(build.published,false);
 assert.match(app,/function atlasVerifiedReferenceHistoryCache\(/);
 assert.match(app,/const cachedEur = atlasVerifiedReferenceHistoryCache\(coin, period, "EUR"\)/);

@@ -12529,6 +12529,82 @@ async function atlasRespectComparisonRequestSpacing(signal = null, period = Numb
   if (nextSlot > now) await atlasWaitWithSignal(nextSlot - now, signal);
 }
 
+// Acquire annual Top 5 USD from its NATIVE USD owner. CoinGecko annual
+// requests must not race against one another. A verified USD-only archive may
+// be reused without a network request; EUR, USDT and USDC never qualify.
+function atlasAnnualUsdHistoryCandidate(coin, period, allowDelayed = false) {
+  if (Number(period) !== 365 || !coin?.id) return null;
+  const record = atlasGetStoredChartResult(coin, period, "coingecko", "USD");
+  if (!record || record.blocked === true || record.integrity?.ok !== true
+      || atlasHistoricalDisplayQuote(record).currency !== "USD") return null;
+  if (!atlasChartNeedsRefresh(record, period)) return record;
+  // A delayed annual archive is still usable only if its LAST native sample
+  // is recent and actually spans the requested year. Never trust savedAt alone.
+  const last = Number(record.integrity.metrics?.lastTimestamp || 0);
+  const first = Number(record.integrity.metrics?.firstTimestamp || 0);
+  if (!allowDelayed || !(last > first) || last > Date.now() + 300000
+      || Date.now() - last > 24 * 3600000
+      || (last - first) < atlasChartRules(period).minCoverageHours * 3600000)
+    return null;
+  return record;
+}
+
+function atlasAnnualUsdFailureLabel(result) {
+  const reason = String(result?.technicalReason || result?.reason || "");
+  const http = reason.match(/\bHTTP\s*(\d{3})\b/i);
+  if (http) return `HTTP ${http[1]}`;
+  if (/d[eé]lai|timeout|timed out/i.test(reason)) return "délai réseau";
+  if (/rate.limit|too many|quota/i.test(reason)) return "limite fournisseur";
+  if (/s[eé]rie|couverture|int[eé]grit[eé]/i.test(reason)) return "intégrité historique";
+  if (/network|fetch|r[eé]seau|failed/i.test(reason)) return "réseau indisponible";
+  return "source USD indisponible";
+}
+
+async function atlasFetchCanonicalAnnualUsdHistory(coin, period, options = {}) {
+  const signal = options.signal || null;
+  const cached = atlasAnnualUsdHistoryCandidate(coin, period);
+  if (cached) return { coin, result: cached, attempts: 0, source: "annual-usd-certified-cache" };
+  let attempts = 0;
+  let failureLabel = "source USD indisponible";
+  // Only one retry, only for bounded network conditions (429/5xx/timeout).
+  // Keep calls paced and cancellable. Never fetch a different currency.
+  for (let retry = 0; retry < 2; retry += 1) {
+    if (signal?.aborted) throw atlasChartAbortError();
+    if (retry) await atlasWaitWithSignal(6500, signal);
+    await atlasRespectComparisonRequestSpacing(signal, period);
+    attempts += 1;
+    try {
+      const native = globalThis.AgentCryptoGraphNativeUsd406520?.fetchCoinGeckoUsd;
+      if (typeof native !== "function") throw new Error("source USD native non installée");
+      const result = await native(coin, period, {
+        signal, timeoutMs: Math.min(16000, ATLAS_COMPARISON_DIRECT_TIMEOUT_MS)
+      });
+      if (result?.blocked || result?.integrity?.ok !== true
+          || atlasHistoricalDisplayQuote(result).currency !== "USD")
+        throw new Error("intégrité historique USD non certifiée");
+      atlasStoreChartResult(coin, period, result, "coingecko");
+      return { coin, result, attempts, source: "annual-usd-native-direct" };
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || signal?.aborted) throw atlasChartAbortError();
+      failureLabel = atlasAnnualUsdFailureLabel({technicalReason: String(error?.message || error)});
+      if (!atlasComparisonRetryableError(error)) break;
+    }
+  }
+  // Source explicitly marked as delayed; this is NOT a refreshed observation.
+  const delayed = atlasAnnualUsdHistoryCandidate(coin, period, true);
+  if (delayed) return {
+    coin, result: { ...delayed, sourceMode: "browser-cache",
+      refreshWarning: `Historique annuel USD certifié, différé · ${failureLabel}` },
+    attempts, source: "annual-usd-delayed-certified-cache"
+  };
+  return {coin, result: {
+    blocked: true, series: [], currency: "USD", quoteCurrency: "USD",
+    sourceFamily: "coingecko", sourceMode: "coingecko-direct",
+    reason: `Historique annuel USD absent pour ${coin.symbol} · ${failureLabel}`,
+    technicalReason: failureLabel
+  }, attempts, source: "annual-usd-unavailable"};
+}
+
 function atlasRenderComparisonDetail(entries, period) {
   if (atlasExternalChartActive()) return;
   const coins = entries.map(entry => entry.coin);
@@ -12720,11 +12796,9 @@ async function renderComparisonAnalystPanel(options = {}) {
 
     let fetchedItem;
     try {
-      fetchedItem = await atlasFetchComparisonSeriesResilient(
-        coin,
-        period,
-        { signal: controller.signal }
-      );
+      fetchedItem = canonicalPresetRequest === "rank-5" && requestedCurrency === "USD" && period === 365
+        ? await atlasFetchCanonicalAnnualUsdHistory(coin, period, {signal: controller.signal})
+        : await atlasFetchComparisonSeriesResilient(coin, period, {signal: controller.signal});
     } catch (error) {
       if (atlasComparisonAbortError(error)) return;
       fetchedItem = {
@@ -12765,10 +12839,12 @@ async function renderComparisonAnalystPanel(options = {}) {
     atlasPatchMarketSelectionState();
     }
   };
-  // At most three concurrent series. Source calls are still individually
-  // spaced and every result is restored in the canonical basket order.
+  // For native annual USD, serialize acquisition to respect provider limits.
+  // All other modes retain the same three-worker behavior as the .708.
+  const annualUsdBasket = canonicalPresetRequest === "rank-5"
+    && requestedCurrency === "USD" && period === 365;
   await Promise.all(Array.from(
-    { length: Math.min(3, coins.length) }, () => worker()
+    { length: annualUsdBasket ? 1 : Math.min(3, coins.length) }, () => worker()
   ));
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted
@@ -12935,8 +13011,17 @@ async function renderComparisonAnalystPanel(options = {}) {
       if (retainedAfterFailure) {
         atlasShowChartRefresh(els.mainChart,
           `${retainedAfterFailure.requested} indisponible · historique ${retainedAfterFailure.visible} conservé · aucune conversion`);
+        const usdAnnualReasons = annualUsdBasket
+          ? [
+              ...fetched.filter(item => item?.result?.blocked).map(item =>
+                `${String(item.coin?.symbol || "?").toUpperCase()} : ${atlasAnnualUsdFailureLabel(item.result)}`),
+              ...alignmentFailures.map(item => `${String(item.coin?.symbol || "?").toUpperCase()} : fenêtre non alignable`)
+            ]
+          : [];
         atlasSetChartCaptionText(
-          `Historique ${retainedAfterFailure.visible} conservé · ${retainedAfterFailure.requested} demandé, acquisition indisponible · données non converties. Réessayer le Top 5.`);
+          `Historique ${retainedAfterFailure.visible} conservé · ${retainedAfterFailure.requested} demandé, acquisition indisponible · données non converties.`
+          + (usdAnnualReasons.length ? ` · ${usdAnnualReasons.join(" ; ")}` : "")
+          + ` · Réessayer le Top 5.`);
       } else {
         atlasHideChartRefresh();
       }
