@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-10-29",
+  "latest_archive_day_utc": "2026-10-30",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,40 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "monero",
-      "symbol": "XMR",
-      "rank": 15,
-      "observed_at": "2026-08-31T23:52:40.991Z",
-      "price_usd": 517.4364015342687,
-      "change24h_pct": 7.13498,
-      "change7d_pct": 17.4,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-07",
-      "observed_followup_at": "2026-09-07T23:31:44.543Z",
-      "observed_followup_price_usd": 515.794409520738,
-      "followup_change_pct": -0.32,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-08-31.jsonl",
-      "followup_source_path": "data/history/2026-09-07.jsonl"
-    },
-    {
-      "id": "hyperliquid",
-      "symbol": "HYPE",
-      "rank": 10,
-      "observed_at": "2026-08-31T23:52:40.991Z",
-      "price_usd": 84.10026367808798,
-      "change24h_pct": 5.6168,
-      "change7d_pct": 8.4,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-07",
-      "observed_followup_at": "2026-09-07T23:31:44.543Z",
-      "observed_followup_price_usd": 85.14165944553477,
-      "followup_change_pct": 1.24,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-08-31.jsonl",
-      "followup_source_path": "data/history/2026-09-07.jsonl"
-    },
     {
       "id": "uniswap",
       "symbol": "UNI",
@@ -2563,6 +2529,23 @@
       "followup_change_pct": null,
       "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
       "source_path": "data/history/2026-10-29.jsonl",
+      "followup_source_path": null
+    },
+    {
+      "id": "pepe",
+      "symbol": "PEPE",
+      "rank": 46,
+      "observed_at": "2026-10-30T14:14:21.504Z",
+      "price_usd": 0.0000051203817042055595,
+      "change24h_pct": 5.38964,
+      "change7d_pct": 1.1274,
+      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+      "future_7d_date": "2026-11-06",
+      "observed_followup_at": null,
+      "observed_followup_price_usd": null,
+      "followup_change_pct": null,
+      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "source_path": "data/history/2026-10-30.jsonl",
       "followup_source_path": null
     }
   ]
