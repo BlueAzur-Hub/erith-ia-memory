@@ -1,0 +1,58 @@
+name: Administrator 40.6.712 candidate verification
+on:
+  push:
+    branches:
+      - candidate/administrator-40.6.712
+    paths:
+      - .github/workflows/administrator_406712_candidate_verify.yml
+      - public/agent_crypto_erith_ia/administrator/app.js
+      - public/agent_crypto_erith_ia/administrator/index.html
+      - public/agent_crypto_erith_ia/administrator/build.json
+      - public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --check public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs
+      - name: Validate 40.6.712 transaction and scanner gates
+        run: node public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs
+      - name: Validate preserved Top 5 and 40.6.711 acquisition tests
+        run: |
+          node public/agent_crypto_erith_ia/tools/verify_administrator_canonical_top5_integrity.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_network_latency.cjs
+      - name: Package full candidate patch
+        shell: bash
+        run: |
+          mkdir -p candidate-patch/public/agent_crypto_erith_ia/administrator
+          mkdir -p candidate-patch/public/agent_crypto_erith_ia/tools
+          cp public/agent_crypto_erith_ia/administrator/app.js candidate-patch/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index.html candidate-patch/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json candidate-patch/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs candidate-patch/public/agent_crypto_erith_ia/tools/
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root=Path("candidate-patch")
+          lines=[]
+          for p in sorted(root.rglob("*")):
+              if p.is_file(): lines.append(hashlib.sha256(p.read_bytes()).hexdigest()+"  "+p.relative_to(root).as_posix())
+          (root/"SHA256SUMS.txt").write_text("\n".join(lines)+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.712_ATOMIC_SCANNER_COMPARISON_DEDUP_4_FILES
+          path: candidate-patch/
+          if-no-files-found: error
+          retention-days: 30
