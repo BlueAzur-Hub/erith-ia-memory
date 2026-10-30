@@ -63,15 +63,18 @@ jobs:
           out.with_name(out.name+'.sha256').write_text(sha+'  '+out.name+'\n')
           print('ZIP:',out,'files:',len(files),'bytes:',out.stat().st_size,'SHA256:',sha)
           PY
-      - name: Publish verified full archive only if within GitHub file size limit
+      - name: Verify SHA-256
         run: |
-          ARCHIVE=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip
-          test "$(stat -c%s "$ARCHIVE")" -lt 95000000 || { echo "ZIP too large for GitHub repository; archive remains available only as Actions artifact after upload step"; exit 1; }
           cd coordination/inter_ai_dialogues/agent_crypto
           sha256sum -c AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip.sha256
-          cd ../../..
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$ARCHIVE" "$ARCHIVE.sha256" "$ARCHIVE.audit.json"
-          git commit -m "Archive verified Administrator 40.6.705 complete local tree"
-          git push origin HEAD:test/administrator-40.6.705-recovery
+      - name: Upload complete local archive and proof as GitHub Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.zip.sha256
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.705_COMPLETE_LOCAL_FULL_TREE.audit.json
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
