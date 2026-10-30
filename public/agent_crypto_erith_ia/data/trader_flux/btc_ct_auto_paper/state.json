@@ -15,28 +15,6 @@
   "events": [
     {
       "asset": "BTC",
-      "at": "2026-10-16T16:00:00Z",
-      "executed_order": false,
-      "instrument": "BTCUSDT",
-      "paper": true,
-      "quote": "USDT",
-      "reason": "Data gap: no reconstructed order or entry",
-      "type": "GAP_PAUSE",
-      "venue": "Binance Spot"
-    },
-    {
-      "asset": "CT",
-      "at": "2026-10-16T16:00:00Z",
-      "executed_order": false,
-      "instrument": "CT-USDT",
-      "paper": true,
-      "quote": "USDT",
-      "reason": "Data gap: no reconstructed order or entry",
-      "type": "GAP_PAUSE",
-      "venue": "OKX Spot"
-    },
-    {
-      "asset": "BTC",
       "at": "2026-10-16T20:00:00Z",
       "executed_order": false,
       "instrument": "BTCUSDT",
@@ -1663,6 +1641,28 @@
       "reason": "Data gap: no reconstructed order or entry",
       "type": "GAP_PAUSE",
       "venue": "OKX Spot"
+    },
+    {
+      "asset": "BTC",
+      "at": "2026-10-30T16:00:00Z",
+      "executed_order": false,
+      "instrument": "BTCUSDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "Data gap: no reconstructed order or entry",
+      "type": "GAP_PAUSE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset": "CT",
+      "at": "2026-10-30T16:00:00Z",
+      "executed_order": false,
+      "instrument": "CT-USDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "Data gap: no reconstructed order or entry",
+      "type": "GAP_PAUSE",
+      "venue": "OKX Spot"
     }
   ],
   "markets": {
@@ -1670,26 +1670,26 @@
       "closed": 0,
       "decision": "PAUSE",
       "error": null,
-      "last_hour": 1793354400000,
-      "last_price_usdt": 77700.0,
+      "last_hour": 1793376000000,
+      "last_price_usdt": 77622.0,
       "open": null,
       "pending": null,
       "pnl_usdt": 0.0,
       "reason": "Data gap: no reconstructed order or entry",
-      "source_time": "2026-10-30T10:00:00Z",
+      "source_time": "2026-10-30T16:00:00Z",
       "wins": 0
     },
     "CT": {
       "closed": 0,
       "decision": "PAUSE",
       "error": null,
-      "last_hour": 1793354400000,
-      "last_price_usdt": 0.13587,
+      "last_hour": 1793376000000,
+      "last_price_usdt": 0.1373,
       "open": null,
       "pending": null,
       "pnl_usdt": 0.0,
       "reason": "Data gap: no reconstructed order or entry",
-      "source_time": "2026-10-30T10:00:00Z",
+      "source_time": "2026-10-30T16:00:00Z",
       "wins": 0
     }
   },
