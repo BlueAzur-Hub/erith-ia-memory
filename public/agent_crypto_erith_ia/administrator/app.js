@@ -4754,14 +4754,30 @@ function atlasChartContextStatus() {
   };
 }
 
+/* 40.6.706 — A named reference basket is an identity contract, not a
+   remembered snapshot of five changing market-cap slots.  Keep manual and
+   scanner selections independent.  Used by every legacy and V7 restorer. */
+function atlasCanonicalPresetSelection406706(preset, ids, selected = null) {
+  const kind = String(preset || "");
+  if (kind !== "rank-5" && kind !== "rank-3") {
+    return { ids: Array.isArray(ids) ? [...ids] : [], selected };
+  }
+  const canonical = atlasCuratedTopIds(kind === "rank-3" ? 3 : 5);
+  return { ids: canonical, selected: canonical[0] };
+}
+
 function atlasComparisonIds() {
   const validIds = new Set((state.coins || []).map(coin => coin.id));
+  const preset = String(state.dataBroker?.comparison?.preset || "");
   const raw = Array.isArray(state.dataBroker?.comparison?.ids) ? state.dataBroker.comparison.ids : [];
+  const locked = atlasCanonicalPresetSelection406706(preset, raw, state.selectedCoinId);
   const ids = [];
-  for (const id of raw) {
+  for (const id of locked.ids) {
     if (validIds.has(id) && !ids.includes(id)) ids.push(id);
   }
   if (state.graphSelectionCleared && !ids.length) return [];
+  // The selected market must never inject USDT or change the order of a locked preset.
+  if (preset === "rank-5" || preset === "rank-3") return ids;
   const primary = validIds.has(state.selectedCoinId) ? state.selectedCoinId : ids[0] || null;
   if (primary && !ids.includes(primary)) ids.unshift(primary);
   return ids.slice(0, ATLAS_COMPARISON_MAX_SERIES);
@@ -4812,8 +4828,9 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   }
   atlasClearComparisonCompletionTimer();
   const validIds = new Set((state.coins || []).map(coin => coin.id));
+  const requested = atlasCanonicalPresetSelection406706(options.preset, ids, primaryId);
   const unique = [];
-  for (const id of ids || []) {
+  for (const id of requested.ids) {
     if (validIds.has(id) && !unique.includes(id)) unique.push(id);
     if (unique.length >= ATLAS_COMPARISON_MAX_SERIES) break;
   }
@@ -4841,11 +4858,13 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   }
 
   state.graphSelectionCleared = false;
-  const primary = validIds.has(primaryId) && unique.includes(primaryId)
-    ? primaryId
-    : validIds.has(state.selectedCoinId) && unique.includes(state.selectedCoinId)
-      ? state.selectedCoinId
-      : unique[0];
+  const primary = (options.preset === "rank-5" || options.preset === "rank-3")
+    ? unique[0]
+    : validIds.has(primaryId) && unique.includes(primaryId)
+      ? primaryId
+      : validIds.has(state.selectedCoinId) && unique.includes(state.selectedCoinId)
+        ? state.selectedCoinId
+        : unique[0];
   const index = unique.indexOf(primary);
   if (index > 0) {
     unique.splice(index, 1);
@@ -12535,6 +12554,19 @@ function atlasComparisonRequiresFullSelection(preset = state.dataBroker?.compari
 async function renderComparisonAnalystPanel(options = {}) {
   if ((atlasScannerTransaction || atlasScannerQueuedRequest) && options.allowDuringScanner !== true) return;
   const coins = atlasComparisonCoins();
+  const requestedPreset406706 = String(state.dataBroker?.comparison?.preset || "");
+  const requiredIdentities406706 = requestedPreset406706 === "rank-5" ? atlasCuratedTopIds(5)
+    : requestedPreset406706 === "rank-3" ? atlasCuratedTopIds(3) : null;
+  if (requiredIdentities406706 && coins.length !== requiredIdentities406706.length) {
+    const available = new Set(coins.map(coin => coin.id));
+    const missing = requiredIdentities406706.filter(id => !available.has(id));
+    state.dataBroker.comparison.status = "blocked";
+    state.dataBroker.comparison.error = `Panier canonique non disponible : ${missing.join(", ")}`;
+    if (els.chartCaption) atlasSetChartCaptionText(
+      `${requestedPreset406706 === "rank-5" ? "Top 5" : "Top 3"} indisponible · identité(s) manquante(s) : ${missing.join(", ")}. Aucun actif de substitution.`
+    );
+    return;
+  }
   if (coins.length < 2) {
     state.dataBroker.comparison.mode = "single";
     return renderAnalystPanel({ ...options, forceSingle: true });
@@ -12602,7 +12634,9 @@ async function renderComparisonAnalystPanel(options = {}) {
   };
 
   atlasChartSetPeriodButtons(period, true);
-  setText(els.selectedAssetTitle, `Comparaison ${coins.map(coin => coin.symbol).join(" + ")}`);
+  if (!strictAtomicComparison) {
+    setText(els.selectedAssetTitle, `Comparaison ${coins.map(coin => coin.symbol).join(" + ")}`);
+  }
 
   const preservedChart = strictAtomicComparison
     ? !!state.chartEngineV2?.realChart
@@ -12721,7 +12755,11 @@ async function renderComparisonAnalystPanel(options = {}) {
   state.dataBroker.comparison.unavailableIds = unavailableIds;
   state.dataBroker.comparison.error = null;
 
-  if (normalizedEntries.length >= requiredSeriesCount) {
+  const exactCanonicalIds406706 = !requiredIdentities406706 || (
+    normalizedEntries.length === requiredIdentities406706.length
+    && normalizedEntries.every((entry, i) => entry.coin?.id === requiredIdentities406706[i])
+  );
+  if (normalizedEntries.length >= requiredSeriesCount && exactCanonicalIds406706) {
     const drawnEntries = drawComparisonChart(els.mainChart, normalizedEntries, period, chartKey);
 
     if (drawnEntries.length >= requiredSeriesCount) {
@@ -12816,7 +12854,29 @@ async function renderComparisonAnalystPanel(options = {}) {
     state.dataBroker.comparison.error = state.dataBroker.comparison.error || "comparaison incomplète";
     if (previousChartState?.status === "ready") {
       state.dataBroker.chart = previousChartState;
-      state.dataBroker.comparison = previousComparisonState;
+      const oldEntries406706 = Array.isArray(previousChartState.result?.entries)
+        ? previousChartState.result.entries : [];
+      const oldIds406706 = oldEntries406706.map(entry => entry?.coin?.id).filter(Boolean);
+      if (oldIds406706.length > 1) {
+        const previousPreset406706 = atlasSameOrderedIds(oldIds406706, atlasCuratedTopIds(5))
+          ? "rank-5" : atlasSameOrderedIds(oldIds406706, atlasCuratedTopIds(3)) ? "rank-3" : "manual";
+        state.dataBroker.comparison = {
+          ...previousComparisonState,
+          ids: oldIds406706,
+          preset: previousPreset406706,
+          mode: "compare",
+          renderedIds: oldIds406706,
+          pendingIds: [], unavailableIds: [], status: "ready",
+          results: Object.fromEntries(oldEntries406706.map(e => [e.coin.id,e.result]))
+        };
+        state.selectedCoinId = oldIds406706[0];
+        state.chartPeriodDays = Number(previousChartState.period || period);
+        setText(els.selectedAssetTitle, `Comparaison ${oldEntries406706.map(e => e.coin.symbol).join(" + ")}`);
+      } else {
+        state.dataBroker.comparison = previousComparisonState;
+        const oldTitle406706 = previousChartState.result?.coin?.symbol;
+        if (oldTitle406706) setText(els.selectedAssetTitle, String(oldTitle406706));
+      }
       atlasHideChartRefresh();
       atlasChartV2RedrawFromBroker();
     } else {
@@ -46649,11 +46709,14 @@ let atlasOperatorGraphProfileRestoring = false;
 
 function atlasOperatorGraphProfileNormalize(raw = {}) {
   const rawIds = Array.isArray(raw.comparisonIds) ? raw.comparisonIds.filter(Boolean) : [];
-  const ids = rawIds.filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
-  const selected = String(raw.selectedCoinId || "").trim() || ids[0] || null;
+  let ids = rawIds.filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
+  let selected = String(raw.selectedCoinId || "").trim() || ids[0] || null;
   let preset = ATLAS_WORKSPACE_PRESETS.includes(String(raw.comparisonPreset || ""))
     ? String(raw.comparisonPreset)
     : ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty";
+  const locked406706 = atlasCanonicalPresetSelection406706(preset, ids, selected);
+  ids = locked406706.ids;
+  selected = locked406706.selected;
   if (ids.length === 1 && preset !== "solo") preset = "solo";
   if (!ids.length && preset !== "empty") preset = "empty";
   const sourceView = raw.chartView && typeof raw.chartView === "object" ? raw.chartView : {};
@@ -47183,15 +47246,17 @@ function atlasGraphContextV7NeutralMarket() {
 function atlasGraphContextV7NormalizeMarket(raw = {}) {
   const source = raw && typeof raw === "object" ? raw : {};
   const rawIds = Array.isArray(source.comparisonIds) ? source.comparisonIds.filter(Boolean) : [];
-  const ids = rawIds.filter((id,index,list)=>list.indexOf(id)===index).slice(0,ATLAS_COMPARISON_MAX_SERIES);
+  let ids = rawIds.filter((id,index,list)=>list.indexOf(id)===index).slice(0,ATLAS_COMPARISON_MAX_SERIES);
   const explicitEmpty = source.selectionIntent === "explicit-empty" || source.selectionCleared === true || source.comparisonPreset === "empty";
   let preset = ATLAS_WORKSPACE_PRESETS.includes(String(source.comparisonPreset || ""))
     ? String(source.comparisonPreset)
     : ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty";
+  const locked406706 = atlasCanonicalPresetSelection406706(preset, ids, source.selectedCoinId);
+  ids = locked406706.ids;
   if (!ids.length) preset = "empty";
   if (ids.length === 1 && !ATLAS_SCANNER_PRESETS.has(preset)) preset = "solo";
   const selected = ids.length
-    ? (ids.includes(String(source.selectedCoinId || "")) ? String(source.selectedCoinId) : ids[0])
+    ? (ids.includes(String(locked406706.selected || "")) ? String(locked406706.selected) : ids[0])
     : null;
   const view = source.chartView && typeof source.chartView === "object" ? source.chartView : {};
   return {
