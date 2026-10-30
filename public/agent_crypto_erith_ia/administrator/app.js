@@ -12549,6 +12549,20 @@ function atlasAnnualUsdHistoryCandidate(coin, period, allowDelayed = false) {
   return record;
 }
 
+// Annual native USD requests only: retry known transient failures, never an
+// integrity rejection or an unclassified HTTP 4xx. The shared comparison
+// retry policy is intentionally untouched for the other chart modes.
+function atlasAnnualUsdRetryableError(error) {
+  if (!error || atlasComparisonAbortError(error)) return false;
+  const reason = String(error.message || error || "");
+  const stated = Number(error.status || 0);
+  const parsed = reason.match(/\bHTTP\s*(\d{3})\b/i);
+  const status = stated || (parsed ? Number(parsed[1]) : 0);
+  if (status) return [408, 425, 429].includes(status) || status >= 500;
+  return error.name === "TimeoutError"
+    || /timeout|timed out|d[eé]lai|network|failed to fetch|load failed|ECONNRESET|ETIMEDOUT/i.test(reason);
+}
+
 function atlasAnnualUsdFailureLabel(result) {
   const reason = String(result?.technicalReason || result?.reason || "");
   const http = reason.match(/\bHTTP\s*(\d{3})\b/i);
@@ -12586,8 +12600,9 @@ async function atlasFetchCanonicalAnnualUsdHistory(coin, period, options = {}) {
       return { coin, result, attempts, source: "annual-usd-native-direct" };
     } catch (error) {
       if (atlasComparisonAbortError(error) || signal?.aborted) throw atlasChartAbortError();
-      failureLabel = atlasAnnualUsdFailureLabel({technicalReason: String(error?.message || error)});
-      if (!atlasComparisonRetryableError(error)) break;
+      failureLabel = atlasAnnualUsdFailureLabel({technicalReason:
+        error?.status ? `HTTP ${error.status} · ${String(error?.message || error)}` : String(error?.message || error)});
+      if (!atlasAnnualUsdRetryableError(error)) break;
     }
   }
   // Source explicitly marked as delayed; this is NOT a refreshed observation.
@@ -14011,7 +14026,11 @@ function atlasChartOverlayCaptureReady(chart) {
     preset,
     count: ids.length || (comparison ? entries.length : 1),
     modeLabel: atlasChartOverlayModeLabelFor(preset, ids.length || entries.length || 1),
-    viewLabel: comparison || atlasChartV2EffectiveView() === "base100" ? "BASE 100" : "PRIX EUR",
+    // Preserve the currency actually displayed, not the newly requested one.
+    viewLabel: comparison || atlasChartV2EffectiveView() === "base100" ? "BASE 100"
+      : (atlasHistoricalDisplayQuote(chart.result).currency
+          ? `PRIX ${atlasHistoricalDisplayQuote(chart.result).currency}`
+          : "PRIX · DEVISE NON CERTIFIÉE"),
     scaleLabel: comparison || atlasChartV2EffectiveScale() !== "logarithmic" ? "NORMALE" : "LOG",
   };
 

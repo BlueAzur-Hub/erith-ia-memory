@@ -10,7 +10,7 @@ const take = name => {
   const found=app.slice(at).match(/^(?:async )?function [\s\S]*?\n}\n/);
   assert.ok(found,"function closure missing "+name);return found[0];
 };
-const nativeFunctions=["atlasAnnualUsdHistoryCandidate","atlasAnnualUsdFailureLabel","atlasFetchCanonicalAnnualUsdHistory"];
+const nativeFunctions=["atlasAnnualUsdHistoryCandidate","atlasAnnualUsdRetryableError","atlasAnnualUsdFailureLabel","atlasFetchCanonicalAnnualUsdHistory"];
 const source=nativeFunctions.map(take).join("\n");
 const now=Date.now(), day=86400000;
 const coin={id:"bitcoin",symbol:"BTC"};
@@ -78,12 +78,40 @@ const context = ({stored=null, network=[]}={})=>{
     const r=await x.ctx.atlasFetchCanonicalAnnualUsdHistory(coin,365);
     assert.equal(r.result.blocked,true);assert.equal(x.traces.writes,0);
   }
+  // A bare HTTP 403 embedded in a provider message is NOT transient.
+  {
+    const x=context({network:[new Error("HTTP 403 Forbidden"), history("USD",0.1)]});
+    const r=await x.ctx.atlasFetchCanonicalAnnualUsdHistory(coin,365);
+    assert.equal(r.result.blocked,true);assert.equal(x.traces.network,1);
+    assert.equal(r.result.technicalReason,"HTTP 403");
+  }
+  // Integrity failures must never trigger another provider request.
+  {
+    const x=context({network:[history("EUR",0.1),history("USD",0.1)]});
+    const r=await x.ctx.atlasFetchCanonicalAnnualUsdHistory(coin,365);
+    assert.equal(r.result.blocked,true);assert.equal(x.traces.network,1);
+    assert.match(r.result.technicalReason,/intégrité historique/);
+  }
+  // Test the REAL overlay capture function, including preserved USD/EUR.
+  {
+    const overlay=take("atlasChartOverlayCaptureReady");
+    for (const quote of ["USD","EUR",null]) {
+      const sandbox={state:{dataBroker:{comparison:{preset:"solo"}},chartPeriodDays:1},
+        atlasChartOverlayLastReady:null,
+        atlasChartV2EffectiveView:()=>"price",atlasChartV2EffectiveScale:()=>"linear",
+        atlasHistoricalDisplayQuote:()=>({currency:quote}),
+        atlasChartOverlayModeLabelFor:()=>"SOLO"};
+      vm.createContext(sandbox);vm.runInContext(overlay,sandbox);
+      const r=sandbox.atlasChartOverlayCaptureReady({status:"ready",coinId:"bitcoin",period:1,result:{currency:quote}});
+      assert.equal(r.viewLabel,quote?`PRIX ${quote}`:"PRIX · DEVISE NON CERTIFIÉE");
+    }
+  }
   assert.match(app,/canonicalPresetRequest === "rank-5" && requestedCurrency === "USD" && period === 365/);
   assert.match(app,/length: annualUsdBasket \? 1 : Math\.min\(3, coins\.length\)/);
   assert.match(app,/fetched\[index\] = fetchedItem/);
   assert.match(app,/atlasComparisonCertifiedCurrency\(normalizedEntries\) === requestedCurrency/);
   assert.doesNotMatch(take("atlasFetchCanonicalAnnualUsdHistory"),/vs_currency=eur|USDT|USDC/);
   const metadata=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../administrator/build.json"),"utf8"));
-  assert.equal(metadata.build,"40.6.709");assert.equal(metadata.engine,"38.15.11");
-  console.log("PASS: annual USD Top5 cache-first, native-only, 429 bounded retry, delayed USD fallback, forbidden EUR/USDT, abort guards, unchanged atomic criteria");
+  assert.equal(metadata.build,"40.6.710");assert.equal(metadata.engine,"38.15.11");
+  console.log("PASS: annual USD Top5 cache-first, native-only, bounded retries, 403/integrity no retry, preserved USD/EUR labels, delayed cache and atomic guards");
 })().catch(e=>{console.error(e);process.exitCode=1});
