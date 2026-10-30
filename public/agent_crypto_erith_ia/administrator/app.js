@@ -4754,14 +4754,29 @@ function atlasChartContextStatus() {
   };
 }
 
+/* Canonical named baskets carry stable identities, not market-cap slots.
+   Manual and scanner selections remain independent, including V7 restore. */
+function atlasCanonicalPresetSelection(preset, ids, selected = null) {
+  const kind = String(preset || "");
+  if (kind !== "rank-5" && kind !== "rank-3") {
+    return { ids: Array.isArray(ids) ? [...ids] : [], selected };
+  }
+  const canonical = atlasCuratedTopIds(kind === "rank-3" ? 3 : 5);
+  return { ids: canonical, selected: canonical[0] };
+}
+
 function atlasComparisonIds() {
   const validIds = new Set((state.coins || []).map(coin => coin.id));
+  const preset = String(state.dataBroker?.comparison?.preset || "");
   const raw = Array.isArray(state.dataBroker?.comparison?.ids) ? state.dataBroker.comparison.ids : [];
+  const locked = atlasCanonicalPresetSelection(preset, raw, state.selectedCoinId);
   const ids = [];
-  for (const id of raw) {
+  for (const id of locked.ids) {
     if (validIds.has(id) && !ids.includes(id)) ids.push(id);
   }
   if (state.graphSelectionCleared && !ids.length) return [];
+  // The selected market must never inject USDT or change the order of a locked preset.
+  if (preset === "rank-5" || preset === "rank-3") return ids;
   const primary = validIds.has(state.selectedCoinId) ? state.selectedCoinId : ids[0] || null;
   if (primary && !ids.includes(primary)) ids.unshift(primary);
   return ids.slice(0, ATLAS_COMPARISON_MAX_SERIES);
@@ -4812,8 +4827,9 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   }
   atlasClearComparisonCompletionTimer();
   const validIds = new Set((state.coins || []).map(coin => coin.id));
+  const requested = atlasCanonicalPresetSelection(options.preset, ids, primaryId);
   const unique = [];
-  for (const id of ids || []) {
+  for (const id of requested.ids) {
     if (validIds.has(id) && !unique.includes(id)) unique.push(id);
     if (unique.length >= ATLAS_COMPARISON_MAX_SERIES) break;
   }
@@ -4841,11 +4857,13 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   }
 
   state.graphSelectionCleared = false;
-  const primary = validIds.has(primaryId) && unique.includes(primaryId)
-    ? primaryId
-    : validIds.has(state.selectedCoinId) && unique.includes(state.selectedCoinId)
-      ? state.selectedCoinId
-      : unique[0];
+  const primary = (options.preset === "rank-5" || options.preset === "rank-3")
+    ? unique[0]
+    : validIds.has(primaryId) && unique.includes(primaryId)
+      ? primaryId
+      : validIds.has(state.selectedCoinId) && unique.includes(state.selectedCoinId)
+        ? state.selectedCoinId
+        : unique[0];
   const index = unique.indexOf(primary);
   if (index > 0) {
     unique.splice(index, 1);
@@ -5618,9 +5636,8 @@ function atlasSanitizeChartRows(rows = []) {
     const ratio = point[1] / previous[1];
     if (!Number.isFinite(ratio) || ratio <= 0) continue;
 
-    // Une multiplication/division instantanée par 8 entre deux points adjacents
-    // est traitée comme une donnée corrompue, jamais comme une trajectoire réelle.
-    if (ratio > 8 || ratio < 0.125) continue;
+    // Keep all finite positive raw observations. Extreme moves are assessed by
+    // the validator, never erased silently during normalization.
     sanitized.push(point);
   }
 
@@ -5717,6 +5734,35 @@ function atlasValidateChartSeries({ c, days, prices, payload = null, sourceMode 
   if (!Number.isFinite(firstPrice) || firstPrice <= 0 || !Number.isFinite(lastPrice) || lastPrice <= 0) return fail("prix invalides");
   if (coverageHours < rules.minCoverageHours) return fail(`couverture insuffisante : ${coverageHours.toFixed(1)} h/${rules.minCoverageHours} h minimum`, { coverageHours });
   if (lastTimestamp > Date.now() + ATLAS_CHART_MAX_FUTURE_MS) return fail("dernier point daté dans le futur");
+
+  // A valid first/last pair cannot certify 24 hours with a hole in between.
+  // Native 5m, 30m and hourly sources have different cadences; accept real
+  // hourly observations, but never bridge multi-hour missing history.
+  if (period === 1) {
+    const gaps = [];
+    for (let i = 1; i < prices.length; i += 1) {
+      const gap = Number(prices[i]?.[0]) - Number(prices[i - 1]?.[0]);
+      if (!(Number.isFinite(gap) && gap > 0)) return fail("horodatages non strictement croissants");
+      gaps.push(gap);
+      const previousPrice = Number(prices[i - 1]?.[1]);
+      const currentPrice = Number(prices[i]?.[1]);
+      const ratio = currentPrice / previousPrice;
+      if (!(Number.isFinite(ratio) && ratio > 0) || ratio > 8 || ratio < 0.125) {
+        return fail("pic de prix non qualifié : observation brute conservée, série bloquée", {
+          pointIndex: i, previousPrice, currentPrice
+        });
+      }
+    }
+    const sorted = [...gaps].sort((a, b) => a - b);
+    const cadenceMs = sorted[Math.floor(sorted.length / 2)] || 0;
+    const maxGapMs = Math.max(30 * 60000, Math.min(2 * 3600000, cadenceMs * 3));
+    const largestGapMs = Math.max(...gaps);
+    if (largestGapMs > maxGapMs) {
+      return fail("historique 24 h discontinu : trou temporel détecté", {
+        cadenceMs, largestGapMs, maxGapMs, coverageHours
+      });
+    }
+  }
 
   if (sourceMode === "github-cache") {
     if (payload?.live_ok !== true) return fail("cache GitHub non validé");
@@ -6994,9 +7040,9 @@ function atlasExternalChartTooltip(context) {
   const atHistoricalEndpoint = hoveredData.length > 0
     && Number.isInteger(hoveredIndex)
     && hoveredIndex >= hoveredData.length - 1;
-  // In comparison modes the last historical point remains historical.
-  // Single-mode virtual live presentation retains its explicit LIVE label.
-  if (atHistoricalEndpoint && !comparison) {
+  // A historical hover must remain historical, even at its last point.
+  // Only a dataset point explicitly declared LIVE may use spot presentation.
+  if (atHistoricalEndpoint && !comparison && point?.raw?.atlasLiveEndpoint === true) {
     const datasets = atlasChartPriceDatasets(chart);
     const virtual = datasets.map((dataset, index) => {
       const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
@@ -11865,14 +11911,25 @@ function atlasComparisonMaximumPoints(period) {
 
 function atlasDownsampleNativeComparisonRows(rows, maximumPoints) {
   const source = Array.isArray(rows) ? rows : [];
-  const limit = Math.max(32, Number(maximumPoints || 640));
+  const limit = Math.max(32, Math.floor(Number(maximumPoints || 640)));
   if (source.length <= limit) return source;
-  const stride = Math.max(1, Math.ceil((source.length - 2) / Math.max(1, limit - 2)));
-  return source.filter((_, index) =>
-    index === 0
-    || index === source.length - 1
-    || index % stride === 0
-  );
+  // Preserve the actual high and low of each time bucket, plus endpoints.
+  // Sampling by stride could erase a real peak even on a 24h chart.
+  const interior = source.length - 2;
+  const pairBudget = Math.max(1, Math.floor((limit - 2) / 2));
+  const bucketSize = Math.ceil(interior / pairBudget);
+  const selected = [source[0]];
+  for (let start = 1; start < source.length - 1; start += bucketSize) {
+    const end = Math.min(source.length - 1, start + bucketSize);
+    let min = start, max = start;
+    for (let i = start + 1; i < end; i += 1) {
+      if (Number(source[i].price) < Number(source[min].price)) min = i;
+      if (Number(source[i].price) > Number(source[max].price)) max = i;
+    }
+    for (const i of [...new Set([min, max])].sort((a, b) => a - b)) selected.push(source[i]);
+  }
+  selected.push(source[source.length - 1]);
+  return selected;
 }
 
 function atlasBuildNativeComparisonTimeline(entries, maximumPoints = 720) {
@@ -11912,6 +11969,15 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
     && Math.abs(Number(e.atlasScannerWindowEnd)
       - Number(prepared[0].atlasScannerWindowEnd)) < 1000
   );
+  // A scanner basket is never a manual comparison. Falling back to manual
+  // overlap when one entry loses its 24h-window proof silently re-bases the
+  // first four curves when the fifth arrives. Require one certified clock
+  // for every scanner entry; partial sets are diagnosed by the caller.
+  const scannerMarked = Number(period) === 1 && prepared.some(e =>
+    Object.prototype.hasOwnProperty.call(e, "atlasScannerVerified24h")
+    || Object.prototype.hasOwnProperty.call(e, "atlasScannerWindowEnd")
+  );
+  if (scannerMarked && !scannerNative) return [];
   if (scannerNative) {
     const targetEnd = Number(prepared[0].atlasScannerWindowEnd);
     const targetStart = targetEnd - 24 * 3600000;
@@ -12418,10 +12484,12 @@ async function atlasRespectComparisonRequestSpacing(signal = null, period = Numb
   const minimumSpacing = Number(period || 1) >= 60
     ? ATLAS_COMPARISON_LONG_HORIZON_SPACING_MS
     : ATLAS_COMPARISON_REQUEST_SPACING_MS;
-  const elapsed = Date.now() - Number(comparison.lastDirectRequestAt || 0);
-  const waitMs = Math.max(0, minimumSpacing - elapsed);
-  if (waitMs) await atlasWaitWithSignal(waitMs, signal);
-  comparison.lastDirectRequestAt = Date.now();
+  // Reserve request slots synchronously so concurrent workers never
+  // collapse the same rate-limit wait into simultaneous provider requests.
+  const now = Date.now();
+  const nextSlot = Math.max(now, Number(comparison.lastDirectRequestAt || 0) + minimumSpacing);
+  comparison.lastDirectRequestAt = nextSlot;
+  if (nextSlot > now) await atlasWaitWithSignal(nextSlot - now, signal);
 }
 
 function atlasRenderComparisonDetail(entries, period) {
@@ -12485,6 +12553,19 @@ function atlasComparisonRequiresFullSelection(preset = state.dataBroker?.compari
 async function renderComparisonAnalystPanel(options = {}) {
   if ((atlasScannerTransaction || atlasScannerQueuedRequest) && options.allowDuringScanner !== true) return;
   const coins = atlasComparisonCoins();
+  const canonicalPresetRequest = String(state.dataBroker?.comparison?.preset || "");
+  const canonicalExpectedIds = canonicalPresetRequest === "rank-5" ? atlasCuratedTopIds(5)
+    : canonicalPresetRequest === "rank-3" ? atlasCuratedTopIds(3) : null;
+  if (canonicalExpectedIds && coins.length !== canonicalExpectedIds.length) {
+    const available = new Set(coins.map(coin => coin.id));
+    const missing = canonicalExpectedIds.filter(id => !available.has(id));
+    state.dataBroker.comparison.status = "blocked";
+    state.dataBroker.comparison.error = `Panier canonique non disponible : ${missing.join(", ")}`;
+    if (els.chartCaption) atlasSetChartCaptionText(
+      `${canonicalPresetRequest === "rank-5" ? "Top 5" : "Top 3"} indisponible · identité(s) manquante(s) : ${missing.join(", ")}. Aucun actif de substitution.`
+    );
+    return;
+  }
   if (coins.length < 2) {
     state.dataBroker.comparison.mode = "single";
     return renderAnalystPanel({ ...options, forceSingle: true });
@@ -12552,7 +12633,9 @@ async function renderComparisonAnalystPanel(options = {}) {
   };
 
   atlasChartSetPeriodButtons(period, true);
-  setText(els.selectedAssetTitle, `Comparaison ${coins.map(coin => coin.symbol).join(" + ")}`);
+  if (!strictAtomicComparison) {
+    setText(els.selectedAssetTitle, `Comparaison ${coins.map(coin => coin.symbol).join(" + ")}`);
+  }
 
   const preservedChart = strictAtomicComparison
     ? !!state.chartEngineV2?.realChart
@@ -12570,14 +12653,21 @@ async function renderComparisonAnalystPanel(options = {}) {
   atlasRenderComparisonControls();
   atlasPatchMarketSelectionState();
 
-  const fetched = [];
-  for (let index = 0; index < coins.length; index += 1) {
+  const fetched = new Array(coins.length);
+  let nextIndex = 0;
+  const worker = async () => {
+    while (nextIndex < coins.length) {
+    const index = nextIndex++;
+
     if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
     const coin = coins[index];
 
-    if (preservedChart && !strictAtomicComparison) {
-      atlasUpdateChartRefresh(`Série ${index + 1}/${coins.length} · ${coin.symbol}`);
-    } else if (!strictAtomicComparison && els.chartCaption) {
+    if (preservedChart) {
+      atlasUpdateChartRefresh(
+        `Comparaison ${periodLabel} · lecture ${index + 1}/${coins.length} · ${coin.symbol}`
+        + (strictAtomicComparison ? " · ancien graphique conservé" : "")
+      );
+    } else if (els.chartCaption) {
       atlasSetChartCaptionText(
         `Comparaison ${periodLabel} · lecture ${index + 1}/${coins.length} · ${coin.symbol}.`
       );
@@ -12603,7 +12693,7 @@ async function renderComparisonAnalystPanel(options = {}) {
       };
     }
 
-    fetched.push(fetchedItem);
+    fetched[index] = fetchedItem;
     state.dataBroker.comparison.pendingIds =
       (state.dataBroker.comparison.pendingIds || [])
         .filter(id => id !== coin.id);
@@ -12628,7 +12718,13 @@ async function renderComparisonAnalystPanel(options = {}) {
     }
 
     atlasPatchMarketSelectionState();
-  }
+    }
+  };
+  // At most three concurrent series. Source calls are still individually
+  // spaced and every result is restored in the canonical basket order.
+  await Promise.all(Array.from(
+    { length: Math.min(3, coins.length) }, () => worker()
+  ));
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
 
@@ -12658,7 +12754,11 @@ async function renderComparisonAnalystPanel(options = {}) {
   state.dataBroker.comparison.unavailableIds = unavailableIds;
   state.dataBroker.comparison.error = null;
 
-  if (normalizedEntries.length >= requiredSeriesCount) {
+  const canonicalExactIds = !canonicalExpectedIds || (
+    normalizedEntries.length === canonicalExpectedIds.length
+    && normalizedEntries.every((entry, i) => entry.coin?.id === canonicalExpectedIds[i])
+  );
+  if (normalizedEntries.length >= requiredSeriesCount && canonicalExactIds) {
     const drawnEntries = drawComparisonChart(els.mainChart, normalizedEntries, period, chartKey);
 
     if (drawnEntries.length >= requiredSeriesCount) {
@@ -12753,7 +12853,29 @@ async function renderComparisonAnalystPanel(options = {}) {
     state.dataBroker.comparison.error = state.dataBroker.comparison.error || "comparaison incomplète";
     if (previousChartState?.status === "ready") {
       state.dataBroker.chart = previousChartState;
-      state.dataBroker.comparison = previousComparisonState;
+      const canonicalPreviousEntries = Array.isArray(previousChartState.result?.entries)
+        ? previousChartState.result.entries : [];
+      const canonicalPreviousIds = canonicalPreviousEntries.map(entry => entry?.coin?.id).filter(Boolean);
+      if (canonicalPreviousIds.length > 1) {
+        const canonicalPreviousPreset = atlasSameOrderedIds(canonicalPreviousIds, atlasCuratedTopIds(5))
+          ? "rank-5" : atlasSameOrderedIds(canonicalPreviousIds, atlasCuratedTopIds(3)) ? "rank-3" : "manual";
+        state.dataBroker.comparison = {
+          ...previousComparisonState,
+          ids: canonicalPreviousIds,
+          preset: canonicalPreviousPreset,
+          mode: "compare",
+          renderedIds: canonicalPreviousIds,
+          pendingIds: [], unavailableIds: [], status: "ready",
+          results: Object.fromEntries(canonicalPreviousEntries.map(e => [e.coin.id,e.result]))
+        };
+        state.selectedCoinId = canonicalPreviousIds[0];
+        state.chartPeriodDays = Number(previousChartState.period || period);
+        setText(els.selectedAssetTitle, `Comparaison ${canonicalPreviousEntries.map(e => e.coin.symbol).join(" + ")}`);
+      } else {
+        state.dataBroker.comparison = previousComparisonState;
+        const canonicalPreviousTitle = previousChartState.result?.coin?.symbol;
+        if (canonicalPreviousTitle) setText(els.selectedAssetTitle, String(canonicalPreviousTitle));
+      }
       atlasHideChartRefresh();
       atlasChartV2RedrawFromBroker();
     } else {
@@ -14566,20 +14688,16 @@ function atlasMarketFrameScannerCoins(preset, period = Number(state.chartPeriodD
 
 // Top 3 and Top 5 follow the actual Market capitalization rank, not a
 // hard-coded basket. The Market Frame is the identity authority for presets.
+// Operator-protected reference baskets, independent from stablecoin ranks.
+// Scanners remain Market-driven. Do not silently change this contract.
+const ATLAS_CURATED_TOP3_IDS = Object.freeze(["bitcoin", "ethereum", "binancecoin"]);
+const ATLAS_CURATED_TOP5_IDS = Object.freeze([
+  "bitcoin", "ethereum", "binancecoin", "ripple", "solana"
+]);
 function atlasCuratedTopIds(limit = 5) {
-  const count = Number(limit) <= 3 ? 3 : 5;
-  const frame = atlasCurrentMarketFrame();
-  const fromFrame = frame?.baskets?.[count === 3 ? "top3" : "top5"];
-  if (Array.isArray(fromFrame) && fromFrame.length === count) {
-    return [...fromFrame];
-  }
-  // Before the first complete frame, use only real ranked Market identities.
-  // Never silently fill a capitalisation basket with unrelated fixed IDs.
-  const ranked = (Array.isArray(state.coins) ? state.coins : [])
-    .filter(coin => coin?.id && Number.isFinite(Number(coin.rank)) && Number(coin.rank) > 0)
-    .sort((a, b) => Number(a.rank) - Number(b.rank)
-      || String(a.id).localeCompare(String(b.id)));
-  return [...new Set(ranked.map(coin => coin.id))].slice(0, count);
+  return Number(limit) <= 3
+    ? [...ATLAS_CURATED_TOP3_IDS]
+    : [...ATLAS_CURATED_TOP5_IDS];
 }
 
 function atlasCuratedTopCoins(limit = 5) {
@@ -14850,8 +14968,13 @@ function atlasSyncTargetTopFiveCycleLabel() {
     ? "automatic"
     : "manual";
 
-  label.textContent = display.label;
-  symbols.textContent = manualTop5Drift
+  // The Target identity remains visible even when the chart is in Solo.
+  // Dynamic scanner labels are preserved for Hausses/Baisses/Volumes.
+  const showTargetIdentity = displayedPreset === "solo" || displayedPreset === "empty";
+  label.textContent = showTargetIdentity ? "TARGET TOP 5 LIVE" : display.label;
+  symbols.textContent = showTargetIdentity
+    ? "BTC · ETH · BNB · XRP · SOL"
+    : manualTop5Drift
     ? `${symbolLine || manualTop5Drift.selectedSymbols.join(" · ")} · manque ${manualTop5Drift.missingSymbols.join("/")}`
     : (symbolLine || "BTC · ETH · BNB · XRP · SOL");
 
@@ -17109,11 +17232,10 @@ function atlasBuildMarketFrame(snapshot, mode = "none") {
   const byId = new Map(ranked.map(coin => [coin.id, coin]));
   const timestamp = snapshot?.timestamp || new Date().toISOString();
   const frameId = snapshot?.snapshotId || `coingecko-top250-eur_${timestamp}`;
-  const capitalized = ranked.filter(coin =>
-    coin?.id && Number.isFinite(Number(coin.rank)) && Number(coin.rank) > 0);
+  const curated = ids => Object.freeze(ids.filter(id => byId.has(id)));
   const baskets = Object.freeze({
-    top3: atlasMarketFrameUniqueIds(capitalized, 3),
-    top5: atlasMarketFrameUniqueIds(capitalized, 5),
+    top3: curated(ATLAS_CURATED_TOP3_IDS),
+    top5: curated(ATLAS_CURATED_TOP5_IDS),
     top50: atlasMarketFrameUniqueIds(ranked, 50),
     top100: atlasMarketFrameUniqueIds(ranked, 100),
     all: atlasMarketFrameUniqueIds(ranked, ATLAS_MARKET_REQUESTED_ASSETS),
@@ -34267,7 +34389,7 @@ async function runSpotFoundationSchoolPosition(cockpit) {
     atlasLearningHoldCockpitRender();
     let result = null;
     try {
-      result = runSchoolTest("safe_btc_5", {
+      result = runSchoolPractice("safe_btc_5", {
         render:false,
         output:false,
         marketQuote:executionQuote
@@ -34364,7 +34486,7 @@ async function runFoundationSchoolPosition(moduleKey) {
     }
   }
 
-  runSchoolTest("safe_btc_5");
+  runSchoolPractice("safe_btc_5");
   const current = loadLearningCockpitState();
   const ok = current.steps.practice === true;
   if (moduleKey === "risk" && ok) {
@@ -38932,13 +39054,13 @@ function renderSchoolResult(kind, title, text, bullets = []) { const el = els.sc
 function schoolNeedsLivecheck() { if (state.liveOk && state.coins.length) return false; renderSchoolResult("err", "Livecheck requis", "Clique d’abord sur Lancer Livecheck. Le simulateur refuse de travailler sans prix réel chargé.", [ "Aucun prix n’est inventé.", "Aucun test n’est lancé tant que la source marché n’est pas prête.", "Après Livecheck OK, recommence le test guidé." ]); return true;
 }
 
-function runSchoolTest(testName, options = {}) {
+function runSchoolPractice(practiceName, options = {}) {
   const renderUi = options.render !== false;
   const renderOutput = options.output !== false && renderUi;
   const safeAmount = SIM_PROFILE.defaultAmount;
   const tooBigAmount = SIM_PROFILE.maxPerOperation * 5;
   const ceilingUnit = SIM_PROFILE.maxExposure / 3;
-  if (testName === "reset_100") {
+  if (practiceName === "reset_100") {
     resetSimulation({ render:renderUi });
     setSimManualFields("BTC", safeAmount);
     if (renderOutput) renderCommandOutput(commandOk("reset_sim", simulationPayload()));
@@ -38947,7 +39069,7 @@ function runSchoolTest(testName, options = {}) {
   }
   if (!atlasExecutionQuoteIsFreshBinance(options.marketQuote) && schoolNeedsLivecheck()) return;
   let result = null;
-  if (testName === "safe_btc_5") {
+  if (practiceName === "safe_btc_5") {
     resetSimulation({ render:renderUi });
     setSimManualFields("BTC", safeAmount);
     result = simulateOrder("buy", "BTC", safeAmount, { render:renderUi, marketQuote:options.marketQuote || null });
@@ -38960,7 +39082,7 @@ function runSchoolTest(testName, options = {}) {
     }
     return result;
   }
-  if (testName === "too_big_btc_50") {
+  if (practiceName === "too_big_btc_50") {
     resetSimulation();
     setSimManualFields("BTC", tooBigAmount);
     result = simulateOrder("buy", "BTC", tooBigAmount);
@@ -38968,7 +39090,7 @@ function runSchoolTest(testName, options = {}) {
     renderSchoolResult(result?.ok === false ? "refusal" : "err", result?.ok === false ? "Refus normal : opération trop grosse" : "Erreur : ce test aurait dû être refusé", result?.ok === false ? `Tu as demandé ${fmtEUR.format(tooBigAmount)}, mais le profil limite chaque opération à ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.` : "Le test n’a pas respecté la règle attendue.", result?.ok === false ? [ "Le refus protège ton capital virtuel.", "Aucune validation réelle n’a été envoyée.", "La règle apprise : ne pas mettre trop gros d’un coup." ] : [ "Ce test doit être revu." ]);
     return;
   }
-  if (testName === "forbidden_doge_5") {
+  if (practiceName === "forbidden_doge_5") {
     resetSimulation();
     setSimManualFields("DOGE", safeAmount);
     result = simulateOrder("buy", "DOGE", safeAmount);
@@ -38976,7 +39098,7 @@ function runSchoolTest(testName, options = {}) {
     renderSchoolResult(result?.ok === false ? "refusal" : "err", result?.ok === false ? "Refus normal : crypto non autorisée" : "Erreur : DOGE aurait dû être refusé", result?.ok === false ? `Le profil autorise seulement ${SIM_PROFILE.allowedSymbols.join(", ")}. DOGE reste volontairement bloqué.` : "Le test n’a pas respecté la règle attendue.", result?.ok === false ? [ "Tu apprends à limiter le périmètre.", "Moins d’actifs = moins de confusion au début.", "Les autres cryptos peuvent être observées sans être autorisées dans ce profil." ] : [ "Ce test doit être revu." ]);
     return;
   }
-  if (testName === "fill_ceiling") {
+  if (practiceName === "fill_ceiling") {
     resetSimulation();
     setSimManualFields("SOL", ceilingUnit);
     const r1 = simulateOrder("buy", "BTC", ceilingUnit);
@@ -38987,7 +39109,7 @@ function runSchoolTest(testName, options = {}) {
     renderSchoolResult(ok ? "ok" : "err", ok ? `Plafond rempli : ${fmtEUR.format(SIM_PROFILE.maxExposure)} exposés` : "Erreur pendant le remplissage du plafond", ok ? `Le simulateur a réparti ${fmtEUR.format(ceilingUnit)} sur BTC, ETH et SOL.` : "Une des trois opérations n’a pas été acceptée.", ok ? [ `Capital restant : environ ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, `Exposition virtuelle : environ ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, "Le profil actif a atteint son plafond de sécurité." ] : [ r1?.error || "BTC : état inconnu.", r2?.error || "ETH : état inconnu.", r3?.error || "SOL : état inconnu." ]);
     return;
   }
-  if (testName === "exceed_ceiling") {
+  if (practiceName === "exceed_ceiling") {
     resetSimulation();
     simulateOrder("buy", "BTC", ceilingUnit);
     simulateOrder("buy", "ETH", ceilingUnit);
@@ -46586,11 +46708,14 @@ let atlasOperatorGraphProfileRestoring = false;
 
 function atlasOperatorGraphProfileNormalize(raw = {}) {
   const rawIds = Array.isArray(raw.comparisonIds) ? raw.comparisonIds.filter(Boolean) : [];
-  const ids = rawIds.filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
-  const selected = String(raw.selectedCoinId || "").trim() || ids[0] || null;
+  let ids = rawIds.filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
+  let selected = String(raw.selectedCoinId || "").trim() || ids[0] || null;
   let preset = ATLAS_WORKSPACE_PRESETS.includes(String(raw.comparisonPreset || ""))
     ? String(raw.comparisonPreset)
     : ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty";
+  const canonicalLockedSelection = atlasCanonicalPresetSelection(preset, ids, selected);
+  ids = canonicalLockedSelection.ids;
+  selected = canonicalLockedSelection.selected;
   if (ids.length === 1 && preset !== "solo") preset = "solo";
   if (!ids.length && preset !== "empty") preset = "empty";
   const sourceView = raw.chartView && typeof raw.chartView === "object" ? raw.chartView : {};
@@ -47120,15 +47245,17 @@ function atlasGraphContextV7NeutralMarket() {
 function atlasGraphContextV7NormalizeMarket(raw = {}) {
   const source = raw && typeof raw === "object" ? raw : {};
   const rawIds = Array.isArray(source.comparisonIds) ? source.comparisonIds.filter(Boolean) : [];
-  const ids = rawIds.filter((id,index,list)=>list.indexOf(id)===index).slice(0,ATLAS_COMPARISON_MAX_SERIES);
+  let ids = rawIds.filter((id,index,list)=>list.indexOf(id)===index).slice(0,ATLAS_COMPARISON_MAX_SERIES);
   const explicitEmpty = source.selectionIntent === "explicit-empty" || source.selectionCleared === true || source.comparisonPreset === "empty";
   let preset = ATLAS_WORKSPACE_PRESETS.includes(String(source.comparisonPreset || ""))
     ? String(source.comparisonPreset)
     : ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty";
+  const canonicalLockedSelection = atlasCanonicalPresetSelection(preset, ids, source.selectedCoinId);
+  ids = canonicalLockedSelection.ids;
   if (!ids.length) preset = "empty";
   if (ids.length === 1 && !ATLAS_SCANNER_PRESETS.has(preset)) preset = "solo";
   const selected = ids.length
-    ? (ids.includes(String(source.selectedCoinId || "")) ? String(source.selectedCoinId) : ids[0])
+    ? (ids.includes(String(canonicalLockedSelection.selected || "")) ? String(canonicalLockedSelection.selected) : ids[0])
     : null;
   const view = source.chartView && typeof source.chartView === "object" ? source.chartView : {};
   return {
@@ -50487,10 +50614,17 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
 
 async function atlasFetchBinanceKlineRows(symbol, interval, limit, options = {}) {
   let lastError = null;
+  // Reference Top 5 can provide a total budget across mirror hosts.  Other
+  // callers retain the existing per-host behavior when no budget is set.
+  const budget = Number(options.totalTimeoutMs || 0);
+  const deadline = budget > 0 ? Date.now() + budget : Infinity;
   for (const base of ATLAS_BINANCE_CHART_ENDPOINTS) {
+    const remaining = deadline - Date.now();
+    if (remaining <= 0) break;
     const url = `${base}/api/v3/klines?symbol=${encodeURIComponent(symbol)}&interval=${encodeURIComponent(interval)}&limit=${encodeURIComponent(limit)}`;
     try {
-      const payload = await atlasFetchJson(url, { signal: options.signal, timeoutMs: Number(options.timeoutMs || ATLAS_CHART_DIRECT_TIMEOUT_MS) });
+      const timeoutMs = Math.max(1, Math.min(Number(options.timeoutMs || ATLAS_CHART_DIRECT_TIMEOUT_MS), remaining));
+      const payload = await atlasFetchJson(url, { signal: options.signal, timeoutMs });
       if (!Array.isArray(payload) || !payload.length) throw new Error(`chandelles Binance absentes pour ${symbol}`);
       return payload;
     } catch (error) {
@@ -50762,6 +50896,23 @@ function atlasWaitWithSignal(ms, signal = null) {
   });
 }
 
+function atlasVerifiedReferenceHistoryCache(coin, period, currency = "EUR", sourceFamily = null, options = {}) {
+  const families = sourceFamily ? [sourceFamily] : ["binance", "coingecko"];
+  const target = String(currency || "").toUpperCase();
+  const candidates = families.map(family => atlasGetStoredChartResult(coin, period, family, target))
+    .filter(result => result && result.blocked !== true
+      && result.integrity?.ok === true
+      && Array.isArray(result.series) && result.series.length > 2
+      && (Number(period) !== 1 || (
+        Number(result.series.at(-1)?.[0]) - Number(result.series[0]?.[0]) >= 23.5 * 3_600_000
+      ))
+      && atlasHistoricalDisplayQuote(result)?.currency === target
+      && String(result.currency || result.quoteCurrency || "").toUpperCase() === target)
+    .sort((left, right) => Number(right.savedAt || 0) - Number(left.savedAt || 0));
+  // Strict freshness is checked against original sample times, not cache write time.
+  return candidates.find(result => options.allowStale === true || !atlasChartNeedsRefresh(result, period)) || null;
+}
+
 async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const signal = options.signal || null;
 
@@ -50778,18 +50929,26 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const quoteMatchesTop3 = result => !top3Eur || atlasHistoricalDisplayQuote(result)?.currency === "EUR";
   if (Number(period || 1) === 1 && preset === "rank-5"
       && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "EUR") {
+    // Read-only cache first. A stored series is usable ONLY when its original
+    // integrity check succeeded, the native currency is EUR, and the real
+    // historical timestamps still satisfy the full 24h freshness contract.
+    const cachedEur = atlasVerifiedReferenceHistoryCache(coin, period, "EUR");
+    if (cachedEur) {
+      return { coin, result: cachedEur, attempts: 0, source: "verified-eur-history-cache" };
+    }
     try {
       await atlasRespectComparisonRequestSpacing(signal, period);
       const result = await atlasFetchTargetTop5BinanceEur24hTruth(coin, {
         signal,
-        timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
+        timeoutMs: Math.min(12_000, ATLAS_COMPARISON_DIRECT_TIMEOUT_MS),
+        totalTimeoutMs: 12_000
       });
       atlasStoreChartResult(coin, period, result, "binance");
       return { coin, result, attempts: 1, source: "binance-eur-direct-24h-truth" };
     } catch (error) {
       if (atlasComparisonAbortError(error)) throw error;
-      const storedTruth = atlasGetStoredChartResult(coin, period, "binance");
-      if (storedTruth?.series?.length && atlasHistoricalDisplayQuote(storedTruth)?.currency === "EUR") {
+      const storedTruth = atlasVerifiedReferenceHistoryCache(coin, period, "EUR", "binance", { allowStale: true });
+      if (storedTruth) {
         return {
           coin,
           result: {
@@ -50809,7 +50968,7 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
       try {
         await atlasRespectComparisonRequestSpacing(signal, period);
         const backup = await fetchCoinGeckoChartDirect(coin, period, {
-          signal, timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
+          signal, timeoutMs: Math.min(14_000, ATLAS_COMPARISON_DIRECT_TIMEOUT_MS)
         });
         if (atlasHistoricalDisplayQuote(backup)?.currency !== "EUR")
           throw new Error("CoinGecko historique non certifie EUR");
@@ -50819,8 +50978,8 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
         if (atlasComparisonAbortError(fallbackError)) throw fallbackError;
         backupFailure = String(fallbackError?.message || fallbackError || "indisponible");
       }
-      const preservedEur = atlasGetStoredChartResult(coin, period, "coingecko");
-      if (preservedEur?.series?.length && atlasHistoricalDisplayQuote(preservedEur)?.currency === "EUR") {
+      const preservedEur = atlasVerifiedReferenceHistoryCache(coin, period, "EUR", "coingecko", { allowStale: true });
+      if (preservedEur) {
         return {
           coin, result: {
             ...preservedEur,
@@ -57288,7 +57447,7 @@ els.btnSimSell?.addEventListener("click", () => renderCommandOutput(simulateOrde
 els.btnSimReset?.addEventListener("click", () => { resetSimulation(); renderCommandOutput(commandOk("reset_sim", simulationPayload()));
 });
 
-document.querySelectorAll("[data-school-test]").forEach(btn => { btn.addEventListener("click", () => runSchoolTest(btn.dataset.schoolTest));
+document.querySelectorAll("[data-school-test]").forEach(btn => { btn.addEventListener("click", () => runSchoolPractice(btn.dataset.schoolTest));
 });
 
 els.btnRunCommand?.addEventListener("click", () => runCommandFromInput());
