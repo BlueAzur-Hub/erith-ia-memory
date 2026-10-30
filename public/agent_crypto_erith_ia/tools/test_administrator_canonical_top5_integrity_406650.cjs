@@ -1,4 +1,4 @@
-/* Administrator 40.6.650 static+semantic regression tests. Run with Node.js. */
+/* Administrator 40.6.705 static+semantic regression tests. Run with Node.js. */
 "use strict";
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -38,6 +38,6 @@ assert.doesNotMatch(usd,/wrap\("atlasChartStorageKey"/);
 assert.match(usd,/const change24h=c\.change24hUsd/);
 assert.doesNotMatch(usd,/const price=c\.priceUsd[^\n]*change24h=c\.change24h\b/);
 const build=JSON.parse(fs.readFileSync(path.join(root,"build.json"),"utf8"));
-assert.equal(build.build,"40.6.650");
+assert.equal(build.build,"40.6.705");
 assert.equal(build.published,false);
 console.log("PASS: canonical Top3/Top5, ribbon, USD contract, caches, gaps, spikes, extrema, tooltip, preview metadata");
