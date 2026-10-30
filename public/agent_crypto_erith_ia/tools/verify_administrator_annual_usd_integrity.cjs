@@ -112,6 +112,6 @@ const context = ({stored=null, network=[]}={})=>{
   assert.match(app,/atlasComparisonCertifiedCurrency\(normalizedEntries\) === requestedCurrency/);
   assert.doesNotMatch(take("atlasFetchCanonicalAnnualUsdHistory"),/vs_currency=eur|USDT|USDC/);
   const metadata=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../administrator/build.json"),"utf8"));
-  assert.equal(metadata.build,"40.6.710");assert.equal(metadata.engine,"38.15.11");
+  assert.equal(metadata.build,"40.6.711");assert.equal(metadata.engine,"38.15.11");
   console.log("PASS: annual USD Top5 cache-first, native-only, bounded retries, 403/integrity no retry, preserved USD/EUR labels, delayed cache and atomic guards");
 })().catch(e=>{console.error(e);process.exitCode=1});

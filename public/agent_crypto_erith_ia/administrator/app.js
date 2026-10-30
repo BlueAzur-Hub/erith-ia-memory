@@ -49371,6 +49371,11 @@ const ATLAS_SOURCE_DOCK_RETRY_STEPS_MS = Object.freeze([60_000, 300_000, 900_000
 
 const ATLAS_SOURCE_DOCK_MIN_ATTEMPT_GAP_MS = 15_000;
 
+// Chart traffic has two bounded lanes; Market / spot / source share one lane.
+// This prevents Market refreshes from starving graph acquisitions while keeping
+// CoinGecko concurrency strictly limited and preserving existing rate spacing.
+const ATLAS_NETWORK_MAX_CHART = 2;
+const ATLAS_NETWORK_MAX_OTHER = 1;
 const ATLAS_NETWORK_PRIORITY = Object.freeze({
   market: 1,
   chart: 2,
@@ -49390,27 +49395,26 @@ function atlasNetworkAbortError() {
 
 function atlasNetworkPump() {
   const governor = state.networkGovernor;
-  if (!governor || governor.active || !governor.queue.length) return;
-
+  if (!governor || !Array.isArray(governor.active) || !governor.queue.length) return;
+  // Reserved non-chart capacity keeps long chart fetches from blocking Livecheck.
   governor.queue.sort((a, b) =>
     (ATLAS_NETWORK_PRIORITY[a.kind] || 99) - (ATLAS_NETWORK_PRIORITY[b.kind] || 99)
     || a.createdAt - b.createdAt
   );
-
-  const job = governor.queue.shift();
-  if (!job || job.cancelled) {
-    atlasNetworkPump();
-    return;
+  while (governor.queue.length) {
+    const activeCharts = governor.active.filter(slot => slot.kind === "chart").length;
+    const activeOther = governor.active.length - activeCharts;
+    const index = governor.queue.findIndex(job => job.cancelled
+      || (job.kind === "chart" ? activeCharts < ATLAS_NETWORK_MAX_CHART
+        : activeOther < ATLAS_NETWORK_MAX_OTHER));
+    if (index < 0) return;
+    const [job] = governor.queue.splice(index, 1);
+    if (!job || job.cancelled) continue;
+    const token = job.kind + ":" + (++governor.sequence);
+    governor.active.push({ token, kind: job.kind, startedAt: Date.now() });
+    job.cleanup();
+    job.resolve(token);
   }
-
-  const token = `${job.kind}:${++governor.sequence}`;
-  governor.active = {
-    token,
-    kind: job.kind,
-    startedAt: Date.now()
-  };
-  job.cleanup();
-  job.resolve(token);
 }
 
 function atlasAcquireNetwork(kind, signal = null, waitTimeoutMs = ATLAS_NETWORK_WAIT_TIMEOUT_MS) {
@@ -49459,13 +49463,15 @@ function atlasAcquireNetwork(kind, signal = null, waitTimeoutMs = ATLAS_NETWORK_
 
 function atlasReleaseNetwork(token) {
   const governor = state.networkGovernor;
-  if (!governor?.active || governor.active.token !== token) return;
-  governor.active = null;
+  if (!Array.isArray(governor?.active)) return;
+  const index = governor.active.findIndex(slot => slot.token === token);
+  if (index < 0) return;
+  governor.active.splice(index, 1);
   queueMicrotask(atlasNetworkPump);
 }
 
 function atlasNetworkBusy() {
-  return !!state.networkGovernor?.active || !!state.networkGovernor?.queue?.length;
+  return !!state.networkGovernor?.active?.length || !!state.networkGovernor?.queue?.length;
 }
 
 function atlasSetLivecheckButtonBusy(busy, label = "") {
@@ -50759,9 +50765,12 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
   let networkToken = null;
   const onAbort = () => controller.abort();
   signal?.addEventListener?.("abort", onAbort, { once: true });
-  const timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
+  let timer = null;
   try {
     networkToken = await atlasAcquireNetwork("chart", signal, ATLAS_NETWORK_WAIT_TIMEOUT_MS);
+    if (signal?.aborted) throw atlasChartAbortError();
+    // Give the request its FULL HTTP timeout after queue acquisition, not before.
+    timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
     const response = await fetch(url, { cache: "no-store", signal: controller.signal, headers: { accept: "application/json" } });
     if (!response.ok) {
       const error = new Error(`HTTP ${response.status}`);
@@ -57298,7 +57307,7 @@ state.marketContinuity = {
 };
 
 state.networkGovernor = {
-  active: null,
+  active: [],
   queue: [],
   sequence: 0,
   periodTimer: null,

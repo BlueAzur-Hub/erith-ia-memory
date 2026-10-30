@@ -1,7 +1,8 @@
-# Administrator 40.6.710 — verified code deployment, Firefox validation pending
+# Administrator 40.6.711 — bounded network and verified USD cache-first
 
-Parent: 40.6.709. Engine: Market Core 38.15.11, unchanged.
-Scope: correct the saved Solo label using certified native EUR/USD currency; retry annual USD CoinGecko on transient failures only, not HTTP 403 or integrity rejection; require an explicit USD change24hUsd for native USD snapshot. EUR acquisition and other comparison modes unchanged.
-Tests: node --check plus six verification scripts, all PASS on the exact code before publication. Git SHA guards compare all six modified source files with the archived and tested 40.6.710 candidate. No fabricated market data.
-Browser status: Top5 USD annual 365d not certified in Firefox; actual five native USD series must still be checked by the user. 24h EUR/USD 5/5 is observed in supplied screenshots. Compact BTC display vs spot discrepancy remains open and intentionally unchanged.
-Release method: commit main after verifiers; ZIP with eleven files and companion SHA-256 created in this shared directory (AGENT_CRYPTO_ADMINISTRATOR_40.6.710_NATIVE_USD_INTEGRITY_11_FILES.zip). Release code and Pages were deployed; Firefox still displayed running 40.6.709 / update 40.6.710 available at 08:44 on 2026-10-30; browser loaded-build verification remains pending. Deployment procedure: AGENT_CRYPTO_DEPLOYMENT_PROTOCOL.md. The archive does not install on a local Windows machine. Final Firefox validation belongs to the user.
+Parent: 40.6.710. Engine Market Core: 38.15.11 unchanged.
+Changes: 2 concurrent chart permits plus 1 reserved non-chart permit in the existing network governor; queued HTTP timeout starts after obtaining permit; abort removal maintained. Native USD comparison cache consulted first only when the stored series passes the existing native USD integrity and freshness gates. HTTP still used for expired, absent, or wrong-currency data.
+Protected: canonical Top 5 BTC/ETH/BNB/XRP/SOL, full five-series atomic rendering, EUR acquisition, live market sources, Trader, Operator, real trading safety. No fabricated or relabeled EUR/USDT/USDC series.
+Verified: node --check and six existing tests plus the new network/cache regression test on the complete GitHub repository before code commit. Browser performance and Top5 EUR/USD are NOT Firefox-verified at commit time.
+Deferred UI requirement: AGENT_CRYPTO_UI_ALIGNMENT_REQUIREMENT.md (Math Core lower-left, Redivider lower-right with common baseline; no UI change in this release).
+Release path: one code commit, ZIP + SHA-256 in shared folder, explicit GitHub Pages workflow_dispatch publish=true, then independently verify Pages status. Firefox loaded-build and functional verification are separate.

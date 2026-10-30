@@ -41,7 +41,7 @@ if (usd !== null) assert.match(usd,/wrap\("atlasChartStorageKey",o=>function\(c,
 if (usd !== null) assert.match(usd,/[,;]change24h=c\.change24hUsd/);
 if (usd !== null) assert.doesNotMatch(usd,/const price=c\.priceUsd[^\n]*change24h=c\.change24h\b/);
 const build=JSON.parse(fs.readFileSync(path.join(root,"build.json"),"utf8"));
-assert.equal(build.build,"40.6.710");
+assert.equal(build.build,"40.6.711");
 assert.equal(build.published,false);
 assert.match(app,/function atlasVerifiedReferenceHistoryCache\(/);
 assert.match(app,/const cachedEur = atlasVerifiedReferenceHistoryCache\(coin, period, "EUR"\)/);
