@@ -12,7 +12,7 @@ assert.equal(manifest.parent_build, "40.6.711");
 assert(html.includes("40.6.712"));
 assert(app.includes("atlasComparisonRequestKey712"));
 assert(app.includes("atlasComparisonDurations712"));
-assert(/latencyMs:\\s*Math\\.max\\(0, Date\\.now\\(\\) - atlasComparisonStartedAt712\\)/.test(app));
+assert(app.includes("latencyMs: Math.max(0, Date.now() - atlasComparisonStartedAt712)"));
 assert(app.includes("finalEntries.length === ATLAS_SCANNER_TARGET"));
 assert(app.includes("prevalidated.length !== ATLAS_SCANNER_TARGET"));
 assert(app.includes("entry.coin?.id !== tx.candidateIds[index]"));
