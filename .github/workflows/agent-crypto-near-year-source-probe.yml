@@ -1,25 +1,35 @@
-name: Agent Crypto Near-Year Binance Spot Source Verification
+name: Agent Crypto Near-Year Authentic Partial Spot Source Vault
 on:
   pull_request:
     paths:
       - '.github/workflows/agent-crypto-near-year-source-probe.yml'
       - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py'
       - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month_test.py'
+      - 'public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources.py'
+      - 'public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-near-year-partial-bootstrap.json'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-near-year-source-probe.yml'
       - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py'
       - 'public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month_test.py'
+      - 'public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources.py'
+      - 'public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-near-year-partial-bootstrap.json'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   verify-original-month:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -28,6 +38,8 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py
           python public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month_test.py
+          python -m py_compile public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources.py
+          python public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources_test.py
           python public/agent_crypto_erith_ia/tools/probe_near_annual_spot_month.py --plan \
             --output /tmp/near-year-plan.json
           python - <<'PY'
@@ -54,9 +66,68 @@ jobs:
           assert j['new_releases']==0 and j['new_catalog_rows']==0
           assert j['requested_identities']==3
           assert j['verified_original_minutes']==j['verified_assets']*44640
+          assert j['verified_assets']==0, 'Full original months appeared; review source before partial archive'
+          assert j['verified_original_minutes_in_incomplete_sources']==120000
+          for row in j['assets']:
+              d=row['original_partial_source']
+              assert d['missing_inside_original_span']==0
+              assert d['missing_after_last_original']==0
+              assert not d['has_full_month']
+              print('REAL SOURCE PARTIAL',row['asset_id'],
+                    'rows',d['original_native_minutes_observed'],
+                    'prelisting',d['missing_before_first_original'],
+                    'sha',d['source_sha256'])
           print('REAL BINANCE 2025-10 PROBES',json.dumps([
             {k:a.get(k) for k in ('asset_id','pair','status','candles','reason','sha256')}
             for a in j['assets']],sort_keys=True))
+          PY
+      - name: Authorize one immutable original source Release only on main marker addition
+        id: approved
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-near-year-partial-bootstrap.json
+          status=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$status" != A ]]; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-near-year-partial-bootstrap.json').read_text())
+          assert r['schema']=='aerith.public.ohlcv.spot.near-year-partial.bootstrap.v1'
+          assert r['action']=='publish_immutable_original_partial_sources_once'
+          assert r['month']=='2025-10' and r['quote']=='USDT'
+          assert r['coin_ids']==['aster-2','morpho','doublezero']
+          assert r['expected_original_native_candles']==120000
+          assert r['expected_prelisting_slots']==13920
+          assert r['expected_internal_missing_slots']==0
+          assert r['release_tag']=='crypto-spot-binance-near-year-partial-2025-10'
+          assert r['no_overwrite'] is True and r['annual_months_promoted']==0
+          assert r['synthetic_candles']==0 and r['trade_orders'] is False
+          assert r['source_data_outside_git_history'] is True
+          PY
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+      - name: Stage and replay original partial ZIP, CHECKSUM and source manifest
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && steps.approved.outputs.publish == 'true')
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources.py \
+            --stage --output /tmp/near-year-original-stage
+          python public/agent_crypto_erith_ia/tools/archive_near_annual_partial_sources.py \
+            --verify --output /tmp/near-year-original-stage
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/near-year-original-stage')
+          j=json.loads((p/'manifest.json').read_text())
+          assert j['original_source_ohlcv_rows']==120000
+          assert j['prelisting_calendar_slots_not_filled']==13920
+          assert j['internal_missing_slots']==0
+          assert j['annual_full_months_added']==0 and j['synthetic_candles']==0
+          assert len(list(p.iterdir()))==7
+          print('ORIGINAL SOURCE-ONLY VAULT VERIFIED',j['original_source_ohlcv_rows'])
           PY
       - name: Ensure no source data or trading app was rewritten
         run: |
@@ -65,6 +136,56 @@ jobs:
             public/agent_crypto_erith_ia/administrator/ \
             public/agent_crypto_erith_ia/data/ \
             public/agent_crypto_erith_ia/core/
+      - name: Publish immutable partial Binance source files and official checksums
+        if: github.event_name == 'push' && steps.approved.outputs.publish == 'true'
+        run: |
+          set -euo pipefail
+          folder=/tmp/near-year-original-stage
+          tag=crypto-spot-binance-near-year-partial-2025-10
+          if gh release view "$tag" --json tagName > /tmp/near-year-existing.json 2>/tmp/near-year-tag-error.txt; then
+            mkdir -p /tmp/near-year-old
+            gh release download "$tag" --pattern manifest.json --dir /tmp/near-year-old
+            cmp /tmp/near-year-old/manifest.json "$folder/manifest.json" || {
+              echo "::error::Existing immutable source Release differs"; exit 1;
+            }
+          else
+            grep -Eqi 'not found|HTTP 404|release not found' /tmp/near-year-tag-error.txt || {
+              cat /tmp/near-year-tag-error.txt; exit 1;
+            }
+            gh release create "$tag" "$folder"/* --target "$GITHUB_SHA" \
+              --title "Original Binance Spot partial October 2025 sources" \
+              --notes "ASTER, MORPHO and 2Z original Spot USDT 1m ZIPs and Binance checksums: 120000 genuine bars; 13920 prelisting empty slots; zero internal holes and zero fabricated candles. Partial months only, not certified full calendar months; Trader and full-month canonical indexes untouched." \
+              --latest=false
+          fi
+          gh release view "$tag" --json assets,isDraft,url > /tmp/near-year-published.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/near-year-published.json').read_text())
+          expected={p.name:p.stat().st_size for p in Path('/tmp/near-year-original-stage').iterdir()}
+          actual={x['name']:x['size'] for x in r['assets']}
+          assert not r['isDraft'] and actual==expected
+          print('VERIFIED SOURCE RELEASE',r['url'],len(actual))
+          PY
+      - name: Publish searchable partial-source manifest only, never ZIPs, to main
+        if: github.event_name == 'push' && steps.approved.outputs.publish == 'true'
+        run: |
+          set -euo pipefail
+          dest=public/agent_crypto_erith_ia/data/historical_archive_prototype/near_year_partial_source_vault/index.json
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$dest")"
+            cp /tmp/near-year-original-stage/manifest.json "$dest"
+            git add -- "$dest"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo "NOOP: source already indexed"; exit 0; fi
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Index genuine near-year Binance partial Spot sources without month promotion"
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -72,5 +193,6 @@ jobs:
           path: |
             /tmp/near-year-plan.json
             /tmp/near-year-real-proof.json
+            /tmp/near-year-original-stage/manifest.json
           if-no-files-found: warn
           retention-days: 30
