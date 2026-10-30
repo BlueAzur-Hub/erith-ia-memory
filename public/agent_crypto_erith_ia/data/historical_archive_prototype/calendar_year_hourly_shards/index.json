@@ -7,7 +7,7 @@
   "source_catalog_archived": 126,
   "materialized_assets": 126,
   "remaining_archived_assets": 0,
-  "year_shards": 969,
+  "year_shards": 971,
   "max_is_all_time": false,
   "first_exchange_trade_date_not_proven": true,
   "assets": [
@@ -26082,13 +26082,55 @@
       "symbol": "STX",
       "pair": "STXUSDT",
       "quote": "USDT",
-      "source_signature": "2af0c9b9ad5867c532a2618ffd050f6e81959c4e39979527b562aee19bdb8c52",
-      "verified_months": 66,
+      "source_signature": "630a72ac045b4e206c8c152c12ba9e209a1acdba01a4356e30878c5ea2ce4532",
+      "verified_months": 68,
       "shards": [
         {
-          "file": "blockstack-2020-span0-2167ed45706d072305525e6d608a131512b9339f6640fa6c6b5788138d79212a.json.gz",
+          "file": "blockstack-2020-span0-e786499672a215e1a196b7a12a30d6c15b93c85e9cb82ccf3c859bfc0910d290.json.gz",
           "year": 2020,
           "span": 0,
+          "first_open_ms": 1577836800000,
+          "last_open_ms": 1580511600000,
+          "first_month": "2020-01",
+          "last_month": "2020-01",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2020-01",
+              "release": "crypto-spot-bulk-add-2020-01-1m-c62df50b6b18",
+              "source_zip_sha256": "24f5d50a7242d1f09e8c85bbb8509cc1a3b4eea8719d3008982f0e3789fc3ad7",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "e786499672a215e1a196b7a12a30d6c15b93c85e9cb82ccf3c859bfc0910d290",
+          "bytes": 17246
+        },
+        {
+          "file": "blockstack-2020-span1-4b1d4bb028113619d4cf92263e1fb57a26147b4af5e4dace5618c67b860f1754.json.gz",
+          "year": 2020,
+          "span": 1,
+          "first_open_ms": 1588291200000,
+          "last_open_ms": 1590966000000,
+          "first_month": "2020-05",
+          "last_month": "2020-05",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2020-05",
+              "release": "crypto-spot-bulk-add-2020-05-1m-c62df50b6b18",
+              "source_zip_sha256": "4861fadd25e905735ff968e03156b4f55689f6ee7773db2f27619421cb1a208f",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "4b1d4bb028113619d4cf92263e1fb57a26147b4af5e4dace5618c67b860f1754",
+          "bytes": 18796
+        },
+        {
+          "file": "blockstack-2020-span2-c63522f37b1fcd0576e2e9357dade1f65bb564c670af74c5d0f7f01e601f202e.json.gz",
+          "year": 2020,
+          "span": 2,
           "first_open_ms": 1593561600000,
           "last_open_ms": 1604185200000,
           "first_month": "2020-07",
@@ -26121,13 +26163,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "2167ed45706d072305525e6d608a131512b9339f6640fa6c6b5788138d79212a",
+          "sha256": "c63522f37b1fcd0576e2e9357dade1f65bb564c670af74c5d0f7f01e601f202e",
           "bytes": 76358
         },
         {
-          "file": "blockstack-2021-span1-e4a8b5d7df8d3db1976af43803758824eb787d709a10388dca1472773148d2cc.json.gz",
+          "file": "blockstack-2021-span3-93a6d39a95699cef09cbe9afa33a49dae4833229854362a102361164150ee165.json.gz",
           "year": 2021,
-          "span": 1,
+          "span": 3,
           "first_open_ms": 1609459200000,
           "last_open_ms": 1612134000000,
           "first_month": "2021-01",
@@ -26142,13 +26184,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "e4a8b5d7df8d3db1976af43803758824eb787d709a10388dca1472773148d2cc",
-          "bytes": 21949
+          "sha256": "93a6d39a95699cef09cbe9afa33a49dae4833229854362a102361164150ee165",
+          "bytes": 21950
         },
         {
-          "file": "blockstack-2021-span2-5ee4418f161709a146226d62e267f872df37b3edda37dba7bb1eaa7a2a87d3b4.json.gz",
+          "file": "blockstack-2021-span4-03c5704deb55331e57659ac64301f53f45216f94b72fd164df0fd98bc621bec5.json.gz",
           "year": 2021,
-          "span": 2,
+          "span": 4,
           "first_open_ms": 1619827200000,
           "last_open_ms": 1627772400000,
           "first_month": "2021-05",
@@ -26175,13 +26217,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "5ee4418f161709a146226d62e267f872df37b3edda37dba7bb1eaa7a2a87d3b4",
+          "sha256": "03c5704deb55331e57659ac64301f53f45216f94b72fd164df0fd98bc621bec5",
           "bytes": 66478
         },
         {
-          "file": "blockstack-2021-span3-febfa3e18975f90936261f46c98853ac325376c6f6fa574e9dec63bae7974e02.json.gz",
+          "file": "blockstack-2021-span5-0d601a5b6384e4c74bb67fc154fa64794b3e75d96019f1e02e0a32751edab97b.json.gz",
           "year": 2021,
-          "span": 3,
+          "span": 5,
           "first_open_ms": 1633046400000,
           "last_open_ms": 1638313200000,
           "first_month": "2021-10",
@@ -26202,13 +26244,13 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "febfa3e18975f90936261f46c98853ac325376c6f6fa574e9dec63bae7974e02",
+          "sha256": "0d601a5b6384e4c74bb67fc154fa64794b3e75d96019f1e02e0a32751edab97b",
           "bytes": 39132
         },
         {
-          "file": "blockstack-2022-span4-480834652d5b94ac392dd523df62f0b7dda656fa20695d3684baa8a7b3b6dd87.json.gz",
+          "file": "blockstack-2022-span6-2074b7e1996a380dfb4b4ecfbe1f99ec012588942c0f9ba513c1b62b7027d4f8.json.gz",
           "year": 2022,
-          "span": 4,
+          "span": 6,
           "first_open_ms": 1640995200000,
           "last_open_ms": 1672527600000,
           "first_month": "2022-01",
@@ -26289,13 +26331,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "480834652d5b94ac392dd523df62f0b7dda656fa20695d3684baa8a7b3b6dd87",
+          "sha256": "2074b7e1996a380dfb4b4ecfbe1f99ec012588942c0f9ba513c1b62b7027d4f8",
           "bytes": 194732
         },
         {
-          "file": "blockstack-2023-span4-21f2d316cb0c06febc830c1d5b790e1d9c7546d683a41ed40e3b18b212fc8ed5.json.gz",
+          "file": "blockstack-2023-span6-e7f890f629e7e055aff28c2df26a929403e36ef4c7bb9ebeb1fc7779a775103c.json.gz",
           "year": 2023,
-          "span": 4,
+          "span": 6,
           "first_open_ms": 1672531200000,
           "last_open_ms": 1677625200000,
           "first_month": "2023-01",
@@ -26316,13 +26358,13 @@
               "native_1m_count": 40320
             }
           ],
-          "sha256": "21f2d316cb0c06febc830c1d5b790e1d9c7546d683a41ed40e3b18b212fc8ed5",
+          "sha256": "e7f890f629e7e055aff28c2df26a929403e36ef4c7bb9ebeb1fc7779a775103c",
           "bytes": 34117
         },
         {
-          "file": "blockstack-2023-span5-af13d7a6431c87435cafb969f444035e17fabedf78984a9cecc949f84bad22c3.json.gz",
+          "file": "blockstack-2023-span7-a00554e99741e0881a29f9701ee5389f2834ee4309d01b4b961d3ccf4f6467dd.json.gz",
           "year": 2023,
-          "span": 5,
+          "span": 7,
           "first_open_ms": 1680307200000,
           "last_open_ms": 1704063600000,
           "first_month": "2023-04",
@@ -26385,13 +26427,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "af13d7a6431c87435cafb969f444035e17fabedf78984a9cecc949f84bad22c3",
+          "sha256": "a00554e99741e0881a29f9701ee5389f2834ee4309d01b4b961d3ccf4f6467dd",
           "bytes": 186363
         },
         {
-          "file": "blockstack-2024-span5-ece2682c205a1dd3da47b701c621c8676e80876aa6b41f2a4932dda6084f7104.json.gz",
+          "file": "blockstack-2024-span7-ba7d4cb972f319e3dbd066b2c564b82cddcd17bd28d1fc983cfdb1465f64b876.json.gz",
           "year": 2024,
-          "span": 5,
+          "span": 7,
           "first_open_ms": 1704067200000,
           "last_open_ms": 1735686000000,
           "first_month": "2024-01",
@@ -26472,13 +26514,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "ece2682c205a1dd3da47b701c621c8676e80876aa6b41f2a4932dda6084f7104",
-          "bytes": 247668
+          "sha256": "ba7d4cb972f319e3dbd066b2c564b82cddcd17bd28d1fc983cfdb1465f64b876",
+          "bytes": 247670
         },
         {
-          "file": "blockstack-2025-span5-0579bb15abfd3aa63ce7207edaff910c6e25ea0b8f387d6b462460501a6dd5b4.json.gz",
+          "file": "blockstack-2025-span7-c4f6d6d1a56802c8790422de17f592ac1c67258c61cdd6566f3363bae8a94572.json.gz",
           "year": 2025,
-          "span": 5,
+          "span": 7,
           "first_open_ms": 1735689600000,
           "last_open_ms": 1767222000000,
           "first_month": "2025-01",
@@ -26559,13 +26601,13 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "0579bb15abfd3aa63ce7207edaff910c6e25ea0b8f387d6b462460501a6dd5b4",
-          "bytes": 214054
+          "sha256": "c4f6d6d1a56802c8790422de17f592ac1c67258c61cdd6566f3363bae8a94572",
+          "bytes": 214056
         },
         {
-          "file": "blockstack-2026-span5-2786e52b95213d819c9b58d8a85eaef3beb578db4199a665b07c68b6ebae7a4d.json.gz",
+          "file": "blockstack-2026-span7-e35ffa2d0144ce0f7afe4b8994bda1f2968b304f7563e0d5dea5ce9d47eedbc6.json.gz",
           "year": 2026,
-          "span": 5,
+          "span": 7,
           "first_open_ms": 1767225600000,
           "last_open_ms": 1790809200000,
           "first_month": "2026-01",
@@ -26628,7 +26670,7 @@
               "native_1m_count": 43200
             }
           ],
-          "sha256": "2786e52b95213d819c9b58d8a85eaef3beb578db4199a665b07c68b6ebae7a4d",
+          "sha256": "e35ffa2d0144ce0f7afe4b8994bda1f2968b304f7563e0d5dea5ce9d47eedbc6",
           "bytes": 163694
         }
       ]
