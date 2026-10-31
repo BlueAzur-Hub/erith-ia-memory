@@ -12682,7 +12682,7 @@ async function atlasFetchCanonicalAnnualUsdHistory(coin, period, options = {}) {
     await atlasRespectComparisonRequestSpacing(signal, period);
     attempts += 1;
     try {
-      const native = globalThis.AgentCryptoGraphNativeUsd406520?.fetchCoinGeckoUsd;
+      const native = globalThis.AgentCryptoGraphNativeUsd?.fetchCoinGeckoUsd;
       if (typeof native !== "function") throw new Error("source USD native non installée");
       const result = await native(coin, period, {
         signal, timeoutMs: Math.min(16000, ATLAS_COMPARISON_DIRECT_TIMEOUT_MS)
@@ -16414,7 +16414,7 @@ function atlasScannerNativeUsdRequested(tx) {
   } catch { return false; }
 }
 function atlasScannerNativeUsdKey(coin, period) {
-  return globalThis.AgentCryptoGraphNativeUsd406520?.usdStorageKey?.(coin, period, "coingecko") || "";
+  return globalThis.AgentCryptoGraphNativeUsd?.usdStorageKey?.(coin, period, "coingecko") || "";
 }
 function atlasScannerNativeUsdStored(coin, period) {
   const key = atlasScannerNativeUsdKey(coin, period);
@@ -54953,7 +54953,7 @@ async function atlasScannerFetchDirect(tx, coin) {
   // USD scanner 24h shares Solo's CoinGecko native USD endpoint and USD cache.
   // Never mix a Bridge/Binance EUR series into this native USD basket.
   if (atlasScannerNativeUsdRequested(tx)) {
-    const native = globalThis.AgentCryptoGraphNativeUsd406520;
+    const native = globalThis.AgentCryptoGraphNativeUsd;
     if (typeof native?.fetchCoinGeckoUsd !== "function") {
       return { result: null, source: "blocked",
         error: new Error("Collecteur natif CoinGecko USD indisponible") };
