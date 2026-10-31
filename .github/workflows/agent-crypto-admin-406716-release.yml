@@ -1,0 +1,138 @@
+name: Agent Crypto Administrator 40.6.716 gated release
+on:
+  push:
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts/ADMINISTRATOR_40.6.716_RELEASE_REQUEST.md'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: administrator-406716-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source SHA and create exactly three source changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, gzip, base64, hashlib, json, subprocess
+          root=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto")
+          ad=pathlib.Path("public/agent_crypto_erith_ia/administrator")
+          def blob(data):
+            return hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+          expected={"app.js":"27b376aa9820ef64bdfc6fcb83ea8b024a2efdc4",
+            "index.html":"4bf035155925930aba79d0ad4c3dd310e9aa0009",
+            "build.json":"cea4c84cd3a719a8280cbd7d146b1cc62924f76c"}
+          for name,sha in expected.items():
+            assert blob((ad/name).read_bytes())==sha, "Source changed: "+name
+          source=root/"administrator_patch_manifests/AGENT_CRYPTO_ADMINISTRATOR_40.6.715_HAUSSES5_COINBASE_USD_PATCH.gz.b64"
+          diff=gzip.decompress(base64.b64decode(source.read_text().strip()))
+          assert hashlib.sha256(diff).hexdigest()=="f0c7a54b575619ecf9c9e2b7ff7ae1992e42028e25db71b208284836dd5322b3"
+          p=pathlib.Path("_hausses5_verified.diff")
+          p.write_bytes(diff)
+          subprocess.run(["git","apply","--check",str(p)],check=True)
+          subprocess.run(["git","apply",str(p)],check=True)
+          assert blob((ad/"app.js").read_bytes())=="f9d46df5ce85a3493af12ef2cb5b9099c04363d3"
+          index=ad/"index.html"
+          old=index.read_text(encoding="utf-8")
+          assert old.count("40.6.715")>=10 and "40.6.716" not in old
+          index.write_text(old.replace("40.6.715","40.6.716"),encoding="utf-8")
+          build_file=ad/"build.json"
+          build=json.loads(build_file.read_text(encoding="utf-8"))
+          assert build["build"]==build["administrator_build"]=="40.6.715"
+          build.update(build="40.6.716",administrator_build="40.6.716",
+            build_label="Build 40.6.716 · Administrator",parent_build="40.6.715",
+            release="HAUSSES 5 NATIVE USD CACHE AND COINBASE SPOT FALLBACK",
+            published=True,status="PUBLISHED_PENDING_FIREFOX",
+            terrain_verified=False,terrain_pending=True,
+            terrain_proof="HAUSSES5_5_OF_5_USD_FIRST_CLICK_PENDING_FIREFOX",
+            release_notes="AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_HANDOFF.md")
+          build["scanner_406716"]={"scope":"Hausses 5 native USD 24h",
+            "primary":"CoinGecko native USD",
+            "fallback":"Coinbase Exchange Spot OP-USD STX-USD GLM-USD after CoinGecko failure",
+            "limitations":"Coinbase fallback only covers the three verified CoinGecko IDs; other assets remain CoinGecko-only",
+            "source_integrity_required":True,"no_interpolation":True,
+            "market_core_modified":False,"historical_vault_modified":False,
+            "bridge_modified":False,"firefox_5_of_5_verified":False}
+          build_file.write_text(json.dumps(build,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          handoff=root/"administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_HANDOFF.md"
+          assert not handoff.exists()
+          handoff.write_text("""# Administrator 40.6.716 — Hausses 5
+          Date: 2026-10-31
+          Source: main 40.6.715, verified original Git blob hashes.
+          
+          ## Actual changes
+          - Reuse common canonical USD history cache in the Hausses 5 scanner.
+          - On CoinGecko failure, native USD Coinbase Spot 5-minute candles for exact optimism/OP, stacks/STX, golem/GLM IDs, checking product currency/status, instrument identity and 24 h coverage.
+          - No asset substitution, no EUR/USDT/USDC relabeling and no interpolated history.
+          - Market Core 38.15.11, Bridge, historical vault and paper trading unchanged.
+          
+          ## Known limitations
+          Coinbase fallback is limited to three verified assets; Hausses 5 may still fail for a different set of gainers or if sources are unreachable. No guarantee of functional 5/5. Tests on the owner's Firefox are NOT done.
+          
+          ## Version gates
+          Source commit and one canonical incremental ZIP/checksum are in GitHub. GitHub Pages deploy is separate; Firefox load and Hausses 5 5/5 must be verified separately. Do not confuse candidate unit tests with functional acceptance.
+          """.replace("\n          ","\n"),encoding="utf-8")
+          print("SOURCE_VERIFIED app.js",blob((ad/"app.js").read_bytes()))
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Build one incremental ZIP and checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, pathlib, zipfile
+          root=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto")
+          out=root/"administrator_zip_archives"
+          out.mkdir(exist_ok=True)
+          filename="AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_COINBASE_NATIVE_USD_FALLBACK_4_FILES.zip"
+          assert not (out/filename).exists(), "Release archive already exists"
+          parts=[("public/agent_crypto_erith_ia/administrator/app.js","administrator/app.js"),
+            ("public/agent_crypto_erith_ia/administrator/index.html","administrator/index.html"),
+            ("public/agent_crypto_erith_ia/administrator/build.json","administrator/build.json"),
+            ("coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_HANDOFF.md",
+             "coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_HANDOFF.md")]
+          with zipfile.ZipFile(out/filename,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for source,arc in parts:
+              info=zipfile.ZipInfo(arc,date_time=(2026,10,31,0,0,0))
+              info.compress_type=zipfile.ZIP_DEFLATED
+              info.external_attr=0o644<<16
+              z.writestr(info,pathlib.Path(source).read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          with zipfile.ZipFile(out/filename) as z:
+            assert z.testzip() is None and z.namelist()==[arc for _,arc in parts]
+          digest=hashlib.sha256((out/filename).read_bytes()).hexdigest()
+          (out/(filename+".sha256")).write_text(digest+"  "+filename+"\n")
+          print("ARCHIVE_OK",filename,digest)
+          PY
+      - name: Single commit source plus archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/build.json
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_HANDOFF.md
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives/AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_COINBASE_NATIVE_USD_FALLBACK_4_FILES.zip*
+          git diff --cached --check
+          git commit -m "Release Administrator 40.6.716 Hausses 5 native USD fallback"
+          git push origin HEAD:main
+      - name: Dispatch existing Pages workflow with publish flag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/agent-crypto-runtime-pages.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"publish":true}}'
