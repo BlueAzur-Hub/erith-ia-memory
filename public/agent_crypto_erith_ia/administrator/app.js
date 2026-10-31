@@ -16582,12 +16582,18 @@ async function atlasScannerRun(tx) {
       }
     }
 
-    // If recent individual caches do not share a usable time window,
-    // refresh only the five requested IDs instead of scanning lower-ranked assets.
-    if (tx.validCount < ATLAS_SCANNER_TARGET) {
+    // An accepted cached series must never consume a network attempt merely
+    // because another asset lacks coverage. Refresh only misaligned IDs.
+    if (tx.validCount < ATLAS_SCANNER_TARGET && accepted.length) {
+      const alignedIds = new Set(atlasScannerAligned(
+        accepted, tx.period, tx.candidateIds, tx.windowEnd
+      ).map(entry => entry.coin?.id));
       const queued = new Set(networkQueue.map(coin => coin.id));
       for (const coin of coins) {
-        if (!queued.has(coin.id)) networkQueue.push(coin);
+        if (!alignedIds.has(coin.id) && !queued.has(coin.id)) {
+          networkQueue.push(coin);
+          queued.add(coin.id);
+        }
       }
     }
 
@@ -16728,7 +16734,14 @@ async function atlasScannerRun(tx) {
     const missingSymbols = missingIds.map(id =>
       String(state.coins.find(coin => coin.id === id)?.symbol || id).toUpperCase()
     );
+    const frameTime = typeof tx.marketTimestamp === "number"
+      ? (tx.marketTimestamp < 1e11 ? tx.marketTimestamp * 1000 : tx.marketTimestamp)
+      : Date.parse(String(tx.marketTimestamp || ""));
+    const snapshotAgeMs = Date.now() - frameTime;
+    const marketAgeWarning = Number.isFinite(frameTime) && frameTime > 0 && snapshotAgeMs > 30 * 60000
+      ? `Classement Market daté : ${Math.round(snapshotAgeMs / 60000)} min` : null;
     const detail = [
+      marketAgeWarning,
       missingSymbols.length ? `Séries non affichées : ${missingSymbols.join(", ")}` : null,
       ...rejected.slice(0, 5).map(row => `${String(row.symbol || row.id || "?").toUpperCase()} : ${row.reason}`)
     ].filter(Boolean).join(" · ");
@@ -49644,6 +49657,36 @@ function atlasAnnounceDirectRetry(delayMs, context = "Snapshot public Crypto ind
   atlasSyncTruthDatasets();
 }
 
+// One CoinGecko origin budget for Market, spot and chart requests.
+// These reservations are independent of the chart/market concurrency lanes:
+// a successful top-five cache read incurs no network delay.
+const atlasCoinGeckoGate = { nextAt: 0, cooldownUntil: 0, consecutiveFailures: 0 };
+function atlasCoinGeckoIsPublicUrl(url) {
+  return /^https:\/\/api\.coingecko\.com\//i.test(String(url || ""));
+}
+async function atlasCoinGeckoReserve(url, signal = null) {
+  if (!atlasCoinGeckoIsPublicUrl(url)) return;
+  if (signal?.aborted) throw atlasNetworkAbortError();
+  const now = Date.now();
+  const slot = Math.max(now, atlasCoinGeckoGate.nextAt, atlasCoinGeckoGate.cooldownUntil);
+  // The unauthenticated public service has a variable global rate limit.
+  atlasCoinGeckoGate.nextAt = slot + 6000;
+  if (slot > now) await atlasWaitWithSignal(slot - now, signal);
+}
+function atlasCoinGeckoObserve(url, status = 200, error = null) {
+  if (!atlasCoinGeckoIsPublicUrl(url)) return;
+  const code = Number(status || 0);
+  if (code >= 200 && code < 400 && !error) {
+    atlasCoinGeckoGate.consecutiveFailures = 0;
+    return;
+  }
+  atlasCoinGeckoGate.consecutiveFailures += 1;
+  const extra = code === 429 ? 45_000 : code >= 500 ? 15_000 : !code ? 12_000 : 0;
+  if (extra) atlasCoinGeckoGate.cooldownUntil = Math.max(
+    atlasCoinGeckoGate.cooldownUntil, Date.now() + extra
+  );
+}
+
 async function fetchWithTimeout(url, options = {}, timeout = 12000) {
   const controller = new AbortController();
   const externalSignal = options?.signal || null;
@@ -49660,6 +49703,7 @@ async function fetchWithTimeout(url, options = {}, timeout = 12000) {
   delete requestOptions.networkWaitMs;
   try {
     if (networkKind) networkToken = await atlasAcquireNetwork(networkKind, externalSignal, networkWaitMs);
+    await atlasCoinGeckoReserve(url, externalSignal);
     // A queued source must receive its full HTTP timeout after acquiring the network permit.
     timer = setTimeout(() => controller.abort(), timeout);
     const response = await fetch(url, {
@@ -49671,6 +49715,7 @@ async function fetchWithTimeout(url, options = {}, timeout = 12000) {
       signal: controller.signal,
       cache: "no-store"
     });
+    atlasCoinGeckoObserve(url, response.status, response.ok ? null : new Error("HTTP status"));
     if (!response.ok) {
       const error = new Error(`HTTP ${response.status}`);
       error.status = response.status;
@@ -49678,6 +49723,7 @@ async function fetchWithTimeout(url, options = {}, timeout = 12000) {
     }
     return await response.json();
   } catch (error) {
+    if (!error?.status && !controller.signal.aborted) atlasCoinGeckoObserve(url, 0, error);
     if (externalSignal?.aborted) {
       const aborted = new Error("Requête annulée");
       aborted.name = "AbortError";
@@ -50911,9 +50957,11 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
   try {
     networkToken = await atlasAcquireNetwork("chart", signal, ATLAS_NETWORK_WAIT_TIMEOUT_MS);
     if (signal?.aborted) throw atlasChartAbortError();
+    await atlasCoinGeckoReserve(url, signal);
     // Give the request its FULL HTTP timeout after queue acquisition, not before.
     timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
     const response = await fetch(url, { cache: "no-store", signal: controller.signal, headers: { accept: "application/json" } });
+    atlasCoinGeckoObserve(url, response.status, response.ok ? null : new Error("HTTP status"));
     if (!response.ok) {
       const error = new Error(`HTTP ${response.status}`);
       error.status = response.status;
@@ -50921,6 +50969,7 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
     }
     return await response.json();
   } catch (error) {
+    if (!error?.status && !controller.signal.aborted) atlasCoinGeckoObserve(url, 0, error);
     if (signal?.aborted) throw atlasChartAbortError();
     if (timedOut) {
       const timeoutError = new Error("délai réseau dépassé");
