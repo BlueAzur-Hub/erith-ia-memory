@@ -7,6 +7,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
       - 'public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs'
+      - 'public/agent_crypto_erith_ia/tools/verify_administrator_graph_provenance_714.cjs'
       - '.github/workflows/agent-crypto-administrator-package.yml'
   workflow_dispatch:
 permissions:
@@ -27,9 +28,10 @@ jobs:
           sparse-checkout: |
             /public/agent_crypto_erith_ia/administrator/
             /public/agent_crypto_erith_ia/tools/
-            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_REPORT.md
-            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_7_FILES.zip
-            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_7_FILES.zip.sha256
+            /public/agent_crypto_erith_ia/apply_graph_truth.py
+            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.714_PROVENANCE_REPORT.md
+            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.714_EUR_USD_CHART_PROVENANCE_7_FILES.zip
+            /coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_ADMINISTRATOR_40.6.714_EUR_USD_CHART_PROVENANCE_7_FILES.zip.sha256
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -37,6 +39,7 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --test public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_graph_provenance_714.cjs
           node public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs
           node public/agent_crypto_erith_ia/tools/verify_administrator_canonical_top5_integrity.cjs
           node public/agent_crypto_erith_ia/tools/verify_administrator_network_latency.cjs
@@ -51,13 +54,13 @@ jobs:
           tools=root/'public/agent_crypto_erith_ia/tools'
           shared=root/'coordination/inter_ai_dialogues/agent_crypto'
           version=json.loads((app/'build.json').read_text(encoding='utf-8'))['build']
-          if version != '40.6.713': raise SystemExit('Unexpected build: '+version)
-          name='AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_7_FILES.zip'
+          if version != '40.6.714': raise SystemExit('Unexpected build: '+version)
+          name='AGENT_CRYPTO_ADMINISTRATOR_40.6.714_EUR_USD_CHART_PROVENANCE_7_FILES.zip'
           paths=[app/'app.js',app/'index.html',app/'build.json',
-            tools/'verify_administrator_712_atomic_and_dedup.cjs',
-            tools/'verify_administrator_canonical_top5_integrity.cjs',
+            tools/'verify_administrator_graph_provenance_714.cjs',
             tools/'verify_administrator_bridge_scanner_auth.cjs',
-            shared/'AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_REPORT.md']
+            root/'public/agent_crypto_erith_ia/apply_graph_truth.py',
+            shared/'AGENT_CRYPTO_ADMINISTRATOR_40.6.714_PROVENANCE_REPORT.md']
           manifest=''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.as_posix()+'\n' for p in paths)
           out=shared/name
           with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
@@ -74,12 +77,12 @@ jobs:
         run: |
           set -euo pipefail
           dest=coordination/inter_ai_dialogues/agent_crypto
-          name=AGENT_CRYPTO_ADMINISTRATOR_40.6.713_SCANNER_BRIDGE_AUTH_DATA_IDENTITY_7_FILES.zip
+          name=AGENT_CRYPTO_ADMINISTRATOR_40.6.714_EUR_USD_CHART_PROVENANCE_7_FILES.zip
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$dest/$name" "$dest/$name.sha256"
           git diff --cached --quiet && exit 0
-          git commit -m "Archive Administrator 40.6.713 scanner Bridge release with SHA256"
+          git commit -m "Archive Administrator 40.6.714 EUR/USD graph provenance release with SHA256"
           for i in 1 2 3; do
             git pull --rebase origin main
             if git push origin HEAD:main; then exit 0; fi
