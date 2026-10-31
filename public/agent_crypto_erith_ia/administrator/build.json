@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.713",
+  "build": "40.6.714",
   "engine": "38.15.11",
-  "release": "AUTHENTICATED OPTIONAL SCANNER BRIDGE AND SNAPSHOT IDENTITY — PUBLISHED",
+  "release": "GRAPH 24H EUR/USD SPOT/HISTORY PROVENANCE — PUBLISHED PENDING FIREFOX",
   "published": true,
   "status": "PUBLISHED_PENDING_FIREFOX",
-  "parent_build": "40.6.712",
+  "parent_build": "40.6.713",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.713",
-  "build_label": "Build 40.6.713 · Administrator",
+  "administrator_build": "40.6.714",
+  "build_label": "Build 40.6.714 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "FIREFOX_VERIFICATION_PENDING",
+  "terrain_proof": "FIREFOX_24H_EUR_USD_PROVENANCE_RECIPE_PENDING",
   "release_notes": "AGENT_CRYPTO_ADMINISTRATOR_HANDOFF.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -11043,5 +11043,15 @@
     "market_core_modified": false,
     "trader_modified": false,
     "firefox_verified": false
+  },
+  "graph_provenance_406714": {
+    "scope": "no new charts/requests; audit statuses and existing side details only",
+    "market_change_currency": "declared or NON QUALIFIÉE",
+    "spot_price_comparability": "same Coingecko provider, EUR/USD quote and <=20m timestamp",
+    "no_synthetic_ohlcv": true,
+    "auto_orders": false,
+    "new_storage_owner": false,
+    "new_network_request": false,
+    "new_recurring_timer": false
   }
 }
