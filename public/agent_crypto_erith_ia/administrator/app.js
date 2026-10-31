@@ -16635,8 +16635,8 @@ async function atlasScannerRun(tx) {
       }
     };
 
-    // EUR historical requests share one public CoinGecko rate budget.
-    // Keep the existing native USD scanner concurrency.
+    // Serialize CoinGecko scanner requests for both native USD and EUR.
+    // Prevent stacked bursts when a user switches comparison presets.
     const scannerConcurrency = atlasScannerNativeUsdRequested(tx)
       ? ATLAS_SCANNER_NETWORK_CONCURRENCY : 1;
     await Promise.all(
@@ -54740,7 +54740,8 @@ async function atlasMarketRegistryFetchJson(path) {
   return response.json();
 }
 
-const ATLAS_SCANNER_NETWORK_CONCURRENCY = 2;
+// All scanner presets share CoinGecko's public rate budget; one scanner fetch at a time.
+const ATLAS_SCANNER_NETWORK_CONCURRENCY = 1;
 
 const ATLAS_SCANNER_BRIDGE_FAST_TIMEOUT_MS = 16000;
 
@@ -54900,29 +54901,26 @@ async function atlasScannerFetchDirect(tx, coin) {
       return { result: null, source: "blocked",
         error: new Error("Collecteur natif CoinGecko USD indisponible") };
     }
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
-        const result = await native.fetchCoinGeckoUsd(coin, tx.period, {
-          signal: tx.controller.signal,
-          timeoutMs: 24000
-        });
-        if (result.currency !== "USD" || result.quoteCurrency !== "USD") {
-          throw new Error("Série retournée sans preuve USD");
-        }
-        const coverage = atlasScannerSeriesCoversWindow(result, tx);
-        if (!coverage.ok) throw new Error(coverage.reason);
-        atlasScannerNativeUsdStore(coin, tx.period, result);
-        return { result, source: "direct", provider: "coingecko-usd-native-solo" };
-      } catch (error) {
-        if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
-        errors.push(`CoinGecko USD tentative ${attempt + 1} : ${String(error?.message || error)}`);
-        if (attempt === 0) {
-          const rateLimited = /429|too many|rate limit/i.test(String(error?.message || error));
-          await atlasWaitWithSignal(rateLimited ? 5000 : 1500, tx.controller.signal);
-        }
+    // One request per scanner attempt. The transaction owner alone decides
+    // whether a missing Market ID gets one additional, bounded attempt.
+    // Do not stack an invisible retry loop on top of the scanner budget.
+    try {
+      const result = await native.fetchCoinGeckoUsd(coin, tx.period, {
+        signal: tx.controller.signal,
+        timeoutMs: 24000
+      });
+      if (result.currency !== "USD" || result.quoteCurrency !== "USD") {
+        throw new Error("Série retournée sans preuve USD");
       }
+      const coverage = atlasScannerSeriesCoversWindow(result, tx);
+      if (!coverage.ok) throw new Error(coverage.reason);
+      atlasScannerNativeUsdStore(coin, tx.period, result);
+      return { result, source: "direct", provider: "coingecko-usd-native-solo" };
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      return { result: null, source: "blocked",
+        error: new Error(`CoinGecko USD ${coin?.symbol || coin?.id || "?"} : ${String(error?.message || error)}`) };
     }
-    return { result: null, source: "blocked", error: new Error(errors.join(" · ")) };
   }
 
   // CoinGecko owns these Market IDs and the historical EUR quote.
