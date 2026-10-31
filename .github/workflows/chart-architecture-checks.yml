@@ -1,0 +1,119 @@
+name: Agent Crypto Chart Architecture Branch Checks
+on:
+  push:
+    branches:
+      - work/chart-architecture-repair
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js'
+      - '.github/workflows/chart-architecture-checks.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Full JavaScript syntax and invariant checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js
+          node <<'JS'
+          const fs=require('fs'),assert=require('assert');
+          const root='public/agent_crypto_erith_ia/administrator';
+          const app=fs.readFileSync(root+'/app.js','utf8');
+          const usd=fs.readFileSync(root+'/js/graph-native-usd.js','utf8');
+          const segment=(text,needle)=>{const start=text.indexOf(needle);assert(start>=0);const end=text.indexOf('\n}\n',start);assert(end>start);return text.slice(start,end+3)};
+          const compare=segment(app,'async function renderComparisonAnalystPanel(options = {})');
+          const top=segment(app,'function atlasSelectTopComparison(limit = 3)');
+          const resilient=segment(app,'async function atlasFetchComparisonSeriesResilient(coin, period, options = {})');
+          const fwt=segment(app,'async function fetchWithTimeout(url, options = {}, timeout = 12000)');
+          const fetchJson=segment(app,'async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRECT_TIMEOUT_MS } = {})');
+          assert(compare.indexOf('try {\n  const period =')>=0);
+          assert(compare.includes('} finally {\n    // Do not clear a newer controller'));
+          assert(compare.includes('state.chartEngineV2?.controller === controller'));
+          assert(compare.includes('state.chartEngineV2.loading = false;'));
+          assert(compare.includes('state.dataBroker.comparison.status = "blocked"'));
+          assert(top.includes('atlasScannerCancel("top-comparison-selection"'));
+          assert(resilient.includes('nativeUsdOwner.compareUsd(coin, period, options)'));
+          assert(usd.includes('compareUsd:cmp'));
+          assert(!usd.includes('wrap("atlasFetchComparisonSeriesResilient"'));
+          assert(fwt.indexOf('await atlasCoinGeckoReserve(url, externalSignal)')<fwt.indexOf('await atlasAcquireNetwork(networkKind, externalSignal'));
+          assert(fetchJson.indexOf('await atlasCoinGeckoReserve(url, signal)')<fetchJson.indexOf('await atlasAcquireNetwork("chart", signal'));
+          assert(app.includes('finalEntries.length === ATLAS_SCANNER_TARGET'));
+          assert(app.includes('atlasScannerSeriesCoversWindow(stored, tx).ok'));
+          assert(app.includes('function atlasStorageReliefWaitIdle(')||app.includes('async function atlasStorageReliefWaitIdle('));
+          console.log('PASS: JS syntax, single USD comparison owner, Top cancel Scanner, network reservation order, 5/5 integrity, storage preserved');
+          JS
+      - name: Top 5 direct selection hands off Scanner activity
+        shell: bash
+        run: |
+          node <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const app=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+          const start=app.indexOf('function atlasSelectTopComparison(limit = 3)'),end=app.indexOf('\n}\n',start);
+          assert(start>=0&&end>start);
+          const calls=[],names=['bitcoin','ethereum','binancecoin','ripple','solana'];
+          const coins=names.map((id,i)=>({id,symbol:['BTC','ETH','BNB','XRP','SOL'][i]}));
+          const ctx={
+            state:{liveOk:true,coins,dataBroker:{}},
+            atlasScannerTransaction:{preset:'gainers'},
+            atlasScannerQueuedRequest:null,
+            atlasScannerCancel:(reason)=>{calls.push('cancel:'+reason);ctx.atlasScannerTransaction=null},
+            atlasCuratedTopIds:(n)=>names.slice(0,n),
+            atlasCuratedTopCoins:(n)=>coins.slice(0,n),
+            atlasSetComparisonIds:(ids,first,options)=>calls.push('selection:'+ids.join(',')+':'+options.preset),
+            atlasBrokerSeedSpot:()=>{},getSelectedCoin:()=>coins[0],renderScore:()=>{},
+            atlasPatchMarketSelectionState:()=>{},
+            els:{chartCaption:{}},atlasSetChartCaptionText:(t)=>calls.push('caption:'+t),
+            requestAnimationFrame:(fn)=>fn(),
+            renderAnalystPanel:(opts)=>calls.push('render:'+opts.topComparison),
+            Number,String
+          };
+          vm.createContext(ctx);vm.runInContext(app.slice(start,end+3),ctx);
+          vm.runInContext('atlasSelectTopComparison(5)',ctx);
+          assert(calls[0]==='cancel:top-comparison-selection',calls.join('|'));
+          assert(calls.includes('selection:'+names.join(',')+':rank-5'));
+          assert(calls.includes('render:5'));
+          console.log('PASS: direct Top 5 owns selection after active Scanner');
+          JS
+      - name: Cancelled or superseded comparison cannot clear successor state
+        shell: bash
+        run: |
+          node <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const app=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+          const start=app.indexOf('} finally {\n    // Do not clear a newer controller');
+          assert(start>=0);
+          const end=app.indexOf('\n  }\n}\n\nfunction ',start);
+          assert(end>start,'cannot isolate finalizer');
+          const body=app.slice(start+'} finally {\n'.length,end);
+          const calls=[];
+          const old={};const current={};
+          const state={chartEngineV2:{controller:old,loading:true,activeRequestKey:'top5'},dataBroker:{comparison:{status:'loading'},chart:{status:'loading'}},chartPeriodDays:1};
+          const ctx={state,controller:old,els:{chartCaption:{}},atlasSetChartCaptionText:s=>calls.push(s),
+            atlasChartSetPeriodButtons:()=>{},atlasRenderComparisonControls:()=>{},atlasPatchMarketSelectionState:()=>{},Number};
+          vm.createContext(ctx);
+          vm.runInContext('(function(){'+body+'})()',ctx);
+          assert(!state.chartEngineV2.loading);
+          assert(state.chartEngineV2.activeRequestKey===null);
+          assert(state.chartEngineV2.controller===null);
+          assert(state.dataBroker.comparison.status==='blocked');
+          assert(calls.some(x=>x.includes('interrompue')));
+          // An old request's finally must not override a newer owner.
+          state.chartEngineV2={controller:current,loading:true,activeRequestKey:'top5-new'};
+          state.dataBroker.comparison.status='loading';calls.length=0;
+          vm.runInNewContext('(function(){'+body+'})()',{...ctx,controller:old});
+          assert(state.chartEngineV2.controller===current);
+          assert(state.chartEngineV2.loading===true);
+          assert(state.chartEngineV2.activeRequestKey==='top5-new');
+          assert(calls.length===0);
+          console.log('PASS: owning request finalizes and superseded request does not clear successor');
+          JS
