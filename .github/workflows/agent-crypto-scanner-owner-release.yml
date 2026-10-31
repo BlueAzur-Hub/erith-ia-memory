@@ -1,0 +1,214 @@
+name: Agent Crypto - scanner owner release
+on:
+  push:
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts/SCANNER_OWNER_RELEASE_REQUEST.md'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: agent-crypto-scanner-owner-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact main source and restore one canonical scanner owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/administrator")
+          admin=root/"app.js"
+          index=root/"index.html"
+          build=root/"build.json"
+          legacy=root/"js/graph-native-usd-406520.js"
+          modern=root/"js/graph-native-usd.js"
+          def blob(data):
+              return hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+          expected={
+              "app.js":"f9d46df5ce85a3493af12ef2cb5b9099c04363d3",
+              "index.html":"05098fe46a456db801d233aa12e6f655aea9d601",
+              "build.json":"fea33041a565b4134d37aed32e0b5f82183007d7",
+              "js/graph-native-usd-406520.js":"b04700174c00ef9f9f4b74ce6bc692b58e6aa1c5"}
+          assert not modern.exists(),"Stable module already exists"
+          for name,expected_sha in expected.items():
+              assert blob((root/name).read_bytes())==expected_sha, "Source conflict: "+name
+          app=admin.read_text(encoding="utf-8")
+          assert app.count("AgentCryptoGraphNativeUsd406520")==3
+          app=app.replace("AgentCryptoGraphNativeUsd406520","AgentCryptoGraphNativeUsd")
+          admin.write_text(app,encoding="utf-8")
+          s=legacy.read_text(encoding="utf-8")
+          assert s.count("AgentCryptoGraphNativeUsd406520")==1
+          assert s.count("agentCrypto.graphNativeUsd406520")==1
+          s=s.replace("AgentCryptoGraphNativeUsd406520","AgentCryptoGraphNativeUsd").replace("agentCrypto.graphNativeUsd406520","agentCrypto.graphNativeUsd")
+          start=s.index("async function scan(tx,c)")
+          brace=s.index("{",start)
+          depth=1
+          end=brace+1
+          while depth and end<len(s):
+              if s[end]=="{": depth+=1
+              if s[end]=="}": depth-=1
+              end+=1
+          assert depth==0
+          s=s[:start]+s[end:].lstrip("\n")
+          hook=';wrap("atlasScannerFetchDirect",o=>async function(tx,c){return usd()&&!canonicalTop5History(tx?.period)?scan(tx,c):o.apply(this,arguments)});'
+          assert s.count(hook)==1
+          s=s.replace(hook,";")
+          assert "atlasScannerFetchDirect" not in s
+          modern.write_text(s,encoding="utf-8")
+          legacy.unlink()
+          t=index.read_text(encoding="utf-8")
+          assert t.count("graph-native-usd-406520.js")==1
+          assert t.count("40.6.716")>=10
+          t=t.replace("graph-native-usd-406520.js?v=40.6.640&amp;top5-usd=canonical-market-observations","graph-native-usd.js?v=40.6.717&amp;top5-usd=canonical-market-observations")
+          t=t.replace('data-agent-crypto-graph-native-usd="40.6.640"','data-agent-crypto-graph-native-usd="stable"')
+          t=t.replace("40.6.716","40.6.717")
+          assert "graph-native-usd-406520" not in t
+          index.write_text(t,encoding="utf-8")
+          b=json.loads(build.read_text(encoding="utf-8"))
+          assert b["build"]==b["administrator_build"]=="40.6.716"
+          raw=json.dumps(b,ensure_ascii=False)
+          assert raw.count("graph-native-usd-406520.js")==2
+          assert raw.count("AgentCryptoGraphNativeUsd406520")==1
+          raw=raw.replace("graph-native-usd-406520.js","graph-native-usd.js")
+          raw=raw.replace("AgentCryptoGraphNativeUsd406520","AgentCryptoGraphNativeUsd")
+          b=json.loads(raw)
+          b.update(build="40.6.717",administrator_build="40.6.717",
+              parent_build="40.6.716",build_label="Build 40.6.717 · Administrator",
+              release="HAUSSES 5 SCANNER OWNER RESTORED AND STABLE USD MODULE NAMES",
+              published=True,status="PUBLISHED_PENDING_FIREFOX",
+              terrain_verified=False,terrain_pending=True,
+              terrain_proof="HAUSSES5_5_OF_5_USD_FIRST_CLICK_PENDING_FIREFOX",
+              release_notes="AGENT_CRYPTO_ADMINISTRATOR_40.6.717_SCANNER_OWNER_HANDOFF.md")
+          b["scanner_owner_repair"]={
+              "single_scanner_owner":"app.js:atlasScannerFetchDirect",
+              "usd_module":"js/graph-native-usd.js",
+              "usd_runtime_api":"AgentCryptoGraphNativeUsd",
+              "legacy_scanner_wrapper_removed":True,
+              "coinbase_fallback_reachable":True,
+              "market_core_modified":False,
+              "no_synthetic_history":True,
+              "five_of_five_in_firefox":"PENDING"}
+          build.write_text(json.dumps(b,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          for filename,verified in {
+              "app.js":"be690d4f9a624136b2533d9a2a71b51a7f04d67c",
+              "index.html":"ebb550fbbee86b2281d50d753c10ce4cfee5a059",
+              "js/graph-native-usd.js":"aa2bbdc4f6473c949a1864b13c077fb63e694281"}.items():
+              assert blob((root/filename).read_bytes())==verified,"Unexpected modified source: "+filename
+          handoff=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.717_SCANNER_OWNER_HANDOFF.md")
+          assert not handoff.exists()
+          handoff.write_text("""# Administrator 40.6.717 — Scanner ownership and stable naming
+          
+          Source: main 40.6.716; all four base Git blobs verified before changing anything.
+          
+          ## Root cause
+          graph-native-usd-406520.js installed a global wrapper of atlasScannerFetchDirect. For USD, canonicalTop5History returned false, so the wrapper called a duplicate CoinGecko-only scan(), bypassing the Coinbase native USD fallback in app.js.
+          
+          ## Code correction
+          - The stable module is now js/graph-native-usd.js, with stable runtime API AgentCryptoGraphNativeUsd and Symbol.for agentCrypto.graphNativeUsd.
+          - Remove duplicate scan() and the global override of atlasScannerFetchDirect. Keep other USD presentation and quote-identity protections unchanged.
+          - Update exactly three app.js references plus the HTML entry, build metadata and original module filename.
+          - No Market Core, EUR history, Bridge, Vault, risk rules or real order changes.
+          - The original versioned module path is removed from the source tree; historical commits retain rollback.
+          
+          ## Evidence and limitation
+          The isolated runtime check confirms that installing the USD module never replaces the canonical scanner function in app.js. Node syntax and source SHA gates also pass.
+          This fixes an actual ownership conflict but is NOT a claim that CAP/OP/GLM or any future five market gainers have 24h genuine coverage.
+          Firefox first-click Hausses 5 5/5 remains PENDING the operator's test. No fabricated data, no substitutions, no automatic reset.
+          
+          The ZIP is incremental: app.js, index.html, build.json and the stable graph-native-usd.js; this handoff and SHA-256 are archived next to it in coordination.
+          """.replace("\n          ","\n"),encoding="utf-8")
+          print("SOURCE_SHA_VERIFIED; duplicate scanner removed; stable owner installed")
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js
+      - name: Isolated runtime check of the actual USD module
+        run: |
+          node <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const root='public/agent_crypto_erith_ia/administrator';
+          const original=async function scanner(){return 'canonical'};
+          const ctx={atlasScannerFetchDirect:original,
+            AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:'USD'})},
+            Intl,Date,Number,Object,Map,Set,String,Error,Symbol,console};
+          ctx.globalThis=ctx;
+          vm.runInNewContext(fs.readFileSync(root+'/js/graph-native-usd.js','utf8'),ctx);
+          const snapshot=ctx.AgentCryptoGraphNativeUsd.install();
+          assert.strictEqual(snapshot.displayCurrency,'USD');
+          assert.strictEqual(ctx.atlasScannerFetchDirect,original,'Scanner owner replaced');
+          assert.strictEqual(typeof ctx.AgentCryptoGraphNativeUsd.fetchCoinGeckoUsd,'function');
+          assert.strictEqual(ctx.AgentCryptoGraphNativeUsd406520,undefined);
+          const app=fs.readFileSync(root+'/app.js','utf8');
+          assert(app.includes('const native = globalThis.AgentCryptoGraphNativeUsd;'));
+          assert(app.includes('await atlasScannerCoinbaseUsdSpot(tx, coin)'));
+          const index=fs.readFileSync(root+'/index.html','utf8');
+          assert(index.includes('graph-native-usd.js?v=40.6.717'));
+          const build=JSON.parse(fs.readFileSync(root+'/build.json','utf8'));
+          assert(build.build==='40.6.717');
+          assert(!JSON.stringify(build).includes('graph-native-usd-406520'));
+          console.log('PASS: native USD module leaves scanner ownership unchanged');
+          JS
+      - name: Publish one canonical four-file incremental archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,zipfile,hashlib
+          root=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto")
+          out=root/"administrator_zip_archives"
+          out.mkdir(exist_ok=True)
+          name="AGENT_CRYPTO_ADMINISTRATOR_40.6.717_HAUSSES5_SCANNER_OWNER_NATIVE_USD_4_FILES.zip"
+          assert not (out/name).exists(),"Archive already exists"
+          files=[("public/agent_crypto_erith_ia/administrator/app.js","administrator/app.js"),
+              ("public/agent_crypto_erith_ia/administrator/index.html","administrator/index.html"),
+              ("public/agent_crypto_erith_ia/administrator/build.json","administrator/build.json"),
+              ("public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js","administrator/js/graph-native-usd.js")]
+          with zipfile.ZipFile(out/name,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for source,arc in files:
+                  info=zipfile.ZipInfo(arc,date_time=(2026,10,31,0,0,0))
+                  info.compress_type=zipfile.ZIP_DEFLATED
+                  info.external_attr=0o644<<16
+                  z.writestr(info,pathlib.Path(source).read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          with zipfile.ZipFile(out/name) as z:
+              assert z.testzip() is None
+              assert z.namelist()==[arc for _,arc in files]
+          sha=hashlib.sha256((out/name).read_bytes()).hexdigest()
+          (out/(name+".sha256")).write_text(sha+"  "+name+"\n",encoding="utf-8")
+          print("ARCHIVE_VERIFIED",name,"SHA256",sha)
+          PY
+      - name: Atomic commit of source and authoritative ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/agent_crypto_erith_ia/administrator/app.js
+          git add -A public/agent_crypto_erith_ia/administrator/index.html
+          git add -A public/agent_crypto_erith_ia/administrator/build.json
+          git add -A public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          git add -A public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.717_SCANNER_OWNER_HANDOFF.md
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives/AGENT_CRYPTO_ADMINISTRATOR_40.6.717_HAUSSES5_SCANNER_OWNER_NATIVE_USD_4_FILES.zip*
+          git diff --cached --check
+          git commit -m "Fix Hausses 5 scanner ownership and remove versioned USD module names"
+          git push origin HEAD:main
+      - name: Explicitly deploy current main through existing Pages pipeline
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/agent-crypto-runtime-pages.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"publish":true}}'
