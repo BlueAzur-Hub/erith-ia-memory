@@ -1,0 +1,181 @@
+name: Agent Crypto - Shared CoinGecko Scanner Release
+on:
+  push:
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts/SCANNER_NETWORK_RELEASE_REQUEST.md'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: agent-crypto-scanner-network-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Lock the accepted source and apply only the reviewed patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,hashlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/administrator")
+          expected={"app.js":"a4b1f3df8ec91ab41537181d0694543161ec5f52",
+                    "index.html":"8e6b7fd9f848369eee5f1d4520e8651d00a7b141",
+                    "build.json":"da87a640324a0dd20d43bae4640866d1a69a2d9b"}
+          for path,sha in expected.items():
+            raw=(root/path).read_bytes()
+            got=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
+            assert got==sha, "Base source diverged: "+path+" "+got
+          print("PASS: 40.6.718 app, HTML, build matched exact Git blobs")
+          PY
+          git apply --check coordination/inter_ai_dialogues/agent_crypto/administrator_patch_manifests/scanner_network_repair.patch
+          git apply coordination/inter_ai_dialogues/agent_crypto/administrator_patch_manifests/scanner_network_repair.patch
+          python3 - <<'PY'
+          import json,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/administrator")
+          app=(root/"app.js").read_text(encoding="utf-8")
+          assert app.count("async function atlasCoinGeckoReserve(")==1
+          assert app.count("atlasCoinGeckoObserve(url, response.status")==2
+          assert app.count("await atlasCoinGeckoReserve(url,")==2
+          assert app.count("if (!alignedIds.has(coin.id) && !queued.has(coin.id))")==1
+          assert app.count("finalEntries.length === ATLAS_SCANNER_TARGET")==1
+          assert "atlasScannerCoinbaseUsdSpot(tx, coin)" in app
+          assert "atlasScannerSeriesCoversWindow(result, tx)" in app
+          # No modifications of the historical bridge/vault, trade logic or Market Core.
+          html=root/"index.html"
+          text=html.read_text(encoding="utf-8")
+          assert text.count("40.6.718")>=10
+          text=text.replace("40.6.718","40.6.719")
+          html.write_text(text,encoding="utf-8")
+          buildpath=root/"build.json"
+          b=json.loads(buildpath.read_text(encoding="utf-8"))
+          assert b["build"]==b["administrator_build"]=="40.6.718"
+          b.update(build="40.6.719",administrator_build="40.6.719",parent_build="40.6.718",
+            build_label="Build 40.6.719 · Administrator",
+            release="HAUSSES 5 MISSING-ONLY ACQUISITION AND SHARED COINGECKO GATE",
+            status="PUBLISHED_PENDING_FIREFOX",published=True,terrain_verified=False,terrain_pending=True,
+            release_notes="AGENT_CRYPTO_ADMINISTRATOR_40.6.719_SCANNER_NETWORK_HANDOFF.md")
+          b["scanner_network_repair"]={
+            "single_coin_gecko_budget":"Market plus chart via app.js",
+            "inter_request_spacing_ms":6000,
+            "cooldown_http_429_ms":45000,
+            "cooldown_http_5xx_ms":15000,
+            "cooldown_opaque_network_ms":12000,
+            "requeue":"only missing or misaligned original Market IDs",
+            "market_snapshot_staleness":"warn after 30min",
+            "genuine_24h_only":True,
+            "no_stablecoin_usd_substitution":True,
+            "market_core_modified":False,
+            "storage_primary_truth_modified":False,
+            "firefox_hausses5_first_click":"PENDING"}
+          buildpath.write_text(json.dumps(b,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          report=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.719_SCANNER_NETWORK_HANDOFF.md")
+          assert not report.exists()
+          report.write_text("""# Administrator 40.6.719 — Hausses 5 network and caches
+          
+          ## Starting point and browser evidence
+          40.6.718: validated recovery of 2.93 MiB localStorage, IndexedDB PRIMARY stable.
+          Top 5 BTC/ETH/BNB/XRP/SOL 5/5. Hausses 5 BEAM/B/CAP/OP/GLM 1/5 after four CoinGecko NetworkErrors, Coinbase GLM-USD rejected for a real 24h gap.
+          Previously cached five histories are not always still fresh for the frozen comparison clock.
+          
+          ## Small and bounded correction
+          - One provider-level request spacing inside app.js for CoinGecko public API. All calls through existing chart and public Market transport share the gate (not external, unknown code paths).
+          - 429 response cools this provider for 45s, 5xx 15s, opaque network failure 12s. No hidden retry loop added.
+          - Scanner no longer requeues accepted and aligned cached histories simply because another asset is missing. Refresh only missing or genuinely misaligned IDs, never substitute lower-ranked coins.
+          - Show Market snapshot age if over 30 minutes in the failure details.
+          - Keep native USD-only identity, real historical candles, exact five Market IDs, 24h window/cadence and 5/5 commit rule.
+          
+          ## Validation
+          Git blob source locks, git apply check, JavaScript syntax and isolated gate/cooldown checks pass.
+          This prevents duplicate requests and reduces CoinGecko request bursts. It does not establish that CoinGecko public endpoints will answer in the operator's Firefox or guarantee 5/5 after provider refusal. The official public rate can vary and Coinbase may have genuine missing candles.
+          No Bridge, Market Core, storage-maintenance logic, IndexedDB, vault, or trade operation changed.
+          FIRST-CLICK FIREFOX ACCEPTANCE: pending operator.
+          """.replace("\n          ","\n"),encoding="utf-8")
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Isolated same-provider transport and error-cooldown checks
+        run: |
+          node <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const src=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+          const first=src.indexOf('const atlasCoinGeckoGate =');
+          const last=src.indexOf('async function fetchWithTimeout(',first);
+          assert(first>0&&last>first);
+          let t=1000;const waits=[];
+          const ctx={
+            Date:{now:()=>t},Math,Number,Error,String,console,
+            atlasNetworkAbortError:()=>Object.assign(new Error('aborted'),{name:'AbortError'}),
+            atlasWaitWithSignal:async (ms,sig)=>{assert(!sig?.aborted);waits.push(ms);t+=ms}
+          };
+          ctx.globalThis=ctx;
+          vm.runInNewContext(src.slice(first,last)+';globalThis.a={reserve:atlasCoinGeckoReserve,observe:atlasCoinGeckoObserve,gate:atlasCoinGeckoGate};',ctx);
+          (async()=>{
+            const url='https://api.coingecko.com/api/v3/coins/bitcoin/market_chart';
+            await ctx.a.reserve(url);assert.equal(t,1000);
+            await ctx.a.reserve(url);assert.equal(t,7000);
+            await ctx.a.reserve('https://api.exchange.coinbase.com/products/BTC-USD');assert.equal(t,7000);
+            ctx.a.observe(url,429,new Error('rate limit'));
+            await ctx.a.reserve(url);assert(t>=52000);
+            ctx.a.observe(url,200,null);assert.equal(ctx.a.gate.consecutiveFailures,0);
+            ctx.a.observe(url,0,new Error('NetworkError'));assert(ctx.a.gate.cooldownUntil>=t+12000);
+            const app=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+            assert(app.includes('if (!alignedIds.has(coin.id) && !queued.has(coin.id))'));
+            assert(app.includes('finalEntries.length === ATLAS_SCANNER_TARGET'));
+            const b=JSON.parse(fs.readFileSync('public/agent_crypto_erith_ia/administrator/build.json','utf8'));
+            assert.equal(b.build,'40.6.719');
+            console.log('PASS: shared provider pacing, 429/opaque cooldown, cache-prioritized Scanner contract');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+      - name: Archive four changed files, verify CRC and SHA
+        run: |
+          python3 - <<'PY'
+          import pathlib,hashlib,zipfile
+          archive=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives")
+          archive.mkdir(parents=True,exist_ok=True)
+          name="AGENT_CRYPTO_ADMINISTRATOR_40.6.719_HAUSSES5_SHARED_NETWORK_GATE_4_FILES.zip"
+          assert not (archive/name).exists(),"Release ZIP already exists"
+          root=pathlib.Path("public/agent_crypto_erith_ia/administrator")
+          sources=[(root/"app.js","administrator/app.js"),
+                   (root/"index.html","administrator/index.html"),
+                   (root/"build.json","administrator/build.json"),
+                   (pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.719_SCANNER_NETWORK_HANDOFF.md"),"administrator/AGENT_CRYPTO_ADMINISTRATOR_40.6.719_SCANNER_NETWORK_HANDOFF.md")]
+          with zipfile.ZipFile(archive/name,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for source,filename in sources:
+              info=zipfile.ZipInfo(filename,date_time=(2026,10,31,0,0,0))
+              info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o644<<16
+              z.writestr(info,source.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          with zipfile.ZipFile(archive/name) as z:
+            assert z.testzip() is None
+            assert z.namelist()==[name for _,name in sources]
+          sha=hashlib.sha256((archive/name).read_bytes()).hexdigest()
+          (archive/(name+".sha256")).write_text(sha+"  "+name+"\n")
+          print("ZIP VERIFIED 4 FILES SHA256",sha)
+          PY
+      - name: Commit verified source, handoff and shared ZIP
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/build.json
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.719_SCANNER_NETWORK_HANDOFF.md
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives/AGENT_CRYPTO_ADMINISTRATOR_40.6.719_HAUSSES5_SHARED_NETWORK_GATE_4_FILES.zip*
+          git diff --cached --check
+          git commit -m "Coordinate CoinGecko traffic and preserve accepted Scanner caches"
+          git push origin HEAD:main
+      - name: Deploy the updated Pages runtime
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl --fail-with-body -sS -X POST -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/agent-crypto-runtime-pages.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"publish":true}}'
