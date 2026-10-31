@@ -5029,6 +5029,10 @@ function atlasResetComparison(coin = getSelectedCoin() || state.coins?.[0] || nu
 
 function atlasSelectTopComparison(limit = 3) {
   if (!state.liveOk || !state.coins.length) return;
+  // A direct Top selection takes ownership from a Scanner still running.
+  if (atlasScannerTransaction || atlasScannerQueuedRequest) {
+    atlasScannerCancel("top-comparison-selection", { keepUi: false });
+  }
 
   const count = Number(limit) <= 3 ? 3 : 5;
   const expectedIds = atlasCuratedTopIds(count);
@@ -12836,6 +12840,9 @@ async function renderComparisonAnalystPanel(options = {}) {
   state.chartEngineV2.loading = true;
   state.chartEngineV2.activeRequestKey = atlasComparisonRequestKey712;
 
+  // Every started comparison must settle, including stale render tokens,
+  // aborted network work, failed sources, and view/currency changes.
+  try {
   const period = Number(state.chartPeriodDays || 1);
   const periodLabel = atlasChartPeriodLabel(period);
   const ids = coins.map(coin => coin.id);
@@ -13208,6 +13215,38 @@ async function renderComparisonAnalystPanel(options = {}) {
   renderMultiHorizon();
   renderAtlasMathCore();
   atlasRuntimeDemandWakeAtlas("graph-ready-comparison");
+  } catch (error) {
+    if (state.chartEngineV2?.controller === controller) {
+      const message = String(error?.message || error || "échec inconnu");
+      state.dataBroker.comparison.status = "blocked";
+      state.dataBroker.comparison.error = message;
+      if (state.dataBroker.chart?.status === "loading") {
+        state.dataBroker.chart = { ...state.dataBroker.chart, status: "blocked", error: message };
+      }
+      if (els.chartCaption) atlasSetChartCaptionText(
+        `Comparaison indisponible · ${message} · graphique précédent conservé si disponible.`
+      );
+    }
+  } finally {
+    // Do not clear a newer controller created after an old request was aborted.
+    if (state.chartEngineV2?.controller === controller) {
+      const stillLoading = state.dataBroker.comparison.status === "loading";
+      state.chartEngineV2.loading = false;
+      state.chartEngineV2.activeRequestKey = null;
+      state.chartEngineV2.controller = null;
+      if (stillLoading) {
+        state.dataBroker.comparison.status = "blocked";
+        state.dataBroker.comparison.error = "comparaison interrompue avant commit";
+        if (state.dataBroker.chart?.status === "loading") {
+          state.dataBroker.chart = { ...state.dataBroker.chart, status: "blocked", error: state.dataBroker.comparison.error };
+        }
+        if (els.chartCaption) atlasSetChartCaptionText("Comparaison interrompue · aucun nouveau panier affiché.");
+      }
+      atlasChartSetPeriodButtons(Number(state.chartPeriodDays || 1), false);
+      atlasRenderComparisonControls();
+      atlasPatchMarketSelectionState();
+    }
+  }
 }
 
 function atlasNormalizeSparkline(values) {
@@ -49702,8 +49741,8 @@ async function fetchWithTimeout(url, options = {}, timeout = 12000) {
   delete requestOptions.networkKind;
   delete requestOptions.networkWaitMs;
   try {
-    if (networkKind) networkToken = await atlasAcquireNetwork(networkKind, externalSignal, networkWaitMs);
     await atlasCoinGeckoReserve(url, externalSignal);
+    if (networkKind) networkToken = await atlasAcquireNetwork(networkKind, externalSignal, networkWaitMs);
     // A queued source must receive its full HTTP timeout after acquiring the network permit.
     timer = setTimeout(() => controller.abort(), timeout);
     const response = await fetch(url, {
@@ -50955,9 +50994,9 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
   signal?.addEventListener?.("abort", onAbort, { once: true });
   let timer = null;
   try {
-    networkToken = await atlasAcquireNetwork("chart", signal, ATLAS_NETWORK_WAIT_TIMEOUT_MS);
-    if (signal?.aborted) throw atlasChartAbortError();
     await atlasCoinGeckoReserve(url, signal);
+    if (signal?.aborted) throw atlasChartAbortError();
+    networkToken = await atlasAcquireNetwork("chart", signal, ATLAS_NETWORK_WAIT_TIMEOUT_MS);
     // Give the request its FULL HTTP timeout after queue acquisition, not before.
     timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
     const response = await fetch(url, { cache: "no-store", signal: controller.signal, headers: { accept: "application/json" } });
@@ -51287,6 +51326,12 @@ function atlasVerifiedReferenceHistoryCache(coin, period, currency = "EUR", sour
 
 async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const signal = options.signal || null;
+  // One acquisition owner: the currency-specific module supplies real native
+  // USD history without replacing this function at runtime.
+  const nativeUsdOwner = globalThis.AgentCryptoGraphNativeUsd;
+  if (atlasRequestedHistoricalCurrency() === "USD" && typeof nativeUsdOwner?.compareUsd === "function") {
+    return nativeUsdOwner.compareUsd(coin, period, options);
+  }
 
   // Build 38.15.11 forensic route:
   // Target Top 5 + 24h must prove the raw historical source before any cache,
