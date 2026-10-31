@@ -1,0 +1,135 @@
+name: Build and verify Administrator 40.6.714 candidate
+on:
+  push:
+    branches: [candidate/administrator-40.6.714]
+    paths:
+      - '.github/workflows/agent-crypto-administrator-714-candidate.yml'
+      - 'public/agent_crypto_erith_ia/tools/graph_714_payload.b64'
+permissions:
+  contents: write
+concurrency:
+  group: administrator-714-candidate-build
+  cancel-in-progress: false
+jobs:
+  patch-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/agent-crypto-administrator-714-candidate.yml
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/index.html
+            /public/agent_crypto_erith_ia/administrator/build.json
+            /public/agent_crypto_erith_ia/tools/graph_714_payload.b64
+            /public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Decode patch to an auditable source script and verify original
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=public/agent_crypto_erith_ia
+          actual=$(git hash-object "$base/administrator/app.js")
+          test "$actual" = e948a206a96c8f8b7b8d2ea45f2f2ebd798dd69f || {
+            echo "::error::Administrator source diverged; manual review required: $actual"; exit 1;
+          }
+          python3 - <<'PY'
+          import base64,zlib
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia')
+          encoded=(root/'tools/graph_714_payload.b64').read_text().strip()
+          assert len(encoded)==5736, 'Unexpected patch payload'
+          content=zlib.decompress(base64.b64decode(encoded,validate=True))
+          assert b'atlasGraphSpotComparisonTruth' in content
+          (root/'apply_graph_truth.py').write_bytes(content)
+          print('DECODED PATCH',len(content),'bytes')
+          PY
+      - name: Construct candidate Administrator and verify graph logic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 public/agent_crypto_erith_ia/apply_graph_truth.py
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --test public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs
+          node - <<'JS'
+          const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+          const root='public/agent_crypto_erith_ia/administrator/';
+          const src=fs.readFileSync(root+'app.js','utf8');
+          const build=JSON.parse(fs.readFileSync(root+'build.json','utf8'));
+          const html=fs.readFileSync(root+'index.html','utf8');
+          assert.equal(build.build,'40.6.714');
+          assert.equal(build.engine,'38.15.11');
+          assert.equal(build.published,false);
+          assert.equal(build.terrain_verified,false);
+          assert.ok(html.includes('40.6.714'));
+          for(const required of [
+            'atlasScannerCommit','atlasComparisonCurveChange',
+            'atlasHistoricalDisplayQuote','atlasRenderComparisonDetail'])
+            assert.ok(src.includes('function '+required+'('));
+          assert.ok(src.includes('globalThis.AgentCryptoGraphProvenance406714'));
+          assert.ok(src.includes('Preuve spot/historique'));
+          const start=src.indexOf('// 40.6.714 — An archived');
+          const end=src.indexOf('const atlasChartLocalStoreRuntime',start);
+          assert.ok(start>0&&end>start);
+          const ctx={
+            Date,
+            ATLAS_CHART_MAX_FUTURE_MS:300000,
+            ATLAS_CHART_PRICE_GAP_WARN_PCT:2.5,
+            atlasChartRules:()=>({minPoints:3,minCoverageHours:23.5}),
+            atlasChartCoverageHours:p=>(p.at(-1)[0]-p[0][0])/3600000,
+            atlasChartFreshness:()=>({level:'fresh',label:'fresh'}),
+            atlasHistoricalDisplayQuote:r=>({currency:r.currency,source:r.source}),
+            atlasComparisonCurveChange:e=>e.data.at(-1).y-100,
+            atlasMarketSnapshotSurface:c=>({change24h:c.change24h??null,observedBasis:'market'}),
+            state:{coins:[],chartPeriodDays:1,dataBroker:{}},
+            atlasRequestedHistoricalCurrency:()=> 'USD'
+          };
+          vm.createContext(ctx);vm.runInContext(src.slice(start,end),ctx,{timeout:2000});
+          const now=Date.now(),at=now-60000;
+          const coin={id:'bitcoin',symbol:'BTC',priceUsd:100,priceEur:90,
+            source:'CoinGecko',lastUpdated:new Date(at).toISOString(),changeQuoteCurrency:'USD'};
+          const truth=(extra={})=>ctx.atlasGraphSpotComparisonTruth({
+            c:coin,quoteCurrency:'USD',historySourceFamily:'coingecko',
+            lastTimestamp:at,lastPrice:100,now,...extra
+          });
+          assert.equal(truth().status,'PRIX_PROCHES');
+          assert.equal(truth({lastPrice:120}).status,'ECART_A_VERIFIER');
+          assert.equal(truth({quoteCurrency:'USDT'}).status,'NON_COMPARABLE');
+          assert.equal(truth({historySourceFamily:'binance'}).status,'NON_COMPARABLE');
+          assert.equal(truth({lastTimestamp:at-30*60000}).status,'NON_COMPARABLE');
+          assert.equal(truth({c:{...coin,priceUsd:null}}).status,'NON_COMPARABLE');
+          assert.equal(ctx.atlasGraphProvenanceMarketCurrency({}),'NON QUALIFIÉE');
+          const rows=Array.from({length:25},(_,i)=>[at-24*3600000+i*3600000,100]);
+          const input={c:coin,days:1,prices:rows,quoteCurrency:'USD',historySourceFamily:'coingecko'};
+          const valid=ctx.atlasValidateChartSeries(input);
+          assert.equal(valid.ok,true);
+          assert.equal(valid.metrics.spotComparison.status,'PRIX_PROCHES');
+          const warn=ctx.atlasValidateChartSeries({...input,prices:rows.map((p,i)=>i===24?[p[0],110]:p)});
+          assert.equal(warn.ok,true);
+          assert.equal(warn.metrics.spotComparison.status,'ECART_A_VERIFIER');
+          assert.ok(warn.warnings.some(w=>w.includes('vérification requise')));
+          const hole=ctx.atlasValidateChartSeries({...input,prices:rows.filter((p,i)=>i<10||i>14)});
+          assert.equal(hole.ok,false);
+          assert.ok(hole.reason.includes('trou temporel'));
+          console.log('GRAPH PROVENANCE 40.6.714 PASS · 16+ safety assertions');
+          JS
+          git diff --check
+      - name: Commit proven candidate sources without publication to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/apply_graph_truth.py
+          git rm public/agent_crypto_erith_ia/tools/graph_714_payload.b64
+          git diff --cached --check
+          git commit -m "Build Administrator 40.6.714 audited EUR/USD chart provenance candidate"
+          git push origin HEAD:candidate/administrator-40.6.714
