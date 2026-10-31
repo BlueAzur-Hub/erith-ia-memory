@@ -1,0 +1,68 @@
+name: Agent Crypto Administrator 40.6.715 Hausses 5 candidate archive
+on:
+  push:
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/administrator_patch_manifests/AGENT_CRYPTO_ADMINISTRATOR_40.6.715_HAUSSES5_COINBASE_USD_PATCH.gz.b64'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: administrator-hausses5-406715-archive
+  cancel-in-progress: false
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Rebuild the candidate without touching production code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, gzip, hashlib, pathlib
+          root=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_patch_manifests")
+          b64=(root/"AGENT_CRYPTO_ADMINISTRATOR_40.6.715_HAUSSES5_COINBASE_USD_PATCH.gz.b64").read_text().strip()
+          raw=gzip.decompress(base64.b64decode(b64))
+          assert hashlib.sha256(raw).hexdigest()=="f0c7a54b575619ecf9c9e2b7ff7ae1992e42028e25db71b208284836dd5322b3"
+          pathlib.Path("hausses5_candidate.patch").write_bytes(raw)
+          PY
+          mkdir -p candidate/administrator
+          cp public/agent_crypto_erith_ia/administrator/app.js candidate/administrator/app.js
+          [[ "$(git hash-object candidate/administrator/app.js)" == "27b376aa9820ef64bdfc6fcb83ea8b024a2efdc4" ]] || { echo "Unexpected base: refusing to build"; exit 1; }
+          (cd candidate && git apply --check ../hausses5_candidate.patch && git apply ../hausses5_candidate.patch)
+          [[ "$(git hash-object candidate/administrator/app.js)" == "f9d46df5ce85a3493af12ef2cb5b9099c04363d3" ]] || { echo "Candidate bytes mismatch"; exit 1; }
+          python3 - <<'PY'
+          import pathlib, hashlib, zipfile
+          out=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives")
+          out.mkdir(parents=True, exist_ok=True)
+          filename="AGENT_CRYPTO_ADMINISTRATOR_40.6.715_HAUSSES5_COINBASE_NATIVE_USD_FALLBACK_2_FILES.zip"
+          handoff=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.715_HAUSSES5_COINBASE_NATIVE_USD_FALLBACK_2_FILES_HANDOFF.md")
+          assert hashlib.sha1(b"blob "+str(handoff.stat().st_size).encode()+b"\0"+handoff.read_bytes()).hexdigest()=="0781b81f0a17732807e0a51300e4164c40c7d701"
+          files=[(pathlib.Path("candidate/administrator/app.js"),"administrator/app.js"),
+                 (handoff,"administrator/"+handoff.name)]
+          with zipfile.ZipFile(out/filename, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zip:
+            for source,name in files:
+              info=zipfile.ZipInfo(name, date_time=(2026,10,31,0,0,0))
+              info.compress_type=zipfile.ZIP_DEFLATED
+              info.external_attr=0o644<<16
+              zip.writestr(info,source.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          with zipfile.ZipFile(out/filename) as check:
+            assert check.testzip() is None
+            assert check.namelist()==[name for _,name in files]
+          digest=hashlib.sha256((out/filename).read_bytes()).hexdigest()
+          (out/(filename+".sha256")).write_text(f"{digest}  {filename}\n")
+          print("Candidate ZIP generated with validated exact app.js blob:", digest)
+          PY
+      - name: Publish candidate archive only in coordination
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives/AGENT_CRYPTO_ADMINISTRATOR_40.6.715_HAUSSES5_COINBASE_NATIVE_USD_FALLBACK_2_FILES.zip*
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive Administrator Hausses 5 Coinbase USD candidate ZIP"
+            git push origin HEAD:main
+          fi
