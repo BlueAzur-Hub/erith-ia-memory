@@ -84,6 +84,45 @@ jobs:
           assert(calls.includes('render:5'));
           console.log('PASS: direct Top 5 owns selection after active Scanner');
           JS
+      - name: Native USD vs EUR comparison dispatch and native module integrity
+        shell: bash
+        run: |
+          node <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const root='public/agent_crypto_erith_ia/administrator';
+          const app=fs.readFileSync(root+'/app.js','utf8');
+          const moduleSource=fs.readFileSync(root+'/js/graph-native-usd.js','utf8');
+          const sandbox={};sandbox.globalThis=sandbox;
+          vm.runInNewContext(moduleSource,sandbox);
+          const report=sandbox.AgentCryptoGraphNativeUsd.self_test();
+          assert(report.pass===true,'native USD unit identity checks failed');
+          const start=app.indexOf('async function atlasFetchComparisonSeriesResilient(coin, period, options = {})'),end=app.indexOf('\n}\n',start);
+          assert(start>=0&&end>start);
+          let currency='USD',calls=0;
+          const ctx={
+            atlasRequestedHistoricalCurrency:()=>currency,
+            globalThis:{AgentCryptoGraphNativeUsd:{compareUsd:async (coin,period,options)=>{
+              calls++;return {coin,period,source:'verified-native-USD',result:{currency:'USD',quoteCurrency:'USD',series:[[1,1],[2,2]]}}
+            }}},
+            state:{dataBroker:{comparison:{preset:'rank-3'}}},
+            String,Number
+          };
+          vm.createContext(ctx);
+          vm.runInContext(app.slice(start,end+3),ctx);
+          (async()=>{
+            const usdResult=await vm.runInContext('atlasFetchComparisonSeriesResilient({id:"bitcoin"},1,{})',ctx);
+            assert.equal(usdResult.source,'verified-native-USD');
+            assert.equal(calls,1);
+            currency='EUR';
+            try{
+              await vm.runInContext('atlasFetchComparisonSeriesResilient({id:"bitcoin"},1,{})',ctx)
+            }catch(error){
+              // Other EUR provider dependencies are not wired in this isolated unit.
+            }
+            assert.equal(calls,1,'EUR must never enter the USD-specific route');
+            console.log('PASS: native USD dispatched explicitly; EUR never routed through USD; module self-test');
+          })().catch(e=>{console.error(e);process.exit(1)})
+          JS
       - name: Cancelled or superseded comparison cannot clear successor state
         shell: bash
         run: |
