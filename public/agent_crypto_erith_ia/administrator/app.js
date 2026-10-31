@@ -5701,15 +5701,21 @@ function atlasHistoryQuoteProvenance(record, expectedFamily = null) {
   const directPair = binance && source.match(/\b[A-Z0-9]{2,15}\/?(EUR)\b/i);
   const derivedEur = binance && /derived-klines/.test(mode) && /\bEUR\/USDT\b/i.test(source);
   const instrumentEur = declaredFamily === "binance" && /^[A-Z0-9]{2,15}EUR$/.test(instrument);
+  const coinbaseSpotUsd = declaredFamily === "coinbase"
+    && /^([A-Z0-9]{2,15})-USD$/.test(instrument)
+    && (source === `Coinbase Exchange Spot ${instrument.replace("-", "/")}`
+      || source.startsWith(`Coinbase Exchange Spot ${instrument.replace("-", "/")} ·`));
   const sourceCurrency = cg ? cg[1].toUpperCase()
-    : directPair || derivedEur || instrumentEur ? "EUR" : null;
+    : directPair || derivedEur || instrumentEur ? "EUR"
+    : coinbaseSpotUsd ? "USD" : null;
   const claims = new Set([...explicit, ...(sourceCurrency ? [sourceCurrency] : [])]);
   const conflict = claims.size > 1;
   const currency = conflict || claims.size !== 1 ? null : [...claims][0];
   const sourceFamily = currency && sourceCurrency === currency && cg
     && (declaredFamily === "coingecko" || !declaredFamily) ? "coingecko"
     : currency && sourceCurrency === currency && (directPair || derivedEur || instrumentEur)
-      && (declaredFamily === "binance" || !declaredFamily) ? "binance" : null;
+      && (declaredFamily === "binance" || !declaredFamily) ? "binance"
+      : currency === "USD" && coinbaseSpotUsd ? "coinbase" : null;
   return { quoteCurrency: currency, historySourceFamily: sourceFamily, historyInstrument: instrument || null,
     quoteConflict: conflict, sourceDeclared: !!sourceFamily };
 }
@@ -5954,6 +5960,7 @@ function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFa
   const local = atlasReadLocalChartStore();
   const cacheLabel = family === "binance"
     ? "Cache navigateur · chandelles Binance"
+    : family === "coinbase" ? "Cache navigateur · série Coinbase Exchange USD"
     : "Cache navigateur · série CoinGecko";
 
   // Read the quote-scoped slot first, then legacy without deleting or
@@ -16413,8 +16420,13 @@ function atlasScannerNativeUsdStored(coin, period) {
   const key = atlasScannerNativeUsdKey(coin, period);
   if (!key) return null;
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // The canonical chart/Solo cache uses coin:period:family:quote;
+  // scanner's former coin:quote:family:period slot is legacy-only.
+  // Read both without promoting another currency or an unverified history.
   const candidates = [
     current,
+    atlasGetStoredChartResult(coin, period, "coingecko", "USD"),
+    atlasGetStoredChartResult(coin, period, "coinbase", "USD"),
     state.chartCache?.[key]?.result,
     atlasReadLocalChartStore()?.[key]
   ].filter(result => result && result.currency === "USD" && result.quoteCurrency === "USD"
@@ -16429,7 +16441,7 @@ function atlasScannerNativeUsdStored(coin, period) {
     });
     if (integrity.ok) return {
       ...result, series, integrity, currency: "USD", quoteCurrency: "USD",
-      sourceFamily: "coingecko", sourceMode: "browser-cache"
+      sourceFamily: quote.historySourceFamily, sourceMode: "browser-cache"
     };
   }
   return null;
@@ -16439,17 +16451,12 @@ function atlasScannerNativeUsdStore(coin, period, result) {
   if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD") {
     throw new Error("Historique USD natif sans identité de devise vérifiable");
   }
-  const savedAt = Date.now();
-  const record = { ...result, savedAt, sourceFamily: "coingecko",
-    originalSourceMode: result.sourceMode || "coingecko-direct",
-    coinId: coin.id, currency: "USD", quoteCurrency: "USD" };
-  state.chartCache[key] = { createdAt: savedAt, result: record };
-  const local = atlasReadLocalChartStore();
-  local[key] = record;
-  const keys = Object.keys(local).sort((a, b) =>
-    Number(local[b]?.savedAt || 0) - Number(local[a]?.savedAt || 0));
-  for (const stale of keys.slice(80)) delete local[stale];
-  atlasWriteLocalChartStore(local);
+  // Persist through the same quote-scoped cache used by Solo and Top 5.
+  // Existing legacy scanner entries remain readable, never erased or relabelled.
+  atlasStoreChartResult(coin, period, {
+    ...result, sourceFamily: "coingecko",
+    coinId: coin.id, currency: "USD", quoteCurrency: "USD"
+  }, "coingecko");
 }
 function atlasScannerStoredHistory(coin, period, tx = null) {
   if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period);
@@ -49696,7 +49703,7 @@ function atlasChartPreferredSourceFamily(coinOrId) {
 
 function atlasChartResultSourceFamily(result = null) {
   const explicitFamily = String(result?.sourceFamily || "").toLowerCase();
-  if (explicitFamily === "binance" || explicitFamily === "coingecko" || explicitFamily === "okx") return explicitFamily;
+  if (["binance", "coingecko", "okx", "coinbase"].includes(explicitFamily)) return explicitFamily;
   if (result?.comparison && Array.isArray(result.entries)) {
     const families = new Set(result.entries.map(entry => atlasChartResultSourceFamily(entry?.result)));
     return families.size === 1 ? [...families][0] : "mixed";
@@ -54889,6 +54896,56 @@ async function atlasFetchBridgeHistory(c, days, options = {}) {
   }
 }
 
+// Hausses 5: independently sourced USD spot observations for three verified
+// CoinGecko IDs. Never use an exchange ticker alone to infer an ID, never map
+// USDC/USDT to USD, and never silently substitute another market asset.
+const ATLAS_SCANNER_COINBASE_USD_IDS = Object.freeze({
+  "optimism": "OP-USD", "stacks": "STX-USD", "golem": "GLM-USD"
+});
+async function atlasScannerCoinbaseUsdSpot(tx, coin) {
+  if (Number(tx?.period) !== 1 || !atlasScannerNativeUsdRequested(tx)) return null;
+  const product = ATLAS_SCANNER_COINBASE_USD_IDS[String(coin?.id || "").toLowerCase()];
+  if (!product || String(coin?.symbol || "").toUpperCase() !== product.split("-")[0]) return null;
+  const signal = tx.controller.signal;
+  const root = `https://api.exchange.coinbase.com/products/${encodeURIComponent(product)}`;
+  // Product metadata is checked before price history so the name cannot map
+  // silently onto an inactive/different pair. Public read-only HTTP requests.
+  const metadata = await atlasFetchJson(root, { signal, timeoutMs: 10000 });
+  if (String(metadata?.id || "") !== product
+      || String(metadata?.base_currency || "") !== product.split("-")[0]
+      || String(metadata?.quote_currency || "") !== "USD"
+      || String(metadata?.status || "").toLowerCase() !== "online"
+      || metadata?.trading_disabled === true) {
+    throw new Error(`Coinbase : identité ou statut Spot ${product} non confirmé`);
+  }
+  const end = Number(tx.windowEnd);
+  const start = end - 24 * 3600000 - 15 * 60000;
+  const query = new URLSearchParams({granularity:"300",
+    start:new Date(start).toISOString(), end:new Date(end).toISOString()});
+  const rows = await atlasFetchJson(`${root}/candles?${query}`, {signal,timeoutMs:12000});
+  if (!Array.isArray(rows)) throw new Error("Coinbase : réponse chandelles invalide");
+  const series = rows.filter(row=>Array.isArray(row)&&row.length>=6)
+    .map(row=>[Number(row[0])*1000,Number(row[4])])
+    .filter(row=>Number.isFinite(row[0])&&Number.isFinite(row[1])&&row[1]>0)
+    .sort((a,b)=>a[0]-b[0]);
+  const unique = series.filter((row,i)=>i===0||row[0]!==series[i-1][0]);
+  const integrity = atlasValidateChartSeries({c:coin,days:1,prices:unique,
+    sourceMode:"coinbase-exchange-spot-direct",quoteCurrency:"USD",
+    historySourceFamily:"coinbase",historyInstrument:product});
+  if (!integrity.ok) throw new Error(`Coinbase ${product} : ${integrity.reason}`);
+  const result = {series:unique,volumeSeries:[],
+    source:`Coinbase Exchange Spot ${product.replace("-", "/")} · USD natif`,
+    sourceFamily:"coinbase",currency:"USD",quoteCurrency:"USD",
+    sourceMode:"coinbase-exchange-spot-direct",kind:"spot-direct",
+    historyInstrument:product,coinId:coin.id,periodDays:1,
+    pointCount:unique.length,generatedAt:new Date(unique.at(-1)[0]).toISOString(),integrity};
+  const coverage = atlasScannerSeriesCoversWindow(result,tx);
+  if (!coverage.ok) throw new Error(`Coinbase ${product} : ${coverage.reason}`);
+  // The verified USD pair is stored separately from CoinGecko's observations.
+  atlasStoreChartResult(coin,1,result,"coinbase");
+  return result;
+}
+
 async function atlasScannerFetchDirect(tx, coin) {
   await atlasRespectComparisonRequestSpacing(tx.controller.signal, tx.period);
   const errors = [];
@@ -54918,6 +54975,19 @@ async function atlasScannerFetchDirect(tx, coin) {
       return { result, source: "direct", provider: "coingecko-usd-native-solo" };
     } catch (error) {
       if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      // A DIFFERENT real USD source, not an additional blind CoinGecko retry.
+      // Only the exact independently verified asset IDs below may use it.
+      if (Number(tx.period) === 1 && ATLAS_SCANNER_COINBASE_USD_IDS[coin?.id]) {
+        try {
+          const backup = await atlasScannerCoinbaseUsdSpot(tx, coin);
+          if (backup) return {result:backup,source:"direct",provider:"coinbase-usd-native-spot"};
+        } catch (backupError) {
+          if (atlasComparisonAbortError(backupError) || tx.controller.signal.aborted) throw backupError;
+          return {result:null,source:"blocked",error:new Error(
+            `CoinGecko USD ${coin.symbol} : ${String(error?.message || error)}`
+            + ` · Coinbase USD : ${String(backupError?.message || backupError)}`)};
+        }
+      }
       return { result: null, source: "blocked",
         error: new Error(`CoinGecko USD ${coin?.symbol || coin?.id || "?"} : ${String(error?.message || error)}`) };
     }

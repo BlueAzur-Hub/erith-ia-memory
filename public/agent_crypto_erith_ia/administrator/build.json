@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.715",
+  "build": "40.6.716",
   "engine": "38.15.11",
-  "release": "SCANNER PUBLIC COINGECKO REQUEST OWNERSHIP — BRANCH CANDIDATE",
-  "published": false,
-  "status": "CANDIDATE_PENDING_FIREFOX",
-  "parent_build": "40.6.714",
+  "release": "HAUSSES 5 NATIVE USD CACHE AND COINBASE SPOT FALLBACK",
+  "published": true,
+  "status": "PUBLISHED_PENDING_FIREFOX",
+  "parent_build": "40.6.715",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.715",
-  "build_label": "Build 40.6.715 · Administrator",
+  "administrator_build": "40.6.716",
+  "build_label": "Build 40.6.716 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,8 +31,8 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "FIREFOX_SCANNER_5_OF_5_COLD_WARM_EUR_USD_PENDING",
-  "release_notes": "AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_HANDOFF.md",
+  "terrain_proof": "HAUSSES5_5_OF_5_USD_FIRST_CLICK_PENDING_FIREFOX",
+  "release_notes": "AGENT_CRYPTO_ADMINISTRATOR_40.6.716_HAUSSES5_HANDOFF.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -11053,5 +11053,17 @@
     "new_storage_owner": false,
     "new_network_request": false,
     "new_recurring_timer": false
+  },
+  "scanner_406716": {
+    "scope": "Hausses 5 native USD 24h",
+    "primary": "CoinGecko native USD",
+    "fallback": "Coinbase Exchange Spot OP-USD STX-USD GLM-USD after CoinGecko failure",
+    "limitations": "Coinbase fallback only covers the three verified CoinGecko IDs; other assets remain CoinGecko-only",
+    "source_integrity_required": true,
+    "no_interpolation": true,
+    "market_core_modified": false,
+    "historical_vault_modified": false,
+    "bridge_modified": false,
+    "firefox_5_of_5_verified": false
   }
 }
