@@ -97,6 +97,15 @@
       "cost_evaluable": 5,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-10-31|2026-10-31T14:30:06Z",
+      "qualified_at_utc": "2026-10-31T14:30:06Z",
+      "candidates": 20,
+      "okx_pairs": 8,
+      "cost_evaluable": 3,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -704,6 +713,25 @@
       "entry_investment_usdt": "99.9999519024",
       "net_sellable_qty": "467.2",
       "break_even_bid_rise_pct": 0.8384,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "blockstack|2026-10-31",
+      "coin_id": "blockstack",
+      "symbol": "STX",
+      "pair": "STX-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-31T14:30:21Z",
+      "entry_bid_usdt": "0.3162",
+      "entry_ask_usdt": "0.3165",
+      "entry_investment_usdt": "99.999999695295",
+      "net_sellable_qty": "315.009789",
+      "break_even_bid_rise_pct": 0.6976,
       "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
       "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
       "contract_identity_proven": false,

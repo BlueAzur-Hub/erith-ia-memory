@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-31T13:48:44Z",
+  "source_qualification_at_utc": "2026-10-31T14:30:06Z",
   "source_observation_date_utc": "2026-10-31",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -46,8 +46,8 @@
         "venue": "Binance",
         "pair": "AAVEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.46962,
-        "roundtrip_cost_pct_assumed": 0.21457
+        "spread_bps_at_snapshot": 0.74132,
+        "roundtrip_cost_pct_assumed": 0.2073
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -70,37 +70,11 @@
       "change7d_pct_at_snapshot": 9.9086,
       "volume24h_aggregate_usd": 46370218,
       "spot": {
-        "venue": "OKX",
-        "pair": "STX-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 9.37354,
-        "roundtrip_cost_pct_assumed": 0.33723
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "cow-protocol",
-      "symbol": "COW",
-      "name": "CoW Protocol",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 352,
-      "change24h_pct_at_snapshot": 11.46014,
-      "change7d_pct_at_snapshot": -5.7169,
-      "volume24h_aggregate_usd": 4998170,
-      "spot": {
         "venue": "Binance",
-        "pair": "COWUSDT",
+        "pair": "STXUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.14664,
-        "roundtrip_cost_pct_assumed": 0.28117
+        "spread_bps_at_snapshot": 9.45329,
+        "roundtrip_cost_pct_assumed": 0.34196
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -126,8 +100,8 @@
         "venue": "Binance",
         "pair": "EIGENUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.56524,
-        "roundtrip_cost_pct_assumed": 0.30529
+        "spread_bps_at_snapshot": 5.33476,
+        "roundtrip_cost_pct_assumed": 0.29158
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -153,11 +127,37 @@
         "venue": "Bitget",
         "pair": "GWEIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.09814,
-        "roundtrip_cost_pct_assumed": 0.3169
+        "spread_bps_at_snapshot": 2.40344,
+        "roundtrip_cost_pct_assumed": 0.22388
       },
       "detections_archived": 3,
       "j1_observed": 2,
+      "j7_observed": 2,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "irys",
+      "symbol": "IRYS",
+      "name": "Irys",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 467,
+      "change24h_pct_at_snapshot": 10.70014,
+      "change7d_pct_at_snapshot": -63.7332,
+      "volume24h_aggregate_usd": 17564668,
+      "spot": {
+        "venue": "OKX",
+        "pair": "IRYS-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 12.96176,
+        "roundtrip_cost_pct_assumed": 0.32917
+      },
+      "detections_archived": 3,
+      "j1_observed": 1,
       "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
@@ -179,8 +179,8 @@
         "venue": "Bitget",
         "pair": "MAGMAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.65759,
-        "roundtrip_cost_pct_assumed": 0.32987
+        "spread_bps_at_snapshot": 6.08635,
+        "roundtrip_cost_pct_assumed": 0.34061
       },
       "detections_archived": 6,
       "j1_observed": 4,
@@ -205,8 +205,8 @@
         "venue": "Binance",
         "pair": "OPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.77578,
-        "roundtrip_cost_pct_assumed": 0.28744
+        "spread_bps_at_snapshot": 8.86918,
+        "roundtrip_cost_pct_assumed": 0.28838
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -232,8 +232,8 @@
         "venue": "Binance",
         "pair": "PENDLEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.29521,
-        "roundtrip_cost_pct_assumed": 0.26335
+        "spread_bps_at_snapshot": 10.59322,
+        "roundtrip_cost_pct_assumed": 0.30556
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -259,8 +259,8 @@
         "venue": "Binance",
         "pair": "PROVEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.32836,
-        "roundtrip_cost_pct_assumed": 0.32878
+        "spread_bps_at_snapshot": 4.65224,
+        "roundtrip_cost_pct_assumed": 0.25694
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -273,27 +273,28 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "unifai-network",
-      "symbol": "UAI",
-      "name": "UnifAI Network",
+      "coin_id": "thorchain",
+      "symbol": "RUNE",
+      "name": "THORChain",
       "group": "primary_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 337,
-      "change24h_pct_at_snapshot": 17.08033,
-      "change7d_pct_at_snapshot": 2.6627,
-      "volume24h_aggregate_usd": 4694667,
+      "rank_at_snapshot": 156,
+      "change24h_pct_at_snapshot": 7.68211,
+      "change7d_pct_at_snapshot": 9.868,
+      "volume24h_aggregate_usd": 302544280,
       "spot": {
-        "venue": "Bitget",
-        "pair": "UAIUSDT",
+        "venue": "Binance",
+        "pair": "RUNEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.0743,
-        "roundtrip_cost_pct_assumed": 0.33594
+        "spread_bps_at_snapshot": 14.17434,
+        "roundtrip_cost_pct_assumed": 0.34126
       },
-      "detections_archived": 2,
-      "j1_observed": 1,
+      "detections_archived": 1,
+      "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified"
+        "token_contract_not_verified",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -312,15 +313,41 @@
         "venue": "Binance",
         "pair": "AMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 43.07251,
-        "roundtrip_cost_pct_assumed": 0.62884
+        "spread_bps_at_snapshot": 28.90173,
+        "roundtrip_cost_pct_assumed": 0.59188
       },
       "detections_archived": 3,
       "j1_observed": 2,
       "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
-        "high_hypothetical_cost",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "cow-protocol",
+      "symbol": "COW",
+      "name": "CoW Protocol",
+      "group": "additional_spot_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 352,
+      "change24h_pct_at_snapshot": 11.46014,
+      "change7d_pct_at_snapshot": -5.7169,
+      "volume24h_aggregate_usd": 4998170,
+      "spot": {
+        "venue": "Binance",
+        "pair": "COWUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 20.42901,
+        "roundtrip_cost_pct_assumed": 0.4666
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
         "book_time_unverified"
       ],
       "identity_certified": false,
@@ -340,8 +367,8 @@
         "venue": "Binance",
         "pair": "GLMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 17.0068,
-        "roundtrip_cost_pct_assumed": 0.36948
+        "spread_bps_at_snapshot": 17.10864,
+        "roundtrip_cost_pct_assumed": 0.3705
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -367,8 +394,8 @@
         "venue": "Bitget",
         "pair": "AINUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.44336,
-        "roundtrip_cost_pct_assumed": 0.35707
+        "spread_bps_at_snapshot": 12.85635,
+        "roundtrip_cost_pct_assumed": 0.34479
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -376,32 +403,6 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "extreme_24h_move"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "irys",
-      "symbol": "IRYS",
-      "name": "Irys",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 467,
-      "change24h_pct_at_snapshot": 10.70014,
-      "change7d_pct_at_snapshot": -63.7332,
-      "volume24h_aggregate_usd": 17564668,
-      "spot": {
-        "venue": "OKX",
-        "pair": "IRYS-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 12.80137,
-        "roundtrip_cost_pct_assumed": 0.35223
-      },
-      "detections_archived": 3,
-      "j1_observed": 1,
-      "j7_observed": 2,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -420,8 +421,8 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.05178,
-        "roundtrip_cost_pct_assumed": 0.34678
+        "spread_bps_at_snapshot": 10.10101,
+        "roundtrip_cost_pct_assumed": 0.38274
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -446,8 +447,8 @@
         "venue": "Binance",
         "pair": "REDUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.04891,
-        "roundtrip_cost_pct_assumed": 0.34998
+        "spread_bps_at_snapshot": 14.20455,
+        "roundtrip_cost_pct_assumed": 0.39239
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -460,28 +461,27 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "thorchain",
-      "symbol": "RUNE",
-      "name": "THORChain",
+      "coin_id": "unifai-network",
+      "symbol": "UAI",
+      "name": "UnifAI Network",
       "group": "additional_spot_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 156,
-      "change24h_pct_at_snapshot": 7.68211,
-      "change7d_pct_at_snapshot": 9.868,
-      "volume24h_aggregate_usd": 302544280,
+      "rank_at_snapshot": 337,
+      "change24h_pct_at_snapshot": 17.08033,
+      "change7d_pct_at_snapshot": 2.6627,
+      "volume24h_aggregate_usd": 4694667,
       "spot": {
-        "venue": "Binance",
-        "pair": "RUNEUSDT",
+        "venue": "Bitget",
+        "pair": "UAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 14.21464,
-        "roundtrip_cost_pct_assumed": 0.34166
+        "spread_bps_at_snapshot": 10.55747,
+        "roundtrip_cost_pct_assumed": 0.36458
       },
-      "detections_archived": 1,
-      "j1_observed": 0,
+      "detections_archived": 2,
+      "j1_observed": 1,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
