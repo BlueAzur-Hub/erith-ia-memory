@@ -110,7 +110,7 @@ def main():
     doc=enrich(json.loads(args.input.read_text(encoding="utf-8")))
     if not args.check_only:
         target=args.output or args.input
-        target.write_text(json.dumps(doc,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+        target.write_text(json.dumps(doc,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps(doc["source_aware_article_triage"],sort_keys=True))
 
 
