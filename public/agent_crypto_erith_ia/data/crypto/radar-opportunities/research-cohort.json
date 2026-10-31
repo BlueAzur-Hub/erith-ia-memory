@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-31T14:30:06Z",
+  "source_qualification_at_utc": "2026-10-31T18:41:45Z",
   "source_observation_date_utc": "2026-10-31",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -46,8 +46,8 @@
         "venue": "Binance",
         "pair": "AAVEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.74132,
-        "roundtrip_cost_pct_assumed": 0.2073
+        "spread_bps_at_snapshot": 0.74209,
+        "roundtrip_cost_pct_assumed": 0.22002
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -60,21 +60,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "blockstack",
-      "symbol": "STX",
-      "name": "Stacks",
+      "coin_id": "cow-protocol",
+      "symbol": "COW",
+      "name": "CoW Protocol",
       "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 95,
-      "change24h_pct_at_snapshot": 15.08898,
-      "change7d_pct_at_snapshot": 9.9086,
-      "volume24h_aggregate_usd": 46370218,
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 352,
+      "change24h_pct_at_snapshot": 11.46014,
+      "change7d_pct_at_snapshot": -5.7169,
+      "volume24h_aggregate_usd": 4998170,
       "spot": {
         "venue": "Binance",
-        "pair": "STXUSDT",
+        "pair": "COWUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.45329,
-        "roundtrip_cost_pct_assumed": 0.34196
+        "spread_bps_at_snapshot": 7.38825,
+        "roundtrip_cost_pct_assumed": 0.27361
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -100,8 +100,8 @@
         "venue": "Binance",
         "pair": "EIGENUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.33476,
-        "roundtrip_cost_pct_assumed": 0.29158
+        "spread_bps_at_snapshot": 5.25348,
+        "roundtrip_cost_pct_assumed": 0.30193
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -127,8 +127,8 @@
         "venue": "Bitget",
         "pair": "GWEIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.40344,
-        "roundtrip_cost_pct_assumed": 0.22388
+        "spread_bps_at_snapshot": 6.08429,
+        "roundtrip_cost_pct_assumed": 0.27488
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -153,38 +153,12 @@
         "venue": "OKX",
         "pair": "IRYS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.96176,
-        "roundtrip_cost_pct_assumed": 0.32917
+        "spread_bps_at_snapshot": 8.66551,
+        "roundtrip_cost_pct_assumed": 0.28634
       },
       "detections_archived": 3,
       "j1_observed": 1,
       "j7_observed": 2,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "magma-finance",
-      "symbol": "MAGMA",
-      "name": "Magma Finance",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 314,
-      "change24h_pct_at_snapshot": 9.41067,
-      "change7d_pct_at_snapshot": 43.5652,
-      "volume24h_aggregate_usd": 20641419,
-      "spot": {
-        "venue": "Bitget",
-        "pair": "MAGMAUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 6.08635,
-        "roundtrip_cost_pct_assumed": 0.34061
-      },
-      "detections_archived": 6,
-      "j1_observed": 4,
-      "j7_observed": 3,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -205,8 +179,8 @@
         "venue": "Binance",
         "pair": "OPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.86918,
-        "roundtrip_cost_pct_assumed": 0.28838
+        "spread_bps_at_snapshot": 8.78349,
+        "roundtrip_cost_pct_assumed": 0.28752
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -232,12 +206,39 @@
         "venue": "Binance",
         "pair": "PENDLEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.59322,
-        "roundtrip_cost_pct_assumed": 0.30556
+        "spread_bps_at_snapshot": 10.68947,
+        "roundtrip_cost_pct_assumed": 0.30652
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "redstone-oracles",
+      "symbol": "RED",
+      "name": "RedStone",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 334,
+      "change24h_pct_at_snapshot": 8.38108,
+      "change7d_pct_at_snapshot": -10.4572,
+      "volume24h_aggregate_usd": 6674073,
+      "spot": {
+        "venue": "Binance",
+        "pair": "REDUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 7.17618,
+        "roundtrip_cost_pct_assumed": 0.27149
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 1,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -259,8 +260,8 @@
         "venue": "Binance",
         "pair": "PROVEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.65224,
-        "roundtrip_cost_pct_assumed": 0.25694
+        "spread_bps_at_snapshot": 4.59453,
+        "roundtrip_cost_pct_assumed": 0.24574
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -286,8 +287,8 @@
         "venue": "Binance",
         "pair": "RUNEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 14.17434,
-        "roundtrip_cost_pct_assumed": 0.34126
+        "spread_bps_at_snapshot": 14.50326,
+        "roundtrip_cost_pct_assumed": 0.34454
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -313,8 +314,8 @@
         "venue": "Binance",
         "pair": "AMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 28.90173,
-        "roundtrip_cost_pct_assumed": 0.59188
+        "spread_bps_at_snapshot": 28.98551,
+        "roundtrip_cost_pct_assumed": 0.48876
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -327,21 +328,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "cow-protocol",
-      "symbol": "COW",
-      "name": "CoW Protocol",
+      "coin_id": "blockstack",
+      "symbol": "STX",
+      "name": "Stacks",
       "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 352,
-      "change24h_pct_at_snapshot": 11.46014,
-      "change7d_pct_at_snapshot": -5.7169,
-      "volume24h_aggregate_usd": 4998170,
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 95,
+      "change24h_pct_at_snapshot": 15.08898,
+      "change7d_pct_at_snapshot": 9.9086,
+      "volume24h_aggregate_usd": 46370218,
       "spot": {
         "venue": "Binance",
-        "pair": "COWUSDT",
+        "pair": "STXUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.42901,
-        "roundtrip_cost_pct_assumed": 0.4666
+        "spread_bps_at_snapshot": 35.7462,
+        "roundtrip_cost_pct_assumed": 0.58953
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -367,8 +368,8 @@
         "venue": "Binance",
         "pair": "GLMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 17.10864,
-        "roundtrip_cost_pct_assumed": 0.3705
+        "spread_bps_at_snapshot": 17.63668,
+        "roundtrip_cost_pct_assumed": 0.37576
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -394,8 +395,8 @@
         "venue": "Bitget",
         "pair": "AINUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.85635,
-        "roundtrip_cost_pct_assumed": 0.34479
+        "spread_bps_at_snapshot": 15.52431,
+        "roundtrip_cost_pct_assumed": 0.35471
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -403,6 +404,32 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "extreme_24h_move"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "magma-finance",
+      "symbol": "MAGMA",
+      "name": "Magma Finance",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 314,
+      "change24h_pct_at_snapshot": 9.41067,
+      "change7d_pct_at_snapshot": 43.5652,
+      "volume24h_aggregate_usd": 20641419,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "MAGMAUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 7.72499,
+        "roundtrip_cost_pct_assumed": 0.3683
+      },
+      "detections_archived": 6,
+      "j1_observed": 4,
+      "j7_observed": 3,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -421,41 +448,14 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.10101,
-        "roundtrip_cost_pct_assumed": 0.38274
+        "spread_bps_at_snapshot": 11.15449,
+        "roundtrip_cost_pct_assumed": 0.36431
       },
       "detections_archived": 3,
       "j1_observed": 2,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "redstone-oracles",
-      "symbol": "RED",
-      "name": "RedStone",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 334,
-      "change24h_pct_at_snapshot": 8.38108,
-      "change7d_pct_at_snapshot": -10.4572,
-      "volume24h_aggregate_usd": 6674073,
-      "spot": {
-        "venue": "Binance",
-        "pair": "REDUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 14.20455,
-        "roundtrip_cost_pct_assumed": 0.39239
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -474,8 +474,8 @@
         "venue": "Bitget",
         "pair": "UAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.55747,
-        "roundtrip_cost_pct_assumed": 0.36458
+        "spread_bps_at_snapshot": 11.48912,
+        "roundtrip_cost_pct_assumed": 0.35395
       },
       "detections_archived": 2,
       "j1_observed": 1,
