@@ -52,7 +52,9 @@ jobs:
           assert b.get('automatic_order') is False
           assert b.get('real_order') is False
           assert b.get('new_recurring_timer') is False
-          assert b.get('new_storage_owner') is False
+          assert b['graph_provenance_406714']['new_storage_owner'] is False
+          assert b['graph_provenance_406714']['new_network_request'] is False
+          assert b['graph_provenance_406714']['new_recurring_timer'] is False
           assert b['graph_provenance_406714']['no_synthetic_ohlcv'] is True
           assert b['graph_provenance_406714']['auto_orders'] is False
           print('NO NETWORK / STORAGE / TIMER / ORDER EXTENSION')
