@@ -12,12 +12,20 @@ on:
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_source_aware_triage.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_source_aware_triage_test.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_source_aware_contract.checks.cjs"
+      - "public/agent_crypto_erith_ia/administrator/js/event-intelligence.js"
   pull_request:
     paths:
       - ".github/workflows/atlas_news_collector.yml"
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_source_aware_triage.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_source_aware_triage_test.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_source_aware_contract.checks.cjs"
+      - "public/agent_crypto_erith_ia/administrator/js/event-intelligence.js"
   schedule:
     - cron: "51 * * * *"
 
@@ -130,6 +138,31 @@ jobs:
           print(f"NEWS NATIVE FR 40.4.291 PASS · events={len(events)} · native_fr={summary.get('accepted_french')} · en_archive={summary.get('archive_english')}")
           PY
 
+      - name: Enrich canonical News with conservative incident/AI-agent classification
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/atlas_news_source_aware_triage_test.py
+          python public/agent_crypto_erith_ia/tools/atlas_news_source_aware_triage.py \
+            --input public/agent_crypto_erith_ia/data/news/latest.json
+          node --check public/agent_crypto_erith_ia/administrator/js/event-intelligence.js
+          node public/agent_crypto_erith_ia/tools/atlas_news_source_aware_contract.checks.cjs
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/data/news/latest.json")
+          j=json.loads(p.read_text(encoding="utf-8"))
+          proof=j["source_aware_article_triage"]
+          assert proof["schema"]=="atlas_news_source_aware_article_triage_v1"
+          assert proof["events_scanned"]==len(j["events"])
+          assert proof["automatic_order"] is False
+          assert proof["financial_signal"] is False
+          assert all(e["news_intelligence"]["direct_market_trade_approved"] is False
+                     and e["news_intelligence"]["reported_usd_profit"] is None
+                     and e["news_intelligence"]["automated_trading_profit_proven"] is False
+                     for e in j["events"])
+          print("ALL NEWS ARTICLЕS SOURCE-AWARE, ZERO AUTO-TRADE",
+                proof["category_counts"])
+          PY
       - name: Validate current Administrator News/Aether operator consumer contract
         run: |
           python - <<'PY'
