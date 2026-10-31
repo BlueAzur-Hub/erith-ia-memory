@@ -7,7 +7,7 @@
   "source_catalog_archived": 126,
   "materialized_assets": 126,
   "remaining_archived_assets": 0,
-  "year_shards": 971,
+  "year_shards": 972,
   "max_is_all_time": false,
   "first_exchange_trade_date_not_proven": true,
   "assets": [
@@ -26082,9 +26082,30 @@
       "symbol": "STX",
       "pair": "STXUSDT",
       "quote": "USDT",
-      "source_signature": "630a72ac045b4e206c8c152c12ba9e209a1acdba01a4356e30878c5ea2ce4532",
-      "verified_months": 68,
+      "source_signature": "993c0ecad902713e964968ce1e29af3e08605f419d460c53340031247531f165",
+      "verified_months": 69,
       "shards": [
+        {
+          "file": "blockstack-2019-span0-7ecaa3660ff14b939be174f881cc31fdb7e510158a9b1a97816febe7abcf6c2a.json.gz",
+          "year": 2019,
+          "span": 0,
+          "first_open_ms": 1575158400000,
+          "last_open_ms": 1577833200000,
+          "first_month": "2019-12",
+          "last_month": "2019-12",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2019-12",
+              "release": "crypto-spot-bulk-add-2019-12-1m-c62df50b6b18",
+              "source_zip_sha256": "3a3e6a323efc48f96b2a69eb4a5b310177a13fdc29b44b52266ef9e2d4ffa06e",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "7ecaa3660ff14b939be174f881cc31fdb7e510158a9b1a97816febe7abcf6c2a",
+          "bytes": 18542
+        },
         {
           "file": "blockstack-2020-span0-e786499672a215e1a196b7a12a30d6c15b93c85e9cb82ccf3c859bfc0910d290.json.gz",
           "year": 2020,
