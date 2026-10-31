@@ -1,0 +1,59 @@
+name: Agent Crypto Administrator 40.6.715 Candidate Archive
+on:
+  push:
+    branches:
+      - administrator-40.6.715-scanner-network
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  candidate-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate Administrator
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/agent_crypto_erith_ia/administrator
+      - name: Check JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/app.js
+      - name: Verify scanner contracts and build metadata
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          folder=Path("public/agent_crypto_erith_ia/administrator")
+          js=(folder/"app.js").read_text(encoding="utf-8")
+          index=(folder/"index.html").read_text(encoding="utf-8")
+          b=json.loads((folder/"build.json").read_text(encoding="utf-8"))
+          assert b["build"]=="40.6.715"
+          assert b["parent_build"]=="40.6.714"
+          assert b["status"]=="CANDIDATE_PENDING_FIREFOX"
+          assert 'const ATLAS_SCANNER_NETWORK_CONCURRENCY = 1;' in js
+          assert 'One request per scanner attempt.' in js
+          assert 'CoinGecko USD tentative ${attempt + 1}' not in js
+          assert 'finalEntries.length !== ATLAS_SCANNER_TARGET' in js
+          assert 'atlasScannerSeriesCoversWindow(result, tx)' in js
+          assert '<meta name="administrator-build" content="40.6.715"' in index
+          assert './app.js?v=40.6.715' in index
+          assert 'market_core_modified' in b and b['market_core_modified'] is False
+          print("Candidate source and safety invariants verified.")
+          PY
+      - name: Package Administrator with explicit versioned filename
+        shell: bash
+        run: |
+          cd public/agent_crypto_erith_ia
+          zip -qr "${GITHUB_WORKSPACE}/AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_FULL_SITE.zip" administrator
+          cd "${GITHUB_WORKSPACE}"
+          sha256sum AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_FULL_SITE.zip > AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_FULL_SITE.zip.sha256
+      - name: Publish candidate archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_FULL_SITE
+          path: |
+            AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_FULL_SITE.zip
+            AGENT_CRYPTO_ADMINISTRATOR_40.6.715_SCANNER_NETWORK_FULL_SITE.zip.sha256
+          retention-days: 14
