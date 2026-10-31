@@ -12959,6 +12959,12 @@ async function renderComparisonAnalystPanel(options = {}) {
       };
     }
 
+    // An obsolete worker must never write into the next chart transaction.
+    if (renderToken !== state.comparisonRenderToken
+        || state.chartEngineV2?.controller !== controller
+        || controller.signal.aborted
+        || requestedCurrency !== atlasRequestedHistoricalCurrency()) return;
+
     comparisonDurations[index] = {
       coinId: coin.id, elapsedMs: Math.max(0, Date.now() - coinStartedAt),
       source: String(fetchedItem?.source || "unavailable").slice(0, 96),
@@ -13138,6 +13144,7 @@ async function renderComparisonAnalystPanel(options = {}) {
 
   if (state.dataBroker.comparison.status === "blocked") {
     state.dataBroker.comparison.error = state.dataBroker.comparison.error || "comparaison incomplète";
+    const failedSelectionReason = String(state.dataBroker.comparison.error);
     if (previousChartState?.status === "ready") {
       state.dataBroker.chart = previousChartState;
       const canonicalPreviousEntries = Array.isArray(previousChartState.result?.entries)
@@ -13181,6 +13188,11 @@ async function renderComparisonAnalystPanel(options = {}) {
           + ` · Réessayer le Top 5.`);
       } else {
         atlasHideChartRefresh();
+        // The retained chart may have the same currency as the failed request.
+        // Always replace the provisional "en préparation" caption on failure.
+        if (els.chartCaption) atlasSetChartCaptionText(
+          `${comparisonPreset === "rank-5" ? "Top 5" : comparisonPreset === "rank-3" ? "Top 3" : "Comparaison"} ${requestedCurrency} ${periodLabel} indisponible · ${failedSelectionReason} · ancien graphique conservé ; aucune nouvelle comparaison affichée.`
+        );
       }
     } else {
       state.dataBroker.chart = {
@@ -13595,6 +13607,12 @@ async function renderAnalystPanel(options = {}) {
       delete state.chartEngineV2.retryAttempts[chartKey];
       state.chartEngineV2.retryKey = "";
       atlasChartSetPeriodButtons(period, false);
+      // A fresh cached Solo series is a completed transaction, not "loading".
+      if (state.chartEngineV2?.controller === controller) {
+        state.chartEngineV2.loading = false;
+        state.chartEngineV2.activeRequestKey = null;
+        state.chartEngineV2.controller = null;
+      }
       return;
     }
     atlasChartSetPeriodButtons(period, true);
