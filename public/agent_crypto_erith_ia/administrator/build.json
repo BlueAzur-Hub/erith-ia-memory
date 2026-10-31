@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.717",
+  "build": "40.6.718",
   "engine": "38.15.11",
-  "release": "HAUSSES 5 SCANNER OWNER RESTORED AND STABLE USD MODULE NAMES",
+  "release": "SCANNER LOCALSTORAGE QUOTA MAINTENANCE COORDINATION",
   "published": true,
   "status": "PUBLISHED_PENDING_FIREFOX",
-  "parent_build": "40.6.716",
+  "parent_build": "40.6.717",
   "asset_token": "market-core-v2.0-alpha-build-40.6.632",
-  "administrator_build": "40.6.717",
-  "build_label": "Build 40.6.717 · Administrator",
+  "administrator_build": "40.6.718",
+  "build_label": "Build 40.6.718 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -32,7 +32,7 @@
   "terrain_verified": false,
   "terrain_pending": true,
   "terrain_proof": "HAUSSES5_5_OF_5_USD_FIRST_CLICK_PENDING_FIREFOX",
-  "release_notes": "AGENT_CRYPTO_ADMINISTRATOR_40.6.717_SCANNER_OWNER_HANDOFF.md",
+  "release_notes": "AGENT_CRYPTO_ADMINISTRATOR_40.6.718_STORAGE_MAINTENANCE_HANDOFF.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -11075,5 +11075,18 @@
     "market_core_modified": false,
     "no_synthetic_history": true,
     "five_of_five_in_firefox": "PENDING"
+  },
+  "scanner_storage_maintenance": {
+    "scope": "Scanner localStorage legacy archive retirement only",
+    "new_storage_module": "js/storage-primary-truth.js",
+    "new_public_api": "AgentCryptoStoragePrimaryTruth",
+    "scanner_quiescence": "explicit operator maintenance lease",
+    "flush_pending_scanner_writes": true,
+    "wait_for_indexeddb_commit": true,
+    "revalidate_primary_during_lock": true,
+    "release_lock_in_finally": true,
+    "does_not_delete_indexeddb": true,
+    "does_not_modify_market_core": true,
+    "firefox_quota_recovery": "PENDING"
   }
 }

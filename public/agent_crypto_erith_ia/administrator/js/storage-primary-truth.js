@@ -9,7 +9,7 @@
    Operator only. No schema change. No generic cleanup. */
 (()=>{
   "use strict";
-  if(globalThis.AgentCryptoStoragePrimaryTruth406344)return;
+  if(globalThis.AgentCryptoStoragePrimaryTruth)return;
 
   const BUILD="40.6.344";
   const TARGETS=Object.freeze([
@@ -29,31 +29,11 @@
   const snapshot=()=>{let count=0,total=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k==null)continue;let v="";try{v=localStorage.getItem(k)??"";}catch(_){}count++;total+=size(k)+size(v);}return {count,bytes:total};};
 
   const SCANNER_KEY=TARGETS[0];
-  const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-  const scannerSnapshot=()=>{try{return globalThis.AtlasScannerPersistence?.snapshot?.()||null;}catch(_){return null;}};
-  const scannerBusy=snap=>{
-    if(!snap)return true;
-    const queued=Array.isArray(snap.queued_keys)?snap.queued_keys:[];
-    const scheduled=Array.isArray(snap.scheduled_keys)?snap.scheduled_keys:[];
-    return queued.includes(SCANNER_KEY)||scheduled.includes(SCANNER_KEY);
+  const acquireScannerMaintenance=async()=>{
+    const scanner=globalThis.AtlasScannerPersistence;
+    if(typeof scanner?.acquireMaintenance!=="function")throw new Error("SCANNER_MAINTENANCE_UNAVAILABLE");
+    return scanner.acquireMaintenance({timeoutMs:23000});
   };
-  async function waitScannerQuiet(timeoutMs=15000,stableMs=1200){
-    const started=Date.now();
-    let quietSince=0;
-    let last=null;
-    while(Date.now()-started<timeoutMs){
-      last=scannerSnapshot();
-      if(!last)return {ok:false,reason:"SCANNER_PERSISTENCE_UNAVAILABLE",wait_ms:Date.now()-started,snapshot:null};
-      if(scannerBusy(last)){
-        quietSince=0;
-      }else{
-        if(!quietSince)quietSince=Date.now();
-        if(Date.now()-quietSince>=stableMs)return {ok:true,reason:"QUIET_STABLE",wait_ms:Date.now()-started,snapshot:last};
-      }
-      await sleep(120);
-    }
-    return {ok:false,reason:"SCANNER_PERSISTENCE_BUSY",wait_ms:Date.now()-started,snapshot:last};
-  }
 
   function renderPlan(plan){
     const box=document.getElementById("atlasStoragePrimaryTruth289");
@@ -121,22 +101,29 @@
     const ok=window.confirm("40.6.344 · PRIMARY IndexedDB vérifié. Retirer uniquement "+candidates.length+" ancienne(s) copie(s) localStorage (~"+fmt(reclaim)+") ? Backup complet exporté. IndexedDB/Market/Evidence conservés.");
     if(!ok)return {status:"ANNULÉ PAR OPÉRATEUR"};
     const scannerNeeded=candidates.some(r=>r.key===SCANNER_KEY);
+  let lease=null;
+  let before,retired;
+  try{
     if(scannerNeeded){
       const box=document.getElementById("atlasStoragePrimaryTruth289");
-      if(box)box.textContent="ATTENTE · Scanner : stabilisation de la file PRIMARY avant retrait…";
-      const gate=await waitScannerQuiet();
-      if(!gate.ok)throw new Error("STOP : Scanner persistence encore en mouvement · "+gate.reason);
+      if(box)box.textContent="MAINTENANCE · Scanner suspendu temporairement, files de sauvegarde synchronisées…";
+      lease=await acquireScannerMaintenance();
       const freshCopy=await a.relief.copyTargets();
       const freshRows=Array.isArray(freshCopy?.rows)?freshCopy.rows:[];
       const freshScanner=freshRows.find(x=>String(x?.key||"")===SCANNER_KEY)||null;
-      const freshVerified=/VÉRIFIÉ\s*·\s*IDB PRIMARY/i.test(String(freshScanner?.state||""));
-      if(!freshVerified||!shape(a.relief.readSync(SCANNER_KEY)).ok)throw new Error("STOP : Scanner PRIMARY non revalidé après fenêtre calme");
-      const finalScannerSnap=scannerSnapshot();
-      if(scannerBusy(finalScannerSnap))throw new Error("STOP : Scanner a repris une écriture avant retrait");
+      const verified=/VÉRIFIÉ\s*·\s*IDB PRIMARY/i.test(String(freshScanner?.state||""));
+      if(!verified||!shape(a.relief.readSync(SCANNER_KEY)).ok)throw new Error("STOP : Scanner PRIMARY non revalidé sous verrou");
     }
-    const before=snapshot();
-    const retired=await a.relief.retireVerified();
-    const rr=Array.isArray(retired?.rows)?retired.rows:[];
+    before=snapshot();
+    retired=await a.relief.retireVerified();
+  }finally{
+    try{lease?.release();}catch(_){}
+  }
+  const rr=Array.isArray(retired?.rows)?retired.rows:[];
+  const scannerResult=rr.find(x=>String(x?.key||"")===SCANNER_KEY);
+  if(scannerNeeded&&!/RETIRÉ DU LOCALSTORAGE|DÉJÀ ABSENT/.test(String(scannerResult?.state||""))){
+    throw new Error("STOP : retrait Scanner non confirmé · "+String(scannerResult?.state||"NON RAPPORTÉ"));
+  }
     const rows=TARGETS.map(key=>{const item=rr.find(x=>String(x?.key||"")===key)||{state:"NON RAPPORTÉ"};return {key,state:String(item.state||""),local_absent:localStorage.getItem(key)===null,read_after_ok:shape(a.relief.readSync(key)).ok};});
     const after=snapshot();
     const result={build:BUILD,status:"TERMINÉ",before,after,reclaimed_bytes:Math.max(0,before.bytes-after.bytes),rows,completed_at:new Date().toISOString()};
@@ -169,7 +156,7 @@
   window.addEventListener("erith:system-hydrated",remount,{passive:true});
   window.addEventListener("pageshow",remount,{passive:true});
 
-  globalThis.AgentCryptoStoragePrimaryTruth406344=Object.freeze({
+  globalThis.AgentCryptoStoragePrimaryTruth=Object.freeze({
     build:BUILD,targets:TARGETS,prepare,retire,mount,
     snapshot:()=>Object.freeze({build:BUILD,mounted:state.mounted,prepared:!!state.plan,all_primary_verified:state.plan?.all_primary_verified??null,reclaimed_bytes:state.result?.reclaimed_bytes??null,error:state.error}),
     root_cause:"SCANNER_UPSTREAM_PERSIST_QUEUE_RACE",operator_only:true,backup_required:true,confirmation_required:true,

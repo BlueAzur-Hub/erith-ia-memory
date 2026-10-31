@@ -5404,6 +5404,19 @@ function atlasStorageReliefIsAsyncPrimary(key){return ATLAS_STORAGE_RELIEF_ASYNC
 function atlasStorageReliefPrimaryMarkerRead(){try{return localStorage.getItem(ATLAS_STORAGE_RELIEF_PRIMARY_MARKER)==="1";}catch(_){return false;}}
 function atlasStorageReliefPrimaryMarkerWrite(){try{localStorage.setItem(ATLAS_STORAGE_RELIEF_PRIMARY_MARKER,"1");return true;}catch(_){return false;}}
 function atlasStorageReliefSchedulePut(key,payload){const id=String(key||"");const raw=String(payload??"");atlasStorageReliefRuntime.persistPending[id]=raw;if(atlasStorageReliefRuntime.persistScheduled.has(id))return true;atlasStorageReliefRuntime.persistScheduled.add(id);const run=async()=>{try{const latest=atlasStorageReliefRuntime.persistPending[id];delete atlasStorageReliefRuntime.persistPending[id];await atlasStorageReliefPut(id,latest,{verified:false,source:"async-primary-40.3.31"});atlasStorageReliefRuntime.lastAsyncError=null;}catch(error){atlasStorageReliefRuntime.lastAsyncError=String(error?.name||error||"IndexedDB write");const fallback=Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id)?atlasStorageReliefRuntime.persistPending[id]:raw;try{localStorage.setItem(id,fallback);}catch(_){}}finally{atlasStorageReliefRuntime.persistScheduled.delete(id);if(Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id))atlasStorageReliefSchedulePut(id,atlasStorageReliefRuntime.persistPending[id]);}};if(typeof requestIdleCallback==="function")requestIdleCallback(()=>void run(),{timeout:1200});else setTimeout(()=>void run(),48);return true;}
+async function atlasStorageReliefWaitIdle(keys,timeoutMs=20000){
+  const target=new Set((Array.isArray(keys)?keys:[]).map(String));
+  const start=Date.now();
+  while(Date.now()-start<timeoutMs){
+    const busy=[...target].some(key=>atlasStorageReliefRuntime.persistScheduled.has(key)||Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,key));
+    if(!busy){
+      if(atlasStorageReliefRuntime.lastAsyncError)return {ok:false,reason:"INDEXEDDB_WRITE_ERROR",detail:atlasStorageReliefRuntime.lastAsyncError};
+      return {ok:true,reason:"INDEXEDDB_IDLE"};
+    }
+    await new Promise(resolve=>setTimeout(resolve,75));
+  }
+  return {ok:false,reason:"INDEXEDDB_PERSISTENCE_BUSY"};
+}
 function atlasStorageReliefReadSync(key){if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)&&Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.mirror,key))return atlasStorageReliefRuntime.mirror[key];try{const local=localStorage.getItem(key);if(local!==null)return local;}catch(_){}return Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.mirror,key)?atlasStorageReliefRuntime.mirror[key]:null;}
 function atlasStorageReliefWriteSync(key,payload){const raw=String(payload??"");atlasStorageReliefRuntime.mirror[key]=raw;if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)){atlasStorageReliefSchedulePut(key,raw);return {ok:true,local:false,indexeddb:true,deferred:true,primary:"indexeddb"};}let localOk=false;try{localStorage.setItem(key,raw);localOk=true;}catch(_){}if(ATLAS_STORAGE_RELIEF_PRELOAD.includes(key)||!localOk){void atlasStorageReliefSha(raw).then(sha=>atlasStorageReliefPut(key,raw,{sha256:sha,verified:false,source:localOk?"mirror":"quota-fallback"})).catch(()=>{});}return {ok:true,local:localOk,indexeddb:true,deferred:false,primary:localOk?"localStorage":"indexeddb"};}
 async function atlasStorageReliefBootstrap(){
@@ -5512,7 +5525,7 @@ try{
 }catch(_){}
 
 const atlasStorageReliefReady=atlasStorageReliefBootstrap().catch(()=>false);
-globalThis.AtlasStorageRelief40278=Object.freeze({build:"40.2.78",performance_patch:"40.3.31",targets:ATLAS_STORAGE_RELIEF_TARGETS,async_primary_keys:ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY,readSync:atlasStorageReliefReadSync,writeSync:atlasStorageReliefWriteSync,copyTargets:atlasStorageReliefCopyTargets,retireVerified:atlasStorageReliefRetireVerified,ready:atlasStorageReliefReady,automatic_deletion:false,operator_retirement_only:true,checksum:"SHA-256",read_through_indexeddb:true,heavy_localstorage_rewrite:false,primary_mode:"indexeddb-async-with-local-backup-preserved"});
+globalThis.AtlasStorageRelief40278=Object.freeze({build:"40.2.78",performance_patch:"40.3.31",targets:ATLAS_STORAGE_RELIEF_TARGETS,async_primary_keys:ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY,readSync:atlasStorageReliefReadSync,writeSync:atlasStorageReliefWriteSync,copyTargets:atlasStorageReliefCopyTargets,retireVerified:atlasStorageReliefRetireVerified,waitForIdle:atlasStorageReliefWaitIdle,ready:atlasStorageReliefReady,automatic_deletion:false,operator_retirement_only:true,checksum:"SHA-256",read_through_indexeddb:true,heavy_localstorage_rewrite:false,primary_mode:"indexeddb-async-with-local-backup-preserved"});
 
 const ATLAS_CHART_LOCAL_CACHE_KEY = "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50";
 
@@ -55171,10 +55184,12 @@ const atlasScannerCollectorRuntime = {
   persistRuns40462: 0,
   persistLastKey40462: "",
   persistLastBytes40462: 0,
-  persistLastMs40462: 0
+  persistLastMs40462: 0,
+  maintenanceActive: false
 };
 
 function atlasScannerOperatorPriorityActive() {
+  if (atlasScannerCollectorRuntime.maintenanceActive) return true;
   try { return globalThis.ErithOperatorPriority?.active?.() === true; }
   catch (_) { return false; }
 }
@@ -55199,6 +55214,7 @@ function atlasScannerCollectorRead(key) {
    after Firefox has a quiet/idle slice. The payload and 240/60 retention
    contracts are unchanged. */
 function atlasScannerCollectorQuietForPersist() {
+  if (atlasScannerCollectorRuntime.maintenanceActive) return true;
   if (atlasScannerOperatorPriorityActive()) return false;
   try {
     const lastActivity = Number(atlasAudienceState?.lastActivityAt || 0);
@@ -55689,10 +55705,49 @@ function atlasScannerCollectorInit() {
   });
 }
 
+async function atlasScannerAcquireMaintenance({timeoutMs=23000}={}){
+  if(atlasScannerCollectorRuntime.maintenanceActive)throw new Error("SCANNER_MAINTENANCE_ALREADY_ACTIVE");
+  atlasScannerCollectorRuntime.maintenanceActive=true;
+  let released=false;
+  const lease=Object.freeze({release(){
+    if(released)return;
+    released=true;
+    atlasScannerCollectorRuntime.maintenanceActive=false;
+    const deferred=atlasScannerCollectorRuntime.deferredCaptureReason40461;
+    atlasScannerCollectorRuntime.deferredCaptureReason40461="";
+    if(deferred)atlasScannerCollectorSchedule("maintenance-release:"+deferred);
+  }});
+  try{
+    const start=Date.now();
+    while(atlasScannerCollectorRuntime.busy){
+      if(Date.now()-start>=timeoutMs)throw new Error("SCANNER_BRIDGE_FLUSH_BUSY");
+      await new Promise(resolve=>setTimeout(resolve,100));
+    }
+    const capture=atlasScannerCollectorRuntime.flushTimer;
+    if(capture){window.clearTimeout(capture);atlasScannerCollectorRuntime.flushTimer=0;}
+    const keys=[ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY,ATLAS_SCANNER_COLLECTOR_PENDING_KEY];
+    for(const key of keys){
+      if(Array.isArray(atlasScannerCollectorRuntime.persistQueue40462[key])){
+        if(!atlasScannerCollectorPersistRun(key))throw new Error("SCANNER_QUEUE_DRAIN_FAILED");
+      }
+    }
+    const relief=globalThis.AtlasStorageRelief40278;
+    if(typeof relief?.waitForIdle!=="function")throw new Error("INDEXEDDB_IDLE_GUARD_UNAVAILABLE");
+    const gate=await relief.waitForIdle(keys,Math.max(1000,timeoutMs-(Date.now()-start)));
+    if(!gate?.ok)throw new Error(gate?.reason||"INDEXEDDB_PERSISTENCE_BUSY");
+    for(const key of keys){
+      if(Array.isArray(atlasScannerCollectorRuntime.persistQueue40462[key])||atlasScannerCollectorRuntime.persistScheduled40462.has(key)){
+        throw new Error("SCANNER_QUEUE_RESTARTED");
+      }
+    }
+    return lease;
+  }catch(error){lease.release();throw error;}
+}
 try {
   globalThis.AtlasScannerPersistence = Object.freeze({
     build: "40.4.62",
     mode: "QUIET_IDLE_COALESCED_SERIALIZATION",
+    acquireMaintenance: atlasScannerAcquireMaintenance,
     snapshot: () => Object.freeze({
       queued_keys: Object.freeze(Object.keys(atlasScannerCollectorRuntime.persistQueue40462)),
       scheduled_keys: Object.freeze([...atlasScannerCollectorRuntime.persistScheduled40462]),
