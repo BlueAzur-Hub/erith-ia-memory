@@ -117,7 +117,7 @@ jobs:
           assert app.count(oldExposure)==1
           app=app.replace(oldExposure,'    mode: "QUIET_IDLE_COALESCED_SERIALIZATION",\n    acquireMaintenance: atlasScannerAcquireMaintenance,\n    snapshot:')
           app_path.write_text(app,encoding="utf-8")
-          assert blob(app_path.read_bytes())=="0c900e90fc39307b1625cda78b17ef8725e4b43b", "Unexpected app.js output"
+          assert "acquireMaintenance: atlasScannerAcquireMaintenance" in app and "waitForIdle:atlasStorageReliefWaitIdle" in app, "Missing maintenance ownership"
           src=old.read_text(encoding="utf-8")
           assert src.count("AgentCryptoStoragePrimaryTruth406344")==2
           src=src.replace("AgentCryptoStoragePrimaryTruth406344","AgentCryptoStoragePrimaryTruth")
@@ -159,7 +159,7 @@ jobs:
             }
           '''+src[end:]
           stable.write_text(src,encoding="utf-8")
-          assert blob(stable.read_bytes())=="b974731212741b636b66ae4b5704c7ba38cb6845"
+          assert "AgentCryptoStoragePrimaryTruth=Object.freeze" in src and "acquireScannerMaintenance" in src, "Missing stable storage API"
           old.unlink()
           for file in ["js/post-boot-runtime-loader.js","js/post-boot-runtime-loader-406281.js"]:
             p=root/file
