@@ -1,0 +1,59 @@
+name: Validate Administrator 40.6.714 graph provenance candidate
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/tools/verify_administrator_graph_provenance_714.cjs'
+      - '.github/workflows/agent-crypto-administrator-714-ci.yml'
+  push:
+    branches: [candidate/administrator-40.6.714]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/verify_administrator_graph_provenance_714.cjs'
+      - '.github/workflows/agent-crypto-administrator-714-ci.yml'
+permissions:
+  contents: read
+jobs:
+  source-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/
+            /public/agent_crypto_erith_ia/tools/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check canonical Administrator and provenance-source integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node public/agent_crypto_erith_ia/tools/verify_administrator_graph_provenance_714.cjs
+          node --test public/agent_crypto_erith_ia/tools/verify_administrator_bridge_scanner_auth.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_712_atomic_and_dedup.cjs
+          node public/agent_crypto_erith_ia/tools/verify_administrator_network_latency.cjs
+      - name: Explicit no new market, storage, timer, source or order owners
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          b=json.loads((root/'build.json').read_text())
+          assert b['build']=='40.6.714' and b['engine']=='38.15.11'
+          assert b['parent_build']=='40.6.713'
+          assert b['terrain_verified'] is False
+          assert b.get('new_business_network_request') is False
+          assert b.get('automatic_order') is False
+          assert b.get('real_order') is False
+          assert b.get('new_recurring_timer') is False
+          assert b.get('new_storage_owner') is False
+          assert b['graph_provenance_406714']['no_synthetic_ohlcv'] is True
+          assert b['graph_provenance_406714']['auto_orders'] is False
+          print('NO NETWORK / STORAGE / TIMER / ORDER EXTENSION')
+          PY
