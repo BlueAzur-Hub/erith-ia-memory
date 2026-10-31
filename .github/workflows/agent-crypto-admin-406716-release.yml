@@ -39,8 +39,8 @@ jobs:
           assert hashlib.sha256(diff).hexdigest()=="f0c7a54b575619ecf9c9e2b7ff7ae1992e42028e25db71b208284836dd5322b3"
           p=pathlib.Path("_hausses5_verified.diff")
           p.write_bytes(diff)
-          subprocess.run(["git","apply","--check",str(p)],check=True)
-          subprocess.run(["git","apply",str(p)],check=True)
+          subprocess.run(["git","apply","--check","--directory=public/agent_crypto_erith_ia",str(p)],check=True)
+          subprocess.run(["git","apply","--directory=public/agent_crypto_erith_ia",str(p)],check=True)
           assert blob((ad/"app.js").read_bytes())=="f9d46df5ce85a3493af12ef2cb5b9099c04363d3"
           index=ad/"index.html"
           old=index.read_text(encoding="utf-8")
