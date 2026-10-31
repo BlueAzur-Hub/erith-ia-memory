@@ -88,6 +88,15 @@
       "cost_evaluable": 2,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-10-31|2026-10-31T13:48:44Z",
+      "qualified_at_utc": "2026-10-31T13:48:44Z",
+      "candidates": 20,
+      "okx_pairs": 8,
+      "cost_evaluable": 5,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -606,6 +615,101 @@
           "elapsed_hours": 35.15
         }
       ]
+    },
+    {
+      "id": "optimism|2026-10-31",
+      "coin_id": "optimism",
+      "symbol": "OP",
+      "pair": "OP-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-31T13:49:06Z",
+      "entry_bid_usdt": "0.11378",
+      "entry_ask_usdt": "0.11381",
+      "entry_investment_usdt": "99.999999513432",
+      "net_sellable_qty": "876.0266",
+      "break_even_bid_rise_pct": 0.6286,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "pendle|2026-10-31",
+      "coin_id": "pendle",
+      "symbol": "PENDLE",
+      "pair": "PENDLE-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-31T13:49:06Z",
+      "entry_bid_usdt": "1.879",
+      "entry_ask_usdt": "1.881",
+      "entry_investment_usdt": "99.999817434",
+      "net_sellable_qty": "53.003",
+      "break_even_bid_rise_pct": 0.711,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "eigenlayer|2026-10-31",
+      "coin_id": "eigenlayer",
+      "symbol": "EIGEN",
+      "pair": "EIGEN-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-31T13:49:06Z",
+      "entry_bid_usdt": "0.1883",
+      "entry_ask_usdt": "0.1884",
+      "entry_investment_usdt": "99.9999791568",
+      "net_sellable_qty": "529.196",
+      "break_even_bid_rise_pct": 0.6556,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "irys|2026-10-31",
+      "coin_id": "irys",
+      "symbol": "IRYS",
+      "pair": "IRYS-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-31T13:49:06Z",
+      "entry_bid_usdt": "0.02341",
+      "entry_ask_usdt": "0.02344",
+      "entry_investment_usdt": "99.997740288",
+      "net_sellable_qty": "4253.3",
+      "break_even_bid_rise_pct": 0.732,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "succinct|2026-10-31",
+      "coin_id": "succinct",
+      "symbol": "PROVE",
+      "pair": "PROVE-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-10-31T13:49:06Z",
+      "entry_bid_usdt": "0.2129",
+      "entry_ask_usdt": "0.2134",
+      "entry_investment_usdt": "99.9999519024",
+      "net_sellable_qty": "467.2",
+      "break_even_bid_rise_pct": 0.8384,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
     }
   ]
 }
