@@ -5029,11 +5029,6 @@ function atlasResetComparison(coin = getSelectedCoin() || state.coins?.[0] || nu
 
 function atlasSelectTopComparison(limit = 3) {
   if (!state.liveOk || !state.coins.length) return;
-  // A direct Top selection takes ownership from a Scanner still running.
-  if (atlasScannerTransaction || atlasScannerQueuedRequest) {
-    atlasScannerCancel("top-comparison-selection", { keepUi: false });
-  }
-
   const count = Number(limit) <= 3 ? 3 : 5;
   const expectedIds = atlasCuratedTopIds(count);
   const coins = atlasCuratedTopCoins(count);
@@ -5045,6 +5040,11 @@ function atlasSelectTopComparison(limit = 3) {
       atlasSetChartCaptionText(`Top ${count} · classement en cours de mise à jour`);
     }
     return;
+  }
+
+  // A direct Top selection takes ownership from a Scanner still running.
+  if (atlasScannerTransaction || atlasScannerQueuedRequest) {
+    atlasScannerCancel("top-comparison-selection", { keepUi: false });
   }
 
   atlasSetComparisonIds(ids, ids[0], { preset: `rank-${count}` });
@@ -12815,17 +12815,17 @@ async function renderComparisonAnalystPanel(options = {}) {
   }
 
   // 40.6.712 — do not restart an identical in-flight comparison.
-  const atlasComparisonRequestKey712 = JSON.stringify([
+  const comparisonRequestKey = JSON.stringify([
     String(state.dataBroker?.comparison?.preset || "manual"),
     coins.map(coin => coin.id), Number(state.chartPeriodDays || 1),
     atlasRequestedHistoricalCurrency()
   ]);
   if (state.chartEngineV2?.loading
-      && state.chartEngineV2.activeRequestKey === atlasComparisonRequestKey712
+      && state.chartEngineV2.activeRequestKey === comparisonRequestKey
       && state.chartEngineV2.controller
       && !state.chartEngineV2.controller.signal.aborted) return;
-  const atlasComparisonStartedAt712 = Date.now();
-  const atlasComparisonDurations712 = new Array(coins.length);
+  const comparisonStartedAt = Date.now();
+  const comparisonDurations = new Array(coins.length);
   atlasClearChartRetryTimer();
   atlasClearComparisonCompletionTimer();
 
@@ -12838,7 +12838,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   const controller = new AbortController();
   state.chartEngineV2.controller = controller;
   state.chartEngineV2.loading = true;
-  state.chartEngineV2.activeRequestKey = atlasComparisonRequestKey712;
+  state.chartEngineV2.activeRequestKey = comparisonRequestKey;
 
   // Every started comparison must settle, including stale render tokens,
   // aborted network work, failed sources, and view/currency changes.
@@ -12941,7 +12941,7 @@ async function renderComparisonAnalystPanel(options = {}) {
     }
 
     let fetchedItem;
-    const atlasCoinStart712 = Date.now();
+    const coinStartedAt = Date.now();
     try {
       fetchedItem = canonicalPresetRequest === "rank-5" && requestedCurrency === "USD" && period === 365
         ? await atlasFetchCanonicalAnnualUsdHistory(coin, period, {signal: controller.signal})
@@ -12959,8 +12959,8 @@ async function renderComparisonAnalystPanel(options = {}) {
       };
     }
 
-    atlasComparisonDurations712[index] = {
-      coinId: coin.id, elapsedMs: Math.max(0, Date.now() - atlasCoinStart712),
+    comparisonDurations[index] = {
+      coinId: coin.id, elapsedMs: Math.max(0, Date.now() - coinStartedAt),
       source: String(fetchedItem?.source || "unavailable").slice(0, 96),
       attempts: Math.max(0, Number(fetchedItem?.attempts || 0)),
       receivedHistory: !!(fetchedItem?.result?.series?.length && !fetchedItem?.result?.blocked)
@@ -13074,8 +13074,8 @@ async function renderComparisonAnalystPanel(options = {}) {
         sourceMode: "comparison-base100",
         source: atlasComparisonSourceDescription(drawnEntries),
          diagnostics712: {
-           totalAcquisitionMs: Math.max(0, Date.now() - atlasComparisonStartedAt712),
-           assetAcquisitions: atlasComparisonDurations712.filter(Boolean)
+           totalAcquisitionMs: Math.max(0, Date.now() - comparisonStartedAt),
+           assetAcquisitions: comparisonDurations.filter(Boolean)
          }
       };
       const retryCount = fetched.reduce(
@@ -13093,7 +13093,7 @@ async function renderComparisonAnalystPanel(options = {}) {
           ? new Date(latestTimestamp).toISOString()
           : null,
         pointCount,
-        latencyMs: Math.max(0, Date.now() - atlasComparisonStartedAt712),
+        latencyMs: Math.max(0, Date.now() - comparisonStartedAt),
          retryCount,
          contextKey: chartKey,
         result: comparisonResult,
@@ -13209,7 +13209,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   atlasPatchMarketSelectionState();
   atlasChartSetPeriodButtons(period, false);
   state.chartEngineV2.loading = false;
-  if (state.chartEngineV2.activeRequestKey === atlasComparisonRequestKey712)
+  if (state.chartEngineV2.activeRequestKey === comparisonRequestKey)
     state.chartEngineV2.activeRequestKey = null;
   atlasRenderBrokerStrip();
   renderMultiHorizon();
