@@ -1,0 +1,315 @@
+name: Agent Crypto - Storage Maintenance Controlled Release
+on:
+  push:
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts/STORAGE_MAINTENANCE_RELEASE_REQUEST.md'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: agent-crypto-storage-maintenance-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact 40.6.717 base and repair scanner maintenance transaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,hashlib,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/administrator")
+          old=root/"js/storage-primary-truth-406344.js"
+          stable=root/"js/storage-primary-truth.js"
+          def blob(data):
+            return hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+          baseline={
+            "app.js":"be690d4f9a624136b2533d9a2a71b51a7f04d67c",
+            "index.html":"ebb550fbbee86b2281d50d753c10ce4cfee5a059",
+            "build.json":"46166b89012f825937e7f794283d23ee9100bb97",
+            "js/storage-primary-truth-406344.js":"fcd0fc454011e6b7316a18f77ea68c6b3d57bcf6",
+            "js/post-boot-runtime-loader.js":"16a76b7a3ca54929e62d8f08e231baa39b4c4ab9",
+            "js/post-boot-runtime-loader-406281.js":"caf1cb67a43d493ac460058dd7048e41eb46edfb"}
+          assert not stable.exists(), "Stable module path already exists"
+          for name,expected in baseline.items():
+            actual=blob((root/name).read_bytes())
+            assert actual==expected, "Refusing unexpected base "+name+" "+actual
+          app_path=root/"app.js"
+          app=app_path.read_text(encoding="utf-8")
+          anchor="function atlasStorageReliefReadSync(key){"
+          assert app.count(anchor)==1
+          app=app.replace(anchor,'''async function atlasStorageReliefWaitIdle(keys,timeoutMs=20000){
+            const target=new Set((Array.isArray(keys)?keys:[]).map(String));
+            const start=Date.now();
+            while(Date.now()-start<timeoutMs){
+              const busy=[...target].some(key=>atlasStorageReliefRuntime.persistScheduled.has(key)||Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,key));
+              if(!busy){
+                if(atlasStorageReliefRuntime.lastAsyncError)return {ok:false,reason:"INDEXEDDB_WRITE_ERROR",detail:atlasStorageReliefRuntime.lastAsyncError};
+                return {ok:true,reason:"INDEXEDDB_IDLE"};
+              }
+              await new Promise(resolve=>setTimeout(resolve,75));
+            }
+            return {ok:false,reason:"INDEXEDDB_PERSISTENCE_BUSY"};
+          }
+          '''+anchor)
+          oldApi="retireVerified:atlasStorageReliefRetireVerified,ready:atlasStorageReliefReady"
+          assert app.count(oldApi)==1
+          app=app.replace(oldApi,"retireVerified:atlasStorageReliefRetireVerified,waitForIdle:atlasStorageReliefWaitIdle,ready:atlasStorageReliefReady")
+          oldRuntime="  persistLastMs40462: 0\n};"
+          assert app.count(oldRuntime)==1
+          app=app.replace(oldRuntime,"  persistLastMs40462: 0,\n  maintenanceActive: false\n};")
+          oldOperator='function atlasScannerOperatorPriorityActive() {\n  try { return globalThis.ErithOperatorPriority?.active?.() === true; }'
+          assert app.count(oldOperator)==1
+          app=app.replace(oldOperator,'function atlasScannerOperatorPriorityActive() {\n  if (atlasScannerCollectorRuntime.maintenanceActive) return true;\n  try { return globalThis.ErithOperatorPriority?.active?.() === true; }')
+          oldQuiet='  if (atlasScannerOperatorPriorityActive()) return false;\n  try {\n    const lastActivity'
+          assert app.count(oldQuiet)==1
+          app=app.replace(oldQuiet,'  if (atlasScannerCollectorRuntime.maintenanceActive) return true;\n  if (atlasScannerOperatorPriorityActive()) return false;\n  try {\n    const lastActivity')
+          marker='try {\n  globalThis.AtlasScannerPersistence = Object.freeze({'
+          assert app.count(marker)==1
+          app=app.replace(marker,'''async function atlasScannerAcquireMaintenance({timeoutMs=23000}={}){
+            if(atlasScannerCollectorRuntime.maintenanceActive)throw new Error("SCANNER_MAINTENANCE_ALREADY_ACTIVE");
+            atlasScannerCollectorRuntime.maintenanceActive=true;
+            let released=false;
+            const lease=Object.freeze({release(){
+              if(released)return;
+              released=true;
+              atlasScannerCollectorRuntime.maintenanceActive=false;
+              const deferred=atlasScannerCollectorRuntime.deferredCaptureReason40461;
+              atlasScannerCollectorRuntime.deferredCaptureReason40461="";
+              if(deferred)atlasScannerCollectorSchedule("maintenance-release:"+deferred);
+            }});
+            try{
+              const start=Date.now();
+              while(atlasScannerCollectorRuntime.busy){
+                if(Date.now()-start>=timeoutMs)throw new Error("SCANNER_BRIDGE_FLUSH_BUSY");
+                await new Promise(resolve=>setTimeout(resolve,100));
+              }
+              const capture=atlasScannerCollectorRuntime.flushTimer;
+              if(capture){window.clearTimeout(capture);atlasScannerCollectorRuntime.flushTimer=0;}
+              const keys=[ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY,ATLAS_SCANNER_COLLECTOR_PENDING_KEY];
+              for(const key of keys){
+                if(Array.isArray(atlasScannerCollectorRuntime.persistQueue40462[key])){
+                  if(!atlasScannerCollectorPersistRun(key))throw new Error("SCANNER_QUEUE_DRAIN_FAILED");
+                }
+              }
+              const relief=globalThis.AtlasStorageRelief40278;
+              if(typeof relief?.waitForIdle!=="function")throw new Error("INDEXEDDB_IDLE_GUARD_UNAVAILABLE");
+              const gate=await relief.waitForIdle(keys,Math.max(1000,timeoutMs-(Date.now()-start)));
+              if(!gate?.ok)throw new Error(gate?.reason||"INDEXEDDB_PERSISTENCE_BUSY");
+              for(const key of keys){
+                if(Array.isArray(atlasScannerCollectorRuntime.persistQueue40462[key])||atlasScannerCollectorRuntime.persistScheduled40462.has(key)){
+                  throw new Error("SCANNER_QUEUE_RESTARTED");
+                }
+              }
+              return lease;
+            }catch(error){lease.release();throw error;}
+          }
+          '''+marker)
+          oldExposure='    mode: "QUIET_IDLE_COALESCED_SERIALIZATION",\n    snapshot:'
+          assert app.count(oldExposure)==1
+          app=app.replace(oldExposure,'    mode: "QUIET_IDLE_COALESCED_SERIALIZATION",\n    acquireMaintenance: atlasScannerAcquireMaintenance,\n    snapshot:')
+          app_path.write_text(app,encoding="utf-8")
+          assert blob(app_path.read_bytes())=="0c900e90fc39307b1625cda78b17ef8725e4b43b", "Unexpected app.js output"
+          src=old.read_text(encoding="utf-8")
+          assert src.count("AgentCryptoStoragePrimaryTruth406344")==2
+          src=src.replace("AgentCryptoStoragePrimaryTruth406344","AgentCryptoStoragePrimaryTruth")
+          start=src.index("  const SCANNER_KEY=TARGETS[0];")
+          end=src.index("  function renderPlan(plan)",start)
+          src=src[:start]+'''  const SCANNER_KEY=TARGETS[0];
+            const acquireScannerMaintenance=async()=>{
+              const scanner=globalThis.AtlasScannerPersistence;
+              if(typeof scanner?.acquireMaintenance!=="function")throw new Error("SCANNER_MAINTENANCE_UNAVAILABLE");
+              return scanner.acquireMaintenance({timeoutMs:23000});
+            };
+
+          '''+src[end:]
+          start=src.index("    const scannerNeeded=candidates.some(r=>r.key===SCANNER_KEY);")
+          end=src.index("    const rows=TARGETS.map(key=>",start)
+          src=src[:start]+'''    const scannerNeeded=candidates.some(r=>r.key===SCANNER_KEY);
+            let lease=null;
+            let before,retired;
+            try{
+              if(scannerNeeded){
+                const box=document.getElementById("atlasStoragePrimaryTruth289");
+                if(box)box.textContent="MAINTENANCE · Scanner suspendu temporairement, files de sauvegarde synchronisées…";
+                lease=await acquireScannerMaintenance();
+                const freshCopy=await a.relief.copyTargets();
+                const freshRows=Array.isArray(freshCopy?.rows)?freshCopy.rows:[];
+                const freshScanner=freshRows.find(x=>String(x?.key||"")===SCANNER_KEY)||null;
+                const verified=/VÉRIFIÉ\\s*·\\s*IDB PRIMARY/i.test(String(freshScanner?.state||""));
+                if(!verified||!shape(a.relief.readSync(SCANNER_KEY)).ok)throw new Error("STOP : Scanner PRIMARY non revalidé sous verrou");
+              }
+              before=snapshot();
+              retired=await a.relief.retireVerified();
+            }finally{
+              try{lease?.release();}catch(_){}
+            }
+            const rr=Array.isArray(retired?.rows)?retired.rows:[];
+            const scannerResult=rr.find(x=>String(x?.key||"")===SCANNER_KEY);
+            if(scannerNeeded&&!/RETIRÉ DU LOCALSTORAGE|DÉJÀ ABSENT/.test(String(scannerResult?.state||""))){
+              throw new Error("STOP : retrait Scanner non confirmé · "+String(scannerResult?.state||"NON RAPPORTÉ"));
+            }
+          '''+src[end:]
+          stable.write_text(src,encoding="utf-8")
+          assert blob(stable.read_bytes())=="b974731212741b636b66ae4b5704c7ba38cb6845"
+          old.unlink()
+          for file in ["js/post-boot-runtime-loader.js","js/post-boot-runtime-loader-406281.js"]:
+            p=root/file
+            text=p.read_text(encoding="utf-8")
+            assert text.count("storage-primary-truth-406344.js")==1
+            p.write_text(text.replace("storage-primary-truth-406344.js","storage-primary-truth.js"),encoding="utf-8")
+          assert blob((root/"js/post-boot-runtime-loader.js").read_bytes())=="b4aa9d8ca7a62fe96cff9997db5c429b07b3eb1a"
+          assert blob((root/"js/post-boot-runtime-loader-406281.js").read_bytes())=="eb0841d4fb083c5ff5deb006107fec4fe1a8e6cb"
+          html=root/"index.html"
+          text=html.read_text(encoding="utf-8")
+          assert text.count("40.6.717")>=10
+          assert text.count('post-boot-runtime-loader.js?v=40.6.608')==1
+          text=text.replace('post-boot-runtime-loader.js?v=40.6.608','post-boot-runtime-loader.js?v=40.6.718')
+          html.write_text(text.replace("40.6.717","40.6.718"),encoding="utf-8")
+          build_path=root/"build.json"
+          build=json.loads(build_path.read_text(encoding="utf-8"))
+          assert build["build"]==build["administrator_build"]=="40.6.717"
+          build.update(build="40.6.718",administrator_build="40.6.718",
+            parent_build="40.6.717",build_label="Build 40.6.718 · Administrator",
+            release="SCANNER LOCALSTORAGE QUOTA MAINTENANCE COORDINATION",
+            published=True,status="PUBLISHED_PENDING_FIREFOX",
+            terrain_verified=False,terrain_pending=True,
+            release_notes="AGENT_CRYPTO_ADMINISTRATOR_40.6.718_STORAGE_MAINTENANCE_HANDOFF.md")
+          build["scanner_storage_maintenance"]={
+            "scope":"Scanner localStorage legacy archive retirement only",
+            "new_storage_module":"js/storage-primary-truth.js",
+            "new_public_api":"AgentCryptoStoragePrimaryTruth",
+            "scanner_quiescence":"explicit operator maintenance lease",
+            "flush_pending_scanner_writes":True,
+            "wait_for_indexeddb_commit":True,
+            "revalidate_primary_during_lock":True,
+            "release_lock_in_finally":True,
+            "does_not_delete_indexeddb":True,
+            "does_not_modify_market_core":True,
+            "firefox_quota_recovery":"PENDING"}
+          build_path.write_text(json.dumps(build,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          handoff=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.718_STORAGE_MAINTENANCE_HANDOFF.md")
+          assert not handoff.exists()
+          handoff.write_text("""# Administrator 40.6.718 — Scanner storage maintenance
+          
+          ## Proven browser state
+          On Firefox, localStorage 218 keys, 5.01 MiB, QuotaExceededError. A 2.93 MiB historical localStorage Scanner archive has 240 rows; 240 rows also exist in verified IndexedDB PRIMARY. Operator performed backup twice. The earlier operator-only retire command repeatedly stopped with SCANNER_PERSISTENCE_BUSY without deleting data.
+          
+          ## Correction
+          - The canonical Scanner persistence now accepts an explicit operator-only maintenance lease. Captures and new Bridge flushes are deferred during maintenance, then resumed.
+          - Drain queued Scanner archive/pending payloads in maintenance even if the foreground would otherwise defer idle persistence.
+          - Wait for the separate IndexedDB async write queue to commit before revalidating the primary copy under the same lock.
+          - Execute existing retireVerified safeguards with no generic clearing or auto deletion.
+          - Release maintenance on success, error, or abort. Recover deferred captures.
+          - Rename touched module file storage-primary-truth.js and public runtime API AgentCryptoStoragePrimaryTruth, removing version numbers from those names. Update both post-boot loader references; cache-bust active loader.
+          
+          ## Acceptance / limits
+          Code SHA and Node isolated maintenance checks pass. This does NOT prove a live Firefox operation; quota recovery is still pending the owner's approval and test. Do not declare success before localStorage is measured at about 2.08 MiB and IndexedDB PRIMARY is still intact.
+          One canonical incremental ZIP contains six changed source files; the prior numbered module path is removed from Git main.
+          No bridge, market core, historical vault, trading, source history, evidence, or other localStorage keys are changed.
+          """.replace("\n          ","\n"),encoding="utf-8")
+          print("SOURCE VERIFIED; app",blob(app_path.read_bytes()),"module",blob(stable.read_bytes()))
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/storage-primary-truth.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader-406281.js
+          if grep -R 'storage-primary-truth-406344.js' public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader*.js; then
+            echo "Legacy module name still referenced"; exit 1
+          fi
+      - name: Isolated maintenance lock runtime checks
+        shell: bash
+        run: |
+          node <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const src=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+          const start=src.indexOf('async function atlasScannerAcquireMaintenance(');
+          const end=src.indexOf('try {\n  globalThis.AtlasScannerPersistence',start);
+          assert(start>0&&end>start);
+          const rt={maintenanceActive:false,busy:false,flushTimer:0,deferredCaptureReason40461:'',persistQueue40462:{archive:[{a:1}],pending:[{p:2}]},persistScheduled40462:new Set(['archive','pending'])};
+          const stored={};
+          const ctx={atlasScannerCollectorRuntime:rt,ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY:'archive',ATLAS_SCANNER_COLLECTOR_PENDING_KEY:'pending',
+            atlasScannerCollectorPersistRun(key){assert(rt.maintenanceActive);stored[key]=rt.persistQueue40462[key];delete rt.persistQueue40462[key];rt.persistScheduled40462.delete(key);return true},
+            atlasScannerCollectorSchedule(){},globalThis:{AtlasStorageRelief40278:{async waitForIdle(keys){assert.deepStrictEqual(Array.from(keys),['archive','pending']);return {ok:true}}}},
+            window:{clearTimeout(){}},setTimeout,Date,Promise,Error};
+          vm.createContext(ctx);
+          vm.runInContext(src.slice(start,end)+';globalThis.fn=atlasScannerAcquireMaintenance;',ctx);
+          (async()=>{
+            const lease=await ctx.globalThis.fn();
+            assert(rt.maintenanceActive);
+            assert.deepStrictEqual(Object.keys(stored),['archive','pending']);
+            assert.deepStrictEqual(Object.keys(rt.persistQueue40462),[]);
+            try{await ctx.globalThis.fn();throw Error('Must reject nested');}catch(e){assert(String(e).includes('ALREADY_ACTIVE'))}
+            lease.release();lease.release();assert(!rt.maintenanceActive);
+            rt.persistQueue40462.archive=[{a:2}];rt.persistScheduled40462.add('archive');
+            ctx.globalThis.AtlasStorageRelief40278.waitForIdle=async()=>({ok:false,reason:'INDEXEDDB_PERSISTENCE_BUSY'});
+            try{await ctx.globalThis.fn();throw Error('Must reject failed IDB');}catch(e){assert(String(e).includes('INDEXEDDB_PERSISTENCE_BUSY'))}
+            assert(!rt.maintenanceActive);
+            const mod=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/storage-primary-truth.js','utf8');
+            assert(mod.includes('AgentCryptoStoragePrimaryTruth=Object.freeze'));
+            assert(!mod.includes('AgentCryptoStoragePrimaryTruth406344'));
+            console.log('PASS: operator lease and safe failure release');
+          })().catch(e=>{console.error(e);process.exit(1)})
+          JS
+      - name: Assemble one authoritative incremental ZIP
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import pathlib,hashlib,zipfile
+          root=pathlib.Path("coordination/inter_ai_dialogues/agent_crypto")
+          out=root/"administrator_zip_archives"
+          out.mkdir(exist_ok=True)
+          name="AGENT_CRYPTO_ADMINISTRATOR_40.6.718_SCANNER_STORAGE_MAINTENANCE_6_FILES.zip"
+          assert not (out/name).exists(),"Release already exists"
+          files=["app.js","index.html","build.json","js/storage-primary-truth.js",
+            "js/post-boot-runtime-loader.js","js/post-boot-runtime-loader-406281.js"]
+          with zipfile.ZipFile(out/name,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for f in files:
+              source=pathlib.Path("public/agent_crypto_erith_ia/administrator")/f
+              info=zipfile.ZipInfo("administrator/"+f,date_time=(2026,10,31,0,0,0))
+              info.compress_type=zipfile.ZIP_DEFLATED
+              info.external_attr=0o644<<16
+              z.writestr(info,source.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          with zipfile.ZipFile(out/name) as z:
+            assert z.testzip() is None and len(z.namelist())==6
+          sha=hashlib.sha256((out/name).read_bytes()).hexdigest()
+          (out/(name+".sha256")).write_text(sha+"  "+name+"\n")
+          print(name,sha)
+          PY
+      - name: One commit for code, archive and handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/app.js
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/build.json
+          git add -A public/agent_crypto_erith_ia/administrator/js/storage-primary-truth-406344.js
+          git add -A public/agent_crypto_erith_ia/administrator/js/storage-primary-truth.js
+          git add public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+          git add public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader-406281.js
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_handoffs/AGENT_CRYPTO_ADMINISTRATOR_40.6.718_STORAGE_MAINTENANCE_HANDOFF.md
+          git add coordination/inter_ai_dialogues/agent_crypto/administrator_zip_archives/AGENT_CRYPTO_ADMINISTRATOR_40.6.718_SCANNER_STORAGE_MAINTENANCE_6_FILES.zip*
+          git diff --cached --check
+          git commit -m "Fix Scanner persistence maintenance lock and stable storage module name"
+          git push origin HEAD:main
+      - name: Dispatch Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/agent-crypto-runtime-pages.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"publish":true}}'
