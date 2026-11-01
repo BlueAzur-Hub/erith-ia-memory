@@ -1,10 +1,10 @@
 {
   "schema": "atlas_news_sentinel_status_v1",
   "version": "V1.1-alpha.26.47.6",
-  "updated_at": "2026-11-01T08:12:56.831928+00:00",
+  "updated_at": "2026-11-01T15:29:37.945046+00:00",
   "status": "ok",
   "events_count": 120,
-  "events_24h": 8,
+  "events_24h": 5,
   "sources_ok": 14,
   "sources_total": 15,
   "sources_failed": 1,
@@ -13,20 +13,20 @@
   "driver_coverage_build": "40.4.291",
   "driver_coverage": {
     "macro_liquidity": {
-      "events_72h": 11,
-      "distinct_sources": 6
+      "events_72h": 7,
+      "distinct_sources": 5
     },
     "institutional_flows": {
-      "events_72h": 6,
-      "distinct_sources": 4
+      "events_72h": 2,
+      "distinct_sources": 1
     },
     "regulation": {
-      "events_72h": 8,
+      "events_72h": 5,
       "distinct_sources": 6
     },
     "leverage": {
       "events_72h": 1,
-      "distinct_sources": 5
+      "distinct_sources": 4
     }
   },
   "causal_claim": false,
@@ -34,8 +34,8 @@
     "build": "40.6.418",
     "schema": "atlas_news_event_core_v1",
     "unique_events": 120,
-    "articles": 210,
-    "clustered_articles": 90,
+    "articles": 225,
+    "clustered_articles": 105,
     "contract": "one real event = one operator story; articles = confirmations"
   },
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique."
