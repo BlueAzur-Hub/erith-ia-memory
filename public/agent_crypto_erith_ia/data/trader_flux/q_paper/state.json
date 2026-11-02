@@ -9,9 +9,9 @@
   "orders_enabled": false,
   "executed_order": false,
   "first_observed_at": "2026-10-17T20:00:41Z",
-  "last_observed_at": "2026-11-01T21:24:23Z",
+  "last_observed_at": "2026-11-02T01:04:07Z",
   "last": {
-    "at_utc": "2026-11-01T21:24:23Z",
+    "at_utc": "2026-11-02T01:04:07Z",
     "coin_id": "quack-ai",
     "symbol": "Q",
     "venue": "Bitget",
@@ -20,22 +20,22 @@
     "quote": "USDT",
     "identity_status": "SYMBOL_SPOT_CONFIRMED_CONTRACT_EXTERNAL",
     "candles": {
-      "last_closed_hour_utc": "2026-11-01T20:00:00Z",
-      "close_usdt": 0.0328631,
-      "change_close_20h_pct": 4.50479,
-      "last_hour_volume_q": 2176059.7,
-      "last_hour_quote_volume_usdt": 70790.15093313,
+      "last_closed_hour_utc": "2026-11-02T00:00:00Z",
+      "close_usdt": 0.0301988,
+      "change_close_20h_pct": -2.22907,
+      "last_hour_volume_q": 374381.3,
+      "last_hour_quote_volume_usdt": 11252.95904032,
       "median_prior_20h_volume_q": 1368224.45,
       "last_21_bars_contiguous": true
     },
     "book": {
-      "best_bid_usdt": 0.031584,
-      "best_ask_usdt": 0.0316284,
-      "spread_bps": 14.04788,
-      "book_timestamp_utc": "2026-11-01T21:24:23Z",
+      "best_bid_usdt": 0.0302164,
+      "best_ask_usdt": 0.0302489,
+      "spread_bps": 10.74997,
+      "book_timestamp_utc": "2026-11-02T01:04:07Z",
       "book_age_seconds": 0,
-      "bid_top20_notional_usdt": 3451.8744,
-      "ask_top20_notional_usdt": 4967.7752
+      "bid_top20_notional_usdt": 2676.1771,
+      "ask_top20_notional_usdt": 1839.3908
     },
     "source": "Bitget v3 public Spot",
     "paper_only": true,
@@ -2486,6 +2486,37 @@
         "book_age_seconds": 0,
         "bid_top20_notional_usdt": 3451.8744,
         "ask_top20_notional_usdt": 4967.7752
+      },
+      "source": "Bitget v3 public Spot",
+      "paper_only": true,
+      "executed_order": false
+    },
+    {
+      "at_utc": "2026-11-02T01:04:07Z",
+      "coin_id": "quack-ai",
+      "symbol": "Q",
+      "venue": "Bitget",
+      "market": "QUSDT",
+      "instrument_type": "SPOT",
+      "quote": "USDT",
+      "identity_status": "SYMBOL_SPOT_CONFIRMED_CONTRACT_EXTERNAL",
+      "candles": {
+        "last_closed_hour_utc": "2026-11-02T00:00:00Z",
+        "close_usdt": 0.0301988,
+        "change_close_20h_pct": -2.22907,
+        "last_hour_volume_q": 374381.3,
+        "last_hour_quote_volume_usdt": 11252.95904032,
+        "median_prior_20h_volume_q": 1368224.45,
+        "last_21_bars_contiguous": true
+      },
+      "book": {
+        "best_bid_usdt": 0.0302164,
+        "best_ask_usdt": 0.0302489,
+        "spread_bps": 10.74997,
+        "book_timestamp_utc": "2026-11-02T01:04:07Z",
+        "book_age_seconds": 0,
+        "bid_top20_notional_usdt": 2676.1771,
+        "ask_top20_notional_usdt": 1839.3908
       },
       "source": "Bitget v3 public Spot",
       "paper_only": true,
