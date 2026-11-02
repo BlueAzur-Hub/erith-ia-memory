@@ -920,7 +920,23 @@
       "contract_identity_proven": false,
       "orders_enabled": false,
       "executed_order": false,
-      "followups": []
+      "followups": [
+        {
+          "observed_at_utc": "2026-11-02T07:37:02Z",
+          "observed_bid_usdt": "0.10857",
+          "observed_bid_change_pct": -3.5447,
+          "status": "QUOTE_BELOW_HYPOTHETICAL_HURDLE",
+          "real_orders": 0,
+          "orders_enabled": false,
+          "execution_proven": false,
+          "liquidity_at_other_levels_unknown": true,
+          "hypothetical_pnl_usdt": "-4.41080136582987",
+          "hypothetical_pnl_pct": -4.4108,
+          "bid_depth_proven_for_hypothetical_size": true,
+          "window": "24h",
+          "elapsed_hours": 32.02
+        }
+      ]
     }
   ]
 }
