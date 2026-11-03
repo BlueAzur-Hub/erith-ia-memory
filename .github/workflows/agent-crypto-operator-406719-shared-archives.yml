@@ -1,0 +1,136 @@
+name: Archive verified Operator 40.6.719 incremental versions in shared directory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-operator-406719-shared-archives.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: archive-operator-406719-shared-20261103
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto
+            .github/workflows
+      - name: Download exact published public Operator patch artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/operator-market-patch" "$RUNNER_TEMP/operator-version-patch"
+          gh run download 41671936573 --repo BlueAzur-Hub/agent-crypto-operator \
+            --name operator-phase-c-incremental-update-zip \
+            --dir "$RUNNER_TEMP/operator-market-patch"
+          gh run download 41676668893 --repo BlueAzur-Hub/agent-crypto-operator \
+            --name operator-40-6-719-version-truth-incremental-zip \
+            --dir "$RUNNER_TEMP/operator-version-patch"
+      - name: Verify source commits, exact ZIP bytes and all application-file SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, os, pathlib, shutil, zipfile
+          shared=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto')
+          specs=[
+            {
+              'folder':'operator-market-patch',
+              'name':'AGENT_CRYPTO_OPERATOR_YOANN_MARKET_RADAR_GRAPHS_INCREMENTAL_UPDATE_PHASE_C_2026_11_03.zip',
+              'sha':'f543714fd154a81e544deb2b3ce5ed3c542d4ab69331a02b785bd8da4dfd346e',
+              'count':19,
+              'base':'7fb07b39f3f8b5a64e1b2213ef27a430c046b6ef',
+              'source':'2257c6e09df8918c04b37e1575363291786ba7d2',
+              'published':'3e3a30d44c5291cf2516d9a51e0462e0a6b587bc'
+            },
+            {
+              'folder':'operator-version-patch',
+              'name':'AGENT_CRYPTO_OPERATOR_YOANN_40_6_719_VERSION_TRUTH_INCREMENTAL_UPDATE_2026_11_03.zip',
+              'sha':'2cb26563f59688f9dac112c70449d897003e45227b55752e9ffca07c54bbb1a5',
+              'count':9,
+              'base':'3e3a30d44c5291cf2516d9a51e0462e0a6b587bc',
+              'source':'b82b62fd1aacd2a09ab714082ca5d123c77d4ff4',
+              'published':'b82b62fd1aacd2a09ab714082ca5d123c77d4ff4'
+            }
+          ]
+          for spec in specs:
+            origin=pathlib.Path(os.environ['RUNNER_TEMP'])/spec['folder']
+            src=origin/spec['name']
+            assert src.is_file(), 'Missing exact original ZIP: '+str(src)
+            assert hashlib.sha256(src.read_bytes()).hexdigest()==spec['sha'], 'Original ZIP SHA mismatch'
+            assert (origin/'BASE_COMMIT.txt').read_text().strip()==spec['base'], 'Wrong baseline'
+            assert (origin/'SOURCE_COMMIT.txt').read_text().strip()==spec['source'], 'Wrong source commit'
+            checks=origin/(spec['name']+'.sha256')
+            assert checks.is_file(), 'Original checksum missing'
+            chkline=checks.read_text().strip()
+            assert chkline==spec['sha']+'  '+spec['name'], 'Original checksum mismatch'
+            expected=(origin/'FILES_CHANGED.txt').read_text().splitlines()
+            assert len(expected)==spec['count'], 'Unexpected manifest file count'
+            with zipfile.ZipFile(src,'r') as archive:
+              assert archive.testzip() is None, 'Corrupt ZIP'
+              files=[p for p in archive.namelist() if not p.endswith('/')]
+              assert len(files)==len(set(files))==spec['count'], 'ZIP file count/duplicates'
+              assert set(files)==set(expected), 'ZIP content differs from FILES_CHANGED'
+              assert all(p.startswith('public/agent_crypto_erith_ia/') for p in files), 'Unsafe path root'
+              assert all('..' not in pathlib.PurePosixPath(p).parts for p in files), 'Unsafe ZIP path'
+              assert not any('/bridge_yohan/' in p or '/.github/' in p for p in files), 'Private/CI file in deployment ZIP'
+              lines=(origin/'FILES_SHA256.txt').read_text().splitlines()
+              assert len(lines)==spec['count'], 'Wrong SHA-256 manifest size'
+              for line in lines:
+                digest,path=line.split('  ',1)
+                assert path in files, 'Unexpected SHA manifest file'
+                assert hashlib.sha256(archive.read(path)).hexdigest()==digest, 'Individual file hash mismatch: '+path
+            dst=shared/spec['name']
+            if dst.exists():
+              assert hashlib.sha256(dst.read_bytes()).hexdigest()==spec['sha'], 'Collision in canonical shared directory'
+            else:
+              shutil.copyfile(src,dst)
+            shafile=shared/(spec['name']+'.sha256')
+            if shafile.exists():
+              assert shafile.read_text().strip()==chkline, 'Checksum collision'
+            else:
+              shutil.copyfile(checks,shafile)
+            assert hashlib.sha256(dst.read_bytes()).hexdigest()==spec['sha']
+            print('VERIFIED_SHARED_ARCHIVE',dst,spec['count'],dst.stat().st_size,spec['sha'])
+          PY
+      - name: Commit only the two verified ZIPs and their original checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          shared=coordination/inter_ai_dialogues/agent_crypto
+          git add -- \
+            "$shared/AGENT_CRYPTO_OPERATOR_YOANN_MARKET_RADAR_GRAPHS_INCREMENTAL_UPDATE_PHASE_C_2026_11_03.zip" \
+            "$shared/AGENT_CRYPTO_OPERATOR_YOANN_MARKET_RADAR_GRAPHS_INCREMENTAL_UPDATE_PHASE_C_2026_11_03.zip.sha256" \
+            "$shared/AGENT_CRYPTO_OPERATOR_YOANN_40_6_719_VERSION_TRUTH_INCREMENTAL_UPDATE_2026_11_03.zip" \
+            "$shared/AGENT_CRYPTO_OPERATOR_YOANN_40_6_719_VERSION_TRUTH_INCREMENTAL_UPDATE_2026_11_03.zip.sha256"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "All verified archives already present."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Archive verified Operator 40.6.719 incremental update ZIPs"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo "SHARED_ARCHIVES_COMMITTED"
+              exit 0
+            fi
+          done
+          exit 1
