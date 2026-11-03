@@ -429,6 +429,34 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-03",
+      "date_utc": "2026-11-03",
+      "first_seen_at_utc": "2026-11-03T02:32:17.798Z",
+      "source_times_utc": [
+        "2026-11-03T02:17:41.778Z",
+        "2026-11-03T02:17:42.068Z"
+      ],
+      "universe_eligible": 393,
+      "policy_matches": 2,
+      "selected": [
+        {
+          "coin_id": "cash-cat",
+          "symbol": "CASHCAT",
+          "source_at_utc": "2026-11-03T02:17:42.068Z",
+          "rank": 264,
+          "price_usd": 0.10362785126577807
+        },
+        {
+          "coin_id": "pieverse",
+          "symbol": "PIEVERSE",
+          "source_at_utc": "2026-11-03T02:17:41.778Z",
+          "rank": 130,
+          "price_usd": 1.1190177528428473
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1012,6 +1040,27 @@
       "sha256": "8dfccbb2d29be2ac4ea349e3ac4ecc2bc43315dacd09f065478af10bd4395619",
       "recorded_at_utc": "2026-11-02T18:40:20.262Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-01",
+      "file": "observations/2026-11-03T023217798Z--2026-11-01.json",
+      "sha256": "5efd6558eda28ce6ef5c8c1dd884c6029caab7643ed935f8237e37ce4f772276",
+      "recorded_at_utc": "2026-11-03T02:32:17.798Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-02",
+      "file": "observations/2026-11-03T023217798Z--2026-11-02.json",
+      "sha256": "8fbc495086ebfdae103ac05ec4c69c213a0c4255209e97d2cefcf45ca5a66273",
+      "recorded_at_utc": "2026-11-03T02:32:17.798Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-03",
+      "file": "observations/2026-11-03T023217798Z--2026-11-03.json",
+      "sha256": "6552227edd3321155c7619a2c615945f302f716fb57d3384ff20aaf7ff998e07",
+      "recorded_at_utc": "2026-11-03T02:32:17.798Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
