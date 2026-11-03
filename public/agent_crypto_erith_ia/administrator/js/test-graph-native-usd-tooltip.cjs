@@ -213,8 +213,8 @@ test("Top 3 USD 24h preserves currency-isolated USD comparison context",()=>{
  const top3usd=check("rank-3","USD");
  assert.equal(top3usd.context,raw+":USD");
  assert.equal(top3usd.canonical,false);
- assert.equal(top3usd.source,"binance");
- assert.ok(top3usd.cache.startsWith("EUR:"));
+ assert.equal(top3usd.source,"coingecko","USD Top 3 uses native CoinGecko source");
+ assert.ok(top3usd.cache.includes(":USD:"),"USD cache must remain isolated from EUR");
  const top3eur=check("rank-3","EUR");
  assert.equal(top3eur.context,raw);
  assert.equal(top3eur.canonical,false);
