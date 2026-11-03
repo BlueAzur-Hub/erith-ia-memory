@@ -1,12 +1,12 @@
 "use strict";
 const fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 const assert=require("node:assert/strict");
-const code=fs.readFileSync(path.resolve(__dirname,"../public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"),"utf8");
-const ctx={console};ctx.globalThis=ctx;vm.runInNewContext(code,ctx,{filename:"graph-native-usd-406520.js"});
-const api=ctx.AgentCryptoGraphNativeUsd406520;
+const code=fs.readFileSync(path.resolve(__dirname,"../public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js"),"utf8");
+const ctx={console};ctx.globalThis=ctx;vm.runInNewContext(code,ctx,{filename:"graph-native-usd.js"});
+const api=ctx.AgentCryptoGraphNativeUsd;
 assert.equal(typeof api.usdTooltipSource,"function");
 const now=Date.UTC(2025,7,12,12,0,0);
-const freshCoin={id:"example-token",priceUsd:15,change24h:0.6,
+const freshCoin={id:"example-token",priceUsd:15,change24hUsd:0.6,
   lastUpdated:new Date(now-90000).toISOString()};
 const label=c=>api.usdTooltipSource(c,now);
 const fresh=label({dataset:{atlasCoin:freshCoin}});

@@ -9,7 +9,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
       - "public/agent_crypto_erith_ia/tools/test_followed_listings.cjs"
-      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
       - "public/agent_crypto_erith_ia/laboratoire/**"
@@ -32,7 +32,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
       - "public/agent_crypto_erith_ia/tools/test_followed_listings.cjs"
-      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
       - "public/agent_crypto_erith_ia/laboratoire/**"
@@ -88,11 +88,11 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --test tests/agent_crypto_orderbook_freshness.cjs
-          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js
           node --test public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
           node - <<'NODE'
-          require("./public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js");
-          const result=globalThis.AgentCryptoGraphNativeUsd406520?.self_test?.();
+          require("./public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js");
+          const result=globalThis.AgentCryptoGraphNativeUsd?.self_test?.();
           console.log(JSON.stringify(result,null,2));
           if(!result?.pass||result?.checks?.top5_24h_canonical_history_owner!==true||result?.checks?.stale_usd_cache_refused!==true)process.exit(1);
           NODE
@@ -239,7 +239,7 @@ jobs:
           aether=(root/"administrator"/"js"/"aether.js").read_text(encoding="utf-8")
           app=(root/"administrator"/"app.js").read_text(encoding="utf-8")
           candles=(root/"administrator"/"js"/"market-microscope-candles.js").read_text(encoding="utf-8")
-          graph_usd=(root/"administrator"/"js"/"graph-native-usd-406520.js").read_text(encoding="utf-8")
+          graph_usd=(root/"administrator"/"js"/"graph-native-usd.js").read_text(encoding="utf-8")
           current=str(build.get("build","")).strip()
 
           forbidden=[
@@ -280,14 +280,14 @@ jobs:
             "minimum_nav_advanced_filtered": '#atlasAdminGraphToggle' in admin and '#atlasAdminCenterToggle' in admin and '#atlasAdminCenterDrawer' in admin and '#atlasAetherStatusToggle{display:inline-flex!important}' in admin,
             "minimum_nav_mirror_contract": "minimum_nav:true" in mirror and 'minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"])' in mirror,
             "minimum_nav_no_aether_clone": "createElement" not in "\n".join(line for line in mirror.splitlines() if "Aether" in line or "aether" in line),
-            "pair_resolver_loaded": 'js/okx-market-pair-resolver.js?v='+current in admin,
+            "pair_resolver_loaded": 'js/okx-market-pair-resolver.js?v=' in admin,
             "pair_resolver_stable_filename": "okx-market-pair-resolver-406" not in admin,
             "pair_resolver_before_consumers": admin.find("js/okx-market-pair-resolver.js") < admin.find("js/market-microscope-candles.js") < admin.find("js/okx-microstructure-406499.js"),
             "canonical_selection_event_owner": 'agent-crypto:selected-market-changed' in app and 'atlasBroadcastSelectedMarketChange' in app,
             "candles_selection_event_listener": 'window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged' in candles,
             "candles_no_legacy_function_wrapper": "__agentCryptoMicroscopeHook" not in candles and "__agentCryptoMicroscopeOriginal" not in candles,
             "candles_stale_canvas_clear": "stale_asset_canvas_cleared:true" in candles,
-            "graph_native_usd_current_cache_token": 'js/graph-native-usd-406520.js?v='+current in admin,
+            "graph_native_usd_canonical_wrapper_loaded": 'js/graph-native-usd.js?v='+current in admin,
             "graph_top5_24h_canonical_owner": "top5_24h_canonical_history_owner:true" in graph_usd,
             "graph_top5_canonical_delegate": 'usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)' in graph_usd,
             "graph_stale_usd_cache_refused": "coingecko-usd-stale-cache-refused" in graph_usd,

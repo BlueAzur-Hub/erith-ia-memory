@@ -10,7 +10,7 @@ globalThis.AgentCryptoMarketInstrumentResolver = Object.freeze({
 });
 require(path.join(ROOT,"okx-market-pair-resolver.js"));
 require(path.join(ROOT,"okx-microstructure-406499.js"));
-require(path.join(ROOT,"graph-native-usd-406520.js"));
+require(path.join(ROOT,"graph-native-usd.js"));
 
 const resolver=globalThis.AgentCryptoOkxMarketPairResolver?.self_test?.();
 assert.equal(resolver?.pass,true,"OKX pair resolver self-test");
@@ -20,7 +20,7 @@ assert.equal(depth.checks.ct_graph_priority_test,true,"Visible external CT outra
 assert.equal(depth.checks.wrong_btc_book_hidden_test,true,"Never display BTC as CT orderbook");
 assert.equal(depth.checks.small_price_levels_preserved,true,"Price precision for CT");
 assert.equal(depth.checks.requested_asset_must_match_payload,true);
-const graph=globalThis.AgentCryptoGraphNativeUsd406520?.self_test?.();
+const graph=globalThis.AgentCryptoGraphNativeUsd?.self_test?.();
 assert.equal(graph?.pass,true,JSON.stringify(graph?.checks,null,2));
 assert.equal(graph.checks.top5_native_usd_quote,true,"Top 5 USD native snapshot only");
 assert.equal(graph.checks.top5_stale_usd_refused,true,"Top 5 stale USD rejected");
