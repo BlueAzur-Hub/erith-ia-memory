@@ -1,0 +1,120 @@
+name: Archive Yoann Operator Trader 40.6.719 differential
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-operator-yohan-trader-shared-archive.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: archive-yohan-trader-406719-20261103
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          persist-credentials: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /coordination/inter_ai_dialogues/agent_crypto/
+            /.github/workflows/agent-crypto-operator-yohan-trader-shared-archive.yml
+      - name: Retrieve reviewed six-file Operator artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/yohan-trader"
+          gh run download 41703487079 --repo BlueAzur-Hub/agent-crypto-operator \
+            --name operator-trader-406719-six-file-incremental-zip \
+            --dir "$RUNNER_TEMP/yohan-trader"
+      - name: Verify artifact, published Operator files, and save only ZIP plus SHA
+        env:
+          PATCH_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, subprocess, urllib.request, zipfile
+          source=Path(os.environ["PATCH_TEMP"])/"yohan-trader"
+          name="AGENT_CRYPTO_OPERATOR_YOANN_TRADER_MARKET_USD_TECHNICAL_SYNC_40_6_719_INCREMENTAL_UPDATE_2026_11_03.zip"
+          path=source/name
+          checks=source/(name+".sha256")
+          assert path.is_file() and checks.is_file(), "Artifact files absent"
+          content=path.read_bytes()
+          expected="9f575853b0e3032e245376597850da2983bbadccecdf102249c344f1a19e529b"
+          assert hashlib.sha256(content).hexdigest()==expected,"Six-file ZIP SHA mismatch"
+          assert checks.read_text().split()[0]==expected,"Artifact checksum mismatch"
+          assert (source/"BASE_COMMIT.txt").read_text().strip()=="b82b62fd1aacd2a09ab714082ca5d123c77d4ff4"
+          assert (source/"SOURCE_COMMIT.txt").read_text().strip()=="a1a8f9bfcf5155de076df62c14ab07e84859ca84"
+          listed=[
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js",
+            "public/agent_crypto_erith_ia/trader/build.json",
+            "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js",
+            "public/agent_crypto_erith_ia/trader/trading-desk.html"
+          ]
+          expected_files={
+            "public/agent_crypto_erith_ia/administrator/index.html":"c733e0c484fd925912e8c2487bfad1af121c938ac30f4f7da3c029f24af6dbc2",
+            "public/agent_crypto_erith_ia/administrator/build.json":"97561ece44ef77b20f7f285068b92b671125a1d3883775c4f190e6c517c1db93",
+            "public/agent_crypto_erith_ia/administrator/js/graph-native-usd.js":"d61cfb47ff8de943f3859e66ce4c12881373fdfde28aa2796ceb5771ac00b033",
+            "public/agent_crypto_erith_ia/trader/build.json":"f0e2349fc3fc33d3d797ad2012ceb061603f00803283f12ff1cc3a1185edbd95",
+            "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js":"2cf2554b384d35ee4a32e5ba7ccaf03fc45dd54f28b69de9f20b87077e5e18a2",
+            "public/agent_crypto_erith_ia/trader/trading-desk.html":"4f7e93e14c838c056b7bcbddac522f9dc69569cacc7773ed6a04b609be769960"
+          }
+          assert sorted(listed)==sorted(expected_files)
+          with zipfile.ZipFile(path) as z:
+            assert z.testzip() is None and sorted(z.namelist())==sorted(listed)
+            for p in listed:
+              payload=z.read(p)
+              assert hashlib.sha256(payload).hexdigest()==expected_files[p],"File SHA mismatch "+p
+              public_url="https://raw.githubusercontent.com/BlueAzur-Hub/agent-crypto-operator/d831ccf17f4c10d3ce63be071b0d43b1663cb5d3/"+p
+              raw=subprocess.check_output(["curl","--fail","--silent","--show-error","--location","--retry","3","--max-time","35",public_url])
+              assert raw==payload,"Published Operator commit differs "+p
+            manifest=json.loads(z.read("public/agent_crypto_erith_ia/trader/build.json"))
+            assert manifest["build"]=="40.6.719" and manifest["market_core"]=="38.15.11"
+            assert manifest["real_orders"] is False and manifest["execution"]=="disabled"
+          share=Path("coordination/inter_ai_dialogues/agent_crypto")
+          share.mkdir(parents=True,exist_ok=True)
+          out=share/name
+          sha=share/(name+".sha256")
+          digest=expected+"  "+name+"\n"
+          if out.exists():assert out.read_bytes()==content,"Archive collision"
+          else:out.write_bytes(content)
+          if sha.exists():assert sha.read_text()==digest,"Checksum collision"
+          else:sha.write_text(digest)
+          print("VERIFIED_YOANN_TRADER_SIX_FILES",len(content),expected)
+          PY
+      - name: Commit only verified small ZIP and checksum
+        run: |
+          set -euo pipefail
+          shared=coordination/inter_ai_dialogues/agent_crypto
+          name=AGENT_CRYPTO_OPERATOR_YOANN_TRADER_MARKET_USD_TECHNICAL_SYNC_40_6_719_INCREMENTAL_UPDATE_2026_11_03.zip
+          git add -- "$shared/$name" "$shared/$name.sha256"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "Shared ZIP and checksum already verified."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Archive Operator Yoann Trader 40.6.719 differential update"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo "SHARED_YOANN_TRADER_ARCHIVE_PUBLISHED"
+              exit 0
+            fi
+          done
+          exit 1
