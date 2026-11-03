@@ -1,11 +1,11 @@
 "use strict";
 const test=require("node:test"),assert=require("node:assert/strict");
-const source="./graph-native-usd-406520.js";
+const source="./graph-native-usd.js";
 const originalGlobals={};
 function setup(){
  for(const name of ["document","state","window","atlasExternalChartTooltip","atlasChartV2EffectiveView",
   "AgentCryptoQuoteCurrencyArchitecture","AtlasExternalChart","AgentCryptoNewListingsNativeCategory",
-  "AgentCryptoGraphNativeUsd406520","atlasChartPriceDatasets","atlasChartLivePresentation",
+  "AgentCryptoGraphNativeUsd","atlasChartPriceDatasets","atlasChartLivePresentation",
   "AtlasMarketUniverse1000"])originalGlobals[name]=globalThis[name];
  const heading={textContent:"PRIX LIVE BINANCE"};
  const price={textContent:"ancien prix",title:""};
@@ -28,7 +28,7 @@ function setup(){
  globalThis.atlasChartV2EffectiveView=()=>"price";
  globalThis.atlasExternalChartTooltip=()=>{price.textContent="ancien prix";heading.textContent="PRIX LIVE BINANCE";return "original"};
  delete require.cache[require.resolve(source)];require(source);
- globalThis.AgentCryptoGraphNativeUsd406520.install();
+ globalThis.AgentCryptoGraphNativeUsd.install();
  const point=(n=36,id="concrete")=>({dataIndex:n,parsed:{y:snapshot.series[n][1],x:snapshot.series[n][0]},
   dataset:{atlasCoin:{id},label:"CT"},raw:{x:snapshot.series[n][0],y:snapshot.series[n][1]}});
  return{heading,price,tooltip,active,selected,snapshot,point,
@@ -201,12 +201,12 @@ test("Top 3 USD 24h preserves currency-isolated USD comparison context",()=>{
   ctx.globalThis=ctx;
   vm.createContext(ctx);
   vm.runInContext(script,ctx);
-  ctx.AgentCryptoGraphNativeUsd406520.install();
+  ctx.AgentCryptoGraphNativeUsd.install();
   return {
    context:ctx.atlasExpectedChartContextKey(ids,period),
    source:ctx.atlasComparisonPreferredSourceFamily(),
    cache:ctx.atlasChartStorageKey({id:"bitcoin"},period,"binance"),
-   canonical:ctx.AgentCryptoGraphNativeUsd406520.canonicalTop5History(period)
+   canonical:ctx.AgentCryptoGraphNativeUsd.canonicalTop5History(period)
   };
  }
  const raw="comparison:bitcoin,ethereum,binancecoin:1";
