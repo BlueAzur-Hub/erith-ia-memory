@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-11-02",
+  "latest_archive_day_utc": "2026-11-03",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,57 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "near",
-      "symbol": "NEAR",
-      "rank": 36,
-      "observed_at": "2026-09-04T22:22:21.580Z",
-      "price_usd": 2.125868762654758,
-      "change24h_pct": 8.1419,
-      "change7d_pct": 15.4,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-11",
-      "observed_followup_at": "2026-09-11T21:44:55.720Z",
-      "observed_followup_price_usd": 2.4933015582996534,
-      "followup_change_pct": 17.28,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-04.jsonl",
-      "followup_source_path": "data/history/2026-09-11.jsonl"
-    },
-    {
-      "id": "zcash",
-      "symbol": "ZEC",
-      "rank": 11,
-      "observed_at": "2026-09-04T22:22:21.580Z",
-      "price_usd": 1022.369470030115,
-      "change24h_pct": 8.00022,
-      "change7d_pct": 27.6,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-11",
-      "observed_followup_at": "2026-09-11T21:44:55.720Z",
-      "observed_followup_price_usd": 1175.4629344185782,
-      "followup_change_pct": 14.97,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-04.jsonl",
-      "followup_source_path": "data/history/2026-09-11.jsonl"
-    },
-    {
-      "id": "memecore",
-      "symbol": "M",
-      "rank": 40,
-      "observed_at": "2026-09-04T22:22:21.580Z",
-      "price_usd": 1.1192873457804504,
-      "change24h_pct": 6.3434,
-      "change7d_pct": 7.3,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-11",
-      "observed_followup_at": "2026-09-11T21:44:55.720Z",
-      "observed_followup_price_usd": 1.192591564891227,
-      "followup_change_pct": 6.55,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-04.jsonl",
-      "followup_source_path": "data/history/2026-09-11.jsonl"
-    },
     {
       "id": "uniswap",
       "symbol": "UNI",
@@ -2272,7 +2221,7 @@
       "observed_followup_at": null,
       "observed_followup_price_usd": null,
       "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "followup_status": "ASSET_NOT_IN_TOP50",
       "source_path": "data/history/2026-10-27.jsonl",
       "followup_source_path": null
     },
@@ -2286,12 +2235,12 @@
       "change7d_pct": 38.9138,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-03",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-03T15:12:48.868Z",
+      "observed_followup_price_usd": 0.8578655097723228,
+      "followup_change_pct": -19.99,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-27.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-03.jsonl"
     },
     {
       "id": "zcash",
@@ -2303,12 +2252,12 @@
       "change7d_pct": 4.9611,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-03",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-03T15:12:48.868Z",
+      "observed_followup_price_usd": 1193.0459983188134,
+      "followup_change_pct": -8.87,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-27.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-03.jsonl"
     },
     {
       "id": "bitcoin-cash",
@@ -2320,12 +2269,12 @@
       "change7d_pct": 3.1439,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-03",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-03T15:12:48.868Z",
+      "observed_followup_price_usd": 277.44041732083826,
+      "followup_change_pct": -4.97,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-27.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-03.jsonl"
     },
     {
       "id": "hyperliquid",
@@ -2337,12 +2286,12 @@
       "change7d_pct": 0.4266,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-03",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-03T15:12:48.868Z",
+      "observed_followup_price_usd": 86.43087863526256,
+      "followup_change_pct": 6.06,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-27.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-03.jsonl"
     },
     {
       "id": "pepe",
