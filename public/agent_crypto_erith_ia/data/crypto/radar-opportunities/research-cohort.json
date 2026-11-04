@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-04T16:13:52Z",
+  "source_qualification_at_utc": "2026-11-04T20:53:45Z",
   "source_observation_date_utc": "2026-11-04",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -50,42 +50,14 @@
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 16.87408,
-        "roundtrip_cost_pct_assumed": 0.38417
+        "spread_bps_at_snapshot": 12.56281,
+        "roundtrip_cost_pct_assumed": 0.38251
       },
       "detections_archived": 7,
       "j1_observed": 6,
       "j7_observed": 6,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "holotoken",
-      "symbol": "HOT",
-      "name": "Holo",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 275,
-      "change24h_pct_at_snapshot": 29.35242,
-      "change7d_pct_at_snapshot": 58.6357,
-      "volume24h_aggregate_usd": 62333551,
-      "spot": {
-        "venue": "Binance",
-        "pair": "HOTUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 21.03049,
-        "roundtrip_cost_pct_assumed": 0.40956
-      },
-      "detections_archived": 3,
-      "j1_observed": 2,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "extreme_24h_move",
-        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -104,12 +76,38 @@
         "venue": "Bitget",
         "pair": "ICNTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.74271,
-        "roundtrip_cost_pct_assumed": 0.31577
+        "spread_bps_at_snapshot": 4.74496,
+        "roundtrip_cost_pct_assumed": 0.27934
       },
       "detections_archived": 8,
       "j1_observed": 6,
       "j7_observed": 6,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "instadapp",
+      "symbol": "FLUID",
+      "name": "Fluid",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 187,
+      "change24h_pct_at_snapshot": 12.08302,
+      "change7d_pct_at_snapshot": -5.9499,
+      "volume24h_aggregate_usd": 4260095,
+      "spot": {
+        "venue": "OKX",
+        "pair": "FLUID-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 15.82311,
+        "roundtrip_cost_pct_assumed": 0.46206
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 1,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -130,8 +128,8 @@
         "venue": "OKX",
         "pair": "IRYS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.70874,
-        "roundtrip_cost_pct_assumed": 0.29675
+        "spread_bps_at_snapshot": 9.71345,
+        "roundtrip_cost_pct_assumed": 0.3149
       },
       "detections_archived": 4,
       "j1_observed": 2,
@@ -156,8 +154,8 @@
         "venue": "Binance",
         "pair": "KMNOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.26788,
-        "roundtrip_cost_pct_assumed": 0.28238
+        "spread_bps_at_snapshot": 8.25196,
+        "roundtrip_cost_pct_assumed": 0.34318
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -183,8 +181,8 @@
         "venue": "Binance",
         "pair": "ZROUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.40687,
-        "roundtrip_cost_pct_assumed": 0.25385
+        "spread_bps_at_snapshot": 5.60067,
+        "roundtrip_cost_pct_assumed": 0.25578
       },
       "detections_archived": 3,
       "j1_observed": 1,
@@ -210,8 +208,8 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.08044,
-        "roundtrip_cost_pct_assumed": 0.33036
+        "spread_bps_at_snapshot": 9.30233,
+        "roundtrip_cost_pct_assumed": 0.34892
       },
       "detections_archived": 5,
       "j1_observed": 4,
@@ -236,8 +234,8 @@
         "venue": "Binance",
         "pair": "PUMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.23189,
-        "roundtrip_cost_pct_assumed": 0.24331
+        "spread_bps_at_snapshot": 2.3818,
+        "roundtrip_cost_pct_assumed": 0.22367
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -263,8 +261,8 @@
         "venue": "Bitget",
         "pair": "SOONUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.15152,
-        "roundtrip_cost_pct_assumed": 0.351
+        "spread_bps_at_snapshot": 7.88333,
+        "roundtrip_cost_pct_assumed": 0.27854
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -289,8 +287,8 @@
         "venue": "Binance",
         "pair": "RUNEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.66171,
-        "roundtrip_cost_pct_assumed": 0.35608
+        "spread_bps_at_snapshot": 15.63722,
+        "roundtrip_cost_pct_assumed": 0.35584
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -316,8 +314,8 @@
         "venue": "Binance",
         "pair": "AMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 29.19708,
-        "roundtrip_cost_pct_assumed": 0.74407
+        "spread_bps_at_snapshot": 29.41176,
+        "roundtrip_cost_pct_assumed": 0.62485
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -344,8 +342,8 @@
         "venue": "OKX",
         "pair": "CARDS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 21.76279,
-        "roundtrip_cost_pct_assumed": 0.43782
+        "spread_bps_at_snapshot": 26.87656,
+        "roundtrip_cost_pct_assumed": 0.49145
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -357,27 +355,29 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "instadapp",
-      "symbol": "FLUID",
-      "name": "Fluid",
+      "coin_id": "holotoken",
+      "symbol": "HOT",
+      "name": "Holo",
       "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 187,
-      "change24h_pct_at_snapshot": 12.08302,
-      "change7d_pct_at_snapshot": -5.9499,
-      "volume24h_aggregate_usd": 4260095,
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 275,
+      "change24h_pct_at_snapshot": 29.35242,
+      "change7d_pct_at_snapshot": 58.6357,
+      "volume24h_aggregate_usd": 62333551,
       "spot": {
-        "venue": "OKX",
-        "pair": "FLUID-USDT",
+        "venue": "Binance",
+        "pair": "HOTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.10574,
-        "roundtrip_cost_pct_assumed": 0.45039
+        "spread_bps_at_snapshot": 21.34472,
+        "roundtrip_cost_pct_assumed": 0.53991
       },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 1,
+      "detections_archived": 3,
+      "j1_observed": 2,
+      "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified"
+        "token_contract_not_verified",
+        "extreme_24h_move",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
