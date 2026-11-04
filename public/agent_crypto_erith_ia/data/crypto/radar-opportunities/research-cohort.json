@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-04T00:50:27Z",
+  "source_qualification_at_utc": "2026-11-04T15:44:43Z",
   "source_observation_date_utc": "2026-11-04",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -37,33 +37,6 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
-      "coin_id": "amp-token",
-      "symbol": "AMP",
-      "name": "Amp",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 380,
-      "change24h_pct_at_snapshot": 5.92719,
-      "change7d_pct_at_snapshot": -3.3978,
-      "volume24h_aggregate_usd": 9726823,
-      "spot": {
-        "venue": "Binance",
-        "pair": "AMPUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 14.50326,
-        "roundtrip_cost_pct_assumed": 0.34454
-      },
-      "detections_archived": 4,
-      "j1_observed": 3,
-      "j7_observed": 2,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
       "coin_id": "bedrock-token",
       "symbol": "BR",
       "name": "Bedrock",
@@ -77,8 +50,8 @@
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.77411,
-        "roundtrip_cost_pct_assumed": 0.3783
+        "spread_bps_at_snapshot": 16.95993,
+        "roundtrip_cost_pct_assumed": 0.38516
       },
       "detections_archived": 7,
       "j1_observed": 6,
@@ -103,12 +76,38 @@
         "venue": "Bitget",
         "pair": "ICNTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.8968,
-        "roundtrip_cost_pct_assumed": 0.2971
+        "spread_bps_at_snapshot": 9.63855,
+        "roundtrip_cost_pct_assumed": 0.29605
       },
       "detections_archived": 8,
       "j1_observed": 6,
       "j7_observed": 6,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "instadapp",
+      "symbol": "FLUID",
+      "name": "Fluid",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 187,
+      "change24h_pct_at_snapshot": 12.08302,
+      "change7d_pct_at_snapshot": -5.9499,
+      "volume24h_aggregate_usd": 4260095,
+      "spot": {
+        "venue": "OKX",
+        "pair": "FLUID-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 14.73445,
+        "roundtrip_cost_pct_assumed": 0.38701
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 1,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -129,8 +128,8 @@
         "venue": "OKX",
         "pair": "IRYS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.47418,
-        "roundtrip_cost_pct_assumed": 0.31163
+        "spread_bps_at_snapshot": 9.68523,
+        "roundtrip_cost_pct_assumed": 0.31018
       },
       "detections_archived": 4,
       "j1_observed": 2,
@@ -155,8 +154,8 @@
         "venue": "Binance",
         "pair": "KMNOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.08458,
-        "roundtrip_cost_pct_assumed": 0.28928
+        "spread_bps_at_snapshot": 5.70288,
+        "roundtrip_cost_pct_assumed": 0.28366
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -182,8 +181,8 @@
         "venue": "Binance",
         "pair": "ZROUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.78749,
-        "roundtrip_cost_pct_assumed": 0.3075
+        "spread_bps_at_snapshot": 5.31208,
+        "roundtrip_cost_pct_assumed": 0.2922
       },
       "detections_archived": 3,
       "j1_observed": 1,
@@ -209,8 +208,8 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.86027,
-        "roundtrip_cost_pct_assumed": 0.24839
+        "spread_bps_at_snapshot": 4.27077,
+        "roundtrip_cost_pct_assumed": 0.31912
       },
       "detections_archived": 5,
       "j1_observed": 4,
@@ -235,8 +234,8 @@
         "venue": "Binance",
         "pair": "PUMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.33836,
-        "roundtrip_cost_pct_assumed": 0.22323
+        "spread_bps_at_snapshot": 2.24039,
+        "roundtrip_cost_pct_assumed": 0.22226
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -262,8 +261,8 @@
         "venue": "Bitget",
         "pair": "SOONUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.87092,
-        "roundtrip_cost_pct_assumed": 0.27842
+        "spread_bps_at_snapshot": 11.31008,
+        "roundtrip_cost_pct_assumed": 0.31271
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -288,12 +287,39 @@
         "venue": "Binance",
         "pair": "RUNEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.9109,
-        "roundtrip_cost_pct_assumed": 0.35856
+        "spread_bps_at_snapshot": 15.76044,
+        "roundtrip_cost_pct_assumed": 0.35707
       },
       "detections_archived": 3,
       "j1_observed": 2,
       "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "amp-token",
+      "symbol": "AMP",
+      "name": "Amp",
+      "group": "additional_spot_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 380,
+      "change24h_pct_at_snapshot": 5.92719,
+      "change7d_pct_at_snapshot": -3.3978,
+      "volume24h_aggregate_usd": 9726823,
+      "spot": {
+        "venue": "Binance",
+        "pair": "AMPUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 29.23977,
+        "roundtrip_cost_pct_assumed": 0.49129
+      },
+      "detections_archived": 4,
+      "j1_observed": 3,
+      "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -315,8 +341,8 @@
         "venue": "OKX",
         "pair": "CARDS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 31.21342,
-        "roundtrip_cost_pct_assumed": 0.53028
+        "spread_bps_at_snapshot": 25.18439,
+        "roundtrip_cost_pct_assumed": 0.45092
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -341,8 +367,8 @@
         "venue": "Binance",
         "pair": "HOTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 18.33181,
-        "roundtrip_cost_pct_assumed": 0.38268
+        "spread_bps_at_snapshot": 41.40787,
+        "roundtrip_cost_pct_assumed": 0.6123
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -350,33 +376,8 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "extreme_24h_move",
+        "high_hypothetical_cost",
         "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "instadapp",
-      "symbol": "FLUID",
-      "name": "Fluid",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 187,
-      "change24h_pct_at_snapshot": 12.08302,
-      "change7d_pct_at_snapshot": -5.9499,
-      "volume24h_aggregate_usd": 4260095,
-      "spot": {
-        "venue": "OKX",
-        "pair": "FLUID-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 9.16966,
-        "roundtrip_cost_pct_assumed": 0.39855
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
