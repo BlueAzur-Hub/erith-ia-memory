@@ -124,6 +124,15 @@
       "cost_evaluable": 4,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-04|2026-11-04T00:50:27Z",
+      "qualified_at_utc": "2026-11-04T00:50:27Z",
+      "candidates": 20,
+      "okx_pairs": 7,
+      "cost_evaluable": 1,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -1036,6 +1045,25 @@
           "elapsed_hours": 56.25
         }
       ]
+    },
+    {
+      "id": "pump-fun|2026-11-04",
+      "coin_id": "pump-fun",
+      "symbol": "PUMP",
+      "pair": "PUMP-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-04T00:50:43Z",
+      "entry_bid_usdt": "0.004272",
+      "entry_ask_usdt": "0.004273",
+      "entry_investment_usdt": "99.999788376",
+      "net_sellable_qty": "23332.0",
+      "break_even_bid_rise_pct": 0.6284,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
     }
   ]
 }
