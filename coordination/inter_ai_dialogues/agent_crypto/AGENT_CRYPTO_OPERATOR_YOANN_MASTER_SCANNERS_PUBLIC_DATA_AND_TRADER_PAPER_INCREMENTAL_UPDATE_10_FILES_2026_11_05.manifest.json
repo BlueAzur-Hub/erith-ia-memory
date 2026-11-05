@@ -1,0 +1,89 @@
+{
+  "schema": "agent_crypto_operator_public_delivery_v1",
+  "release_status": "PUBLISHED_MAIN_EXACT_COMMIT",
+  "source_repository": "BlueAzur-Hub/agent-crypto-operator",
+  "source_commit": "d4b01c36ce9070b474873da1de865bfd2bdde6c6",
+  "base_commit": "0bda78a7ba747bd1d6aa25e67174243d077de654",
+  "shared_build": "40.6.719",
+  "market_core": "38.15.11",
+  "archive": {
+    "name": "AGENT_CRYPTO_OPERATOR_YOANN_MASTER_SCANNERS_PUBLIC_DATA_AND_TRADER_PAPER_INCREMENTAL_UPDATE_10_FILES_2026_11_05.zip",
+    "size_bytes": 915051,
+    "sha256": "7bc82e38e572edfa847bade4992ed12a05e0075f0e15df26e0e7c6b5aba91754",
+    "git_blob_sha": "7530aa8bbe9c661b34eb74b2babbc40b97daab8b"
+  },
+  "incremental_patch": true,
+  "file_count": 10,
+  "files": [
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/app.js",
+      "size_bytes": 3441172,
+      "sha256": "28c02e38a8101563098e23e7c2e8d3f22670bcda5d407de7c21859488d4b5d2a",
+      "git_blob_sha": "477c53766a0f412e59a99cf556c65928f4c51b08"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js",
+      "size_bytes": 17692,
+      "sha256": "cb49daea09877730464a5b6a44c413745a64eb5a2c500c9d6a1ac60d2e2cebac",
+      "git_blob_sha": "0d35f806d6ff0392eb978e27dcf4e1fb4dea0d60"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/strategy-comparator.js",
+      "size_bytes": 51674,
+      "sha256": "fa9d9737d5117448e350eca855e6d2c73f79438407559800dbe5fab4c4ba1a00",
+      "git_blob_sha": "b38bb9bb611bf40918b372708737c109aa19dda5"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-order-entry-view.js",
+      "size_bytes": 32950,
+      "sha256": "c6f13b1a05381fc41e5e97d2267a1d4d6795ad743208a6d02bcbbbde5f1c7ac6",
+      "git_blob_sha": "2a117277200b6f2240c052cc5e3182e3a8776264"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-order-entry.css",
+      "size_bytes": 18669,
+      "sha256": "10f2510db34bd8b0180323f26930289bec7fbfb24afd2ca67c70e2b90e1e0bc5",
+      "git_blob_sha": "05f4c084f21005c77cc2decc45b5291bb24ad0d3"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-paper-decision-core.js",
+      "size_bytes": 47262,
+      "sha256": "00777c4a81376df28c9df5a040ac41ab1ac5c68e06e0e923cc798821871a089c",
+      "git_blob_sha": "8154cb8f26a37aae9252e7766a1cf11462e4822b"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-paper-decision-view.js",
+      "size_bytes": 49362,
+      "sha256": "f75a612f82aa7daa43892de9bb1604dda9c38087ead797925a3bda102c465673",
+      "git_blob_sha": "be40e1889f80f4735ed4a6c5e10e4ec77a2e6d57"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-paper-lab-core.js",
+      "size_bytes": 7314,
+      "sha256": "185fa5848fbcd640d17029461e5c43fa28667e08087637ebd9a6d312dcbfcf66",
+      "git_blob_sha": "34ee6cf2f48696cee4d2bc53acef31c8d2108fc7"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-paper-lab-view.js",
+      "size_bytes": 16343,
+      "sha256": "d3b0f730959117f60ab0a96df45eb80b192a44ab54ec14bc49be31bfbdc300a4",
+      "git_blob_sha": "bdf7ebe413420726b1ddaf4040d763f07132ad1b"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js",
+      "size_bytes": 13656,
+      "sha256": "57dc75d8c90769d82004d4ab5b9934567a158bac80e58f222f26d8605a42ed51",
+      "git_blob_sha": "826fca0683fae0ccff83bf48bc2bb3727434b898"
+    }
+  ],
+  "ci_run": 41955957669,
+  "ci_artifact_id": 13382888499,
+  "pages_run": 41955956365,
+  "firefox_linux": {
+    "passed": 29,
+    "failed": 0
+  },
+  "firefox_windows": "PENDING",
+  "full_functional_parity": "PENDING",
+  "browser_cache_acceptance": "PENDING"
+}
