@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-05T16:25:35Z",
+  "source_qualification_at_utc": "2026-11-05T21:11:10Z",
   "source_observation_date_utc": "2026-11-05",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -51,8 +51,8 @@
         "venue": "Binance",
         "pair": "BATUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.52162,
-        "roundtrip_cost_pct_assumed": 0.27494
+        "spread_bps_at_snapshot": 7.75494,
+        "roundtrip_cost_pct_assumed": 0.27726
       },
       "detections_archived": 3,
       "j1_observed": 1,
@@ -60,32 +60,6 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "beam-2",
-      "symbol": "BEAM",
-      "name": "Beam",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 153,
-      "change24h_pct_at_snapshot": 13.03018,
-      "change7d_pct_at_snapshot": 32.0383,
-      "volume24h_aggregate_usd": 60783412,
-      "spot": {
-        "venue": "Bitget",
-        "pair": "BEAMUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 11.48765,
-        "roundtrip_cost_pct_assumed": 0.31448
-      },
-      "detections_archived": 5,
-      "j1_observed": 4,
-      "j7_observed": 3,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -104,8 +78,8 @@
         "venue": "Binance",
         "pair": "STXUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.87968,
-        "roundtrip_cost_pct_assumed": 0.28848
+        "spread_bps_at_snapshot": 5.72574,
+        "roundtrip_cost_pct_assumed": 0.25703
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -131,8 +105,8 @@
         "venue": "Bitget",
         "pair": "DGAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.40563,
-        "roundtrip_cost_pct_assumed": 0.24386
+        "spread_bps_at_snapshot": 6.82416,
+        "roundtrip_cost_pct_assumed": 0.26798
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -157,8 +131,8 @@
         "venue": "Binance",
         "pair": "INITUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.63986,
-        "roundtrip_cost_pct_assumed": 0.32012
+        "spread_bps_at_snapshot": 6.11247,
+        "roundtrip_cost_pct_assumed": 0.28669
       },
       "detections_archived": 5,
       "j1_observed": 4,
@@ -184,8 +158,8 @@
         "venue": "Bitget",
         "pair": "JCTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.70245,
-        "roundtrip_cost_pct_assumed": 0.32659
+        "spread_bps_at_snapshot": 6.64011,
+        "roundtrip_cost_pct_assumed": 0.26615
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -211,8 +185,8 @@
         "venue": "Binance",
         "pair": "KMNOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.8309,
-        "roundtrip_cost_pct_assumed": 0.29246
+        "spread_bps_at_snapshot": 5.87544,
+        "roundtrip_cost_pct_assumed": 0.28619
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -238,8 +212,8 @@
         "venue": "Binance",
         "pair": "LSKUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.24066,
-        "roundtrip_cost_pct_assumed": 0.35024
+        "spread_bps_at_snapshot": 5.24246,
+        "roundtrip_cost_pct_assumed": 0.30158
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -247,6 +221,32 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "pons",
+      "symbol": "PONS",
+      "name": "Pons",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 206,
+      "change24h_pct_at_snapshot": 12.24598,
+      "change7d_pct_at_snapshot": -24.0802,
+      "volume24h_aggregate_usd": 30335625,
+      "spot": {
+        "venue": "OKX",
+        "pair": "PONS-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 5.29521,
+        "roundtrip_cost_pct_assumed": 0.25273
+      },
+      "detections_archived": 4,
+      "j1_observed": 2,
+      "j7_observed": 3,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -265,8 +265,8 @@
         "venue": "Binance",
         "pair": "RAYUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.67528,
-        "roundtrip_cost_pct_assumed": 0.27647
+        "spread_bps_at_snapshot": 2.96112,
+        "roundtrip_cost_pct_assumed": 0.22945
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -292,8 +292,8 @@
         "venue": "Binance",
         "pair": "UNIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.43812,
-        "roundtrip_cost_pct_assumed": 0.21425
+        "spread_bps_at_snapshot": 1.46295,
+        "roundtrip_cost_pct_assumed": 0.2145
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -301,6 +301,32 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "beam-2",
+      "symbol": "BEAM",
+      "name": "Beam",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 153,
+      "change24h_pct_at_snapshot": 13.03018,
+      "change7d_pct_at_snapshot": 32.0383,
+      "volume24h_aggregate_usd": 60783412,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "BEAMUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 11.95457,
+        "roundtrip_cost_pct_assumed": 0.31914
+      },
+      "detections_archived": 5,
+      "j1_observed": 4,
+      "j7_observed": 3,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -319,8 +345,8 @@
         "venue": "OKX",
         "pair": "FLUID-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 16.24633,
-        "roundtrip_cost_pct_assumed": 0.4623
+        "spread_bps_at_snapshot": 16.39792,
+        "roundtrip_cost_pct_assumed": 0.47033
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -346,39 +372,12 @@
         "venue": "Bitget",
         "pair": "NPCUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 46.99009,
-        "roundtrip_cost_pct_assumed": 0.71383
+        "spread_bps_at_snapshot": 13.2321,
+        "roundtrip_cost_pct_assumed": 0.53035
       },
       "detections_archived": 2,
       "j1_observed": 0,
       "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "high_hypothetical_cost"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "pons",
-      "symbol": "PONS",
-      "name": "Pons",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 206,
-      "change24h_pct_at_snapshot": 12.24598,
-      "change7d_pct_at_snapshot": -24.0802,
-      "volume24h_aggregate_usd": 30335625,
-      "spot": {
-        "venue": "OKX",
-        "pair": "PONS-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 15.19372,
-        "roundtrip_cost_pct_assumed": 0.35142
-      },
-      "detections_archived": 4,
-      "j1_observed": 2,
-      "j7_observed": 3,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
