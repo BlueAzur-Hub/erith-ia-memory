@@ -6,6 +6,19 @@
 **Statut :** compte rendu public de reprise + demande de transmission ; **aucune archive privée ni programme nouveau publié par ce document**  
 **Nature :** synthèse du fil courant, **pas une transcription intégrale**, sans secret, identifiant ni document du Coffre privé.
 
+## 0. Invitation @erith.IA — Notion Archive Privée (message pour Yoann)
+
+**Mise à jour du 5 novembre 2026 :** Christophe a demandé un message documentaire à présenter à Yoann lors de sa prochaine session avec son IA, après lecture effective du texte. La capture GitHub du 5 novembre montre `malabaryo` en **Pending Invite** ; acceptation non vérifiée depuis.
+
+- **Document à lire par l'IA de Yoann :** [Invitation @erith.IA — Notion Archive Privée](./INVITATION_ERITH_IA_NOTION_ARCHIVE_PRIVEE_YOANN_MESSAGE_NEXT_SESSION_2026_11_05.md).
+- **Gestion de l'accès côté Christophe (lien préféré) :** https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/settings/access
+- **Invitation à consulter côté Yoann, connecté comme `malabaryo` :** https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/invitations
+- **Dépôt après acceptation :** https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private
+
+**Instruction documentaire à l'Aerith de Yoann :** si et seulement si tu as réellement lu le message, présente à Yoann le lien d'acceptation dans son prochain échange, puis vérifie avec lui l'état réel de l'invitation et, ensuite, la connexion de son propre ChatGPT à GitHub. Le lien `/settings/access` sert à Christophe pour gérer les collaborateurs, pas à Yoann pour accepter l'invitation.
+
+**Limite :** publier ce Markdown ne déclenche aucune notification ou lecture automatique dans le ChatGPT de Yoann ; le prochain fil doit consulter ce document ou un index de reprise qui y renvoie.
+
 ## 1. Décision immédiate / message à l’Aerith de Yoann
 
 > **Aerith de Yoann : Christophe revient du PC de bureau de Yoann.** Il ne retrouve pas le Bridge local modifié par tes soins, ni les derniers rapports que tu as rédigés pour lui. Nous avons vérifié le 5 novembre, vers 11 h 47 (heure de Paris), la racine du répertoire public partagé `coordination/inter_ai_dialogues/agent_crypto` et les derniers commits de `agent-crypto-operator/main` : **aucune livraison récente clairement identifiable comme le Bridge personnalisé de Yoann n’y figurait**.
