@@ -1,0 +1,39 @@
+{
+  "schema": "erith.radar.priority-spot-paper.observations.v1",
+  "date_utc": "2026-11-06",
+  "coin_id": "impossible-cloud-network-token",
+  "observations": [
+    {
+      "at_utc": "2026-11-06T07:08:58Z",
+      "coin_id": "impossible-cloud-network-token",
+      "symbol": "ICNT",
+      "venue": "Bitget",
+      "market": "ICNTUSDT",
+      "instrument_type": "SPOT",
+      "quote": "USDT",
+      "identity_status": "EXCHANGE_SPOT_SYMBOL_ONLY_CONTRACT_NOT_VERIFIED",
+      "candles": {
+        "last_closed_hour_utc": "2026-11-06T06:00:00Z",
+        "close_usdt": 0.2503,
+        "change_close_20h_pct": 12.24215,
+        "last_hour_volume_base": 840647.41,
+        "last_hour_quote_volume_usdt": 201654.968019,
+        "median_prior_20h_volume_base": 204679.97,
+        "last_21_bars_contiguous": true
+      },
+      "book": {
+        "best_bid_usdt": 0.2616,
+        "best_ask_usdt": 0.2618,
+        "spread_bps": 7.64234,
+        "book_timestamp_utc": "2026-11-06T07:08:59Z",
+        "book_age_seconds": 0,
+        "bid_top20_notional_usdt": 6181.903,
+        "ask_top20_notional_usdt": 2453.4929
+      },
+      "source": "Bitget public Spot",
+      "paper_only": true,
+      "orders_enabled": false,
+      "executed_order": false
+    }
+  ]
+}
