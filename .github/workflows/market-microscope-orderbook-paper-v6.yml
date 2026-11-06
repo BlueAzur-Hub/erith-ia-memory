@@ -1,0 +1,31 @@
+name: Market Microscope V6 instant-depth PAPER regression checks
+on:
+  push:
+    branches:
+      - feature-market-microscope-orderbook-paper-v6
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/market-microscope-orderbook-paper-v6.js'
+      - 'public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-orderbook-paper-v6.cjs'
+      - '.github/workflows/market-microscope-orderbook-paper-v6.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/market-microscope-orderbook-paper-v6.js'
+      - 'public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-orderbook-paper-v6.cjs'
+      - '.github/workflows/market-microscope-orderbook-paper-v6.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  instant-book-paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Node version
+        run: node --version
+      - name: Check V6 syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-orderbook-paper-v6.js
+          node --check public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-orderbook-paper-v6.cjs
+      - name: Run V6 depth fixtures
+        run: node public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-orderbook-paper-v6.cjs
