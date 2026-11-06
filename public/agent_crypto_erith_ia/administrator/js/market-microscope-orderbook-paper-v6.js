@@ -109,6 +109,8 @@
     const now=options.now||Date.now,sleep=options.sleep||pause,showDepth=options.showDepth||openDepthView;
     try{
       if(bookService.setOpen(true)!==true)return fail("DEPTH_OPEN_FAILED","Impossible d'ouvrir Profondeur.");
+      // A previously minimized panel should become visible with the same single click.
+      bookService.setMinimized?.(false);
       if(showDepth()!==true)return fail("DEPTH_TAB_UNAVAILABLE","Onglet Profondeur indisponible.");
       // setOpen starts the existing asynchronous fetch for an empty book.
       const wasLoading=Boolean(bookService.snapshot()?.loading);
