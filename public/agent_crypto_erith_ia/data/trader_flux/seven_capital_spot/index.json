@@ -527,6 +527,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-06",
+      "date_utc": "2026-11-06",
+      "first_seen_at_utc": "2026-11-06T07:09:02.241Z",
+      "source_times_utc": [
+        "2026-11-06T06:55:28.028Z",
+        "2026-11-06T06:55:42.453Z"
+      ],
+      "universe_eligible": 416,
+      "policy_matches": 4,
+      "selected": [
+        {
+          "coin_id": "cap-4",
+          "symbol": "CAP",
+          "source_at_utc": "2026-11-06T06:55:28.028Z",
+          "rank": 188,
+          "price_usd": 0.10716230065683477
+        },
+        {
+          "coin_id": "pieverse",
+          "symbol": "PIEVERSE",
+          "source_at_utc": "2026-11-06T06:55:28.028Z",
+          "rank": 115,
+          "price_usd": 1.39854174425919
+        },
+        {
+          "coin_id": "redstone-oracles",
+          "symbol": "RED",
+          "source_at_utc": "2026-11-06T06:55:42.453Z",
+          "rank": 292,
+          "price_usd": 0.15379545264658057
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1257,6 +1292,27 @@
       "sha256": "39c365d0dd268a32186101d3dc1f674e624d6561b276be0db89596d060c87a1b",
       "recorded_at_utc": "2026-11-05T12:38:42.280Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-04",
+      "file": "observations/2026-11-06T070902241Z--2026-11-04.json",
+      "sha256": "ce7db73093ed093f41d3d26428ef7efccc588de04b9ed81cb938e652a8f820dc",
+      "recorded_at_utc": "2026-11-06T07:09:02.241Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-05",
+      "file": "observations/2026-11-06T070902241Z--2026-11-05.json",
+      "sha256": "e73f5647c30c410b89a79039591b354bfe8e52fcda55dd3651d8f1346e0aa4ca",
+      "recorded_at_utc": "2026-11-06T07:09:02.241Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-06",
+      "file": "observations/2026-11-06T070902241Z--2026-11-06.json",
+      "sha256": "59ed46b89c4049c7f83fcc109ce97c6653f0cd5dc99de751dba3736aa1beac0c",
+      "recorded_at_utc": "2026-11-06T07:09:02.241Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
