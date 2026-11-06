@@ -1,0 +1,34 @@
+name: Market Microscope V5 PAPER regression checks
+on:
+  push:
+    branches:
+      - feature-market-microscope-historical-paper-ema-v5
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/market-microscope-paper-backtest-v5.js'
+      - 'public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-paper-backtest-v5.cjs'
+      - '.github/workflows/market-microscope-paper-ema-v5.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/market-microscope-paper-backtest-v5.js'
+      - 'public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-paper-backtest-v5.cjs'
+      - '.github/workflows/market-microscope-paper-ema-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  v5-paper-regressions:
+    name: V5 historical PAPER EMA (read-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Node version
+        run: node --version
+      - name: Check syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-paper-backtest-v5.js
+          node --check public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-paper-backtest-v5.cjs
+      - name: Run historical PAPER V5 fixtures
+        run: node public/agent_crypto_erith_ia/administrator/tests/test-market-microscope-paper-backtest-v5.cjs
