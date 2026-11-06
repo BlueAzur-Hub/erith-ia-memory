@@ -93,7 +93,7 @@
       details.append(node("small",{},`Capital fictif initial ${f(result.settings.initialCapital)} ${result.quote} · frais ${f(result.settings.feePercent)} %/côté · glissement ${f(result.settings.slippagePercent)} %/côté · ${result.pendingSignal?"dernier signal en attente d'une bougie suivante clôturée":"aucun signal en attente"}. Résultat historique non prédictif.`));
       for(const trade of result.closedTrades.slice(-8))details.append(node("p",{},`${new Date(trade.entryAt).toISOString().slice(0,16)} → ${new Date(trade.exitAt).toISOString().slice(0,16)} UTC · PnL ${f(trade.pnl)} ${result.quote} (${f(trade.returnPercent)} %)`));
     });
-    const anchor=host.querySelector("#erithStrategyProfiles")?.closest(".erith-row")?.previousElementSibling;
+    const anchor=host.querySelector("#erithStrategyName")?.closest(".erith-row")?.previousElementSibling;
     if(anchor)host.insertBefore(section,anchor);else host.append(section);
     return true;
   }
