@@ -119,8 +119,15 @@
     try{globalThis.sessionStorage?.setItem(BAR_STORAGE_KEY,bar);persisted=true;}catch(_){}
     return persisted;
   }
+  const PAPER_EMA_SIGNAL_KEY="agentCrypto.marketMicroscope.paperEmaCrossVisible.v1";
+  function readPaperEmaSignalPreference(){
+    try{return globalThis.localStorage?.getItem(PAPER_EMA_SIGNAL_KEY)==="true";}catch(_){return false;}
+  }
+  function savePaperEmaSignalPreference(){
+    try{globalThis.localStorage?.setItem(PAPER_EMA_SIGNAL_KEY,String(state.paperEmaSignals));return true;}catch(_){return false;}
+  }
   const initialBar=readBarPreference();
-  const state={mode:"native",bar:initialBar,requestedBar:initialBar,loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,errorCode:null,lastLoadedAt:null,source:"Market resolver",indicators:readIndicatorState(),emaPeriods:readEmaPeriods(),bollSettings:readBollingerSettings(),lastLevels:null};
+  const state={mode:"native",bar:initialBar,requestedBar:initialBar,loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,errorCode:null,lastLoadedAt:null,source:"Market resolver",indicators:readIndicatorState(),emaPeriods:readEmaPeriods(),bollSettings:readBollingerSettings(),paperEmaSignals:readPaperEmaSignalPreference(),lastLevels:null};
   const view={start:0,count:72,dragging:false,dragX:0,dragStart:0};
   // Certified 1-year candles belong ONLY to BTC's explicit "1a" period in Bougies.
   // The original Ligne and Hybride owners are never modified.
@@ -284,6 +291,43 @@
       }
       ema=close*alpha+ema*(1-alpha);
       return ema;
+    });
+  }
+  // V4 — pedagogical PAPER observations. These are NOT orders or predictive signals.
+  // Both compared observations must refer to confirmed, contiguous, completed candles.
+  function paperEmaCrossEvents(rows,fastPeriod,slowPeriod,intervalMs,nowMs){
+    if(!Array.isArray(rows)||rows.length<slowPeriod+2
+      ||!Number.isInteger(fastPeriod)||!Number.isInteger(slowPeriod)
+      ||fastPeriod<2||slowPeriod>200||fastPeriod>=slowPeriod
+      ||!Number.isFinite(intervalMs)||intervalMs<=0
+      ||!Number.isFinite(nowMs)||nowMs<=0)return [];
+    const fast=exponentialAverage(rows,fastPeriod),slow=exponentialAverage(rows,slowPeriod);
+    const closed=r=>{
+      const t=Number(r?.t),confirm=String(r?.confirm??"");
+      return Number.isFinite(t)&&t>0&&t+intervalMs<=nowMs
+        &&confirm!=="0"&&confirm!=="false";
+    };
+    const events=[];
+    for(let i=1;i<rows.length;i++){
+      if(!closed(rows[i-1])||!closed(rows[i]))continue;
+      if(Number(rows[i].t)-Number(rows[i-1].t)!==intervalMs)continue;
+      const previousFast=fast[i-1],previousSlow=slow[i-1],latestFast=fast[i],latestSlow=slow[i];
+      if(![previousFast,previousSlow,latestFast,latestSlow].every(Number.isFinite))continue;
+      const prevDiff=previousFast-previousSlow,currentDiff=latestFast-latestSlow;
+      const direction=prevDiff<=0&&currentDiff>0?"UP":prevDiff>=0&&currentDiff<0?"DOWN":null;
+      if(direction)events.push(Object.freeze({index:i,t:rows[i].t,direction,price:rows[i].c,fast:latestFast,slow:latestSlow}));
+    }
+    return events;
+  }
+  function paperEmaCrossSnapshot(nowMs=Date.now()){
+    const periods=state.emaPeriods,bar=activeBar(),instrument=activeInstrument(),duration=barDurationMs(bar);
+    const events=state.archivePeriod==="1an"?[]:paperEmaCrossEvents(state.rows,periods[0],periods[1],duration,nowMs);
+    return Object.freeze({
+      mode:"PAPER_READ_ONLY",visible:state.paperEmaSignals,fastPeriod:periods[0],slowPeriod:periods[1],
+      instrument,bar,source:state.source,rows:state.rows.length,
+      archiveSupported:state.archivePeriod!=="1an",
+      methodology:"EMA crossover on consecutive closed OHLCV candles; no orders",
+      events:Object.freeze(events.slice().map(e=>Object.freeze({...e})))
     });
   }
   function volumeProfile(rows,bins=24){
@@ -609,6 +653,7 @@
     if(state.indicators.sar)items.push(["SAR","#f5d07a"]);
     if(state.indicators.vwap)items.push(["VWAP fenêtre","#f0c36d"]);
     if(state.indicators.vp)items.push(["VP approx","#74bce2"],["POC","#ffd782"]);
+    if(state.paperEmaSignals)items.push(["PAPER EMA "+state.emaPeriods[0]+"/"+state.emaPeriods[1],"#72e3c8"]);
     host.innerHTML=items.map(([label,color])=>`<span><i style="background:${color};color:${color}"></i>${label}</span>`).join("");
     host.hidden=!items.length;
   }
@@ -633,6 +678,14 @@
     renderSeriesLegend();
     if(candleModeActive())draw(); // Local redraw only; no data fetch or trading.
     return Object.freeze({ok:true,persisted,settings:state.bollSettings});
+  }
+  function setPaperEmaSignalDisplay(next){
+    if(typeof next!=="boolean")return Object.freeze({ok:false,persisted:false,error:"Choisir affiché ou masqué."});
+    state.paperEmaSignals=next;
+    const persisted=savePaperEmaSignalPreference();
+    renderSeriesLegend();
+    if(candleModeActive())draw();
+    return Object.freeze({ok:true,persisted,visible:next});
   }
   function setMode(mode){state.mode=mode==="hybrid"?"hybrid":mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="candles")void load();else renderTechnicalLevels(null);globalThis.AgentCryptoLineCandleOverlay?.refresh?.();return state.mode;}
   async function fetchInstrument(inst,{bar=state.requestedBar||state.bar,signal=null}={}){
@@ -1008,6 +1061,24 @@
     drawExtreme(highIndex,rows[highIndex].h,"PLUS HAUT",true);
     drawExtreme(lowIndex,rows[lowIndex].l,"PLUS BAS",false);
 
+    // Read-only PAPER markers. Draw only events confirmed by the candle timestamp,
+    // OKX completion flag when available, and a contiguous historical interval.
+    if(state.paperEmaSignals&&state.mode==="candles"){
+      const events=paperEmaCrossEvents(state.rows,state.emaPeriods[0],state.emaPeriods[1],barDurationMs(activeBar()),Date.now());
+      ctx.save();ctx.font="900 10px ui-monospace,monospace";ctx.textAlign="center";
+      events.forEach(event=>{
+        const local=event.index-view.start;
+        if(local<0||local>=rows.length)return;
+        const up=event.direction==="UP",xx=x(local);
+        const yy=Math.max(pad.t+17,Math.min(priceBottom-17,y(up?rows[local].l:rows[local].h)+(up?14:-14)));
+        ctx.fillStyle=up?"#70ecd0":"#ffad83";ctx.strokeStyle="rgba(0,0,0,.85)";
+        ctx.beginPath();ctx.moveTo(xx,yy+(up?-6:6));ctx.lineTo(xx-5,yy+(up?5:-5));ctx.lineTo(xx+5,yy+(up?5:-5));ctx.closePath();
+        ctx.fill();ctx.stroke();
+        ctx.fillText(up?"P↑":"P↓",xx,yy+(up?20:-11));
+      });
+      ctx.restore();
+    }
+
     if(Number.isInteger(crossIndex)&&rows[crossIndex]){
       const xx=x(crossIndex);ctx.strokeStyle="rgba(255,255,255,.42)";ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,h-pad.b);ctx.stroke();
       if(Number.isFinite(crossPrice)&&crossPrice>=low&&crossPrice<=high){
@@ -1149,7 +1220,7 @@
       &&candleContextOk&&wrongAssetBlocked&&wrongQuoteBlocked&&wrongVenueBlocked&&externalRaceBlocked;
     return Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,support_resistance_current_edge_support:currentEdgeSupport,support_resistance_current_edge_resistance:currentEdgeResistance,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:INDICATOR_DEFAULTS.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:INDICATOR_DEFAULTS.ma===true,ema_opt_in:INDICATOR_DEFAULTS.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_custom_reference:customBollReference,bollinger_settings_contract:bollSettingsContract,bollinger_default_20x2:BOLL_DEFAULT.period===20&&BOLL_DEFAULT.multiplier===2,bollinger_default_off:INDICATOR_DEFAULTS.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:INDICATOR_DEFAULTS.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:INDICATOR_DEFAULTS.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:INDICATOR_DEFAULTS.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,candle_context_guard:candleContextOk&&wrongAssetBlocked&&wrongQuoteBlocked&&wrongVenueBlocked&&externalRaceBlocked,strict_null_ohlc_rejected:nullOhlcRejected,strict_incoherent_ohlc_rejected:incoherentOhlcRejected,empty_parsed_series_rejected:emptySeriesRejected,timeout_has_explicit_error:timeoutTruth,local_transport_truth_label:transportLabelTruth,pair_http_400_fallback:pairHttp400Fallback,response_invalid_no_pair_fallback:responseInvalidNoPairFallback,backend_http_detail_truth:backendDetailTruth,market_instrument_resolver:resolverTruth,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",canonical_market_selection_event:true,stale_asset_canvas_cleared:true,external_asset_selection_not_ignored:true,empty_series_inspector_cleared:true,external_asset_mode_preserved:true,context_identity_guard:true,latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,indicator_state_roundtrip:indicatorRoundTrip,custom_ema_full_history_reference:customEmaReference,ema_periods_strict_contract:emaPeriodsContract,ema_periods_default_5_10_20:EMA_PERIODS_DEFAULT.join(",")==="5,10,20",ema_periods_storage_key:EMA_PERIODS_KEY==="agentCrypto.marketMicroscope.emaPeriods.v1",indicator_state_storage_key:INDICATOR_STORAGE_KEY==="agentCrypto.marketMicroscope.indicators.v1",bar_preference_default:normalizeBar("bad")==="15m",bar_preference_valid:normalizeBar("5m")==="5m",bar_preference_storage_key:BAR_STORAGE_KEY==="agentCrypto.marketMicroscope.bar.v1",default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
-  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,emaPeriods:()=>Object.freeze(state.emaPeriods.slice()),setEmaPeriods,emaReference:period=>exponentialAverage(state.rows,period),bollingerSettings:()=>Object.freeze({...state.bollSettings}),setBollingerSettings,bollingerReference:(period,multiplier)=>validBollingerSettings({period,multiplier})?bollinger(state.rows,period,multiplier):null,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),emaPeriods:Object.freeze(state.emaPeriods.slice()),bollSettings:Object.freeze({...state.bollSettings}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,http_status_checked_before_json:true,pair_fallback_http_400_404:true,response_invalid_does_not_mask_http_status:true,response_error_detail:true,zero_series_truth:true,network:"MARKET_RESOLVER_VIA_LOCAL_BACKEND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,canonical_market_selection_event:true,stale_asset_canvas_cleared:true,external_asset_selection_not_ignored:true,empty_series_inspector_cleared:true,external_asset_mode_preserved:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,ema_period_settings:true,bollinger_settings:true,bollinger_settings_storage_key:BOLL_KEY,ema_periods_storage_key:EMA_PERIODS_KEY,indicator_storage_key:INDICATOR_STORAGE_KEY,interval_persistence:true,interval_storage_key:BAR_STORAGE_KEY,compact_meta:true,verbose_indicator_meta_removed:true,responsive_single_line_toolbar:true,interval_label_removed:true,narrow_wrap_two_rows:true,canvas_vertical_reclaim:true,stable_control_rows:true,view_layout_refresh_no_fetch:true,idempotent_mount_reparent:true,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE",real_order:false,market_core_changed:false,strategy_changed:false});
+  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,emaPeriods:()=>Object.freeze(state.emaPeriods.slice()),setEmaPeriods,emaReference:period=>exponentialAverage(state.rows,period),bollingerSettings:()=>Object.freeze({...state.bollSettings}),setBollingerSettings,paperEmaCrossSnapshot,setPaperEmaSignalDisplay,paperEmaCrossReference:paperEmaCrossEvents,bollingerReference:(period,multiplier)=>validBollingerSettings({period,multiplier})?bollinger(state.rows,period,multiplier):null,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),emaPeriods:Object.freeze(state.emaPeriods.slice()),bollSettings:Object.freeze({...state.bollSettings}),paperEmaSignals:state.paperEmaSignals,external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,http_status_checked_before_json:true,pair_fallback_http_400_404:true,response_invalid_does_not_mask_http_status:true,response_error_detail:true,zero_series_truth:true,network:"MARKET_RESOLVER_VIA_LOCAL_BACKEND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,canonical_market_selection_event:true,stale_asset_canvas_cleared:true,external_asset_selection_not_ignored:true,empty_series_inspector_cleared:true,external_asset_mode_preserved:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,ema_period_settings:true,paper_ema_cross_observations:true,paper_ema_cross_storage_key:PAPER_EMA_SIGNAL_KEY,bollinger_settings:true,bollinger_settings_storage_key:BOLL_KEY,ema_periods_storage_key:EMA_PERIODS_KEY,indicator_storage_key:INDICATOR_STORAGE_KEY,interval_persistence:true,interval_storage_key:BAR_STORAGE_KEY,compact_meta:true,verbose_indicator_meta_removed:true,responsive_single_line_toolbar:true,interval_label_removed:true,narrow_wrap_two_rows:true,canvas_vertical_reclaim:true,stable_control_rows:true,view_layout_refresh_no_fetch:true,idempotent_mount_reparent:true,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE",real_order:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:admin-graph",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",syncAnnualPeriod,{passive:true});window.addEventListener("atlas:admin-graph",syncAnnualPeriod,{passive:true});document.addEventListener("click",event=>{if(event.target?.closest?.("#analyste .period-tabs .period-btn"))setTimeout(syncAnnualPeriod,0);},{passive:true});window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",event=>{if(String(event?.detail?.reason||"").startsWith("market-instrument-resolver"))return;if(candleModeActive()&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{const primary=instrumentCandidates()[0]||desiredInstrument();requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.errorCode=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.instrument=primary;state.requestedInstrument=primary;renderTechnicalLevels(null);resetView(false);renderState();syncControls();draw();if(candleModeActive())queueMicrotask(()=>{try{void load({bar:state.bar,reason:"external-asset-changed"});}catch(_){}});},{passive:true});}
 })();
 
