@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-11-05",
+  "latest_archive_day_utc": "2026-11-06",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,23 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "polkadot",
-      "symbol": "DOT",
-      "rank": 49,
-      "observed_at": "2026-09-07T23:31:44.543Z",
-      "price_usd": 1.0566233213866862,
-      "change24h_pct": 8.42247,
-      "change7d_pct": 24.1,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-14",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "ASSET_NOT_IN_TOP50",
-      "source_path": "data/history/2026-09-07.jsonl",
-      "followup_source_path": null
-    },
     {
       "id": "polkadot",
       "symbol": "DOT",
@@ -2184,12 +2167,12 @@
       "change7d_pct": 7.3892,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-06",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-06T10:57:57.029Z",
+      "observed_followup_price_usd": 0.000005033563509805174,
+      "followup_change_pct": 1.71,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-30.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-06.jsonl"
     },
     {
       "id": "bitcoin-cash",
@@ -2201,12 +2184,12 @@
       "change7d_pct": 3.098,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-06",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-06T10:57:57.029Z",
+      "observed_followup_price_usd": 266.79196322703234,
+      "followup_change_pct": -9.06,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-30.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-06.jsonl"
     },
     {
       "id": "quant-network",
@@ -2218,12 +2201,12 @@
       "change7d_pct": 4.525,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-06",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-06T10:57:57.029Z",
+      "observed_followup_price_usd": 189.16727397774736,
+      "followup_change_pct": -2.03,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-30.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-06.jsonl"
     },
     {
       "id": "quant-network",
