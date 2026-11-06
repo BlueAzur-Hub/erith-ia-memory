@@ -86,6 +86,22 @@
     const el=$("erithStrategyStatus");
     if(el){el.textContent=message;el.dataset.warning=String(warning);}
   }
+  function renderPaperSignals(){
+    const summary=$("erithPaperEmaSummary");
+    if(!summary)return;
+    const engine=api(),report=engine?.paperEmaCrossSnapshot?.();
+    if(!report){summary.textContent="Moteur PAPER V4 non chargé.";return;}
+    const checkbox=$(PANEL)?.querySelector("[data-erith-paper-signal]");
+    if(checkbox)checkbox.checked=!!report.visible;
+    const events=report.events||[],last=events[events.length-1];
+    if(!report.archiveSupported){summary.textContent="Archives annuelles : signaux désactivés tant que la clôture des bougies n’est pas certifiée.";return;}
+    if(!report.rows){summary.textContent="Aucune bougie historique chargée. Aucun signal à afficher.";return;}
+    let when="—";
+    if(last)try{when=new Date(last.t).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});}catch(_){}
+    summary.textContent=events.length+" croisement(s) EMA "+report.fastPeriod+"/"+report.slowPeriod
+      +" sur "+report.rows+" bougies chargées · "+report.instrument+" · "+report.bar
+      +(last?" · dernier : "+(last.direction==="UP"?"haussier":"baissier")+" ("+when+")":". Aucun croisement confirmé dans la série.");
+  }
   function sync(){
     const panel=$(PANEL);
     if(!panel)return false;
@@ -106,6 +122,7 @@
     const selected=CODES.filter(k=>enabled[k]);
     const meta=$("erithStrategySummary");
     if(meta)meta.textContent=selected.length+" / "+CODES.length+" indicateurs actifs · "+(api()?.snapshot?.()?.loadedBar||"historique en attente");
+    renderPaperSignals();
     const names=readProfiles(),picker=$("erithStrategyProfiles"),old=picker?.value;
     if(picker){
       picker.replaceChildren();
@@ -164,11 +181,15 @@
       '<p>Calcul SMA + écart-type de la population sur toutes les bougies chargées. Plus le multiplicateur est élevé, plus les bandes sont larges.</p>'+
       '<div class="erith-boll-inputs"><label>Période (2–200)<input type="number" data-erith-boll-setting="period" min="2" max="200" step="1" value="20"></label><label>Multiplicateur (0,10–5)<input type="number" data-erith-boll-setting="multiplier" min="0.1" max="5" step="0.01" value="2"></label></div>'+
       '<div class="erith-row"><button type="button" data-erith-boll-save>Appliquer Bollinger</button><button type="button" data-erith-boll-default>Rétablir 20 / 2</button></div>'+
+      '<strong>V4 · Observations PAPER — croisement EMA</strong>'+
+      '<p>Quand la première EMA croise la deuxième sur deux bougies consécutives et clôturées, le graphique marque P↑ (hausse) ou P↓ (baisse). Un croisement n’est pas un ordre ni une recommandation.</p>'+
+      '<div class="erith-row"><label><input type="checkbox" data-erith-paper-signal> Afficher les croisements confirmés</label><button type="button" data-erith-paper-refresh>Recompter</button></div>'+
+      '<p id="erithPaperEmaSummary" role="status" aria-live="polite">Lecture des bougies en attente.</p>'+
       '<strong>Mes profils personnalisés</strong>'+
       '<div class="erith-row"><input id="erithStrategyName" type="text" maxlength="48" placeholder="Nom (ex. EMA de Yoann)" aria-label="Nom du profil"><button type="button" data-erith-save>Enregistrer</button></div>'+
       '<div class="erith-row"><select id="erithStrategyProfiles" aria-label="Profils enregistrés"></select><button type="button" data-erith-load>Charger</button><button type="button" data-erith-delete>Supprimer</button></div>'+
       '<div class="erith-row"><button type="button" data-erith-export>Exporter les profils JSON</button></div>'+
-      '<p class="erith-warning">Lecture seule · EMA et Bollinger ont des réglages réels enregistrés dans le navigateur. SAR et les autres indicateurs restent canoniques. Un profil sauvegarde seulement les indicateurs visibles, les périodes EMA et les paramètres Bollinger : aucun signal, aucun ordre, aucune clé OKX.</p>'+
+      '<p class="erith-warning">Lecture seule · Le mode PAPER ne fait qu’annoter des croisements sur des bougies historiques clôturées. Pas de résultats de backtest, de performance, d’alerte en direct ni d’ordre. Les profils personnels sauvegardent les indicateurs, les périodes EMA et Bollinger, pas les signaux. Aucune clé OKX exportée.</p>'+
       '<p id="erithStrategyStatus" role="status" aria-live="polite">Aucune transaction.</p>';
     const fields=panel.querySelector("[data-erith-fields]");
     CODES.forEach(k=>{
@@ -196,6 +217,14 @@
   }
   function handle(event){
     const t=event.target;
+    if(t.matches?.("[data-erith-paper-signal]")){
+      const enabled=t.checked;
+      const result=api()?.setPaperEmaSignalDisplay?.(enabled);
+      if(!result?.ok){status("Moteur PAPER indisponible.",true);return;}
+      renderPaperSignals();
+      status(enabled?"Marqueurs PAPER EMA affichés sur les bougies confirmées.":"Marqueurs PAPER EMA masqués.");
+      return;
+    }
     if(t.matches?.("[data-erith-indicator]")){
       const key=t.dataset.erithIndicator,b=buttonFor(key),active=!!current()[key];
       if(b&&active!==t.checked){b.click();sync();}
@@ -204,6 +233,7 @@
     const b=t.closest?.("button");
     if(!b)return;
     if(b.matches("[data-erith-close]")){close();$(BUTTON)?.focus();return;}
+    if(b.matches("[data-erith-paper-refresh]")){renderPaperSignals();status("Croisements historiques recalculés — aucune transaction.");return;}
     if(b.matches("[data-erith-preset]")){
       const codes=PRESETS[b.dataset.erithPreset];if(!codes)return;
       status(apply(Object.fromEntries(CODES.map(k=>[k,codes.includes(k)])))?"Profil appliqué au graphique.":"Un indicateur n'est pas disponible.",false);return;
@@ -294,7 +324,7 @@
   },{passive:true});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$(PANEL)?.hidden)close();});
   globalThis.ErithMarketStrategyOptions=Object.freeze({
-    version:"2026-11-06-paper-indicator-profiles-v3-bollinger",mount,apply,current,readProfiles,close,emaPeriods:currentEmaPeriods,validEmaPeriods:validPeriods,bollingerSettings:currentBoll,validBollingerSettings:validBoll,
+    version:"2026-11-06-paper-indicator-profiles-v4-ema-paper-cross",mount,apply,current,readProfiles,close,emaPeriods:currentEmaPeriods,validEmaPeriods:validPeriods,bollingerSettings:currentBoll,validBollingerSettings:validBoll,
     read_only:true,real_order:false,paper_execution:false,api_credentials:false
   });
 })();
