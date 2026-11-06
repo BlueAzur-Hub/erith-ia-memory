@@ -186,7 +186,7 @@
     if(b.matches("[data-erith-ema-save]")||b.matches("[data-erith-ema-default]")){
       const periods=b.matches("[data-erith-ema-default]")?DEFAULT_EMA.slice():
         [...$(PANEL).querySelectorAll("[data-erith-ema-period]")].map(x=>
-          /^\\d{1,3}$/.test(x.value.trim())?Number(x.value):NaN);
+          /^\d{1,3}$/.test(x.value.trim())?Number(x.value):NaN);
       if(!validPeriods(periods)){status("EMA : saisir trois nombres entiers croissants entre 2 et 200.",true);return;}
       const result=api()?.setEmaPeriods?.(periods);
       if(!result?.ok){status(result?.error||"Moteur EMA V2 indisponible.",true);return;}
