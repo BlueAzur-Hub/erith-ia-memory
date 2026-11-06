@@ -100,3 +100,82 @@ test("one-level full fill gives no book impact beyond best ask",()=>{
 });
 process.stdout.write(passed+"/15 V6 historical-safe instant-depth tests passed\n");
 if(passed!==15)process.exitCode=1;
+
+// Integration orchestration tests: one click opens Depth, uses existing refresh,
+// awaits a validated public book, and stays read-only. No real browser or network.
+(async()=>{
+ let extraPassed=0;
+ async function scenario(name,fn){
+   try{await fn();extraPassed++;process.stdout.write("PASS "+name+"\n");}
+   catch(e){process.stderr.write("FAIL "+name+" "+String(e.stack||e)+"\n");process.exitCode=1;}
+ }
+ function mockBook(initial=basicBook()){
+   return {
+     state:initial,opened:0,restored:0,refreshes:0,
+     snapshot(){return this.state;},
+     setOpen(value){assert.equal(value,true);this.opened++;return true;},
+     setMinimized(value){assert.equal(value,false);this.restored++;return false;},
+     async refresh(){this.refreshes++;this.state=basicBook();return true;}
+   };
+ }
+ const options={now:()=>NOW,showDepth:()=>true,sleep:async()=>{}};
+ await scenario("one click opens Depth and estimates with current valid book",async()=>{
+   const book=mockBook();let shown=0;
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{...options,showDepth:()=>{shown++;return true;}});
+   assert.equal(r.ok,true);assert.equal(r.orders,0);
+   assert.equal(book.opened,1);assert.equal(book.restored,1);assert.equal(shown,1);assert.equal(book.refreshes,0);
+ });
+ await scenario("initial background loading is awaited before calculation",async()=>{
+   const book=mockBook({...basicBook(),loading:true,freshness:"UNKNOWN"});
+   let waits=0;
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{
+     ...options,sleep:async()=>{waits++;book.state=basicBook();}
+   });
+   assert.equal(r.ok,true);assert.equal(book.opened,1);assert.equal(book.refreshes,0);assert.ok(waits>0);
+ });
+ await scenario("existing stale book refreshes once, then returns FRESH estimate",async()=>{
+   const old={...basicBook(),sourceObservedAt:new Date(NOW-30000).toISOString()};
+   const book=mockBook(old);
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),options);
+   assert.equal(r.ok,true);assert.equal(book.refreshes,1);assert.equal(book.opened,1);
+ });
+ await scenario("stale after explicit refresh remains blocked",async()=>{
+   const stale={...basicBook(),sourceObservedAt:new Date(NOW-30000).toISOString()};
+   const book=mockBook(stale);book.refresh=async()=>{book.refreshes++;return false;};
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),options);
+   assert.equal(r.ok,false);assert.equal(r.code,"BOOK_STALE");assert.equal(book.refreshes,1);
+ });
+ await scenario("missing depth API refuses without guessing a snapshot",async()=>{
+   const r=await api.openDepthAndEstimate(null,{snapshot:chart},settings(),options);
+   assert.equal(r.code,"BOOK_SERVICE_UNAVAILABLE");
+ });
+ await scenario("wrong chart and invalid settings refused before opening",async()=>{
+   const book=mockBook();
+   const other=()=>({...chart(),source:"CoinGecko"});
+   assert.equal((await api.openDepthAndEstimate(book,{snapshot:other},settings(),options)).code,"CHART_UNAVAILABLE");
+   assert.equal((await api.openDepthAndEstimate(book,{snapshot:chart},settings("BUY",1000,-1),options)).code,"SETTINGS_INVALID");
+   assert.equal(book.opened,0);
+ });
+ await scenario("different pair is blocked even after explicit refresh",async()=>{
+   const book=mockBook({...basicBook(),pair:"ETH/USDC",loadedAsset:"ETH"});
+   book.refresh=async()=>{book.refreshes++;return true;};
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),options);
+   assert.equal(r.code,"BOOK_CONTEXT");assert.equal(book.refreshes,1);
+ });
+ await scenario("loading timeout is finite and never uses stale book",async()=>{
+   const book=mockBook({...basicBook(),loading:true});
+   let clock=NOW;
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{
+     now:()=>clock,showDepth:()=>true,sleep:async()=>{clock+=2000;}
+   });
+   assert.equal(r.code,"BOOK_LOADING_TIMEOUT");assert.equal(book.refreshes,0);
+ });
+ await scenario("unavailable Depth UI shows an error without execution",async()=>{
+   const book=mockBook();
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{...options,showDepth:()=>false});
+   assert.equal(r.code,"DEPTH_TAB_UNAVAILABLE");assert.equal(book.opened,1);assert.equal(book.refreshes,0);
+ });
+ process.stdout.write(extraPassed+"/9 one-click orchestration scenarios passed\n");
+ if(extraPassed!==9)process.exitCode=1;
+})().catch(e=>{process.stderr.write(String(e.stack||e)+"\n");process.exitCode=1;});
+
