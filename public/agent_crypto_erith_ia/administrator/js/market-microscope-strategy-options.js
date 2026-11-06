@@ -189,8 +189,8 @@
       '<div class="erith-row"><input id="erithStrategyName" type="text" maxlength="48" placeholder="Nom (ex. EMA de Yoann)" aria-label="Nom du profil"><button type="button" data-erith-save>Enregistrer</button></div>'+
       '<div class="erith-row"><select id="erithStrategyProfiles" aria-label="Profils enregistrés"></select><button type="button" data-erith-load>Charger</button><button type="button" data-erith-delete>Supprimer</button></div>'+
       '<div class="erith-row"><button type="button" data-erith-export>Exporter les profils JSON</button></div>'+
-      '<p class="erith-warning">Lecture seule · Le mode PAPER ne fait qu’annoter des croisements sur des bougies historiques clôturées. Pas de résultats de backtest, de performance, d’alerte en direct ni d’ordre. Les profils personnels sauvegardent les indicateurs, les périodes EMA et Bollinger, pas les signaux. Aucune clé OKX exportée.</p>'+
-      '<p id="erithStrategyStatus" role="status" aria-live="polite">Aucune transaction.</p>';
+      '<p class="erith-warning">Lecture seule · V4 annote les croisements EMA sur les bougies clôturées. V5 calcule une simulation historique PAPER à la demande, avec frais et glissement fictifs ; ses résultats ne prédisent aucune performance future. Aucune alerte en direct, aucun ordre ni accès aux clés OKX. Les profils personnels sauvegardent les indicateurs, les périodes EMA et Bollinger, pas les signaux ou les transactions fictives.</p>'+
+      '<p id="erithStrategyStatus" role="status" aria-live="polite">Aucun ordre réel.</p>';
     const fields=panel.querySelector("[data-erith-fields]");
     CODES.forEach(k=>{
       const label=document.createElement("label"),checkbox=document.createElement("input"),text=document.createElement("span");
