@@ -75,6 +75,61 @@
       method:"Same-time public OKX depth snapshot; volume-weighted visible-level sweep; hypothetical taker quote fee; no execution or historical inference"
     });
   }
+  // Manual one-click bridge to the existing public-only OKX depth viewer.
+  // This is an instant snapshot, never a historical execution or order.
+  const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  async function waitForBook(book,now=Date.now,sleep=pause){
+    const deadline=now()+13500; // Existing backend request has a 12s timeout.
+    while(book.snapshot?.()?.loading){
+      if(now()>=deadline)return false;
+      await sleep(100);
+    }
+    return true;
+  }
+  function openDepthView(){
+    if(typeof document==="undefined")return false;
+    const tab=document.querySelector('#atlasOkxMicrostructure [data-oms-tab="depth"]');
+    if(!tab)return false;
+    if(!tab.classList.contains("is-active"))tab.click();
+    return true;
+  }
+  async function openDepthAndEstimate(bookService,market,settings,options={}){
+    const readChart=()=>market?.snapshot?.();
+    const chart=readChart(),pair=String(chart?.loadedInstrument||"").toUpperCase();
+    const matched=/^([A-Z0-9]+)-([A-Z0-9]+)$/.exec(pair);
+    if(!matched||chart?.loading||chart?.error||chart?.archivePeriod
+       ||!/^OKX\b/i.test(String(chart?.source||"")))
+      return fail("CHART_UNAVAILABLE","Choisir d'abord une paire et des bougies OKX valides.");
+    if(!["BUY","SELL"].includes(settings?.side)||!Number.isFinite(settings?.quoteBudget)
+       ||settings.quoteBudget<10||settings.quoteBudget>1000000
+       ||!Number.isFinite(settings?.feePercent)||settings.feePercent<0||settings.feePercent>2)
+      return fail("SETTINGS_INVALID","Montant fictif de 10 à 1 000 000 et frais de 0 à 2 %.");
+    if(!bookService?.setOpen||!bookService?.snapshot||!bookService?.refresh)
+      return fail("BOOK_SERVICE_UNAVAILABLE","Service de profondeur OKX indisponible.");
+    const now=options.now||Date.now,sleep=options.sleep||pause,showDepth=options.showDepth||openDepthView;
+    try{
+      if(bookService.setOpen(true)!==true)return fail("DEPTH_OPEN_FAILED","Impossible d'ouvrir Profondeur.");
+      // A previously minimized panel should become visible with the same single click.
+      bookService.setMinimized?.(false);
+      if(showDepth()!==true)return fail("DEPTH_TAB_UNAVAILABLE","Onglet Profondeur indisponible.");
+      // setOpen starts the existing asynchronous fetch for an empty book.
+      const wasLoading=Boolean(bookService.snapshot()?.loading);
+      if(wasLoading&&!(await waitForBook(bookService,now,sleep)))
+        return fail("BOOK_LOADING_TIMEOUT","Le carnet OKX ne s'est pas chargé dans le délai prévu.");
+      let result=simulate(bookService.snapshot(),readChart(),settings,now());
+      if(result.ok)return result;
+      // Force an explicit update only if opening didn't already start a fetch.
+      if(!wasLoading&&["BOOK_CONTEXT","BOOK_STALE"].includes(result.code)){
+        await bookService.refresh({asset:matched[1],quote:matched[2]});
+        if(!(await waitForBook(bookService,now,sleep)))
+          return fail("BOOK_LOADING_TIMEOUT","La mise à jour du carnet a dépassé le délai prévu.");
+        result=simulate(bookService.snapshot(),readChart(),settings,now());
+      }
+      return result;
+    }catch(e){
+      return fail("BOOK_OPEN_ERROR","Impossible de préparer le carnet OKX : "+String(e?.message||e));
+    }
+  }
   function el(tag,attrs={},text){
     const n=document.createElement(tag);
     for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));
@@ -103,12 +158,21 @@
     sec.append(controls);
     const button=el("button",{type:"button","data-v6-run":"true"},"Estimer sur le carnet FRESH");
     sec.append(button);
-    const out=el("p",{id:"erithBookPaperV6Result",role:"status","aria-live":"polite"},"Ouvre le carnet OKX correspondant et utilise ce bouton pour un snapshot daté. Aucun ordre.");
+    const out=el("p",{id:"erithBookPaperV6Result",role:"status","aria-live":"polite"},"Un clic : ouverture de Profondeur, chargement OKX FRESH et estimation fictive. Aucun ordre.");
     sec.append(out);
-    button.addEventListener("click",()=>{
+    button.addEventListener("click",async()=>{
+      if(button.disabled)return;
       const val=key=>sec.querySelector('[data-v6="'+key+'"]')?.value;
-      const result=simulate(globalThis.AgentCryptoOkxMicrostructure?.snapshot?.(),globalThis.AgentCryptoMarketMicroscope?.snapshot?.(),
-        {side:val("side"),quoteBudget:Number(val("quoteBudget")),feePercent:Number(val("feePercent"))});
+      button.disabled=true;
+      out.textContent="Ouverture de Profondeur et lecture du carnet OKX en cours…";
+      let result;
+      try{
+        result=await openDepthAndEstimate(
+          globalThis.AgentCryptoOkxMicrostructure,
+          globalThis.AgentCryptoMarketMicroscope,
+          {side:val("side"),quoteBudget:Number(val("quoteBudget")),feePercent:Number(val("feePercent"))}
+        );
+      }finally{button.disabled=false;}
       if(!result.ok){out.textContent="Estimation refusée : "+result.message+" ["+result.code+"]";return;}
       const fmt=(n,d=4)=>n.toLocaleString("fr-FR",{maximumFractionDigits:d});
       out.textContent=result.pair+" · "+(result.side==="BUY"?"ACHAT":"VENTE")+" fictif · snapshot OKX "+result.observedAt+
@@ -125,7 +189,7 @@
     if(anchor)host.insertBefore(sec,anchor);else host.append(sec);
     return true;
   }
-  const api=Object.freeze({version:"2026-11-06-v6-instant-orderbook-paper",simulate,mount,read_only:true,
+  const api=Object.freeze({version:"2026-11-06-v6-one-click-depth-paper",simulate,openDepthAndEstimate,mount,read_only:true,
     orders:0,real_order:false,api_credentials:false,uses_historical_book:false});
   globalThis.ErithMarketBookPaperV6=api;
   if(typeof document!=="undefined"){
