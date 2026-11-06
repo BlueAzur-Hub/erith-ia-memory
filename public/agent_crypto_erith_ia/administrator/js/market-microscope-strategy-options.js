@@ -1,14 +1,16 @@
 /* ERITH.IA · Market Microscope Strategy Options · first safe increment.
    Shared by Administrator and Trader's mirrored Administrator runtime.
-   Adds validated EMA period controls using the canonical Market Microscope API.
-   Stored profiles include visibility + 3 EMA periods; they are still NOT
-   algorithmic strategies or PAPER execution. */
+   Adds validated EMA and Bollinger controls via the canonical chart API.
+   Profiles contain indicator visibility + numerical display settings,
+   NEVER trading strategies, simulated orders, or real execution. */
 (()=>{"use strict";
   if(typeof document==="undefined"||globalThis.ErithMarketStrategyOptions)return;
   const ROOT="atlasMarketMicroscope",PANEL="erithStrategyOptionsPanel",BUTTON="erithStrategyOptionsButton";
-  const LEGACY_KEY="agentCrypto.marketMicroscope.paperIndicatorProfiles.v1";
-  const KEY="agentCrypto.marketMicroscope.paperIndicatorProfiles.v2";
+  const LEGACY_KEY_V1="agentCrypto.marketMicroscope.paperIndicatorProfiles.v1";
+  const LEGACY_KEY_V2="agentCrypto.marketMicroscope.paperIndicatorProfiles.v2";
+  const KEY="agentCrypto.marketMicroscope.paperIndicatorProfiles.v3";
   const DEFAULT_EMA=Object.freeze([5,10,20]);
+  const DEFAULT_BOLL=Object.freeze({period:20,multiplier:2});
   const CODES=Object.freeze(["ma","ema","sr","supertrend","boll","sar","vwap","vp"]);
   const LABEL=Object.freeze({ma:"MA · 5 / 10 / 20",ema:"EMA · 5 / 10 / 20",sr:"Supports / résistances",supertrend:"SuperTrend · 10 × 3",boll:"Bollinger · 20 × 2",sar:"Parabolic SAR · 0,02 / 0,20",vwap:"VWAP fenêtre",vp:"Volume Profile · 24 zones"});
   const PRESETS=Object.freeze({
@@ -29,6 +31,15 @@
   const validPeriods=p=>Array.isArray(p)&&p.length===3
     &&p.every(n=>Number.isInteger(n)&&n>=2&&n<=200)
     &&p[0]<p[1]&&p[1]<p[2];
+  const validBoll=p=>!!p&&typeof p==="object"&&!Array.isArray(p)
+    &&Number.isInteger(p.period)&&p.period>=2&&p.period<=200
+    &&typeof p.multiplier==="number"&&Number.isFinite(p.multiplier)
+    &&p.multiplier>=0.1&&p.multiplier<=5
+    &&Math.abs(p.multiplier*100-Math.round(p.multiplier*100))<1e-8;
+  const currentBoll=()=>{
+    const p=api()?.bollingerSettings?.();
+    return validBoll(p)?{period:p.period,multiplier:p.multiplier}:{...DEFAULT_BOLL};
+  };
   const currentEmaPeriods=()=>{
     const p=api()?.emaPeriods?.();
     return validPeriods(p)?p.slice():DEFAULT_EMA.slice();
@@ -36,12 +47,13 @@
   const normalizeProfile=value=>{
     const rich=value&&typeof value==="object"&&value.indicators&&typeof value.indicators==="object";
     const periods=rich&&validPeriods(value.emaPeriods)?value.emaPeriods.slice():DEFAULT_EMA.slice();
-    return {indicators:normalize(rich?value.indicators:value),emaPeriods:periods};
+    const b=rich&&validBoll(value.bollSettings)?value.bollSettings:DEFAULT_BOLL;
+    return {indicators:normalize(rich?value.indicators:value),emaPeriods:periods,bollSettings:{period:b.period,multiplier:b.multiplier}};
   };
   const readProfiles=()=>{
     try{
-      // Read previous v1 records on first use; writing v2 never destroys the original.
-      const raw=localStorage.getItem(KEY)??localStorage.getItem(LEGACY_KEY)??"{}";
+      // V3 is additive: v2 and v1 data are read but never overwritten.
+      const raw=localStorage.getItem(KEY)??localStorage.getItem(LEGACY_KEY_V2)??localStorage.getItem(LEGACY_KEY_V1)??"{}";
       const value=JSON.parse(raw);
       if(!value||typeof value!=="object"||Array.isArray(value))return {};
       const out=Object.create(null);
@@ -85,6 +97,12 @@
     });
     const emaLabel=panel.querySelector('[data-erith-indicator="ema"]')?.nextElementSibling;
     if(emaLabel)emaLabel.textContent="EMA · "+periods.join(" / ");
+    const boll=currentBoll();
+    panel.querySelectorAll("[data-erith-boll-setting]").forEach(c=>{
+      c.value=String(boll[c.dataset.erithBollSetting]);
+    });
+    const bollLabel=panel.querySelector('[data-erith-indicator="boll"]')?.nextElementSibling;
+    if(bollLabel)bollLabel.textContent="Bollinger · "+boll.period+" × "+boll.multiplier;
     const selected=CODES.filter(k=>enabled[k]);
     const meta=$("erithStrategySummary");
     if(meta)meta.textContent=selected.length+" / "+CODES.length+" indicateurs actifs · "+(api()?.snapshot?.()?.loadedBar||"historique en attente");
@@ -120,6 +138,9 @@
       "#"+ROOT+" #"+PANEL+" .erith-ema-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0}"+
       "#"+ROOT+" #"+PANEL+" .erith-ema-inputs label{display:flex;flex-direction:column;gap:4px;color:#b9dde4;font:11px system-ui}"+
       "#"+ROOT+" #"+PANEL+" .erith-ema-inputs input{width:100%;flex:none}"+
+      "#"+ROOT+" #"+PANEL+" .erith-boll-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:8px 0}"+
+      "#"+ROOT+" #"+PANEL+" .erith-boll-inputs label{display:flex;flex-direction:column;gap:4px;color:#b9dde4;font:11px system-ui}"+
+      "#"+ROOT+" #"+PANEL+" .erith-boll-inputs input{width:100%;flex:none}"+
       "#"+ROOT+" #"+PANEL+" .erith-warning{border-top:1px solid #365463;padding-top:8px;color:#e7be73}"+
       "#"+ROOT+" #erithStrategyStatus{color:#9fe8c7}"+
       "#"+ROOT+" #erithStrategyStatus[data-warning=true]{color:#ffd08b}"+
@@ -139,11 +160,15 @@
       '<p>Les trois courbes EMA sont recalculées sur toutes les bougies chargées, puis affichées sur la période choisie. Valeurs entières croissantes : 2 à 200.</p>'+
       '<div class="erith-ema-inputs"><label>EMA courte<input type="number" data-erith-ema-period="0" min="2" max="200" step="1" value="5"></label><label>EMA moyenne<input type="number" data-erith-ema-period="1" min="2" max="200" step="1" value="10"></label><label>EMA longue<input type="number" data-erith-ema-period="2" min="2" max="200" step="1" value="20"></label></div>'+
       '<div class="erith-row"><button type="button" data-erith-ema-save>Appliquer les périodes</button><button type="button" data-erith-ema-default>Rétablir 5 / 10 / 20</button></div>'+
+      '<strong>V3 · Bandes de Bollinger personnalisables</strong>'+
+      '<p>Calcul SMA + écart-type de la population sur toutes les bougies chargées. Plus le multiplicateur est élevé, plus les bandes sont larges.</p>'+
+      '<div class="erith-boll-inputs"><label>Période (2–200)<input type="number" data-erith-boll-setting="period" min="2" max="200" step="1" value="20"></label><label>Multiplicateur (0,10–5)<input type="number" data-erith-boll-setting="multiplier" min="0.1" max="5" step="0.01" value="2"></label></div>'+
+      '<div class="erith-row"><button type="button" data-erith-boll-save>Appliquer Bollinger</button><button type="button" data-erith-boll-default>Rétablir 20 / 2</button></div>'+
       '<strong>Mes profils personnalisés</strong>'+
       '<div class="erith-row"><input id="erithStrategyName" type="text" maxlength="48" placeholder="Nom (ex. EMA de Yoann)" aria-label="Nom du profil"><button type="button" data-erith-save>Enregistrer</button></div>'+
       '<div class="erith-row"><select id="erithStrategyProfiles" aria-label="Profils enregistrés"></select><button type="button" data-erith-load>Charger</button><button type="button" data-erith-delete>Supprimer</button></div>'+
       '<div class="erith-row"><button type="button" data-erith-export>Exporter les profils JSON</button></div>'+
-      '<p class="erith-warning">Lecture seule · les périodes EMA sont personnalisables et enregistrées dans le navigateur. Les autres paramètres (BOLL 20×2, SAR, etc.) restent canoniques. Un profil sauvegarde les indicateurs et les trois périodes EMA, pas des signaux ni des ordres de trading. Aucune clé OKX exportée.</p>'+
+      '<p class="erith-warning">Lecture seule · EMA et Bollinger ont des réglages réels enregistrés dans le navigateur. SAR et les autres indicateurs restent canoniques. Un profil sauvegarde seulement les indicateurs visibles, les périodes EMA et les paramètres Bollinger : aucun signal, aucun ordre, aucune clé OKX.</p>'+
       '<p id="erithStrategyStatus" role="status" aria-live="polite">Aucune transaction.</p>';
     const fields=panel.querySelector("[data-erith-fields]");
     CODES.forEach(k=>{
@@ -164,10 +189,10 @@
   }
   function exportProfiles(){
     const profiles=readProfiles();
-    const content=JSON.stringify({schema:"erith.market-microscope.indicator-profiles.v2",source:"local browser presentation",contains_trading_orders:false,contains_api_credentials:false,indicator_profiles:profiles},null,2);
+    const content=JSON.stringify({schema:"erith.market-microscope.indicator-profiles.v3",source:"local browser presentation",contains_trading_orders:false,contains_api_credentials:false,indicator_profiles:profiles},null,2);
     const blob=new Blob([content],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
     a.href=url;a.download="ERITH_IA_MARKET_MICROSCOPE_INDICATOR_PROFILES.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-    status("Profils exportés (indicateurs et périodes EMA, aucune clé API).");
+    status("Profils exportés (indicateurs, EMA, Bollinger ; aucune clé API).");
   }
   function handle(event){
     const t=event.target;
@@ -195,22 +220,47 @@
         +(result.persisted?" Réglages conservés.":" Stockage local indisponible."),!result.persisted);
       return;
     }
+    if(b.matches("[data-erith-boll-save]")||b.matches("[data-erith-boll-default]")){
+      const reset=b.matches("[data-erith-boll-default]");
+      const periodRaw=$(PANEL).querySelector('[data-erith-boll-setting="period"]')?.value?.trim()||"";
+      const multiplierRaw=$(PANEL).querySelector('[data-erith-boll-setting="multiplier"]')?.value?.trim()||"";
+      const settings=reset?{...DEFAULT_BOLL}:{
+        period:/^[0-9]{1,3}$/.test(periodRaw)?Number(periodRaw):NaN,
+        multiplier:/^[0-9]{1,3}(?:[.][0-9]{1,2})?$/.test(multiplierRaw)?Number(multiplierRaw):NaN
+      };
+      if(!validBoll(settings)){status("Bollinger : période entière 2–200, multiplicateur 0,10–5 (maximum 2 décimales).",true);return;}
+      const result=api()?.setBollingerSettings?.(settings);
+      if(!result?.ok){status(result?.error||"Moteur Bollinger V3 indisponible.",true);return;}
+      sync();
+      status("Bandes Bollinger "+settings.period+" × "+settings.multiplier+" recalculées."
+        +(result.persisted?" Réglages conservés.":" Stockage local indisponible."),!result.persisted);
+      return;
+    }
     if(b.matches("[data-erith-save]")){
       const name=safeName($("erithStrategyName")?.value);
       if(!name){status("Indique un nom de profil.",true);return;}
       const profiles=readProfiles();
       if(!Object.hasOwn(profiles,name)&&Object.keys(profiles).length>=20){status("Limite de 20 profils atteinte.",true);return;}
-      profiles[name]={indicators:current(),emaPeriods:currentEmaPeriods()};
+      profiles[name]={indicators:current(),emaPeriods:currentEmaPeriods(),bollSettings:currentBoll()};
       if(!writeProfiles(profiles)){status("Enregistrement local indisponible.",true);return;}
       sync();$("erithStrategyProfiles").value=name;status("Profil « "+name+" » enregistré dans ce navigateur.");return;
     }
     if(b.matches("[data-erith-load]")){
       const name=$("erithStrategyProfiles")?.value,profile=readProfiles()[name];
       if(!name||!profile){status("Sélectionne un profil enregistré.",true);return;}
-      const periodsResult=api()?.setEmaPeriods?.(profile.emaPeriods);
-      if(!periodsResult?.ok){status("Profil incompatible avec les périodes EMA.",true);return;}
+      if(!validPeriods(profile.emaPeriods)||!validBoll(profile.bollSettings)){
+        status("Profil incompatible avec les réglages EMA / Bollinger.",true);return;
+      }
+      if(!api()?.setEmaPeriods||!api()?.setBollingerSettings){
+        status("Moteur d'indicateurs V3 indisponible.",true);return;
+      }
+      const periodsResult=api().setEmaPeriods(profile.emaPeriods);
+      const bollResult=api().setBollingerSettings(profile.bollSettings);
+      if(!periodsResult.ok||!bollResult.ok){
+        status("Impossible d'appliquer tous les réglages de ce profil.",true);return;
+      }
       const applied=apply(profile.indicators);
-      status(applied?"Profil « "+name+" » et périodes EMA appliqués.":"Un indicateur du profil est indisponible.",!applied);return;
+      status(applied?"Profil « "+name+" » appliqué (indicateurs + EMA + Bollinger).":"Un indicateur du profil est indisponible.",!applied);return;
     }
     if(b.matches("[data-erith-delete]")){
       const name=$("erithStrategyProfiles")?.value,profiles=readProfiles();
@@ -244,7 +294,7 @@
   },{passive:true});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$(PANEL)?.hidden)close();});
   globalThis.ErithMarketStrategyOptions=Object.freeze({
-    version:"2026-11-06-paper-indicator-profiles-v2-ema",mount,apply,current,readProfiles,close,emaPeriods:currentEmaPeriods,validEmaPeriods:validPeriods,
+    version:"2026-11-06-paper-indicator-profiles-v3-bollinger",mount,apply,current,readProfiles,close,emaPeriods:currentEmaPeriods,validEmaPeriods:validPeriods,bollingerSettings:currentBoll,validBollingerSettings:validBoll,
     read_only:true,real_order:false,paper_execution:false,api_credentials:false
   });
 })();
