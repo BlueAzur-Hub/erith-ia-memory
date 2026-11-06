@@ -93,6 +93,27 @@
     if(!tab.classList.contains("is-active"))tab.click();
     return true;
   }
+  // The native Lecture Technique rail is the only supported authority for
+  // reopening a collapsed #detailPanel. Do not size Depth against a hidden panel.
+  async function ensureTechnicalReading(){
+    if(typeof document==="undefined")return false;
+    const deck=document.getElementById("analyste");
+    const panel=document.getElementById("detailPanel");
+    if(!deck||!panel)return false;
+    if(deck.classList.contains("detail-collapsed")){
+      const rail=document.getElementById("detailPanelRail");
+      if(!rail||typeof rail.click!=="function")return false;
+      rail.click(); // native delegated action: also maintains existing UI/persistence.
+    }
+    // Two layout frames allow the native grid to expose the real dock rectangle.
+    if(typeof globalThis.requestAnimationFrame==="function"){
+      await new Promise(resolve=>globalThis.requestAnimationFrame(
+        ()=>globalThis.requestAnimationFrame(resolve)));
+    }
+    if(deck.classList.contains("detail-collapsed"))return false;
+    const rect=panel.getBoundingClientRect?.();
+    return Boolean(rect&&rect.width>=140&&rect.height>=120);
+  }
   async function openDepthAndEstimate(bookService,market,settings,options={}){
     const readChart=()=>market?.snapshot?.();
     const chart=readChart(),pair=String(chart?.loadedInstrument||"").toUpperCase();
@@ -107,10 +128,16 @@
     if(!bookService?.setOpen||!bookService?.snapshot||!bookService?.refresh)
       return fail("BOOK_SERVICE_UNAVAILABLE","Service de profondeur OKX indisponible.");
     const now=options.now||Date.now,sleep=options.sleep||pause,showDepth=options.showDepth||openDepthView;
+    const ensureReading=options.ensureReading||ensureTechnicalReading;
     try{
-      if(bookService.setOpen(true)!==true)return fail("DEPTH_OPEN_FAILED","Impossible d'ouvrir Profondeur.");
-      // A previously minimized panel should become visible with the same single click.
+      if(await ensureReading()!==true)
+        return fail("TECH_PANEL_UNAVAILABLE","Lecture technique non affichable : ouverture de Profondeur annulée.");
+      // Restore any manually detached/maximized window to the native Lecture dock.
+      // Required order: unmaximize first, since maximization restores detachment.
+      if(bookService.snapshot()?.maximized)bookService.setMaximized?.(false);
+      if(bookService.snapshot()?.detached)bookService.setDetached?.(false);
       bookService.setMinimized?.(false);
+      if(bookService.setOpen(true)!==true)return fail("DEPTH_OPEN_FAILED","Impossible d'ouvrir Profondeur.");
       if(showDepth()!==true)return fail("DEPTH_TAB_UNAVAILABLE","Onglet Profondeur indisponible.");
       // setOpen starts the existing asynchronous fetch for an empty book.
       const wasLoading=Boolean(bookService.snapshot()?.loading);
@@ -158,13 +185,13 @@
     sec.append(controls);
     const button=el("button",{type:"button","data-v6-run":"true"},"Estimer sur le carnet FRESH");
     sec.append(button);
-    const out=el("p",{id:"erithBookPaperV6Result",role:"status","aria-live":"polite"},"Un clic : ouverture de Profondeur, chargement OKX FRESH et estimation fictive. Aucun ordre.");
+    const out=el("p",{id:"erithBookPaperV6Result",role:"status","aria-live":"polite"},"Un clic : ouverture de Lecture technique puis Profondeur, carnet OKX FRESH et estimation fictive. Aucun ordre.");
     sec.append(out);
     button.addEventListener("click",async()=>{
       if(button.disabled)return;
       const val=key=>sec.querySelector('[data-v6="'+key+'"]')?.value;
       button.disabled=true;
-      out.textContent="Ouverture de Profondeur et lecture du carnet OKX en cours…";
+      out.textContent="Ouverture de Lecture technique → Profondeur → lecture du carnet OKX…";
       let result;
       try{
         result=await openDepthAndEstimate(
@@ -189,7 +216,7 @@
     if(anchor)host.insertBefore(sec,anchor);else host.append(sec);
     return true;
   }
-  const api=Object.freeze({version:"2026-11-06-v6-one-click-depth-paper",simulate,openDepthAndEstimate,mount,read_only:true,
+  const api=Object.freeze({version:"2026-11-06-v6-technical-reading-dock",simulate,ensureTechnicalReading,openDepthAndEstimate,mount,read_only:true,
     orders:0,real_order:false,api_credentials:false,uses_historical_book:false});
   globalThis.ErithMarketBookPaperV6=api;
   if(typeof document!=="undefined"){

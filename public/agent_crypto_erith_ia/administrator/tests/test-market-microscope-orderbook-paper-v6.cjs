@@ -118,7 +118,7 @@ if(passed!==15)process.exitCode=1;
      async refresh(){this.refreshes++;this.state=basicBook();return true;}
    };
  }
- const options={now:()=>NOW,showDepth:()=>true,sleep:async()=>{}};
+ const options={now:()=>NOW,showDepth:()=>true,sleep:async()=>{},ensureReading:async()=>true};
  await scenario("one click opens Depth and estimates with current valid book",async()=>{
    const book=mockBook();let shown=0;
    const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{...options,showDepth:()=>{shown++;return true;}});
@@ -166,7 +166,7 @@ if(passed!==15)process.exitCode=1;
    const book=mockBook({...basicBook(),loading:true});
    let clock=NOW;
    const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{
-     now:()=>clock,showDepth:()=>true,sleep:async()=>{clock+=2000;}
+     now:()=>clock,showDepth:()=>true,sleep:async()=>{clock+=2000;},ensureReading:async()=>true
    });
    assert.equal(r.code,"BOOK_LOADING_TIMEOUT");assert.equal(book.refreshes,0);
  });
@@ -175,7 +175,77 @@ if(passed!==15)process.exitCode=1;
    const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{...options,showDepth:()=>false});
    assert.equal(r.code,"DEPTH_TAB_UNAVAILABLE");assert.equal(book.opened,1);assert.equal(book.refreshes,0);
  });
- process.stdout.write(extraPassed+"/9 one-click orchestration scenarios passed\n");
- if(extraPassed!==9)process.exitCode=1;
+ // Native Lecture Technique rail is authoritative; minimal simulated DOM.
+ async function withReadingDom(config,fn){
+   const {collapsed=false,rail=true,railWorks=true,width=340,height=600,panel=true}=config;
+   const priorDoc=globalThis.document,priorRaf=globalThis.requestAnimationFrame;
+   const classes=new Set(collapsed?["detail-collapsed"]:[]);
+   let clicks=0;
+   const deck={classList:{contains:v=>classes.has(v)}};
+   const detail={getBoundingClientRect:()=>({width:classes.has("detail-collapsed")?0:width,height:classes.has("detail-collapsed")?0:height})};
+   const sideRail={click(){clicks++;if(railWorks)classes.delete("detail-collapsed");}};
+   globalThis.document={getElementById:id=>({
+     analyste:deck,detailPanel:panel?detail:null,detailPanelRail:rail?sideRail:null
+   })[id]||null};
+   globalThis.requestAnimationFrame=cb=>{cb();return 1;};
+   try{return await fn({classes,clicks:()=>clicks});}
+   finally{
+     if(priorDoc===undefined)delete globalThis.document;else globalThis.document=priorDoc;
+     if(priorRaf===undefined)delete globalThis.requestAnimationFrame;else globalThis.requestAnimationFrame=priorRaf;
+   }
+ }
+ await scenario("collapsed Lecture Technique opens via existing native rail",async()=>{
+   await withReadingDom({collapsed:true},async d=>{
+     assert.equal(await api.ensureTechnicalReading(),true);
+     assert.equal(d.clicks(),1);assert.equal(d.classes.has("detail-collapsed"),false);
+   });
+ });
+ await scenario("already open Lecture Technique is not toggled shut",async()=>{
+   await withReadingDom({},async d=>{
+     assert.equal(await api.ensureTechnicalReading(),true);
+     assert.equal(d.clicks(),0);
+   });
+ });
+ await scenario("missing rail refuses and prevents oversized Depth",async()=>{
+   await withReadingDom({collapsed:true,rail:false},async()=>{
+     assert.equal(await api.ensureTechnicalReading(),false);
+   });
+ });
+ await scenario("rail did not open reading: fail closed",async()=>{
+   await withReadingDom({collapsed:true,railWorks:false},async d=>{
+     assert.equal(await api.ensureTechnicalReading(),false);assert.equal(d.clicks(),1);
+   });
+ });
+ await scenario("hidden or missing technical panel fails dock guard",async()=>{
+   await withReadingDom({width:0,height:0},async()=>{
+     assert.equal(await api.ensureTechnicalReading(),false);
+   });
+   await withReadingDom({panel:false},async()=>{
+     assert.equal(await api.ensureTechnicalReading(),false);
+   });
+ });
+ await scenario("one click orders Lecture, unmaximize, redock, open and switch Depth",async()=>{
+   const book=mockBook({...basicBook(),maximized:true,detached:true});
+   const order=[];
+   book.setMaximized=value=>{assert.equal(value,false);order.push("unmaximize");book.state.maximized=false;};
+   book.setDetached=value=>{assert.equal(value,false);order.push("dock");book.state.detached=false;};
+   book.setMinimized=value=>{assert.equal(value,false);order.push("unminimize");};
+   book.setOpen=value=>{assert.equal(value,true);order.push("depthOpen");return true;};
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{
+     ...options,ensureReading:async()=>{order.push("lectureOpen");return true;},
+     showDepth:()=>{order.push("depthTab");return true;}
+   });
+   assert.equal(r.ok,true);assert.equal(r.orders,0);
+   assert.deepEqual(order,["lectureOpen","unmaximize","dock","unminimize","depthOpen","depthTab"]);
+ });
+ await scenario("unavailable Lecture refuses with no Depth open or refresh",async()=>{
+   const book=mockBook();
+   const r=await api.openDepthAndEstimate(book,{snapshot:chart},settings(),{
+     ...options,ensureReading:async()=>false
+   });
+   assert.equal(r.code,"TECH_PANEL_UNAVAILABLE");assert.equal(book.opened,0);assert.equal(book.refreshes,0);
+ });
+ process.stdout.write(extraPassed+"/16 one-click & Lecture tests passed\n");
+ if(extraPassed!==16)process.exitCode=1;
 })().catch(e=>{process.stderr.write(String(e.stack||e)+"\n");process.exitCode=1;});
 
