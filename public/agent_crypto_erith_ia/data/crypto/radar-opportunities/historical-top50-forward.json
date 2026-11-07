@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-11-06",
+  "latest_archive_day_utc": "2026-11-07",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,57 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "polkadot",
-      "symbol": "DOT",
-      "rank": 45,
-      "observed_at": "2026-09-08T21:54:36.031Z",
-      "price_usd": 1.2340335243666585,
-      "change24h_pct": 15.09926,
-      "change7d_pct": 42.5,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-15",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "ASSET_NOT_IN_TOP50",
-      "source_path": "data/history/2026-09-08.jsonl",
-      "followup_source_path": null
-    },
-    {
-      "id": "whitebit",
-      "symbol": "WBT",
-      "rank": 15,
-      "observed_at": "2026-09-08T21:54:36.031Z",
-      "price_usd": 81.22476987476144,
-      "change24h_pct": 5.97177,
-      "change7d_pct": 14.3,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-15",
-      "observed_followup_at": "2026-09-15T21:25:58.830Z",
-      "observed_followup_price_usd": 77.87074108754511,
-      "followup_change_pct": -4.13,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-08.jsonl",
-      "followup_source_path": "data/history/2026-09-15.jsonl"
-    },
-    {
-      "id": "memecore",
-      "symbol": "M",
-      "rank": 38,
-      "observed_at": "2026-09-08T21:54:36.031Z",
-      "price_usd": 1.2140472516085752,
-      "change24h_pct": 5.14602,
-      "change7d_pct": 14.6,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-15",
-      "observed_followup_at": "2026-09-15T21:25:58.830Z",
-      "observed_followup_price_usd": 1.1194147589759431,
-      "followup_change_pct": -7.79,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-08.jsonl",
-      "followup_source_path": "data/history/2026-09-15.jsonl"
-    },
     {
       "id": "near",
       "symbol": "NEAR",
@@ -2218,12 +2167,12 @@
       "change7d_pct": 12.523,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-07",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-07T10:16:53.654Z",
+      "observed_followup_price_usd": 197.40348217946828,
+      "followup_change_pct": -1.24,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-31.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-07.jsonl"
     },
     {
       "id": "chainlink",
@@ -2235,12 +2184,12 @@
       "change7d_pct": 2.2366,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-07",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-07T10:16:53.654Z",
+      "observed_followup_price_usd": 10.831538279772353,
+      "followup_change_pct": -8.17,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-31.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-07.jsonl"
     },
     {
       "id": "quant-network",
@@ -2376,6 +2325,23 @@
       "followup_change_pct": null,
       "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
       "source_path": "data/history/2026-11-06.jsonl",
+      "followup_source_path": null
+    },
+    {
+      "id": "quant-network",
+      "symbol": "QNT",
+      "rank": 34,
+      "observed_at": "2026-11-07T10:16:53.654Z",
+      "price_usd": 197.40348217946828,
+      "change24h_pct": 4.58001,
+      "change7d_pct": 1.8773,
+      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+      "future_7d_date": "2026-11-14",
+      "observed_followup_at": null,
+      "observed_followup_price_usd": null,
+      "followup_change_pct": null,
+      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "source_path": "data/history/2026-11-07.jsonl",
       "followup_source_path": null
     }
   ]
