@@ -562,6 +562,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-07",
+      "date_utc": "2026-11-07",
+      "first_seen_at_utc": "2026-11-07T15:00:15.490Z",
+      "source_times_utc": [
+        "2026-11-07T14:57:42.078Z",
+        "2026-11-07T14:57:50.000Z"
+      ],
+      "universe_eligible": 356,
+      "policy_matches": 5,
+      "selected": [
+        {
+          "coin_id": "geodnet",
+          "symbol": "GEOD",
+          "source_at_utc": "2026-11-07T14:57:42.078Z",
+          "rank": 177,
+          "price_usd": 0.2460203318460987
+        },
+        {
+          "coin_id": "meteora",
+          "symbol": "MET",
+          "source_at_utc": "2026-11-07T14:57:42.078Z",
+          "rank": 185,
+          "price_usd": 0.3050293112096612
+        },
+        {
+          "coin_id": "pearl-2",
+          "symbol": "PEARL",
+          "source_at_utc": "2026-11-07T14:57:42.078Z",
+          "rank": 90,
+          "price_usd": 1.7439467668197939
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1327,6 +1362,20 @@
       "sha256": "1b4104c6729ebfba93f2335c2ca44cd65e32cd07e342f799024fad179508a846",
       "recorded_at_utc": "2026-11-06T21:43:07.980Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-06",
+      "file": "observations/2026-11-07T150015490Z--2026-11-06.json",
+      "sha256": "d022d96ae87b5c7c85c5998f5cfee180270a6d1256bb029716428cd61605f4db",
+      "recorded_at_utc": "2026-11-07T15:00:15.490Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-07",
+      "file": "observations/2026-11-07T150015490Z--2026-11-07.json",
+      "sha256": "6d33ae06d5df377c44dd561cf4c8b15ffa350a248e91bb4d83ebfa97f7c17079",
+      "recorded_at_utc": "2026-11-07T15:00:15.490Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
