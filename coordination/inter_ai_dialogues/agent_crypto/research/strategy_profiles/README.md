@@ -10,6 +10,10 @@ Ce répertoire du Coffre Agent-Crypto partage **sept fiches pédagogiques approf
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
 - [Accéder au code HTML source et l'enregistrer](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — format unique, auto-contenu et consultable hors ligne.
 
+## Observations du marché — Recherches 08 et 08B
+
+- [**Ouvrir les études 08 / 08B dans le répertoire partagé**](../market_observations/README.md) — classification rétrospective sans anticipation, qualité des historiques, AKE/OKX, distinction Spot et perpétuels ; **aucun changement logiciel**.
+
 ## Commencer ici
 
 - [Comparaison des profils selon l'état du marché](./SEVEN_HEAVEN_AGENT_CRYPTO_STRATEGY_PROFILES_MARKET_REGIMES_EDUCATIONAL_COMPARISON_2026_11_07.md) — tableau des environnements (hausse, baisse, range, volatilité, accumulation), correspondances avec les fiches, chiffres 2022–2025, drawdowns et limites.

@@ -1,0 +1,132 @@
+{
+  "schema": "seven.heaven.agent_crypto.research08b.ake-spot-futures-screenshots.v1",
+  "status": "DOCUMENTARY_READ_ONLY_NO_CODE_NO_ORDERS",
+  "study_date": "2026-11-07",
+  "program": {
+    "module": "Administrator",
+    "build": "40.6.719",
+    "source": "user screenshots"
+  },
+  "previous_reference": {
+    "timestamp_approx": "07:21:50",
+    "source": "Research 08 JSON from previous turn",
+    "returns_24h_percent": {
+      "AKE": 17.65,
+      "GEOD": 21.1,
+      "KNTQ": 11.57,
+      "BTW": 10.82,
+      "PEARL": 8.13
+    }
+  },
+  "capture_1": {
+    "displayed_latest_point": "2026-11-07 07:27:10",
+    "selection": "Hausses 5 · 24h · Base 100 · USD",
+    "sources": "mixed 1 direct, 4 caches (delayed)",
+    "series": "5/5",
+    "points_per_series": 289,
+    "assets": {
+      "AKE": {
+        "pct": 23.29,
+        "price_usd": 0.00579005
+      },
+      "GEOD": {
+        "pct": 20.86,
+        "price_usd": 0.275062
+      },
+      "KNTQ": {
+        "pct": 11.71,
+        "price_usd": 0.481348
+      },
+      "BTW": {
+        "pct": 10.66,
+        "price_usd": 1.1973
+      },
+      "PEARL": {
+        "pct": 7.08,
+        "price_usd": 1.7557
+      }
+    },
+    "delta_percentage_points_vs_prior": {
+      "AKE": 5.64,
+      "GEOD": -0.24,
+      "KNTQ": 0.14,
+      "BTW": -0.16,
+      "PEARL": -1.05
+    },
+    "leader": "AKE",
+    "laggard": "PEARL",
+    "spread_points": 16.21,
+    "source_age_per_token": "not shown"
+  },
+  "capture_2": {
+    "screen": "Oracle AKE · continuation · 15 min",
+    "ake_price_displayed_usd": 0.00582521,
+    "market_source_label": "SOURCE MARCHÉ NON CONFIRMÉ",
+    "oracle_direction": "HAUSSIER",
+    "oracle_confidence_data_100": 83,
+    "oracle_rising_force_100": 61,
+    "oracle_falling_force_100": 39,
+    "confidence_100_bottom": 42,
+    "volatility_pct_bottom": 60.21,
+    "orderbook_pair_displayed": "AKE/?",
+    "orderbook_state": "carnet non synchronisé",
+    "orderbook_reason_displayed": "La paire du carnet ne correspond pas au graphique. Aucune profondeur affichée avant une lecture publique concordante.",
+    "market_context": "spot",
+    "notes": "Different confidence indicators are not interchangeable; no executable trading recommendation."
+  },
+  "capture_3": {
+    "screen": "akedo.fun",
+    "purpose": "Project website identifies Akedo AI platform; does not establish exchange listing",
+    "account_or_wallet": "not accessed"
+  },
+  "listing_research": {
+    "token": "Akedo",
+    "ticker": "AKE",
+    "okx_perpetuals": "AKE/USDT USDT-margined futures announced 2026-09-16",
+    "okx_spot": "no spot trading pair confirmed in researched sources as of 2026-11-07; exact official instrument REST endpoint not retrieved",
+    "okx_europe": "products may differ by jurisdiction; spot not assumed from futures or price info",
+    "unconfirmed_causal_inference": "Spot book unavailable likely because no matching AKE spot pair, but could also result from instrument mapping / synchronization. Code not audited."
+  },
+  "supporting_sources": [
+    {
+      "title": "OKX France/Europe AKE perpetual futures announcement",
+      "url": "https://www.okx.com/fr-fr/help/okx-to-list-perpetual-futures-for-ake-crypto"
+    },
+    {
+      "title": "Akedo AKE OKX price information (not proof of a Spot pair)",
+      "url": "https://www.okx.com/fr/price/akedo-ake"
+    },
+    {
+      "title": "Spot vs futures instruments, third-party venue matrix dated Nov 6 2026",
+      "url": "https://pattern.plus/token/ake-akedo?hold=7&lev=3&side=short"
+    },
+    {
+      "title": "Official Akedo project homepage shown in screenshot",
+      "url": "https://akedo.fun/#/"
+    }
+  ],
+  "actions": {
+    "code_changed": false,
+    "github_changed": false,
+    "notion_changed": false,
+    "orders": false,
+    "account_connected": false
+  },
+  "evidence": [
+    {
+      "filename": "CAPTURE_ADMINISTRATOR_HAUSSES_5_2026_11_07_072710.png",
+      "sha256": "935b6452c80cb3ae21fb42b54a3b871783791626cf35e6a7e09d075af25c1999",
+      "dimensions": "1920x1080"
+    },
+    {
+      "filename": "CAPTURE_ADMINISTRATOR_ORACLE_AKE_ORDERBOOK_2026_11_07_0735.png",
+      "sha256": "9a0e474e2e0d3a5359789588390078c5f5de7e572f3ee32ffce1746f7cc3c3b5",
+      "dimensions": "1920x1080"
+    },
+    {
+      "filename": "CAPTURE_AKEDO_OFFICIAL_PLATFORM_2026_11_07_0738.png",
+      "sha256": "34f63baf78de7bfaa965ea838466d235febf1a4f7f1be23aba7565865bbaeff2",
+      "dimensions": "1920x1080"
+    }
+  ]
+}

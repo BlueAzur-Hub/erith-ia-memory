@@ -1,0 +1,230 @@
+{
+  "schema": "seven.heaven.agent_crypto.research08.observation.v1",
+  "created_date": "2026-11-07",
+  "status": "research_only__not_importable__no_trades",
+  "source": {
+    "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_native_daily_reconciliation/index.json",
+    "daily_file": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_native_daily_reconciliation/bitcoin-Max.json.gz",
+    "daily_data_git_blob_sha": "8f2073bfefe41957bc2affc73b81402631c19f41",
+    "daily_index_git_blob_sha": "a68de86bf6e81cde0581deb0894be66547896301",
+    "archive_file_sha256_from_index": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+    "pair": "BTCUSDT",
+    "venue": "Binance Spot",
+    "bar_interval": "1d",
+    "range": [
+      "2018-05-01",
+      "2026-09-30"
+    ],
+    "daily_rows": 3075,
+    "native_1d_recovered": 26,
+    "remaining_missing_minutes_in_minute_sources": 5881,
+    "audit_limit": "daily OHLC completeness; no validated intraday order sequence, fill quality, or 2026-11-07 close"
+  },
+  "capture": {
+    "date_displayed": "2026-11-07",
+    "chart_newest_point_label": "2026-11-07 07:21:50",
+    "record_type": "user_screenshot_static_not_realtime_api",
+    "interface": {
+      "product": "Administrator",
+      "build": "40.6.719",
+      "market_core": "38.15.11"
+    },
+    "view": "Hausses 5",
+    "selected_window": "24h",
+    "comparison_base": 100,
+    "quote_display": "USD",
+    "ranking_base": "Top 100",
+    "series_displayed": 5,
+    "points_per_series_ui": 289,
+    "series_provenance_aggregate": {
+      "direct": 1,
+      "cache": 4
+    },
+    "direct_asset_identity": "not_shown",
+    "per_asset_timestamps": "not_shown",
+    "benchmark_contemporaneity_verified": false,
+    "source_label_read_from_ui": "historiques mixtes ; 1 direct ; 4 caches ; à jour",
+    "exchange_price_badge": "Prix Live Binance : 5/5 (separate status; not evidence all five series were live)",
+    "market_score_badge": "MARCHÉ · BTC · 70/100 (semantics not audited)",
+    "assets": [
+      {
+        "symbol": "AKE",
+        "name_ui": "Alkedo",
+        "price_usd_ui": 0.00582745,
+        "return_24h_percent_ui": 17.65
+      },
+      {
+        "symbol": "GEOD",
+        "name_ui": "Geodnet",
+        "price_usd_ui": 0.275502,
+        "return_24h_percent_ui": 21.1
+      },
+      {
+        "symbol": "KNTQ",
+        "name_ui": "Kinetiq",
+        "price_usd_ui": 0.481352,
+        "return_24h_percent_ui": 11.57
+      },
+      {
+        "symbol": "BTW",
+        "name_ui": "Bitway",
+        "price_usd_ui": 1.1997,
+        "return_24h_percent_ui": 10.82
+      },
+      {
+        "symbol": "PEARL",
+        "name_ui": "Pearl",
+        "price_usd_ui": 1.7605,
+        "return_24h_percent_ui": 8.13
+      }
+    ],
+    "leader": {
+      "symbol": "GEOD",
+      "return_24h_percent_ui": 21.1
+    },
+    "laggard": {
+      "symbol": "PEARL",
+      "return_24h_percent_ui": 8.13
+    },
+    "spread_percentage_points": 12.97,
+    "data_quality_disclaimer": "UI capture only; price sources, currencies, asset mappings, quote timestamps and source ages not independently verified."
+  },
+  "regime_study": {
+    "status": "exploratory_descriptive_not_backtest",
+    "analysis_window_each_year": "January 22 - December 31 for 2022,2023,2024,2025",
+    "state_time": "close at t (no future value in label)",
+    "trend_rules": {
+      "bullish": "close_t > SMA50_t > SMA200_t and (close_t / close_(t-30)-1) >= +0.03",
+      "bearish": "close_t < SMA50_t < SMA200_t and (close_t / close_(t-30)-1) <= -0.03",
+      "undetermined": "all remaining days; do NOT claim they are reliably range-bound"
+    },
+    "volatility_rules": {
+      "measure": "sample standard deviation of last 20 BTCUSDT daily log returns ending t, multiplied by sqrt(365)",
+      "high": "vol20_t greater than 75th percentile of vol20 across the previous 180 days (t-180 through t-1)",
+      "relationship": "volatility is an overlay, not a fourth mutually exclusive trend class"
+    },
+    "days_by_year": {
+      "2022": {
+        "days": 344,
+        "bullish": 0,
+        "bearish": 190,
+        "undetermined": 154,
+        "high_vol": 100
+      },
+      "2023": {
+        "days": 344,
+        "bullish": 156,
+        "bearish": 4,
+        "undetermined": 184,
+        "high_vol": 78
+      },
+      "2024": {
+        "days": 345,
+        "bullish": 152,
+        "bearish": 20,
+        "undetermined": 173,
+        "high_vol": 95
+      },
+      "2025": {
+        "days": 344,
+        "bullish": 80,
+        "bearish": 41,
+        "undetermined": 223,
+        "high_vol": 101
+      }
+    },
+    "total_days": 1377,
+    "trend_totals": {
+      "bullish": 388,
+      "bearish": 255,
+      "undetermined": 734
+    },
+    "high_vol_days": 374,
+    "descriptive_20d_outcomes": {
+      "sampling": "Jan 22 of each year then every 20 days, require t+20 <= Dec 31 of same year",
+      "samples_per_year": 17,
+      "total_samples": 68,
+      "metric": "100*(close_(t+20)/close_t-1) after observation at t; non-executable close-to-close descriptive outcome",
+      "unconditional_median_pct": -0.42,
+      "groups": [
+        {
+          "trend": "undetermined",
+          "volatility": "ordinary",
+          "n": 27,
+          "positive": 13,
+          "median_20d_pct": -0.33,
+          "mean_20d_pct": 0.56
+        },
+        {
+          "trend": "bullish",
+          "volatility": "ordinary",
+          "n": 15,
+          "positive": 5,
+          "median_20d_pct": -2.73,
+          "mean_20d_pct": 1.61
+        },
+        {
+          "trend": "bearish",
+          "volatility": "ordinary",
+          "n": 8,
+          "positive": 4,
+          "median_20d_pct": -0.16,
+          "mean_20d_pct": 0.62
+        },
+        {
+          "trend": "undetermined",
+          "volatility": "high",
+          "n": 8,
+          "positive": 4,
+          "median_20d_pct": 0.42,
+          "mean_20d_pct": 2.95
+        },
+        {
+          "trend": "bearish",
+          "volatility": "high",
+          "n": 5,
+          "positive": 2,
+          "median_20d_pct": -2.5,
+          "mean_20d_pct": 2.32
+        },
+        {
+          "trend": "bullish",
+          "volatility": "high",
+          "n": 5,
+          "positive": 4,
+          "median_20d_pct": 5.63,
+          "mean_20d_pct": 5.7
+        }
+      ],
+      "limitations": [
+        "small subgroup sizes",
+        "overfitting risk",
+        "thresholds exploratory",
+        "no test of strategy orders",
+        "no fees/benchmark for forward return observations",
+        "not a prospective trial"
+      ]
+    },
+    "last_historical_checkpoint": {
+      "date": "2026-09-30",
+      "btc_usdt_close": 83623.6,
+      "trend_label": "bullish",
+      "high_vol": false,
+      "sma50": 77295.59,
+      "sma200": 71299.7,
+      "momentum_30d_percent": 6.42,
+      "volatility_20d_annualized_percent": 42.21,
+      "past_180d_volatility_75pct_threshold_percent": 43.62,
+      "caution": "historical as of 30 Sep only, NOT the BTC or USD price on the user screenshot of 7 Nov"
+    }
+  },
+  "ownership": {
+    "notion_modified": false,
+    "github_modified": false,
+    "trader_modified": false,
+    "administrator_modified": false,
+    "operator_modified": false,
+    "exchange_orders": false,
+    "next_status": "preserve report; require explicit publication instruction before writing to shared GitHub"
+  }
+}
