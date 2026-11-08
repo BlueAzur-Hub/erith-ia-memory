@@ -6,6 +6,9 @@ on:
       - '.github/workflows/seven-radar-market.yml'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/coffre-radar-dossiers.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-coffre-radar-dossiers.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-okx-hourly.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar.cjs'
@@ -22,6 +25,9 @@ on:
       - '.github/workflows/seven-radar-market.yml'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/coffre-radar-dossiers.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-coffre-radar-dossiers.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-okx-hourly.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar.cjs'
@@ -46,11 +52,13 @@ jobs:
       - name: Check Radar and native Market syntax
         run: |
           node --check public/agent_crypto_erith_ia/laboratoire/radar.js
+          node --check public/agent_crypto_erith_ia/laboratoire/coffre-radar-dossiers.js
           node --check public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
           node --check public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
+          node --test public/agent_crypto_erith_ia/laboratoire/test-coffre-radar-dossiers.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-okx-hourly.cjs
           node --test public/agent_crypto_erith_ia/tools/test-radar-opportunity-history.cjs
           node --test public/agent_crypto_erith_ia/administrator/js/test-market-radar-fidelity.cjs
