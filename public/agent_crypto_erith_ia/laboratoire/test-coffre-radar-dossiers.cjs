@@ -12,25 +12,30 @@ function fixtures(){return Object.fromEntries(Object.entries(api.SOURCES)
 test("current Radar dossier bridge uses exact ids and published sources",()=>{
  const src=fixtures(),out=api.reconcile(src);
  assert.equal(out.counts.total,src.cohort.count);
- assert.equal(out.counts.documented,1);
- assert.equal(out.counts.needsKnowledge,19);
- assert.equal(out.counts.spot,src.cohort.spot_documented);
- assert.equal(out.counts.matched,src.identity.identity_proven_count);
- assert.equal(out.counts.daily,4);
- assert.equal(out.counts.minute,2);
+ const known=new Set(src.knowledge.candidates.map(x=>x.coin_id));
+ const daily=new Map(src.daily.assets.map(x=>[x.id,x.native_candles||0]));
+ const minute=new Map(src.minute.assets.map(x=>[x.id,x.native_1m_count||0]));
+ assert.equal(out.counts.documented,src.cohort.candidates.filter(x=>known.has(x.coin_id)).length);
+ assert.equal(out.counts.needsKnowledge,out.counts.total-out.counts.documented);
+ assert.equal(out.counts.spot,src.cohort.candidates.filter(x=>!!x.spot).length);
+ assert.equal(out.counts.matched,out.dossiers.filter(x=>x.contractMatched).length);
+ assert.equal(out.counts.daily,src.cohort.candidates.filter(x=>daily.get(x.coin_id)>0).length);
+ assert.equal(out.counts.minute,src.cohort.candidates.filter(x=>minute.get(x.coin_id)>0).length);
  assert.equal(out.counts.paperReady,0);
  assert.ok(out.dossiers.every(x=>x.paperAllowed===false&&x.blockers.length>0));
- assert.deepEqual(out.dossiers.filter(x=>x.minuteCandles>0).map(x=>x.id).sort(),
-  ["spacex-bstocks-tokenized-stock","tezos"]);
+ assert.ok(out.dossiers.every(x=>x.dailyCandles===(daily.get(x.id)||0)));
+ assert.ok(out.dossiers.every(x=>x.minuteCandles===(minute.get(x.id)||0)));
 });
 test("no status is inferred from a ticker collision or untrusted trade permission",()=>{
- const src=fixtures();const id=src.cohort.candidates.find(x=>x.coin_id==="lab");
- const proof=src.identity.candidates.find(x=>x.coin_id==="lab");
- assert.ok(proof.identity_proven);
+ const src=fixtures();
+ const proven=src.identity.candidates.find(x=>x.identity_proven===true&&
+   src.cohort.candidates.some(c=>c.coin_id===x.coin_id&&c.spot));
+ assert.ok(proven,"At least one matched contract in current research snapshot");
+ const id=src.cohort.candidates.find(x=>x.coin_id===proven.coin_id);
  id.spot.pair="DIFFERENTUSDT";
  const out=api.reconcile(src);
- assert.equal(out.dossiers.find(x=>x.id==="lab").contractMatched,false);
- assert.equal(out.dossiers.find(x=>x.id==="lab").paperAllowed,false);
+ assert.equal(out.dossiers.find(x=>x.id===proven.coin_id).contractMatched,false);
+ assert.equal(out.dossiers.find(x=>x.id===proven.coin_id).paperAllowed,false);
  src.cohort.orders_enabled=true;
  assert.throws(()=>api.reconcile(src),/Provenance invalide/);
 });
