@@ -2,8 +2,10 @@
 **État documentaire : 8 novembre 2026 — édition initiale, lecture seule.**  
 **Périmètre :** cryptomonnaies du snapshot CoinGecko Top 250, après exclusion explicite des stablecoins (dont USDD, United Stables et BFUSD), des fonds tokenisés (dont BUIDL) et des instruments adossés connus. Les **rangs officiels CoinGecko ne sont jamais renumérotés**. Les dossiers Top 5 sont approfondis ; les cinq suivants ont une analyse fondamentale intermédiaire ; les 40 suivants ont chacun une fiche chiffrée, historique et de risques de lecture. Ce n'est ni un classement des « meilleurs investissements », ni une preuve qu'un instrument est négociable sur ton compte OKX.
 
+**Audit des 50 dossiers :** [contrôle de fiabilité, matrices de sources, contrats et dettes OKX/PAPER](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/laboratoire/SEVEN_HEAVEN_CRYPTO_RESEARCH_TOP_50_EVIDENCE_CONTRACTS_OKX_PAPER_AUDIT_2026_11_08.md). **Snapshot de référence figé :** [CoinGecko `2026-11-08T16:04:58.911Z`](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/ed32ae3605ef5e594a3c1b74dbd383b315171526/public/agent_crypto_erith_ia/data/crypto/latest.json), commit `ed32ae3605ef`. **Seuls sept actifs** sont présents dans les 21 captures OKX collectées ; les autres ne sont pas déclarés indisponibles.
+
 ## Sources canoniques et méthode
-- [Market public Top 250](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/latest.json) — snapshot du **2026-11-08T16:04:58.911Z** ; identifiants exacts, rangs, prix USD, variations et volumes datés.
+- [Market Top 250 figé au commit ed32ae3605ef](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/ed32ae3605ef5e594a3c1b74dbd383b315171526/public/agent_crypto_erith_ia/data/crypto/latest.json) — snapshot du **2026-11-08T16:04:58.911Z** ; identifiants exacts, rangs, prix USD, variations et volumes datés.
 - [Registre des usages et sources primaires](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json) — les usages déclarés ne prouvent pas l'adoption réelle.
 - [Index des historiques 1 minute](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json) et [index multirésolution 1 jour](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json) — source native, devise et couverture distinctes des prix CoinGecko.
 - [Captures OKX fournies par le titulaire du compte](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json) — **21 paires visibles**. Son compte européen existe ; cette liste ne certifie pas les droits de négociation *paire par paire*. La capture de portefeuille prouve un compte connecté, non l'univers exhaustif des marchés autorisés.
@@ -1096,6 +1098,8 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 **Documentation consultée (8 novembre 2026) :** [Ondo Foundation — identité, contrat, offre et déblocages ONDO](https://docs.ondo.foundation/ondo-token) · [Ondo Foundation — gouvernance et délégation de la DAO](https://docs.ondo.foundation/ondo-dao). [Fiche CoinGecko](https://www.coingecko.com/en/coins/ondo-finance).
 
 
+**Identité contractuelle ajoutée par audit :** ONDO sur Ethereum ERC-20 `0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3` ([Fondation Ondo](https://docs.ondo.foundation/ondo-token)). Il ne s'agit pas d'une part de fonds tokenisé.
+
 ### 36 ASTER
 
 **Aster · rang CoinGecko #53**
@@ -1351,6 +1355,8 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Sources documentaires consultées (08/11/2026) :** [Morpho — rôle exact et versions du jeton MORPHO](https://docs.morpho.org/learn/governance/morpho-token/) ; [Morpho — risques de vaults, oracles et marchés](https://docs.morpho.org/learn/resources/risks/) ; [Morpho — frais des vaults V1 et V2](https://docs.morpho.org/curate/concepts/fee/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/morpho).
 
+
+**Contrats Ethereum ajoutés par audit :** MORPHO actuel `0x58D97B57BB95320F9a05dC918Aef65434969c2B2`, legacy `0x9994E35Db50125E0DF82e4c2dde62496CE330999`, wrapper `0x9D03bb2092270648d7480049d0E58d2FcF0E5123` ([registres Morpho](https://docs.morpho.org/developers/contracts/addresses/)). Ces contrats sont différents.
 
 ### 44 HTX
 
