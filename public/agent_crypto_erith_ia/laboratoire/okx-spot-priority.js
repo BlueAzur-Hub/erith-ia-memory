@@ -233,6 +233,11 @@ function render(doc,model){
   td.textContent="Aucun instrument pour ces filtres.";tr.appendChild(td);tbody.appendChild(tr);
  }
  doc.getElementById("okx-target-count").textContent=rows.length+" instrument(s) affiché(s)";
+ const proof=doc.getElementById("okx-logo-render-status");
+ if(proof){const n=rows.filter(row=>logoForRow(row)!==null).length;
+  proof.textContent="Logos actifs · "+n+" ligne(s) avec logo local · "+(rows.length-n)+
+   " avec monogramme sur ce filtre. Identité de marché et accès au compte toujours à vérifier.";
+ }
 }
 async function probeLocalMarket({asset="EDGE",fetcher=null}={}){
  const name=String(asset||"").trim().toUpperCase();
