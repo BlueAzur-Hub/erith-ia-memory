@@ -293,7 +293,7 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ## Partie C — Top 50, quarante fiches quantitatives et historiques complémentaires
 
-**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 20** disposent maintenant chacune d'une analyse de projet issue de sources primaires (catégorie, fonction, tokenomics/usages déclarés, métriques vérifiables, risques spécifiques, question de recherche). Ces dix analyses n'établissent pas l'adoption réelle ; les positions **21 à 50** restent des fiches quantitatives et historiques jusqu'à vérification approfondie. Les rangs CoinGecko proviennent toujours du même snapshot, sans donnée actualisée artificiellement.
+**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 30** disposent maintenant chacune d'une analyse de projet issue de sources primaires (catégorie, rôle du token, mécanismes économiques, métriques vérifiables, risques et question de recherche). Ces vingt analyses documentaires ne prouvent pas l'adoption réelle ; les positions **31 à 50** restent des fiches quantitatives et historiques jusqu'à vérification approfondie. Les rangs CoinGecko proviennent toujours du même snapshot, sans données actualisées artificiellement.
 Les fiches ci-dessous sont *réellement individualisées par relevés de prix, volumes et archives existantes*, mais ne prétendent pas contenir une recherche d'adoption que les sources n'établissent pas. Pour chaque dossier, le statut de cotation OKX reste un constat de capture, pas une interrogation authentifiée.
 
 ### 11 WBT
@@ -629,7 +629,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/canton-network).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Infrastructure de synchronisation et de règlement à confidentialité contrôlée, avec jeton natif d'utilité.
+
+**Fonction du projet et du jeton :** Canton Network est conçu pour faire interagir des applications financières et institutionnelles en conservant des contrôles de confidentialité sur leurs transactions. Son Global Synchronizer facilite la synchronisation d'opérations entre applications. Canton Coin (CC) sert au paiement de capacités de synchronisation et à la rémunération d'opérateurs d'infrastructure, de validateurs et d'applications selon la contribution déclarée au réseau. Les échanges publics du jeton ne constituent pas à eux seuls une preuve d'adoption institutionnelle.
+
+**Mécanisme économique :** Selon les documents Canton, les frais en CC payés pour les services sont détruits, tandis que de nouveaux CC sont émis pour récompenser les contributions au réseau : c'est un mécanisme de burn-and-mint et non une offre parfaitement fixe. Le nombre de CC détruits et créés peut être vérifié par données publiques agrégées sans avoir accès aux transactions privées. Il faut donc calculer la variation nette d'offre et non supposer que les seuls burns garantissent une rareté croissante.
+
+**Question de recherche :** L'usage facturable du Global Synchronizer et les dépenses CC augmentent-ils plus vite que les nouvelles émissions, et comment l'attester avec des données publiques ?
+
+**Indicateurs à collecter :** CC émis contre CC détruits par période ; recettes des frais de synchronisation ; nombre de validateurs et d'applications contribuant au Global Synchronizer ; activité agrégée indépendamment attestable ; concentration des rémunérations et émission nette.
+
+**Risques spécifiques :** Liquidité Spot limitée par place de cotation ; dépendance à la réelle activité des institutions ; confidentialité réduisant la transparence directe des opérations ; régime réglementaire de la tokenisation ; concentration de l'infrastructure et variation de l'émission nette.
+
+**Discernement, identité et réserves :** L'archive OKX CC-USDT est une série historique journalisée ; son existence ne prouve pas que la paire figure dans les droits Spot actuels du compte européen.
+
+**Sources primaires consultées le 08/11/2026 :** [Canton Network — FAQ du CC, frais, brûlages et récompenses](https://www.canton.network/faq) ; [Canton — site officiel et documentation du réseau](https://www.canton.network/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/canton-network).
 
 
 ### 22 AVAX
@@ -645,7 +661,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/avalanche-2).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Infrastructure blockchain multi-réseaux : Primary Network et Avalanche L1.
+
+**Fonction du projet et du jeton :** Avalanche distingue une Primary Network (C-Chain EVM, P-Chain et X-Chain) de réseaux Avalanche L1 spécialisés, dont les règles, machines virtuelles et frais peuvent différer. AVAX sert notamment au paiement de frais sur la Primary Network, à son staking et à des fonctions du protocole. Un déploiement de L1 autonome ne doit pas être automatiquement compté comme une transaction de la C-Chain.
+
+**Mécanisme économique :** La valeur économique à étudier dépend des coûts de transactions effectifs en AVAX sur la Primary Network, des quantités mises en staking et des exigences d'activation/participation aux L1. Les frais et actifs employés par un L1 ne sont pas nécessairement les mêmes que ceux de la Primary Network : compter tout son trafic comme une demande de gaz AVAX serait trompeur.
+
+**Question de recherche :** Les frais AVAX et le staking de la Primary Network progressent-ils réellement avec l'extension des Avalanche L1, ou l'activité est-elle principalement localisée sur des environnements économiques distincts ?
+
+**Indicateurs à collecter :** Transactions et frais de la C-Chain, X-Chain et P-Chain distingués ; AVAX stakés et participation des validateurs ; nombre de L1 actifs avec règles vérifiées ; coûts réels des lancements et validations ; liquidité AVAX/USDT et USDC.
+
+**Risques spécifiques :** Fragmentation des réseaux et de la valeur captée, bugs et mises à jour des machines virtuelles, dépendance aux validateurs, incertitude sur les frais réels des L1, concurrence des solutions de scalabilité.
+
+**Discernement, identité et réserves :** L'archive minute Binance AVAX/USDT prouve une couverture historique dans cette devise ; elle ne certifie pas un accès OKX Europe.
+
+**Sources primaires consultées le 08/11/2026 :** [Avalanche Builder Hub — architecture Primary Network](https://docs.avax.network/docs/primary-network) ; [Avalanche — FAQ officielle des L1 et de leurs frais](https://support.avax.network/en/articles/6158840-l1-faq). [Fiche CoinGecko](https://www.coingecko.com/en/coins/avalanche-2).
 
 
 ### 23 SUI
@@ -661,7 +693,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/sui).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Blockchain L1 à modèle objet, contrats intelligents Move et preuve d'enjeu.
+
+**Fonction du projet et du jeton :** Sui utilise Move et un modèle de données fondé sur des objets pour les actifs et applications. SUI est l'actif natif du réseau : il sert au gaz des opérations, au staking qui soutient les validateurs et à des décisions de gouvernance du protocole. La documentation prévoit un fonds de stockage chargé de répartir dans le temps le coût des données conservées sur la chaîne.
+
+**Mécanisme économique :** Les transactions créant des données paient des frais de stockage alimentant un fonds en SUI ; une part des rémunérations associées au fonds compense les validateurs qui stockent des données historiques. Les frais d'exécution et de stockage ne doivent pas être additionnés aveuglément comme bénéfice distribué aux détenteurs. La documentation fixe un plafond théorique de 10 milliards de SUI, sans préciser dans notre dossier leur calendrier effectif de libération.
+
+**Question de recherche :** L'activité des applications paie-t-elle durablement le coût de calcul et de stockage en SUI, et comment cette demande se compare-t-elle aux émissions et déblocages ?
+
+**Indicateurs à collecter :** Transactions et gaz effectivement payés ; taille et capital du fonds de stockage ; frais d'ajout et remboursements lors de suppressions ; SUI délégués/validateurs ; activité des contrats Move ; émissions et déblocages datés.
+
+**Risques spécifiques :** Complexité de l'exécution des objets et contrats Move, dilution via déblocages de jetons, centralisation de staking ou infrastructures, croissance du stockage, concurrence des L1 et vulnérabilités applicatives.
+
+**Discernement, identité et réserves :** La présence de SUI dans le Top 50 vient du snapshot Market. La couverture de bougies Binance reste distincte d'une autorisation de négocier sur OKX.
+
+**Sources primaires consultées le 08/11/2026 :** [Sui Docs — usages du jeton, plafond et fonds de stockage](https://docs.sui.io/develop/sui-architecture/tokenomics-overview) ; [Sui Docs — architecture et développement](https://docs.sui.io/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/sui).
 
 
 ### 24 GRAM
@@ -677,7 +725,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/the-open-network).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Cryptomonnaie native de The Open Network (TON), anciennement Toncoin.
+
+**Fonction du projet et du jeton :** The Open Network conserve le nom TON pour son infrastructure. Sa cryptomonnaie native a été renommée de TON/Toncoin à Gram (GRAM) en 2026 : les soldes et adresses demeurent ceux du réseau d'origine, sans migration de jetons requise selon la documentation de support et celle de TON. GRAM paie les frais de calcul des smart contracts, du stockage et des messages réseau ; il sert également au staking de validation.
+
+**Mécanisme économique :** Le changement de nom est un changement d'identité commerciale et de symbole, pas une nouvelle création monétaire automatique. Pour comparer les historiques il faut rattacher les anciens tickers TON et le GRAM nouveau à l'identifiant CoinGecko conservé `the-open-network`, en vérifiant soigneusement la continuité réelle des paires chez chaque fournisseur et en évitant tout rapprochement avec un autre token GRAM homonyme.
+
+**Question de recherche :** Les indicateurs natifs confirment-ils une croissance de l'activité facturée en GRAM après le renommage, indépendamment des distorsions de ticker et des ruptures de série ?
+
+**Indicateurs à collecter :** Transactions, messages et frais en GRAM ; dépenses de stockage/calcul ; actifs stakés et validateurs ; séries de prix ancien ticker TON / nouveau ticker GRAM reliées par une preuve de marché ; distribution des usages des mini-apps ; disponibilité des ponts et portefeuilles.
+
+**Risques spécifiques :** Confusion de nom et de ticker, imitations frauduleuses proposant des échanges de TON vers GRAM, risques de portefeuilles et contrats TON, liquidité et conversion des historiques, dépendance à l'écosystème d'applications.
+
+**Discernement, identité et réserves :** Aucun dépôt de conversion ou « claim » GRAM ne doit être déduit de ce dossier. L'archive native ancienne peut encore utiliser TON : vérifier l'identifiant précis, la date et le contrat pour la raccorder.
+
+**Sources primaires consultées le 08/11/2026 :** [TON Docs — Gram, calcul, stockage, frais](https://docs.ton.org/start-here) ; [TON Docs — paramètres du staking et des frais](https://docs.ton.org/foundations/config) ; [Blockchain.com — avis de renommage TON → GRAM du 15 juillet 2026](https://support.blockchain.com/hc/en-us/articles/28894576327068-Toncoin-TON-renamed-to-GRAM). [Fiche CoinGecko](https://www.coingecko.com/en/coins/the-open-network).
 
 
 ### 25 HBAR
@@ -693,7 +757,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/hedera-hashgraph).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Infrastructure de consensus hashgraph, services de tokens et contrats intelligents.
+
+**Fonction du projet et du jeton :** Hedera utilise un consensus de type proof-of-stake pondéré en HBAR. HBAR est la monnaie native qui paie les transactions des services du réseau : transferts, émission/gestion d'actifs, contrats intelligents et stockage. Les frais sont répartis entre différentes composantes du réseau et des opérateurs selon les paramètres applicables.
+
+**Mécanisme économique :** L'augmentation des opérations enregistrées ne se traduit pas automatiquement en forte consommation économique de HBAR si leurs coûts unitaires sont faibles. Une analyse fiable relie nombre de transactions *par type de service* aux frais HBAR réellement réglés, aux actifs détenus en staking et aux allocations du trésor. Les chiffres d'adoption d'entreprise doivent être séparés de l'usage de comptes test et de transactions subventionnées.
+
+**Question de recherche :** Les frais HBAR payés pour des services économiques mesurables progressent-ils indépendamment des volumes bruts de transactions et du marketing institutionnel ?
+
+**Indicateurs à collecter :** Comptes et tokens réellement actifs ; transactions par service HTS/HCS/EVM ; frais HBAR par catégorie ; staking et répartition des nœuds ; déblocages de trésorerie et réseau ; liquidité native HBAR.
+
+**Risques spécifiques :** Modèle de gouvernance, concentration et évolution des opérateurs, structure des frais et coûts bas pouvant limiter la capture de valeur, dépendance aux usages commerciaux, risques de contrats et d'émetteurs de tokens.
+
+**Discernement, identité et réserves :** Conserver l'unité native HBAR des frais séparée des montants USD issus du snapshot Market. Aucun rendement de staking actuel n'est affirmé ici.
+
+**Sources primaires consultées le 08/11/2026 :** [Hedera — FAQ officielle HBAR, frais et consensus](https://hedera.com/faq/) ; [Hedera — rôle des nœuds, staking et distribution des frais](https://hedera.com/learning/how-hedera-works/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/hedera-hashgraph).
 
 
 ### 26 QNT
@@ -709,7 +789,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/quant-network).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Jeton utilitaire lié aux produits d'interopérabilité Quant / Overledger.
+
+**Fonction du projet et du jeton :** Quant propose Overledger pour permettre à des applications et institutions d'interagir avec plusieurs réseaux blockchain sans les traiter comme une infrastructure unique. Les documents commerciaux présentent QNT comme un jeton utilisable pour certains abonnements et services Quant ; ils évoquent aussi des mécanismes de staking dans son écosystème Fusion.
+
+**Mécanisme économique :** Nuance essentielle établie dans la FAQ de Quant : un client peut régler son abonnement Overledger en USD ou le souscrire avec QNT. Il serait donc faux d'affirmer que toute utilisation d'Overledger implique automatiquement un achat de QNT. L'usage de QNT pour la sécurisation de nœuds Fusion, ses conditions et sa demande réelle doivent être vérifiés séparément des revenus du logiciel.
+
+**Question de recherche :** Quelle part chiffrable de l'activité d'Overledger et Fusion exige réellement QNT, alors que la plateforme accepte aussi le paiement des abonnements en USD ?
+
+**Indicateurs à collecter :** Abonnements Overledger réglés effectivement en QNT vs USD ; volumes QNT engagés sur Fusion et durée de blocage ; transactions interopérables réellement traitées ; clients actifs vérifiables ; frais/récompenses selon contrats ; liquidité QNT indépendante.
+
+**Risques spécifiques :** Dépendance à une entreprise commerciale et à ses tarifs, confidentialité des données clients, faible visibilité de la demande tokenisée, évolution des offres USD/QNT, incertitude sur le lien entre succès du produit et demande du jeton.
+
+**Discernement, identité et réserves :** Le cours et la capitalisation de QNT ne sont pas une mesure de clients Quant. Ne pas traiter le jeton comme un droit à part des revenus de Quant.
+
+**Sources primaires consultées le 08/11/2026 :** [Quant — FAQ officielle Overledger, QNT et abonnement USD](https://quant.network/frequently-asked-questions/?scroll-to=FAQoverledger) ; [Quant — contrat de services et usage permis de QNT](https://quant.network/terms-and-conditions/) ; [Quant — architecture Fusion et sécurité par QNT](https://quant.network/use-cases/why-institutions-need-layer-2-5-and-why-we-built-it/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/quant-network).
 
 
 ### 27 TAO
@@ -725,7 +821,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bittensor).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Réseau décentralisé d'incitations pour services d'IA, subnets et jetons alpha.
+
+**Fonction du projet et du jeton :** Bittensor organise des sous-réseaux (« subnets ») dans lesquels des mineurs fournissent un travail lié à l'IA et des validateurs évaluent ce travail. TAO est la monnaie native du réseau. Le protocole utilise également des jetons alpha spécifiques à chaque subnet ; les jetons alpha ne sont pas identiques à TAO et peuvent avoir leurs propres liquidités et mécanismes d'émission.
+
+**Mécanisme économique :** La documentation Bittensor décrit une émission de TAO distribuée entre subnets et des récompenses alpha attribuées aux participants par consensus. Le mécanisme a évolué : depuis juin 2026, la part d'émission TAO attribuée à un subnet suit à nouveau une logique basée sur son prix moyen (EMA), après une phase fondée sur les flux. Ce signal économique de marché n'est pas une preuve scientifique de la qualité du travail d'IA. L'émission et les incitations doivent être datées et séparées entre TAO et alpha.
+
+**Question de recherche :** Quels subnets fournissent des résultats d'IA mesurables et recherchés par des clients, au-delà du seul mécanisme d'émission de TAO/alpha ?
+
+**Indicateurs à collecter :** Production d'IA livrée et qualité indépendante par subnet ; émissions TAO et alpha par période ; prix/EMA des pools et profondeur ; staking root et subnet ; concentration des validateurs ; demande d'utilisateurs payants pour les services.
+
+**Risques spécifiques :** Complexité du consensus et des émissions, volatilité des alpha peu liquides, auto-évaluation ou manipulation de métriques, concentration des validateurs, dépendance aux mécanismes d'incitation, confusion entre valorisation d'un subnet et adoption des services IA.
+
+**Discernement, identité et réserves :** Les évolutions du protocole sont fréquentes : aucun APR ni modèle d'émission n'est extrapolé de manière intemporelle.
+
+**Sources primaires consultées le 08/11/2026 :** [Bittensor Docs — émissions, TAO et alpha](https://www.bittensor.com/docs/concepts/emissions) ; [Learn Bittensor — fonctionnement des subnets](https://guides.learnbittensor.org/subnets/understanding-subnets) ; [Learn Bittensor — changement des émissions en juin 2026](https://guides.learnbittensor.org/learn/emissions). [Fiche CoinGecko](https://www.coingecko.com/en/coins/bittensor).
 
 
 ### 28 SHIB
@@ -741,7 +853,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/shiba-inu).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Jeton ERC-20 d'écosystème communautaire, distinct du gaz de Shibarium.
+
+**Fonction du projet et du jeton :** SHIB est le jeton Ethereum historiquement associé à l'écosystème Shiba Inu. Le réseau Shibarium constitue une infrastructure de type couche 2/PoS pour les applications de cet écosystème. Distinction essentielle : la documentation technique de Shibarium donne **BONE** comme symbole de la monnaie native qui paie les frais de gaz et sert au staking, pas SHIB.
+
+**Mécanisme économique :** Le simple fait que Shibarium attire des applications ou réalise des transactions ne signifie pas que celles-ci paient leurs frais en SHIB. Pour attribuer une demande au jeton SHIB, il faut établir les mécanismes précis de destruction, incitations, activités de produits et transferts de SHIB, sans confondre avec les frais BONE. Des annonces communautaires de burns ne suffisent pas : vérifier l'offre circulante et les transactions prouvées.
+
+**Question de recherche :** Quelle part quantifiable de l'activité de Shibarium crée une utilité ou une réduction d'offre vérifiable pour SHIB, plutôt que pour BONE ?
+
+**Indicateurs à collecter :** Nombre et valeur des transferts SHIB ; adresses et contrats SHIB actifs ; SHIB brûlés vérifiés et flux nets ; transactions et frais Shibarium payés en BONE tenus séparés ; liquidité SHIB et concentration de portefeuilles.
+
+**Risques spécifiques :** Volatilité et concentration des jetons communautaires, dissociation entre usage du réseau et valeur SHIB, ponts interchaînes, promesses marketing, risques de smart contracts et de liquidité.
+
+**Discernement, identité et réserves :** Ne pas attribuer de frais de gaz SHIB à Shibarium : le token natif est explicitement BONE. Pour les contrats ERC-20 SHIB, vérifier toujours réseau et adresse avant tout rapprochement.
+
+**Sources primaires consultées le 08/11/2026 :** [Shiba Inu Docs — Shibarium, réseau et devise de gaz BONE](https://docs.shib.io/get-started/shibarium) ; [Shiba Inu Docs — architecture et staking BONE](https://docs.shib.io/shibarium/architecture/overview) ; [Shiba Inu Docs — distinction native gas BONE](https://docs.shib.io/faucet). [Fiche CoinGecko](https://www.coingecko.com/en/coins/shiba-inu).
 
 
 ### 29 CRO
@@ -757,7 +885,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/crypto-com-chain).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Actif natif de l'écosystème Cronos, transferts, gaz et staking selon le réseau.
+
+**Fonction du projet et du jeton :** Cronos est un écosystème de réseaux et produits liés à Crypto.com. CRO est utilisé comme actif natif, notamment pour les frais de transactions de Cronos EVM et pour des fonctions de staking selon les réseaux et produits. Le CRO natif de Cronos POS, le CRO transféré sur Cronos EVM et les représentations ERC-20 sur Ethereum ne doivent pas être confondus pour les dépôts et retraits.
+
+**Mécanisme économique :** L'activité de Cronos Network peut générer des frais de réseau, mais les revenus éventuels des produits commerciaux et la politique annoncée de rachats ou destructions ne sont pas automatiquement des revenus du détenteur CRO. Les déclarations actuelles de Cronos Foundation évoquent des mécanismes de staking, de rachats et de burn : les volumes réalisés et sources de financement doivent être établis indépendamment, et aucune allocation de récompense n'est garantie.
+
+**Question de recherche :** Les frais vérifiables et mécanismes de réduction d'offre financés par l'activité économique soutiennent-ils l'utilité de CRO indépendamment des campagnes commerciales de l'écosystème ?
+
+**Indicateurs à collecter :** Frais réseau effectivement réglés en CRO ; transactions et contrats actifs ; CRO stakés/délégations par réseau ; burns et rachats vérifiés ; origine des revenus de produits ; liquidité native et volumes CRO/USDT séparés des autres cotations.
+
+**Risques spécifiques :** Dépendance à l'écosystème Crypto.com et Cronos Labs, changements des modèles de frais et réserves, risque de réseau ou de pont, multiples formats de CRO et erreur de réseau de dépôt, incertitude sur revenus réellement réinjectés.
+
+**Discernement, identité et réserves :** La série historique OKX CRO-USDT documente une cotation d'archives et ne renseigne pas l'état actuel de cette paire sur ton compte. Aucun taux de staking n'est utilisé comme acquis.
+
+**Sources primaires consultées le 08/11/2026 :** [Cronos — présentation du rôle CRO et des mécanismes annoncés](https://cronos.com/about-cro/) ; [Crypto.com — CRO natif contre CRO ERC-20](https://help.crypto.com/en/articles/5019195-send-and-receive-cro-the-difference-between-native-cro-and-erc20-cro) ; [Cronos — évolution du réseau EVM en octobre 2026](https://blog.cronos.com/p/cronos-evm-mainnet-v18-upgrade). [Fiche CoinGecko](https://www.coingecko.com/en/coins/crypto-com-chain).
 
 
 ### 30 OKB
@@ -773,7 +917,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** OKB-USDC.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/okb).
+**Étude fondamentale — recherche sur sources primaires (pas audit d'adoption).**
+
+**Catégorie :** Jeton natif de gaz de X Layer (écosystème OKX).
+
+**Fonction du projet et du jeton :** OKB est devenu le jeton natif de gaz de X Layer, blockchain publique associée à OKX. D'après la FAQ OKX Europe, son rôle actuel est de payer des frais on-chain ; X Layer n'est pas une sous-chaîne privée du compte de trading OKX. Il faut distinguer la présence de OKB sur la plateforme, les fonctions du réseau X Layer et les conditions Spot de chaque paire.
+
+**Mécanisme économique :** À la suite de la refonte annoncée en août 2025, OKX a décrit une destruction exceptionnelle d'environ 65,26 millions d'OKB et une offre totale fixée à 21 millions de jetons. Cette politique d'offre ne constitue pas un rendement. Surtout, **OKX Europe précise explicitement que détenir OKB ne permet pas de réduire les frais de trading de la plateforme**. Le mécanisme de valeur à étudier porte donc sur les dépenses de gaz et l'activité réelle de X Layer, pas sur un avantage de frais Spot présumé.
+
+**Question de recherche :** Les frais de gaz réellement consommés sur X Layer et l'usage économique de la blockchain justifient-ils une demande mesurable d'OKB distincte de sa seule cotation sur OKX ?
+
+**Indicateurs à collecter :** Nombre de transactions et frais payés en OKB sur X Layer ; comptes/contrats actifs ; volume d'opérations réalisées sur le réseau ; transactions vérifiées de destruction et offre totale ; profondeur et spread OKB-USDC ; détails d'éligibilité des instruments pour le compte européen.
+
+**Risques spécifiques :** Dépendance à l'écosystème et gouvernance de X Layer, migrations de token/versions de réseau, liquidité par devise, risques opérationnels de pont et de retrait, changements réglementaires, confusion entre frais de trading OKX et frais de gaz.
+
+**Discernement, identité et réserves :** OKB-USDC est visible sur les captures OKX du compte européen et il existe un historique OKB-USDT dans le Coffre : ces deux paires différentes ne doivent jamais être traitées comme une seule. Le compte existe, mais la consultation actuelle des droits Spot de la paire depuis cette page n'a pas été effectuée.
+
+**Sources primaires consultées le 08/11/2026 :** [OKX Europe — FAQ X Layer/OKB, offre et absence de réduction trading](https://www.okx.com/en-eu/help/x-layer-okt-okb) ; [OKX Europe — annonce de la refonte X Layer en 2025](https://www.okx.com/fr-fr/help/announcement-on-the-pp-upgrade-of-x-layer-and-optimisation-of-the-okb-gas) ; [OKX Web3 — rôle de OKB pour X Layer](https://web3.okx.com/xlayer). [Fiche CoinGecko](https://www.coingecko.com/en/coins/okb).
 
 
 ### 31 PEPE
@@ -1098,4 +1258,4 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 4. **PAPER :** seulement après validation des entrées, frais, règles et horizons ; aucune opération fictive exécutée par ce document.
 5. **Top 100 / 250 / 1 000 :** étendre la même grille sans retoucher le code du Trader ni recopier les historiques.
 
-**Ce qui est accompli :** **50 dossiers individuels** ; **5 études fondamentales initiales**, **5 études fondamentales intermédiaires**, **10 études documentaires enrichies et sourcées (positions 11–20)** et **30 fiches quantitatives/archives (positions 21–50) restant à approfondir**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
+**Ce qui est accompli :** **50 dossiers individuels** ; **5 études fondamentales initiales**, **5 études fondamentales intermédiaires**, **20 études documentaires enrichies et sourcées (positions 11–30)** et **20 fiches quantitatives/archives (positions 31–50) restant à approfondir**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
