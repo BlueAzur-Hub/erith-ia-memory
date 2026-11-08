@@ -154,7 +154,9 @@ function mount(doc=document,fetcher=fetch){
    if(!list.length){box.append(make("p","muted","Aucun dossier avec ces filtres."));return;}
    for(const d of list){
      const card=make("details","item collapsible"),head=make("summary","head");
-     head.append(make("strong","",d.symbol+" · "+d.name),
+     const identity=make("strong","",d.symbol+" · "+d.name);
+     identity.dataset.coinId=d.id;identity.dataset.coinSymbol=d.symbol;identity.dataset.coinName=d.name;
+     head.append(identity,
        make("small","pill",d.hasKnowledge?"Dossier connu":"Dossier Radar à enrichir"));
      card.append(head);
      const id=make("p","muted","ID CoinGecko : "+d.id+" · "+d.category);

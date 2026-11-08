@@ -162,7 +162,7 @@ if(sort==="symbol")entries.sort((a,b)=>a.symbol.localeCompare(b.symbol));
 if(sort==="roundtrip")entries.sort((a,b)=>(a.research_spot_market?.hypothetical_roundtrip_pct_100usdt??Infinity)-(b.research_spot_market?.hypothetical_roundtrip_pct_100usdt??Infinity));
 if(sort==="priority")entries.sort((a,b)=>(priority.get(a.coin_id)??999)-(priority.get(b.coin_id)??999)||a.symbol.localeCompare(b.symbol));
 $("count").textContent=entries.length+" / "+data.candidates.length;
-for(const x of entries){const c=el("details","item collapsible");const head=el("summary","head");head.append(el("strong","",x.symbol+" · "+x.name),el("small","pill",priority.has(x.coin_id)?"Dossier recherche prioritaire":"Qualification à compléter"));c.append(head);
+for(const x of entries){const c=el("details","item collapsible");const head=el("summary","head");const identity=el("strong","",x.symbol+" · "+x.name);identity.dataset.coinId=x.coin_id;identity.dataset.coinSymbol=x.symbol;identity.dataset.coinName=x.name;head.append(identity,el("small","pill",priority.has(x.coin_id)?"Dossier recherche prioritaire":"Qualification à compléter"));c.append(head);
 c.append(el("p","muted",x.category_research));
 dl(c,[["Objet déclaré",x.claimed_function],["Preuve d'usage indépendant",x.real_world_adoption_proof_status==="unknown"?"non recherchée / inconnue":"non certifiée ici"],
 ["Carnet Spot au relevé",x.research_spot_market?x.research_spot_market.provider+" "+x.research_spot_market.pair:"paire non observée"],
@@ -185,7 +185,7 @@ function showDynamic(report){
  const rows=[...report.observations].sort((a,b)=>b.first_seen_date_utc.localeCompare(a.first_seen_date_utc)||a.id.localeCompare(b.id));
  for(const x of rows){
   const tr=el("tr");
-  const c1=el("td");c1.append(el("strong","",x.symbol||x.id),el("small","muted",x.id));
+  const c1=el("td"),identity=el("strong","",x.symbol||x.id);identity.dataset.coinId=x.id;c1.append(identity,el("small","muted",x.id));
   tr.append(c1);
   for(const value of [x.first_seen_date_utc,x.initial_price_usd===null?"inconnu":priceValue(x.initial_price_usd),
        displayFollowup(x.followup_1d),displayFollowup(x.followup_7d),

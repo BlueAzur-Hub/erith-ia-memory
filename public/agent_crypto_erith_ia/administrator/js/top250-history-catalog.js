@@ -142,6 +142,7 @@ function show(){
  for(const v of rows){
   const a=v.asset,wbt=a.id==="whitebit"&&privateWBT;
   const row=document.createElement("tr");
+  row.dataset.coinId=a.id;row.dataset.coinSymbol=a.symbol;row.dataset.coinName=a.name;
   cell(row,a.rank);cell(row,a.name+" · "+a.symbol);
   cell(row,v.primary?(v.primary==="Binance"?"Binance Spot":"Bitget Spot")+(v.both?" · Bitget aussi":""):
    wbt?"WhiteBIT Spot · privé vérifié":"À collecter");
