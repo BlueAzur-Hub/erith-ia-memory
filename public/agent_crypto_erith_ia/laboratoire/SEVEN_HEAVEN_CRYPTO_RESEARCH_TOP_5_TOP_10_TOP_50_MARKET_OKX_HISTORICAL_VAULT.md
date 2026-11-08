@@ -292,6 +292,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 **Source documentaire du protocole :** https://dogecoin.com/ · **Source marché :** https://www.coingecko.com/en/coins/dogecoin.
 
 ## Partie C — Top 50, quarante fiches quantitatives et historiques complémentaires
+
+**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 20** disposent maintenant chacune d'une analyse de projet issue de sources primaires (catégorie, fonction, tokenomics/usages déclarés, métriques vérifiables, risques spécifiques, question de recherche). Ces dix analyses n'établissent pas l'adoption réelle ; les positions **21 à 50** restent des fiches quantitatives et historiques jusqu'à vérification approfondie. Les rangs CoinGecko proviennent toujours du même snapshot, sans donnée actualisée artificiellement.
 Les fiches ci-dessous sont *réellement individualisées par relevés de prix, volumes et archives existantes*, mais ne prétendent pas contenir une recherche d'adoption que les sources n'établissent pas. Pour chaque dossier, le statut de cotation OKX reste un constat de capture, pas une interrogation authentifiée.
 
 ### 11 WBT
@@ -307,7 +309,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/whitebit).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Jeton de plateforme d’échange et gaz d’un réseau compatible EVM.
+
+**Fonction et projet :** WhiteBIT présente WBT comme un actif utilisé pour des avantages de plateforme : le programme « Owning » porte sur les jetons du solde principal et « Holding » sur les jetons placés dans le programme dédié. WBT sert aussi d’actif natif pour les frais de Whitechain, décrit par l’émetteur comme un réseau L2 EVM construit sur l’OP Stack. L’émetteur annonce une émission plafonnée à 400 millions de WBT et un mécanisme de destruction fondé sur les commissions de la plateforme.
+
+**Mécanisme économique à comprendre :** La valeur d’usage annoncée dépend principalement des services WhiteBIT, des conditions d’accès aux programmes et de l’activité de Whitechain. La destruction de jetons réduit l’offre nominale lorsqu’elle est exécutée ; elle ne garantit pas une hausse du cours. La fonction de gaz ne suffit pas à établir une demande économique significative sans mesure de l’activité du réseau.
+
+**Question de recherche :** Les bénéfices du programme de détention et l’usage réel du gaz Whitechain génèrent-ils une demande durable mesurable, ou l’essentiel de la valorisation dépend-il du programme d’incitation de l’émetteur ?
+
+**Indicateurs précis à collecter :** Volume des opérations de la plateforme ; WBT réellement immobilisés dans Holding ; avantages utilisés ; historiques vérifiables des destructions ; transactions et frais en WBT sur Whitechain ; profondeur des carnets Spot hors de la plateforme émettrice.
+
+**Risques propres au projet :** Dépendance à WhiteBIT et à ses règles commerciales ; concentration de distribution et calendrier de déblocage ; liquidité indépendante potentiellement limitée ; risque de contrepartie et réglementation des plateformes ; évolution de Whitechain et de ses frais.
+
+**Limite / point de vigilance :** Les chiffres de circulation et de destruction ne sont pas recalculés ici : il faut récupérer les transactions d’émission/destruction et dater tout bilan.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [WhiteBIT — caractéristiques, émission et avantages](https://help.whitebit.com/hc/en-gb/articles/17190215630493-All-about-WBT-Coin) ; [WhiteBIT — distinguer Owning et Holding](https://help.whitebit.com/hc/en-gb/articles/18507753585565-Features-of-the-Holding-and-Owning-functionality-of-WBT-Coin-on-WhiteBIT). [Fiche CoinGecko](https://www.coingecko.com/en/coins/whitebit).
 
 
 ### 12 LEO
@@ -323,7 +341,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/leo-token).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Jeton utilitaire de plateforme d’échange (Bitfinex).
+
+**Fonction et projet :** UNUS SED LEO (LEO) a été conçu pour donner accès à des avantages de frais et services au sein de l’écosystème Bitfinex/iFinex. L’opérateur documente ses versions Ethereum ERC-20 et Vaulta (nom adopté après EOS). Le projet présente un mécanisme de rachats et de destructions, avec une page dédiée aux opérations de burn.
+
+**Mécanisme économique à comprendre :** Les avantages de frais doivent être évalués par niveau de détention et juridiction ; les montants de rachat et de destruction observés doivent être comparés à l’offre en circulation. Un burn annoncé ou une baisse d’offre ne constitue ni un rendement garanti ni un droit automatique à une part des bénéfices de Bitfinex.
+
+**Question de recherche :** Les transactions de burn et les économies de frais représentent-elles une utilité indépendante du seul marché secondaire du jeton ?
+
+**Indicateurs précis à collecter :** LEO effectivement détruits et transactions correspondantes ; variation de l’offre circulante ; frais économisés par paliers ; volume et profondeur des carnets ; concentration des détentions et transférabilité par réseau.
+
+**Risques propres au projet :** Risque de contrepartie de l’écosystème iFinex, restrictions de niveau de vérification ou de juridiction, liquidité potentiellement concentrée, compatibilité des versions de jetons et dépendance aux politiques commerciales.
+
+**Limite / point de vigilance :** Notre Historical Vault recense un lot Spot LEO-USDT ancien : archive de marché et autorisation actuelle sur OKX sont deux preuves distinctes.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Bitfinex — caractéristiques et avantages de LEO](https://support.bitfinex.com/hc/en-us/articles/360023342674-Unus-Sed-LEO-LEO) ; [Bitfinex — versions ERC-20 / Vaulta et conversion](https://support.bitfinex.com/hc/en-us/articles/360023617554-Unus-Sed-LEO-Token-Conversion) ; [Bitfinex — registre public des destructions](https://leo.bitfinex.com/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/leo-token).
 
 
 ### 13 LINK
@@ -339,7 +373,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/chainlink).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Infrastructure d’oracles et d’interopérabilité inter-chaînes.
+
+**Fonction et projet :** Chainlink fournit des services d’oracles pour apporter des données à des contrats intelligents et des solutions d’interopérabilité telles que CCIP. La documentation indique que LINK sert de référence pour la rémunération de services et pour certaines formes de sécurité économique via le staking, avec des conditions définies par le réseau.
+
+**Mécanisme économique à comprendre :** Une hausse du nombre d’intégrations ou de messages CCIP ne prouve pas mécaniquement une hausse des achats de LINK : il faut étudier les frais réellement payés, les modalités de paiement/conversion et les besoins en staking. Le jeton est distinct des flux bruts des applications clientes.
+
+**Question de recherche :** Quelle part vérifiable de la demande de services Chainlink se traduit en frais ou garanties économiques impliquant réellement LINK ?
+
+**Indicateurs précis à collecter :** Demandes et frais payés aux services d’oracles ; messages CCIP finalisés et coûts ; LINK immobilisés en staking et slashing effectif ; disponibilité et fiabilité des flux ; nombre de clients payants documentés.
+
+**Risques propres au projet :** Concentration des fournisseurs de données, qualité des oracles, surface d’attaque inter-chaînes, évolution de la tarification et concurrence entre fournisseurs ; risque de confondre adoption du réseau et revenus au profit des détenteurs.
+
+**Limite / point de vigilance :** Le CoinGecko ID exact `chainlink` est conservé ; aucun instrument Spot n’est déduit du seul symbole LINK.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Chainlink — usage, contrats, rémunération et staking de LINK](https://docs.chain.link/resources/link-token-contracts) ; [Chainlink — documentation des services](https://docs.chain.link/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/chainlink).
 
 
 ### 14 ADA
@@ -355,7 +405,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/cardano).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Blockchain de preuve d’enjeu, contrats intelligents et gouvernance.
+
+**Fonction et projet :** ADA est la monnaie native de Cardano, utilisée pour les transactions et la participation au consensus Ouroboros par délégation de mise. La gouvernance du réseau inclut les représentants délégués (DReps), les stake pool operators et un comité constitutionnel. La documentation Cardano date du 29 janvier 2025 le hard fork Plomin ayant activé les fonctions de gouvernance prévues.
+
+**Mécanisme économique à comprendre :** Déléguer ADA permet de participer au protocole sans transférer le contrôle de ses unités au pool. La délégation et les droits de gouvernance ne prouvent ni demande commerciale des applications ni rendement constant. Les paramètres et récompenses dépendent des règles et de l’activité du réseau.
+
+**Question de recherche :** L’usage applicatif et la participation à la gouvernance progressent-ils en parallèle du nombre d’ADA immobilisés ou délégués ?
+
+**Indicateurs précis à collecter :** Transactions, frais et ressources consommées ; délégation active par pools ; concentration des validateurs ; participation des DReps aux votes ; usages des applications et TVL ; présence de liquidité Spot native.
+
+**Risques propres au projet :** Fragmentation de l’activité applicative, concentration du staking, complexité de gouvernance, changements de paramètres, dépendance à l’adoption réelle et cycles de marché.
+
+**Limite / point de vigilance :** L’index minute contient ADA/USDT sur Binance, ce qui documente un marché historique, sans certifier les droits du compte OKX.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Cardano — gouvernance et DReps](https://docs.cardano.org/about-cardano/governance-overview) ; [Cardano — mécanisme de délégation](https://docs.cardano.org/learn/delegation/) ; [Cardano — activation des fonctions de gouvernance Plomin](https://docs.cardano.org/about-cardano/evolution/upgrades/plomin). [Fiche CoinGecko](https://www.coingecko.com/en/coins/cardano).
 
 
 ### 15 XLM
@@ -371,7 +437,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/stellar).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Réseau de règlements et d’actifs émis, paiements transfrontaliers.
+
+**Fonction et projet :** Stellar permet des paiements et l’émission d’actifs par des émetteurs (« anchors »). XLM est l’actif natif utilisé pour payer les frais et satisfaire les réserves requises par les comptes. Le réseau prend aussi en charge les paiements par chemin et les contrats intelligents ; ces mécanismes sont distincts de la valeur des actifs émis sur Stellar.
+
+**Mécanisme économique à comprendre :** L’augmentation des paiements en stablecoins ou des actifs tokenisés sur Stellar ne correspond pas automatiquement à une hausse proportionnelle de la demande de XLM : une partie de la fonction native tient aux frais faibles et aux réserves de comptes. Les frais et réserves dépendent des paramètres réseau.
+
+**Question de recherche :** Les nouvelles émissions et opérations créent-elles un besoin quantifiable de XLM en frais et en réserves, indépendamment du volume des actifs émis ?
+
+**Indicateurs précis à collecter :** Opérations réellement réglées ; comptes et actifs émis actifs ; volumes par émetteur ; frais payés en XLM ; montants immobilisés au titre des réserves ; qualité de conversion entre actifs et liquidité des marchés XLM.
+
+**Risques propres au projet :** Risques propres aux émetteurs/anchors, liquidité et disponibilité de conversion, conformité des rails de paiement, faible capture de valeur liée aux faibles frais, confusion entre activité Stellar et utilisation économique de XLM.
+
+**Limite / point de vigilance :** Le montant minimum des réserves est un paramètre de réseau modifiable ; ce dossier n’en transforme pas une valeur datée en constante immuable.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Stellar — FAQ officielle : frais et réserves XLM](https://stellar.org/faq) ; [Stellar Developers — fonctions et actifs du protocole](https://developers.stellar.org/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/stellar).
 
 
 ### 16 BCH
@@ -387,7 +469,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** BCH-USDC.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bitcoin-cash).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Monnaie électronique pair-à-pair, réseau à preuve de travail.
+
+**Fonction et projet :** Bitcoin Cash (BCH) est une blockchain issue de la séparation de Bitcoin en 2017, privilégiant les transferts directs à coûts de transaction réduits. Le protocole conserve un consensus par preuve de travail SHA-256. BCH sert d’unité native pour les transferts et les frais, et n’est pas un jeton de gouvernance d’une plateforme d’échange.
+
+**Mécanisme économique à comprendre :** La valeur d’usage comme moyen de paiement se mesure par les transferts et les frais réels du réseau ; volume de cotation, nombre de détenteurs et transactions marchandes sont des grandeurs différentes. Les confirmations, la sécurité et l’activité des commerçants sont à apprécier séparément.
+
+**Question de recherche :** Les transferts BCH observables représentent-ils un usage de paiement durable, plutôt que principalement des mouvements liés aux marchés d’échange ?
+
+**Indicateurs précis à collecter :** Transactions et frais par jour ; taille et temps des blocs ; sécurité PoW et répartition de la puissance de calcul ; acceptation par les prestataires ; liquidité et spread BCH-USDC observés sur OKX.
+
+**Risques propres au projet :** Concurrence des réseaux de paiement, volatilité monétaire, centralisation possible de la puissance de calcul, adoption marchande difficile à attribuer, erreurs de réseau ou d’adresse.
+
+**Limite / point de vigilance :** BCH-USDC est visible sur une capture OKX du titulaire ; la paire est « observée », mais ses frais, taille minimale et droits du compte ne sont pas établis par cette capture.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Bitcoin Cash — présentation officielle du protocole](https://bitcoincash.org/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/bitcoin-cash).
 
 
 ### 17 NEAR
@@ -403,7 +501,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/near).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Infrastructure d’applications à contrats intelligents, comptes et stockage.
+
+**Fonction et projet :** NEAR est l’actif natif du réseau NEAR Protocol. Le protocole emploie un mécanisme de preuve d’enjeu pour sécuriser le réseau ; ses contrats utilisent un modèle de gaz pour facturer calcul et bande passante, tandis que le stockage des données engendre des exigences économiques propres aux comptes. Les spécifications sont publiées dans les NEPs et les dépôts NEAR.
+
+**Mécanisme économique à comprendre :** L’activité utile devrait être évaluée via transactions, frais, comptes/contrats actifs et consommation de stockage. La création de comptes ou le nombre d’appels ne garantit pas un effet proportionnel sur la demande de NEAR, notamment lorsque des applications subventionnent les utilisateurs.
+
+**Question de recherche :** Les applications rémunèrent-elles durablement les ressources calcul/stockage et quelle part des frais/émissions peut être reliée à l’usage réel ?
+
+**Indicateurs précis à collecter :** Transactions et gaz réellement consommé ; contrats actifs ; stockage immobilisé ; frais et émissions du réseau ; concentration de délégation PoS ; paiements utilisateurs par applications.
+
+**Risques propres au projet :** Évolution des paramètres et des frais, complexité de l’exécution fragmentée, dépendance aux applications, sécurité des contrats et concentration des validateurs.
+
+**Limite / point de vigilance :** Les formules et paramètres du dépôt NEAR sont versionnés et peuvent changer ; aucun taux de rendement n’est déduit du texte de référence.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [NEAR — spécifications et normes (NEPs)](https://near.github.io/NEPs/) ; [NEAR Core — règles économiques et gaz](https://github.com/near/nearcore/blob/master/docs/Economics/Economics.md) ; [NEAR — modèles de comptes et stockage](https://near.github.io/nearcore/DataStructures/Account.html). [Fiche CoinGecko](https://www.coingecko.com/en/coins/near).
 
 
 ### 18 UNI
@@ -419,7 +533,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/uniswap).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Jeton de gouvernance du protocole d’échange décentralisé Uniswap.
+
+**Fonction et projet :** UNI accorde des droits de vote délégués pour la gouvernance du protocole Uniswap et les paramètres qu’elle peut décider. La documentation actuelle décrit des frais de protocole actifs sur certaines versions et un mécanisme de collecte qui permet d’obtenir des UNI destinés à être détruits. Cela diffère de la présentation historique d’UNI comme simple jeton de vote sans aucun mécanisme de burn.
+
+**Mécanisme économique à comprendre :** Les frais de swap reviennent d’abord aux fournisseurs de liquidité selon la version et la configuration ; une fraction peut constituer des frais de protocole. Les destructions de UNI sont une voie indirecte de capture économique : elles ne confèrent **aucune créance individuelle ni distribution automatique de bénéfices** aux détenteurs.
+
+**Question de recherche :** Combien de frais du protocole sont convertis en UNI détruits et que représente cette quantité face à l’offre, sans assimiler les revenus de liquidité à un dividende ?
+
+**Indicateurs précis à collecter :** Volumes et frais effectivement réglés par version et chaîne ; part capturée par le protocole ; UNI brûlés et transactions correspondantes ; participation aux votes et délégations ; TVL et concentration de liquidité.
+
+**Risques propres au projet :** Risque des smart contracts, concurrence DEX, changements de paramètres votés, distribution des votes, dépendance à l’activité de swap et confusion entre recettes des pools et avantages des détenteurs UNI.
+
+**Limite / point de vigilance :** La documentation signale un changement de régime économique depuis décembre 2025 : une description de 2020 non mise à jour serait insuffisante.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Uniswap — statut et mécanisme économique du jeton UNI](https://developers.uniswap.org/docs/ecosystem/governance/uni) ; [Uniswap — frais de swap, fournisseurs et protocole](https://developers.uniswap.org/docs/get-started/concepts/fees) ; [Uniswap — gouvernance et délégation](https://developers.uniswap.org/docs/ecosystem/governance/overview). [Fiche CoinGecko](https://www.coingecko.com/en/coins/uniswap).
 
 
 ### 19 LTC
@@ -435,7 +565,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/litecoin).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Monnaie pair-à-pair et réseau à preuve de travail.
+
+**Fonction et projet :** Litecoin (LTC) est un réseau de monnaie numérique ouvert et décentralisé, orienté transferts et paiements. Son écosystème distribue le logiciel Litecoin Core pour exécuter un nœud complet. Le réseau emploie un consensus par preuve de travail et l’algorithme Scrypt ; les mouvements LTC de plateforme ne sont pas des paiements de marchands.
+
+**Mécanisme économique à comprendre :** Une valeur d’usage comme moyen d’échange se documente par les transactions natives, les frais et les points d’acceptation, non par le seul volume de trading. Les services de portefeuille et les confirmations constituent des éléments opérationnels distincts du prix spot.
+
+**Question de recherche :** La stabilité des frais et de la fiabilité du réseau conduit-elle à des paiements effectifs mesurables, au-delà de la liquidité sur plateformes ?
+
+**Indicateurs précis à collecter :** Transactions et frais du réseau ; sécurité du hachage PoW ; confirmations ; liquidité LTC sur plusieurs marchés ; répartition du volume marchand et des mouvements d’exchange lorsque mesurable.
+
+**Risques propres au projet :** Volatilité et concurrence des moyens de paiement, risque de garde et d’adresse, modifications logicielles et concentration de hachage, écart entre paiements réels et volume spéculatif.
+
+**Limite / point de vigilance :** Les métriques d’adoption marchande ne sont pas présentes dans les archives du dépôt : elles sont à mesurer auprès de sources indépendantes.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Litecoin — site officiel et logiciels de nœud](https://litecoin.org/) ; [Litecoin — documentation communautaire](https://litecoin.info/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/litecoin).
 
 
 ### 20 RAIN
@@ -451,7 +597,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/rain).
+**Étude fondamentale — statut : recherche documentaire sourcée (pas audit d'adoption).**
+
+**Catégorie et identité :** Infrastructure de marchés de prédiction sur Arbitrum.
+
+**Fonction et projet :** L’identifiant CoinGecko `rain` renvoie au protocole de marchés de prédiction Rain, lié à Arbitrum, et **pas** à d’autres projets ou tokens homonymes. Le projet présente des outils de création de marchés, des mécanismes de résolution des résultats et un jeton RAIN. Son livre blanc daté de mars 2026 définit RAIN comme un jeton de gouvernance de type ERC-20 sur Arbitrum et précise qu’il ne donne ni droit de propriété ni droit individuel au rachat.
+
+**Mécanisme économique à comprendre :** Le site du projet présente un mécanisme de rachat/destruction associé à l’activité des marchés, mais son montant annoncé doit être rapproché d’opérations on-chain effectives. **Contradiction documentaire :** la page « About us » présente la détention du jeton comme nécessaire à certains usages, tandis que le livre blanc indique que RAIN n’est pas nécessaire pour échanger, déposer ou créer un marché. Le livre blanc précise donc des droits plus limités que la page marketing ; cette divergence n’est pas tranchée par notre Coffre.
+
+**Question de recherche :** La gouvernance et le mécanisme de destruction documenté conduisent-ils à une utilité du jeton vérifiable, et quels usages sont réellement conditionnés à sa détention ?
+
+**Indicateurs précis à collecter :** Marchés ouverts/résolus ; volume réglé plutôt que volume notionnel ; litiges et appels ; frais réellement distribués ; RAIN effectivement rachetés/détruits ; contrat exact sur Arbitrum ; disponibilité régionale du produit.
+
+**Risques propres au projet :** Risques réglementaires et de marché liés aux marchés de prédiction, qualité des oracles/résolutions et contestations, dépendance à Arbitrum, liquidité du token et écart entre documents marketing et droits contractuels.
+
+**Limite / point de vigilance :** La source Rain présente des mécanismes pouvant relever de marchés de prédiction : ce dossier **n’est pas un guide de participation**. L’archive KuCoin RAIN-USDT reste une preuve historique de prix, pas une preuve de disponibilité ou de conformité sur OKX Europe.
+
+**Sources de projet et de protocole (primaires, examinées le 08/11/2026) :** [Rain — site du protocole et résolution des marchés](https://rain.one/) ; [Rain — présentation officielle du fonctionnement du protocole](https://www.rain.one/about-us) ; [Rain — livre blanc token V2, droits et contrat (26 mars 2026)](https://whitepaper.rain.one/) ; [CoinGecko — identité exacte `rain`](https://www.coingecko.com/en/coins/rain). [Fiche CoinGecko](https://www.coingecko.com/en/coins/rain).
 
 
 ### 21 CC
@@ -936,4 +1098,4 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 4. **PAPER :** seulement après validation des entrées, frais, règles et horizons ; aucune opération fictive exécutée par ce document.
 5. **Top 100 / 250 / 1 000 :** étendre la même grille sans retoucher le code du Trader ni recopier les historiques.
 
-**Ce qui est accompli :** un répertoire de **50 dossiers individuels**, dont **5 fondamentaux approfondis**, **5 fondamentaux intermédiaires** et **40 fiches quantitatives sourcées**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
+**Ce qui est accompli :** **50 dossiers individuels** ; **5 études fondamentales initiales**, **5 études fondamentales intermédiaires**, **10 études documentaires enrichies et sourcées (positions 11–20)** et **30 fiches quantitatives/archives (positions 21–50) restant à approfondir**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
