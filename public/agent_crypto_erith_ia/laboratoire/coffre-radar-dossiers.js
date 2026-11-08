@@ -16,6 +16,11 @@ const SOURCES=Object.freeze({
  knowledge:"data/crypto/research/asset-knowledge.json",
  curated:"data/crypto/research/radar-curated-dossiers.json"
 });
+const OPTIONAL=Object.freeze({
+  marketTop:"data/crypto/latest.json",
+  marketExtended:"data/crypto/extended.json",
+  okxScreens:"data/crypto/research/okx-spot-screen-candidates.json"
+});
 const truth=x=>x===true;
 const n=x=>Number.isInteger(x)&&x>=0?x:0;
 function assert(v,m){if(!v)throw Error("Provenance invalide : "+m);}
@@ -119,6 +124,60 @@ function reconcile(inputs){
  return Object.freeze({dossiers:Object.freeze(dossiers),counts,sourceDate:cohort.source_observation_date_utc,
    sourceQualification:cohort.source_qualification_at_utc});
 }
+
+/* All Market joins use the exact CoinGecko ID, never a rank or ticker alone.
+   These sources are optional; missing snapshots must not erase the Radar dossiers. */
+function enrichSources(base,{qualification,marketTop=null,marketExtended=null,okxScreens=null}={}){
+ const index=(records,key,label)=>{
+  const found=new Map();
+  for(const record of records){
+   const id=record?.[key];assert(typeof id==="string"&&id&&!found.has(id),
+     label+" : identifiant absent/dupliqué");
+   found.set(id,record);
+  }
+  return found;
+ };
+ if(marketTop!==null)assert(marketTop?.schema==="agent_crypto_public_market_snapshot_v1"&&
+    marketTop.assets_count===250&&marketTop.coins?.length===250,"Market Top 250");
+ if(marketExtended!==null)assert(marketExtended?.schema==="agent_crypto_public_extended_market_snapshot_v1"&&
+    marketExtended.assets_count===750&&marketExtended.coins?.length===750,"Market étendu");
+ if(okxScreens!==null)assert(okxScreens?.schema==="erith.crypto.okx-spot-user-screen-candidates.v1"&&
+    okxScreens.account_instruments_verified===false&&Array.isArray(okxScreens.items),"Captures OKX");
+ const top=index(marketTop?.coins||[],"id","Top 250");
+ const ext=index(marketExtended?.coins||[],"id","251–1000");
+ const qual=index(qualification?.candidates||[],"id","qualification Spot");
+ for(const id of top.keys())assert(!ext.has(id),"ID Market dupliqué");
+ const dossiers=base.dossiers.map(d=>{
+  const coin=top.get(d.id)||ext.get(d.id)||null;
+  const conflict=!!coin&&String(coin.symbol).toUpperCase()!==d.symbol.toUpperCase();
+  const market=coin&&!conflict?Object.freeze({
+    rank:coin.rank,tier:top.has(d.id)?"Top 250":"251–1 000",
+    priceUsd:Number.isFinite(coin.priceUsd)&&coin.priceUsd>0?coin.priceUsd:null,
+    observedAt:coin.lastUpdated||null,
+    catalogAt:(top.has(d.id)?marketTop:marketExtended)?.generated_at||null,
+    source:top.has(d.id)?OPTIONAL.marketTop:OPTIONAL.marketExtended
+  }):null;
+  const ox=qual.get(d.id)?.okx_spot;
+  const okxPair=ox?.pair_observed===true&&ox.venue==="OKX"&&typeof ox.pair==="string"?ox.pair:null;
+  if(okxPair)assert(ox.account_access_proven===false&&ox.contract_identity_proven===false&&
+    ox.real_orders_enabled===false,"OKX non autorisé");
+  const screenshotTickers=okxScreens===null?null:
+    okxScreens.items.filter(x=>String(x.instId).split("-")[0]===d.symbol).map(x=>x.instId);
+  return Object.freeze({...d,market,marketConflict:conflict,okxPair,screenshotTickers,
+    blockers:Object.freeze([...d.blockers,...(conflict?["Conflit ticker Market / ID Radar"]:[]),
+      okxPair?"OKX : droit de négocier non prouvé":"OKX : aucune paire qualifiée pour cet ID"])});
+ });
+ const counts=Object.freeze({...base.counts,
+  market:dossiers.filter(x=>x.market).length,
+  top:dossiers.filter(x=>x.market?.tier==="Top 250").length,
+  extended:dossiers.filter(x=>x.market?.tier==="251–1 000").length,
+  okx:dossiers.filter(x=>x.okxPair).length,
+  screenMatches:okxScreens===null?null:dossiers.filter(x=>x.screenshotTickers.length).length,
+  screens:okxScreens?.items.length??null
+ });
+ return Object.freeze({...base,dossiers:Object.freeze(dossiers),counts,
+  marketComplete:marketTop!==null&&marketExtended!==null});
+}
 const make=(tag,cls,text)=>{
  const e=document.createElement(tag);
  if(cls)e.className=cls;
@@ -149,7 +208,9 @@ function mount(doc=document,fetcher=fetch){
       (mode==="missing"&&!x.hasKnowledge)||
       (mode==="identity"&&x.contractMatched)||
       (mode==="spot"&&!!x.spot)||
-      (mode==="history"&&(x.dailyCandles>0||x.minuteCandles>0))));
+      (mode==="history"&&(x.dailyCandles>0||x.minuteCandles>0))||
+      (mode==="market"&&!!x.market)||
+      (mode==="okx"&&!!x.okxPair)));
    box.replaceChildren();
    if(!list.length){box.append(make("p","muted","Aucun dossier avec ces filtres."));return;}
    for(const d of list){
@@ -163,6 +224,24 @@ function mount(doc=document,fetcher=fetch){
      card.append(id);
      if(d.studyUrl){const p=make("p");link(p,d.studyUrl,"Lire l’étude documentaire et ses sources ↗");card.append(p);}
      line(card,"Observations","Détections "+d.detections+" · J+1 "+d.j1+" · J+7 "+d.j7);
+     line(card,"Market CoinGecko (USD daté)",d.market?
+       d.market.tier+" · rang "+d.market.rank+" · "+
+       (d.market.priceUsd===null?"prix non observé":
+        new Intl.NumberFormat("fr-FR",{maximumSignificantDigits:8}).format(d.market.priceUsd)+" USD")+
+       " · relevé "+(d.market.observedAt||"inconnu")+
+       " · publication "+(d.market.catalogAt||"inconnue"):
+       d.marketConflict?"Conflit d'identité entre ID et ticker":
+       "Aucune correspondance dans les catalogues Market chargés");
+     if(d.market){const p=make("p");link(p,
+       "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/"+d.market.source,
+       "Source Market versionnée ↗");card.append(p);}
+     line(card,"OKX Spot · qualification publique",d.okxPair?
+       d.okxPair+" · observation historique, aucun droit de négocier prouvé":
+       "Aucune paire rapprochée dans la qualification");
+     line(card,"Captures OKX du 8 novembre",d.screenshotTickers===null?
+       "Inventaire non chargé":d.screenshotTickers.length?
+       "Ticker observé "+d.screenshotTickers.join(", ")+" ; identité non prouvée":
+       "Aucune correspondance de ticker dans ces captures");
      line(card,"Spot historique",d.spot?d.spot.venue+" · "+d.spot.pair+" ("+d.spot.quote+")":"Paire non documentée");
      line(card,"Identité",d.identityStatus+(d.contract?" · "+d.chain+" · "+d.contract:""));
      line(card,"Coffre 1 jour",d.dailyCandles?d.dailyCandles+" bougies natives · "+d.dailySource+" · "+d.dailyMarket+" ("+d.dailyQuote+")":"Non présent dans le catalogue 1j consulté");
@@ -183,7 +262,7 @@ function mount(doc=document,fetcher=fetch){
  }
  async function load(){
    if(pending)return;
-   pending=true;reload.disabled=true;status.textContent="Lecture des six catalogues publics et contrôle des identifiants…";
+   pending=true;reload.disabled=true;status.textContent="Lecture des catalogues Radar, Market et des captures OKX…";
    const ctl=new AbortController(),timeout=setTimeout(()=>ctl.abort(),18000);
    try{
      const entries=await Promise.all(Object.entries(SOURCES).map(async ([key,path])=>{
@@ -191,13 +270,24 @@ function mount(doc=document,fetcher=fetch){
        if(!r.ok)throw Error(key+" HTTP "+r.status);
        return [key,await r.json()];
      }));
-     current=reconcile(Object.fromEntries(entries));
+     const extras=await Promise.all(Object.entries(OPTIONAL).map(async([key,path])=>{
+       try{const r=await fetcher(ROOT+path,{cache:"no-store",credentials:"omit",signal:ctl.signal});
+        if(!r.ok)throw Error("HTTP "+r.status);return [key,await r.json()];}
+       catch(_){return [key,null];}
+     }));
+     const canonical=Object.fromEntries(entries);
+     current=enrichSources(reconcile(canonical),{...canonical,...Object.fromEntries(extras)});
      const c=current.counts;
-     status.textContent="Cohorte archivée "+current.sourceDate+" UTC · "+c.total+" dossiers Radar · "+
-       c.documented+" déjà relié(s) aux dossiers de connaissance · "+c.needsKnowledge+
-       " à enrichir · "+c.matched+" contrat(s) rapproché(s) · "+c.spot+
-       " marchés Spot documentés · "+c.daily+" historiques 1j · "+c.minute+
-       " historiques 1m · 0 admissible PAPER V5/V6 automatiquement. Les sources restent datées.";
+     status.textContent="Cohorte "+current.sourceDate+" UTC · "+c.total+" dossiers · "+
+       c.market+"/"+c.total+" identifiants Market ("+c.top+" Top 250, "+c.extended+" Top 251–1 000) · "+
+       c.okx+" observations OKX publiques (accès compte non prouvé) · "+
+       (c.screenMatches===null?"captures OKX non chargées":
+        c.screenMatches+" ticker(s) commun(s) aux "+c.screens+" captures OKX, identité à confirmer")+
+       " · "+c.documented+" dossiers connus · "+c.needsKnowledge+" à enrichir · "+
+       c.matched+" contrats rapprochés · "+c.spot+" Spot historiques · "+
+       c.daily+" archives 1j · "+c.minute+" archives 1m · "+
+       "0 PAPER V5/V6 autorisé. "+
+       (!current.marketComplete?"Market partiel ou inaccessible : absences non concluantes.":"");
      render();
    }catch(e){
      current=null;box.replaceChildren();
@@ -219,5 +309,5 @@ if(typeof document!=="undefined"){
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>mount());
  else mount();
 }
-return Object.freeze({reconcile,mount,SOURCES});
+return Object.freeze({reconcile,enrichSources,mount,SOURCES,OPTIONAL});
 });
