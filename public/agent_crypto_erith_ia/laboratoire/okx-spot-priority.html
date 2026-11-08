@@ -21,6 +21,48 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 .crypto-coin-logo--product{border-radius:8px;color:#ffd8a2;background:#322b29;border-color:#796249}
 .crypto-pair-code{font-weight:750;white-space:nowrap}
 @media(max-width:750px){.grid{grid-template-columns:1fr}section{padding:14px}}
+
+/* OKX × Market: named assets with verified-source images, not bare ticker codes. */
+#okx-market-crosswalk .okx-cx-identity {
+ display:flex;align-items:center;justify-content:flex-start;gap:12px;
+ min-width:195px;text-align:left;
+}
+#okx-market-crosswalk .okx-cx-logo{
+ flex:0 0 42px;width:42px;height:42px;display:inline-grid;place-items:center;
+ overflow:hidden;border-radius:50%;background:#12394b;
+ border:1px solid #528ca1;box-shadow:0 0 0 2px rgba(80,196,208,.05);
+}
+#okx-market-crosswalk .okx-cx-logo img{
+ display:block;width:100%;height:100%;object-fit:contain;
+}
+#okx-market-crosswalk .okx-cx-logo--fallback{
+ color:#bdeeff;font:800 12px/1 system-ui;background:#1b4960;
+}
+#okx-market-crosswalk .okx-cx-labels{
+ display:flex;flex-direction:column;align-items:flex-start;
+ gap:4px;line-height:1.2;text-align:left;
+}
+#okx-market-crosswalk .okx-cx-labels strong{
+ font-size:16px;color:#ffecad;
+}
+#okx-market-crosswalk .okx-cx-labels small{
+ font-size:12px;color:#c1d9e5;white-space:normal;
+}
+#okx-market-crosswalk .okx-cx-rank{
+ border:1px solid #41798b;background:#0f394b;padding:5px 9px;
+ border-radius:18px;font-size:12px;font-weight:700;white-space:nowrap;
+}
+#okx-market-crosswalk .okx-cx-rank--top{
+ border-color:#8f7751;background:#30362f;color:#ffe4a2;
+}
+#okx-market-crosswalk .okx-cx-pairs{display:flex;flex-wrap:wrap;gap:5px}
+#okx-market-crosswalk .okx-cx-pair{
+ display:inline-flex;padding:4px 7px;background:#0b3042;
+ border:1px solid #32586a;border-radius:6px;font-size:12px;white-space:nowrap;
+}
+#okx-market-crosswalk tbody tr:hover{background:#0e3244}
+#okx-market-crosswalk tbody th{min-width:204px;white-space:normal}
+#okx-market-crosswalk tbody td,#okx-market-crosswalk tbody th{vertical-align:middle}
 </style></head><body><main>
 <nav><a href="radar.html">← Radar permanent</a><a href="crypto-knowledge.html#coffre-radar-live-dossiers">Dossiers du Coffre</a><a href="../administrator/historical-vault.html">Historical Vault</a><a href="../trader/trading-desk.html">Trader</a></nav>
 <p class="kicker">SEVEN HEAVEN · PRIORITÉ OKX EUROPE · OBSERVATION PUBLIQUE</p>
@@ -74,7 +116,7 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 <option value="unmatched">Sans correspondance Market</option></select></label></div>
 <p class="foot" id="okx-crosswalk-count">En attente des catalogues.</p>
 <div class="scroller"><table>
-<thead><tr><th>Crypto</th><th>Rang</th><th>Paires OKX observées</th><th>Identité CoinGecko</th><th>Preuves disponibles</th><th>Accès au compte</th></tr></thead>
+<thead><tr><th>Crypto & logo</th><th>Rang</th><th>Paires OKX observées</th><th>Identité CoinGecko</th><th>Preuves disponibles</th><th>Accès au compte</th></tr></thead>
 <tbody id="okx-crosswalk-rows"><tr><td colspan="6">Lecture seule.</td></tr></tbody></table></div>
 <p class="foot">Les snapshots Top 250 et 251–1 000 peuvent chevaucher une frontière de classement. Aucun prix USD n'est assimilé à une cotation USDC, USDT ou EUR. Aucun ordre.</p>
 </section>
@@ -84,4 +126,4 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 <p><a href="https://www.okx.com/docs-v5/" target="_blank" rel="noopener noreferrer">Documentation officielle OKX API ↗</a> · <a href="https://www.okx.com/fr-fr/stock" target="_blank" rel="noopener noreferrer">Produits tokenisés OKX ↗</a> · <a href="../administrator/data/new-listings-public-feed.json" target="_blank" rel="noopener noreferrer">Catalogue Spot public archivé ↗</a> · <a href="../data/crypto/okx-hourly/research-latest.json" target="_blank" rel="noopener noreferrer">Carnets OKX historiques ↗</a> · <a href="../data/crypto/research/okx-spot-screen-candidates.json" target="_blank" rel="noopener noreferrer">Paires des captures (sans données privées) ↗</a></p>
 </section>
 <footer class="foot">ERITH.IA · Observation publique et datée · aucune garantie d'accès régional, aucun ordre, aucun rendement, aucun conseil d'achat.</footer>
-</main><script src="./okx-spot-priority.js?v=20261108-market-v1" defer></script><script src="./okx-market-crosswalk.js?v=20261108-market-v1" defer></script></body></html>
+</main><script src="./okx-spot-priority.js?v=20261108-market-v1" defer></script><script src="./okx-market-crosswalk.js?v=20261108-logos-v2" defer></script></body></html>

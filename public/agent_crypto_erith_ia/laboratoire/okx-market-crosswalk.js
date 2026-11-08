@@ -7,6 +7,11 @@
 })(typeof globalThis!=="undefined"?globalThis:null,()=>{
 "use strict";
 const SOURCES=Object.freeze({top:"../data/crypto/latest.json",extended:"../data/crypto/extended.json"});
+// Exact CoinGecko CDN domain; no ticker-based image lookup or invented image URLs.
+function trustedImage(value){
+ const url=String(value||"");
+ return /^https:\/\/coin-images\.coingecko\.com\/coins\/images\/[^?#\s]+(?:\?[^#\s]+)?$/.test(url)?url:null;
+}
 function build(universe,top,extended){
  if(!Array.isArray(universe?.data))throw Error("Univers OKX absent");
  if(top?.schema!=="agent_crypto_public_market_snapshot_v1"||
@@ -49,6 +54,7 @@ function build(universe,top,extended){
   return Object.freeze({
    symbol,pairs:pairs.map(p=>p.instId).sort(),
    marketId:match?.id||null,name:match?.name||null,rank,
+   image:match?trustedImage(match.image):null,
    evidence,marketCandidates:candidates.map(c=>c.id),
    bookCount:pairs.filter(p=>p.hasBook).length,
    seenScreenshot:pairs.some(p=>p.hasScreenshot),
@@ -95,12 +101,40 @@ function mount(doc=document,fetcher=fetch){
    NOT_IN_MARKET_1000:"Absent des snapshots Top 1 000"
   };
   for(const item of list){
-   const tr=doc.createElement("tr"),name=cell("th",item.symbol);
-   if(item.name){const sub=cell("small",item.name);sub.style.display="block";name.append(sub);}
-   tr.append(name);
-   tr.append(cell("td",item.rank===null?"—":item.rank<=250?
-    item.rank+" · Top 250":item.rank+" · 251–1 000"));
-   tr.append(cell("td",item.pairs.join(" · ")));
+   const tr=doc.createElement("tr"),name=doc.createElement("th");
+   name.scope="row";
+   const identity=doc.createElement("div");identity.className="okx-cx-identity";
+   const logo=doc.createElement("span");logo.className="okx-cx-logo";
+   logo.setAttribute("aria-hidden","true");
+   logo.title=item.image?"Logo illustratif CoinGecko · "+item.symbol:
+    "Logo non présent dans le Market : "+item.symbol;
+   function initials(){
+    logo.classList.add("okx-cx-logo--fallback");
+    logo.replaceChildren(doc.createTextNode(item.symbol.slice(0,2)));
+   }
+   if(item.image){
+    const image=doc.createElement("img");
+    image.alt="";image.loading="lazy";image.decoding="async";
+    image.width=42;image.height=42;
+    image.addEventListener("error",initials,{once:true});
+    logo.appendChild(image);
+    image.src=item.image;
+   }else initials();
+   const labels=doc.createElement("span");labels.className="okx-cx-labels";
+   labels.append(cell("strong",item.symbol),cell("small",item.name||"Hors catalogue Market"));
+   identity.append(logo,labels);name.append(identity);tr.append(name);
+   const rank=doc.createElement("td"),rankBadge=cell("span",
+    item.rank===null?"Hors Top 1000":
+    "#"+item.rank+" · Top "+(item.rank<=10?"10":item.rank<=50?"50":item.rank<=250?"250":"1000"));
+   rankBadge.className="okx-cx-rank"+(item.rank!==null&&item.rank<=50?" okx-cx-rank--top":"");
+   rank.append(rankBadge);tr.append(rank);
+   const pairs=doc.createElement("td"),tags=doc.createElement("div");
+   tags.className="okx-cx-pairs";
+   for(const pair of item.pairs){
+    const chip=cell("span",pair);chip.className="okx-cx-pair";
+    tags.append(chip);
+   }
+   pairs.append(tags);tr.append(pairs);
    tr.append(cell("td",wording[item.evidence]));
    tr.append(cell("td",(item.seenScreenshot?"Capture OKX · ":"")+
     item.bookCount+" carnet(s) archivé(s)"+
