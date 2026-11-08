@@ -110,9 +110,176 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <p><span class="chip">Futures</span> TAO, LIT et SOL sur les captures OKX sont des exemples de contrats perpétuels ; ils ne sont pas assimilés aux paires Spot et aucun effet de levier n'est simulé ici.</p>
 <p><span class="chip">Recherche</span> « Radar 20 » reste une expérience distincte à univers fixe de 20 actifs, <strong>pas</strong> un Top 20 par capitalisation. Son protocole prospectif ne doit pas être réécrit.</p>
 </section>
+
+<section class="panel" id="radar-permanent-matrix" aria-labelledby="radar-permanent-heading">
+  <h2 id="radar-permanent-heading">Radar permanent · matrice de qualification commune</h2>
+  <p>Vue en lecture seule des <strong>20 dossiers dynamiques</strong> issus du dernier relevé archivé. Chaque ligne conserve son identifiant CoinGecko ; un ticker, une paire Spot ou un contrat observé ne certifie pas à lui seul une identité échange. Pas de score arbitraire, pas de signal d'achat, pas d'ordre.</p>
+  <details id="radar-permanent-details">
+    <summary style="cursor:pointer;color:var(--cyan);font-weight:750">Consulter les preuves et les blocages · archive actuelle</summary>
+    <p id="radar-permanent-status" role="status" aria-live="polite">Ouvrir pour consulter les sources publiques existantes.</p>
+    <div class="controls">
+      <label for="radar-permanent-filter">Filtrer les 20 dossiers</label>
+      <input type="search" id="radar-permanent-filter" placeholder="Projet, ticker, identifiant..." autocomplete="off">
+      <select id="radar-permanent-scope" aria-label="Couverture Spot">
+        <option value="all">Tous les candidats</option>
+        <option value="spot">Spot documenté</option>
+        <option value="missing">Spot non documenté</option>
+      </select>
+      <button id="radar-permanent-refresh" type="button">Relire les archives</button>
+    </div>
+    <div class="scroll"><table style="min-width:1120px" aria-label="Qualification commune des candidats Radar archivés">
+      <thead><tr><th>Actif / ID CoinGecko</th><th>Détections</th><th>J+1 / J+7</th><th>Spot public</th><th>Contrat / identité</th><th>Historique 1j</th><th>Étape suivante</th></tr></thead>
+      <tbody id="radar-permanent-rows"><tr><td colspan="7">Données non chargées.</td></tr></tbody>
+    </table></div>
+    <p class="muted">Les J+1/J+7 sont des relevés descriptifs à échéance calendaire, pas des opérations PAPER. Bougies du catalogue historique ≠ carnet live ; absence du catalogue ≠ absence de marché. Source Spot en devise native USDT/USDC, tandis que les prix Radar sont agrégés en USD. Les mesures manquantes ne sont jamais interpolées.</p>
+    <p class="muted">Sources canoniques :
+      <a href="../data/crypto/radar-opportunities/research-cohort.json" target="_blank" rel="noopener">cohorte</a> ·
+      <a href="../data/crypto/radar-opportunities/spot-identity-latest.json" target="_blank" rel="noopener">identité Spot</a> ·
+      <a href="../data/crypto/radar-opportunities/radar-automation-health.json" target="_blank" rel="noopener">santé des collectes</a> ·
+      <a href="../data/historical_archive_prototype/top250_multiresolution_sources/index.json" target="_blank" rel="noopener">catalogue du Coffre</a> ·
+      <a href="./PROTOCOLE_RADAR_CIBLAGE.md" target="_blank" rel="noopener">protocole Radar</a>.
+    </p>
+  </details>
+</section>
+
 <footer>Données publiques, ponctuelles et éventuellement différées. Ni conseil d'achat personnalisé, ni exécution, ni contrôle du solde, ni promesse de gains. Aucune donnée privée OKX dans cette page.</footer>
 <script src="../trader/spot-paper-order-engine.js" defer></script>
 <script src="./radar-spot-paper.js" defer></script>
 <script src="./radar-okx-hourly.js" defer></script>
 <script src="./radar.js"></script>
+
+<script>
+/* Seven Heaven: read-only qualification matrix; existing archived source data only.
+   Deliberately does NOT collect markets, alter the Trader or place any order. */
+(function () {
+  "use strict";
+  const details = document.getElementById("radar-permanent-details");
+  if (!details) return;
+  const rows = document.getElementById("radar-permanent-rows");
+  const status = document.getElementById("radar-permanent-status");
+  const filter = document.getElementById("radar-permanent-filter");
+  const scope = document.getElementById("radar-permanent-scope");
+  const refresh = document.getElementById("radar-permanent-refresh");
+  let entries = null, busy = false;
+  const root = "../data/";
+  const required = [
+    root + "crypto/radar-opportunities/research-cohort.json",
+    root + "crypto/radar-opportunities/spot-identity-latest.json",
+    root + "crypto/radar-opportunities/radar-automation-health.json",
+    root + "historical_archive_prototype/top250_multiresolution_sources/index.json"
+  ];
+  const txt = value => value == null ? "Non relevé" : String(value);
+  function addRow(values) {
+    const tr = document.createElement("tr");
+    for (const value of values) {
+      const td = document.createElement("td");
+      td.textContent = txt(value);
+      tr.appendChild(td);
+    }
+    rows.appendChild(tr);
+  }
+  function paint() {
+    if (!entries) return;
+    const needle = filter.value.trim().toLocaleLowerCase("fr");
+    const which = scope.value;
+    rows.replaceChildren();
+    let shown = 0;
+    for (const x of entries) {
+      if (which === "spot" && !x.spot) continue;
+      if (which === "missing" && x.spot) continue;
+      if (needle && ![x.symbol,x.name,x.id].join(" ").toLocaleLowerCase("fr").includes(needle)) continue;
+      shown++;
+      addRow([
+        x.name + " · " + x.symbol + "  [" + x.id + "]",
+        x.detections,
+        x.j1 + " / " + x.j7 + " observés",
+        x.spot ? x.spot.venue + " · " + x.spot.pair + " (historique)" : "Paire non documentée",
+        x.identity === "catalogue" ? "Contrat concordant dans la collecte ; paire non certifiée" :
+          x.identity === "certified" ? "Identité certifiée dans la cohorte" : "À vérifier",
+        x.candles == null ? "Non indexé dans ce catalogue" :
+          x.candles + " bougies 1j · " + x.gaps + " lacune(s)",
+        x.next
+      ]);
+    }
+    if (!shown) addRow(["Aucune ligne pour ce filtre", "", "", "", "", "", ""]);
+  }
+  async function load() {
+    if (busy || !details.open) return;
+    busy = true;
+    refresh.disabled = true;
+    status.textContent = "Lecture des quatre archives publiques…";
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const responses = await Promise.all(required.map(async path => {
+        const res = await fetch(new URL(path, document.baseURI).href, {
+          credentials: "omit", cache: "no-store", signal: controller.signal
+        });
+        if (!res.ok) throw Error("Archive indisponible (HTTP " + res.status + ")");
+        return res.json();
+      }));
+      const [cohort, identity, health, history] = responses;
+      if (cohort.schema !== "erith.radar.research-cohort.v1" ||
+          health.schema !== "erith.radar.automation-health.v1" ||
+          !Array.isArray(cohort.candidates) ||
+          !Array.isArray(identity.candidates) ||
+          !Array.isArray(history.assets) ||
+          cohort.orders_enabled !== false || health.orders_enabled !== false ||
+          health.real_orders !== 0 || cohort.trade_authorized === true ||
+          cohort.candidates.length !== cohort.count ||
+          cohort.candidates.some(c => !c.coin_id || c.trade_authorized !== false)) {
+        throw Error("Archives ou garde-fous incohérents : aucune matrice affichée");
+      }
+      const identities = new Map(identity.candidates.map(x => [x.coin_id, x]));
+      const histories = new Map(history.assets.map(x => [x.id, x]));
+      entries = cohort.candidates.map(c => {
+        const i = identities.get(c.coin_id);
+        const h = histories.get(c.coin_id);
+        const spot = c.spot && typeof c.spot.pair === "string" ? c.spot : null;
+        let next = spot ? "Vérifier contrat, accès régional, coûts et fraîcheur" :
+          "Retrouver paire Spot et identité exacte";
+        if (h && h.native_candles > 0) next += " ; historiques présents";
+        return {
+          id: c.coin_id, symbol: c.symbol, name: c.name,
+          detections: c.detections_archived ?? 0,
+          j1: c.j1_observed ?? 0, j7: c.j7_observed ?? 0,
+          spot, candles: h ? h.native_candles : null,
+          gaps: h ? h.gaps_within_observed_span ?? "?" : null,
+          identity: c.identity_certified === true ? "certified" :
+            i?.identity_proven === true ? "catalogue" : "pending",
+          next
+        };
+      });
+      const timestamp = health.checked_at_utc || cohort.source_qualification_at_utc;
+      const lag = Date.now() - Date.parse(timestamp);
+      const stale = !Number.isFinite(lag) || lag < -3600000 || lag > 36*3600000;
+      const count = entries.filter(x => !!x.spot).length;
+      const mismatch = count !== cohort.spot_documented;
+      status.textContent = "Relevé archivé : " + txt(cohort.source_observation_date_utc) +
+        " UTC · " + entries.length + " candidats · " + count + " marchés Spot documentés · " +
+        (entries.length - count) + " sans paire documentée · " +
+        "contrôle " + txt(timestamp) + " · " +
+        (stale ? "ATTENTION : archive ancienne ou horodatage incohérent. " : "") +
+        (mismatch ? "ATTENTION : compteurs contradictoires. " : "") +
+        "Consultation uniquement ; aucun ordre, aucun rendement certifié.";
+      paint();
+    } catch (error) {
+      entries = null;
+      rows.replaceChildren();
+      addRow(["Matrice indisponible : source ou schéma non vérifié", "", "", "", "", "", ""]);
+      status.textContent = "Échec contrôlé : " + (error?.message || "source non disponible") +
+        ". Les dernières observations connues ne sont pas présentées comme actuelles.";
+    } finally {
+      clearTimeout(timeout);
+      busy = false;
+      refresh.disabled = false;
+    }
+  }
+  details.addEventListener("toggle", () => { if (details.open && !entries) load(); });
+  refresh.addEventListener("click", load);
+  filter.addEventListener("input", paint);
+  scope.addEventListener("change", paint);
+}());
+</script>
+
 </main></body></html>
