@@ -25,6 +25,57 @@ code{color:var(--gold)}dl{display:grid;grid-template-columns:125px 1fr;gap:4px 1
 .warn{color:var(--gold)}.error{color:var(--red)}.pill{border:1px solid #3f7285;color:var(--cyan);border-radius:30px;padding:3px 7px;font-size:11px}
 .table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:770px}th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}th{color:var(--muted);font-size:12px}td small{display:block}details.archive>summary{cursor:pointer;font-weight:700;color:var(--gold)}.status-note{color:var(--muted)}.measured{color:#9ceec5}.waiting{color:var(--gold)}footer{color:var(--muted);padding:20px 0;font-size:12px}
 @media(max-width:720px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}dl{grid-template-columns:1fr}}
+
+/* Coffre Radar dossiers: fixed left alignment for caret, identity and status.
+   Scoped to these 20 research cards; other panels and controls are unchanged. */
+#coffre-radar-items{align-items:start;gap:12px}
+#coffre-radar-items>.item{
+  min-width:0;padding:0;overflow:hidden;
+  background:linear-gradient(125deg,#0b2738,#0a1e2d);
+  border:1px solid #32566a;border-radius:13px;
+}
+#coffre-radar-items>.item:hover{border-color:#69a9bd}
+#coffre-radar-items>.item>summary.head{
+  display:grid;grid-template-columns:12px minmax(0,1fr) max-content;
+  align-items:center;justify-content:initial;
+  gap:12px;min-height:76px;padding:14px 16px;margin:0;
+}
+#coffre-radar-items>.item>summary.head::before{
+  grid-column:1;align-self:center;justify-self:start;
+  color:#7de0ed;line-height:1;
+}
+#coffre-radar-items>.item>summary.head>strong{
+  grid-column:2;display:flex;align-items:center;justify-content:flex-start;
+  min-width:0;gap:11px;text-align:left;
+  font-size:14px;line-height:1.4;color:#edf8ff;font-weight:750;
+}
+#coffre-radar-items>.item>summary.head>strong>.seven-coin-mark{
+  width:36px!important;height:36px!important;flex:0 0 36px;
+  margin:0;border-color:#50869c;background-color:#123b4e;
+  box-shadow:0 0 0 2px rgba(82,177,194,.075);
+}
+#coffre-radar-items>.item>summary.head>small.pill{
+  grid-column:3;justify-self:end;max-width:100%;
+  margin:0;white-space:nowrap;text-align:center;
+  color:#a8e9f5;border-color:#386d7e;background:#102c3b;
+  padding:5px 10px;font-size:11px;font-weight:600;
+}
+#coffre-radar-items>.item[open]>summary.head{
+  border-bottom:1px solid #35556a;margin-bottom:10px;
+}
+#coffre-radar-items>.item[open]>:not(summary){
+  margin-left:16px;margin-right:16px;
+}
+#coffre-radar-items>.item[open]>:last-child{margin-bottom:18px}
+@media(max-width:560px){
+  #coffre-radar-items>.item>summary.head{
+    grid-template-columns:12px minmax(0,1fr);
+    row-gap:8px;padding:12px;min-height:72px;
+  }
+  #coffre-radar-items>.item>summary.head>small.pill{
+    grid-column:2;grid-row:2;justify-self:start;
+  }
+}
 </style></head><body><main>
 <header><div class="kicker">SEVEN HEAVEN · RADAR → SOURCES → LABORATOIRE</div><h1>Dossiers Crypto · mémoire et qualification</h1>
 <p>Top 5 / 10 / 50 / 250 / 1 000 · candidats Radar · projets et objectifs · preuves manquantes. <a href="../trader/trading-desk.html">Retour Trader</a> · <a href="../administrator/historical-vault.html">Coffre</a></p>

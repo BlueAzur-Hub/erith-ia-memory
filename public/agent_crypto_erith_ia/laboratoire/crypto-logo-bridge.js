@@ -13,7 +13,7 @@
   let byID = null, byPair = null;
   const product = name => /tokenized|bstocks|xstocks|stock|\betf\b/i.test(name);
   function identity(el, type) {
-    let symbol = "", name = "", id = "";
+    let symbol = "", name = "", id = "", image = "";
     if (type === "top") {
       const m = el.textContent.trim().match(/^(.+?)\s*·\s*([A-Z0-9]{1,16})$/);
       if (!m) return null;
@@ -30,14 +30,16 @@
       symbol = el.dataset.coinSymbol || "";
       name = el.dataset.coinName || "";
       id = el.dataset.coinId || "";
+      image = el.dataset.coinImage || "";
     } else {
       const m = el.textContent.trim().match(/^([A-Z0-9]{1,16})\s*·\s*(.+)$/);
       if (!m) return null;
       symbol = el.dataset.coinSymbol || m[1];
       name = el.dataset.coinName || m[2];
       id = el.dataset.coinId || "";
+      image = el.dataset.coinImage || "";
     }
-    return /^[A-Z0-9]{1,16}$/.test(symbol) ? { symbol, name, id } : null;
+    return /^[A-Z0-9]{1,16}$/.test(symbol) ? { symbol, name, id, image } : null;
   }
   function localURL(v) {
     const record = local[v.symbol];
@@ -45,8 +47,16 @@
       (v.id ? norm(v.id) === record[0] : norm(v.name) === record[1])
       ? new URL("assets/crypto-logos/" + record[2], base).href : null;
   }
+  function trustedImage(value) {
+    try {
+      const u=new URL(String(value||""));
+      return u.protocol==="https:"&&u.hostname==="coin-images.coingecko.com"&&
+        u.pathname.startsWith("/coins/images/")?u.href:null;
+    } catch (_) { return null; }
+  }
   function snapshotURL(v) {
-    if (!byID || product(v.name)) return null;
+    // Product-specific identities must be exact CoinGecko IDs, not shared tickers.
+    if (!byID || (product(v.name) && !v.id)) return null;
     const row = v.id ? byID.get(norm(v.id)) : byPair.get(norm(v.symbol) + "|" + norm(v.name));
     if (!row || norm(row.symbol) !== norm(v.symbol) ||
         (v.id && norm(row.id) !== norm(v.id)) ||
@@ -59,7 +69,7 @@
     } catch (_) { return null; }
   }
   function paint(mark, v) {
-    const remote = snapshotURL(v), fallback = localURL(v);
+    const remote = (v.id && trustedImage(v.image)) || snapshotURL(v), fallback = localURL(v);
     function initials() {
       mark.classList.add("seven-coin-fallback");
       mark.textContent = v.symbol.slice(0, 2);
@@ -99,6 +109,7 @@
         mark.dataset.coinSymbol = v.symbol;
         mark.dataset.coinName = v.name;
         mark.dataset.coinId = v.id;
+        mark.dataset.coinImage = v.image || "";
         el.prepend(mark);
         paint(mark, v);
       }
@@ -128,7 +139,8 @@
         paint(mark, {
           symbol: mark.dataset.coinSymbol,
           name: mark.dataset.coinName,
-          id: mark.dataset.coinId
+          id: mark.dataset.coinId,
+          image: mark.dataset.coinImage || ""
         });
       }
     } catch (_) { /* Keep existing local logos and readable initials offline. */ }

@@ -155,7 +155,13 @@ function enrichSources(base,{qualification,marketTop=null,marketExtended=null,ok
     priceUsd:Number.isFinite(coin.priceUsd)&&coin.priceUsd>0?coin.priceUsd:null,
     observedAt:coin.lastUpdated||null,
     catalogAt:(top.has(d.id)?marketTop:marketExtended)?.generated_at||null,
-    source:top.has(d.id)?OPTIONAL.marketTop:OPTIONAL.marketExtended
+    source:top.has(d.id)?OPTIONAL.marketTop:OPTIONAL.marketExtended,
+    // Visual image from the same exact-ID Market row; not evidence of trading rights.
+    image:(()=>{try{
+      const u=new URL(String(coin.image||""));
+      return u.protocol==="https:"&&u.hostname==="coin-images.coingecko.com"&&
+        u.pathname.startsWith("/coins/images/")?u.href:null;
+    }catch(_){return null;}})()
   }):null;
   const ox=qual.get(d.id)?.okx_spot;
   const okxPair=ox?.pair_observed===true&&ox.venue==="OKX"&&typeof ox.pair==="string"?ox.pair:null;
@@ -217,6 +223,7 @@ function mount(doc=document,fetcher=fetch){
      const card=make("details","item collapsible"),head=make("summary","head");
      const identity=make("strong","",d.symbol+" · "+d.name);
      identity.dataset.coinId=d.id;identity.dataset.coinSymbol=d.symbol;identity.dataset.coinName=d.name;
+     identity.dataset.coinImage=d.market?.image||"";
      head.append(identity,
        make("small","pill",d.hasKnowledge?"Dossier connu":"Dossier Radar à enrichir"));
      card.append(head);
