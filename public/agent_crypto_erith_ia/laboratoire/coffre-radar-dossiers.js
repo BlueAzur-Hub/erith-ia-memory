@@ -154,9 +154,9 @@ function mount(doc=document,fetcher=fetch){
      line(card,"Coffre 1 minute",d.minuteCandles?d.minuteCandles+" bougies natives · "+d.minuteSource+" ("+d.minuteQuote+")":"Non présent dans le catalogue 1m consulté");
      if(d.dailyRelease)link(card,d.dailyRelease,"Archive source 1j ↗");
      const info=make("p","muted");
-     link(info,"https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/"+SOURCES.identity,"Contrats et décisions Spot ↗");
+     link(info,"https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/"+SOURCES.identity,"Contrats et décisions Spot ↗");
      info.append(make("span",""," · "));
-     link(info,"https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/"+SOURCES.qualification,"Qualification marché ↗");
+     link(info,"https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/"+SOURCES.qualification,"Qualification marché ↗");
      card.append(info);
      const ul=make("ul");
      for(const b of d.blockers){const li=make("li","",b);ul.append(li);}
