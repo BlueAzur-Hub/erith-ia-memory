@@ -106,7 +106,7 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 </div>
 <section class="panel" id="radar-new-listings-matrix" aria-labelledby="radar-new-listings-heading">
   <h2 id="radar-new-listings-heading">Nouvelles cotations Spot · qualification et provenance</h2>
-  <p>Complément au détecteur ci-dessus : inventaire des <strong>paires nouvellement référencées</strong> sur OKX et Bitget dans le catalogue des 30 derniers jours. Une nouvelle paire n'est ni nécessairement un nouveau projet, ni un signal de trading. Les cours et volumes sont ceux du relevé daté, en unités natives, jamais convertis artificiellement en USD.</p>
+  <p>Complément au détecteur ci-dessus : inventaire des <strong>paires nouvellement référencées</strong> sur OKX et Bitget dans le catalogue des 30 derniers jours. Les produits X d'OKX sont classés séparément des nouveaux projets crypto : OKX décrit cette famille comme des actions ou ETF tokenisés. Une nouvelle paire n'est pas nécessairement un nouveau projet. Cours et volumes sont les valeurs natives du relevé daté, pas des prix d'exécution.</p>
   <details id="radar-new-listings-details">
     <summary style="cursor:pointer;color:var(--cyan);font-weight:750">Consulter toutes les paires, leur identité et les preuves manquantes</summary>
     <p class="note" id="radar-new-listings-status" role="status" aria-live="polite">Ouvrir pour consulter le catalogue public archivé.</p>
@@ -114,6 +114,11 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       <label for="radar-new-listings-search">Rechercher <input id="radar-new-listings-search" type="search" placeholder="Paire, symbole, ID..." autocomplete="off"></label>
       <label for="radar-new-listings-provider">Place <select id="radar-new-listings-provider">
         <option value="all">OKX + Bitget</option><option value="okx">OKX</option><option value="bitget">Bitget</option>
+      </select></label>
+      <label for="radar-new-listings-family">Famille <select id="radar-new-listings-family">
+        <option value="all">Toutes les familles</option>
+        <option value="tokenized">Produits X tokenisés OKX</option>
+        <option value="other">Autres cotations Spot</option>
       </select></label>
       <label for="radar-new-listings-proof">Preuve <select id="radar-new-listings-proof">
         <option value="all">Toutes</option>
@@ -124,10 +129,11 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       </select></label>
       <button id="radar-new-listings-refresh" type="button">Relire le catalogue</button>
     </div>
-    <div class="scroll"><table style="min-width:1080px" aria-label="Preuves et qualification des nouvelles cotations Spot">
-      <thead><tr><th>Paire Spot</th><th>Place</th><th>Date de cotation (UTC)</th><th>Âge au relevé</th><th>Identité du projet</th><th>Dernier prix API (devise native)</th><th>Vol. API 24h brut</th><th>Suite documentaire</th></tr></thead>
-      <tbody id="radar-new-listings-rows"><tr><td colspan="8">Archives non chargées.</td></tr></tbody>
+    <div class="scroll"><table style="min-width:1460px" aria-label="Preuves et qualification des nouvelles cotations Spot">
+      <thead><tr><th>Paire Spot</th><th>Place</th><th>Famille d'actif</th><th>Date de cotation (UTC)</th><th>Âge au relevé</th><th>Identité du projet</th><th>Dernier prix API (devise native)</th><th>Vol. API 24h brut</th><th>Coffre historique</th><th>Suite documentaire</th></tr></thead>
+      <tbody id="radar-new-listings-rows"><tr><td colspan="10">Archives non chargées.</td></tr></tbody>
     </table></div>
+    <p class="muted">Coffre : rapprochement par <strong>identifiant canonique exact uniquement</strong>, jamais par ticker. « Non indexé » concerne seulement les deux catalogues consultés, pas toutes les archives du projet. Les actions tokenisées ne confèrent pas de propriété directe des titres sous-jacents. <a href="https://www.okx.com/fr/stock" target="_blank" rel="noopener">Famille produits X : documentation officielle OKX</a>.</p>
     <p class="muted">Limites : <code>listTime</code> peut désigner le début d'une préouverture sur OKX ; la date ne prouve pas la première création du jeton. <code>volCcy24h</code> est conservé tel que publié par l'API, sans conversion en USD. Les devises USDT et USDC sont distinctes. Les données Spot publiques ne prouvent ni éligibilité du compte/région, ni liquidité historique, ni possibilité d'exécution au prix affiché.</p>
     <p class="muted">Sources :
       <a href="../administrator/data/new-listings-public-feed.json" target="_blank" rel="noopener">flux public archivé</a> ·
@@ -163,10 +169,10 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       <button id="radar-permanent-refresh" type="button">Relire les archives</button>
     </div>
     <div class="scroll"><table style="min-width:1120px" aria-label="Qualification commune des candidats Radar archivés">
-      <thead><tr><th>Actif / ID CoinGecko</th><th>Détections</th><th>J+1 / J+7</th><th>Spot public</th><th>Contrat / identité</th><th>Historique 1j</th><th>Étape suivante</th></tr></thead>
-      <tbody id="radar-permanent-rows"><tr><td colspan="7">Données non chargées.</td></tr></tbody>
+      <thead><tr><th>Actif / ID CoinGecko</th><th>Détections</th><th>J+1 / J+7</th><th>Spot public</th><th>Contrat / identité</th><th>Historique 1j</th><th>Historique 1m</th><th>Étape suivante</th></tr></thead>
+      <tbody id="radar-permanent-rows"><tr><td colspan="8">Données non chargées.</td></tr></tbody>
     </table></div>
-    <p class="muted">Les J+1/J+7 sont des relevés descriptifs à échéance calendaire, pas des opérations PAPER. Bougies du catalogue historique ≠ carnet live ; absence du catalogue ≠ absence de marché. Source Spot en devise native USDT/USDC, tandis que les prix Radar sont agrégés en USD. Les mesures manquantes ne sont jamais interpolées.</p>
+    <p class="muted">Le catalogue 1j conserve les bougies natives quotidiennes. Le second catalogue 1m recense les séries minute ; une ligne référencée mais avec 0 bougie n'est pas couverte. Les J+1/J+7 sont des relevés descriptifs à échéance calendaire, pas des opérations PAPER. Bougies du catalogue historique ≠ carnet live ; absence du catalogue ≠ absence de marché. Source Spot en devise native USDT/USDC, tandis que les prix Radar sont agrégés en USD. Les mesures manquantes ne sont jamais interpolées.</p>
     <p class="muted">Sources canoniques :
       <a href="../data/crypto/radar-opportunities/research-cohort.json" target="_blank" rel="noopener">cohorte</a> ·
       <a href="../data/crypto/radar-opportunities/spot-identity-latest.json" target="_blank" rel="noopener">identité Spot</a> ·
@@ -201,7 +207,8 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
     root + "crypto/radar-opportunities/research-cohort.json",
     root + "crypto/radar-opportunities/spot-identity-latest.json",
     root + "crypto/radar-opportunities/radar-automation-health.json",
-    root + "historical_archive_prototype/top250_multiresolution_sources/index.json"
+    root + "historical_archive_prototype/top250_multiresolution_sources/index.json",
+    root + "historical_archive_prototype/top250_multisource_coverage/index.json"
   ];
   const txt = value => value == null ? "Non relevé" : String(value);
   function addRow(values) {
@@ -231,12 +238,13 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
         x.spot ? x.spot.venue + " · " + x.spot.pair + " (historique)" : "Paire non documentée",
         x.identity === "catalogue" ? "Contrat concordant dans la collecte ; paire non certifiée" :
           x.identity === "certified" ? "Identité certifiée dans la cohorte" : "À vérifier",
-        x.candles == null ? "Non indexé dans ce catalogue" :
+        x.candles == null ? "Non indexé 1j" :
           x.candles + " bougies 1j · " + x.gaps + " lacune(s)",
+        x.minuteCount > 0 ? x.minuteCount + " bougies 1m" : "Aucune série 1m dans cet index",
         x.next
       ]);
     }
-    if (!shown) addRow(["Aucune ligne pour ce filtre", "", "", "", "", "", ""]);
+    if (!shown) addRow(["Aucune ligne pour ce filtre", "", "", "", "", "", "", ""]);
   }
   async function load() {
     if (busy || !details.open) return;
@@ -253,12 +261,12 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
         if (!res.ok) throw Error("Archive indisponible (HTTP " + res.status + ")");
         return res.json();
       }));
-      const [cohort, identity, health, history] = responses;
+      const [cohort, identity, health, history, minuteHistory] = responses;
       if (cohort.schema !== "erith.radar.research-cohort.v1" ||
           health.schema !== "erith.radar.automation-health.v1" ||
           !Array.isArray(cohort.candidates) ||
           !Array.isArray(identity.candidates) ||
-          !Array.isArray(history.assets) ||
+          !Array.isArray(history.assets) || !Array.isArray(minuteHistory.assets) ||
           cohort.orders_enabled !== false || health.orders_enabled !== false ||
           health.real_orders !== 0 || cohort.trade_authorized === true ||
           cohort.candidates.length !== cohort.count ||
@@ -267,19 +275,22 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       }
       const identities = new Map(identity.candidates.map(x => [x.coin_id, x]));
       const histories = new Map(history.assets.map(x => [x.id, x]));
+      const minuteHistories = new Map(minuteHistory.assets.map(x=>[x.id,x]));
       entries = cohort.candidates.map(c => {
         const i = identities.get(c.coin_id);
         const h = histories.get(c.coin_id);
+        const m = minuteHistories.get(c.coin_id);
         const spot = c.spot && typeof c.spot.pair === "string" ? c.spot : null;
         let next = spot ? "Vérifier contrat, accès régional, coûts et fraîcheur" :
           "Retrouver paire Spot et identité exacte";
-        if (h && h.native_candles > 0) next += " ; historiques présents";
+        if ((h && h.native_candles > 0) || (m && m.native_1m_count > 0)) next += " ; historiques présents";
         return {
           id: c.coin_id, symbol: c.symbol, name: c.name,
           detections: c.detections_archived ?? 0,
           j1: c.j1_observed ?? 0, j7: c.j7_observed ?? 0,
           spot, candles: h ? h.native_candles : null,
           gaps: h ? h.gaps_within_observed_span ?? "?" : null,
+          minuteCount: m ? m.native_1m_count : 0,
           identity: c.identity_certified === true ? "certified" :
             i?.identity_proven === true ? "catalogue" : "pending",
           next
@@ -290,8 +301,12 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       const stale = !Number.isFinite(lag) || lag < -3600000 || lag > 36*3600000;
       const count = entries.filter(x => !!x.spot).length;
       const mismatch = count !== cohort.spot_documented;
+      const dayCount = entries.filter(x=>x.candles>0).length;
+      const minuteCount = entries.filter(x=>x.minuteCount>0).length;
       status.textContent = "Relevé archivé : " + txt(cohort.source_observation_date_utc) +
-        " UTC · " + entries.length + " candidats · " + count + " marchés Spot documentés · " +
+        " UTC · " + entries.length + " candidats · " +
+        dayCount + " avec historiques 1j · " + minuteCount + " avec historiques 1m · " +
+        count + " marchés Spot documentés · " +
         (entries.length - count) + " sans paire documentée · " +
         "contrôle " + txt(timestamp) + " · " +
         (stale ? "ATTENTION : archive ancienne ou horodatage incohérent. " : "") +
@@ -327,10 +342,26 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
   const tbody = document.getElementById("radar-new-listings-rows");
   const query = document.getElementById("radar-new-listings-search");
   const provider = document.getElementById("radar-new-listings-provider");
+  const family = document.getElementById("radar-new-listings-family");
   const proof = document.getElementById("radar-new-listings-proof");
   const refresh = document.getElementById("radar-new-listings-refresh");
   const source = "../administrator/data/new-listings-public-feed.json";
-  let items = null, loading = false;
+  const archiveDaily = "../data/historical_archive_prototype/top250_multiresolution_sources/index.json";
+  const archiveMinute = "../data/historical_archive_prototype/top250_multisource_coverage/index.json";
+  // All sources are public, routed by the existing read-only data router.
+  let items = null, loading = false, archiveStatus = "Non contrôlé";
+  let historyDaily = new Map(), historyMinute = new Map();
+  const isTokenizedX = x => x.provider === "okx" && /^X[A-Z0-9]+$/.test(x.base);
+  const historyLabel = x => {
+    if (archiveStatus !== "Contrôlé") return "Catalogue indisponible";
+    const id = x.identity_status === "EXACT_CONTRACT_AND_VENUE_REGISTRY" ? x.canonicalId : null;
+    if (!id) return "ID canonique absent : aucun lien automatique";
+    const day = historyDaily.get(id), minute = historyMinute.get(id);
+    const pieces = [];
+    if (Number(day?.native_candles)>0) pieces.push(Number(day.native_candles)+" bougies 1j");
+    if (Number(minute?.native_1m_count)>0) pieces.push(Number(minute.native_1m_count)+" bougies 1m");
+    return pieces.length ? pieces.join(" · ") : "ID exact absent des deux index consultés";
+  };
   const str = value => value == null || value === "" ? "Non relevé" : String(value);
   const utc = value => {
     const ms = Date.parse(value);
@@ -354,7 +385,7 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
   function render() {
     if (!items) return;
     const term = query.value.trim().toLocaleLowerCase("fr");
-    const p = provider.value, v = proof.value;
+    const p = provider.value, v = proof.value, fam = family.value;
     tbody.replaceChildren();
     let shown = 0;
     for (const x of items) {
@@ -362,6 +393,8 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       const quoted = !!x.quote_snapshot && x.quote_snapshot.last !== undefined && x.quote_snapshot.last !== null;
       const zero = !!x.quote_snapshot && x.quote_snapshot.volCcy24h != null && Number(x.quote_snapshot.volCcy24h) === 0;
       if (p !== "all" && x.provider !== p) continue;
+      if (fam === "tokenized" && !isTokenizedX(x)) continue;
+      if (fam === "other" && isTokenizedX(x)) continue;
       if (v === "exact" && !exact) continue;
       if (v === "unverified" && exact) continue;
       if (v === "noquote" && quoted) continue;
@@ -369,17 +402,20 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       if (term && ![x.base,x.quote,x.pair,x.canonicalId,x.provider].join(" ").toLocaleLowerCase("fr").includes(term)) continue;
       shown++;
       row([
-        x.pair, x.provider.toUpperCase(), utc(x.listedAt), readableAge(x.listedAt,x.archiveAt),
+        x.pair, x.provider.toUpperCase(),
+        isTokenizedX(x) ? "Action / ETF tokenisé · produit X OKX" : "Spot · nature du projet à qualifier",
+        utc(x.listedAt), readableAge(x.listedAt,x.archiveAt),
         exact ? "Registre : " + x.canonicalId : "Identité non certifiée (symbole de place)",
         quoted ? str(x.quote_snapshot.last) + " " + x.quote : "Aucun prix archivé",
         x.quote_snapshot?.volCcy24h == null ? "Non relevé" : String(x.quote_snapshot.volCcy24h),
+        historyLabel(x),
         exact ? "Vérifier accès régional, carnet et historique" :
           zero ? "Vérifier activité et identité ; volume observé nul" :
           quoted ? "Vérifier contrat, projet, carnet et historique" :
           "Vérifier identité et disponibilité d'un prix public"
       ]);
     }
-    if (!shown) row(["Aucune paire pour ce filtre", "", "", "", "", "", "", ""]);
+    if (!shown) row(["Aucune paire pour ce filtre", "", "", "", "", "", "", "", "", "", ""]);
   }
   async function read() {
     if (loading || !details.open) return;
@@ -389,11 +425,18 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-      const res = await fetch(new URL(source,document.baseURI).href,{
-        cache:"no-store", credentials:"omit", signal:controller.signal
-      });
-      if (!res.ok) throw Error("Archive indisponible (HTTP " + res.status + ")");
-      const data = await res.json();
+      const fetchJson = async path => {
+        const response = await fetch(new URL(path,document.baseURI).href,{
+          cache:"no-store", credentials:"omit", signal:controller.signal
+        });
+        if (!response.ok) throw Error("Archive HTTP " + response.status);
+        return response.json();
+      };
+      const [data, dailyResult, minuteResult] = await Promise.all([
+        fetchJson(source),
+        fetchJson(archiveDaily).then(value=>({value})).catch(error=>({error})),
+        fetchJson(archiveMinute).then(value=>({value})).catch(error=>({error}))
+      ]);
       if (data.schema !== "erith.seven.public-spot-listings-feed.v1" ||
           data.read_only !== true || data.trade_permission !== false ||
           data.real_orders !== 0 || data.no_ticker_to_contract_identity_inference !== true ||
@@ -405,24 +448,41 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
       }
       const unique = new Set(data.entries.map(x => x.provider + "|" + x.providerSymbol));
       if (unique.size !== data.entries.length) throw Error("Paires dupliquées dans le relevé");
+      const daily = dailyResult.value, minute = minuteResult.value;
+      if (Array.isArray(daily?.assets) && Array.isArray(minute?.assets) &&
+          daily.assets.every(x => typeof x.id === "string") &&
+          minute.assets.every(x => typeof x.id === "string")) {
+        historyDaily = new Map(daily.assets.map(x=>[x.id,x]));
+        historyMinute = new Map(minute.assets.map(x=>[x.id,x]));
+        archiveStatus = "Contrôlé";
+      } else {
+        historyDaily = new Map(); historyMinute = new Map();
+        archiveStatus = "Non contrôlé";
+      }
       items = data.entries.map(x => ({...x,archiveAt:data.captured_at_utc}))
         .sort((a,b) => Date.parse(b.listedAt)-Date.parse(a.listedAt));
       const okx = items.filter(x => x.provider === "okx").length;
       const bitget = items.length - okx;
       const exact = items.filter(x => x.identity_status === "EXACT_CONTRACT_AND_VENUE_REGISTRY" && x.canonicalId).length;
       const price = items.filter(x => x.quote_snapshot?.last != null).length;
+      const xProducts = items.filter(isTokenizedX).length;
+      const confirmedWithArchive = items.filter(x => historyLabel(x).includes("bougies")).length;
       const lag = Date.now()-Date.parse(data.captured_at_utc);
       const old = !Number.isFinite(lag) || lag < -3600000 || lag > 36 * 3600000;
       status.textContent = "Relevé " + utc(data.captured_at_utc) + " · " +
         items.length + " paires distinctes (" + okx + " OKX, " + bitget + " Bitget) · " +
-        exact + " identité(s) reliée(s) au registre exact · " + price + " prix API archivé(s) · " +
+        xProducts + " produits X tokenisés (convention OKX) · " +
+        exact + " identité(s) reliée(s) au registre exact · " +
+        confirmedWithArchive + " lien(s) exact(s) vers le Coffre · " +
+        "catalogues Coffre : " + archiveStatus + " · " +
+        price + " prix API archivé(s) · " +
         (old ? "ATTENTION : archive ancienne ou date incohérente · " : "") +
         "Observation publique uniquement. Aucune paire n'est certifiée exécutable.";
       render();
     } catch(err) {
       items = null;
       tbody.replaceChildren();
-      row(["Matrice indisponible", "", "", "", "", "", "", ""]);
+      row(["Matrice indisponible", "", "", "", "", "", "", "", "", "", ""]);
       status.textContent = "Échec contrôlé : " + (err?.message || "archive non disponible") +
         ". Aucune valeur ancienne n'est présentée comme actuelle.";
     } finally {
@@ -435,6 +495,7 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
   refresh.addEventListener("click", read);
   query.addEventListener("input", render);
   provider.addEventListener("change", render);
+  family.addEventListener("change", render);
   proof.addEventListener("change", render);
 }());
 </script>
