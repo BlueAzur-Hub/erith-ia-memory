@@ -597,6 +597,34 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-08",
+      "date_utc": "2026-11-08",
+      "first_seen_at_utc": "2026-11-08T06:28:12.267Z",
+      "source_times_utc": [
+        "2026-11-08T05:58:38.015Z",
+        "2026-11-08T05:58:44.252Z"
+      ],
+      "universe_eligible": 339,
+      "policy_matches": 2,
+      "selected": [
+        {
+          "coin_id": "megaeth",
+          "symbol": "MEGA",
+          "source_at_utc": "2026-11-08T05:58:44.252Z",
+          "rank": 401,
+          "price_usd": 0.05017180771946333
+        },
+        {
+          "coin_id": "dgrid-ai",
+          "symbol": "DGAI",
+          "source_at_utc": "2026-11-08T05:58:38.015Z",
+          "rank": 242,
+          "price_usd": 0.7665595034039359
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1404,6 +1432,27 @@
       "sha256": "3eb633578c2570ec727437eff0e2ebb5739b523fca50bd9ac61161b80e4eb01c",
       "recorded_at_utc": "2026-11-07T23:47:11.329Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-06",
+      "file": "observations/2026-11-08T062812267Z--2026-11-06.json",
+      "sha256": "ba79040580c70814345a920a493621eb50cfa10f7124d923d5961956cbac6423",
+      "recorded_at_utc": "2026-11-08T06:28:12.267Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-07",
+      "file": "observations/2026-11-08T062812267Z--2026-11-07.json",
+      "sha256": "c5e4a64b774630a6c8d6eb0e896ac0e4ccdd9a4f1b1c68f1307ce29b5a8602de",
+      "recorded_at_utc": "2026-11-08T06:28:12.267Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-08",
+      "file": "observations/2026-11-08T062812267Z--2026-11-08.json",
+      "sha256": "df6e8a9ba35ed72c06758f011f80a87d1a01f4a81bfd35acc935edaada09c7d1",
+      "recorded_at_utc": "2026-11-08T06:28:12.267Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
