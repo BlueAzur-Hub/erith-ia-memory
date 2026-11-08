@@ -293,7 +293,7 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ## Partie C — Top 50, quarante fiches quantitatives et historiques complémentaires
 
-**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 40** disposent chacune d'une analyse de projet avec sources de protocole, du projet ou sources secondaires identifiées (catégorie, identité et fonction, mécanismes économiques, mesures, risques et questions). Ces trente analyses ne démontrent pas l'adoption réelle ; les positions **41 à 50** restent des fiches quantitatives et historiques à compléter. Les rangs CoinGecko et cours proviennent toujours du même snapshot, sans données actualisées artificiellement.
+**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 50** disposent maintenant chacune d'une analyse de projet sourcée (catégorie, fonction, mécanismes économiques, indicateurs vérifiables, risques, question de recherche). Ces quarante études, ajoutées aux cinq fondamentales initiales et aux cinq intermédiaires, constituent **50 dossiers documentaires enrichis à des degrés différents**. Les chiffres et rangs CoinGecko demeurent ceux du snapshot initial, sans prix artificiellement actualisés. Aucune étude ne prouve l'adoption réelle ni la négociabilité Spot sur le compte OKX.
 Les fiches ci-dessous sont *réellement individualisées par relevés de prix, volumes et archives existantes*, mais ne prétendent pas contenir une recherche d'adoption que les sources n'établissent pas. Pour chaque dossier, le statut de cotation OKX reste un constat de capture, pas une interrogation authentifiée.
 
 ### 11 WBT
@@ -1269,7 +1269,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/mantle).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Jeton natif de Mantle Network : gaz du L2, gouvernance et trésorerie de l'écosystème.
+
+**Fonction du jeton et du protocole :** Mantle est une solution de mise à l'échelle Ethereum de type rollup modulaire. Sur Mantle Network, MNT sert à payer les frais de gaz des transactions et peut être délégué pour participer à la gouvernance. Le protocole emploie une architecture de traitement L2, disponibilité des données et publication des engagements sur Ethereum. MNT est l'actif du réseau et de la gouvernance, pas une action détenue dans une société exploitant la chaîne.
+
+**Économie réelle et droits du détenteur :** Une activité L2 accrue peut provoquer plus de frais payés en MNT, mais le coût du traitement L1, des données et des opérateurs doit être séparé des revenus du séquenceur et de l'utilité économique du jeton. Le livre blanc MiCA MNT du 9 mars 2026 déclare explicitement qu'aucun droit à dividende, rachat ou propriété de l'entreprise n'est accordé. La gouvernance et l'usage du gaz ne garantissent pas un mécanisme permanent de redistribution aux détenteurs.
+
+**Question de recherche :** Quelle part de la croissance réelle des applications se traduit en frais MNT nets et en décisions de gouvernance vérifiables, après paiement des coûts d'infrastructure ?
+
+**Indicateurs à collecter :** Transactions nettes du réseau et frais MNT effectivement payés ; coûts de publication sur Ethereum et frais de disponibilité des données ; recettes/coûts du séquenceur ; quantité MNT détenue par le trésor et votes exécutés ; parts d'activité sponsorisées par des applications ; profondeur et spreads des paires observées.
+
+**Risques spécifiques :** Dépendance à la disponibilité des données et au séquenceur, ponts entre L1 et L2, risques de contrats, gouvernance de la trésorerie, concentration des jetons, évolution des coûts de publication L1.
+
+**Réserve de discernement :** Cette étude n'attribue aucun « rendement de Mantle » au simple fait de posséder des MNT. Les 1 jour natifs Gate dans le Coffre concernent MNT_USDT, pas un carnet Spot OKX authentifié.
+
+**Sources documentaires consultées (08/11/2026) :** [Mantle, documentation du code et architecture officielle](https://github.com/mantlenetworkio/mantle) ; [Livre blanc MiCA MNT du 9 mars 2026 — droits, frais et responsabilités](https://assets.bitstamp.net/docs/whitepaper/MNT_2026_03_09.xhtml). [Fiche CoinGecko](https://www.coingecko.com/en/coins/mantle).
 
 
 ### 42 WLFI
@@ -1285,7 +1301,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/world-liberty-financial).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Gouvernance de World Liberty Financial, séparée du stablecoin USD1.
+
+**Fonction du jeton et du protocole :** WLFI est un jeton de gouvernance du protocole World Liberty Financial. Le livre blanc de l'émetteur présente des votes et des délégations, sans attribuer au token des actions, une propriété de société ou un droit aux revenus. Le stablecoin USD1 est un instrument distinct, émis selon la FAQ par BitGo, sur des conditions spécifiques ; détenir WLFI ne revient pas à posséder les actifs de réserve du USD1.
+
+**Économie réelle et droits du détenteur :** La page officielle de gouvernance annonce un programme de staking WLFI avec verrouillage minimum de 180 jours et des récompenses potentielles versées en USD1, conditionnées notamment à des votes durant la période. Il s'agit d'un **programme particulier et variable** : ce n'est ni une distribution de dividendes sur l'activité totale, ni un droit universel, ni une garantie de rendement. Le statut et l'éligibilité du programme peuvent évoluer selon les règles du protocole et la juridiction.
+
+**Question de recherche :** Quel pouvoir effectif exercent les détenteurs via les votes, et quelles récompenses USD1 ont été réellement distribuées sous conditions, sans attribuer au jeton un droit de propriété qui n'existe pas ?
+
+**Indicateurs à collecter :** Taux de participation et délégation des votes ; WLFI effectivement immobilisés et expirations des verrous ; USD1 distribués par programme avec preuves de paiement ; modifications votées ; unlocks et jetons en circulation ; concentration des détenteurs ; spread/liquidité WLFI.
+
+**Risques spécifiques :** Gouvernance de plateforme et concentration des votes, conflits d'intérêts potentiels, évolutions de la réglementation et des restrictions régionales, risque de contrepartie et réserves propres à USD1, volatilité WLFI et illiquidité durant une période de verrouillage.
+
+**Réserve de discernement :** Une récompense potentielle annoncée en USD1 ne certifie ni disponibilité en France, ni rendement futur, ni statut d'une proposition de gouvernance. Il faut documenter les paiements et conditions au moment précis du relevé.
+
+**Sources documentaires consultées (08/11/2026) :** [World Liberty Financial — gouvernance et modalités du staking affichées](https://worldlibertyfinancial.com/governance) ; [World Liberty Financial — Gold Paper, droits du jeton](https://static.worldlibertyfinancial.com/docs/us/gold-paper.pdf) ; [World Liberty Financial — FAQ USD1 et émetteur](https://docs.worldlibertyfinancial.com/resources/faq). [Fiche CoinGecko](https://www.coingecko.com/en/coins/world-liberty-financial).
 
 
 ### 43 MORPHO
@@ -1301,7 +1333,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/morpho).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Jeton de gouvernance du protocole de prêts Morpho, différent des parts de vault.
+
+**Fonction du jeton et du protocole :** Morpho permet la création de marchés de prêt et de coffres d'allocation (vaults) configurés par des curateurs, oracles et paramètres de risque. MORPHO est le jeton de gouvernance ; ses détenteurs peuvent voter ou déléguer. Il ne faut pas confondre MORPHO avec les jetons représentant les parts de dépôt dans un vault, ni avec les intérêts payés par les emprunteurs aux prêteurs.
+
+**Économie réelle et droits du détenteur :** Les intérêts et frais sont réglés au niveau des marchés de prêts et des vaults ; les droits du jeton MORPHO portent sur la gouvernance et ne constituent pas un droit de distribution automatique de ces flux. Les versions legacy et wrapped MORPHO diffèrent sur les fonctionnalités de comptabilisation des votes : les contrats et conversions sont à vérifier selon réseau. Les vaults V1/V2 peuvent collecter frais de performance et, en V2, certains frais de gestion ; leur destinataire dépend de la configuration du vault.
+
+**Question de recherche :** La croissance de Morpho augmente-t-elle un avantage économique démontrable pour le jeton de gouvernance, ou l'essentiel des intérêts est-il porté par les marchés et les vaults ?
+
+**Indicateurs à collecter :** Prêts et dépôts actifs par marché ; taux d'utilisation et pertes de mauvaises dettes ; qualité et fréquence des oracles ; caps et timelocks des vaults ; frais nets payés aux curateurs et prêteurs ; quorum et délégation MORPHO ; conversions legacy/wrapped.
+
+**Risques spécifiques :** Liquidation sur prix d'oracle incorrect, insolvabilité des emprunteurs, défaut ou concentration du collatéral, droits des curateurs de vaults, défaillance de contrats et manque de liquidité au retrait ; confusion entre intérêts de dépôt et revenus de détention de MORPHO.
+
+**Réserve de discernement :** Les versions de contrats MORPHO et les parts de vault ne sont pas interchangeables avec une paire cotée. Les audits du protocole ne constituent pas une garantie de sécurité.
+
+**Sources documentaires consultées (08/11/2026) :** [Morpho — rôle exact et versions du jeton MORPHO](https://docs.morpho.org/learn/governance/morpho-token/) ; [Morpho — risques de vaults, oracles et marchés](https://docs.morpho.org/learn/resources/risks/) ; [Morpho — frais des vaults V1 et V2](https://docs.morpho.org/curate/concepts/fee/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/morpho).
 
 
 ### 44 HTX
@@ -1317,7 +1365,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/htx-dao).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Jeton de HTX DAO, gouvernance et programmes de liquidité liés à un écosystème d'exchange.
+
+**Fonction du jeton et du protocole :** HTX DAO se présente comme une structure de gouvernance et de soutien à un écosystème lié notamment aux plateformes HTX et Poloniex. Le jeton HTX sert aux programmes de participation et d'avantages dont les règles sont fixées par l'écosystème ; il ne doit pas être confondu avec les droits d'un compte de trading chez OKX, qui est une autre plateforme. Les annonces de HTX DAO comportent des événements de staking et d'incitations.
+
+**Économie réelle et droits du détenteur :** Le programme 'Pledge and Burn' combine des apports de liquidité HTX/TRX sur des DEX et la destruction de jetons **LP** obtenus, ainsi que d'autres opérations de destruction directe de HTX selon les annonces. Brûler un jeton LP verrouille en principe les droits sur la position de liquidité mais ne retire pas automatiquement les deux actifs sous-jacents de leur offre circulante. Il faut distinguer en comptabilité : HTX réellement brûlés, LP brûlés, apports de liquidité, provenance des jetons et frais utilisés pour rachats.
+
+**Question de recherche :** Parmi les montants affichés comme 'pledged and burnt', quelle part représente une destruction de HTX lui-même, par opposition aux LP rendus non récupérables ?
+
+**Indicateurs à collecter :** Transactions vérifiées de burn de HTX distinctes des burns de LP ; montants HTX/TRX ajoutés aux pools ; slippage et profondeur sur chaque DEX ; frais de l'exchange consacrés à chaque mécanisme ; parts de la trésorerie ; participation aux votes et conditions des incitations.
+
+**Risques spécifiques :** Concentration des contreparties et de la gouvernance, dépendance aux volumes d'exchanges, risques d'AMM et de contrats LP, liquidité circulante variable, communication agrégée qui fusionne plusieurs mécanismes non comparables.
+
+**Réserve de discernement :** Les montants affichés dans les communications du projet ne sont pas recalculés ici ; ne pas les employer comme variation d'offre de HTX sans analyse de transactions et des contrats.
+
+**Sources documentaires consultées (08/11/2026) :** [HTX DAO — présentation officielle des programmes](https://www.htxdao.com/) ; [HTX DAO — Pledge and Burn, étapes et transactions listées](https://www.htxdao.com/en-us/contribute/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/htx-dao).
 
 
 ### 45 ICP
@@ -1333,7 +1397,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/internet-computer).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Infrastructures de calcul et stockage sur blockchain, jeton ICP et carburant cycles.
+
+**Fonction du jeton et du protocole :** Internet Computer exécute des logiciels et des applications au sein de canisters, répartis sur des sous-réseaux physiques et administrés par un système de gouvernance NNS. ICP est utilisé pour la gouvernance, pour la sécurité économique et pour alimenter le calcul, mais le carburant directement consommé par les canisters est le **cycle**, pas une transaction en ICP pour chaque instruction.
+
+**Économie réelle et droits du détenteur :** ICP peut être détruit et converti en cycles via le Cycles Minting Canister ; les cycles sont calibrés par rapport au panier SDR/XDR pour stabiliser le coût des ressources informatiques. Les canisters consomment des cycles pour le stockage, la bande passante et le calcul. Le protocole émet aussi de nouveaux ICP pour rémunérer les contributeurs et votes du réseau. Pour calculer l'effet économique, il faut distinguer ICP convertis/détruits, émissions et dépenses en cycles.
+
+**Question de recherche :** L'utilisation informatique réelle des canisters consomme-t-elle suffisamment de cycles issus d'ICP pour caractériser une demande économique durable, face aux nouvelles émissions ?
+
+**Indicateurs à collecter :** ICP détruits pour l'émission de cycles ; cycles consommés par stockage, calcul et communication ; canisters actifs et ressources réellement utilisées ; ICP immobilisés en neurones NNS ; émissions/récompenses ; fournisseurs de nœuds et évolution des capacités physiques.
+
+**Risques spécifiques :** Dilution des émissions, concentration des pouvoirs NNS, dépendances des sous-réseaux et des opérateurs de nœuds, sécurité des canisters, efficacité économique relative au cloud traditionnel et confusion entre cycles XDR et prix spot ICP.
+
+**Réserve de discernement :** Le nombre de canisters, le volume d'appels et le prix ICP ne constituent pas à eux seuls une preuve de revenus nets ; les usages et leur coût en cycles doivent être documentés.
+
+**Sources documentaires consultées (08/11/2026) :** [Internet Computer — économie du réseau, ICP et cycles](https://docs.internetcomputer.org/concepts/network-economics/) ; [Internet Computer — conversion et consommation des cycles](https://docs.internetcomputer.org/concepts/cycles/) ; [Internet Computer — gouvernance NNS et neurones](https://docs.internetcomputer.org/concepts/governance/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/internet-computer).
 
 
 ### 46 WLD
@@ -1349,7 +1429,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/worldcoin-wld).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Jeton WLD de World Network : identité numérique World ID et gouvernance, séparé des données biométriques.
+
+**Fonction du jeton et du protocole :** World Network associe des preuves d'unicité humaine (World ID), des applications et le jeton WLD. Le livre blanc version 24 mars 2026 distingue les contrats WLD sur Ethereum, World Chain et Optimism ; World Chain est la chaîne mise en avant pour une large part des transferts. World ID concerne la preuve d'unicité, et WLD est un jeton crypto lié aux mécanismes de distribution et à la gouvernance annoncée. Détenir WLD n'est pas équivalent à disposer d'une identité World ID vérifiée.
+
+**Économie réelle et droits du détenteur :** Le livre blanc présente des distributions destinées à des personnes uniques vérifiées, des mécanismes d'incitation et un projet de gouvernance. Les allocations, déblocages et éventuelles émissions futures sont indépendants des inscriptions cumulées ; le projet indique que l'inflation est possible à partir de quinze ans après le lancement, selon les règles décrites. L'inscription d'un nouvel utilisateur ne signifie pas à elle seule un achat de WLD sur le marché secondaire.
+
+**Question de recherche :** Quelle part des usages effectifs de World ID et des applications est corrélée à une demande de WLD, sans transformer des inscriptions en achats ou droits financiers supposés ?
+
+**Indicateurs à collecter :** World ID uniques et réellement actifs selon mesures vérifiables et respectueuses de la confidentialité ; utilisations authentifiées de World ID par service ; WLD alloués/réclamés, circulation et déblocages ; frais et transactions par réseau ; qualité et transparence de la gouvernance ; adoption indépendante des applications.
+
+**Risques spécifiques :** Questions de protection des données et de consentement liées à la collecte biométrique, restrictions réglementaires régionales, centralisation des dispositifs de vérification, concentration et calendrier des WLD, risques de pont entre réseaux et confusion entre identité et monnaie.
+
+**Réserve de discernement :** Le thème biométrique exige des sources claires et respect de la vie privée : aucune inférence personnelle ni donnée d'identité n'est collectée pour cette recherche.
+
+**Sources documentaires consultées (08/11/2026) :** [World Foundation — livre blanc actualisé au 24 mars 2026](https://whitepaper.world.org/designing-for-scale/2026-03-24) ; [World Network — documentation sur les contrats et World Chain](https://docs.world.org/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/worldcoin-wld).
 
 
 ### 47 BGB
@@ -1365,7 +1461,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
 
-**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/bitget-token).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Jeton Bitget historiquement lié à l'exchange, désormais également gaz et gouvernance de Morph.
+
+**Fonction du jeton et du protocole :** BGB est le Bitget Token de l'écosystème Bitget. La plateforme le décrit dans certains programmes d'avantages, tandis que son annonce du 2 septembre 2025 acte un partenariat avec Morph, chaîne orientée usages de paiement. BGB y est présenté comme futur jeton de gaz et de gouvernance, ce qui le distingue d'un simple jeton de remise de frais de plateforme. Bitget fournit deux identités de contrat (Ethereum et Morph) qui doivent être contrôlées par réseau.
+
+**Économie réelle et droits du détenteur :** La valeur d'usage éventuelle dépend des programmes Bitget et des frais de réseau sur Morph. Le passage vers Morph annoncé par Bitget peut entraîner des modifications de répartition et de gouvernance ; il faut vérifier les transactions d'approvisionnement, la circulation et les burns effectifs. Aucun avantage Bitget n'est transposable automatiquement au compte européen OKX de l'utilisateur.
+
+**Question de recherche :** Le rôle réel de BGB sur Morph produit-il une demande de gaz mesurable et indépendante des promotions liées à Bitget ?
+
+**Indicateurs à collecter :** Transactions Morph et frais payés en BGB, véritables comptes et applications actifs, conditions et volumes de remises Bitget, offre totale et circulante à différentes dates, contrats ERC-20/Morph, concentration de tokens détenus par fondations/exchange et spreads Spot.
+
+**Risques spécifiques :** Dépendance à Bitget et à Morph, risques liés au fonctionnement de l'exchange, changements de programme, confusion entre contrats et réseaux, liquidité concentrée, modifications d'allocation de BGB et conformité par juridiction.
+
+**Réserve de discernement :** L'archive native Bitget BGB/USDT du Coffre représente un marché historique distinct d'une paire sur OKX ; aucun droit de trading OKX n'a été confirmé ici.
+
+**Sources documentaires consultées (08/11/2026) :** [Bitget — positionnement BGB / Morph annoncé le 2 septembre 2025](https://www.bitget.com/support/articles/12560603836781) ; [Bitget — présentation BGB et contrats Ethereum / Morph](https://www.bitget.fund/fr/activity-hub/BGB/intro). [Identité CoinGecko](https://www.coingecko.com/en/coins/bitget-token).
 
 ### 48 ARB
 
@@ -1380,7 +1492,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
 
-**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/arbitrum).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Gouvernance de l'Arbitrum DAO sur un écosystème de rollups Ethereum, pas le gaz natif d'Arbitrum One.
+
+**Fonction du jeton et du protocole :** Arbitrum propose notamment Arbitrum One et Nova, solutions de mise à l'échelle Ethereum. Le jeton ARB est le jeton de gouvernance de l'Arbitrum DAO, permettant de voter ou de déléguer sur les paramètres, la trésorerie et des éléments de gouvernance des chaînes gérées. **ETH, et non ARB, paie le gaz des transactions sur Arbitrum One.** D'autres Arbitrum Chains peuvent adopter des paramètres spécifiques, à ne pas confondre avec la chaîne One.
+
+**Économie réelle et droits du détenteur :** La DAO collecte des recettes de frais après couverture des coûts de publication et d'exploitation ; les décisions de leur allocation relèvent de la gouvernance et ne sont pas un dividende automatique pour ARB. La documentation de gouvernance indique une offre initiale de dix milliards ARB, avec possibilité de mint plafonné à 2 % par an via une proposition centrale : possibilité juridique/contractuelle ne signifie pas émission effectivement réalisée.
+
+**Question de recherche :** Les revenus nets et décisions exécutées de la DAO présentent-ils un avantage prouvé pour ARB, ou observe-t-on surtout des opérations réglées en ETH ?
+
+**Indicateurs à collecter :** Frais collectés nets des coûts L1, dépenses de séquenceur et contributions DAO, décisions votées et exécutées, actifs de trésorerie, participation des délégués ARB, échéances de déblocage, volumes d'activité économique L2 et concentration des validateurs/séquenceurs.
+
+**Risques spécifiques :** Séquenceur centralisé à la date du document de gouvernance, risques d'upgrade et de rollup, déblocages et dilution potentielle, concentration des votes et confusion entre frais ETH et valorisation d'ARB.
+
+**Réserve de discernement :** Le cours ARB du Market et les bougies ARB/USDT du Coffre ne doivent pas être utilisés comme s'il s'agissait du prix du gaz ETH.
+
+**Sources documentaires consultées (08/11/2026) :** [Arbitrum DAO — rôles ARB, émission et répartition des frais](https://docs.arbitrum.foundation/dao-faqs) ; [Arbitrum — FAQ officielle sur les frais de gaz ETH](https://docs.arbitrum.io/get-started/faq) ; [Arbitrum — statut de décentralisation du séquenceur](https://docs.arbitrum.foundation/state-of-progressive-decentralization). [Identité CoinGecko](https://www.coingecko.com/en/coins/arbitrum).
 
 ### 49 JST
 
@@ -1395,7 +1523,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
 
-**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/just).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Jeton de gouvernance TRC-20 du JUST DAO / JustLend sur TRON.
+
+**Fonction du jeton et du protocole :** JST est le jeton de gouvernance de JUST DAO, avec un rôle dans JustLend, le protocole de prêts et d'emprunts lié à TRON. Il peut être placé dans un wrapper WJST afin d'obtenir des droits de vote et d'interagir avec le système de propositions et timelock. JST doit être distingué du TRX utilisé pour les ressources réseau et des stablecoins issus des produits de prêt.
+
+**Économie réelle et droits du détenteur :** La documentation du protocole fixe l'offre maximale initiale à 9,9 milliards JST et décrit un programme de rachats et destructions qui doit être vérifié par transactions. Des tokens de gouvernance peuvent influencer les paramètres des marchés (collatéraux, taux, réserves, oracles) sans donner automatiquement droit aux intérêts encaissés par les prêteurs. Les rémunérations et les risques sont propres à chaque marché.
+
+**Question de recherche :** Quelle part des revenus nets des produits de prêt finance effectivement des rachats et destructions JST et quelles décisions de gouvernance ont une incidence économique démontrée ?
+
+**Indicateurs à collecter :** JST rachetés et brûlés par transaction vérifiée, distribution et concentration des WJST votants, quorum/propositions exécutées, encours de prêts et dettes douteuses, réserves et taux d'utilisation JustLend, valeur réelle des collatéraux, prix/oracles et profondeur JST.
+
+**Risques spécifiques :** Erreurs d'oracle et liquidations, dépendance à l'écosystème TRON, concentration des votes, failles de smart contracts et paramètres de collatéral, reporting promotionnel de buyback non audité, écarts de liquidité.
+
+**Réserve de discernement :** Les montants affichés par le site JustLend sont des chiffres d'émetteur, à recouper avec la chaîne TRON avant de les employer dans un calcul de variation d'offre.
+
+**Sources documentaires consultées (08/11/2026) :** [JustLend — rôle, contrat et distribution du JST](https://docs.justlend.org/governance/tokenomics/) ; [JustLend — gouvernance WJST, quorum et timelock](https://docs.justlend.org/developers/supply_and_borrow_market/governance/) ; [JustLend — page de présentation du programme de burn](https://justlend.org/jst). [Identité CoinGecko](https://www.coingecko.com/en/coins/just).
 
 ### 50 ETC
 
@@ -1410,7 +1554,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
 
-**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/ethereum-classic).
+**Étude fondamentale — état : recherche documentaire sourcée, adoption réelle non auditée.**
+
+**Catégorie :** Blockchain de preuve de travail compatible EVM, distincte d'Ethereum et de son consensus PoS.
+
+**Fonction du jeton et du protocole :** Ethereum Classic (ETC) exploite sa propre chaîne EVM de preuve de travail et des contrats intelligents. ETC sert au paiement du gaz et aux récompenses de minage. **ETC n'est pas ETH** : contrats, chaîne, politique d'émission, profondeur de marché et risques de sécurité sont distincts ; les historiques Ethereum ne doivent jamais être substitués aux séries Ethereum Classic.
+
+**Économie réelle et droits du détenteur :** La politique ECIP-1017 prévoit une diminution de 20 % des récompenses de blocs toutes les 5 millions de blocs (« fifthing »), ce qui fait converger l'émission vers un plafond asymptotique. Une courbe prévisible d'émission n'est ni un rendement, ni la preuve d'une adoption des smart contracts. La sécurité PoW dépend de la distribution réelle de puissance de calcul, et les frais disponibles pour les mineurs peuvent être limités si l'usage est faible.
+
+**Question de recherche :** Les frais et l'activité des applications augmentent-ils en même temps que la sécurité économique PoW, à mesure que l'émission de blocs diminue ?
+
+**Indicateurs à collecter :** Récompenses ETC et frais par bloc, taux de hachage et concentration des pools, coût d'une attaque et confirmations nécessaires selon les intermédiaires, transactions et frais de smart contracts, capacités de nœuds, volumes et liquidité ETC/USDT, diffusions/mises à jour du client.
+
+**Risques spécifiques :** Risque de réorganisation et attaques à puissance de calcul, infrastructure de mineurs et concentrations, compatibilité des contrats selon version EVM, erreurs de chaîne, volatilité des actifs, concurrence de réseaux plus actifs.
+
+**Réserve de discernement :** Le nombre d'ETC en circulation ou la récompense de bloc précise ne sont pas extrapolés ici ; ils doivent être recalculés au bloc et à l'instant d'observation.
+
+**Sources documentaires consultées (08/11/2026) :** [Ethereum Classic — standards ECIP dont ECIP-1017](https://ethereumclassic.org/development/ecips/) ; [Ethereum Classic — calendrier des réductions 5M20 et approvisionnement](https://ethereumclassic.com/research/emission-schedule) ; [Ethereum Classic — réseau Mainnet PoW, chain ID 61](https://ethereumclassic.com/mining). [Identité CoinGecko](https://www.coingecko.com/en/coins/ethereum-classic).
 **Cas de recherche hors Top 50 :** [JCT / Janction · mouvement +247 % observé au 8 novembre, identité et limites des sources](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/laboratoire/SEVEN_HEAVEN_AGENT_CRYPTO_JANCTION_JCT_RADAR_MOMENTUM_MARKET_EVIDENCE_CASE_STUDY_2026_11_08.md). Cette étude reste distincte du classement Top 50 et ne crée pas de rang artificiel.
 
 ## Priorités de recherche et prochaine étape réelle
@@ -1420,4 +1580,4 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 4. **PAPER :** seulement après validation des entrées, frais, règles et horizons ; aucune opération fictive exécutée par ce document.
 5. **Top 100 / 250 / 1 000 :** étendre la même grille sans retoucher le code du Trader ni recopier les historiques.
 
-**Ce qui est accompli :** **50 dossiers individuels** ; **5 études fondamentales initiales**, **5 études fondamentales intermédiaires**, **30 études documentaires enrichies et sourcées (positions 11–40)** et **10 fiches quantitatives/archives (positions 41–50) restant à approfondir**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
+**Ce qui est accompli :** **50 dossiers individuels**, dont **5 fondamentaux initiaux**, **5 fondamentaux intermédiaires** et **40 études documentaires enrichies avec sources (positions 11–50)**. L'approfondissement et la validation indépendante restent ouverts pour les 50 ; la couverture documentaire n'est pas un audit de protocole. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
