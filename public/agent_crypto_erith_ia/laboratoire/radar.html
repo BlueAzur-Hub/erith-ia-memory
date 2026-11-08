@@ -41,6 +41,7 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <div><div class="kicker">ERITH.IA · LABORATOIRE IA · OBSERVATION PUBLIQUE</div><h1>Radar</h1>
 <p>Marché par capitalisation, nouveaux listings Spot et observations PAPER automatisées — aucune transaction réelle.</p></div>
 <div><a href="../trader/trading-desk.html">← Trader</a> · <a href="./radar20-veille.html">Étude historique Radar 20</a>
+ · <a href="#radar-new-listings-matrix">Nouveaux · preuves</a> · <a href="#radar-permanent-matrix">Matrice Radar</a>
 <button id="refresh" type="button">Actualiser Radar</button></div>
 </header>
 <p id="status" role="status" aria-live="polite">Lecture des sources publiques…</p>
@@ -103,6 +104,40 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <p><a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/trader_flux/btc_ct_auto_paper/state.json" target="_blank" rel="noopener">Journal public BTC/CT ↗</a></p>
 </section>
 </div>
+<section class="panel" id="radar-new-listings-matrix" aria-labelledby="radar-new-listings-heading">
+  <h2 id="radar-new-listings-heading">Nouvelles cotations Spot · qualification et provenance</h2>
+  <p>Complément au détecteur ci-dessus : inventaire des <strong>paires nouvellement référencées</strong> sur OKX et Bitget dans le catalogue des 30 derniers jours. Une nouvelle paire n'est ni nécessairement un nouveau projet, ni un signal de trading. Les cours et volumes sont ceux du relevé daté, en unités natives, jamais convertis artificiellement en USD.</p>
+  <details id="radar-new-listings-details">
+    <summary style="cursor:pointer;color:var(--cyan);font-weight:750">Consulter toutes les paires, leur identité et les preuves manquantes</summary>
+    <p class="note" id="radar-new-listings-status" role="status" aria-live="polite">Ouvrir pour consulter le catalogue public archivé.</p>
+    <div class="controls">
+      <label for="radar-new-listings-search">Rechercher <input id="radar-new-listings-search" type="search" placeholder="Paire, symbole, ID..." autocomplete="off"></label>
+      <label for="radar-new-listings-provider">Place <select id="radar-new-listings-provider">
+        <option value="all">OKX + Bitget</option><option value="okx">OKX</option><option value="bitget">Bitget</option>
+      </select></label>
+      <label for="radar-new-listings-proof">Preuve <select id="radar-new-listings-proof">
+        <option value="all">Toutes</option>
+        <option value="exact">Identité exacte du registre</option>
+        <option value="unverified">Identité à vérifier</option>
+        <option value="noquote">Cotation absente</option>
+        <option value="zerovol">Volume API nul</option>
+      </select></label>
+      <button id="radar-new-listings-refresh" type="button">Relire le catalogue</button>
+    </div>
+    <div class="scroll"><table style="min-width:1080px" aria-label="Preuves et qualification des nouvelles cotations Spot">
+      <thead><tr><th>Paire Spot</th><th>Place</th><th>Date de cotation (UTC)</th><th>Âge au relevé</th><th>Identité du projet</th><th>Dernier prix API (devise native)</th><th>Vol. API 24h brut</th><th>Suite documentaire</th></tr></thead>
+      <tbody id="radar-new-listings-rows"><tr><td colspan="8">Archives non chargées.</td></tr></tbody>
+    </table></div>
+    <p class="muted">Limites : <code>listTime</code> peut désigner le début d'une préouverture sur OKX ; la date ne prouve pas la première création du jeton. <code>volCcy24h</code> est conservé tel que publié par l'API, sans conversion en USD. Les devises USDT et USDC sont distinctes. Les données Spot publiques ne prouvent ni éligibilité du compte/région, ni liquidité historique, ni possibilité d'exécution au prix affiché.</p>
+    <p class="muted">Sources :
+      <a href="../administrator/data/new-listings-public-feed.json" target="_blank" rel="noopener">flux public archivé</a> ·
+      <a href="https://www.okx.com/docs-v5/en/" target="_blank" rel="noopener">documentation OKX</a> ·
+      <a href="https://www.bitget.com/legacy-docs/classic/spot/market/Get-Symbols" target="_blank" rel="noopener">documentation Bitget</a> ·
+      <a href="#radar-permanent-matrix">matrice des 20 candidats Radar</a>.
+    </p>
+  </details>
+</section>
+
 <section class="panel">
 <h2>Évolution prévue · Radar 10 → 20 → 50 → 250</h2>
 <p><span class="chip">Marché</span> Ces quatre périmètres sont disponibles en consultation. Le classement se fonde sur la capitalisation CoinGecko, pas sur la disponibilité d'une paire Spot OKX ni sur la rentabilité.</p>
@@ -279,6 +314,128 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
   refresh.addEventListener("click", load);
   filter.addEventListener("input", paint);
   scope.addEventListener("change", paint);
+}());
+</script>
+
+<script>
+/* Seven Heaven: public archived listings only; zero exchange requests and zero orders. */
+(function () {
+  "use strict";
+  const details = document.getElementById("radar-new-listings-details");
+  if (!details) return;
+  const status = document.getElementById("radar-new-listings-status");
+  const tbody = document.getElementById("radar-new-listings-rows");
+  const query = document.getElementById("radar-new-listings-search");
+  const provider = document.getElementById("radar-new-listings-provider");
+  const proof = document.getElementById("radar-new-listings-proof");
+  const refresh = document.getElementById("radar-new-listings-refresh");
+  const source = "../administrator/data/new-listings-public-feed.json";
+  let items = null, loading = false;
+  const str = value => value == null || value === "" ? "Non relevé" : String(value);
+  const utc = value => {
+    const ms = Date.parse(value);
+    return Number.isFinite(ms) ? new Date(ms).toISOString().replace("T"," ").slice(0,16) + " UTC" : "Date invalide";
+  };
+  const readableAge = (then, now) => {
+    const delta = Date.parse(now) - Date.parse(then);
+    if (!Number.isFinite(delta) || delta < 0) return "Inconnu";
+    const d = Math.floor(delta / 86400000), h = Math.floor((delta % 86400000) / 3600000);
+    return d + " j " + h + " h";
+  };
+  function row(values) {
+    const tr = document.createElement("tr");
+    for (const cell of values) {
+      const td = document.createElement("td");
+      td.textContent = str(cell);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  function render() {
+    if (!items) return;
+    const term = query.value.trim().toLocaleLowerCase("fr");
+    const p = provider.value, v = proof.value;
+    tbody.replaceChildren();
+    let shown = 0;
+    for (const x of items) {
+      const exact = x.identity_status === "EXACT_CONTRACT_AND_VENUE_REGISTRY" && !!x.canonicalId;
+      const quoted = !!x.quote_snapshot && x.quote_snapshot.last !== undefined && x.quote_snapshot.last !== null;
+      const zero = !!x.quote_snapshot && x.quote_snapshot.volCcy24h != null && Number(x.quote_snapshot.volCcy24h) === 0;
+      if (p !== "all" && x.provider !== p) continue;
+      if (v === "exact" && !exact) continue;
+      if (v === "unverified" && exact) continue;
+      if (v === "noquote" && quoted) continue;
+      if (v === "zerovol" && !zero) continue;
+      if (term && ![x.base,x.quote,x.pair,x.canonicalId,x.provider].join(" ").toLocaleLowerCase("fr").includes(term)) continue;
+      shown++;
+      row([
+        x.pair, x.provider.toUpperCase(), utc(x.listedAt), readableAge(x.listedAt,x.archiveAt),
+        exact ? "Registre : " + x.canonicalId : "Identité non certifiée (symbole de place)",
+        quoted ? str(x.quote_snapshot.last) + " " + x.quote : "Aucun prix archivé",
+        x.quote_snapshot?.volCcy24h == null ? "Non relevé" : String(x.quote_snapshot.volCcy24h),
+        exact ? "Vérifier accès régional, carnet et historique" :
+          zero ? "Vérifier activité et identité ; volume observé nul" :
+          quoted ? "Vérifier contrat, projet, carnet et historique" :
+          "Vérifier identité et disponibilité d'un prix public"
+      ]);
+    }
+    if (!shown) row(["Aucune paire pour ce filtre", "", "", "", "", "", "", ""]);
+  }
+  async function read() {
+    if (loading || !details.open) return;
+    loading = true;
+    refresh.disabled = true;
+    status.textContent = "Vérification du dernier catalogue public publié…";
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const res = await fetch(new URL(source,document.baseURI).href,{
+        cache:"no-store", credentials:"omit", signal:controller.signal
+      });
+      if (!res.ok) throw Error("Archive indisponible (HTTP " + res.status + ")");
+      const data = await res.json();
+      if (data.schema !== "erith.seven.public-spot-listings-feed.v1" ||
+          data.read_only !== true || data.trade_permission !== false ||
+          data.real_orders !== 0 || data.no_ticker_to_contract_identity_inference !== true ||
+          !Array.isArray(data.entries) || !Number.isFinite(Date.parse(data.captured_at_utc)) ||
+          data.entries.some(x => x.instrument_type !== "SPOT" ||
+            !["okx","bitget"].includes(x.provider) ||
+            !x.pair || !x.base || !x.quote || !Number.isFinite(Date.parse(x.listedAt)))) {
+        throw Error("Schéma, provenance ou garde-fous incohérents");
+      }
+      const unique = new Set(data.entries.map(x => x.provider + "|" + x.providerSymbol));
+      if (unique.size !== data.entries.length) throw Error("Paires dupliquées dans le relevé");
+      items = data.entries.map(x => ({...x,archiveAt:data.captured_at_utc}))
+        .sort((a,b) => Date.parse(b.listedAt)-Date.parse(a.listedAt));
+      const okx = items.filter(x => x.provider === "okx").length;
+      const bitget = items.length - okx;
+      const exact = items.filter(x => x.identity_status === "EXACT_CONTRACT_AND_VENUE_REGISTRY" && x.canonicalId).length;
+      const price = items.filter(x => x.quote_snapshot?.last != null).length;
+      const lag = Date.now()-Date.parse(data.captured_at_utc);
+      const old = !Number.isFinite(lag) || lag < -3600000 || lag > 36 * 3600000;
+      status.textContent = "Relevé " + utc(data.captured_at_utc) + " · " +
+        items.length + " paires distinctes (" + okx + " OKX, " + bitget + " Bitget) · " +
+        exact + " identité(s) reliée(s) au registre exact · " + price + " prix API archivé(s) · " +
+        (old ? "ATTENTION : archive ancienne ou date incohérente · " : "") +
+        "Observation publique uniquement. Aucune paire n'est certifiée exécutable.";
+      render();
+    } catch(err) {
+      items = null;
+      tbody.replaceChildren();
+      row(["Matrice indisponible", "", "", "", "", "", "", ""]);
+      status.textContent = "Échec contrôlé : " + (err?.message || "archive non disponible") +
+        ". Aucune valeur ancienne n'est présentée comme actuelle.";
+    } finally {
+      clearTimeout(timeout);
+      loading = false;
+      refresh.disabled = false;
+    }
+  }
+  details.addEventListener("toggle", () => {if (details.open && !items) read();});
+  refresh.addEventListener("click", read);
+  query.addEventListener("input", render);
+  provider.addEventListener("change", render);
+  proof.addEventListener("change", render);
 }());
 </script>
 
