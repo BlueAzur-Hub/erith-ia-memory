@@ -326,6 +326,8 @@ function mount(doc=document,fetcher=fetch){
     c.catalogOKX+" cotations OKX dans le catalogue du "+
     m.listingAt.slice(0,10)+" · 0 instrument authentifié pour le compte. Aucun ordre.";
    render(doc,model);
+   const EventType=doc.defaultView?.CustomEvent;
+   if(EventType)doc.dispatchEvent(new EventType("seven:okx-universe-loaded",{detail:model}));
   }catch(e){
    active=null;doc.getElementById("okx-target-rows").replaceChildren();
    status.textContent="Catalogue partiel / inaccessible : "+e.message+

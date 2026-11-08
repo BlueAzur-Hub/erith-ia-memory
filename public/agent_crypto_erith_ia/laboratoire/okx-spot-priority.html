@@ -62,10 +62,26 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 <p class="foot" id="okx-logo-render-status" role="status" aria-live="polite">Logos : chargement du nouveau rendu…</p><p class="foot">Logos locaux lorsque l'identité visuelle est connue ; sinon initiales du symbole. Le pictogramme est uniquement une aide visuelle, pas une certification d'identité, de cotation ou d'accès au compte.</p>
 <div class="scroller"><table><thead><tr><th>Paire native</th><th>Catégorie</th><th>Source de preuve</th><th>Dernier relevé pertinent</th><th>Accès au compte</th><th>Suite documentaire</th></tr></thead><tbody id="okx-target-rows"><tr><td colspan="6">Aucune donnée chargée.</td></tr></tbody></table></div>
 </section>
+<section id="okx-market-crosswalk">
+<h2>Radar OKX × Market · classer sans confondre les instruments</h2>
+<p>Les paires crypto sont regroupées par actif, avec rapprochement aux rangs CoinGecko Top 250 et Top 1 000. <strong>Correspondance de ticker ≠ identité du contrat</strong>, et observation publique ≠ autorisation pour le compte européen. Les produits X sont exclus.</p>
+<p class="notice" id="okx-crosswalk-status" role="status">Lecture des données Market à venir…</p>
+<div class="filters"><label for="okx-crosswalk-range">Univers Market
+<select id="okx-crosswalk-range">
+<option value="all">Toutes les crypto recensées</option>
+<option value="10">Top 10</option><option value="50">Top 50</option>
+<option value="250">Top 250</option><option value="1000">Top 1 000</option>
+<option value="unmatched">Sans correspondance Market</option></select></label></div>
+<p class="foot" id="okx-crosswalk-count">En attente des catalogues.</p>
+<div class="scroller"><table>
+<thead><tr><th>Crypto</th><th>Rang</th><th>Paires OKX observées</th><th>Identité CoinGecko</th><th>Preuves disponibles</th><th>Accès au compte</th></tr></thead>
+<tbody id="okx-crosswalk-rows"><tr><td colspan="6">Lecture seule.</td></tr></tbody></table></div>
+<p class="foot">Les snapshots Top 250 et 251–1 000 peuvent chevaucher une frontière de classement. Aucun prix USD n'est assimilé à une cotation USDC, USDT ou EUR. Aucun ordre.</p>
+</section>
 <section><h2>Critère d'admissibilité dans notre Laboratoire</h2>
 <p>Une ligne du catalogue public, un prix à l'écran ou un carnet historique ne valident pas un ordre. Pour passer de « observer » à une <em>simulation PAPER justifiée</em>, il faudra vérifier l'instrument exact au bon instant, les règles Spot, l'identité du jeton, les frais réels applicables, une profondeur suffisante et des séries historiques compatibles. USD, USDC, USDT et EUR restent des devises distinctes.</p>
 <p><strong>Attention à la migration du 30 septembre 2026 :</strong> les instruments Spot <code>Crypto-USD</code> concernés ont été remplacés par <code>Crypto-USDC</code>. La devise de règlement doit être qualifiée séparément avec <code>tradeQuoteCcyList</code> fourni par les instruments authentifiés du compte. Une annonce historique <code>EDGE-USD</code> ne prouve pas son état actuel. <a href="https://my.okx.com/docs-v5/log_en/" target="_blank" rel="noopener noreferrer">Journal officiel des modifications ↗</a></p><p>Pour l'Europe, la documentation d'OKX indique le domaine <code>eea.okx.com</code>. <strong>GET /api/v5/public/instruments?instType=SPOT</strong> est public ; <strong>GET /api/v5/account/instruments?instType=SPOT</strong> est authentifié et seul peut préciser les instruments accessibles au compte. Cette page n'appelle pas le second.</p>
 <p><a href="https://www.okx.com/docs-v5/" target="_blank" rel="noopener noreferrer">Documentation officielle OKX API ↗</a> · <a href="https://www.okx.com/fr-fr/stock" target="_blank" rel="noopener noreferrer">Produits tokenisés OKX ↗</a> · <a href="../administrator/data/new-listings-public-feed.json" target="_blank" rel="noopener noreferrer">Catalogue Spot public archivé ↗</a> · <a href="../data/crypto/okx-hourly/research-latest.json" target="_blank" rel="noopener noreferrer">Carnets OKX historiques ↗</a> · <a href="../data/crypto/research/okx-spot-screen-candidates.json" target="_blank" rel="noopener noreferrer">Paires des captures (sans données privées) ↗</a></p>
 </section>
 <footer class="foot">ERITH.IA · Observation publique et datée · aucune garantie d'accès régional, aucun ordre, aucun rendement, aucun conseil d'achat.</footer>
-</main><script src="./okx-spot-priority.js?v=20261108-logos-b" defer></script></body></html>
+</main><script src="./okx-spot-priority.js?v=20261108-market-v1" defer></script><script src="./okx-market-crosswalk.js?v=20261108-market-v1" defer></script></body></html>
