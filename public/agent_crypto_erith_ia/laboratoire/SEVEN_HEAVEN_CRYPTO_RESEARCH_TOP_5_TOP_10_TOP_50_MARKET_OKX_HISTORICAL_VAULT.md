@@ -1,6 +1,6 @@
 # SEVEN HEAVEN — Dossiers crypto Top 5 / Top 10 / Top 50
 **État documentaire : 8 novembre 2026 — édition initiale, lecture seule.**  
-**Périmètre :** cryptomonnaies du snapshot CoinGecko Top 250, après exclusion de travail des stablecoins et des instruments adossés/tokenisés connus. Les **rangs officiels CoinGecko ne sont jamais renumérotés**. Les dossiers Top 5 sont approfondis ; les cinq suivants ont une analyse fondamentale intermédiaire ; les 40 suivants ont chacun une fiche chiffrée, historique et de risques de lecture. Ce n'est ni un classement des « meilleurs investissements », ni une preuve qu'un instrument est négociable sur ton compte OKX.
+**Périmètre :** cryptomonnaies du snapshot CoinGecko Top 250, après exclusion explicite des stablecoins (dont USDD, United Stables et BFUSD), des fonds tokenisés (dont BUIDL) et des instruments adossés connus. Les **rangs officiels CoinGecko ne sont jamais renumérotés**. Les dossiers Top 5 sont approfondis ; les cinq suivants ont une analyse fondamentale intermédiaire ; les 40 suivants ont chacun une fiche chiffrée, historique et de risques de lecture. Ce n'est ni un classement des « meilleurs investissements », ni une preuve qu'un instrument est négociable sur ton compte OKX.
 
 ## Sources canoniques et méthode
 - [Market public Top 250](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/latest.json) — snapshot du **2026-11-08T16:04:58.911Z** ; identifiants exacts, rangs, prix USD, variations et volumes datés.
@@ -12,65 +12,67 @@
 Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre de bougies n'implique ni leur téléchargement dans cette fiche, ni leur admissibilité automatique à PAPER. Les descriptions de protocoles sont une synthèse documentaire de leur fonction déclarée, sans audit indépendant d'adoption. Nous ne fabriquons aucun signal, bénéfice, fill ou permission de trading.
 
 ## Synthèse du classement de travail
-**Top 5 hors stablecoins et instruments adossés :** BTC (rang CoinGecko 1) · ETH (rang CoinGecko 2) · BNB (rang CoinGecko 4) · XRP (rang CoinGecko 5) · SOL (rang CoinGecko 7).
+**Top 5 :** BTC (#1) · ETH (#2) · BNB (#4) · XRP (#5) · SOL (#7).
 
 **Top 10 :** BTC (#1) · ETH (#2) · BNB (#4) · XRP (#5) · SOL (#7) · TRX (#8) · ZEC (#10) · HYPE (#11) · XMR (#12) · DOGE (#13).
 
-| Position de travail | Rang CoinGecko | Actif | Prix USD archivé | 24 h | Volume 24 h | Historique natif | Paires présentes sur tes captures OKX |
+| Position de travail | Rang CoinGecko | Actif | Prix USD archivé | 24 h | Volume 24 h | Historique natif | Paires visibles sur les captures OKX |
 |---:|---:|---|---:|---:|---:|---|---|
 | 1 | 1 | [Bitcoin (BTC)](#1-btc) | 76 004,05 USD | +0,4 % | 10,28 Md USD | 1 min | BTC-USDC |
 | 2 | 2 | [Ethereum (ETH)](#2-eth) | 2 240,02 USD | +0,21 % | 3,76 Md USD | 1 min | ETH-USDC |
-| 3 | 4 | [BNB (BNB)](#3-bnb) | 697,45 USD | +0,58 % | 574,73 M USD | 1 min | Pas sur les 21 captures |
+| 3 | 4 | [BNB (BNB)](#3-bnb) | 697,45 USD | +0,58 % | 574,73 M USD | 1 min | Pas sur les captures |
 | 4 | 5 | [XRP (XRP)](#4-xrp) | 1,16 USD | -0,17 % | 819,44 M USD | 1 min | XRP-USDC |
 | 5 | 7 | [Solana (SOL)](#5-sol) | 89,67 USD | +0,29 % | 863,84 M USD | 1 min | SOL-USDC |
-| 6 | 8 | [TRON (TRX)](#6-trx) | 0,32032412 USD | +0,23 % | 266,96 M USD | 1 min | Pas sur les 21 captures |
-| 7 | 10 | [Zcash (ZEC)](#7-zec) | 1 273,73 USD | +1,32 % | 595,45 M USD | 1 min | Pas sur les 21 captures |
-| 8 | 11 | [Hyperliquid (HYPE)](#8-hype) | 77,47 USD | +0,06 % | 431,75 M USD | 1 min | Pas sur les 21 captures |
-| 9 | 12 | [Monero (XMR)](#9-xmr) | 607,67 USD | -0,26 % | 81,27 M USD | 1 min | Pas sur les 21 captures |
+| 6 | 8 | [TRON (TRX)](#6-trx) | 0,32032412 USD | +0,23 % | 266,96 M USD | 1 min | Pas sur les captures |
+| 7 | 10 | [Zcash (ZEC)](#7-zec) | 1 273,73 USD | +1,32 % | 595,45 M USD | 1 min | Pas sur les captures |
+| 8 | 11 | [Hyperliquid (HYPE)](#8-hype) | 77,47 USD | +0,06 % | 431,75 M USD | 1 min | Pas sur les captures |
+| 9 | 12 | [Monero (XMR)](#9-xmr) | 607,67 USD | -0,26 % | 81,27 M USD | 1 min | Pas sur les captures |
 | 10 | 13 | [Dogecoin (DOGE)](#10-doge) | 0,0713868 USD | -0,2 % | 241,15 M USD | 1 min | DOGE-USDC |
-| 11 | 15 | [WhiteBIT Coin (WBT)](#11-wbt) | 72,95 USD | +0,29 % | 24,75 M USD | Pas dans les deux index | Pas sur les 21 captures |
-| 12 | 16 | [LEO Token (LEO)](#12-leo) | 9,32 USD | -0,13 % | 1,14 M USD | 1 jour | Pas sur les 21 captures |
-| 13 | 17 | [Chainlink (LINK)](#13-link) | 10,74 USD | -0,91 % | 142,66 M USD | 1 min | Pas sur les 21 captures |
-| 14 | 18 | [Cardano (ADA)](#14-ada) | 0,18083338 USD | -0,42 % | 110,8 M USD | 1 min | Pas sur les 21 captures |
-| 15 | 19 | [Stellar (XLM)](#15-xlm) | 0,15141957 USD | +0,05 % | 75,67 M USD | 1 min | Pas sur les 21 captures |
+| 11 | 15 | [WhiteBIT Coin (WBT)](#11-wbt) | 72,95 USD | +0,29 % | 24,75 M USD | Non indexé | Pas sur les captures |
+| 12 | 16 | [LEO Token (LEO)](#12-leo) | 9,32 USD | -0,13 % | 1,14 M USD | 1 jour | Pas sur les captures |
+| 13 | 17 | [Chainlink (LINK)](#13-link) | 10,74 USD | -0,91 % | 142,66 M USD | 1 min | Pas sur les captures |
+| 14 | 18 | [Cardano (ADA)](#14-ada) | 0,18083338 USD | -0,42 % | 110,8 M USD | 1 min | Pas sur les captures |
+| 15 | 19 | [Stellar (XLM)](#15-xlm) | 0,15141957 USD | +0,05 % | 75,67 M USD | 1 min | Pas sur les captures |
 | 16 | 20 | [Bitcoin Cash (BCH)](#16-bch) | 245,45 USD | -4,42 % | 125,55 M USD | 1 min | BCH-USDC |
-| 17 | 22 | [NEAR Protocol (NEAR)](#17-near) | 3,71 USD | +1,15 % | 234,78 M USD | 1 min | Pas sur les 21 captures |
-| 18 | 24 | [Uniswap (UNI)](#18-uni) | 7 USD | -0,09 % | 231,08 M USD | 1 min | Pas sur les 21 captures |
-| 19 | 25 | [Litecoin (LTC)](#19-ltc) | 51,82 USD | -0,01 % | 121,06 M USD | 1 min | Pas sur les 21 captures |
-| 20 | 26 | [Rain (RAIN)](#20-rain) | 0,0054178 USD | -3,31 % | 9,22 M USD | 1 jour | Pas sur les 21 captures |
-| 21 | 27 | [Canton (CC)](#21-cc) | 0,09307752 USD | -1,73 % | 6,39 M USD | 1 jour | Pas sur les 21 captures |
-| 22 | 28 | [Avalanche (AVAX)](#22-avax) | 8,24 USD | +0,55 % | 88,6 M USD | 1 min | Pas sur les 21 captures |
-| 23 | 29 | [Sui (SUI)](#23-sui) | 0,85264769 USD | -0,47 % | 158,07 M USD | 1 min | Pas sur les 21 captures |
-| 24 | 32 | [Gram (prev. Toncoin) (GRAM)](#24-gram) | 1,06 USD | -2,16 % | 25,98 M USD | 1 min | Pas sur les 21 captures |
-| 25 | 33 | [Hedera (HBAR)](#25-hbar) | 0,06669443 USD | -0,81 % | 25,36 M USD | 1 min | Pas sur les 21 captures |
-| 26 | 34 | [Quant (QNT)](#26-qnt) | 200,74 USD | +0,93 % | 32,39 M USD | 1 min | Pas sur les 21 captures |
-| 27 | 38 | [Bittensor (TAO)](#27-tao) | 226,41 USD | +1,9 % | 41,74 M USD | 1 min | Pas sur les 21 captures |
-| 28 | 39 | [Shiba Inu (SHIB)](#28-shib) | 0,00000447 USD | +0,01 % | 36,2 M USD | 1 min | Pas sur les 21 captures |
-| 29 | 40 | [Cronos (CRO)](#29-cro) | 0,04842157 USD | -0,59 % | 3,75 M USD | 1 jour | Pas sur les 21 captures |
+| 17 | 22 | [NEAR Protocol (NEAR)](#17-near) | 3,71 USD | +1,15 % | 234,78 M USD | 1 min | Pas sur les captures |
+| 18 | 24 | [Uniswap (UNI)](#18-uni) | 7 USD | -0,09 % | 231,08 M USD | 1 min | Pas sur les captures |
+| 19 | 25 | [Litecoin (LTC)](#19-ltc) | 51,82 USD | -0,01 % | 121,06 M USD | 1 min | Pas sur les captures |
+| 20 | 26 | [Rain (RAIN)](#20-rain) | 0,0054178 USD | -3,31 % | 9,22 M USD | 1 jour | Pas sur les captures |
+| 21 | 27 | [Canton (CC)](#21-cc) | 0,09307752 USD | -1,73 % | 6,39 M USD | 1 jour | Pas sur les captures |
+| 22 | 28 | [Avalanche (AVAX)](#22-avax) | 8,24 USD | +0,55 % | 88,6 M USD | 1 min | Pas sur les captures |
+| 23 | 29 | [Sui (SUI)](#23-sui) | 0,85264769 USD | -0,47 % | 158,07 M USD | 1 min | Pas sur les captures |
+| 24 | 32 | [Gram (prev. Toncoin) (GRAM)](#24-gram) | 1,06 USD | -2,16 % | 25,98 M USD | 1 min | Pas sur les captures |
+| 25 | 33 | [Hedera (HBAR)](#25-hbar) | 0,06669443 USD | -0,81 % | 25,36 M USD | 1 min | Pas sur les captures |
+| 26 | 34 | [Quant (QNT)](#26-qnt) | 200,74 USD | +0,93 % | 32,39 M USD | 1 min | Pas sur les captures |
+| 27 | 38 | [Bittensor (TAO)](#27-tao) | 226,41 USD | +1,9 % | 41,74 M USD | 1 min | Pas sur les captures |
+| 28 | 39 | [Shiba Inu (SHIB)](#28-shib) | 0,00000447 USD | +0,01 % | 36,2 M USD | 1 min | Pas sur les captures |
+| 29 | 40 | [Cronos (CRO)](#29-cro) | 0,04842157 USD | -0,59 % | 3,75 M USD | 1 jour | Pas sur les captures |
 | 30 | 42 | [OKB (OKB)](#30-okb) | 102,89 USD | -0,05 % | 9,48 M USD | 1 jour | OKB-USDC |
-| 31 | 43 | [Pepe (PEPE)](#31-pepe) | 0,00000507 USD | +4,05 % | 232,54 M USD | 1 min | Pas sur les 21 captures |
-| 32 | 45 | [Ethena (ENA)](#32-ena) | 0,15417634 USD | -2,29 % | 176,34 M USD | 1 min | Pas sur les 21 captures |
-| 33 | 46 | [Aave (AAVE)](#33-aave) | 129,99 USD | -1,69 % | 131,51 M USD | 1 min | Pas sur les 21 captures |
-| 34 | 48 | [MemeCore (M)](#34-m) | 0,80268685 USD | -2,61 % | 1,63 M USD | 1 jour | Pas sur les 21 captures |
-| 35 | 51 | [BlackRock USD Institutional Digital Liquidity Fund (BUIDL)](#35-buidl) | 1 USD | 0 % | 0 USD | Pas dans les deux index | Pas sur les 21 captures |
-| 36 | 52 | [Ondo (ONDO)](#36-ondo) | 0,36274143 USD | -0,02 % | 58,27 M USD | 1 min | Pas sur les 21 captures |
-| 37 | 53 | [Aster (ASTER)](#37-aster) | 0,67928902 USD | +0,61 % | 44,05 M USD | 1 min | Pas sur les 21 captures |
-| 38 | 54 | [Pump.fun (PUMP)](#38-pump) | 0,00374501 USD | +4,69 % | 111,49 M USD | 1 min | Pas sur les 21 captures |
-| 39 | 55 | [Bitway (BTW)](#39-btw) | 1,14 USD | +1,05 % | 8,94 M USD | 1 min | Pas sur les 21 captures |
-| 40 | 56 | [United Stables (U)](#40-u) | 0,99953939 USD | +0,03 % | 72,33 M USD | 1 jour | Pas sur les 21 captures |
-| 41 | 57 | [Polkadot (DOT)](#41-dot) | 0,89155249 USD | -0,29 % | 48,76 M USD | 1 min | Pas sur les 21 captures |
-| 42 | 58 | [USDD (USDD)](#42-usdd) | 0,99878535 USD | -0,05 % | 709 391 USD | 1 jour | Pas sur les 21 captures |
-| 43 | 59 | [Sky (SKY)](#43-sky) | 0,06412478 USD | +0,54 % | 3,67 M USD | 1 min | Pas sur les 21 captures |
-| 44 | 60 | [Mantle (MNT)](#44-mnt) | 0,45337855 USD | -0,19 % | 12,51 M USD | 1 jour | Pas sur les 21 captures |
-| 45 | 61 | [World Liberty Financial (WLFI)](#45-wlfi) | 0,04689894 USD | +1,57 % | 15,81 M USD | 1 min | Pas sur les 21 captures |
-| 46 | 62 | [Morpho (MORPHO)](#46-morpho) | 2,08 USD | -0,67 % | 10,84 M USD | 1 min | Pas sur les 21 captures |
-| 47 | 63 | [HTX DAO (HTX)](#47-htx) | 0,00000155 USD | -0,08 % | 19,18 M USD | 1 jour | Pas sur les 21 captures |
-| 48 | 64 | [Internet Computer (ICP)](#48-icp) | 2,38 USD | -1,55 % | 20,08 M USD | 1 min | Pas sur les 21 captures |
-| 49 | 65 | [BFUSD (BFUSD)](#49-bfusd) | 0,99892007 USD | -0,03 % | 6,41 M USD | 1 min | Pas sur les 21 captures |
-| 50 | 66 | [Worldcoin (WLD)](#50-wld) | 0,3264658 USD | -2,71 % | 95,79 M USD | 1 min | Pas sur les 21 captures |
+| 31 | 43 | [Pepe (PEPE)](#31-pepe) | 0,00000507 USD | +4,05 % | 232,54 M USD | 1 min | Pas sur les captures |
+| 32 | 45 | [Ethena (ENA)](#32-ena) | 0,15417634 USD | -2,29 % | 176,34 M USD | 1 min | Pas sur les captures |
+| 33 | 46 | [Aave (AAVE)](#33-aave) | 129,99 USD | -1,69 % | 131,51 M USD | 1 min | Pas sur les captures |
+| 34 | 48 | [MemeCore (M)](#34-m) | 0,80268685 USD | -2,61 % | 1,63 M USD | 1 jour | Pas sur les captures |
+| 35 | 52 | [Ondo (ONDO)](#35-ondo) | 0,36274143 USD | -0,02 % | 58,27 M USD | 1 min | Pas sur les captures |
+| 36 | 53 | [Aster (ASTER)](#36-aster) | 0,67928902 USD | +0,61 % | 44,05 M USD | 1 min | Pas sur les captures |
+| 37 | 54 | [Pump.fun (PUMP)](#37-pump) | 0,00374501 USD | +4,69 % | 111,49 M USD | 1 min | Pas sur les captures |
+| 38 | 55 | [Bitway (BTW)](#38-btw) | 1,14 USD | +1,05 % | 8,94 M USD | 1 min | Pas sur les captures |
+| 39 | 57 | [Polkadot (DOT)](#39-dot) | 0,89155249 USD | -0,29 % | 48,76 M USD | 1 min | Pas sur les captures |
+| 40 | 59 | [Sky (SKY)](#40-sky) | 0,06412478 USD | +0,54 % | 3,67 M USD | 1 min | Pas sur les captures |
+| 41 | 60 | [Mantle (MNT)](#41-mnt) | 0,45337855 USD | -0,19 % | 12,51 M USD | 1 jour | Pas sur les captures |
+| 42 | 61 | [World Liberty Financial (WLFI)](#42-wlfi) | 0,04689894 USD | +1,57 % | 15,81 M USD | 1 min | Pas sur les captures |
+| 43 | 62 | [Morpho (MORPHO)](#43-morpho) | 2,08 USD | -0,67 % | 10,84 M USD | 1 min | Pas sur les captures |
+| 44 | 63 | [HTX DAO (HTX)](#44-htx) | 0,00000155 USD | -0,08 % | 19,18 M USD | 1 jour | Pas sur les captures |
+| 45 | 64 | [Internet Computer (ICP)](#45-icp) | 2,38 USD | -1,55 % | 20,08 M USD | 1 min | Pas sur les captures |
+| 46 | 66 | [Worldcoin (WLD)](#46-wld) | 0,3264658 USD | -2,71 % | 95,79 M USD | 1 min | Pas sur les captures |
+| 47 | 67 | [Bitget Token (BGB)](#47-bgb) | 1,74 USD | +0,32 % | 4,28 M USD | 1 min | Pas sur les captures |
+| 48 | 68 | [Arbitrum (ARB)](#48-arb) | 0,16986861 USD | +2,61 % | 99,35 M USD | 1 min | Pas sur les captures |
+| 49 | 69 | [JUST (JST)](#49-jst) | 0,14242227 USD | -0,63 % | 12,38 M USD | 1 min | Pas sur les captures |
+| 50 | 71 | [Ethereum Classic (ETC)](#50-etc) | 6,86 USD | -0,76 % | 19,07 M USD | 1 min | Pas sur les captures |
 
 ## Partie A — Top 5, cinq études fondamentales avec archives
-### 1 BTC — Bitcoin (rang CoinGecko #1)
+### 1 BTC
+
+**Bitcoin · rang CoinGecko #1**
 **Identité :** [bitcoin](https://www.coingecko.com/en/coins/bitcoin). **Périmètre :** monographie fondamentale.
 
 **Fonction du protocole :** Bitcoin est un réseau de règlement sans administrateur central. BTC sert à transférer et conserver des unités dont l’émission est définie par le protocole. La preuve de travail et les frais des transactions financent la compétition des mineurs.
@@ -91,7 +93,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://bitcoin.org/fr/ · **Source marché :** https://www.coingecko.com/en/coins/bitcoin.
 
-### 2 ETH — Ethereum (rang CoinGecko #2)
+### 2 ETH
+
+**Ethereum · rang CoinGecko #2**
 **Identité :** [ethereum](https://www.coingecko.com/en/coins/ethereum). **Périmètre :** monographie fondamentale.
 
 **Fonction du protocole :** Ethereum héberge des contrats intelligents et des applications programmables. ETH sert au gaz du réseau, aux mécanismes de staking et aux transferts de valeur. Les applications et L2 ne doivent pas être assimilées mécaniquement à la demande d’ETH.
@@ -112,7 +116,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://ethereum.org/fr/what-is-ethereum/ · **Source marché :** https://www.coingecko.com/en/coins/ethereum.
 
-### 3 BNB — BNB (rang CoinGecko #4)
+### 3 BNB
+
+**BNB · rang CoinGecko #4**
 **Identité :** [binancecoin](https://www.coingecko.com/en/coins/binancecoin). **Périmètre :** monographie fondamentale.
 
 **Fonction du protocole :** BNB est l’actif natif utilisé notamment pour payer les frais sur BNB Smart Chain. Cette blockchain compatible EVM héberge des applications et mécanismes de staking. Les avantages éventuels sur plateformes sont distincts du protocole.
@@ -133,7 +139,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://docs.bnbchain.org/bnb-smart-chain/developers/quick-guide/ · **Source marché :** https://www.coingecko.com/en/coins/binancecoin.
 
-### 4 XRP — XRP (rang CoinGecko #5)
+### 4 XRP
+
+**XRP · rang CoinGecko #5**
 **Identité :** [ripple](https://www.coingecko.com/en/coins/ripple). **Périmètre :** monographie fondamentale.
 
 **Fonction du protocole :** XRP est l’actif natif du XRP Ledger, utilisé notamment pour payer les frais et satisfaire les réserves de comptes. Le réseau permet des transferts et l’émission d’autres actifs ; XRP n’est pas identique à chacun de ces jetons.
@@ -154,7 +162,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://xrpl.org/docs/concepts/accounts/reserves · **Source marché :** https://www.coingecko.com/en/coins/ripple.
 
-### 5 SOL — Solana (rang CoinGecko #7)
+### 5 SOL
+
+**Solana · rang CoinGecko #7**
 **Identité :** [solana](https://www.coingecko.com/en/coins/solana). **Périmètre :** monographie fondamentale.
 
 **Fonction du protocole :** Solana est une infrastructure de transactions et d’applications. SOL sert au règlement des frais et au staking. L’usage de stablecoins et des applications s’y déroule, mais ne se transforme pas automatiquement en revenus pour le détenteur de SOL.
@@ -176,7 +186,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 **Source documentaire du protocole :** https://solana.com/docs/core/fees · **Source marché :** https://www.coingecko.com/en/coins/solana.
 
 ## Partie B — Top 10, cinq dossiers fondamentaux complémentaires
-### 6 TRX — TRON (rang CoinGecko #8)
+### 6 TRX
+
+**TRON · rang CoinGecko #8**
 **Identité :** [tron](https://www.coingecko.com/en/coins/tron). **Périmètre :** fiche fondamentale intermédiaire.
 
 **Fonction du protocole :** TRON est un réseau de transferts et de contrats intelligents. TRX intervient dans les ressources et frais du réseau. L’activité de stablecoins, notamment USDT, est une piste d’analyse indépendante du prix de TRX.
@@ -195,7 +207,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://developers.tron.network/docs · **Source marché :** https://www.coingecko.com/en/coins/tron.
 
-### 7 ZEC — Zcash (rang CoinGecko #10)
+### 7 ZEC
+
+**Zcash · rang CoinGecko #10**
 **Identité :** [zcash](https://www.coingecko.com/en/coins/zcash). **Périmètre :** fiche fondamentale intermédiaire.
 
 **Fonction du protocole :** Zcash est un réseau de paiement qui permet des transactions transparentes et des transactions protégées à l’aide de preuves cryptographiques. ZEC est l’unité native du réseau.
@@ -214,7 +228,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html · **Source marché :** https://www.coingecko.com/en/coins/zcash.
 
-### 8 HYPE — Hyperliquid (rang CoinGecko #11)
+### 8 HYPE
+
+**Hyperliquid · rang CoinGecko #11**
 **Identité :** [hyperliquid](https://www.coingecko.com/en/coins/hyperliquid). **Périmètre :** fiche fondamentale intermédiaire.
 
 **Fonction du protocole :** Hyperliquid exploite HyperCore pour des carnets on-chain et HyperEVM pour les contrats intelligents. HYPE intervient dans son écosystème et sert de gaz sur HyperEVM ; ne pas confondre volumes de dérivés et revenus attribuables à HYPE.
@@ -233,7 +249,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://hyperliquid.gitbook.io/hyperliquid-docs · **Source marché :** https://www.coingecko.com/en/coins/hyperliquid.
 
-### 9 XMR — Monero (rang CoinGecko #12)
+### 9 XMR
+
+**Monero · rang CoinGecko #12**
 **Identité :** [monero](https://www.coingecko.com/en/coins/monero). **Périmètre :** fiche fondamentale intermédiaire.
 
 **Fonction du protocole :** Monero (XMR) est un réseau de paiement orienté confidentialité utilisant signatures de cercle, RingCT et adresses furtives pour masquer des informations de transaction.
@@ -252,7 +270,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 **Source documentaire du protocole :** https://www.getmonero.org/get-started/faq/ · **Source marché :** https://www.coingecko.com/en/coins/monero.
 
-### 10 DOGE — Dogecoin (rang CoinGecko #13)
+### 10 DOGE
+
+**Dogecoin · rang CoinGecko #13**
 **Identité :** [dogecoin](https://www.coingecko.com/en/coins/dogecoin). **Périmètre :** fiche fondamentale intermédiaire.
 
 **Fonction du protocole :** Dogecoin est une monnaie numérique fondée sur un réseau de preuve de travail. DOGE est utilisé pour transférer de la valeur ; sa communauté et sa médiatisation ne suffisent pas à démontrer une utilité économique croissante.
@@ -274,7 +294,9 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 ## Partie C — Top 50, quarante fiches quantitatives et historiques complémentaires
 Les fiches ci-dessous sont *réellement individualisées par relevés de prix, volumes et archives existantes*, mais ne prétendent pas contenir une recherche d'adoption que les sources n'établissent pas. Pour chaque dossier, le statut de cotation OKX reste un constat de capture, pas une interrogation authentifiée.
 
-### 11 WBT — WhiteBIT Coin (rang CoinGecko #15)
+### 11 WBT
+
+**WhiteBIT Coin · rang CoinGecko #15**
 **Identifiant CoinGecko :** `whitebit` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 72,95 USD · 24 h +0,29 % · 7 j -2,58 % · 30 j -10,5 % · capitalisation 8,66 Md USD · volume 24 h 24,75 M USD.
@@ -287,7 +309,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/whitebit).
 
-### 12 LEO — LEO Token (rang CoinGecko #16)
+
+### 12 LEO
+
+**LEO Token · rang CoinGecko #16**
 **Identifiant CoinGecko :** `leo-token` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 9,32 USD · 24 h -0,13 % · 7 j -0,59 % · 30 j +4,79 % · capitalisation 8,57 Md USD · volume 24 h 1,14 M USD.
@@ -300,7 +325,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/leo-token).
 
-### 13 LINK — Chainlink (rang CoinGecko #17)
+
+### 13 LINK
+
+**Chainlink · rang CoinGecko #17**
 **Identifiant CoinGecko :** `chainlink` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 10,74 USD · 24 h -0,91 % · 7 j -7,34 % · 30 j -16,17 % · capitalisation 8,24 Md USD · volume 24 h 142,66 M USD.
@@ -313,7 +341,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/chainlink).
 
-### 14 ADA — Cardano (rang CoinGecko #18)
+
+### 14 ADA
+
+**Cardano · rang CoinGecko #18**
 **Identifiant CoinGecko :** `cardano` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,18083338 USD · 24 h -0,42 % · 7 j -6,54 % · 30 j -24 % · capitalisation 6,8 Md USD · volume 24 h 110,8 M USD.
@@ -326,7 +357,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/cardano).
 
-### 15 XLM — Stellar (rang CoinGecko #19)
+
+### 15 XLM
+
+**Stellar · rang CoinGecko #19**
 **Identifiant CoinGecko :** `stellar` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,15141957 USD · 24 h +0,05 % · 7 j -10,29 % · 30 j -21,43 % · capitalisation 5,36 Md USD · volume 24 h 75,67 M USD.
@@ -339,7 +373,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/stellar).
 
-### 16 BCH — Bitcoin Cash (rang CoinGecko #20)
+
+### 16 BCH
+
+**Bitcoin Cash · rang CoinGecko #20**
 **Identifiant CoinGecko :** `bitcoin-cash` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 245,45 USD · 24 h -4,42 % · 7 j -13,75 % · 30 j -10,53 % · capitalisation 4,94 Md USD · volume 24 h 125,55 M USD.
@@ -352,7 +389,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bitcoin-cash).
 
-### 17 NEAR — NEAR Protocol (rang CoinGecko #22)
+
+### 17 NEAR
+
+**NEAR Protocol · rang CoinGecko #22**
 **Identifiant CoinGecko :** `near` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 3,71 USD · 24 h +1,15 % · 7 j -15,38 % · 30 j -22,64 % · capitalisation 4,86 Md USD · volume 24 h 234,78 M USD.
@@ -365,7 +405,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/near).
 
-### 18 UNI — Uniswap (rang CoinGecko #24)
+
+### 18 UNI
+
+**Uniswap · rang CoinGecko #24**
 **Identifiant CoinGecko :** `uniswap` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 7 USD · 24 h -0,09 % · 7 j -4,18 % · 30 j -5,2 % · capitalisation 4,26 Md USD · volume 24 h 231,08 M USD.
@@ -378,7 +421,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/uniswap).
 
-### 19 LTC — Litecoin (rang CoinGecko #25)
+
+### 19 LTC
+
+**Litecoin · rang CoinGecko #25**
 **Identifiant CoinGecko :** `litecoin` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 51,82 USD · 24 h -0,01 % · 7 j -7,3 % · 30 j -18,18 % · capitalisation 4,03 Md USD · volume 24 h 121,06 M USD.
@@ -391,7 +437,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/litecoin).
 
-### 20 RAIN — Rain (rang CoinGecko #26)
+
+### 20 RAIN
+
+**Rain · rang CoinGecko #26**
 **Identifiant CoinGecko :** `rain` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,0054178 USD · 24 h -3,31 % · 7 j -13,74 % · 30 j -47,19 % · capitalisation 3,87 Md USD · volume 24 h 9,22 M USD.
@@ -404,7 +453,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/rain).
 
-### 21 CC — Canton (rang CoinGecko #27)
+
+### 21 CC
+
+**Canton · rang CoinGecko #27**
 **Identifiant CoinGecko :** `canton-network` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,09307752 USD · 24 h -1,73 % · 7 j -4,84 % · 30 j -23,75 % · capitalisation 3,72 Md USD · volume 24 h 6,39 M USD.
@@ -417,7 +469,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/canton-network).
 
-### 22 AVAX — Avalanche (rang CoinGecko #28)
+
+### 22 AVAX
+
+**Avalanche · rang CoinGecko #28**
 **Identifiant CoinGecko :** `avalanche-2` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 8,24 USD · 24 h +0,55 % · 7 j -6,03 % · 30 j -19,25 % · capitalisation 3,68 Md USD · volume 24 h 88,6 M USD.
@@ -430,7 +485,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/avalanche-2).
 
-### 23 SUI — Sui (rang CoinGecko #29)
+
+### 23 SUI
+
+**Sui · rang CoinGecko #29**
 **Identifiant CoinGecko :** `sui` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,85264769 USD · 24 h -0,47 % · 7 j -5,57 % · 30 j -19,48 % · capitalisation 3,53 Md USD · volume 24 h 158,07 M USD.
@@ -443,7 +501,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/sui).
 
-### 24 GRAM — Gram (prev. Toncoin) (rang CoinGecko #32)
+
+### 24 GRAM
+
+**Gram (prev. Toncoin) · rang CoinGecko #32**
 **Identifiant CoinGecko :** `the-open-network` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 1,06 USD · 24 h -2,16 % · 7 j -13,54 % · 30 j -28,57 % · capitalisation 3,02 Md USD · volume 24 h 25,98 M USD.
@@ -456,7 +517,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/the-open-network).
 
-### 25 HBAR — Hedera (rang CoinGecko #33)
+
+### 25 HBAR
+
+**Hedera · rang CoinGecko #33**
 **Identifiant CoinGecko :** `hedera-hashgraph` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,06669443 USD · 24 h -0,81 % · 7 j -7,45 % · 30 j -26,74 % · capitalisation 2,96 Md USD · volume 24 h 25,36 M USD.
@@ -469,7 +533,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/hedera-hashgraph).
 
-### 26 QNT — Quant (rang CoinGecko #34)
+
+### 26 QNT
+
+**Quant · rang CoinGecko #34**
 **Identifiant CoinGecko :** `quant-network` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 200,74 USD · 24 h +0,93 % · 7 j +1 % · 30 j -20,82 % · capitalisation 2,92 Md USD · volume 24 h 32,39 M USD.
@@ -482,7 +549,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/quant-network).
 
-### 27 TAO — Bittensor (rang CoinGecko #38)
+
+### 27 TAO
+
+**Bittensor · rang CoinGecko #38**
 **Identifiant CoinGecko :** `bittensor` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 226,41 USD · 24 h +1,9 % · 7 j -4,04 % · 30 j -17,4 % · capitalisation 2,65 Md USD · volume 24 h 41,74 M USD.
@@ -495,7 +565,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bittensor).
 
-### 28 SHIB — Shiba Inu (rang CoinGecko #39)
+
+### 28 SHIB
+
+**Shiba Inu · rang CoinGecko #39**
 **Identifiant CoinGecko :** `shiba-inu` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,00000447 USD · 24 h +0,01 % · 7 j -5,2 % · 30 j -16,72 % · capitalisation 2,63 Md USD · volume 24 h 36,2 M USD.
@@ -508,7 +581,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/shiba-inu).
 
-### 29 CRO — Cronos (rang CoinGecko #40)
+
+### 29 CRO
+
+**Cronos · rang CoinGecko #40**
 **Identifiant CoinGecko :** `crypto-com-chain` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,04842157 USD · 24 h -0,59 % · 7 j -6,33 % · 30 j -20,6 % · capitalisation 2,46 Md USD · volume 24 h 3,75 M USD.
@@ -521,7 +597,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/crypto-com-chain).
 
-### 30 OKB — OKB (rang CoinGecko #42)
+
+### 30 OKB
+
+**OKB · rang CoinGecko #42**
 **Identifiant CoinGecko :** `okb` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 102,89 USD · 24 h -0,05 % · 7 j -9,54 % · 30 j -18 % · capitalisation 2,16 Md USD · volume 24 h 9,48 M USD.
@@ -534,7 +613,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/okb).
 
-### 31 PEPE — Pepe (rang CoinGecko #43)
+
+### 31 PEPE
+
+**Pepe · rang CoinGecko #43**
 **Identifiant CoinGecko :** `pepe` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,00000507 USD · 24 h +4,05 % · 7 j +3,78 % · 30 j +30,5 % · capitalisation 2,13 Md USD · volume 24 h 232,54 M USD.
@@ -547,7 +629,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/pepe).
 
-### 32 ENA — Ethena (rang CoinGecko #45)
+
+### 32 ENA
+
+**Ethena · rang CoinGecko #45**
 **Identifiant CoinGecko :** `ethena` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,15417634 USD · 24 h -2,29 % · 7 j -17,09 % · 30 j -29,22 % · capitalisation 2,08 Md USD · volume 24 h 176,34 M USD.
@@ -560,7 +645,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/ethena).
 
-### 33 AAVE — Aave (rang CoinGecko #46)
+
+### 33 AAVE
+
+**Aave · rang CoinGecko #46**
 **Identifiant CoinGecko :** `aave` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 129,99 USD · 24 h -1,69 % · 7 j -6,34 % · 30 j -23,52 % · capitalisation 2,01 Md USD · volume 24 h 131,51 M USD.
@@ -573,7 +661,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/aave).
 
-### 34 M — MemeCore (rang CoinGecko #48)
+
+### 34 M
+
+**MemeCore · rang CoinGecko #48**
 **Identifiant CoinGecko :** `memecore` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,80268685 USD · 24 h -2,61 % · 7 j -4,62 % · 30 j -23,04 % · capitalisation 1,84 Md USD · volume 24 h 1,63 M USD.
@@ -586,20 +677,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/memecore).
 
-### 35 BUIDL — BlackRock USD Institutional Digital Liquidity Fund (rang CoinGecko #51)
-**Identifiant CoinGecko :** `blackrock-usd-institutional-digital-liquidity-fund` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
-**Marché USD archivé :** Prix 1 USD · 24 h 0 % · 7 j 0 % · 30 j 0 % · capitalisation 1,78 Md USD · volume 24 h 0 USD.
+### 35 ONDO
 
-**Lecture des mouvements :** variation journalière faible ou nulle (0 %), 7 j 0 %, 30 j 0 %. La lecture multihorizon doit être confrontée aux dates et bougies natives. Volume/capitalisation 0 % : indicateur d'activité de marché, pas profondeur exécutable.
-
-**Historique natif :** aucune série native enregistrée dans les deux index consultés.
-
-**Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
-
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/blackrock-usd-institutional-digital-liquidity-fund).
-
-### 36 ONDO — Ondo (rang CoinGecko #52)
+**Ondo · rang CoinGecko #52**
 **Identifiant CoinGecko :** `ondo-finance` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,36274143 USD · 24 h -0,02 % · 7 j -11,29 % · 30 j -24,74 % · capitalisation 1,77 Md USD · volume 24 h 58,27 M USD.
@@ -612,7 +693,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/ondo-finance).
 
-### 37 ASTER — Aster (rang CoinGecko #53)
+
+### 36 ASTER
+
+**Aster · rang CoinGecko #53**
 **Identifiant CoinGecko :** `aster-2` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,67928902 USD · 24 h +0,61 % · 7 j -2,98 % · 30 j -2,61 % · capitalisation 1,75 Md USD · volume 24 h 44,05 M USD.
@@ -625,7 +709,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/aster-2).
 
-### 38 PUMP — Pump.fun (rang CoinGecko #54)
+
+### 37 PUMP
+
+**Pump.fun · rang CoinGecko #54**
 **Identifiant CoinGecko :** `pump-fun` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,00374501 USD · 24 h +4,69 % · 7 j -11,9 % · 30 j -31,93 % · capitalisation 1,72 Md USD · volume 24 h 111,49 M USD.
@@ -638,7 +725,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/pump-fun).
 
-### 39 BTW — Bitway (rang CoinGecko #55)
+
+### 38 BTW
+
+**Bitway · rang CoinGecko #55**
 **Identifiant CoinGecko :** `bitway` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 1,14 USD · 24 h +1,05 % · 7 j +4,51 % · 30 j -26,31 % · capitalisation 1,71 Md USD · volume 24 h 8,94 M USD.
@@ -651,20 +741,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bitway).
 
-### 40 U — United Stables (rang CoinGecko #56)
-**Identifiant CoinGecko :** `united-stables` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
-**Marché USD archivé :** Prix 0,99953939 USD · 24 h +0,03 % · 7 j +0,02 % · 30 j -0,01 % · capitalisation 1,61 Md USD · volume 24 h 72,33 M USD.
+### 39 DOT
 
-**Lecture des mouvements :** progression journalière (+0,03 %), 7 j +0,02 %, 30 j -0,01 %. La lecture multihorizon doit être confrontée aux dates et bougies natives. Volume/capitalisation +4,49 % : indicateur d'activité de marché, pas profondeur exécutable.
-
-**Historique natif :** 128 bougies natives 1 jour, Bitget Spot (UUSDT, USDT) · [Lot historique](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-single-symbol-owners).
-
-**Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
-
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/united-stables).
-
-### 41 DOT — Polkadot (rang CoinGecko #57)
+**Polkadot · rang CoinGecko #57**
 **Identifiant CoinGecko :** `polkadot` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,89155249 USD · 24 h -0,29 % · 7 j -6,47 % · 30 j -23,55 % · capitalisation 1,53 Md USD · volume 24 h 48,76 M USD.
@@ -677,20 +757,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/polkadot).
 
-### 42 USDD — USDD (rang CoinGecko #58)
-**Identifiant CoinGecko :** `usdd` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
-**Marché USD archivé :** Prix 0,99878535 USD · 24 h -0,05 % · 7 j -0,02 % · 30 j -0,03 % · capitalisation 1,51 Md USD · volume 24 h 709 391 USD.
+### 40 SKY
 
-**Lecture des mouvements :** repli journalier (-0,05 %), 7 j -0,02 %, 30 j -0,03 %. La lecture multihorizon doit être confrontée aux dates et bougies natives. Volume/capitalisation +0,05 % : indicateur d'activité de marché, pas profondeur exécutable.
-
-**Historique natif :** 1 598 bougies natives 1 jour, KuCoin Spot (USDD-USDT, USDT) · [Lot historique](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5).
-
-**Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
-
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/usdd).
-
-### 43 SKY — Sky (rang CoinGecko #59)
+**Sky · rang CoinGecko #59**
 **Identifiant CoinGecko :** `sky` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,06412478 USD · 24 h +0,54 % · 7 j -6,99 % · 30 j -16,28 % · capitalisation 1,5 Md USD · volume 24 h 3,67 M USD.
@@ -703,7 +773,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/sky).
 
-### 44 MNT — Mantle (rang CoinGecko #60)
+
+### 41 MNT
+
+**Mantle · rang CoinGecko #60**
 **Identifiant CoinGecko :** `mantle` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,45337855 USD · 24 h -0,19 % · 7 j -5,22 % · 30 j -17,23 % · capitalisation 1,5 Md USD · volume 24 h 12,51 M USD.
@@ -716,7 +789,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/mantle).
 
-### 45 WLFI — World Liberty Financial (rang CoinGecko #61)
+
+### 42 WLFI
+
+**World Liberty Financial · rang CoinGecko #61**
 **Identifiant CoinGecko :** `world-liberty-financial` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,04689894 USD · 24 h +1,57 % · 7 j -8,23 % · 30 j -12,31 % · capitalisation 1,49 Md USD · volume 24 h 15,81 M USD.
@@ -729,7 +805,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/world-liberty-financial).
 
-### 46 MORPHO — Morpho (rang CoinGecko #62)
+
+### 43 MORPHO
+
+**Morpho · rang CoinGecko #62**
 **Identifiant CoinGecko :** `morpho` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 2,08 USD · 24 h -0,67 % · 7 j -8,38 % · 30 j -13,92 % · capitalisation 1,47 Md USD · volume 24 h 10,84 M USD.
@@ -742,7 +821,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/morpho).
 
-### 47 HTX — HTX DAO (rang CoinGecko #63)
+
+### 44 HTX
+
+**HTX DAO · rang CoinGecko #63**
 **Identifiant CoinGecko :** `htx-dao` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,00000155 USD · 24 h -0,08 % · 7 j +1,02 % · 30 j -7,76 % · capitalisation 1,38 Md USD · volume 24 h 19,18 M USD.
@@ -755,7 +837,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/htx-dao).
 
-### 48 ICP — Internet Computer (rang CoinGecko #64)
+
+### 45 ICP
+
+**Internet Computer · rang CoinGecko #64**
 **Identifiant CoinGecko :** `internet-computer` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 2,38 USD · 24 h -1,55 % · 7 j -5,53 % · 30 j -19,96 % · capitalisation 1,33 Md USD · volume 24 h 20,08 M USD.
@@ -768,20 +853,10 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/internet-computer).
 
-### 49 BFUSD — BFUSD (rang CoinGecko #65)
-**Identifiant CoinGecko :** `bfusd` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
-**Marché USD archivé :** Prix 0,99892007 USD · 24 h -0,03 % · 7 j +0,01 % · 30 j +0,04 % · capitalisation 1,32 Md USD · volume 24 h 6,41 M USD.
+### 46 WLD
 
-**Lecture des mouvements :** repli journalier (-0,03 %), 7 j +0,01 %, 30 j +0,04 %. Signaux journalier et hebdomadaire de sens opposé. Volume/capitalisation +0,49 % : indicateur d'activité de marché, pas profondeur exécutable.
-
-**Historique natif :** 613 440 bougies natives 1 min, 14 mois, source Binance Spot official native 1m ZIPs, cotation USDT.
-
-**Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
-
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bfusd).
-
-### 50 WLD — Worldcoin (rang CoinGecko #66)
+**Worldcoin · rang CoinGecko #66**
 **Identifiant CoinGecko :** `worldcoin-wld` · **Périmètre de la fiche :** identité Market, historique et risques de marché ; usage protocolaire non déduit du seul ticker.
 
 **Marché USD archivé :** Prix 0,3264658 USD · 24 h -2,71 % · 7 j -18,23 % · 30 j -33,74 % · capitalisation 1,22 Md USD · volume 24 h 95,79 M USD.
@@ -794,6 +869,66 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/worldcoin-wld).
 
+
+### 47 BGB
+
+**Bitget Token · rang CoinGecko #67**
+**Identifiant CoinGecko :** `bitget-token` · **Périmètre :** dossier quantitatif de recherche, sans attribution d'usage non sourcée.
+
+**Marché USD archivé :** Prix 1,74 USD · 24 h +0,32 % · 7 j -2,56 % · 30 j -10,34 % · capitalisation 1,22 Md USD · volume 24 h 4,28 M USD.
+
+**Lecture des mouvements :** progression journalière ; comparer la direction 7 jours / 30 jours. Volume/capitalisation +0,35 % : activité de marché, pas profondeur d'un carnet exécutable.
+
+**Historique natif :** 43 200 bougies natives 1 minute (1 mois, USDT, Bitget Spot native 1m HTTPS).
+
+**Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
+
+**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/bitget-token).
+
+### 48 ARB
+
+**Arbitrum · rang CoinGecko #68**
+**Identifiant CoinGecko :** `arbitrum` · **Périmètre :** dossier quantitatif de recherche, sans attribution d'usage non sourcée.
+
+**Marché USD archivé :** Prix 0,16986861 USD · 24 h +2,61 % · 7 j +3,57 % · 30 j -5,68 % · capitalisation 1,17 Md USD · volume 24 h 99,35 M USD.
+
+**Lecture des mouvements :** progression journalière ; comparer la direction 7 jours / 30 jours. Volume/capitalisation +8,48 % : activité de marché, pas profondeur d'un carnet exécutable.
+
+**Historique natif :** 1 886 400 bougies natives 1 minute (43 mois, USDT, Binance Spot official native 1m ZIPs).
+
+**Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
+
+**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/arbitrum).
+
+### 49 JST
+
+**JUST · rang CoinGecko #69**
+**Identifiant CoinGecko :** `just` · **Périmètre :** dossier quantitatif de recherche, sans attribution d'usage non sourcée.
+
+**Marché USD archivé :** Prix 0,14242227 USD · 24 h -0,63 % · 7 j +3,92 % · 30 j -0,22 % · capitalisation 1,14 Md USD · volume 24 h 12,38 M USD.
+
+**Lecture des mouvements :** recul journalier ; comparer la direction 7 jours / 30 jours. Volume/capitalisation +1,08 % : activité de marché, pas profondeur d'un carnet exécutable.
+
+**Historique natif :** 2 894 400 bougies natives 1 minute (66 mois, USDT, Binance Spot official native 1m ZIPs).
+
+**Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
+
+**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/just).
+
+### 50 ETC
+
+**Ethereum Classic · rang CoinGecko #71**
+**Identifiant CoinGecko :** `ethereum-classic` · **Périmètre :** dossier quantitatif de recherche, sans attribution d'usage non sourcée.
+
+**Marché USD archivé :** Prix 6,86 USD · 24 h -0,76 % · 7 j -4,46 % · 30 j -16,81 % · capitalisation 1,09 Md USD · volume 24 h 19,07 M USD.
+
+**Lecture des mouvements :** recul journalier ; comparer la direction 7 jours / 30 jours. Volume/capitalisation +1,75 % : activité de marché, pas profondeur d'un carnet exécutable.
+
+**Historique natif :** 3 510 720 bougies natives 1 minute (80 mois, USDT, Binance Spot official native 1m ZIPs).
+
+**Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
+
+**Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/ethereum-classic).
 ## Priorités de recherche et prochaine étape réelle
 1. **Élargir les dossiers structurés :** ajouter des sources primaires pour les usages économiques de chaque actif, sans écraser les preuves déjà archivées. Les cinq premiers sont un socle, pas une fin.
 2. **OKX Europe :** relier chaque paire reconnue par l'interface utilisateur aux instruments publics OKX, puis distinguer leur présence de l'éligibilité effective du compte. Pas de clé privée ni de transfert d'identifiants.
