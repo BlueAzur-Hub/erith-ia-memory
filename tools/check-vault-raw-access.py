@@ -6,7 +6,9 @@ ROOT="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/"
 SOURCES=[
  "public/agent_crypto_erith_ia/data/crypto/latest.json",
  "public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/index.json",
- "public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json"]
+ "public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json",
+ "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json",
+ "public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json"]
 def fetch(path,revision,max_bytes):
  url=ROOT+revision+"/"+path
  request=urllib.request.Request(url,headers={"Origin":ORIGIN,"Accept":"application/json"})

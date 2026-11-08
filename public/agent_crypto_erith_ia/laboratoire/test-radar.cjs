@@ -90,12 +90,21 @@ assert.throws(()=>reader.selectMarket(validated.rows,500),/invalide/i);
 assert.throws(()=>reader.validMarket({...example,source:{provider_id:'unknown'}}),/canonique/i);
 const clash=coins.map(v=>({...v}));clash[3].rank=1;
 assert.throws(()=>reader.validMarket({...example,coins:clash}),/invalide/i);
-const registries={schema:'agent_crypto_new_listings_identity_registry_v1',identities:{
- 'magic-hash':{symbol:'MHA',displayName:'MAGNE.AI',coingeckoId:'magic-hash',image:'./assets/crypto/new-listings/magic-hash.png',verified:true},
- bogus:{symbol:'X',coingeckoId:'made-up',verified:false}
-}};
+const registries={schema:'erith.seven.public-spot-listings-feed.v1',read_only:true,trade_permission:false,
+ real_orders:0,no_ticker_to_contract_identity_inference:true,entries:[
+ {provider:'bitget',instrument_type:'SPOT',base:'MHA',quote:'USDT',
+  providerSymbol:'MHAUSDT',pair:'MHA/USDT',canonicalId:'magic-hash',
+  identity_status:'EXACT_CONTRACT_AND_VENUE_REGISTRY',image:'./assets/crypto/new-listings/magic-hash.png'},
+ {provider:'bitget',instrument_type:'SPOT',base:'XYZ',quote:'USDT',
+  providerSymbol:'XYZUSDT',pair:'XYZ/USDT',canonicalId:null,identity_status:'VENUE_SYMBOL_ONLY'},
+ {provider:'bitget',instrument_type:'SPOT',base:'MHA',quote:'USDC',
+  providerSymbol:'MHAUSDC',pair:'MHA/USDC',canonicalId:null,identity_status:'VENUE_SYMBOL_ONLY'}
+]};
 const registry=reader.verifyRegistry(registries);
 assert.equal(registry.size,1);
+assert.equal(registry.has('XYZUSDT'),false);
+assert.equal(registry.has('MHAUSDC'),false);
+assert.throws(()=>reader.verifyRegistry({...registries,trade_permission:true}),/invalide/);
 const launch=now-2*86400000;
 const instruments={code:'00000',data:[
  {symbol:'MHAUSDT',baseCoin:'MHA',quoteCoin:'USDT',launchTime:launch,status:'online',symbolType:'crypto'},
@@ -169,7 +178,8 @@ assert(nativeCss.includes(':is(#marketSnapshotPanel, #atlasRadarBelowMarket) .ra
 assert(!nativeCss.includes('color:#fff1c7')&&!nativeCss.includes('background:#06131f'),"Standalone palette not duplicated");
 assert(js.includes('global.AgentCryptoRadarReader=API'),"Standalone and Market-native views share same validators");
 assert(js.includes('!document.getElementById("tiers")'),"Standalone renderer does not auto-mount in Trader");
-assert(js.includes('registre inaccessible (chargement réseau ou publication)'),"Unreachable registry identified accurately");
+assert(js.includes('catalogue Spot inaccessible (réseau ou publication)'),"Unavailable Spot feed described");
+assert(js.includes('new-listings-public-feed.json'),"Canonical contract-matched public feed used");
 console.log('PASS Radar 10/20/50/250, real listing eligibility, PAPER, public-only integration');
 
 const router=require('../administrator/js/market-radar-native.js');

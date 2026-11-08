@@ -20,3 +20,21 @@ test("fetch stays read-only and strips auth",async()=>{
  assert.equal(calls[0][1].credentials,"omit");assert.equal(calls[0][1].headers.has("authorization"),false);
  await ctx.fetch(u,{method:"POST"});assert.equal(calls[1][0],u);
 });
+test("public Spot listing catalogs are routed without enabling private admin paths",async()=>{
+ const {ctx,calls}=client();
+ const site="https://blueazur-hub.github.io/erith-ia-memory/";
+ const raw="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/";
+ for(const name of ["new-listings-identities.json","new-listings-public-feed.json"]){
+  const path="public/agent_crypto_erith_ia/administrator/data/"+name;
+  const url=site+path;
+  assert.equal(ctx.AgentCryptoVaultDataRouter.route(url),raw+path);
+  assert.equal(ctx.AgentCryptoVaultDataRouter.route(url,"POST"),null);
+  await ctx.fetch(url,{headers:{Authorization:"Bearer SECRET",Accept:"application/json"}});
+  const call=calls.at(-1);
+  assert.equal(call[0],raw+path);
+  assert.equal(call[1].credentials,"omit");
+  assert.equal(call[1].headers.has("authorization"),false);
+ }
+ assert.equal(ctx.AgentCryptoVaultDataRouter.route(site+"public/agent_crypto_erith_ia/administrator/data/private.json"),null);
+ assert.equal(ctx.AgentCryptoVaultDataRouter.route("https://bad.invalid/erith-ia-memory/public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"),null);
+});

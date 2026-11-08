@@ -2,6 +2,10 @@
 (()=>{"use strict";
  const BASE="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/";
  const PREFIX="public/agent_crypto_erith_ia/data/";
+ const ADMIN_PUBLIC_JSON=new Set([
+  "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json",
+  "public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json"
+ ]);
  const native=globalThis.fetch.bind(globalThis);
  const observed={routed:0,bypassed:0};
  function route(input,method="GET"){
@@ -9,12 +13,11 @@
   try{
    const url=new URL(input instanceof Request?input.url:String(input),document.baseURI);
    if(url.origin!==location.origin)return null;
-   const start=url.pathname.indexOf("/"+PREFIX);
-   if(start<0)return null;
-   const prefixBefore=url.pathname.slice(0,start);
-   if(prefixBefore!==""&&prefixBefore!=="/erith-ia-memory")return null;
-   const relative=url.pathname.slice(start+1);
-   if(!relative.startsWith(PREFIX)||relative.includes("\\")||/%(?:2f|5c)/i.test(relative))return null;
+   // Route public archives plus exactly two public administration catalogs.
+   const sitePrefix=url.pathname.startsWith("/erith-ia-memory/")?"/erith-ia-memory/":"/";
+   const relative=url.pathname.slice(sitePrefix.length);
+   if(!(relative.startsWith(PREFIX)||ADMIN_PUBLIC_JSON.has(relative))||
+      relative.includes("\\")||/%(?:2f|5c)/i.test(relative))return null;
    const dest=new URL(relative,BASE);dest.search=url.search;
    return dest.href;
   }catch(_){return null;}
