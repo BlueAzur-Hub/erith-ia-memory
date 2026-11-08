@@ -82,7 +82,7 @@
     ["#candidates summary strong", "card"],
     ["#dynamic-rows td:first-child strong", "dynamic"],
     [".link-grid .link-tile strong", "watch"],
-    ["[data-coin-symbol]", "direct"]
+    ["[data-coin-symbol]:not(.seven-coin-mark):not(strong):not(tr)", "direct"]
   ];
   function refresh() {
     for (const [selector, type] of rules) {
