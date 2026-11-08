@@ -76,6 +76,61 @@ code{color:var(--gold)}dl{display:grid;grid-template-columns:125px 1fr;gap:4px 1
     grid-column:2;grid-row:2;justify-self:start;
   }
 }
+/* Dossier summaries: left-anchored text, badge on the right. */
+#coffre-radar-items > details.item > summary.head,
+#veille-fil-crypto .grid > details.item > summary.head {
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  text-align:left!important;
+  gap:12px!important;
+  min-height:72px;
+  padding:12px 16px!important;
+  margin:0!important;
+}
+#coffre-radar-items > details.item > summary.head::before,
+#veille-fil-crypto .grid > details.item > summary.head::before {
+  display:block!important;flex:0 0 12px!important;
+  width:12px!important;margin:0!important;
+  align-self:center!important;order:0;
+}
+#coffre-radar-items > details.item > summary.head > strong,
+#veille-fil-crypto .grid > details.item > summary.head > strong {
+  display:flex!important;flex:1 1 0%!important;
+  min-width:0!important;width:auto!important;
+  align-items:center!important;justify-content:flex-start!important;
+  justify-self:start!important;text-align:left!important;
+  margin:0!important;padding:0!important;gap:10px;order:1;
+}
+#coffre-radar-items > details.item > summary.head > small.pill,
+#veille-fil-crypto .grid > details.item > summary.head > small.pill {
+  display:inline-flex!important;align-items:center;justify-content:center;
+  flex:0 0 auto!important;max-width:43%;white-space:normal;
+  margin:0 0 0 auto!important;text-align:center;order:2;
+}
+#veille-fil-crypto .grid > details.item {padding:0!important;overflow:hidden}
+#veille-fil-crypto .grid > details.item[open] > summary.head {
+  border-bottom:1px solid var(--border);
+}
+#veille-fil-crypto .grid > details.item[open] > :not(summary) {
+  margin-left:16px;margin-right:16px;
+}
+#veille-fil-crypto .grid > details.item[open] > :last-child{margin-bottom:16px}
+@media(max-width:620px){
+  #coffre-radar-items > details.item > summary.head,
+  #veille-fil-crypto .grid > details.item > summary.head {
+    flex-wrap:wrap!important;gap:7px 10px!important;padding:12px!important
+  }
+  #coffre-radar-items > details.item > summary.head > strong,
+  #veille-fil-crypto .grid > details.item > summary.head > strong {
+    flex:1 1 calc(100% - 24px)!important
+  }
+  #coffre-radar-items > details.item > summary.head > small.pill,
+  #veille-fil-crypto .grid > details.item > summary.head > small.pill {
+    max-width:calc(100% - 24px);margin:0 0 0 22px!important
+  }
+}
 </style></head><body><main>
 <header><div class="kicker">SEVEN HEAVEN · RADAR → SOURCES → LABORATOIRE</div><h1>Dossiers Crypto · mémoire et qualification</h1>
 <p>Top 5 / 10 / 50 / 250 / 1 000 · candidats Radar · projets et objectifs · preuves manquantes. <a href="../trader/trading-desk.html">Retour Trader</a> · <a href="../administrator/historical-vault.html">Coffre</a></p>
