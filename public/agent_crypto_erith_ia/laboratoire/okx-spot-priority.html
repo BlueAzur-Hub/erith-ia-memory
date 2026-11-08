@@ -23,9 +23,17 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 <section id="okx-edge-focus" aria-labelledby="okx-edge-heading">
 <h2 id="okx-edge-heading">Premier cas OKX · edgeX (EDGE)</h2>
 <p><strong>Capture du Trader du 8 novembre :</strong> EDGE/USDC cité dans la source marché, tandis que le graphique est un historique CoinGecko <strong>USD</strong> sur 60 jours. La paire EDGE/USDC n'est pas certifiée par les annonces officielles consultées.</p>
-<p><strong>Sources primaires :</strong> OKX annonce EDGE/USDT, EDGE/USD et EDGE/EUR. Le symbole <code>EDGE</code> est ambigu chez CoinGecko : ne pas confondre <code>edgex</code> et <code>edge</code>. Aucune des quatre paires n'est authentifiée ici pour le compte.</p>
+<p><strong>Sources primaires :</strong> OKX a annoncé EDGE/USDT, EDGE/USD et EDGE/EUR en mai 2026. Mais la migration Spot USD → USDC du 30 septembre 2026 rend l’annonce EDGE/USD <em>historique</em>, et non une preuve de disponibilité actuelle. Le symbole <code>EDGE</code> est ambigu chez CoinGecko : ne pas confondre <code>edgex</code> et <code>edge</code>. Aucune des quatre paires n'est authentifiée ici pour le compte.</p>
 <p><a href="./cas-ecole-edgex-okx.html"><strong>Lire le dossier EDGE · identité, cotations, écarts de devises et preuves manquantes ↗</strong></a> ·
 <a href="../data/crypto/research/okx-spot-identity-research.json">Registre de recherche versionné ↗</a></p>
+</section>
+<section id="okx-local-bridge-probe" aria-labelledby="okx-local-probe-title">
+<h2 id="okx-local-probe-title">Vérifier le Bridge local · marché seulement</h2>
+<p>Le résolveur local déjà utilisé par l’Administrator peut identifier une source de <strong>bougies</strong> ou de <strong>carnet</strong> pour une crypto. Ce test fait une unique requête <code>GET /market-resolve</code> vers <code>127.0.0.1:8790</code> et n’envoie aucune clé ni donnée du compte. Il ne prouve <strong>pas</strong> que l’instrument soit négociable depuis ton compte OKX.</p>
+<div class="filters"><label for="okx-local-asset">Actif à contrôler
+<input id="okx-local-asset" maxlength="16" value="EDGE" autocomplete="off" spellcheck="false" aria-describedby="okx-local-bridge-status"></label>
+<button type="button" id="okx-local-bridge-check">Tester ma source marché locale (lecture seule)</button></div>
+<p class="notice" id="okx-local-bridge-status" role="status" aria-live="polite">Aucune connexion locale demandée. Clique pour tester si ton Bridge est ouvert.</p>
 </section>
 <div class="grid">
 <div class="metric"><strong>Crypto Spot · priorité</strong><span>BTC, ETH, SOL, XRP, CT, LIT, RSR, EDGE… parmi les paires vues ou archivées. Leurs noms ne certifient pas des contrats ni un accès régional.</span></div>
@@ -49,7 +57,7 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 </section>
 <section><h2>Critère d'admissibilité dans notre Laboratoire</h2>
 <p>Une ligne du catalogue public, un prix à l'écran ou un carnet historique ne valident pas un ordre. Pour passer de « observer » à une <em>simulation PAPER justifiée</em>, il faudra vérifier l'instrument exact au bon instant, les règles Spot, l'identité du jeton, les frais réels applicables, une profondeur suffisante et des séries historiques compatibles. USD, USDC, USDT et EUR restent des devises distinctes.</p>
-<p>Pour l'Europe, la documentation d'OKX indique le domaine <code>eea.okx.com</code>. <strong>GET /api/v5/public/instruments?instType=SPOT</strong> est public ; <strong>GET /api/v5/account/instruments?instType=SPOT</strong> est authentifié et seul peut préciser les instruments accessibles au compte. Cette page n'appelle pas le second.</p>
+<p><strong>Attention à la migration du 30 septembre 2026 :</strong> les instruments Spot <code>Crypto-USD</code> concernés ont été remplacés par <code>Crypto-USDC</code>. La devise de règlement doit être qualifiée séparément avec <code>tradeQuoteCcyList</code> fourni par les instruments authentifiés du compte. Une annonce historique <code>EDGE-USD</code> ne prouve pas son état actuel. <a href="https://my.okx.com/docs-v5/log_en/" target="_blank" rel="noopener noreferrer">Journal officiel des modifications ↗</a></p><p>Pour l'Europe, la documentation d'OKX indique le domaine <code>eea.okx.com</code>. <strong>GET /api/v5/public/instruments?instType=SPOT</strong> est public ; <strong>GET /api/v5/account/instruments?instType=SPOT</strong> est authentifié et seul peut préciser les instruments accessibles au compte. Cette page n'appelle pas le second.</p>
 <p><a href="https://www.okx.com/docs-v5/" target="_blank" rel="noopener noreferrer">Documentation officielle OKX API ↗</a> · <a href="https://www.okx.com/fr-fr/stock" target="_blank" rel="noopener noreferrer">Produits tokenisés OKX ↗</a> · <a href="../administrator/data/new-listings-public-feed.json" target="_blank" rel="noopener noreferrer">Catalogue Spot public archivé ↗</a> · <a href="../data/crypto/okx-hourly/research-latest.json" target="_blank" rel="noopener noreferrer">Carnets OKX historiques ↗</a> · <a href="../data/crypto/research/okx-spot-screen-candidates.json" target="_blank" rel="noopener noreferrer">Paires des captures (sans données privées) ↗</a></p>
 </section>
 <footer class="foot">ERITH.IA · Observation publique et datée · aucune garantie d'accès régional, aucun ordre, aucun rendement, aucun conseil d'achat.</footer>

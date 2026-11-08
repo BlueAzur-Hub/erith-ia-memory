@@ -20,22 +20,28 @@
       "observed_at_utc_date": "2026-11-08",
       "observed_provenance": "USER_SUPPLIED_TRADER_SCREENSHOT",
       "observed_pair_official_announcement_confirmed": false,
-      "explanation": "EDGE-USDC appears in the user screenshot; the consulted primary OKX announcements cover EDGE-USDT, EDGE-USD and EDGE-EUR. No proof of the exact EDGE-USDC pair or account eligibility has been obtained from those announcements.",
+      "explanation": "EDGE-USDC appears in the user screenshot. Historic OKX announcements include EDGE-USDT, EDGE-USD and EDGE-EUR. After the official September 2026 migration, the historic EDGE-USD announcement is not proof of a currently listed EDGE-USD instrument. EDGE-USDC and the available tradeQuoteCcyList must be verified against current instrument data.",
       "announced_spot_instruments": [
         {
           "instId": "EDGE-USDT",
           "open_at_utc": "2026-05-06T11:00:00Z",
-          "source_url": "https://www.okx.com/en-eu/help/okx-to-list-edge-edgex-for-spot-trading"
+          "source_url": "https://www.okx.com/en-eu/help/okx-to-list-edge-edgex-for-spot-trading",
+          "current_state_verified": false,
+          "official_announcement_is_not_current_account_availability": true
         },
         {
           "instId": "EDGE-USD",
           "open_at_utc": "2026-05-06T12:00:00Z",
-          "source_url": "https://www.okx.com/help/okx-will-launch-edge-usd-and-edge-eur-for-spot-trading"
+          "source_url": "https://www.okx.com/help/okx-will-launch-edge-usd-and-edge-eur-for-spot-trading",
+          "current_state_verified": false,
+          "official_announcement_is_not_current_account_availability": true
         },
         {
           "instId": "EDGE-EUR",
           "open_at_utc": "2026-05-06T12:00:00Z",
-          "source_url": "https://www.okx.com/help/okx-will-launch-edge-usd-and-edge-eur-for-spot-trading"
+          "source_url": "https://www.okx.com/help/okx-will-launch-edge-usd-and-edge-eur-for-spot-trading",
+          "current_state_verified": false,
+          "official_announcement_is_not_current_account_availability": true
         }
       ],
       "coin_source_url": "https://www.coingecko.com/en/coins/edgex",
@@ -44,7 +50,16 @@
       "account_spot_available_verified": false,
       "actual_fees_verified": false,
       "order_fill_proven": false,
-      "paper_ready": false
+      "paper_ready": false,
+      "september_2026_usd_migration_review": "EDGE-USD is a historical announcement; impact of the regional USD/USDC consolidation on this exact EDGE instrument is not independently established.",
+      "trade_quote_ccy_list_verified": false
     }
-  ]
+  ],
+  "public_okx_migration": {
+    "announced_date": "2026-09-30",
+    "official_changelog": "https://my.okx.com/docs-v5/log_en/",
+    "rule": "Some Crypto-USD instruments were discontinued in favor of Crypto-USDC; do not assume an announced historical USD instrument is still available.",
+    "quote_note": "USD may be in an instrument's account-specific tradeQuoteCcyList; USD and USDC are not equivalent accounting currencies.",
+    "private_account_instruments_checked": false
+  }
 }

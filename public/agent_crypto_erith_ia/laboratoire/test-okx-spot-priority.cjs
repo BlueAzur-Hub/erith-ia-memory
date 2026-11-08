@@ -56,6 +56,46 @@ test("public new listings do not become account-authorized instruments",()=>{
  assert.ok(x.hasPublicListing&&x.hasScreenshot&&x.verifiedForAccount===false);
 });
 
+test("2026-09-30 USD migration keeps historic announcements unverified",()=>{
+ const input=fixtures(),out=api.buildUniverse(input);
+ assert.equal(input.research.public_okx_migration.announced_date,"2026-09-30");
+ assert.equal(input.research.records[0].trade_quote_ccy_list_verified,false);
+ for(const a of input.research.records[0].announced_spot_instruments)
+   assert.equal(a.current_state_verified,false);
+ for(const id of ["EDGE-USDT","EDGE-USD","EDGE-EUR"]){
+   const item=out.data.find(x=>x.instId===id);
+   assert.ok(item.hasOfficialAnnouncement);
+   assert.equal(item.verifiedForAccount,false);
+   assert.equal(item.orderAllowed,false);
+ }
+ assert.equal(out.data.find(x=>x.instId==="EDGE-USDC").hasOfficialAnnouncement,false);
+});
+test("local Bridge probe is GET-only, private-credential-free and is not account proof",async()=>{
+ let calls=0;
+ const mock=async(url,opts)=>{
+   calls++;
+   assert.equal(url,"http://127.0.0.1:8790/market-resolve?asset=EDGE&currency=USD");
+   assert.equal(opts.method,"GET");
+   assert.equal(opts.credentials,"omit");
+   return {ok:true,json:async()=>({
+     asset:"EDGE",display_currency:"USD",
+     chosen:{
+       candles:{provider:"bitget",instrument:"EDGE-USDT",quote:"USDT"},
+       book:{provider:"okx",instrument:"EDGE-USDC",quote:"USDC",capabilities:["book"]}
+     }
+   })};
+ };
+ const data=await api.probeLocalMarket({asset:"EDGE",fetcher:mock});
+ assert.equal(calls,1);
+ assert.equal(data.book.instrument,"EDGE-USDC");
+ assert.equal(data.candles,null);
+ assert.equal(data.accountAccessVerified,false);
+ assert.equal(data.accountInstrumentsQueried,false);
+ assert.equal(data.tradeQuoteCcyListVerified,false);
+ assert.equal(data.orderAuthorized,false);
+ await assert.rejects(()=>api.probeLocalMarket({asset:"../secret",fetcher:mock}),/Source OKX invalide/);
+ assert.equal(calls,1);
+});
 test("EDGE/USDC does not inherit EDGE/USDT official proof; CoinGecko ticker collision is explicit",()=>{
  const r=api.buildUniverse(fixtures()),edgeUSDC=r.data.find(x=>x.instId==="EDGE-USDC");
  assert.ok(edgeUSDC&&edgeUSDC.hasScreenshot&&edgeUSDC.hasOfficialAnnouncement===false);

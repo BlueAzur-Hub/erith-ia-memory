@@ -89,7 +89,10 @@ function buildUniverse({screenshot,hourly,listings,research}){
     !researched.has(x.coin_id)&&Array.isArray(x.announced_spot_instruments)&&
     x.announced_spot_instruments.length>0&&x.account_spot_available_verified===false&&
     x.actual_fees_verified===false&&x.order_fill_proven===false&&
-    x.paper_ready===false&&x.contract_matched_to_okx_announcement===false,
+    x.paper_ready===false&&x.contract_matched_to_okx_announcement===false&&
+    x.trade_quote_ccy_list_verified===false&&
+    research.public_okx_migration?.announced_date==="2026-09-30"&&
+    research.public_okx_migration.private_account_instruments_checked===false,
     "fiche identité / permission");
   researched.add(x.coin_id);
   invariant(typeof x.symbol==="string"&&/^[A-Z0-9]+$/.test(x.symbol)&&
@@ -121,6 +124,8 @@ function buildUniverse({screenshot,hourly,listings,research}){
    const row=ensure(listed.instId,"crypto_spot_candidate");
    row.canonicalResearchId=x.coin_id;row.researchPage=x.research_page;
    row.identityWarning=x.ambiguity_warning;
+   invariant(listed.current_state_verified===false&&listed.official_announcement_is_not_current_account_availability===true,
+    "annonce historique ≠ accès courant");
    row.hasOfficialAnnouncement=true;row.officialListingAt=listed.open_at_utc;
    row.labels.push("Annonce officielle OKX Spot · "+listed.open_at_utc.slice(0,10));
   }
@@ -169,7 +174,7 @@ function render(doc,model){
   append(tr,"td","À vérifier pour le compte (Europe)");
   const detail=append(tr,"td",x.type==="tokenized_stock_or_etf"?
    "Tenir distinct des cryptomonnaies":
-   x.hasOfficialAnnouncement?"Annonce de cotation, accès au compte non vérifié":
+   x.hasOfficialAnnouncement?"Annonce historique ; état courant et accès au compte non vérifiés":
    x.identityWarning?"Paire affichée, preuve instrument exact à obtenir":
    x.hasBook?"Actualiser le carnet, les règles et les frais":
    "Vérifier la paire, l'identité et les règles Spot");
@@ -185,7 +190,60 @@ function render(doc,model){
  }
  doc.getElementById("okx-target-count").textContent=rows.length+" instrument(s) affiché(s)";
 }
+async function probeLocalMarket({asset="EDGE",fetcher=null}={}){
+ const name=String(asset||"").trim().toUpperCase();
+ invariant(/^[A-Z0-9]{2,16}$/.test(name),"nom d'actif local");
+ const request=typeof fetcher==="function"?fetcher:
+  (typeof fetch==="function"?fetch.bind(globalThis):null);
+ invariant(!!request,"transport local indisponible");
+ const url="http://127.0.0.1:8790/market-resolve?asset="+
+  encodeURIComponent(name)+"&currency=USD";
+ const response=await request(url,{
+  method:"GET",cache:"no-store",credentials:"omit",mode:"cors",
+  headers:{Accept:"application/json"}
+ });
+ invariant(response&&response.ok,"Bridge local hors ligne ou réponse non valide");
+ const payload=await response.json();
+ invariant(payload&&typeof payload==="object"&&
+  String(payload.asset||"").toUpperCase()===name&&
+  String(payload.display_currency||"").toUpperCase()==="USD", "Bridge hors contexte");
+ const normalize=(item)=>{
+  if(!item||typeof item!=="object"||item.provider!=="okx")return null;
+  const instId=String(item.instrument||"").toUpperCase();
+  if(!safeInstId(instId)||!instId.startsWith(name+"-"))return null;
+  return {provider:"okx",instrument:instId,
+   quote:instId.split("-")[1],capabilities:Array.isArray(item.capabilities)?
+    item.capabilities.filter(z=>z==="book"||z==="candles"):[]};
+ };
+ const candles=normalize(payload.chosen?.candles),book=normalize(payload.chosen?.book);
+ return Object.freeze({
+  asset:name,source:"LOCAL_PUBLIC_MARKET_RESOLVER",readOnly:true,
+  candles,book,accountAccessVerified:false,accountInstrumentsQueried:false,
+  tradeQuoteCcyListVerified:false,orderAuthorized:false
+ });
+}
 function mount(doc=document,fetcher=fetch){
+ const bridgeBtn=doc.getElementById("okx-local-bridge-check");
+ const bridgeOut=doc.getElementById("okx-local-bridge-status");
+ if(bridgeBtn&&bridgeOut){
+  bridgeBtn.addEventListener("click",async()=>{
+   if(bridgeBtn.disabled)return;
+   const asset=String(doc.getElementById("okx-local-asset")?.value||"EDGE")
+    .trim().toUpperCase();
+   bridgeBtn.disabled=true;bridgeOut.textContent="Recherche marché local en lecture seule…";
+   try{
+    const result=await probeLocalMarket({asset});
+    bridgeOut.textContent=result.asset+" : "+
+     (result.candles?"bougies "+result.candles.instrument:"pas de bougies OKX confirmées")+
+     " · "+(result.book?"carnet "+result.book.instrument:"pas de carnet OKX confirmé")+
+     ". Source marché uniquement : aucun instrument du compte ni devise de règlement authentifiés.";
+   }catch(error){
+    bridgeOut.textContent="Bridge local non confirmé : "+
+      String(error?.message||"indisponible")+
+      ". Aucun accès au compte démontré.";
+   }finally{bridgeBtn.disabled=false;}
+  });
+ }
  const status=doc.getElementById("okx-target-status");
  if(!status)return null;
  let active=null;
@@ -226,5 +284,5 @@ if(typeof document!=="undefined"){
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>mount());
  else mount();
 }
-return Object.freeze({buildUniverse,mount,PATHS});
+return Object.freeze({buildUniverse,mount,probeLocalMarket,PATHS});
 });
