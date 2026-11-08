@@ -1,0 +1,50 @@
+{
+  "schema": "erith.crypto.okx-spot-identity-research.v1",
+  "reviewed_on_utc": "2026-11-08",
+  "read_only": true,
+  "orders_enabled": false,
+  "no_account_access_verification": true,
+  "no_quote_interchange": true,
+  "source_basis": "Official OKX listing announcements, CoinGecko distinct IDs, and user's 2026-11-08 Trader screenshot",
+  "records": [
+    {
+      "coin_id": "edgex",
+      "display_name": "edgeX",
+      "symbol": "EDGE",
+      "ambiguity_warning": "The symbol EDGE is also used by CoinGecko 'edge' (different project); never join by ticker alone.",
+      "coin_id_collision_to_exclude": "edge",
+      "research_contract_network": "Ethereum",
+      "research_contract_address": "0xb0076de78dc50581770bba1d211ddc0ad4f2a241",
+      "contract_matched_to_okx_announcement": false,
+      "observed_instrument": "EDGE-USDC",
+      "observed_at_utc_date": "2026-11-08",
+      "observed_provenance": "USER_SUPPLIED_TRADER_SCREENSHOT",
+      "observed_pair_official_announcement_confirmed": false,
+      "explanation": "EDGE-USDC appears in the user screenshot; the consulted primary OKX announcements cover EDGE-USDT, EDGE-USD and EDGE-EUR. No proof of the exact EDGE-USDC pair or account eligibility has been obtained from those announcements.",
+      "announced_spot_instruments": [
+        {
+          "instId": "EDGE-USDT",
+          "open_at_utc": "2026-05-06T11:00:00Z",
+          "source_url": "https://www.okx.com/en-eu/help/okx-to-list-edge-edgex-for-spot-trading"
+        },
+        {
+          "instId": "EDGE-USD",
+          "open_at_utc": "2026-05-06T12:00:00Z",
+          "source_url": "https://www.okx.com/help/okx-will-launch-edge-usd-and-edge-eur-for-spot-trading"
+        },
+        {
+          "instId": "EDGE-EUR",
+          "open_at_utc": "2026-05-06T12:00:00Z",
+          "source_url": "https://www.okx.com/help/okx-will-launch-edge-usd-and-edge-eur-for-spot-trading"
+        }
+      ],
+      "coin_source_url": "https://www.coingecko.com/en/coins/edgex",
+      "conflict_coin_source_url": "https://www.coingecko.com/en/coins/edge",
+      "research_page": "cas-ecole-edgex-okx.html",
+      "account_spot_available_verified": false,
+      "actual_fees_verified": false,
+      "order_fill_proven": false,
+      "paper_ready": false
+    }
+  ]
+}

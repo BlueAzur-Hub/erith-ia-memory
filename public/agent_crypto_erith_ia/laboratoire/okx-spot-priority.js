@@ -9,12 +9,13 @@
 const PATHS=Object.freeze({
  screenshot:"../data/crypto/research/okx-spot-screen-candidates.json",
  hourly:"../data/crypto/okx-hourly/research-latest.json",
- listings:"../administrator/data/new-listings-public-feed.json"
+ listings:"../administrator/data/new-listings-public-feed.json",
+ research:"../data/crypto/research/okx-spot-identity-research.json"
 });
 function invariant(ok,msg){if(!ok)throw Error("Source OKX invalide : "+msg);}
 function safeText(v){return typeof v==="string"?v:"";}
-function safeInstId(id){return /^[A-Z0-9]+-(USDC|USDT|EUR)$/.test(id);}
-function buildUniverse({screenshot,hourly,listings}){
+function safeInstId(id){return /^[A-Z0-9]+-(USDC|USDT|USD|EUR)$/.test(id);}
+function buildUniverse({screenshot,hourly,listings,research}){
  invariant(screenshot?.schema==="erith.crypto.okx-spot-user-screen-candidates.v1"&&
   screenshot.public_only===true&&screenshot.orders_enabled===false&&
   screenshot.account_instruments_verified===false&&Array.isArray(screenshot.items),
@@ -26,6 +27,10 @@ function buildUniverse({screenshot,hourly,listings}){
   listings.trade_permission===false&&listings.real_orders===0&&
   listings.spot_usdc_access_for_user_verified===false&&Array.isArray(listings.entries),
   "nouveaux instruments Spot");
+ invariant(research?.schema==="erith.crypto.okx-spot-identity-research.v1"&&
+  research.read_only===true&&research.orders_enabled===false&&
+  research.no_account_access_verification===true&&research.no_quote_interchange===true&&
+  Array.isArray(research.records),"registre des identités de recherche");
  const map=new Map();
  function ensure(id,type){
   invariant(safeInstId(id),"format instrument "+String(id));
@@ -33,6 +38,8 @@ function buildUniverse({screenshot,hourly,listings}){
     instId:id,base:id.split("-")[0],quote:id.split("-")[1],type:type,
     labels:[],hasScreenshot:false,hasBook:false,hasPublicListing:false,
     bookAt:null,bookSpreadBps:null,listingAt:null,listingState:null,
+    hasOfficialAnnouncement:false,officialListingAt:null,canonicalResearchId:null,
+    researchPage:null,identityWarning:null,spotPairConfirmed:false,
     verifiedForAccount:false,eligibilityVerified:false,orderAllowed:false
   });
   const row=map.get(id);
@@ -76,7 +83,49 @@ function buildUniverse({screenshot,hourly,listings}){
   row.listingState=safeText(x.state);
   row.labels.push("Catalogue Spot OKX · relevé "+listings.captured_at_utc.slice(0,10));
  }
- const data=[...map.values()].sort((a,b)=>
+ const researched=new Set();
+ for(const x of research.records){
+  invariant(typeof x?.coin_id==="string"&&/^[a-z0-9-]+$/.test(x.coin_id)&&
+    !researched.has(x.coin_id)&&Array.isArray(x.announced_spot_instruments)&&
+    x.announced_spot_instruments.length>0&&x.account_spot_available_verified===false&&
+    x.actual_fees_verified===false&&x.order_fill_proven===false&&
+    x.paper_ready===false&&x.contract_matched_to_okx_announcement===false,
+    "fiche identité / permission");
+  researched.add(x.coin_id);
+  invariant(typeof x.symbol==="string"&&/^[A-Z0-9]+$/.test(x.symbol)&&
+    typeof x.research_page==="string"&&/^cas-ecole-[a-z0-9-]+\.html$/.test(x.research_page),
+    "identité et destination de recherche");
+  invariant(x.coin_id!==x.coin_id_collision_to_exclude &&
+    typeof x.ambiguity_warning==="string"&&x.ambiguity_warning.length>0,
+    "conflit de ticker");
+  invariant(x.observed_provenance==="USER_SUPPLIED_TRADER_SCREENSHOT"&&
+    x.observed_pair_official_announcement_confirmed===false&&
+    screenshot.items.some(y=>y.instId===x.observed_instrument)&&
+    x.observed_instrument.startsWith(x.symbol+"-"),
+    "paire Trader non reconnue");
+  const observed=ensure(x.observed_instrument,"crypto_spot_candidate");
+  observed.canonicalResearchId=x.coin_id;observed.researchPage=x.research_page;
+  observed.identityWarning=x.ambiguity_warning;
+  observed.labels.push("Trader : paire affichée, non certifiée par les annonces officielles consultées");
+  const announcements=new Set();
+  for(const listed of x.announced_spot_instruments){
+   invariant(safeInstId(listed.instId)&&listed.instId.startsWith(x.symbol+"-")&&
+     !announcements.has(listed.instId)&&
+     /^https:\/\/www\.okx\.com\//.test(listed.source_url)&&
+     /^\d{4}-\d{2}-\d{2}T/.test(listed.open_at_utc),
+     "annonce Spot primaire");
+   announcements.add(listed.instId);
+   invariant(listed.instId!==x.observed_instrument ||
+     x.observed_pair_official_announcement_confirmed===true,
+     "la paire de l'écran ne doit pas être présumée annoncée");
+   const row=ensure(listed.instId,"crypto_spot_candidate");
+   row.canonicalResearchId=x.coin_id;row.researchPage=x.research_page;
+   row.identityWarning=x.ambiguity_warning;
+   row.hasOfficialAnnouncement=true;row.officialListingAt=listed.open_at_utc;
+   row.labels.push("Annonce officielle OKX Spot · "+listed.open_at_utc.slice(0,10));
+  }
+ }
+  const data=[...map.values()].sort((a,b)=>
   Number(b.hasScreenshot)-Number(a.hasScreenshot)||
   Number(b.hasBook)-Number(a.hasBook)||
   a.instId.localeCompare(b.instId));
@@ -86,12 +135,14 @@ function buildUniverse({screenshot,hourly,listings}){
   seenScreenshot:data.filter(x=>x.hasScreenshot).length,
   haveBook:data.filter(x=>x.hasBook).length,
   catalogOKX:data.filter(x=>x.hasPublicListing).length,
-  regionConfirmed:0,orderAuthorized:0
+  officialAnnounced:data.filter(x=>x.hasOfficialAnnouncement).length,
+  researchReviewed:researched.size,regionConfirmed:0,orderAuthorized:0
  };
  invariant(data.every(x=>x.verifiedForAccount===false&&x.orderAllowed===false),
  "toute décision d'accès authentifié doit rester inconnue");
  return {data,counts,metadata:{hourlyAt:hourly.as_of_utc,listingAt:listings.captured_at_utc,
-  screenshotAt:screenshot.captured_at_local_date,accountInstrumentsChecked:false}};
+  screenshotAt:screenshot.captured_at_local_date,identityReviewAt:research.reviewed_on_utc,
+  accountInstrumentsChecked:false}};
 }
 function render(doc,model){
  const tbody=doc.getElementById("okx-target-rows");
@@ -113,12 +164,19 @@ function render(doc,model){
   append(tr,"td",x.labels.join(" · "));
   append(tr,"td",x.hasBook?x.bookAt.slice(0,16).replace("T"," ")+" UTC":
    x.hasPublicListing?x.listingAt.slice(0,16).replace("T"," ")+" UTC":
-   "Capture "+x.screenshotAt);
+   x.hasOfficialAnnouncement?x.officialListingAt.slice(0,16).replace("T"," ")+" UTC":
+   "Capture "+(x.screenshotAt||"non datée"));
   append(tr,"td","À vérifier pour le compte (Europe)");
-  append(tr,"td",x.type==="tokenized_stock_or_etf"?
+  const detail=append(tr,"td",x.type==="tokenized_stock_or_etf"?
    "Tenir distinct des cryptomonnaies":
+   x.hasOfficialAnnouncement?"Annonce de cotation, accès au compte non vérifié":
+   x.identityWarning?"Paire affichée, preuve instrument exact à obtenir":
    x.hasBook?"Actualiser le carnet, les règles et les frais":
    "Vérifier la paire, l'identité et les règles Spot");
+  if(x.researchPage){
+   const a=doc.createElement("a");a.href="./"+x.researchPage;a.textContent=" · Dossier "+x.canonicalResearchId+" ↗";
+   detail.appendChild(a);
+  }
   tbody.appendChild(tr);
  }
  if(!rows.length){
@@ -151,7 +209,8 @@ function mount(doc=document,fetcher=fetch){
    const c=model.counts,m=model.metadata;
    status.textContent=c.crypto+" paires crypto · "+c.tokenized+" produits X tokenisés séparés · "+
     c.seenScreenshot+" sur captures OKX du "+m.screenshotAt+" · "+c.haveBook+
-    " avec ancien carnet public · "+c.catalogOKX+" cotations OKX dans le catalogue du "+
+    " avec ancien carnet public · "+c.officialAnnounced+" paires à annonce officielle revue · "+
+    c.catalogOKX+" cotations OKX dans le catalogue du "+
     m.listingAt.slice(0,10)+" · 0 instrument authentifié pour le compte. Aucun ordre.";
    render(doc,model);
   }catch(e){
