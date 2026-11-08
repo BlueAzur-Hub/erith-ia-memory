@@ -13,6 +13,26 @@ const fixtures=()=>({
  listings:json("../administrator/data/new-listings-public-feed.json"),
  research:json("../data/crypto/research/okx-spot-identity-research.json")
 });
+test("crypto logos are exact local assets and ambiguous token tickers remain monograms",()=>{
+ const model=api.buildUniverse(fixtures());
+ for(const base of ["BTC","ETH","SOL","XRP","BCH","DOGE","CT"]){
+  const row=model.data.find(x=>x.base===base&&x.type==="crypto_spot_candidate");
+  assert.ok(row,base+" has a documented Spot candidate");
+  const logo=api.logoForRow(row);
+  assert.ok(logo&&typeof logo.src==="string");
+  assert.ok(!logo.src.startsWith("http"),"no external logo fetch");
+  assert.ok(fs.existsSync(path.resolve(root,logo.src)),base+" local logo exists");
+ }
+ const edge=model.data.find(x=>x.instId==="EDGE-USDC");
+ assert.equal(api.logoForRow(edge),null,"EDGE must never pick a logo by ambiguous ticker");
+ assert.equal(api.symbolMonogram(edge),"ED");
+ const product=model.data.find(x=>x.instId==="XASML-USDC");
+ assert.equal(api.logoForRow(product),null,"tokenized product never borrows a crypto logo");
+ assert.equal(api.symbolMonogram(product),"X");
+ assert.equal(api.logoForRow({instId:"EDGE-USDC",base:"BTC",type:"crypto_spot_candidate"}),null,
+  "inconsistent instrument cannot borrow BTC logo");
+ assert.equal(api.CRYPTO_LOGOS.EDGE,undefined);
+});
 test("OKX public books, native pairs and screenshot observations remain distinct",()=>{
  const input=fixtures(),{data,counts}=api.buildUniverse(input);
  assert.equal(counts.haveBook,input.hourly.pairs.length);

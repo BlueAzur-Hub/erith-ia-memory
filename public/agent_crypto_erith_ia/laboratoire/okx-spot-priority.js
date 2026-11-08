@@ -12,6 +12,27 @@ const PATHS=Object.freeze({
  listings:"../administrator/data/new-listings-public-feed.json",
  research:"../data/crypto/research/okx-spot-identity-research.json"
 });
+/* Deliberate, locally hosted project logos: a ticker alone never resolves an unknown asset.
+   Other cryptos get a monogram; tokenized securities never borrow crypto icons. */
+const CRYPTO_LOGOS=Object.freeze({
+ BTC:Object.freeze({src:"assets/crypto-logos/btc.svg",name:"Bitcoin"}),
+ ETH:Object.freeze({src:"assets/crypto-logos/eth.svg",name:"Ethereum"}),
+ SOL:Object.freeze({src:"assets/crypto-logos/sol.svg",name:"Solana"}),
+ XRP:Object.freeze({src:"assets/crypto-logos/xrp.svg",name:"XRP"}),
+ BCH:Object.freeze({src:"assets/crypto-logos/bch.svg",name:"Bitcoin Cash"}),
+ DOGE:Object.freeze({src:"assets/crypto-logos/doge.svg",name:"Dogecoin"}),
+ CT:Object.freeze({src:"../administrator/assets/crypto/new-listings/concrete.png",name:"Concrete"})
+});
+function logoForRow(row){
+ if(row?.type!=="crypto_spot_candidate")return null;
+ const base=String(row.base||"").toUpperCase();
+ if(!/^[A-Z0-9]{2,16}$/.test(base)||!String(row.instId||"").startsWith(base+"-"))return null;
+ return Object.prototype.hasOwnProperty.call(CRYPTO_LOGOS,base)?CRYPTO_LOGOS[base]:null;
+}
+function symbolMonogram(row){
+ if(row?.type==="tokenized_stock_or_etf")return "X";
+ return String(row?.base||"?").slice(0,2).toUpperCase();
+}
 function invariant(ok,msg){if(!ok)throw Error("Source OKX invalide : "+msg);}
 function safeText(v){return typeof v==="string"?v:"";}
 function safeInstId(id){return /^[A-Z0-9]+-(USDC|USDT|USD|EUR)$/.test(id);}
@@ -164,7 +185,30 @@ function render(doc,model){
  };
  for(const x of rows){
   const tr=doc.createElement("tr");
-  append(tr,"th",x.instId);
+  const identity=append(tr,"th","");
+  const holder=doc.createElement("span");holder.className="crypto-pair-identity";
+  const icon=doc.createElement("span");icon.className="crypto-coin-logo";
+  const asset=logoForRow(x);
+  function showFallback(){
+   icon.replaceChildren();
+   icon.classList.add("crypto-coin-logo--fallback");
+   if(x.type==="tokenized_stock_or_etf")icon.classList.add("crypto-coin-logo--product");
+   icon.textContent=symbolMonogram(x);
+   icon.title=asset?"Logo indisponible · sigle "+x.base:
+    x.type==="tokenized_stock_or_etf"?"Produit tokenisé · pas une crypto":
+    "Logo du projet non vérifié · sigle "+x.base;
+  }
+  if(asset){
+   const image=doc.createElement("img");
+   image.src=asset.src;image.alt="Logo "+asset.name;
+   image.loading="lazy";image.decoding="async";image.width=30;image.height=30;
+   image.addEventListener("error",showFallback,{once:true});
+   icon.appendChild(image);
+  }else showFallback();
+  holder.appendChild(icon);
+  const pairText=doc.createElement("span");pairText.className="crypto-pair-code";
+  pairText.textContent=x.instId;holder.appendChild(pairText);
+  identity.appendChild(holder);
   append(tr,"td",x.type==="tokenized_stock_or_etf"?"Action / ETF tokenisé":"Crypto · catégorie à confirmer");
   append(tr,"td",x.labels.join(" · "));
   append(tr,"td",x.hasBook?x.bookAt.slice(0,16).replace("T"," ")+" UTC":
@@ -284,5 +328,5 @@ if(typeof document!=="undefined"){
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>mount());
  else mount();
 }
-return Object.freeze({buildUniverse,mount,probeLocalMarket,PATHS});
+return Object.freeze({buildUniverse,mount,probeLocalMarket,logoForRow,symbolMonogram,CRYPTO_LOGOS,PATHS});
 });

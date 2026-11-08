@@ -14,6 +14,12 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.metric{padding:14px;background:#061d2c;border:1px solid #275365;border-radius:9px}.metric strong{display:block;font-size:17px;color:#ecfcff}.metric span{color:var(--muted);font-size:13px}
 .filters{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:18px 0}.filters label{display:flex;flex-direction:column;gap:4px;color:#b5d3d9;font-size:13px}.filters input,.filters select,button{background:#0a3041;border:1px solid #4c7a88;border-radius:8px;padding:10px;color:#f5ffff;font:inherit}button{cursor:pointer}
 .scroller{overflow-x:auto}table{min-width:940px;width:100%;border-collapse:collapse}th,td{padding:11px;text-align:left;border-bottom:1px solid #305367;vertical-align:top}th{font-size:12px;color:#bcd6e2}tbody th{color:#fff0bd;font-size:14px;white-space:nowrap}tbody td{font-size:13px}.foot{color:var(--muted);font-size:12px}
+.crypto-pair-identity{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;min-width:0}
+.crypto-coin-logo{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:inline-grid;place-items:center;overflow:hidden;background:#15384b;border:1px solid #477588;box-shadow:0 0 0 1px rgba(11,66,78,.35)}
+.crypto-coin-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.crypto-coin-logo--fallback{font-size:11px;letter-spacing:-.03em;font-weight:800;color:#d0f3fa;background:linear-gradient(135deg,#153e53,#113045)}
+.crypto-coin-logo--product{border-radius:8px;color:#ffd8a2;background:#322b29;border-color:#796249}
+.crypto-pair-code{font-weight:750;white-space:nowrap}
 @media(max-width:750px){.grid{grid-template-columns:1fr}section{padding:14px}}
 </style></head><body><main>
 <nav><a href="radar.html">← Radar permanent</a><a href="crypto-knowledge.html#coffre-radar-live-dossiers">Dossiers du Coffre</a><a href="../administrator/historical-vault.html">Historical Vault</a><a href="../trader/trading-desk.html">Trader</a></nav>
@@ -53,6 +59,7 @@ p{margin:8px 0 12px}.notice{border-left:3px solid var(--cyan);background:#0a3140
 <button id="okx-target-reload" type="button">Relire les archives</button>
 </div>
 <p class="foot" id="okx-target-count" role="status">En attente</p>
+<p class="foot">Logos locaux lorsque l'identité visuelle est connue ; sinon initiales du symbole. Le pictogramme est uniquement une aide visuelle, pas une certification d'identité, de cotation ou d'accès au compte.</p>
 <div class="scroller"><table><thead><tr><th>Paire native</th><th>Catégorie</th><th>Source de preuve</th><th>Dernier relevé pertinent</th><th>Accès au compte</th><th>Suite documentaire</th></tr></thead><tbody id="okx-target-rows"><tr><td colspan="6">Aucune donnée chargée.</td></tr></tbody></table></div>
 </section>
 <section><h2>Critère d'admissibilité dans notre Laboratoire</h2>
