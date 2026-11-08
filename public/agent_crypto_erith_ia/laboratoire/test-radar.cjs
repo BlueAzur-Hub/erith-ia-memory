@@ -14,9 +14,13 @@ const validated=reader.validMarket(example);
 assert.equal(validated.rows.length,250);
 assert.equal(validated.rows[0].marketCapUsd,5000);
 assert.equal(validated.rows[0].image,coins[0].image);
-assert.equal(reader.marketLogoSource(validated.rows[0]),"assets/crypto-logos/btc.svg");
-assert.match(reader.marketIdentityCell(validated.rows[0]),/radar-market-icon-image/);
-assert.match(reader.marketIdentityCell(validated.rows[0]),/OKX · vérifier/);
+// The fixture has a BTC ticker but intentionally fake ID "asset-0": never reuse a logo or OKX link by ticker alone.
+assert.equal(reader.marketLogoSource(validated.rows[0]),coins[0].image);
+assert.doesNotMatch(reader.marketIdentityCell(validated.rows[0]),/OKX · vérifier/);
+const canonicalBitcoin={...validated.rows[0],id:"bitcoin"};
+assert.equal(reader.marketLogoSource(canonicalBitcoin),"assets/crypto-logos/btc.svg");
+assert.match(reader.marketIdentityCell(canonicalBitcoin),/radar-market-icon-image/);
+assert.match(reader.marketIdentityCell(canonicalBitcoin),/OKX · vérifier/);
 const unsafeCoin={id:"edge",symbol:"EDGE",name:"Different Edge",image:"https://evil.example/edge.png"};
 assert.equal(reader.marketLogoSource(unsafeCoin),"");
 assert.doesNotMatch(reader.marketIdentityCell(unsafeCoin),/OKX · vérifier/);
