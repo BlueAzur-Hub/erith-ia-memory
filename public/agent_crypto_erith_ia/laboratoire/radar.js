@@ -172,7 +172,50 @@ function selectOpportunities(core,extended){
    scoutUniverse:candidates,
   disclaimer:"Observations transversales de snapshots, non opportunités négociables ni conseils d'achat. Aucune paire d'exécution vérifiée."};
 }
-const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,eligibleResearchCoin,selectOpportunities});
+// The ranking source carries exact CoinGecko IDs; never infer a token logo from a ticker.
+const LOCAL_MARKET_ICONS=Object.freeze({
+ bitcoin:{symbol:"BTC",src:"assets/crypto-logos/btc.svg"},
+ ethereum:{symbol:"ETH",src:"assets/crypto-logos/eth.svg"},
+ solana:{symbol:"SOL",src:"assets/crypto-logos/sol.svg"},
+ ripple:{symbol:"XRP",src:"assets/crypto-logos/xrp.svg"},
+ "bitcoin-cash":{symbol:"BCH",src:"assets/crypto-logos/bch.svg"},
+ dogecoin:{symbol:"DOGE",src:"assets/crypto-logos/doge.svg"}
+});
+// This is only a route to historical OKX research, NOT proof of account access.
+const OKX_PUBLIC_RESEARCH=Object.freeze({
+ bitcoin:"BTC",ethereum:"ETH",solana:"SOL",ripple:"XRP",
+ "bitcoin-cash":"BCH",dogecoin:"DOGE",okb:"OKB",edgex:"EDGE"
+});
+function marketLogoSource(asset){
+ const id=String(asset?.id||"").toLowerCase(),symbol=String(asset?.symbol||"").toUpperCase();
+ const trusted=Object.prototype.hasOwnProperty.call(LOCAL_MARKET_ICONS,id)?
+  LOCAL_MARKET_ICONS[id]:null;
+ if(trusted?.symbol===symbol)return trusted.src;
+ const candidate=String(asset?.image||"");
+ // CoinGecko snapshot includes image URLs keyed by canonical ID. Reject arbitrary hosts.
+ try{
+  const u=new URL(candidate);
+  if(u.protocol!=="https:"||!["coin-images.coingecko.com","assets.coingecko.com"].includes(u.hostname)||
+    !/^\/coins\/images\/\d+\/(?:large|small|thumb)\/[A-Za-z0-9._%-]+$/.test(u.pathname))
+   return "";
+  return u.href;
+ }catch{return "";}
+}
+function marketIdentityCell(asset){
+ const id=String(asset?.id||"").toLowerCase(),sym=String(asset?.symbol||"").toUpperCase();
+ const img=marketLogoSource(asset);
+ const marker='<span class="radar-market-icon"><span class="radar-market-monogram">'+
+  safe(sym.slice(0,2)||"?")+'</span>'+(img?'<img class="radar-market-icon-image" src="'+safe(img)+
+  '" alt="" loading="lazy" decoding="async">':'')+'</span>';
+ const okx=Object.prototype.hasOwnProperty.call(OKX_PUBLIC_RESEARCH,id)&&
+  OKX_PUBLIC_RESEARCH[id]===sym?'<a class="radar-okx-link" href="okx-spot-priority.html?search='+
+  encodeURIComponent(sym)+'#okx-target-universe" title="Consulter les preuves Spot OKX publiques pour '+
+  safe(sym)+' (aucun accès au compte confirmé)">OKX · vérifier ↗</a>':"";
+ return '<span class="radar-market-identity">'+marker+'<span><span class="radar-market-name">'+
+  safe(asset.name)+'</span> <span class="muted">· '+safe(sym)+'</span>'+
+  (okx?'<span class="radar-market-okx">'+okx+'</span>':"")+'</span></span>';
+}
+const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,eligibleResearchCoin,selectOpportunities,marketLogoSource,marketIdentityCell});
 if(typeof module!=="undefined"&&module.exports)module.exports=API;
 // Shared pure parser between standalone Radar and Trader-native view; never start
 // the standalone UI in a page without its own #tiers control.
@@ -189,10 +232,14 @@ function marketRender(){
  display("tier-note",rows.length+" actifs dans le filtre · classement par capitalisation, pas critère d'achat · source CoinGecko du "+new Date(market.at).toLocaleString("fr-FR"));
  for(const b of $("tiers").querySelectorAll("[data-tier]"))b.setAttribute("aria-pressed",String(Number(b.dataset.tier)===tier));
  if(!rows.length){emptyRow("market-body",6,"Aucun actif pour ce filtre");return}
- $("market-body").innerHTML=rows.map(c=>"<tr><td>"+safe(c.name)+" <span class='muted'>· "+safe(c.symbol)+"</span></td><td>"+c.rank+"</td><td>"+price(c.priceUsd)+
+ $("market-body").innerHTML=rows.map(c=>"<tr><td>"+marketIdentityCell(c)+"</td><td>"+c.rank+"</td><td>"+price(c.priceUsd)+
  "</td><td class='"+(c.change24h>0?"positive":c.change24h<0?"negative":"")+"'>"+pct(c.change24h)+
  "</td><td class='"+(c.change7d>0?"positive":c.change7d<0?"negative":"")+"'>"+pct(c.change7d)+
  "</td><td>"+compact(c.volume24hUsd)+"</td></tr>").join("");
+ for(const img of $("market-body").querySelectorAll(".radar-market-icon-image")){
+  img.addEventListener("error",()=>img.remove(),{once:true});
+  if(img.complete&&img.naturalWidth===0)img.remove();
+ }
 }
 function listingRender(){
  const rows=listing.slice();

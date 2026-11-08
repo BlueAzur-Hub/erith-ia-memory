@@ -14,6 +14,17 @@ const validated=reader.validMarket(example);
 assert.equal(validated.rows.length,250);
 assert.equal(validated.rows[0].marketCapUsd,5000);
 assert.equal(validated.rows[0].image,coins[0].image);
+assert.equal(reader.marketLogoSource(validated.rows[0]),"assets/crypto-logos/btc.svg");
+assert.match(reader.marketIdentityCell(validated.rows[0]),/radar-market-icon-image/);
+assert.match(reader.marketIdentityCell(validated.rows[0]),/OKX · vérifier/);
+const unsafeCoin={id:"edge",symbol:"EDGE",name:"Different Edge",image:"https://evil.example/edge.png"};
+assert.equal(reader.marketLogoSource(unsafeCoin),"");
+assert.doesNotMatch(reader.marketIdentityCell(unsafeCoin),/OKX · vérifier/);
+assert.match(reader.marketIdentityCell({id:"edgex",symbol:"EDGE",name:"edgeX",image:""}),/OKX · vérifier/);
+assert.equal(reader.marketLogoSource({id:"bitcoin",symbol:"FAKE",image:"javascript:alert(1)"}),"");
+assert.equal(reader.marketLogoSource({id:"unknown",symbol:"ABC",image:"https://coin-images.coingecko.com.evil.example/coins/images/2/large/test.png"}),"");
+assert.equal(reader.marketLogoSource({id:"unknown",symbol:"ABC",image:"https://coin-images.coingecko.com/coins/images/2/large/test.png"}),"https://coin-images.coingecko.com/coins/images/2/large/test.png");
+
 const extendedExample={schema:'agent_crypto_public_extended_market_snapshot_v1',
  source:{provider_id:'coingecko'},generated_at:'2026-10-16T07:35:00Z',
  coins:Array.from({length:750},(_,i)=>({id:'extended-'+i,rank:251+i,symbol:'T'+i,
@@ -141,6 +152,8 @@ const js=fs.readFileSync(path.resolve(__dirname,'radar.js'),'utf8');
 assert(native.includes('mountRadarLink()')&&native.includes('atlasPublicRadarLink'));
 assert(native.includes('atlasRadarMarketView')); // standalone path lives in native renderer
 assert(html.includes('Top 10')&&html.includes('Top 20')&&html.includes('Top 50')&&html.includes('Top 250'));
+assert.match(html,/radar\.js\?v=20261108-market-icons-b/);
+assert.match(html,/radar-market-icon/);
 assert(html.includes('new listings')||html.includes('nouveaux listings'));
 assert(!js.includes('api/v5/trade/order'));
 assert(!js.includes('secretKey'));

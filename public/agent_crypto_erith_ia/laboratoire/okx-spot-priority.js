@@ -292,6 +292,12 @@ function mount(doc=document,fetcher=fetch){
  if(!status)return null;
  let active=null;
  const button=doc.getElementById("okx-target-reload");
+ const deepLink=doc.defaultView?.location?.search||"";
+ const requested=new URLSearchParams(deepLink).get("search");
+ if(requested&&/^[A-Za-z0-9-]{2,20}$/.test(requested)){
+  const searchBox=doc.getElementById("okx-target-search");
+  if(searchBox)searchBox.value=requested.toUpperCase();
+ }
  const inputs=["okx-target-type","okx-target-evidence","okx-target-search"];
  inputs.forEach(id=>doc.getElementById(id).addEventListener(id.endsWith("search")?"input":"change",
   ()=>{if(active)render(doc,active)}));

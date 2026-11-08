@@ -13,6 +13,12 @@ const fixtures=()=>({
  listings:json("../administrator/data/new-listings-public-feed.json"),
  research:json("../data/crypto/research/okx-spot-identity-research.json")
 });
+test("OKX catalog page busts the stale script cache and exposes a visual render check",()=>{
+ const html=fs.readFileSync(path.resolve(root,"okx-spot-priority.html"),"utf8");
+ assert.match(html,/okx-spot-priority\.js\?v=20261108-logos-b/);
+ assert.match(html,/id="okx-logo-render-status"/);
+ assert.match(fs.readFileSync(path.resolve(root,"okx-spot-priority.js"),"utf8"),/Logos actifs/);
+});
 test("crypto logos are exact local assets and ambiguous token tickers remain monograms",()=>{
  const model=api.buildUniverse(fixtures());
  for(const base of ["BTC","ETH","SOL","XRP","BCH","DOGE","CT"]){

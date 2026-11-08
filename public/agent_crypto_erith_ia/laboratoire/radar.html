@@ -17,6 +17,13 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 .stat{padding:12px;background:#091c2a;border:1px solid #24495a;border-radius:10px}.stat small{display:block;color:var(--muted)}.stat b{font-size:21px;font-variant-numeric:tabular-nums}.stat span{display:block;color:var(--muted);font-size:12px}
 .controls{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:14px 0}.controls input{min-width:180px;flex:1 1 150px}.controls label{color:var(--muted);font-size:12px}
 .scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:680px}td,th{padding:11px 8px;border-bottom:1px solid #264452;text-align:left;vertical-align:middle}th{font-size:11px;color:var(--muted)}td:not(:first-child),th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}td:first-child{font-weight:620}.positive{color:#8aefbb}.negative{color:#ffa5ac}.muted{color:var(--muted);font-size:12px}
+.radar-market-identity{display:inline-flex;align-items:center;gap:9px;min-width:0;text-align:left}
+.radar-market-icon{position:relative;display:inline-grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border:1px solid #3a7482;border-radius:50%;background:#0c3949;color:#d7f5ef;overflow:hidden}
+.radar-market-monogram{font-size:10px;letter-spacing:-.02em;font-weight:800}
+.radar-market-icon-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;border-radius:50%}
+.radar-market-name{font-weight:750}
+.radar-market-okx{display:block;margin-top:1px;font-size:10px}
+.radar-okx-link{font-size:10px;text-decoration:underline;text-decoration-style:dotted;color:#92e6ea;font-weight:600}
 .note{padding:11px 13px;background:#0b2c36;border-left:3px solid var(--cyan);border-radius:5px;color:#d1ebea}
 #radar-shadow-status{white-space:pre-line}#radar-signal-evidence-status{white-space:pre-line}#status{min-height:24px;color:var(--gold)}.chip{display:inline-block;border:1px solid #3f7780;border-radius:99px;padding:2px 9px;font-size:11px;color:#bcecf2}
 .grid .panel{margin:0}footer{font-size:12px;color:var(--muted);padding-top:12px}
@@ -83,6 +90,7 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 </section>
 <section class="panel">
 <h2>Marché · Univers par rang de capitalisation</h2>
+<p class="muted">Top 10 / 20 / 50 / 250 · logos issus des identifiants CoinGecko exacts, pas des seuls tickers. Le lien « OKX · vérifier » mène au catalogue Spot public daté : il ne certifie pas l'accès au compte.</p>
 <div class="controls" id="tiers" aria-label="Choisir le périmètre Radar">
 <button data-tier="10" aria-pressed="true" type="button">Top 10</button>
 <button data-tier="20" aria-pressed="false" type="button">Top 20</button>
@@ -192,7 +200,7 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <script src="../trader/spot-paper-order-engine.js" defer></script>
 <script src="./radar-spot-paper.js" defer></script>
 <script src="./radar-okx-hourly.js" defer></script>
-<script src="./radar.js"></script>
+<script src="./radar.js?v=20261108-market-icons-b"></script>
 
 <script>
 /* Seven Heaven: read-only qualification matrix; existing archived source data only.
