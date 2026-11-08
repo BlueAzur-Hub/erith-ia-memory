@@ -12,7 +12,7 @@ function fixtures(){return Object.fromEntries(Object.entries(api.SOURCES)
 test("current Radar dossier bridge uses exact ids and published sources",()=>{
  const src=fixtures(),out=api.reconcile(src);
  assert.equal(out.counts.total,src.cohort.count);
- const known=new Set(src.knowledge.candidates.map(x=>x.coin_id));
+ const known=new Set([...src.knowledge.candidates.map(x=>x.coin_id),...src.curated.records.map(x=>x.coin_id)]);
  const daily=new Map(src.daily.assets.map(x=>[x.id,x.native_candles||0]));
  const minute=new Map(src.minute.assets.map(x=>[x.id,x.native_1m_count||0]));
  assert.equal(out.counts.documented,src.cohort.candidates.filter(x=>known.has(x.coin_id)).length);
@@ -25,6 +25,21 @@ test("current Radar dossier bridge uses exact ids and published sources",()=>{
  assert.ok(out.dossiers.every(x=>x.paperAllowed===false&&x.blockers.length>0));
  assert.ok(out.dossiers.every(x=>x.dailyCandles===(daily.get(x.id)||0)));
  assert.ok(out.dossiers.every(x=>x.minuteCandles===(minute.get(x.id)||0)));
+});
+test("exact curated studies improve coverage but not trading eligibility",()=>{
+ const src=fixtures(),out=api.reconcile(src);
+ assert.equal(out.counts.documented,3);
+ assert.equal(out.counts.needsKnowledge,17);
+ assert.equal(out.counts.paperReady,0);
+ for(const study of src.curated.records){
+   const d=out.dossiers.find(x=>x.id===study.coin_id);
+   assert.ok(d&&d.hasKnowledge&&d.studyUrl);
+   assert.equal(d.paperAllowed,false);
+   assert.equal(study.adoption_proven,false);
+   assert.ok(fs.existsSync(path.join(__dirname,study.page)),"public study exists: "+study.page);
+ }
+ const bad=fixtures();bad.curated.records[0].page="../secret.txt";
+ assert.throws(()=>api.reconcile(bad),/chemin ou statut/);
 });
 test("no status is inferred from a ticker collision or untrusted trade permission",()=>{
  const src=fixtures();

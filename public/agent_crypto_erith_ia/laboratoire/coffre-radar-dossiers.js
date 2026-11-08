@@ -13,13 +13,14 @@ const SOURCES=Object.freeze({
  qualification:"data/crypto/radar-opportunities/qualification-latest.json",
  daily:"data/historical_archive_prototype/top250_multiresolution_sources/index.json",
  minute:"data/historical_archive_prototype/top250_multisource_coverage/index.json",
- knowledge:"data/crypto/research/asset-knowledge.json"
+ knowledge:"data/crypto/research/asset-knowledge.json",
+ curated:"data/crypto/research/radar-curated-dossiers.json"
 });
 const truth=x=>x===true;
 const n=x=>Number.isInteger(x)&&x>=0?x:0;
 function assert(v,m){if(!v)throw Error("Provenance invalide : "+m);}
 function reconcile(inputs){
- const {cohort,identity,qualification,daily,minute,knowledge}=inputs||{};
+ const {cohort,identity,qualification,daily,minute,knowledge,curated}=inputs||{};
  assert(cohort?.schema==="erith.radar.research-cohort.v1"&&
    cohort.orders_enabled===false&&cohort.strategy_certified===false&&
    Array.isArray(cohort.candidates)&&cohort.count===cohort.candidates.length&&cohort.count>0&&cohort.count<=100,
@@ -36,6 +37,9 @@ function reconcile(inputs){
    "archives minute");
  assert(knowledge?.schema==="erith.crypto.asset-research-knowledge.v1"&&Array.isArray(knowledge.candidates),
    "dossiers documentaires");
+ assert(curated?.schema==="erith.crypto.radar-curated-dossiers.v1" &&
+   curated.no_order_execution===true && curated.no_performance_claim===true &&
+   Array.isArray(curated.records),"registre des études primaires");
  const unique=(items,key,label)=>{
    const map=new Map();
    for(const x of items){
@@ -50,6 +54,7 @@ function reconcile(inputs){
  const dailyBy=unique(daily.assets,"id","quotidien");
  const minuteBy=unique(minute.assets,"id","minute");
  const knowledgeBy=unique(knowledge.candidates,"coin_id","connaissances");
+ const curatedBy=unique(curated.records,"coin_id","étude dédiée");
  const ids=new Set();
  const dossiers=cohort.candidates.map(c=>{
    const id=c?.coin_id;
@@ -57,7 +62,10 @@ function reconcile(inputs){
      "id Radar ou droits d'exécution");
    ids.add(id);
    const proof=evidences.get(id),qual=quals.get(id);
-   const day=dailyBy.get(id),min=minuteBy.get(id),known=knowledgeBy.get(id);
+   const day=dailyBy.get(id),min=minuteBy.get(id),known=knowledgeBy.get(id),study=curatedBy.get(id);
+   if(study)assert(study.paper_ready===false&&study.adoption_proven===false&&
+    typeof study.page==="string"&&/^cas-ecole-[a-z0-9-]+\.(html|md)$/.test(study.page)&&
+    (study.render==="site"||study.render==="github"),"chemin ou statut d'étude");
    const dailyCandles=n(day?.native_candles),minuteCandles=n(min?.native_1m_count);
    const spot=c.spot&&typeof c.spot.pair==="string"?c.spot:null;
    const matched=truth(proof?.identity_proven) && !!spot &&
@@ -65,7 +73,8 @@ function reconcile(inputs){
      proof.venue===spot.venue && proof.quote===spot.quote &&
      typeof proof.contract_address==="string"&&proof.contract_address.length>5;
    const blockers=[];
-   if(!known)blockers.push("Dossier de connaissance à constituer : projet, usage réel et source primaire");
+   if(!known&&!study)blockers.push("Dossier de connaissance à constituer : projet, usage réel et source primaire");
+   if(study)blockers.push("Adoption et usage réel indépendants non certifiés par cette étude");
    if(!spot)blockers.push("Aucune paire Spot documentée dans la cohorte");
    if(!matched)blockers.push("Identité contrat + place non rapprochée sur cette observation");
    if(!dailyCandles&&!minuteCandles)blockers.push("Aucune série native dans les deux catalogues contrôlés");
@@ -75,7 +84,10 @@ function reconcile(inputs){
      id,name:String(c.name||c.symbol||id),symbol:String(c.symbol||id),
      category:/tokenized|bstocks|xstocks|etf/i.test(c.name||"")?"Produit tokenisé (selon intitulé Radar)":"Projet à catégoriser",
      detections:n(c.detections_archived),j1:n(c.j1_observed),j7:n(c.j7_observed),
-     hasKnowledge:!!known,spot:spot?{venue:spot.venue,pair:spot.pair,quote:spot.quote}:null,
+     hasKnowledge:!!known||!!study,
+     studyUrl:study?(study.render==="site"?"./"+study.page:
+      "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/laboratoire/"+study.page):null,
+     spot:spot?{venue:spot.venue,pair:spot.pair,quote:spot.quote}:null,
      contractMatched:matched,
      identityStatus:matched?"Contrat / paire rapprochés à la collecte":"Identité complète non établie",
      chain:matched?proof.platform:null,
@@ -147,6 +159,7 @@ function mount(doc=document,fetcher=fetch){
      card.append(head);
      const id=make("p","muted","ID CoinGecko : "+d.id+" · "+d.category);
      card.append(id);
+     if(d.studyUrl){const p=make("p");link(p,d.studyUrl,"Lire l’étude documentaire et ses sources ↗");card.append(p);}
      line(card,"Observations","Détections "+d.detections+" · J+1 "+d.j1+" · J+7 "+d.j7);
      line(card,"Spot historique",d.spot?d.spot.venue+" · "+d.spot.pair+" ("+d.spot.quote+")":"Paire non documentée");
      line(card,"Identité",d.identityStatus+(d.contract?" · "+d.chain+" · "+d.contract:""));
@@ -162,9 +175,7 @@ function mount(doc=document,fetcher=fetch){
      for(const b of d.blockers){const li=make("li","",b);ul.append(li);}
      card.append(make("p","warn","Preuves à recueillir (aucune opération PAPER autorisée) :"),ul);
      line(card,"V5 / V6",d.paperReason);
-     if(d.id==="impossible-cloud-network-token"){
-       const a=make("p");link(a,"cas-ecole-icnt-impossible-cloud-network.md","Étude ICNT déjà présente ↗");card.append(a);
-     }
+
      box.append(card);
    }
  }
