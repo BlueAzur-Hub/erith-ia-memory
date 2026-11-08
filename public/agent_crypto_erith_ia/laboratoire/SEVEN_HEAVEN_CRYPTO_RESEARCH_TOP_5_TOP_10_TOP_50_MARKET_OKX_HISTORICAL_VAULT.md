@@ -293,7 +293,7 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ## Partie C — Top 50, quarante fiches quantitatives et historiques complémentaires
 
-**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 30** disposent maintenant chacune d'une analyse de projet issue de sources primaires (catégorie, rôle du token, mécanismes économiques, métriques vérifiables, risques et question de recherche). Ces vingt analyses documentaires ne prouvent pas l'adoption réelle ; les positions **31 à 50** restent des fiches quantitatives et historiques jusqu'à vérification approfondie. Les rangs CoinGecko proviennent toujours du même snapshot, sans données actualisées artificiellement.
+**Avancement de l'enrichissement documentaire (8 novembre 2026) :** les positions **11 à 40** disposent chacune d'une analyse de projet avec sources de protocole, du projet ou sources secondaires identifiées (catégorie, identité et fonction, mécanismes économiques, mesures, risques et questions). Ces trente analyses ne démontrent pas l'adoption réelle ; les positions **41 à 50** restent des fiches quantitatives et historiques à compléter. Les rangs CoinGecko et cours proviennent toujours du même snapshot, sans données actualisées artificiellement.
 Les fiches ci-dessous sont *réellement individualisées par relevés de prix, volumes et archives existantes*, mais ne prétendent pas contenir une recherche d'adoption que les sources n'établissent pas. Pour chaque dossier, le statut de cotation OKX reste un constat de capture, pas une interrogation authentifiée.
 
 ### 11 WBT
@@ -949,7 +949,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/pepe).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Memecoin ERC-20 Ethereum : actif culturel/spéculatif, sans produit de protocole autonome.
+
+**Projet et fonction du jeton :** Le PEPE répertorié par CoinGecko sous l'identifiant exact `pepe` est un jeton ERC-20 inspiré d'un mème. Il ne constitue pas une blockchain indépendante, ne possède pas de gaz propre et ne porte pas un droit de gouvernance ou de revenus d'un protocole. Les transferts Ethereum utilisent le gaz ETH. La présentation publique du projet revendique un rôle communautaire plutôt qu'une utilisation économique d'application. La même chaîne héberge de nombreux actifs homonymes ; le symbole seul ne suffit pas à reconnaître le contrat.
+
+**Mécanisme de valeur et limites :** L'activité de marché dépend des échanges entre détenteurs, de la liquidité et de l'attention collective. Une capitalisation élevée ne matérialise ni bénéfices, ni adoption industrielle, ni droit de rachat. Les mécanismes éventuels de réduction d'offre doivent être démontrés par des transactions on-chain spécifiques et non supposés à partir d'un prix en hausse.
+
+**Question de recherche :** La hausse du volume traduit-elle des échanges récurrents et une profondeur durable, ou une concentration ponctuelle de l'attention sans flux d'usage hors marché ?
+
+**Indicateurs à recouper :** Contrat et chaîne Ethereum exacts, détenteurs et concentration des principaux portefeuilles, liquidité et carnets multi-plateformes, spreads, slippage, volume vérifiable, transfert de réserves et périodes de forte volatilité ; distinguer volume de cotation et paiements économiques.
+
+**Risques propres au projet :** Risque spéculatif et fort effet de sentiment, volatilité et manipulation de marchés peu liquides, homonymes/copies de contrat, défaut de modèle de trésorerie ou d'utilité économique, défaillance d'intermédiaire.
+
+**Discernement / point à vérifier :** Le site revendiqué du projet est inaccessible à notre outil de vérification aujourd'hui ; la fiche ne lui attribue donc aucun avantage de staking, de gouvernance ou de frais non établi.
+
+**Documentation consultée (8 novembre 2026) :** [CoinGecko — ID et métadonnées du PEPE historique](https://www.coingecko.com/en/coins/pepe) · [Uphold — présentation des limites et risques de PEPE](https://uphold.com/en-gb/prices/crypto/pepe). [Fiche CoinGecko](https://www.coingecko.com/en/coins/pepe).
 
 
 ### 32 ENA
@@ -965,7 +981,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/ethena).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton de gouvernance et de staking du protocole Ethena, distinct de l'actif dollar USDe.
+
+**Projet et fonction du jeton :** Ethena propose un dollar synthétique (USDe) adossé à une stratégie de couverture et à des actifs de réserve, et un écosystème de produits distinct. ENA est le jeton de gouvernance ; sENA représente des positions d'ENA placées dans son mécanisme de staking pour les juridictions autorisées. Posséder ENA ne correspond pas à posséder directement USDe, sa réserve ou les positions dérivées de couverture.
+
+**Mécanisme de valeur et limites :** La documentation Ethena distingue rémunération éventuelle de sENA, réserve de sécurité et recettes de USDe. Le forum de gouvernance daté du 27 août 2026 décrit **une proposition** d'activation d'un mécanisme de rachat d'ENA lié à des seuils d'offre USDe ; cette proposition ne permet pas de présumer que les seuils, montants et distributions ont été votés, activés ou exécutés. La documentation de staking souligne le caractère discrétionnaire et historique des distributions.
+
+**Question de recherche :** Quelles recettes nettes du protocole sont effectivement attribuées à des achats/allocations d'ENA, après frais de couverture et risques des réserves, et via quelles décisions exécutées ?
+
+**Indicateurs à recouper :** Offre USDe et sUSDe, frais nets, coûts de couverture, taux de financement positifs/négatifs, taille et mouvements du fonds de réserve, décisions du forum ENA, flux de rachat réellement exécutés et ENA/sENA immobilisés ; restrictions par juridiction.
+
+**Risques propres au projet :** Dérivés et liquidations de couverture, risques de contreparties et de garde, décrochage potentiel de USDe, gouvernance et calendrier de déblocages ENA, confusion entre rendement du stablecoin et retour économique du jeton ENA.
+
+**Discernement / point à vérifier :** Un post de gouvernance est une proposition, non une preuve d'exécution ; les résultats ou montants devront être datés et vérifiés on-chain.
+
+**Documentation consultée (8 novembre 2026) :** [Ethena — guide officiel de staking ENA/sENA](https://docs.ethena.fi/video-guides/how-to-stake-ena) · [Ethena Governance — proposition de fee switch d'août 2026](https://gov.ethenafoundation.com/t/ena-fee-switch-activation/830) · [Ethena Governance — registre et décisions](https://gov.ethenafoundation.com/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/ethena).
 
 
 ### 33 AAVE
@@ -981,7 +1013,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/aave).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Gouvernance d'un protocole de prêts décentralisés et participation à la sécurité.
+
+**Projet et fonction du jeton :** Aave fournit des marchés décentralisés de dépôts et d'emprunts, dont les risques dépendent de la garantie, du collatéral et du marché utilisé. Le jeton AAVE représente un pouvoir de gouvernance par vote ou délégation, pas une part de propriété de la société opératrice. Le système de protection Umbrella d'Aave V3 permet de couvrir automatiquement certaines mauvaises dettes avec des actifs spécifiques stakés (aTokens et GHO) ; il se distingue du Safety Module historique associé entre autres à stkAAVE.
+
+**Mécanisme de valeur et limites :** Le programme de rachats AAVE documenté par la gouvernance achète des jetons sur le marché pour l'Ecosystem Reserve : **rachat ne veut pas dire destruction du jeton ni dividende du détenteur**. Umbrella couvre les déficits via le slash/burn des actifs engagés en garantie ; son économie doit être étudiée séparément des récompenses et du staking AAVE historique.
+
+**Question de recherche :** Le revenu net après provisionnement des défauts soutient-il les rachats vérifiés d'AAVE, et quelle part du risque protocolaire est effectivement couverte par Umbrella ?
+
+**Indicateurs à recouper :** Montants déposés/empruntés et utilisation des marchés, risques par collatéral, mauvaises dettes nettes, frais réellement encaissés, rachats AAVE exécutés et destination des jetons, valeur sous protection Umbrella, événements de slashing, participation et concentration de gouvernance.
+
+**Risques propres au projet :** Défaut de collatéral et liquidations en cascade, oracles, exploits de smart contracts, risques de ponts et marchés isolés, gouvernance de paramètres et confusion entre intérêts des déposants et avantages des détenteurs AAVE.
+
+**Discernement / point à vérifier :** Ne pas présenter les récompenses d'Umbrella comme un droit automatique pour tout détenteur AAVE. La couverture dépend de l'actif mis en staking.
+
+**Documentation consultée (8 novembre 2026) :** [Aave Docs — AAVE, gouvernance et rachats](https://www.aave.com/docs/ecosystem/aave) · [Aave Docs — architecture Umbrella et risques](https://www.aave.com/docs/aave-v3/umbrella). [Fiche CoinGecko](https://www.coingecko.com/en/coins/aave).
 
 
 ### 34 M
@@ -997,7 +1045,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/memecore).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton natif de MemeCore, blockchain orientée applications de memecoins.
+
+**Projet et fonction du jeton :** MemeCore est une blockchain dédiée aux usages autour des memecoins. M est son actif natif et sert au gaz, au staking, aux incitations Proof of Meme (PoM) et à la gouvernance annoncée. La documentation du protocole distingue offre initiale et offre maximale : 5 milliards de M à la création et plafond annoncé de 10 milliards avec émission additionnelle par récompenses de blocs.
+
+**Mécanisme de valeur et limites :** Les mécanismes PoM visent à récompenser validateurs et participants ; les frais de gaz peuvent alimenter des récompenses et une part peut être détruite selon les règles du réseau. Il ne faut pas qualifier toutes les activités sociales sur la plateforme comme revenus de l'actif M. L'inflation effective dépend des émissions, de la circulation, des destructions et de la gouvernance.
+
+**Question de recherche :** La consommation récurrente de gaz et la sécurité PoM justifient-elles la demande en M malgré les émissions nouvelles, en excluant les volumes promotionnels ou circulaires ?
+
+**Indicateurs à recouper :** Transactions et frais payés en M, validateurs/délégations, blocs produits, récompenses PoM réellement distribuées, offre créée/détruite, taux d'activité de jeux/projets récurrents, liquidité par place de marché.
+
+**Risques propres au projet :** Dépendance à l'économie des memecoins et au marketing, émissions potentielles jusqu'au plafond annoncé, sécurité des validateurs, faible liquidité et activité artificielle, risque d'assimiler un score social à une recette réelle.
+
+**Discernement / point à vérifier :** Le plafond et l'offre initiale sont ceux annoncés par le projet ; la circulation effective doit être rapprochée du registre Market et des données de chaîne.
+
+**Documentation consultée (8 novembre 2026) :** [MemeCore Docs — fonctions et émission de M](https://docs.memecore.com/memecore/token/usdm) · [MemeCore Docs — documentation de la chaîne](https://docs.memecore.com/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/memecore).
 
 
 ### 35 ONDO
@@ -1013,7 +1077,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/ondo-finance).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton de gouvernance d'Ondo DAO / Flux Finance, distinct des produits RWA tokenisés.
+
+**Projet et fonction du jeton :** Ondo propose un ensemble de produits et solutions de tokenisation d'actifs financiers réels. Le jeton ONDO, contrat Ethereum identifié par Ondo Foundation, est le jeton de gouvernance d'Ondo DAO et de Flux Finance. Il est **distinct** des jetons représentant des produits financiers (par exemple des fonds monétaires ou valeurs mobilières tokenisés) : sa détention ne constitue pas en elle-même un titre sur leurs actifs ou leurs revenus.
+
+**Mécanisme de valeur et limites :** La Fondation indique une offre initiale de 10 milliards ONDO et aucune inflation programmée ; les allocations ont toutefois des calendriers de déblocage, qu'il faut distinguer de la création monétaire. Les détenteurs et délégués participent aux paramètres de gouvernance ; aucun dividende automatique ne découle de la détention du jeton.
+
+**Question de recherche :** Quelles décisions vérifiables de la DAO et quels services exigent ONDO, indépendamment du développement commercial des produits tokenisés d'Ondo ?
+
+**Indicateurs à recouper :** Votes et taux de participation de la DAO, délégation des droits, poids des gros détenteurs, calendriers et transactions de vesting, demande/activité de Flux Finance documentée, volumes réellement captés par l'écosystème, profondeur du marché ONDO.
+
+**Risques propres au projet :** Concentration de votes et d'offres en déblocage, risques juridiques de la tokenisation et d'accès géographique aux produits, risques de contrats et de collatéraux, confusion entre rendement des RWA émis et fonction économique d'ONDO.
+
+**Discernement / point à vérifier :** L'ID Market `ondo-finance` nomme le jeton ONDO ; il ne faut pas le confondre avec le prix d'un fonds Ondo, ni avec une action tokenisée.
+
+**Documentation consultée (8 novembre 2026) :** [Ondo Foundation — identité, contrat, offre et déblocages ONDO](https://docs.ondo.foundation/ondo-token) · [Ondo Foundation — gouvernance et délégation de la DAO](https://docs.ondo.foundation/ondo-dao). [Fiche CoinGecko](https://www.coingecko.com/en/coins/ondo-finance).
 
 
 ### 36 ASTER
@@ -1029,7 +1109,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/aster-2).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton d'incitation, gouvernance et programmes économiques d'une plateforme de trading décentralisée.
+
+**Projet et fonction du jeton :** Aster est un écosystème de trading décentralisé de produits Spot et dérivés. ASTER constitue le jeton de son écosystème ; les documents de distribution détaillent l'allocation entre airdrops, communauté, trésor, équipe et liquidité. La documentation chiffre notamment 53,5 % de l'offre initiale attribuée à des programmes d'airdrops et 5 % à l'équipe, avec blocage et déblocages progressifs.
+
+**Mécanisme de valeur et limites :** Aster présente des rachats d'ASTER utilisant une partie des revenus du protocole et des mécanismes d'incitation communautaires et de gouvernance ; il faut distinguer programmes **annoncés**, rachats effectivement réalisés, jetons distribués et volumes de dérivés notionnels. Un chiffre de volume cumulé ne renseigne pas à lui seul les revenus nets ou les achats effectivement réalisés.
+
+**Question de recherche :** Quelle fraction des recettes nettes se traduit en demande vérifiable d'ASTER après les incitations, débloquages et coûts de liquidité de la plateforme ?
+
+**Indicateurs à recouper :** Frais nets, volumes Spot vs perpétuels, open interest, liquidations, activité de comptes récurrents, rachats on-chain et destination des jetons, calendriers de vesting, offres circulantes vérifiées et profondeur ASTER.
+
+**Risques propres au projet :** Risque de liquidation de dérivés, risque de smart contracts/collatéraux et dépendance aux oracles, possibles concentrations des volumes, dilution liée aux allocations d'aires et incertitudes d'exécution de la politique de rachats.
+
+**Discernement / point à vérifier :** Les pourcentages décrivent un plan de distribution publié, non l'offre immédiatement en circulation au moment du snapshot.
+
+**Documentation consultée (8 novembre 2026) :** [Aster Docs — tokenomics, allocations et rachats annoncés](https://docs.asterdex.com/usdaster-token/tokenomics) · [Aster — documentation générale](https://docs.asterdex.com/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/aster-2).
 
 
 ### 37 PUMP
@@ -1045,7 +1141,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/pump-fun).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton de l'écosystème de création et de négociation de memecoins sur Solana.
+
+**Projet et fonction du jeton :** Pump.fun est un protocole de lancement de jetons sur courbes de prix automatiques, avec migration vers PumpSwap lorsque les conditions du contrat sont atteintes. PUMP est le jeton de son écosystème, distinct de chaque memecoin lancé via la plateforme. Le protocole perçoit des frais sur les transactions et son portail de jeton annonce un programme de rachats et destructions de PUMP.
+
+**Mécanisme de valeur et limites :** La page de jeton éditée par l'émetteur annonce un objectif de 50 % des revenus du protocole consacrés à l'achat et la destruction de PUMP. **Attention :** la même page signale qu'une partie du tableau de frais est erronée depuis l'introduction des paires personnalisées. Les achats/destructions doivent donc être recalculés depuis des transactions Solana vérifiables et confrontés aux frais de trading réellement applicables. Les frais d'une transaction dans un memecoin ne sont pas des dividendes promis à l'acheteur de PUMP.
+
+**Question de recherche :** Les revenus nets de l'activité de création/trading persistent-ils après les coûts et commissions, et quelle fraction est réellement convertie en réduction mesurable de l'offre PUMP ?
+
+**Indicateurs à recouper :** Frais nets par mécanisme (bonding curve/PumpSwap/terminal), volumes réels hors wash trading, créations vs migrations, revenus des créateurs et de la plateforme, achats et burns PUMP attestés on-chain, offre circulante et concentration, dépenses et frais par utilisateur.
+
+**Risques propres au projet :** Forte exposition à la spéculation en memecoins, création rapide d'actifs risqués, fraude et rug-pulls de jetons lancés, changement de barèmes, manipulation de volumes, écart des tableaux et montants réellement brûlés, liquidité et dilution.
+
+**Discernement / point à vérifier :** La page de jeton est un environnement de prévisualisation de l'émetteur : sa stabilité et ses agrégats ne sont pas une preuve indépendante. Aucun parcours de participation aux produits spéculatifs n'est proposé.
+
+**Documentation consultée (8 novembre 2026) :** [Pump.fun — règles de frais applicables au 17 octobre 2026](https://pump.fun/docs/fees) · [Pump.fun — mécanisme de bonding curve et de migration](https://pump.fun/docs/bonding-curve) · [Pump Foundation — page du jeton PUMP et burns (version preview)](https://x.preview.pump.fun/pump-token). [Fiche CoinGecko](https://www.coingecko.com/en/coins/pump-fun).
 
 
 ### 38 BTW
@@ -1061,7 +1173,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/bitway).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton de gouvernance et d'utilité Bitway, infrastructure Bitcoin et produits de financement.
+
+**Projet et fonction du jeton :** Bitway présente des produits de paiement, de financement et de rendement liés aux cryptoactifs. BTW est un jeton de l'écosystème et un jeton de gaz/staking de Bitway Ledger selon les documents de l'équipe. Le projet publie des adresses de contrats BEP-20 et ERC-20 distinctes ; le symbole BTW seul ne suffit pas à établir le réseau et le contrat à utiliser.
+
+**Mécanisme de valeur et limites :** Les détenteurs stakés peuvent accéder à des programmes, niveaux de service et incitations sous conditions ; la sécurité d'un réseau PoS peut impliquer des récompenses et des émissions. Ces avantages dépendent des règles commerciales, des risques des produits et de l'activité effective. Les programmes de prêts et de rendement n'équivalent pas à une promesse de bénéfice automatique de BTW.
+
+**Question de recherche :** La demande réelle de gaz, les services payants et les sûretés de prêts financent-ils durablement la fonction de BTW, au-delà des programmes incitatifs annoncés ?
+
+**Indicateurs à recouper :** Gaz payé en BTW sur Bitway Ledger, validateurs et tokens délégués, volumes des produits de prêt et de paiement, emprunts sains/impayés, récompenses émises vs frais, contrats vérifiés par réseau, concentration des détenteurs et liquidité Spot.
+
+**Risques propres au projet :** Risque de crédit et collatéral de produits financiers, volatilité de BTW, dépendance à l'éditeur, multichaînes et faux contrats, calendrier d'émission, risques de validateurs et faiblesse des preuves d'adoption.
+
+**Discernement / point à vérifier :** L'usage déclaré de BTW n'est pas une preuve que les produits proposés sont accessibles depuis la France ou qu'ils sont adaptés à l'utilisateur.
+
+**Documentation consultée (8 novembre 2026) :** [Bitway Docs — contrat ERC20/BEP20, gaz, PoS, gouvernance BTW](https://docs.bitway.com/resources/btw-bitway-token) · [Bitway Docs — présentation des produits](https://docs.bitway.com/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/bitway).
 
 
 ### 39 DOT
@@ -1077,7 +1205,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/polkadot).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton natif Polkadot : gouvernance OpenGov, staking et achat de coretime.
+
+**Projet et fonction du jeton :** Polkadot propose un réseau d'infrastructure partagé et des ressources de calcul (« coretime ») allouées aux systèmes d'exécution connectés. DOT sert à la gouvernance, au staking pour sécuriser le réseau et à l'achat des ressources coretime. Le jeton DOT n'est pas une action dans une entreprise et chaque chaîne utilisant les ressources n'est pas nécessairement réglée en DOT à chacune de ses transactions.
+
+**Mécanisme de valeur et limites :** La documentation Polkadot explique qu'une réforme adoptée par référendum en 2026 introduit une limite d'offre autour de 2,1 milliards de DOT et une émission décroissante par paliers de deux ans. La même page contient encore des sections décrivant une **ancienne** inflation de 120 millions de DOT par an : il ne faut pas utiliser ce chiffre ancien comme règle actuelle sans contrôle du référendum et du niveau d'offre. Coretime vendu et éventuellement brûlé doit être rapproché de l'émission nette et de l'usage réellement acheté.
+
+**Question de recherche :** La demande facturée en DOT pour coretime et la sécurité économique du réseau compense-t-elle les émissions nettes, en tenant compte des changements 2026 ?
+
+**Indicateurs à recouper :** Ventes et consommation de coretime, DOT stakés et délégués, validateurs actifs, participation OpenGov, émissions et burns par période, chaînes actives utilisant réellement du coretime, frais et liquidité du DOT.
+
+**Risques propres au projet :** Évolution des règles économiques et gouvernance, complexité interchaînes, concentration de validateurs, demande incertaine de coretime, divergences entre pages de documentation historiques et actuelles.
+
+**Discernement / point à vérifier :** La documentation contient explicitement un modèle historique conservé comme comparaison. Le dossier ne lui attribue pas une inflation actuelle de 120 M DOT/an.
+
+**Documentation consultée (8 novembre 2026) :** [Polkadot Wiki — fonctions, réforme d'inflation et coretime](https://wiki.polkadot.com/learn/learn-dot/) · [Polkadot Wiki — gouvernance et staking](https://wiki.polkadot.com/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/polkadot).
 
 
 ### 40 SKY
@@ -1093,7 +1237,23 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 
 **Paires repérées sur tes captures OKX :** aucune parmi les 21 captures ; statut global OKX non conclu.
 
-**À étudier :** cohérence de l'identité du contrat sur la place de marché, profondeur et frais réels, activité du projet documentée indépendamment. [Fiche CoinGecko](https://www.coingecko.com/en/coins/sky).
+**Étude fondamentale — sources documentaires datées, sans validation d'adoption indépendante.**
+
+**Catégorie / identité économique :** Jeton de gouvernance et de staking du protocole Sky (successeur de MakerDAO), distinct de USDS.
+
+**Projet et fonction du jeton :** Sky gouverne un protocole de stablecoin et de dette collatéralisée. SKY est son jeton de gouvernance, tandis que USDS est le stablecoin et sUSDS un produit d'épargne distinct. Le jeton SKY peut être staké dans le Staking Engine pour déléguer les votes et participer aux mécanismes de récompenses du protocole ; certaines positions permettent d'emprunter des USDS avec risque de liquidation.
+
+**Mécanisme de valeur et limites :** Le protocole dit employer une part de son surplus pour racheter SKY et alimenter des récompenses de staking ou des mécanismes de burn. Les taux de staking et d'emprunt sont décidés par gouvernance et restent variables : les chiffres affichés à un instant ne sont pas des rendements fixes. L'activité du stablecoin USDS n'accorde pas automatiquement à chaque détenteur de SKY un intérêt ou un droit sur les collatéraux.
+
+**Question de recherche :** Quel surplus économique vérifié finance les achats SKY après les risques de crédit et comment est-il distribué entre burn, réserve et récompenses, sans confondre SKY avec USDS ?
+
+**Indicateurs à recouper :** Offre USDS, qualité et valeur des collatéraux, surplus net vs déficits et provisions, paramètres approuvés dans les votes, volume de rachats SKY et part brûlée/récompensée, SKY réellement stakés, emprunts USDS et facteurs de liquidation.
+
+**Risques propres au projet :** Dépendance à la qualité des garanties (y compris expositions RWA), risque de gouvernance et de smart contracts, liquidations, taux variables, détérioration du peg USDS et concentration du pouvoir de vote.
+
+**Discernement / point à vérifier :** Ne pas recopier un APY actuel dans une étude datée comme rendement constant. Emprunter USDS contre SKY comporte un risque de liquidation.
+
+**Documentation consultée (8 novembre 2026) :** [Sky — fonctionnement de SKY et du Staking Engine, août 2026](https://sky.money/blog/understanding-the-sky-token) · [Sky Protocol Docs — Staking Engine (LockStake)](https://developers.skyeco.com/protocol/rewards/staking-engine/) · [Sky — portail des votes de gouvernance](https://vote.sky.money/). [Fiche CoinGecko](https://www.coingecko.com/en/coins/sky).
 
 
 ### 41 MNT
@@ -1258,4 +1418,4 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 4. **PAPER :** seulement après validation des entrées, frais, règles et horizons ; aucune opération fictive exécutée par ce document.
 5. **Top 100 / 250 / 1 000 :** étendre la même grille sans retoucher le code du Trader ni recopier les historiques.
 
-**Ce qui est accompli :** **50 dossiers individuels** ; **5 études fondamentales initiales**, **5 études fondamentales intermédiaires**, **20 études documentaires enrichies et sourcées (positions 11–30)** et **20 fiches quantitatives/archives (positions 31–50) restant à approfondir**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
+**Ce qui est accompli :** **50 dossiers individuels** ; **5 études fondamentales initiales**, **5 études fondamentales intermédiaires**, **30 études documentaires enrichies et sourcées (positions 11–40)** et **10 fiches quantitatives/archives (positions 41–50) restant à approfondir**. **Ce qui n'est pas accompli :** une vérification authentifiée de toutes les paires OKX, un audit externe de l'usage réel des 50 projets, ou une simulation PAPER.
