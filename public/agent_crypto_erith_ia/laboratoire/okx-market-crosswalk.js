@@ -139,7 +139,7 @@ function mount(doc=document,fetcher=fetch){
    tr.append(cell("td",(item.seenScreenshot?"Capture OKX · ":"")+
     item.bookCount+" carnet(s) archivé(s)"+
     (item.announcedCount?" · annonce(s) historiques":"")));
-   tr.append(cell("td","Non authentifié pour le compte européen"));
+   tr.append(cell("td","Compte européen visible sur capture ; droits de cette paire non interrogés ici"));
    rows.append(tr);
   }
   if(!list.length){const tr=doc.createElement("tr"),td=cell("td","Aucun actif dans cette catégorie.");
@@ -162,7 +162,7 @@ function mount(doc=document,fetcher=fetch){
     " rapprochements Market ("+c.explicit+" ID explicite, "+c.tickerOnly+
     " candidats par ticker) · "+c.unmatched+" absents du Top 1 000 · "+
     c.top50+" dans le Top 50 · "+c.overlapIds+
-    " chevauchement(s) de snapshots Market dédoublonnés · 0 accès compte certifié. "+
+    " chevauchement(s) de snapshots Market dédoublonnés · droits Spot du compte non consultés. "+
     "Sources "+result.timestamps.top+" / "+result.timestamps.extended+".";
    render();
   }catch(err){

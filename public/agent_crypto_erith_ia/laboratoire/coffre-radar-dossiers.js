@@ -87,7 +87,12 @@ function reconcile(inputs){
    blockers.push("Compatibilité devise, période, source et moteur PAPER non démontrée");
    return Object.freeze({
      id,name:String(c.name||c.symbol||id),symbol:String(c.symbol||id),
-     category:/tokenized|bstocks|xstocks|etf/i.test(c.name||"")?"Produit tokenisé (selon intitulé Radar)":"Projet à catégoriser",
+     category:/tokenized|bstocks|xstocks|etf/i.test(c.name||"")
+      ?"Produit tokenisé (selon intitulé Radar)"
+      :known?.category_research||study?.category||"Fiche de marché · étude fondamentale à compléter",
+     projectRole:typeof known?.claimed_function==="string"?known.claimed_function:null,
+     projectSource:typeof known?.primary_project_source==="string"&&
+      /^https:\/\//.test(known.primary_project_source)?known.primary_project_source:null,
      detections:n(c.detections_archived),j1:n(c.j1_observed),j7:n(c.j7_observed),
      hasKnowledge:!!known||!!study,
      studyUrl:study?(study.render==="site"?"./"+study.page:
@@ -229,6 +234,11 @@ function mount(doc=document,fetcher=fetch){
      card.append(head);
      const id=make("p","muted","ID CoinGecko : "+d.id+" · "+d.category);
      card.append(id);
+     if(d.projectRole)line(card,"Projet · utilité déclarée",d.projectRole);
+     if(d.projectSource){
+      const source=make("p");link(source,d.projectSource,"Documentation du projet ↗");
+      card.append(source);
+     }
      if(d.studyUrl){const p=make("p");link(p,d.studyUrl,"Lire l’étude documentaire et ses sources ↗");card.append(p);}
      line(card,"Observations","Détections "+d.detections+" · J+1 "+d.j1+" · J+7 "+d.j7);
      line(card,"Market CoinGecko (USD daté)",d.market?
@@ -261,7 +271,8 @@ function mount(doc=document,fetcher=fetch){
      card.append(info);
      const ul=make("ul");
      for(const b of d.blockers){const li=make("li","",b);ul.append(li);}
-     card.append(make("p","warn","Preuves à recueillir (aucune opération PAPER autorisée) :"),ul);
+     const further=make("details",""), summary=make("summary","","Preuves à approfondir ("+d.blockers.length+")");
+     further.append(summary,ul);card.append(further);
      line(card,"V5 / V6",d.paperReason);
 
      box.append(card);
@@ -287,7 +298,7 @@ function mount(doc=document,fetcher=fetch){
      const c=current.counts;
      status.textContent="Cohorte "+current.sourceDate+" UTC · "+c.total+" dossiers · "+
        c.market+"/"+c.total+" identifiants Market ("+c.top+" Top 250, "+c.extended+" Top 251–1 000) · "+
-       c.okx+" observations OKX publiques (accès compte non prouvé) · "+
+       c.okx+" observations OKX publiques (droits par paire non interrogés depuis cette page) · "+
        (c.screenMatches===null?"captures OKX non chargées":
         c.screenMatches+" ticker(s) commun(s) aux "+c.screens+" paires relevées sur les captures OKX, identité à confirmer")+
        " · "+c.documented+" dossiers connus · "+c.needsKnowledge+" à enrichir · "+
