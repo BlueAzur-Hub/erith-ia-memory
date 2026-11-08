@@ -282,7 +282,7 @@ function mount(doc=document,fetcher=fetch){
        c.market+"/"+c.total+" identifiants Market ("+c.top+" Top 250, "+c.extended+" Top 251–1 000) · "+
        c.okx+" observations OKX publiques (accès compte non prouvé) · "+
        (c.screenMatches===null?"captures OKX non chargées":
-        c.screenMatches+" ticker(s) commun(s) aux "+c.screens+" captures OKX, identité à confirmer")+
+        c.screenMatches+" ticker(s) commun(s) aux "+c.screens+" paires relevées sur les captures OKX, identité à confirmer")+
        " · "+c.documented+" dossiers connus · "+c.needsKnowledge+" à enrichir · "+
        c.matched+" contrats rapprochés · "+c.spot+" Spot historiques · "+
        c.daily+" archives 1j · "+c.minute+" archives 1m · "+
