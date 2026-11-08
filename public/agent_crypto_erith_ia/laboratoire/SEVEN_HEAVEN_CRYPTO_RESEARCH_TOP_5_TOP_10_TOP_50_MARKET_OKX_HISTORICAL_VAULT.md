@@ -1411,6 +1411,8 @@ Les fiches ci-dessous sont *réellement individualisées par relevés de prix, v
 **Paires vues sur les captures OKX :** aucune sur les 21 captures consultées ; disponibilité globale non concluante.
 
 **Étapes documentaires :** distinguer le protocole et le jeton, vérifier sources officielles, activité indépendante et règles de marché par devise. [Identité CoinGecko](https://www.coingecko.com/en/coins/ethereum-classic).
+**Cas de recherche hors Top 50 :** [JCT / Janction · mouvement +247 % observé au 8 novembre, identité et limites des sources](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/laboratoire/SEVEN_HEAVEN_AGENT_CRYPTO_JANCTION_JCT_RADAR_MOMENTUM_MARKET_EVIDENCE_CASE_STUDY_2026_11_08.md). Cette étude reste distincte du classement Top 50 et ne crée pas de rang artificiel.
+
 ## Priorités de recherche et prochaine étape réelle
 1. **Élargir les dossiers structurés :** ajouter des sources primaires pour les usages économiques de chaque actif, sans écraser les preuves déjà archivées. Les cinq premiers sont un socle, pas une fin.
 2. **OKX Europe :** relier chaque paire reconnue par l'interface utilisateur aux instruments publics OKX, puis distinguer leur présence de l'éligibilité effective du compte. Pas de clé privée ni de transfert d'identifiants.
