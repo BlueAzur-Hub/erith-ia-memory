@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_public_metals_collection_manifest_v1",
   "version": "2.3.0",
-  "generated_at": "2026-11-08T05:57:14.102Z",
+  "generated_at": "2026-11-08T15:09:34.834Z",
   "build_target": "28.2.67",
-  "state": "partial",
+  "state": "ready",
   "assets": [
     "XAU",
     "XAG",
@@ -14,11 +14,8 @@
   "current_provider": "gold_api",
   "history_provider": "yahoo_finance",
   "fx_provider": "ecb",
-  "status": "partial",
-  "errors": [
-    "Yahoo intraday PL=F: Yahoo intraday PL=F: série absente",
-    "Yahoo intraday PA=F: Yahoo intraday PA=F: série absente"
-  ],
+  "status": "ready",
+  "errors": [],
   "files": {
     "latest": "data/metals/latest.json",
     "status": "data/metals/status.json",
@@ -51,5 +48,5 @@
     "spot_history_retention_hours": 48,
     "last_valid_data_preserved_on_failure": true
   },
-  "fingerprint": "sha256:7dc7a341f62fef63164d576aef3395d1ad4064caa6779fec8bab16ddb577284f"
+  "fingerprint": "sha256:7e69c253c8448f4bf647c9c6575f45f2e866da29fa4cd41498978ba0fab22db2"
 }
