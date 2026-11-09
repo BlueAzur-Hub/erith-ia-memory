@@ -1,0 +1,226 @@
+{
+  "schema": "seven_heaven.crypto.bnb_spot_research_evidence.v1",
+  "observation_date": "2026-11-09",
+  "status": "DOCUMENTARY_COMPLETE_OKX_PAIR_UNQUALIFIED",
+  "sources": {
+    "market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "ref": "main",
+      "sha": "4f1f33162f2bf729f5772562e15a60fdb7017075"
+    },
+    "history": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "ref": "main",
+      "sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "screens": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "ref": "main",
+      "sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4"
+    },
+    "hourly": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "ref": "main",
+      "sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    },
+    "gaps": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_gap_audit/index.json",
+      "ref": "main",
+      "sha": "f4f159ff099683b3a70a0090d5fe34fb65d55880"
+    }
+  },
+  "primary_public_refs": [
+    {
+      "subject": "BNB-USDC and BNB-USDT historical OKX listing",
+      "date": "2022-12-20",
+      "url": "https://www.okx.com/en-eu/help/okx-will-list-bnb-bnb-usdt-and-bnb-usdc-for-spot-trading",
+      "current_instrument_state_verified": false
+    },
+    {
+      "subject": "BNB-USD historical EEA listing",
+      "date": "2025-10-08",
+      "url": "https://www.okx.com/en-eu/help/okx-to-support-new-unified-usd-spot-trading-pairs-in-eea-link-avax-xlm-bnb",
+      "current_instrument_state_verified": false
+    },
+    {
+      "subject": "BNB-EUR historical EEA listing",
+      "date": "2025-10-27",
+      "url": "https://www.okx.com/fr-fr/help/okx-to-support-new-unified-usd-and-eur-spot-trading-pairs-in-eea",
+      "current_instrument_state_verified": false
+    },
+    {
+      "subject": "BNB appears on OKX France list of assets",
+      "url": "https://www.okx.com/en-eu/help/what-are-the-cryptoassets-that-are-listed-on-okx-in-france",
+      "pair_permission_verified": false
+    },
+    {
+      "subject": "BNB Smart Chain official protocol description",
+      "url": "https://docs.bnbchain.org/bnb-smart-chain/introduction/"
+    },
+    {
+      "subject": "BNB foundation 37th burn announcement on 2026-10-19",
+      "url": "https://www.bnbchain.org/en/blog/search?q=burn",
+      "reported_burn_bnb": 1646196.44,
+      "onchain_transaction_independently_verified": false
+    }
+  ],
+  "market_snapshot": {
+    "at_utc": "2026-11-09T07:53:59.646Z",
+    "quote": "USD",
+    "assets": [
+      {
+        "id": "bitcoin",
+        "symbol": "BTC",
+        "rank": 1,
+        "price_usd": 73953.11536683573,
+        "change24h_pct": -2.57318,
+        "change7d_pct": -5.1455,
+        "change30d_pct": -10.2806,
+        "volume24h_usd": 24036848011
+      },
+      {
+        "id": "ethereum",
+        "symbol": "ETH",
+        "rank": 2,
+        "price_usd": 2091.3917165653775,
+        "change24h_pct": -6.5554,
+        "change7d_pct": -7.7385,
+        "change30d_pct": -15.3848,
+        "volume24h_usd": 12046950596
+      },
+      {
+        "id": "binancecoin",
+        "symbol": "BNB",
+        "rank": 4,
+        "price_usd": 675.2308848940562,
+        "change24h_pct": -3.50436,
+        "change7d_pct": -4.0993,
+        "change30d_pct": -9.2851,
+        "volume24h_usd": 827501806
+      },
+      {
+        "id": "ripple",
+        "symbol": "XRP",
+        "rank": 6,
+        "price_usd": 1.085266817381596,
+        "change24h_pct": -6.81033,
+        "change7d_pct": -12.9734,
+        "change30d_pct": -22.6014,
+        "volume24h_usd": 1953119042
+      },
+      {
+        "id": "solana",
+        "symbol": "SOL",
+        "rank": 7,
+        "price_usd": 85.54180943212933,
+        "change24h_pct": -4.13438,
+        "change7d_pct": -9.2246,
+        "change30d_pct": -21.8325,
+        "volume24h_usd": 2411927012
+      }
+    ]
+  },
+  "bnb_relative_change_percentage_points": {
+    "BTC": {
+      "h24": -0.9311800000000003,
+      "d7": 1.0461999999999998,
+      "d30": 0.9954999999999998
+    },
+    "ETH": {
+      "h24": 3.0510399999999995,
+      "d7": 3.6391999999999998,
+      "d30": 6.0997
+    },
+    "XRP": {
+      "h24": 3.3059700000000003,
+      "d7": 8.874099999999999,
+      "d30": 13.316300000000002
+    },
+    "SOL": {
+      "h24": 0.63002,
+      "d7": 5.1253,
+      "d30": 12.5474
+    }
+  },
+  "okx_evidence": {
+    "asset": "BNB",
+    "distinguish_from_okb": true,
+    "spot_candidates_in_2026_11_08_screenshot_registry": 0,
+    "spot_candidates_in_2026_10_28_hourly_index": 0,
+    "source_registries_total": {
+      "screens": 21,
+      "okx_book_pairs": 18
+    },
+    "historical_official_announcements": [
+      "BNB-USDC",
+      "BNB-USDT",
+      "BNB-USD",
+      "BNB-EUR"
+    ],
+    "native_current_state_verified": false,
+    "active_pair_on_user_account_verified": false,
+    "book_historical_from_repo": null,
+    "book_current": null,
+    "public_instruments_queried_successfully_in_this_turn": false,
+    "private_account_permissions_verified": false
+  },
+  "native_historical_archive": {
+    "asset_id": "binancecoin",
+    "pair": "BNBUSDT",
+    "quote": "USDT",
+    "months_indexed": 83,
+    "native_1m_candles_indexed": 3643200,
+    "prior_audit": {
+      "months_targeted": 3,
+      "months_verified": 3,
+      "missing_minutes": 470,
+      "months": [
+        {
+          "month": "2021-08",
+          "missing_1m": 270,
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-08-13T06:30:00Z",
+              "missing_minutes": 270,
+              "start_utc": "2021-08-13T02:00:00Z"
+            }
+          ],
+          "zip_sha256_from_previous_audit": "58e8696c35ff5d9deaef65fd4f8f82b5c27d199b879d198f88ed456cd8ba7ecb"
+        },
+        {
+          "month": "2021-09",
+          "missing_1m": 120,
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-09-29T09:00:00Z",
+              "missing_minutes": 120,
+              "start_utc": "2021-09-29T07:00:00Z"
+            }
+          ],
+          "zip_sha256_from_previous_audit": "848a9f6d7dbe4e817ee8c2f2ee9c2ef95eb89bb09bf5ffb34e296ad885ff6b0c"
+        },
+        {
+          "month": "2023-03",
+          "missing_1m": 80,
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-03-24T14:00:00Z",
+              "missing_minutes": 80,
+              "start_utc": "2023-03-24T12:40:00Z"
+            }
+          ],
+          "zip_sha256_from_previous_audit": "9b5896c952fa761f41cdf329ddc532068517208320f3b8781ca52b03015e8e3b"
+        }
+      ]
+    },
+    "zip_bodies_rechecked_this_turn": false
+  },
+  "paper_status": {
+    "qualified": false,
+    "reproducible_simulations": 0,
+    "orders_enabled": false,
+    "real_orders": 0
+  },
+  "runtime_untouched": true,
+  "secrets_accessed": false
+}

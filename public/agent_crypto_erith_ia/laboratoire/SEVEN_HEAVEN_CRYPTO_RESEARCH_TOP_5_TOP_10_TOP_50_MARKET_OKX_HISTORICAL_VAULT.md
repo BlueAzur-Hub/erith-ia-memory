@@ -124,6 +124,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ### 3 BNB
 
+**Complément terrain du 09/11/2026 :** [BNB — marché comparé au Top 5, historiques BNBUSDT, annonces OKX par région et preuves Spot manquantes](./SEVEN_HEAVEN_AGENT_CRYPTO_BNB_SPOT_RESEARCH_2026_11_09.md). Les anciennes données chiffrées de cette fiche restent figées à leur date d'observation ; aucune paire OKX n'est déduite des archives Binance.
+
 **BNB · rang CoinGecko #4**
 **Identité :** [binancecoin](https://www.coingecko.com/en/coins/binancecoin). **Périmètre :** monographie fondamentale.
 
