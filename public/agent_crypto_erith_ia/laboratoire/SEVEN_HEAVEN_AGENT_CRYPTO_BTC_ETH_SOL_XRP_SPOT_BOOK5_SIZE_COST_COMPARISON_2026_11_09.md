@@ -54,3 +54,7 @@ Pour les achats de 10, 100, 500 et 1 000 USDC, les **240 scénarios** et chacun 
 - **Prochaine action documentaire** : contrôler la continuité de données historiques sur une fenêtre bornée pour au moins BTC et ETH avant d'attribuer un statut de backtest comparatif ; pas de fusion des séries Binance USDT et des carnets OKX USDC.
 
 **Statut : étude documentaire accomplie, programme et Bridge R31 inchangés.**
+
+## 6. Audit de continuité minute BTC / ETH — blocage source reconnu
+
+[L'audit croisé de la fenêtre 27–28 octobre 2026](./SEVEN_HEAVEN_AGENT_CRYPTO_BTC_ETH_BINANCE_SPOT_NATIVE_1M_SOURCE_CONTINUITY_AUDIT_2026_11_09.md) réconcilie les deux index (85 mois, 3 731 040 minutes calendaires déclarées par actif, aucun mois dupliqué, octobre inclus) et les trous antérieurs. **Les quatre ZIP natifs Spot Binance et leurs CHECKSUM ne sont pas accessibles depuis ce contexte** : 5 760 bougies à lire, aucune minute brute certifiée, aucune déclaration « zéro trou ». [Preuves structurées](../data/crypto/research/seven_heaven_btc_eth_spot_native_1m_2026_10_27_28_source_continuity_audit_2026_11_09.json). Les tests d'un vérificateur sur données synthétiques ne constituent pas une preuve sur le marché. **PAPER reste non certifié.**
