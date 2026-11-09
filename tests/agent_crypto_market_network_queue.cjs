@@ -18,6 +18,10 @@ function makeFetch({acquire,fetcher,release=()=>{}}){
     ATLAS_NETWORK_WAIT_TIMEOUT_MS:45000,
     atlasAcquireNetwork:acquire,
     atlasReleaseNetwork:release,
+    // Production's CoinGecko gate is tested separately. Here it must not
+    // obscure the queue/time-budget behavior of fetchWithTimeout.
+    atlasCoinGeckoReserve:async()=>{},
+    atlasCoinGeckoObserve:()=>{},
     fetch:fetcher
   };
   return vm.runInNewContext(source+'\nfetchWithTimeout',sandbox,{timeout:3000});
