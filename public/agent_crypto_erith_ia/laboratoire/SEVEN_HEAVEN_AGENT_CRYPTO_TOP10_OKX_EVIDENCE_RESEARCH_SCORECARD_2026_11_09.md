@@ -65,3 +65,7 @@ La paire DOGE/USDC est affichée dans le catalogue public OKX Europe, mais les e
 ## 7. ZEC / HYPE — comparaison de carnets d'octobre (09/11)
 
 [Étude ZEC-HYPE comparée](./SEVEN_HEAVEN_AGENT_CRYPTO_ZEC_HYPE_SPOT_BOOK_COMPARATIVE_RESEARCH_2026_11_09.md) : rapprochement de **58 couples de carnets** à moins de cinq minutes d'écart, HYPE a le spread le plus étroit sur **48/58**, ZEC une profondeur médiane bid/ask supérieure sur les cinq niveaux. Sur 1 000 USDC de profondeur affichée des deux côtés : ZEC **52/58**, HYPE **44/58**. Coûts uniquement **fictifs** avec frais et slippage supposés ; aucun ordre exécuté ni résultat PAPER certifié.
+
+## 8. BTC / ETH / SOL / XRP — étude de liquidité par taille (09/11)
+
+[Étude des 240 scénarios théoriques à 10, 100, 500 et 1 000 USDC](./SEVEN_HEAVEN_AGENT_CRYPTO_BTC_ETH_SOL_XRP_SPOT_BOOK5_SIZE_COST_COMPARISON_2026_11_09.md) : **15 carnets historiques communs par actif** (27–28 octobre), tous couvrant les quatre budgets dans leurs cinq niveaux vendeurs affichés. Analyse séparée du spread, de l'impact de parcours du carnet et des **frais Spot déjà connus** (Taker 0,10 % ; Maker 0,08 % en référence, non appliqué à une prise de liquidité). [Registre JSON reproductible](../data/crypto/research/seven_heaven_btc_eth_sol_xrp_book5_size_cost_2026_11_09.json). Aucun carnet actuel, aucune certification PAPER ni modification du programme.

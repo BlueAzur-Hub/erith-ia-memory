@@ -1,0 +1,4818 @@
+{
+  "schema": "seven_heaven.crypto.top4.book5_size_cost.v1",
+  "analysis_date": "2026-11-09",
+  "spot_window_utc": "2026-10-27T10:00Z..2026-10-28T08:59Z",
+  "derived_from_n_hourly_observations": 15,
+  "analyzed_pairs": [
+    "BTC-USDC",
+    "ETH-USDC",
+    "SOL-USDC",
+    "XRP-USDC"
+  ],
+  "quote_currency": "USDC",
+  "venue": "OKX_EEA_PUBLIC_REST",
+  "source_files": [
+    {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "git_blob_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "observations_in_file": 15
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "git_blob_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+      "observations_in_file": 5
+    }
+  ],
+  "price_input_type": "HISTORICAL_PUBLIC_SPOT_FIVE_LEVEL_ORDERBOOKS",
+  "simulation_mode": "COUNTERFACTUAL_STATIC_BOOK_WALK_NOT_EXECUTION",
+  "real_orders": 0,
+  "paper_fills_proven": 0,
+  "paper_certified": false,
+  "maker_fee_reference_from_user_account_2026_11_06_and_2026_11_09": 0.0008,
+  "taker_fee_reference_from_user_account_2026_11_06_and_2026_11_09": 0.001,
+  "fee_rate_note": "Screenshot-confirmed regular-user displayed Spot fee tier on 2026-11-06 and 2026-11-09. Applied to older October orderbook counterfactually; not the actual historical trade fee, not proof of fee currency or rebates.",
+  "method": {
+    "side": "BUY_TAKER",
+    "amounts_usdc": [
+      10,
+      100,
+      500,
+      1000
+    ],
+    "budget_excludes_fee": true,
+    "bid_ask_mid": "(first_bid+first_ask)/2",
+    "walk": "Each ascending ask: quote_i=min(remaining_quote,price_i*base_qty_i), base_i=quote_i/price_i, VWAP=sum(quote_i)/sum(base_i)",
+    "threshold": "Fully covered only if full quote budget consumed within the 5 historical asks",
+    "relative_impact_bps": "(VWAP/best_ask -1)*10000",
+    "mid_cost_bps": "(VWAP/mid -1)*10000",
+    "extra_cost_usdc": "(spent_usdc-mid*unrounded_base_quantity)+budget_usdc*0.001",
+    "maker_fee": "reference only, not applied to a buy that consumes bids/asks",
+    "min_sz_only": "Check historical minSz with idealized unrounded base qty; do not claim eligibility, lotSz/tickSz not executed",
+    "quartiles": "linear interpolation at p*(n-1)"
+  },
+  "summary": {
+    "BTC": {
+      "observations": 15,
+      "median_spread_bps": 0.01239748,
+      "median_ask_capacity_usdc": 19324.608671,
+      "archived_rules": {
+        "minSz": "0.00001",
+        "lotSz": "0.00000001",
+        "tickSz": "0.1"
+      },
+      "by_budget": {
+        "10": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.00619874,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.0100062
+        },
+        "100": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.00619874,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.10006199
+        },
+        "500": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.00619874,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.50030994
+        },
+        "1000": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 3,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.0771737,
+          "median_buy_cost_vs_mid_bps": 0.00621253,
+          "median_impact_and_0_1pct_taker_fee_usdc": 1.00062125
+        }
+      }
+    },
+    "ETH": {
+      "observations": 15,
+      "median_spread_bps": 0.04267222,
+      "median_ask_capacity_usdc": 34733.504752,
+      "archived_rules": {
+        "minSz": "0.001",
+        "lotSz": "0.000001",
+        "tickSz": "0.01"
+      },
+      "by_budget": {
+        "10": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.02133611,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.01002134
+        },
+        "100": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.02133611,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.10021336
+        },
+        "500": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 3,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.09397952,
+          "median_buy_cost_vs_mid_bps": 0.02137159,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.50106858
+        },
+        "1000": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 5,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.33623556,
+          "median_buy_cost_vs_mid_bps": 0.02146323,
+          "median_impact_and_0_1pct_taker_fee_usdc": 1.00214632
+        }
+      }
+    },
+    "SOL": {
+      "observations": 15,
+      "median_spread_bps": 1.98137507,
+      "median_ask_capacity_usdc": 35474.906899,
+      "archived_rules": {
+        "minSz": "0.01",
+        "lotSz": "0.00001",
+        "tickSz": "0.01"
+      },
+      "by_budget": {
+        "10": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.99068754,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.01099059
+        },
+        "100": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 0.99068754,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.10990589
+        },
+        "500": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 4,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.65091928,
+          "median_buy_cost_vs_mid_bps": 0.99147333,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.54956875
+        },
+        "1000": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 6,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.82524803,
+          "median_buy_cost_vs_mid_bps": 0.99196508,
+          "median_impact_and_0_1pct_taker_fee_usdc": 1.09918667
+        }
+      }
+    },
+    "XRP": {
+      "observations": 15,
+      "median_spread_bps": 2.2516606,
+      "median_ask_capacity_usdc": 24274.839181,
+      "archived_rules": {
+        "minSz": "1",
+        "lotSz": "0.001",
+        "tickSz": "0.0001"
+      },
+      "by_budget": {
+        "10": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 0,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0,
+          "median_buy_cost_vs_mid_bps": 1.1258303,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.0111257
+        },
+        "100": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 1,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.10192943,
+          "median_buy_cost_vs_mid_bps": 1.1258303,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.11125704
+        },
+        "500": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 1,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.20159919,
+          "median_buy_cost_vs_mid_bps": 1.1258303,
+          "median_impact_and_0_1pct_taker_fee_usdc": 0.55628518
+        },
+        "1000": {
+          "covered": 15,
+          "noncovered": 0,
+          "above_historical_minSz": 15,
+          "requiring_multiple_ask_levels": 3,
+          "median_slippage_vs_best_ask_bps": 0,
+          "p95_slippage_vs_best_ask_bps": 0.43796876,
+          "median_buy_cost_vs_mid_bps": 1.1258303,
+          "median_impact_and_0_1pct_taker_fee_usdc": 1.11257036
+        }
+      }
+    }
+  },
+  "observations": [
+    {
+      "hour_utc": "2026-10-27T10Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T10:36:04Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 79559.2,
+          "best_ask_usdc": 79559.3,
+          "spread_bps": 0.01256925,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 153069.3063279,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000125692408,
+              "vwap_usdc_per_base": 79559.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00628462,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062846,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 153069.3063279,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001256924081,
+              "vwap_usdc_per_base": 79559.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00628462,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000628462,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 153069.3063279,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006284620403,
+              "vwap_usdc_per_base": 79559.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00628462,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.500314231,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 153069.3063279,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012569240805,
+              "vwap_usdc_per_base": 79559.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00628462,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.000628462,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T10:36:05Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2302,
+          "best_ask_usdc": 2302.28,
+          "spread_bps": 1.21625965,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35122.8487096,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004343520336,
+              "vwap_usdc_per_base": 2302.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.60812983,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0106080928,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35122.8487096,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.043435203364,
+              "vwap_usdc_per_base": 2302.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.60812983,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1060809285,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35122.8487096,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.217176016818,
+              "vwap_usdc_per_base": 2302.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.60812983,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5304046424,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35122.8487096,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.434352033636,
+              "vwap_usdc_per_base": 2302.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.60812983,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0608092847,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T10:36:06Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 99.55,
+          "best_ask_usdc": 99.57,
+          "spread_bps": 2.00883889,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 28494.262258,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.100431856985,
+              "vwap_usdc_per_base": 99.57,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.00441945,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0110043186,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 28494.262258,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 1.00431856985,
+              "vwap_usdc_per_base": 99.57,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.00441945,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1100431857,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 28494.262258,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 5.021273299859,
+              "vwap_usdc_per_base": 99.5763365467,
+              "slippage_vs_best_ask_bps": 0.63639116,
+              "buy_cost_vs_mid_bps": 1.64087452,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.582030266,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 28494.262258,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 10.042361871862,
+              "vwap_usdc_per_base": 99.5781682397,
+              "slippage_vs_best_ask_bps": 0.82035148,
+              "buy_cost_vs_mid_bps": 1.82485332,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1824520374,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T10:36:07Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.2942,
+          "best_ask_usdc": 1.2945,
+          "spread_bps": 2.31776567,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24274.8391809,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.724990343762,
+              "vwap_usdc_per_base": 1.2945,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.15888284,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0111587486,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24274.8391809,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 77.249903437621,
+              "vwap_usdc_per_base": 1.2945,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.15888284,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1115874855,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24274.8391809,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 386.249517188104,
+              "vwap_usdc_per_base": 1.2945,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.15888284,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5579374276,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24274.8391809,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 772.499034376207,
+              "vwap_usdc_per_base": 1.2945,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.15888284,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1158748552,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T13Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T13:11:58Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80125.5,
+          "best_ask_usdc": 80125.6,
+          "spread_bps": 0.01248041,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 151029.5502237,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000124804058,
+              "vwap_usdc_per_base": 80125.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00624021,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062402,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 151029.5502237,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001248040576,
+              "vwap_usdc_per_base": 80125.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00624021,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.100062402,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 151029.5502237,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006240202881,
+              "vwap_usdc_per_base": 80125.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00624021,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003120101,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 151029.5502237,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012480405763,
+              "vwap_usdc_per_base": 80125.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00624021,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006240203,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T13:12:00Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2327.74,
+          "best_ask_usdc": 2327.84,
+          "spread_bps": 0.42959202,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35426.9229515,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004295827892,
+              "vwap_usdc_per_base": 2327.84,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.21479601,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0102147914,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35426.9229515,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.04295827892,
+              "vwap_usdc_per_base": 2327.84,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.21479601,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1021479139,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35426.9229515,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.214791394598,
+              "vwap_usdc_per_base": 2327.84,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.21479601,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5107395697,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35426.9229515,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.429582789195,
+              "vwap_usdc_per_base": 2327.84,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.21479601,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0214791395,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T13:12:02Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.56,
+          "best_ask_usdc": 100.58,
+          "spread_bps": 1.98866461,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35474.9068989,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099423344601,
+              "vwap_usdc_per_base": 100.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99433231,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109942334,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35474.9068989,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.994233446013,
+              "vwap_usdc_per_base": 100.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99433231,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1099423345,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35474.9068989,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.971167230066,
+              "vwap_usdc_per_base": 100.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99433231,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5497116723,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35474.9068989,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.942334460131,
+              "vwap_usdc_per_base": 100.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99433231,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0994233446,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T13:12:04Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3108,
+          "best_ask_usdc": 1.3111,
+          "spread_bps": 2.2884168,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25870.6818681,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.627183281214,
+              "vwap_usdc_per_base": 1.3111,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1442084,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0111440775,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25870.6818681,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 76.271832812142,
+              "vwap_usdc_per_base": 1.3111,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1442084,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1114407749,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25870.6818681,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 381.359164060712,
+              "vwap_usdc_per_base": 1.3111,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1442084,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5572038746,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25870.6818681,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 762.718328121425,
+              "vwap_usdc_per_base": 1.3111,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1442084,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1144077492,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T14Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T14:54:28Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80226.3,
+          "best_ask_usdc": 80226.4,
+          "spread_bps": 0.01246473,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32740.3004099,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000124647248,
+              "vwap_usdc_per_base": 80226.4,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00623237,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062324,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32740.3004099,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001246472483,
+              "vwap_usdc_per_base": 80226.4,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00623237,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000623236,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32740.3004099,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006232362414,
+              "vwap_usdc_per_base": 80226.4,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00623237,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003116181,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32740.3004099,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012464724829,
+              "vwap_usdc_per_base": 80226.4,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00623237,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006232362,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T14:54:29Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2329.56,
+          "best_ask_usdc": 2329.57,
+          "spread_bps": 0.04292647,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36864.7135602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004292637697,
+              "vwap_usdc_per_base": 2329.57,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02146323,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100214632,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36864.7135602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042926376971,
+              "vwap_usdc_per_base": 2329.57,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02146323,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002146319,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36864.7135602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.214631884854,
+              "vwap_usdc_per_base": 2329.57,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02146323,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010731594,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36864.7135602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.429263769709,
+              "vwap_usdc_per_base": 2329.57,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02146323,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021463188,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T14:54:30Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.46,
+          "best_ask_usdc": 100.49,
+          "spread_bps": 2.98581737,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 45623.0322676,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099512389292,
+              "vwap_usdc_per_base": 100.49,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.49290868,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0114926858,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 45623.0322676,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.995123892925,
+              "vwap_usdc_per_base": 100.49,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.49290868,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1149268584,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 45623.0322676,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.975619464623,
+              "vwap_usdc_per_base": 100.49,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.49290868,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.574634292,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 45623.0322676,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.951238929247,
+              "vwap_usdc_per_base": 100.49,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.49290868,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1492685839,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T14:54:31Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3156,
+          "best_ask_usdc": 1.3158,
+          "spread_bps": 1.52010337,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37869.2954166,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.599939200486,
+              "vwap_usdc_per_base": 1.3158,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.76005168,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0107599939,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37869.2954166,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.999392004864,
+              "vwap_usdc_per_base": 1.3158,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.76005168,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1075999392,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37869.2954166,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 379.99696002432,
+              "vwap_usdc_per_base": 1.3158,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.76005168,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.537999696,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37869.2954166,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 759.99392004864,
+              "vwap_usdc_per_base": 1.3158,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.76005168,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.075999392,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T15Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T15:59:00Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80419.2,
+          "best_ask_usdc": 80419.3,
+          "spread_bps": 0.01243483,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 18276.8737881,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00012434826,
+              "vwap_usdc_per_base": 80419.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621742,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062174,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 18276.8737881,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001243482597,
+              "vwap_usdc_per_base": 80419.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621742,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000621741,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 18276.8737881,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006217412984,
+              "vwap_usdc_per_base": 80419.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621742,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003108706,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 18276.8737881,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012434825968,
+              "vwap_usdc_per_base": 80419.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621742,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006217413,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T15:59:01Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2343.33,
+          "best_ask_usdc": 2343.34,
+          "spread_bps": 0.04267422,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 39650.3718751,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004267413179,
+              "vwap_usdc_per_base": 2343.34,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02133711,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213371,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 39650.3718751,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042674131795,
+              "vwap_usdc_per_base": 2343.34,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02133711,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002133707,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 39650.3718751,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213370658974,
+              "vwap_usdc_per_base": 2343.34,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02133711,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010668533,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 39650.3718751,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.426741317948,
+              "vwap_usdc_per_base": 2343.34,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02133711,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021337066,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T15:59:02Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.8,
+          "best_ask_usdc": 100.82,
+          "spread_bps": 1.98393017,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 57166.2302543,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099186669312,
+              "vwap_usdc_per_base": 100.82,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99196508,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109918667,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 57166.2302543,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.991866693116,
+              "vwap_usdc_per_base": 100.82,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99196508,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1099186669,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 57166.2302543,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.959333465582,
+              "vwap_usdc_per_base": 100.82,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99196508,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5495933347,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 57166.2302543,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.918666931164,
+              "vwap_usdc_per_base": 100.82,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99196508,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0991866693,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T15:59:03Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3184,
+          "best_ask_usdc": 1.3186,
+          "spread_bps": 1.51687524,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25487.0206908,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.583801001062,
+              "vwap_usdc_per_base": 1.3186,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75843762,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0107583801,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25487.0206908,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.838010010617,
+              "vwap_usdc_per_base": 1.3186,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75843762,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.107583801,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25487.0206908,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 379.190050053087,
+              "vwap_usdc_per_base": 1.3186,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75843762,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.537919005,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25487.0206908,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 758.380100106173,
+              "vwap_usdc_per_base": 1.3186,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75843762,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.07583801,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T16Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T16:46:30Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80482.5,
+          "best_ask_usdc": 80482.6,
+          "spread_bps": 0.01242505,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 33373.3161015,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000124250459,
+              "vwap_usdc_per_base": 80482.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621253,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062125,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 33373.3161015,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001242504591,
+              "vwap_usdc_per_base": 80482.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621253,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000621252,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 33373.3161015,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006212522955,
+              "vwap_usdc_per_base": 80482.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621253,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003106261,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 33373.3161015,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012425045911,
+              "vwap_usdc_per_base": 80482.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00621253,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006212523,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T16:46:31Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2345.6,
+          "best_ask_usdc": 2345.61,
+          "spread_bps": 0.04263292,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41106.841955,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004263283325,
+              "vwap_usdc_per_base": 2345.61,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131646,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213164,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41106.841955,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.04263283325,
+              "vwap_usdc_per_base": 2345.61,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131646,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002131642,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41106.841955,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213164166251,
+              "vwap_usdc_per_base": 2345.61,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131646,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010658208,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41106.841955,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.426328332502,
+              "vwap_usdc_per_base": 2345.61,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131646,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021316417,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T16:46:33Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.85,
+          "best_ask_usdc": 100.87,
+          "spread_bps": 1.98294666,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 43220.1179085,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099137503718,
+              "vwap_usdc_per_base": 100.87,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99147333,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.010991375,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 43220.1179085,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.991375037177,
+              "vwap_usdc_per_base": 100.87,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99147333,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1099137504,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 43220.1179085,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.956875185883,
+              "vwap_usdc_per_base": 100.87,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99147333,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5495687519,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 43220.1179085,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.913750371766,
+              "vwap_usdc_per_base": 100.87,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99147333,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0991375037,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T16:46:34Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3203,
+          "best_ask_usdc": 1.3206,
+          "spread_bps": 2.27195274,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22967.3745882,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.572315614115,
+              "vwap_usdc_per_base": 1.3206,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13597637,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0111358473,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22967.3745882,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.723156141148,
+              "vwap_usdc_per_base": 1.3206,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13597637,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1113584734,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22967.3745882,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 378.61578070574,
+              "vwap_usdc_per_base": 1.3206,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13597637,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5567923671,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22967.3745882,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 757.23156141148,
+              "vwap_usdc_per_base": 1.3206,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13597637,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1135847342,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T18Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T18:48:11Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80578,
+          "best_ask_usdc": 80578.1,
+          "spread_bps": 0.01241033,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 6479.9328762,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000124103199,
+              "vwap_usdc_per_base": 80578.1,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00620516,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062052,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 6479.9328762,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001241031993,
+              "vwap_usdc_per_base": 80578.1,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00620516,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000620516,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 6479.9328762,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006205159963,
+              "vwap_usdc_per_base": 80578.1,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00620516,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.500310258,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 6479.9328762,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012410159156,
+              "vwap_usdc_per_base": 80579.1438658334,
+              "slippage_vs_best_ask_bps": 0.12954709,
+              "buy_cost_vs_mid_bps": 0.13575233,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0135750491,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T18:48:12Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2344.64,
+          "best_ask_usdc": 2344.65,
+          "spread_bps": 0.04265038,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36261.920179,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004265028896,
+              "vwap_usdc_per_base": 2344.65,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02132519,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213251,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36261.920179,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042650288956,
+              "vwap_usdc_per_base": 2344.65,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02132519,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002132514,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36261.920179,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213251444779,
+              "vwap_usdc_per_base": 2344.65,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02132519,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010662572,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36261.920179,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.426502889557,
+              "vwap_usdc_per_base": 2344.65,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02132519,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021325144,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T18:48:14Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.93,
+          "best_ask_usdc": 100.95,
+          "spread_bps": 1.98137507,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31742.7360195,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099058940069,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99068754,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109905894,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31742.7360195,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.990589400693,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99068754,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.109905894,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31742.7360195,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.952947003467,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99068754,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.54952947,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31742.7360195,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.905894006934,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99068754,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0990589401,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T18:48:15Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3243,
+          "best_ask_usdc": 1.3244,
+          "spread_bps": 0.7550874,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24656.4397704,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.550588945938,
+              "vwap_usdc_per_base": 1.3244,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.3775437,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0103775294,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24656.4397704,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.50332412231,
+              "vwap_usdc_per_base": 1.3244449984,
+              "slippage_vs_best_ask_bps": 0.33976478,
+              "buy_cost_vs_mid_bps": 0.71732131,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1071726986,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24656.4397704,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 377.504079124198,
+              "vwap_usdc_per_base": 1.3244889993,
+              "slippage_vs_best_ask_bps": 0.67199731,
+              "buy_cost_vs_mid_bps": 1.04956638,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5524728119,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24656.4397704,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 755.005022876557,
+              "vwap_usdc_per_base": 1.3244944996,
+              "slippage_vs_best_ask_bps": 0.71352793,
+              "buy_cost_vs_mid_bps": 1.09109857,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1090979534,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T20Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T20:57:16Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80678.4,
+          "best_ask_usdc": 80678.5,
+          "spread_bps": 0.01239488,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 154628.6139217,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00012394876,
+              "vwap_usdc_per_base": 80678.5,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619744,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061974,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 154628.6139217,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001239487596,
+              "vwap_usdc_per_base": 80678.5,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619744,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000619744,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 154628.6139217,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006197437979,
+              "vwap_usdc_per_base": 80678.5,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619744,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003098719,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 154628.6139217,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012394826625,
+              "vwap_usdc_per_base": 80678.8211154708,
+              "slippage_vs_best_ask_bps": 0.03980186,
+              "buy_cost_vs_mid_bps": 0.04599933,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0045999119,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T20:57:18Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2341.79,
+          "best_ask_usdc": 2341.8,
+          "spread_bps": 0.04270229,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32885.9328832,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004270219489,
+              "vwap_usdc_per_base": 2341.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02135114,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213511,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32885.9328832,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042702194893,
+              "vwap_usdc_per_base": 2341.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02135114,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.100213511,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32885.9328832,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213510974464,
+              "vwap_usdc_per_base": 2341.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02135114,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010675549,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32885.9328832,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.427021948928,
+              "vwap_usdc_per_base": 2341.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02135114,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021351097,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T20:57:19Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.94,
+          "best_ask_usdc": 100.95,
+          "spread_bps": 0.99063847,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37197.1469278,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099058940069,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.49531923,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0104952947,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37197.1469278,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.990589400693,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.49531923,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.104952947,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37197.1469278,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.952947003467,
+              "vwap_usdc_per_base": 100.95,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.49531923,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.524764735,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 37197.1469278,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.905805952853,
+              "vwap_usdc_per_base": 100.9508973585,
+              "slippage_vs_best_ask_bps": 0.08889139,
+              "buy_cost_vs_mid_bps": 0.58421502,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0584180893,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T20:57:21Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3194,
+          "best_ask_usdc": 1.3197,
+          "spread_bps": 2.27350233,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 26432.511753,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.577479730242,
+              "vwap_usdc_per_base": 1.3197,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13675117,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.011136622,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 26432.511753,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.774797302417,
+              "vwap_usdc_per_base": 1.3197,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13675117,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1113662196,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 26432.511753,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 378.873986512086,
+              "vwap_usdc_per_base": 1.3197,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13675117,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.556831098,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 26432.511753,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 757.747973024172,
+              "vwap_usdc_per_base": 1.3197,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13675117,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.113662196,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T21Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T21:21:41Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80612.7,
+          "best_ask_usdc": 80612.8,
+          "spread_bps": 0.01240499,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 8448.1958133,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000124049779,
+              "vwap_usdc_per_base": 80612.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00620249,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100062025,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 8448.1958133,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001240497787,
+              "vwap_usdc_per_base": 80612.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00620249,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000620249,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 8448.1958133,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006202488935,
+              "vwap_usdc_per_base": 80612.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00620249,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003101244,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 8448.1958133,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.01240490998,
+              "vwap_usdc_per_base": 80613.2411774013,
+              "slippage_vs_best_ask_bps": 0.05472796,
+              "buy_cost_vs_mid_bps": 0.06093049,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0060930114,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T21:21:42Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2339.55,
+          "best_ask_usdc": 2339.56,
+          "spread_bps": 0.04274317,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 16752.1502573,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00427430799,
+              "vwap_usdc_per_base": 2339.56,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02137159,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213715,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 16752.1502573,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042743079895,
+              "vwap_usdc_per_base": 2339.56,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02137159,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002137154,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 16752.1502573,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213715399477,
+              "vwap_usdc_per_base": 2339.56,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02137159,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.501068577,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 16752.1502573,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.427418941616,
+              "vwap_usdc_per_base": 2339.6249034231,
+              "slippage_vs_best_ask_bps": 0.27741722,
+              "buy_cost_vs_mid_bps": 0.2987894,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0298780471,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T21:21:44Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 100.9,
+          "best_ask_usdc": 100.92,
+          "spread_bps": 1.98196413,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41624.8685729,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.099088386841,
+              "vwap_usdc_per_base": 100.92,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99098206,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109908839,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41624.8685729,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.990883868411,
+              "vwap_usdc_per_base": 100.92,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.99098206,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1099088387,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41624.8685729,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.954214987615,
+              "vwap_usdc_per_base": 100.9241628088,
+              "slippage_vs_best_ask_bps": 0.41248601,
+              "buy_cost_vs_mid_bps": 1.40350895,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5701655998,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 41624.8685729,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.908143452888,
+              "vwap_usdc_per_base": 100.92708132,
+              "slippage_vs_best_ask_bps": 0.70167658,
+              "buy_cost_vs_mid_bps": 1.69272817,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1692441691,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T21:21:45Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3175,
+          "best_ask_usdc": 1.3178,
+          "spread_bps": 2.27678063,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23439.01083,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.588404917286,
+              "vwap_usdc_per_base": 1.3178,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13839032,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0111382607,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23439.01083,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.884049172864,
+              "vwap_usdc_per_base": 1.3178,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13839032,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1113826074,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23439.01083,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 379.420245864319,
+              "vwap_usdc_per_base": 1.3178,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13839032,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5569130369,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23439.01083,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 758.840491728639,
+              "vwap_usdc_per_base": 1.3178,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13839032,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1138260738,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T22Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T22:40:27Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80781.5,
+          "best_ask_usdc": 80781.6,
+          "spread_bps": 0.01237906,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 19324.6086707,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000123790566,
+              "vwap_usdc_per_base": 80781.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618953,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061895,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 19324.6086707,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001237905662,
+              "vwap_usdc_per_base": 80781.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618953,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000618953,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 19324.6086707,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006189528308,
+              "vwap_usdc_per_base": 80781.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618953,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003094764,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 19324.6086707,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012379056617,
+              "vwap_usdc_per_base": 80781.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618953,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006189528,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T22:40:28Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2347.53,
+          "best_ask_usdc": 2347.54,
+          "spread_bps": 0.04259787,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24408.8155626,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004259778321,
+              "vwap_usdc_per_base": 2347.54,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02129894,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100212989,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24408.8155626,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042597783211,
+              "vwap_usdc_per_base": 2347.54,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02129894,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002129889,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24408.8155626,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.212987689346,
+              "vwap_usdc_per_base": 2347.5535207523,
+              "slippage_vs_best_ask_bps": 0.05759541,
+              "buy_cost_vs_mid_bps": 0.07889447,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5039446922,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24408.8155626,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.425974790847,
+              "vwap_usdc_per_base": 2347.5567603717,
+              "slippage_vs_best_ask_bps": 0.07139547,
+              "buy_cost_vs_mid_bps": 0.09269456,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0092693698,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T22:40:30Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 101.17,
+          "best_ask_usdc": 101.19,
+          "spread_bps": 1.97667523,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32336.4004755,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.098823994466,
+              "vwap_usdc_per_base": 101.19,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98833762,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109882399,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32336.4004755,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.988239944659,
+              "vwap_usdc_per_base": 101.19,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98833762,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1098823994,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32336.4004755,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.941199723293,
+              "vwap_usdc_per_base": 101.19,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98833762,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5494119972,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 32336.4004755,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.882399446586,
+              "vwap_usdc_per_base": 101.19,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98833762,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0988239945,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T22:40:31Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3224,
+          "best_ask_usdc": 1.3227,
+          "spread_bps": 2.26834524,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 27988.3086194,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.560293339382,
+              "vwap_usdc_per_base": 1.3227,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13417262,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.011134044,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 27988.3086194,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.602933393816,
+              "vwap_usdc_per_base": 1.3227,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13417262,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.11134044,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 27988.3086194,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 378.014666969078,
+              "vwap_usdc_per_base": 1.3227,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13417262,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5567022,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 27988.3086194,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 756.029333938157,
+              "vwap_usdc_per_base": 1.3227,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.13417262,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1134044001,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-27T23Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "source_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-27T23:52:17Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80825.6,
+          "best_ask_usdc": 80825.7,
+          "spread_bps": 0.01237231,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 10472.7533589,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000123723024,
+              "vwap_usdc_per_base": 80825.7,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618616,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061862,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 10472.7533589,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001237230237,
+              "vwap_usdc_per_base": 80825.7,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618616,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000618615,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 10472.7533589,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006186151187,
+              "vwap_usdc_per_base": 80825.7,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618616,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003093076,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 10472.7533589,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012372302374,
+              "vwap_usdc_per_base": 80825.7,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618616,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006186151,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-27T23:52:19Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2349.27,
+          "best_ask_usdc": 2349.28,
+          "spread_bps": 0.04256632,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31917.822187,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004256623306,
+              "vwap_usdc_per_base": 2349.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02128316,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100212831,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31917.822187,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042566233059,
+              "vwap_usdc_per_base": 2349.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02128316,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002128312,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31917.822187,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.212831165293,
+              "vwap_usdc_per_base": 2349.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02128316,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010641558,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31917.822187,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.425662330586,
+              "vwap_usdc_per_base": 2349.28,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02128316,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021283117,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-27T23:52:21Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 101.28,
+          "best_ask_usdc": 101.3,
+          "spread_bps": 1.97452858,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 29053.5058272,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.098716683119,
+              "vwap_usdc_per_base": 101.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98726429,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109871668,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 29053.5058272,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.987166831194,
+              "vwap_usdc_per_base": 101.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98726429,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1098716683,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 29053.5058272,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.935834155972,
+              "vwap_usdc_per_base": 101.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98726429,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5493583416,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 29053.5058272,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.871668311945,
+              "vwap_usdc_per_base": 101.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98726429,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0987166831,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-27T23:52:22Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.331,
+          "best_ask_usdc": 1.3312,
+          "spread_bps": 1.50251672,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23157.2817139,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.512019230769,
+              "vwap_usdc_per_base": 1.3312,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75125836,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0107512019,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23157.2817139,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.120192307692,
+              "vwap_usdc_per_base": 1.3312,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75125836,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1075120192,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23157.2817139,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 375.600961538462,
+              "vwap_usdc_per_base": 1.3312,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75125836,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5375600962,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 23157.2817139,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 751.189361676557,
+              "vwap_usdc_per_base": 1.3312222603,
+              "slippage_vs_best_ask_bps": 0.16722016,
+              "buy_cost_vs_mid_bps": 0.91849108,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0918406723,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-28T00Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "source_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-28T00:45:09Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80661.5,
+          "best_ask_usdc": 80661.6,
+          "spread_bps": 0.01239748,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 11776.087943,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000123974729,
+              "vwap_usdc_per_base": 80661.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619874,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061987,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 11776.087943,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00123974729,
+              "vwap_usdc_per_base": 80661.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619874,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000619874,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 11776.087943,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00619873645,
+              "vwap_usdc_per_base": 80661.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619874,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003099368,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 11776.087943,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012397472899,
+              "vwap_usdc_per_base": 80661.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619874,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006198736,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-28T00:45:11Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2343.44,
+          "best_ask_usdc": 2343.45,
+          "spread_bps": 0.04267222,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31724.4991249,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00426721287,
+              "vwap_usdc_per_base": 2343.45,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02133611,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213361,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31724.4991249,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042672128699,
+              "vwap_usdc_per_base": 2343.45,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02133611,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002133606,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31724.4991249,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213356827059,
+              "vwap_usdc_per_base": 2343.491918644,
+              "slippage_vs_best_ask_bps": 0.17887578,
+              "buy_cost_vs_mid_bps": 0.20021227,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.510010413,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 31724.4991249,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.426701083618,
+              "vwap_usdc_per_base": 2343.5609572881,
+              "slippage_vs_best_ask_bps": 0.47347837,
+              "buy_cost_vs_mid_bps": 0.49481549,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0494791005,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-28T00:45:12Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 101.15,
+          "best_ask_usdc": 101.16,
+          "spread_bps": 0.98858188,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25539.0743435,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.0988533017,
+              "vwap_usdc_per_base": 101.16,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.49429094,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0104942665,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25539.0743435,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.988533017003,
+              "vwap_usdc_per_base": 101.16,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.49429094,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1049426651,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25539.0743435,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.942326625482,
+              "vwap_usdc_per_base": 101.1669276211,
+              "slippage_vs_best_ask_bps": 0.68481822,
+              "buy_cost_vs_mid_bps": 1.17914301,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5589501994,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 25539.0743435,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.884503160028,
+              "vwap_usdc_per_base": 101.1684637872,
+              "slippage_vs_best_ask_bps": 0.83667331,
+              "buy_cost_vs_mid_bps": 1.33100561,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1330828474,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-28T00:45:14Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3254,
+          "best_ask_usdc": 1.3256,
+          "spread_bps": 1.50886458,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21716.7814725,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.543753771877,
+              "vwap_usdc_per_base": 1.3256,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75443229,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0107543754,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21716.7814725,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.437537718769,
+              "vwap_usdc_per_base": 1.3256,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75443229,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1075437538,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21716.7814725,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 377.187688593844,
+              "vwap_usdc_per_base": 1.3256,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75443229,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5377187689,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21716.7814725,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 754.375377187689,
+              "vwap_usdc_per_base": 1.3256,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75443229,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0754375377,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-28T01Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "source_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-28T01:29:34Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80704.5,
+          "best_ask_usdc": 80704.6,
+          "spread_bps": 0.01239088,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 158471.6847377,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000123908674,
+              "vwap_usdc_per_base": 80704.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619544,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061954,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 158471.6847377,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001239086744,
+              "vwap_usdc_per_base": 80704.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619544,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000619543,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 158471.6847377,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006195433718,
+              "vwap_usdc_per_base": 80704.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619544,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003097717,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 158471.6847377,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012390867435,
+              "vwap_usdc_per_base": 80704.6,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00619544,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006195434,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-28T01:29:35Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2346.26,
+          "best_ask_usdc": 2346.27,
+          "spread_bps": 0.04262093,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34733.5047517,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004262084074,
+              "vwap_usdc_per_base": 2346.27,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131047,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100213104,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34733.5047517,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042620840739,
+              "vwap_usdc_per_base": 2346.27,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131047,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002131042,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34733.5047517,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.213104203694,
+              "vwap_usdc_per_base": 2346.27,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131047,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.501065521,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34733.5047517,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.426208407387,
+              "vwap_usdc_per_base": 2346.27,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02131047,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.002131042,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-28T01:29:37Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 101.23,
+          "best_ask_usdc": 101.25,
+          "spread_bps": 1.97550375,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 30055.114856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.098765432099,
+              "vwap_usdc_per_base": 101.25,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98775188,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109876543,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 30055.114856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.987654320988,
+              "vwap_usdc_per_base": 101.25,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98775188,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1098765432,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 30055.114856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.938271604938,
+              "vwap_usdc_per_base": 101.25,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98775188,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.549382716,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 30055.114856,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.876363400158,
+              "vwap_usdc_per_base": 101.2518433641,
+              "slippage_vs_best_ask_bps": 0.18206065,
+              "buy_cost_vs_mid_bps": 1.16983051,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.116969368,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-28T01:29:38Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3282,
+          "best_ask_usdc": 1.3285,
+          "spread_bps": 2.25844092,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21928.4244602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.527286413248,
+              "vwap_usdc_per_base": 1.3285,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.12922046,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.011129093,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21928.4244602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.27286413248,
+              "vwap_usdc_per_base": 1.3285,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.12922046,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1112909296,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21928.4244602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 376.364320662401,
+              "vwap_usdc_per_base": 1.3285,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.12922046,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5564546481,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21928.4244602,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 752.728641324802,
+              "vwap_usdc_per_base": 1.3285,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.12922046,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1129092962,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-28T05Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "source_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-28T05:57:29Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80838.7,
+          "best_ask_usdc": 80838.8,
+          "spread_bps": 0.01237031,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 15637.7215218,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000123702974,
+              "vwap_usdc_per_base": 80838.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618515,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061851,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 15637.7215218,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001237029743,
+              "vwap_usdc_per_base": 80838.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618515,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000618515,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 15637.7215218,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006185148716,
+              "vwap_usdc_per_base": 80838.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618515,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003092574,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 15637.7215218,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012370297431,
+              "vwap_usdc_per_base": 80838.8,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618515,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006185149,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-28T05:57:30Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2351.51,
+          "best_ask_usdc": 2351.58,
+          "spread_bps": 0.29767663,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 12661.8131605,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004252460048,
+              "vwap_usdc_per_base": 2351.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.14883832,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0101488361,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 12661.8131605,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042524600481,
+              "vwap_usdc_per_base": 2351.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.14883832,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.101488361,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 12661.8131605,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.212623002407,
+              "vwap_usdc_per_base": 2351.58,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.14883832,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5074418051,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 12661.8131605,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.425245403578,
+              "vwap_usdc_per_base": 2351.5833247956,
+              "slippage_vs_best_ask_bps": 0.01413856,
+              "buy_cost_vs_mid_bps": 0.16297709,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0162974432,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-28T05:57:32Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 101.71,
+          "best_ask_usdc": 101.74,
+          "spread_bps": 2.94912755,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34876.2719197,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.098289758207,
+              "vwap_usdc_per_base": 101.74,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.47456377,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0114743464,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34876.2719197,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.982897582072,
+              "vwap_usdc_per_base": 101.74,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.47456377,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1147434637,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34876.2719197,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.914313700246,
+              "vwap_usdc_per_base": 101.7436066352,
+              "slippage_vs_best_ask_bps": 0.35449531,
+              "buy_cost_vs_mid_bps": 1.82911135,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5914388425,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 34876.2719197,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.828318614251,
+              "vwap_usdc_per_base": 101.7468032172,
+              "slippage_vs_best_ask_bps": 0.66868657,
+              "buy_cost_vs_mid_bps": 2.14334895,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.2142889654,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-28T05:57:34Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3246,
+          "best_ask_usdc": 1.3247,
+          "spread_bps": 0.75491639,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24476.0223056,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.54887899147,
+              "vwap_usdc_per_base": 1.3247,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.3774582,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0103774439,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24476.0223056,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.488789914698,
+              "vwap_usdc_per_base": 1.3247,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.3774582,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1037744395,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24476.0223056,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 377.443949573488,
+              "vwap_usdc_per_base": 1.3247,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.3774582,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5188721975,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 24476.0223056,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 754.86375317029,
+              "vwap_usdc_per_base": 1.3247423734,
+              "slippage_vs_best_ask_bps": 0.31987198,
+              "buy_cost_vs_mid_bps": 0.69734225,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.069729363,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-28T07Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "source_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-28T07:20:58Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 80819.2,
+          "best_ask_usdc": 80819.3,
+          "spread_bps": 0.01237329,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 147883.0946715,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000123732821,
+              "vwap_usdc_per_base": 80819.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618664,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061866,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 147883.0946715,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001237328212,
+              "vwap_usdc_per_base": 80819.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618664,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000618664,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 147883.0946715,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006186641062,
+              "vwap_usdc_per_base": 80819.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618664,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003093321,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 147883.0946715,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012373282124,
+              "vwap_usdc_per_base": 80819.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00618664,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006186641,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-28T07:20:59Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2350.31,
+          "best_ask_usdc": 2350.32,
+          "spread_bps": 0.04254749,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35764.5367824,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.00425473978,
+              "vwap_usdc_per_base": 2350.32,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02127374,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100212737,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35764.5367824,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042547397801,
+              "vwap_usdc_per_base": 2350.32,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02127374,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.100212737,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35764.5367824,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.212736989006,
+              "vwap_usdc_per_base": 2350.32,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02127374,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5010636849,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 35764.5367824,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.425473978012,
+              "vwap_usdc_per_base": 2350.32,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02127374,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0021273699,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-28T07:21:01Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 101.84,
+          "best_ask_usdc": 101.86,
+          "spread_bps": 1.96367207,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 42558.4525561,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.098173964265,
+              "vwap_usdc_per_base": 101.86,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98183603,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109817396,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 42558.4525561,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.981739642647,
+              "vwap_usdc_per_base": 101.86,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98183603,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1098173964,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 42558.4525561,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.908698213234,
+              "vwap_usdc_per_base": 101.86,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98183603,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5490869821,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 42558.4525561,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.817396426468,
+              "vwap_usdc_per_base": 101.86,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.98183603,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0981739643,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-28T07:21:02Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3239,
+          "best_ask_usdc": 1.3241,
+          "spread_bps": 1.51057402,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21210.6999091,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.552299675251,
+              "vwap_usdc_per_base": 1.3241,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75528701,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.01075523,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21210.6999091,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.522996752511,
+              "vwap_usdc_per_base": 1.3241,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75528701,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1075522997,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21210.6999091,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 377.614983762556,
+              "vwap_usdc_per_base": 1.3241,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75528701,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5377614984,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21210.6999091,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 755.229967525111,
+              "vwap_usdc_per_base": 1.3241,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.75528701,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0755229968,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "hour_utc": "2026-10-28T08Z",
+      "source_file": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "source_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+      "markets": {
+        "BTC": {
+          "pair": "BTC-USDC",
+          "book_source_utc": "2026-10-28T08:34:15Z",
+          "archived_rules": {
+            "minSz": "0.00001",
+            "lotSz": "0.00000001",
+            "tickSz": "0.1"
+          },
+          "best_bid_usdc": 81383.2,
+          "best_ask_usdc": 81383.3,
+          "spread_bps": 0.01228754,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 13729.1510723,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.000122875332,
+              "vwap_usdc_per_base": 81383.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00614377,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100061438,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 13729.1510723,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.001228753319,
+              "vwap_usdc_per_base": 81383.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00614377,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1000614377,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 13729.1510723,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.006143766596,
+              "vwap_usdc_per_base": 81383.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00614377,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5003071883,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 13729.1510723,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.012287533192,
+              "vwap_usdc_per_base": 81383.3,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.00614377,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0006143767,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "ETH": {
+          "pair": "ETH-USDC",
+          "book_source_utc": "2026-10-28T08:34:16Z",
+          "archived_rules": {
+            "minSz": "0.001",
+            "lotSz": "0.000001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 2371.37,
+          "best_ask_usdc": 2371.38,
+          "spread_bps": 0.04216963,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22668.7777955,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.004216953841,
+              "vwap_usdc_per_base": 2371.38,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02108481,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0100210848,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22668.7777955,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.042169538412,
+              "vwap_usdc_per_base": 2371.38,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.02108481,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1002108477,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22668.7777955,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.210847093899,
+              "vwap_usdc_per_base": 2371.3867274863,
+              "slippage_vs_best_ask_bps": 0.0283695,
+              "buy_cost_vs_mid_bps": 0.04945437,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5024727064,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 22668.7777955,
+              "used_ask_levels": 2,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.421693896828,
+              "vwap_usdc_per_base": 2371.388363742,
+              "slippage_vs_best_ask_bps": 0.03526951,
+              "buy_cost_vs_mid_bps": 0.0563544,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0056354085,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "SOL": {
+          "pair": "SOL-USDC",
+          "book_source_utc": "2026-10-28T08:34:17Z",
+          "archived_rules": {
+            "minSz": "0.01",
+            "lotSz": "0.00001",
+            "tickSz": "0.01"
+          },
+          "best_bid_usdc": 102.88,
+          "best_ask_usdc": 102.9,
+          "spread_bps": 1.9438235,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36208.0746484,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.097181729835,
+              "vwap_usdc_per_base": 102.9,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.97191175,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0109718173,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36208.0746484,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 0.971817298348,
+              "vwap_usdc_per_base": 102.9,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.97191175,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.109718173,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36208.0746484,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 4.85908649174,
+              "vwap_usdc_per_base": 102.9,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.97191175,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5485908649,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 36208.0746484,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 9.718172983479,
+              "vwap_usdc_per_base": 102.9,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 0.97191175,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.0971817298,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        },
+        "XRP": {
+          "pair": "XRP-USDC",
+          "book_source_utc": "2026-10-28T08:34:18Z",
+          "archived_rules": {
+            "minSz": "1",
+            "lotSz": "0.001",
+            "tickSz": "0.0001"
+          },
+          "best_bid_usdc": 1.3322,
+          "best_ask_usdc": 1.3325,
+          "spread_bps": 2.2516606,
+          "scenarios": [
+            {
+              "budget_usdc": 10,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21279.4271856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 7.50469043152,
+              "vwap_usdc_per_base": 1.3325,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1258303,
+              "quote_equiv_taker_fee_usdc": 0.01,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.0111257036,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 100,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21279.4271856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 75.046904315197,
+              "vwap_usdc_per_base": 1.3325,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1258303,
+              "quote_equiv_taker_fee_usdc": 0.1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.1112570356,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 500,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21279.4271856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 375.234521575985,
+              "vwap_usdc_per_base": 1.3325,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1258303,
+              "quote_equiv_taker_fee_usdc": 0.5,
+              "incremental_cost_vs_mid_plus_fee_usdc": 0.5562851782,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            },
+            {
+              "budget_usdc": 1000,
+              "covered_by_five_asks": true,
+              "ask_capacity_usdc": 21279.4271856,
+              "used_ask_levels": 1,
+              "uncovered_usdc": 0,
+              "base_bought_unrounded": 750.46904315197,
+              "vwap_usdc_per_base": 1.3325,
+              "slippage_vs_best_ask_bps": 0,
+              "buy_cost_vs_mid_bps": 1.1258303,
+              "quote_equiv_taker_fee_usdc": 1,
+              "incremental_cost_vs_mid_plus_fee_usdc": 1.1125703565,
+              "historical_minSz_pass": true,
+              "lot_rounding_executed": false
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "October books are not current 9 November live books and samples are irregular, not continuous.",
+    "Displayed liquidity is not executable fill: no queue, latency, cancellations, marketable order transmission or real slippage time dynamics.",
+    "Fees are screenshot-confirmed 9 November displayed tier, applied as counterfactual assumption to October. Actual collected quote currency or special asset fee not proven.",
+    "Historical minSz/lotSz/tickSz not revalidated for 9 November; round-to-lot not applied; min-notional and EEA account eligibility unverified.",
+    "No conversion USD=USDC=USDT, never a proof of strategy profitability.",
+    "No private Bridge, keys, orders or modifications to Administrator/Trader runtime."
+  ]
+}
