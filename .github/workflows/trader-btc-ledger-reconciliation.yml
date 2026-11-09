@@ -1,0 +1,32 @@
+name: Trader BTC mixed-currency ledger reconciliation
+
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/trader/trader-okx-account.js'
+      - 'public/agent_crypto_erith_ia/trader/test-btc-position-reading.cjs'
+      - 'public/agent_crypto_erith_ia/trader/test-btc-mixed-acquisition-reconciliation.cjs'
+      - '.github/workflows/trader-btc-ledger-reconciliation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  btc-ledger-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/agent_crypto_erith_ia/trader
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate syntax and synthetic private-ledger contracts
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/trader-okx-account.js
+          node --test public/agent_crypto_erith_ia/trader/test-btc-position-reading.cjs public/agent_crypto_erith_ia/trader/test-btc-mixed-acquisition-reconciliation.cjs
