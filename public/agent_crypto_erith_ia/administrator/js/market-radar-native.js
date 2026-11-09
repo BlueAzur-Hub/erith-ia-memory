@@ -787,12 +787,12 @@ function printOkxHourly(root,model){
  }
 }
 async function identityRegistry(){
- const local="./data/new-listings-identities.json";
+ const local="./data/new-listings-public-feed.json";
  try{return await get(local);}
  catch(_){
   // Data folder may be excluded from the lightweight Pages artifact. The
   // canonical PUBLIC file is GitHub RAW; no identity is inferred on failure.
-  return get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json");
+  return get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json");
  }
 }
 async function refresh(root,model){

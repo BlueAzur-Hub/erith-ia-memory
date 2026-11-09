@@ -1,0 +1,37 @@
+name: Radar public Spot identity feed
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-radar-native.js"
+      - "public/agent_crypto_erith_ia/laboratoire/radar.js"
+      - "public/agent_crypto_erith_ia/laboratoire/test-spot-identity-registry-source.cjs"
+      - ".github/workflows/radar-spot-identity-feed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
+            public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json
+            public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json
+            public/agent_crypto_erith_ia/laboratoire/radar.js
+            public/agent_crypto_erith_ia/laboratoire/test-spot-identity-registry-source.cjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check strict registry identity contract and loader paths
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
+          node --check public/agent_crypto_erith_ia/laboratoire/radar.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-spot-identity-registry-source.cjs
