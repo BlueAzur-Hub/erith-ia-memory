@@ -1,0 +1,103 @@
+{
+  "schema": "seven_heaven.crypto.top10.research_supplement.v1",
+  "date": "2026-11-09",
+  "canonical_rank": 8,
+  "asset": {
+    "id": "hyperliquid",
+    "symbol": "HYPE",
+    "coingecko_rank": 11
+  },
+  "market": {
+    "quote": "USD",
+    "source_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+    "at_utc": "2026-11-09T07:53:59.646Z",
+    "price_usd": 73.02539110375943,
+    "change24h_pct": -5.48221,
+    "change7d_pct": -15.4329,
+    "change30d_pct": -12.197
+  },
+  "okx": {
+    "venue": "OKX_EEA_PUBLIC_REST",
+    "pair": "HYPE-USDC",
+    "quote": "USDC",
+    "books": 59,
+    "first_book_at_utc": "2026-10-24T07:37:27Z",
+    "last_book_at_utc": "2026-10-28T08:34:12Z",
+    "spread_bps": {
+      "min": 0.13,
+      "median": 2.07,
+      "max": 12.18
+    },
+    "last_book": {
+      "bid": 81.601,
+      "ask": 81.625,
+      "bid_size_hype": 9.44,
+      "ask_size_hype": 36.9911,
+      "spread_bps_reported": 2.94,
+      "fill_proven": false
+    },
+    "daily_sources": [
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-books/2026-10-24.json",
+        "books": 11,
+        "sha": "f383b5f3a470970f7ec34cb11f0119b19d99701d"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-books/2026-10-25.json",
+        "books": 15,
+        "sha": "112539b5bdd05e27fe960cf1a633f0b950791d53"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-books/2026-10-26.json",
+        "books": 13,
+        "sha": "8d1db0e80a1ca89eeb979d8c6345697c591a50d2"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-books/2026-10-27.json",
+        "books": 15,
+        "sha": "81d6caad237c9e79b85642d4a8bfcd74140f2c94"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-books/2026-10-28.json",
+        "books": 5,
+        "sha": "0e20c8b76b05e9bc604da1770d77ce4bb8df4adc"
+      }
+    ],
+    "historical_rules": {
+      "minSz": "0.01",
+      "lotSz": "0.0001",
+      "tickSz": "0.001",
+      "current_on_2026_11_09_verified": false
+    },
+    "current_orderbook_verified": false,
+    "account_permission_verified": false,
+    "real_fees_verified": false,
+    "candles": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-candles.json",
+      "sha": "9e6acd23ee0363ada3b83ef7d329470d7140bec2",
+      "generated_at_utc": "2026-10-28T08:34:12Z",
+      "bars_per_interval": {
+        "15m": 299,
+        "1H": 299,
+        "1Dutc": 299
+      },
+      "seven_closed_daily_bars_oct17_to_oct23_quote_usdc": 78275624.325035
+    }
+  },
+  "historic_binance": {
+    "pair": "HYPEUSDT",
+    "quote": "USDT",
+    "months_indexed": 1,
+    "one_minute_candles_indexed": 44640,
+    "source_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3",
+    "zips_revalidated": false
+  },
+  "existing_research_sha": "63bd59f3e1ee080657c2e6ffd4f15866f9c280ff",
+  "controls": {
+    "paper_certified": false,
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "runtime_changed": false
+  }
+}

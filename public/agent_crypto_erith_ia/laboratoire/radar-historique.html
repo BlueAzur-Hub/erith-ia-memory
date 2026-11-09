@@ -47,6 +47,19 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <div class="links"><a href="../trader/trading-desk.html">← Retour Trader</a><a href="crypto-knowledge.html">Dossiers des candidats dynamiques</a><a href="PROTOCOLE_RADAR_CIBLAGE.md">Méthode Radar</a><a href="zcash-case-study.html">ZEC · Cas d’école Spot PAPER</a><a href="../trader/verified-reader.html">Coffre · archives vérifiées</a></div></div>
 </header>
 <div class="notice"><strong>Deux ensembles distincts.</strong> Ici : 20 actifs <em>fixes</em>, archives Binance Spot <strong>cotées USDT</strong> de juillet à septembre 2026. Les candidats Q, ICNT, FLUID, SAND du Radar dynamique sont une autre liste, qui exige des preuves historiques séparées. Cette page n'est ni un outil d'exécution ni un générateur de signaux.</div>
+<section id="venue-continuity" aria-labelledby="venue-continuity-heading">
+<h2 id="venue-continuity-heading">Continuité multi-plateformes · preuves de fonctionnement pendant les arrêts Binance</h2>
+<p>Le Coffre dispose déjà d'une <strong>matrice d'archives Coinbase et Kraken</strong> et d'un <strong>registre d'interruptions Binance</strong>. Cette vue relie ces deux sources : une interruption du Spot Binance ne signifie pas un arrêt mondial du marché. <strong>USD Coinbase ≠ USDT Binance</strong> ; aucune bougie substituée et aucun ordre simulé.</p>
+<div class="controls">
+<label>Interruption étudiée<select id="venue-continuity-date"><option value="all">Les trois interruptions</option><option value="2021-08-13">13 août 2021</option><option value="2021-09-29">29 septembre 2021</option><option value="2023-03-24">24 mars 2023</option></select></label>
+<button type="button" id="venue-continuity-reload">Relire les registres</button>
+</div>
+<p class="status" id="venue-continuity-status" role="status" aria-live="polite">Chargement des preuves historiques…</p>
+<div class="table-wrap"><table><thead><tr><th>Fenêtre UTC</th><th>Actif</th><th>Binance Spot (USDT)</th><th>Coinbase Exchange (USD)</th><th>Kraken Spot (USD)</th><th>Cause</th></tr></thead>
+<tbody id="venue-continuity-rows"><tr><td colspan="6">En attente des registres.</td></tr></tbody></table></div>
+<p class="chart-caption">Les bougies Coinbase complètes prouvent l'activité de <strong>Coinbase</strong> pendant les interruptions ; les sondes Kraken ne certifient pas toute la fenêtre. Un arrêt Binance reste <strong>non négociable sur Binance</strong> pour le PAPER. Les simulations actuellement affichées sur cette page utilisent d'autres périodes (2026) et restent inchangées.</p>
+<p class="muted"><a href="../data/historical_archive_prototype/cross_venue_gap_matrix/index.json" target="_blank" rel="noopener noreferrer">Source : matrice multi-plateformes ↗</a> · <a href="../data/historical_archive_prototype/exchange_incident_register/index.json" target="_blank" rel="noopener noreferrer">Source : registre d'incidents ↗</a></p>
+</section>
 <section aria-labelledby="case-market-heading" id="case-market-public-study">
 <h2 id="case-market-heading">Preuves réelles · ZEC Spot OKX et AXIS Spot Bitget</h2>
 <p>Le collecteur <strong>public existant, une fois par heure</strong>, archive désormais deux marchés distincts : <strong>ZEC-USDC sur OKX EEE</strong> et <strong>AXISUSDT sur Bitget</strong>. Les observations contiennent les carnets à cinq niveaux, les spreads, le ticker et jusqu'à quatre bougies 15 minutes closes. Aucune donnée privée ni ordre réel.</p>
@@ -230,6 +243,7 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 </details>
 </section>
 <footer>ERITH.IA · laboratoire d'analyse scientifique · les années antérieures et les candidats dynamiques demandent des archives propres, non extrapolées. Aucune exécution de trading.</footer>
+<script src="radar-venue-continuity.js" defer></script>
 <script src="radar-historique.js" defer></script>
 <script src="radar-activity-audit.js" defer></script>
 <script src="radar-native-activity-view.js" defer></script>

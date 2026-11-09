@@ -1,0 +1,87 @@
+{
+  "schema": "seven_heaven.crypto.top10.research_supplement.v1",
+  "research_date": "2026-11-09",
+  "canonical_dossier_rank": 6,
+  "asset": {
+    "id": "tron",
+    "symbol": "TRX",
+    "name": "TRON",
+    "coingecko_rank_snapshot": 8
+  },
+  "sources": {
+    "coingecko_market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "blob_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+      "generated_at_utc": "2026-11-09T07:53:59.646Z",
+      "source_asset_updated_utc": "2026-11-09T07:52:59.000Z"
+    },
+    "native_archive_index": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "okx_user_screen_registry": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "blob_sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4",
+      "observation_date": "2026-11-08"
+    },
+    "okx_hourly_index": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "blob_sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    }
+  },
+  "market": {
+    "quote": "USD",
+    "price_usd": 0.3162062330405736,
+    "change24h_pct": -1.30503,
+    "change7d_pct": 0.7776,
+    "change30d_pct": -4.3016,
+    "volume24h_usd": 322375451,
+    "relative_to_btc_points": {
+      "h24": 1.2681499999999999,
+      "d7": 5.9231,
+      "d30": 5.979
+    }
+  },
+  "native_archive": {
+    "venue": "Binance Spot",
+    "pair": "TRXUSDT",
+    "quote": "USDT",
+    "months_indexed": 79,
+    "indexed_native_1m_candles": 3466080,
+    "full_zip_sha_rechecked": false,
+    "source_gap_audit_completed_here": false
+  },
+  "okx": {
+    "research_status": "PUBLIC_GROUP_HISTORY_NOT_USER_PERMISSION",
+    "ui_pairs_observed_2026_11_08": [],
+    "hourly_book_pairs_observed_2026_10": [],
+    "current_book_verified": false,
+    "public_instrument_state_current_verified": false,
+    "account_order_permission_verified": false,
+    "real_account_fees_verified": false
+  },
+  "public_primary_sources": [
+    {
+      "title": "TRON — documentation développeur",
+      "url": "https://developers.tron.network/docs"
+    },
+    {
+      "title": "OKX — Spot group adjustment 30 Jul 2026 (TRX-USDT)",
+      "url": "https://www.okx.com/en-gb/help/important-notice-token-pairs-adjustment"
+    },
+    {
+      "title": "OKX EEA — Spot market listings",
+      "url": "https://www.okx.com/en-eu/markets/rankings/spot"
+    }
+  ],
+  "controls": {
+    "paper_certified": false,
+    "simulations_executed": 0,
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "secrets_accessed": false,
+    "administrator_code_changed": false
+  },
+  "account_restriction_note": null
+}

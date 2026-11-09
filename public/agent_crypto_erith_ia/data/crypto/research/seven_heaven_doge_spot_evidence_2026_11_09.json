@@ -1,0 +1,375 @@
+{
+  "schema": "seven_heaven.crypto.top10.research_supplement.v1",
+  "research_date": "2026-11-09",
+  "canonical_dossier_rank": 10,
+  "asset": {
+    "id": "dogecoin",
+    "symbol": "DOGE",
+    "name": "Dogecoin",
+    "coingecko_rank_snapshot": 13
+  },
+  "sources": {
+    "coingecko_market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "blob_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+      "generated_at_utc": "2026-11-09T07:53:59.646Z",
+      "source_asset_updated_utc": "2026-11-09T07:52:59.000Z"
+    },
+    "native_archive_index": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "okx_user_screen_registry": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "blob_sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4",
+      "observation_date": "2026-11-08"
+    },
+    "okx_hourly_index": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "blob_sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    }
+  },
+  "market": {
+    "quote": "USD",
+    "price_usd": 0.06812286432666365,
+    "change24h_pct": -4.3626,
+    "change7d_pct": -9.4118,
+    "change30d_pct": -20.5945,
+    "volume24h_usd": 591477164,
+    "relative_to_btc_points": {
+      "h24": -1.7894199999999998,
+      "d7": -4.266299999999999,
+      "d30": -10.3139
+    }
+  },
+  "native_archive": {
+    "venue": "Binance Spot",
+    "pair": "DOGEUSDT",
+    "quote": "USDT",
+    "months_indexed": 73,
+    "indexed_native_1m_candles": 3205440,
+    "full_zip_sha_rechecked": false,
+    "source_gap_audit_completed_here": false,
+    "coverage_audit_2026_11_09": {
+      "reviewed_at_date": "2026-11-09",
+      "source_year_depth": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json",
+        "git_blob_sha": "f97dc90291ec67661ff2b263de1de78a56f8a100"
+      },
+      "source_current_minute_index": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+        "git_blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+      },
+      "claimed_verified_months_in_current_index": 73,
+      "claimed_native_minute_rows_in_current_index": 3205440,
+      "first_indexed_month": "2019-09",
+      "last_indexed_month": "2026-10",
+      "longest_indexed_consecutive_months": 43,
+      "longest_period": {
+        "from": "2023-04",
+        "to": "2026-10"
+      },
+      "calendar_months_from_2019_09_to_2026_10": 86,
+      "not_covered_by_month_index_count": 13,
+      "not_covered_by_month_index": [
+        "2019-11",
+        "2020-02",
+        "2020-03",
+        "2020-04",
+        "2020-06",
+        "2020-11",
+        "2020-12",
+        "2021-02",
+        "2021-03",
+        "2021-04",
+        "2021-08",
+        "2021-09",
+        "2023-03"
+      ],
+      "raw_zips_redownloaded_or_checksums_replayed_in_this_audit": false,
+      "intramonth_candle_gap_scan_performed_in_this_audit": false,
+      "not_covered_month_does_not_prove_exchange_halted": true,
+      "historical_reconciliation": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_coverage_reconciliation.json",
+        "git_blob_sha": "a663d29a07d93b27b4e1454eec2481b826532093",
+        "date": "2026-10-12",
+        "old_federation_complete_months": 62,
+        "old_independent_closed_months": 67,
+        "old_input_minute_git_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff",
+        "counters_do_not_combine": true
+      }
+    }
+  },
+  "okx": {
+    "research_status": "USER_SCREEN_AND_PUBLIC_PAIR_LISTING_NOT_ORDER_CERTIFIED",
+    "ui_pairs_observed_2026_11_08": [
+      "DOGE-USDC"
+    ],
+    "hourly_book_pairs_observed_2026_10": [],
+    "current_book_verified": false,
+    "public_instrument_state_current_verified": false,
+    "account_order_permission_verified": false,
+    "real_account_fees_verified": false,
+    "public_european_catalog_2026_11_09": {
+      "url": "https://www.okx.com/en-eu/markets/spot/usdc-meme",
+      "pair_label_observed": "DOGE/USDC",
+      "source_kind": "PUBLIC_MARKET_PAGE_NOT_LIVE_INSTRUMENT_STATE",
+      "order_book_values_extracted": false
+    },
+    "public_rest_endpoint_attempt": {
+      "date": "2026-11-09",
+      "instrument_api": "NOT_ACCESSIBLE",
+      "book_api": "NOT_ACCESSIBLE",
+      "current_rules_certified": false,
+      "current_book_certified": false
+    },
+    "public_spot_followup_2026_11_09": {
+      "review_date": "2026-11-09",
+      "pair": "DOGE-USDC",
+      "venue": "OKX Europe public",
+      "quote": "USDC",
+      "public_catalog": {
+        "pair_listed": true,
+        "links": [
+          "https://www.okx.com/en-eu/markets/spot/usdc-all",
+          "https://www.okx.com/en-eu/markets/spot/usdc-meme"
+        ],
+        "numeric_bid_ask_not_available": true
+      },
+      "archive_scan": {
+        "main_branch": true,
+        "from_utc": "2026-10-22",
+        "to_utc": "2026-10-28",
+        "checked_files": [
+          {
+            "date_utc": "2026-10-22",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-22.json",
+            "git_blob_sha": "275eecee85a1990ef120d736117423672f3fee68",
+            "hour_blocks": 7,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-22",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-22.json",
+            "git_blob_sha": "37dda15c7c3e79d9890973ff0b7f389c3780f4dd",
+            "hour_blocks": 9,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-23",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-23.json",
+            "git_blob_sha": "84cbde707131a4850f72295999dd1dbd957a2d47",
+            "hour_blocks": 13,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-23",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-23.json",
+            "git_blob_sha": "3a8e9292175681603af3f6353f5243a3bac15ec5",
+            "hour_blocks": 13,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-24",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-24.json",
+            "git_blob_sha": "5d2f49aecbf348d202d86c9f32e8929e0c39f32c",
+            "hour_blocks": 17,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-24",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-24.json",
+            "git_blob_sha": "12dcdfc2886bc25b35ed5cf32a103e46ea9ad054",
+            "hour_blocks": 17,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-25",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-25.json",
+            "git_blob_sha": "81d44bb5e6781b9915cf90b64081f154fec13eaf",
+            "hour_blocks": 15,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-25",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-25.json",
+            "git_blob_sha": "4b2ed2623f0f592e4e33d1641f8e9e9b28c84b6",
+            "hour_blocks": 15,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-26",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-26.json",
+            "git_blob_sha": "58c02af4c1d006695c55a0559c6f04bd8942175f",
+            "hour_blocks": 13,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-26",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-26.json",
+            "git_blob_sha": "9d605dd87bd8ad2f558b64fe11488fce1acf1e4",
+            "hour_blocks": 13,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-27",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-27.json",
+            "git_blob_sha": "6e23dfe1a8dab5ba25e05b308408f7f940807499",
+            "hour_blocks": 15,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-27",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+            "git_blob_sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef",
+            "hour_blocks": 15,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-28",
+            "collection": "case-market-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-28.json",
+            "git_blob_sha": "2397f13e5c858ab533b05f395871edd971cc96b7",
+            "hour_blocks": 5,
+            "doge_mentions": 0
+          },
+          {
+            "date_utc": "2026-10-28",
+            "collection": "okx-hourly",
+            "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+            "git_blob_sha": "09c15414acf17d6f5154ed8475b54b45e116b209",
+            "hour_blocks": 5,
+            "doge_mentions": 0
+          }
+        ],
+        "files_count": 14,
+        "hour_blocks_total": 172,
+        "doge_mentions": 0,
+        "conclusion": "NOT_FOUND_IN_EXAMINED_COLLECTION_NOT_MARKET_ABSENCE",
+        "latest_collection_date_utc": "2026-10-28"
+      },
+      "api_attempts": {
+        "public_instruments": {
+          "path": "/api/v5/public/instruments?instType=SPOT&instId=DOGE-USDC",
+          "current_http_response_verified": false
+        },
+        "public_books": {
+          "path": "/api/v5/market/books?instId=DOGE-USDC&sz=5",
+          "current_http_response_verified": false
+        },
+        "public_ticker": {
+          "path": "/api/v5/market/ticker?instId=DOGE-USDC",
+          "current_http_response_verified": false
+        },
+        "blocked_by": "NETWORK_OR_FETCH_ENVIRONMENT",
+        "api_outage_proven": false
+      },
+      "instrument": {
+        "state": null,
+        "minSz": null,
+        "lotSz": null,
+        "tickSz": null,
+        "verified": false
+      },
+      "book": {
+        "exchange_ts": null,
+        "bids": null,
+        "asks": null,
+        "verified": false
+      },
+      "account_eee_eligibility_verified": false,
+      "paper_certified": false,
+      "private_api_credentials_used": false,
+      "orders_executed": 0,
+      "next_evidence": [
+        "dated public instrument response with state/minSz/lotSz/tickSz",
+        "dated public books response with five levels and exchange ts",
+        "test size and true account eligibility separately before PAPER validation"
+      ]
+    },
+    "public_rest_endpoint_followup_2026_11_09": {
+      "source_type": "OFFICIAL_PUBLIC_DOCUMENTATION_AND_FAILED_PUBLIC_GET_ATTEMPTS",
+      "observed_date": "2026-11-09",
+      "domain_for_eu_accounts_documented": "eea.okx.com",
+      "region_note": "Documentation uses region-dependent USD/USDC unified-book and migration rules; no DOGE-specific EEA instrument mapping established.",
+      "catalog_doge_usdc_label_verified": true,
+      "direct_public_get_attempts": [
+        {
+          "endpoint": "https://eea.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USDC",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        },
+        {
+          "endpoint": "https://eea.okx.com/api/v5/market/books?instId=DOGE-USDC&sz=5",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        },
+        {
+          "endpoint": "https://eea.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USD",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        },
+        {
+          "endpoint": "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USD",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        }
+      ],
+      "other_network_attempt": "DNS resolution failure from an isolated runtime; not an OKX HTTP response",
+      "current_instid_proven": false,
+      "current_instrument_state_verified": false,
+      "current_spot_rules_verified": false,
+      "current_exchange_book_timestamp_verified": false,
+      "account_permissions_verified": false,
+      "paper_certified": false,
+      "required_evidence": [
+        "same regional-domain public instrument response",
+        "same regional-domain public book response",
+        "source timestamp and retrieval timestamp",
+        "instId, state, minSz, lotSz, tickSz",
+        "bids, asks, ts",
+        "do not infer account rights"
+      ],
+      "source_urls": [
+        "https://www.okx.com/en-eu/markets/spot/usdc-meme",
+        "https://www.okx.com/docs-v5",
+        "https://www.okx.com/en-eu/help/how-do-i-trade-a-usd-pair-using-usdc-or-another-stablecoin",
+        "https://www.okx.com/docs-v5/log_en/"
+      ],
+      "no_private_api_or_orders": true,
+      "no_master_or_bridge_change": true
+    }
+  },
+  "public_primary_sources": [
+    {
+      "title": "Dogecoin — site officiel et ressources",
+      "url": "https://dogecoin.com/"
+    },
+    {
+      "title": "OKX Europe — liste publique Spot USDC",
+      "url": "https://www.okx.com/en-eu/markets/spot/usdc-meme"
+    },
+    {
+      "title": "OKX — Spot group adjustment 30 Jul 2026 (DOGE-USDC)",
+      "url": "https://www.okx.com/en-gb/help/important-notice-token-pairs-adjustment"
+    }
+  ],
+  "controls": {
+    "paper_certified": false,
+    "simulations_executed": 0,
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "secrets_accessed": false,
+    "administrator_code_changed": false
+  },
+  "account_restriction_note": null
+}

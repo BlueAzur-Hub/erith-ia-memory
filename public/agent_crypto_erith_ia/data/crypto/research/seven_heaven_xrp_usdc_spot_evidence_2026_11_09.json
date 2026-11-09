@@ -1,0 +1,199 @@
+{
+  "schema": "seven_heaven.crypto.xrp_spot_dossier_evidence.v1",
+  "date": "2026-11-09",
+  "mode": "READ_ONLY_DOCUMENTARY",
+  "sources": {
+    "market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "ref": "main",
+      "sha": "4f1f33162f2bf729f5772562e15a60fdb7017075"
+    },
+    "history": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "ref": "main",
+      "sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "ui": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "ref": "main",
+      "sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4"
+    },
+    "index": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "ref": "main",
+      "sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    },
+    "day27": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "ref": "main",
+      "sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef"
+    },
+    "day28": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "ref": "main",
+      "sha": "09c15414acf17d6f5154ed8475b54b45e116b209"
+    },
+    "gaps": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_gap_audit/index.json",
+      "ref": "main",
+      "sha": "f4f159ff099683b3a70a0090d5fe34fb65d55880"
+    }
+  },
+  "market_snapshot": {
+    "generated_at": "2026-11-09T07:53:59.646Z",
+    "asset_last_updated": "2026-11-09T07:52:59.000Z",
+    "quote": "USD",
+    "assets": [
+      {
+        "coingecko_id": "bitcoin",
+        "symbol": "BTC",
+        "rank": 1,
+        "price_usd": 73953.11536683573,
+        "change24h_pct": -2.57318,
+        "change7d_pct": -5.1455,
+        "change30d_pct": -10.2806,
+        "volume24h_usd": 24036848011
+      },
+      {
+        "coingecko_id": "ethereum",
+        "symbol": "ETH",
+        "rank": 2,
+        "price_usd": 2091.3917165653775,
+        "change24h_pct": -6.5554,
+        "change7d_pct": -7.7385,
+        "change30d_pct": -15.3848,
+        "volume24h_usd": 12046950596
+      },
+      {
+        "coingecko_id": "ripple",
+        "symbol": "XRP",
+        "rank": 6,
+        "price_usd": 1.085266817381596,
+        "change24h_pct": -6.81033,
+        "change7d_pct": -12.9734,
+        "change30d_pct": -22.6014,
+        "volume24h_usd": 1953119042
+      }
+    ]
+  },
+  "xrp_relative_to_btc_points": {
+    "d24": -4.237150000000001,
+    "d7": -7.8279,
+    "d30": -12.320800000000002
+  },
+  "xrp_relative_to_eth_points": {
+    "d24": -0.25493000000000077,
+    "d7": -5.2349,
+    "d30": -7.2166000000000015
+  },
+  "identity": {
+    "coingecko_id": "ripple",
+    "symbol": "XRP",
+    "native_asset": true,
+    "quote_for_okx_book": "USDC",
+    "coingecko_rank_on_2026_11_09": 6,
+    "coingecko_rank_on_original_2026_11_08_dossier": 5
+  },
+  "okx": {
+    "instrument": "XRP-USDC",
+    "ui_observed": "2026-11-08",
+    "account_order_permission_verified": false,
+    "source": "OKX_EEA_PUBLIC_REST_ARCHIVED",
+    "archive_records": 20,
+    "qualified_book5_count": 15,
+    "qualified_from": "2026-10-27T10:36:07Z",
+    "qualified_to": "2026-10-28T08:34:18Z",
+    "latest_qualified_book5": {
+      "at": "2026-10-28T08:34:18Z",
+      "bid": 1.3322,
+      "ask": 1.3325,
+      "bid_qty_xrp": 13382.155,
+      "ask_qty_xrp": 1183.228,
+      "mid_usdc_per_xrp": 1.33235,
+      "spread_usdc_per_xrp": 0.00029999999999996696,
+      "spread_bps_computed": 2.251660599692025,
+      "market_fill_proven": false
+    },
+    "summary": {
+      "median_spread_bps_reported": "2.25",
+      "max_spread_bps_reported": "2.32",
+      "ticker_book_bid_ask_mismatch_rows": 7
+    },
+    "historical_rules": {
+      "minSz_xrp": "1",
+      "lotSz_xrp": "0.001",
+      "tickSz_usdc": "0.0001",
+      "source_dates": [
+        "2026-10-27",
+        "2026-10-28"
+      ],
+      "verified_current_on_2026_11_09": false,
+      "live_state_verified_on_2026_11_09": false
+    },
+    "user_permission_verified": false,
+    "book_on_2026_11_09": null,
+    "real_fees_verified": false
+  },
+  "native_history": {
+    "pair": "XRPUSDT",
+    "quote": "USDT",
+    "indexed_months": 80,
+    "indexed_native_1m_candles": 3510720,
+    "source": "Binance Spot official native 1m ZIPs",
+    "source_zip_individually_revalidated_this_turn": false,
+    "targeted_existing_gap_audit": {
+      "months_targeted": 3,
+      "months_verified": 3,
+      "source_missing_1m_total": 470,
+      "months": [
+        {
+          "month": "2021-08",
+          "missing_1m": 270,
+          "first_utc": "2021-08-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-08-13T06:30:00Z",
+              "missing_minutes": 270,
+              "start_utc": "2021-08-13T02:00:00Z"
+            }
+          ],
+          "zip_sha256_from_existing_audit": "7e5dab7bdaeec266cf58ff7e4809d49dad1959f379e32a381bae476a6560e09e"
+        },
+        {
+          "month": "2021-09",
+          "missing_1m": 120,
+          "first_utc": "2021-09-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-09-29T09:00:00Z",
+              "missing_minutes": 120,
+              "start_utc": "2021-09-29T07:00:00Z"
+            }
+          ],
+          "zip_sha256_from_existing_audit": "beaa16e73e57586ac20975c930d1d74f2ab44534169222f52eaffeda270a6006"
+        },
+        {
+          "month": "2023-03",
+          "missing_1m": 80,
+          "first_utc": "2023-03-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-03-24T14:00:00Z",
+              "missing_minutes": 80,
+              "start_utc": "2023-03-24T12:40:00Z"
+            }
+          ],
+          "zip_sha256_from_existing_audit": "2b203759453af143ae3f26dca22237cb1a4db6f6423e009ce5e5f459859a7f70"
+        }
+      ]
+    }
+  },
+  "boundary": {
+    "status": "NOT_PAPER_CERTIFIED",
+    "simulation_performed": false,
+    "real_orders": 0,
+    "private_portfolio_access": false,
+    "secret_access": false,
+    "source_time_alignment_for_price_levels": false
+  }
+}

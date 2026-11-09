@@ -1,0 +1,240 @@
+{
+  "schema": "seven_heaven.crypto.sol_usdc_spot_evidence.v1",
+  "observation_date": "2026-11-09",
+  "status": "DOCUMENTARY_READ_ONLY_NOT_PAPER_CERTIFIED",
+  "sources": {
+    "market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "ref": "main",
+      "sha": "4f1f33162f2bf729f5772562e15a60fdb7017075"
+    },
+    "history": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "ref": "main",
+      "sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "screens": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "ref": "main",
+      "sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4"
+    },
+    "hourindex": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "ref": "main",
+      "sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    },
+    "day27": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-27.json",
+      "ref": "main",
+      "sha": "9509de1c7d65d0e74b3a60f8cfcb550d95c83aef"
+    },
+    "day28": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/2026-10-28.json",
+      "ref": "main",
+      "sha": "09c15414acf17d6f5154ed8475b54b45e116b209"
+    },
+    "gaps": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_gap_audit/index.json",
+      "ref": "main",
+      "sha": "f4f159ff099683b3a70a0090d5fe34fb65d55880"
+    }
+  },
+  "market_snapshot": {
+    "at_utc": "2026-11-09T07:53:59.646Z",
+    "asset_updated_at_utc": "2026-11-09T07:52:59.000Z",
+    "quote": "USD",
+    "assets": [
+      {
+        "id": "bitcoin",
+        "symbol": "BTC",
+        "rank": 1,
+        "price_usd": 73953.11536683573,
+        "change24h_pct": -2.57318,
+        "change7d_pct": -5.1455,
+        "change30d_pct": -10.2806,
+        "volume24h_usd": 24036848011
+      },
+      {
+        "id": "ethereum",
+        "symbol": "ETH",
+        "rank": 2,
+        "price_usd": 2091.3917165653775,
+        "change24h_pct": -6.5554,
+        "change7d_pct": -7.7385,
+        "change30d_pct": -15.3848,
+        "volume24h_usd": 12046950596
+      },
+      {
+        "id": "ripple",
+        "symbol": "XRP",
+        "rank": 6,
+        "price_usd": 1.085266817381596,
+        "change24h_pct": -6.81033,
+        "change7d_pct": -12.9734,
+        "change30d_pct": -22.6014,
+        "volume24h_usd": 1953119042
+      },
+      {
+        "id": "solana",
+        "symbol": "SOL",
+        "rank": 7,
+        "price_usd": 85.54180943212933,
+        "change24h_pct": -4.13438,
+        "change7d_pct": -9.2246,
+        "change30d_pct": -21.8325,
+        "volume24h_usd": 2411927012
+      }
+    ]
+  },
+  "sol_relative_change_percentage_points": {
+    "BTC": {
+      "h24": -1.5612000000000004,
+      "d7": -4.0791,
+      "d30": -11.5519
+    },
+    "ETH": {
+      "h24": 2.4210199999999995,
+      "d7": -1.4861000000000004,
+      "d30": -6.447699999999999
+    },
+    "XRP": {
+      "h24": 2.6759500000000003,
+      "d7": 3.7487999999999992,
+      "d30": 0.7689000000000021
+    }
+  },
+  "sol_identity": {
+    "coingecko_id": "solana",
+    "symbol": "SOL",
+    "asset_type": "native_coin",
+    "coin_rank_at_snapshot": 7,
+    "okx_pair_observed_in_user_interface": "SOL-USDC",
+    "ui_observed_at_date": "2026-11-08",
+    "account_spot_permission_verified": false
+  },
+  "okx_spot_historical_books": {
+    "source": "OKX_EEA_PUBLIC_REST_ARCHIVED",
+    "pair": "SOL-USDC",
+    "quote": "USDC",
+    "stored_snapshots": 20,
+    "qualified_snapshots": 15,
+    "qualified_start_utc": "2026-10-27T10:36:06Z",
+    "qualified_end_utc": "2026-10-28T08:34:17Z",
+    "latest_qualified_book5": {
+      "source_at_utc": "2026-10-28T08:34:17Z",
+      "bid_usdc_per_sol": 102.88,
+      "ask_usdc_per_sol": 102.9,
+      "bid_size_sol": 3.92205,
+      "ask_size_sol": 9.88608,
+      "spread_usdc_per_sol": 0.020000000000010232,
+      "mid_usdc_per_sol": 102.89,
+      "spread_bps_calculated": 1.9438235008271194,
+      "fill_proven": false
+    },
+    "qualified_window_spread_bps": {
+      "median_reported": "1.98",
+      "max_reported": "2.99"
+    },
+    "ticker_book_prices_differ_in_snapshots": 3,
+    "archived_rules": {
+      "minSz_sol": "0.01",
+      "lotSz_sol": "0.00001",
+      "tickSz_usdc": "0.01",
+      "source_date_start": "2026-10-27",
+      "source_date_end": "2026-10-28",
+      "same_rules_across_stored_snapshots": true,
+      "current_on_2026_11_09_verified": false
+    },
+    "native_state_current_verified": false,
+    "account_trade_quote_permission_verified": false,
+    "current_book_at_2026_11_09": null,
+    "real_account_fees_verified": false,
+    "public_api_current_2026_11_09": {
+      "attempted": true,
+      "status": "UNAVAILABLE_FROM_RESEARCH_ENVIRONMENT",
+      "instrument_verified": false
+    }
+  },
+  "historical_archive": {
+    "pair": "SOLUSDT",
+    "quote": "USDT",
+    "source": "Binance Spot official native 1m ZIPs",
+    "indexed_months": 64,
+    "indexed_native_1m_candles": 2809440,
+    "checked_months_in_prior_audit": 5,
+    "months_verified_in_prior_audit": 5,
+    "source_missing_1m_in_prior_audit": 471,
+    "gap_months": [
+      {
+        "month": "2021-08",
+        "missing_1m": 270,
+        "first_utc": "2021-08-01T00:00:00Z",
+        "gaps": [
+          {
+            "end_exclusive_utc": "2021-08-13T06:30:00Z",
+            "missing_minutes": 270,
+            "start_utc": "2021-08-13T02:00:00Z"
+          }
+        ],
+        "zip_sha256_from_prior_audit": "7dcee841a8a512f4aab0cb72986c41621f1aed09d16c3677d5c8b960013bad84"
+      },
+      {
+        "month": "2021-09",
+        "missing_1m": 120,
+        "first_utc": "2021-09-01T00:00:00Z",
+        "gaps": [
+          {
+            "end_exclusive_utc": "2021-09-29T09:00:00Z",
+            "missing_minutes": 120,
+            "start_utc": "2021-09-29T07:00:00Z"
+          }
+        ],
+        "zip_sha256_from_prior_audit": "f1ef01c54bacaa75a07c3a79a9116f842a065ffb13557cee7b5c10537a7ce923"
+      },
+      {
+        "month": "2021-12",
+        "missing_1m": 0,
+        "first_utc": "2021-12-01T00:00:00Z",
+        "gaps": [],
+        "zip_sha256_from_prior_audit": "08fc0993fd2aa0d7b844a65ceed970e84e71e4162b71ed7bee8c2f56e20bcee9"
+      },
+      {
+        "month": "2023-02",
+        "missing_1m": 1,
+        "first_utc": "2023-02-01T00:00:00Z",
+        "gaps": [
+          {
+            "end_exclusive_utc": "2023-02-14T16:40:00Z",
+            "missing_minutes": 1,
+            "start_utc": "2023-02-14T16:39:00Z"
+          }
+        ],
+        "zip_sha256_from_prior_audit": "c896994f054d5e9f0949638a860579242dbaad843be1a1e1fd538ace9026de69"
+      },
+      {
+        "month": "2023-03",
+        "missing_1m": 80,
+        "first_utc": "2023-03-01T00:00:00Z",
+        "gaps": [
+          {
+            "end_exclusive_utc": "2023-03-24T14:00:00Z",
+            "missing_minutes": 80,
+            "start_utc": "2023-03-24T12:40:00Z"
+          }
+        ],
+        "zip_sha256_from_prior_audit": "d2a5434672a7f758c8d536a07645b6a499526892d605a63dbaaa96a5e32ffcee"
+      }
+    ],
+    "monthly_zip_sha256_revalidated_during_this_research": false,
+    "full_64_months_validated": false,
+    "synthetic_candles_added": 0
+  },
+  "security": {
+    "paper_certified": false,
+    "simulation_performed": false,
+    "real_orders": 0,
+    "account_private_data_used": false,
+    "secrets_used": false,
+    "runtime_changed": false
+  }
+}
