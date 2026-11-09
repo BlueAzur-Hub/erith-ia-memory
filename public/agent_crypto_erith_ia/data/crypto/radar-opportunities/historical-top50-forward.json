@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-11-08",
+  "latest_archive_day_utc": "2026-11-09",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -2291,6 +2291,23 @@
       "followup_change_pct": null,
       "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
       "source_path": "data/history/2026-11-06.jsonl",
+      "followup_source_path": null
+    },
+    {
+      "id": "avalanche-2",
+      "symbol": "AVAX",
+      "rank": 26,
+      "observed_at": "2026-11-09T17:36:03.265Z",
+      "price_usd": 8.666658910900782,
+      "change24h_pct": 5.80752,
+      "change7d_pct": 3.1286,
+      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+      "future_7d_date": "2026-11-16",
+      "observed_followup_at": null,
+      "observed_followup_price_usd": null,
+      "followup_change_pct": null,
+      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "source_path": "data/history/2026-11-09.jsonl",
       "followup_source_path": null
     }
   ]
