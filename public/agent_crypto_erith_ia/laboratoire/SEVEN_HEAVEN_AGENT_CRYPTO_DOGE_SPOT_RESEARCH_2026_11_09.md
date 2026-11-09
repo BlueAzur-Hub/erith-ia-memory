@@ -66,4 +66,24 @@ Ces pages sont des preuves de **publication ou de présentation de marché** à 
 - **Travail suivant :** qualification **publique** des instruments et carnets à la date de collecte. Ne pas demander les identifiants ni ouvrir une session privée ; si la réglementation régionale exclut l'actif, conserver le dossier en recherche uniquement.
 - **PAPER :** une étude hypothétique n'est acceptable qu'avec données horodatées et cohérentes, frais/tailles explicites, fenêtres historiques vérifiées et journal reproductible ; aucune certification PAPER dans ce dossier.
 
+## 6. Couverture native DOGEUSDT — contrôle croisé des index du Coffre (09/11)
+
+**Nouveau contrôle documentaire :** la couverture des mois dans l'index doit être séparée de la continuité vérifiée de chaque bougie et du prix Spot OKX. Les index sont des **déclarations archivées**, pas des ZIP téléchargés et indépendamment recalculés pendant cette étude.
+
+- [Catalogue actuel `year_depth_index.json`](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json) — SHA Git `f97dc90291ec67661ff2b263de1de78a56f8a100`. Entrée `dogecoin` : **73 mois considérés vérifiés dans l'index**, de **septembre 2019** à **octobre 2026** ; **3 205 440 minutes natives** annoncées en `DOGEUSDT`, quote **USDT**, source Binance Spot.
+- [Index fédéré actuel de la minute native](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json) — SHA Git `71b25904a652fbd8cdea1ac6bb942c9789e930c3`. Il reprend exactement **73 mois** et **3 205 440 minutes** pour DOGE ; les deux **index courants** se correspondent.
+- **Plus longue succession de mois listés : avril 2023 → octobre 2026 inclus, 43 mois.** C'est un **candidat de période historique** pour audit préalable, pas une série de bougies ayant été toutes relues ou un backtest approuvé.
+- De septembre 2019 à octobre 2026 inclus, **86 mois calendaires** ; 73 figurent dans le catalogue de mois repris dans l'index, soit **13 mois non couverts par cet index**. Il ne faut **pas** conclure qu'il n'y a eu aucun échange sur ces mois ou qu'il manque autant de bougies dans les ZIP.
+- Mois sans entrée dans ce catalogue, sur cette plage : `2019-11`, `2020-02`, `2020-03`, `2020-04`, `2020-06`, `2020-11`, `2020-12`, `2021-02`, `2021-03`, `2021-04`, `2021-08`, `2021-09`, `2023-03`. Un **mois non indexé** est différent d'une **minute manquante dans un mois vérifié**.
+
+### Pourquoi un ancien rapport comptait 62 mois
+
+Le [rapport de réconciliation du 12 octobre 2026](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_coverage_reconciliation.json) (SHA Git `a663d29a07d93b27b4e1454eec2481b826532093`) décrivait un **checkpoint plus ancien** avec **62 mois complets dans la fédération de l'époque** et **67 mois clos dans l'index indépendant de profondeur**. Ce rapport référençait l'ancienne empreinte du catalogue minute `5446dc85c93660ce80a85db7fe2b32093fb2d8ff`, différente de l'index actuel `71b25904a652fbd8cdea1ac6bb942c9789e930c3`. Les 62, 67 et 73 ne sont **pas** à additionner. Ne pas afficher « 11 nouveaux mois vérifiés aujourd'hui » sans historique de migration des sources.
+
+### Décision de qualité pour DOGE
+
+1. **Coffre** : les 43 mois consécutifs indexés constituent une bonne fenêtre **candidate** pour un prochain audit réel des lots; commencer par des intervalles UTC bornés puis vérifier téléchargement, checksums SHA-256, doublons, trous intramensuels et quote native.
+2. **OKX** : la page [Spot DOGE/USDC d'OKX Europe](https://www.okx.com/en-eu/markets/spot/usdc-meme) affiche la paire à la consultation du 9 novembre, mais **n'affiche pas ici de bid/ask chiffré exploitable**. Un GET direct vers les endpoints publics `/api/v5/public/instruments` et `/api/v5/market/books` n'a pas abouti depuis cet environnement. Le `state`, le `minSz`, le `lotSz`, le `tickSz`, l'heure exchange du carnet et les permissions de compte restent **inconnus**.
+3. **PAPER** : toujours **non certifié**, faute de règles actuelles, d'un carnet horodaté et d'une série réellement validée sur les périodes retenues. Aucune conversion implicite USD/USDT/USDC.
+
 **Statut : USER_SCREEN_AND_PUBLIC_PAIR_LISTING_NOT_ORDER_CERTIFIED.** Aucun ordre réel, aucune action Bridge, aucun changement de l'Administrator, du Trader ni des droits OKX. Document à publier via PR de recherche, pas une mise à jour logicielle.

@@ -49,7 +49,56 @@
     "months_indexed": 73,
     "indexed_native_1m_candles": 3205440,
     "full_zip_sha_rechecked": false,
-    "source_gap_audit_completed_here": false
+    "source_gap_audit_completed_here": false,
+    "coverage_audit_2026_11_09": {
+      "reviewed_at_date": "2026-11-09",
+      "source_year_depth": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json",
+        "git_blob_sha": "f97dc90291ec67661ff2b263de1de78a56f8a100"
+      },
+      "source_current_minute_index": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+        "git_blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+      },
+      "claimed_verified_months_in_current_index": 73,
+      "claimed_native_minute_rows_in_current_index": 3205440,
+      "first_indexed_month": "2019-09",
+      "last_indexed_month": "2026-10",
+      "longest_indexed_consecutive_months": 43,
+      "longest_period": {
+        "from": "2023-04",
+        "to": "2026-10"
+      },
+      "calendar_months_from_2019_09_to_2026_10": 86,
+      "not_covered_by_month_index_count": 13,
+      "not_covered_by_month_index": [
+        "2019-11",
+        "2020-02",
+        "2020-03",
+        "2020-04",
+        "2020-06",
+        "2020-11",
+        "2020-12",
+        "2021-02",
+        "2021-03",
+        "2021-04",
+        "2021-08",
+        "2021-09",
+        "2023-03"
+      ],
+      "raw_zips_redownloaded_or_checksums_replayed_in_this_audit": false,
+      "intramonth_candle_gap_scan_performed_in_this_audit": false,
+      "not_covered_month_does_not_prove_exchange_halted": true,
+      "historical_reconciliation": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_coverage_reconciliation.json",
+        "git_blob_sha": "a663d29a07d93b27b4e1454eec2481b826532093",
+        "date": "2026-10-12",
+        "old_federation_complete_months": 62,
+        "old_independent_closed_months": 67,
+        "old_input_minute_git_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff",
+        "counters_do_not_combine": true
+      }
+    }
   },
   "okx": {
     "research_status": "USER_SCREEN_AND_PUBLIC_PAIR_LISTING_NOT_ORDER_CERTIFIED",
@@ -60,7 +109,20 @@
     "current_book_verified": false,
     "public_instrument_state_current_verified": false,
     "account_order_permission_verified": false,
-    "real_account_fees_verified": false
+    "real_account_fees_verified": false,
+    "public_european_catalog_2026_11_09": {
+      "url": "https://www.okx.com/en-eu/markets/spot/usdc-meme",
+      "pair_label_observed": "DOGE/USDC",
+      "source_kind": "PUBLIC_MARKET_PAGE_NOT_LIVE_INSTRUMENT_STATE",
+      "order_book_values_extracted": false
+    },
+    "public_rest_endpoint_attempt": {
+      "date": "2026-11-09",
+      "instrument_api": "NOT_ACCESSIBLE",
+      "book_api": "NOT_ACCESSIBLE",
+      "current_rules_certified": false,
+      "current_book_certified": false
+    }
   },
   "public_primary_sources": [
     {

@@ -55,3 +55,10 @@ Les 10 historiques minute sont indexés dans [le Coffre natif Binance Spot](http
 Ceci est un **travail documentaire** : dix monographies originales conservées parmi les cinquante, des compléments documentaires couvrant les dix actifs (BTC et ETH partagent un document de terrain), et des registres JSON de provenance. Les compléments sont joints à une PR de recherche en **brouillon**, sans changement du programme MASTER, Administrator, Trader ni Bridge R31.
 
 **STOP POINT :** Top 10 étudié et tracé ; **qualification PAPER toujours ouverte**. La prochaine décision est une collecte de preuves manquantes, pas une reconstruction du logiciel.
+
+## 5. DOGE — audit complémentaire de couverture (09/11)
+
+[Audit détaillé DOGE/USDC](./SEVEN_HEAVEN_AGENT_CRYPTO_DOGE_SPOT_RESEARCH_2026_11_09.md) : les index publics actuels DOGEUSDT annoncent **73 mois** et **3 205 440 bougies natives 1m**, dont **43 mois indexés consécutivement d'avril 2023 à octobre 2026**. Treize mois ne figurent pas dans la couverture cataloguée entre septembre 2019 et octobre 2026 ; **cela ne signifie pas qu'il n'y a pas eu de cotation durant ces mois**. Le checkpoint séparé du 12 octobre parlait de 62 mois complets dans une fédération plus ancienne et d'un index de profondeur à 67 mois : ne pas additionner ces chiffres. Les ZIP et les trous intramensuels restent à contrôler avant PAPER.
+
+La paire DOGE/USDC est affichée dans le catalogue public OKX Europe, mais les endpoints publics d'instrument et de carnet n'ont pas fourni de valeurs exploitables le 9 novembre depuis cet environnement. **Aucune règle Spot ni aucun prix bid/ask actuel n'est certifié.**
+
