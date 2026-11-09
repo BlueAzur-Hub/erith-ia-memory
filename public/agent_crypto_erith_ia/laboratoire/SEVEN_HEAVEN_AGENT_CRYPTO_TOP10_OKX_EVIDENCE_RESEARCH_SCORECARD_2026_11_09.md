@@ -52,6 +52,6 @@ Les 10 historiques minute sont indexés dans [le Coffre natif Binance Spot](http
 
 ## 4. Statut de livraison
 
-Ceci est un **travail documentaire** : dix monographies originales conservées parmi les cinquante, dix compléments de recherche sur les cinq premiers et les cinq suivants, et des registres JSON de provenance. Les compléments sont joints à une PR de recherche en **brouillon**, sans changement du programme MASTER, Administrator, Trader ni Bridge R31.
+Ceci est un **travail documentaire** : dix monographies originales conservées parmi les cinquante, des compléments documentaires couvrant les dix actifs (BTC et ETH partagent un document de terrain), et des registres JSON de provenance. Les compléments sont joints à une PR de recherche en **brouillon**, sans changement du programme MASTER, Administrator, Trader ni Bridge R31.
 
 **STOP POINT :** Top 10 étudié et tracé ; **qualification PAPER toujours ouverte**. La prochaine décision est une collecte de preuves manquantes, pas une reconstruction du logiciel.
