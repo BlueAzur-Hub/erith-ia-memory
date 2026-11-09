@@ -844,8 +844,11 @@
         (isBtcAnnual&&selectedSymbol()!=="BTC"))
         throw codedError("MARKET_CANDLES_PERIOD_CHANGED","Période ou actif changé pendant la lecture du Coffre");
       state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.archivePeriod=isBtcAnnual?"1an":null;state.source=source||"Market public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"PAIR_FALLBACK":null;state.lastLoadedAt=new Date().toISOString();
-      // Match the highlighted interval to the actual loaded OHLC resolution.
-      state.bar=requestedBar;syncControls();
+      // The annual archive must NOT overwrite the operator's intraday bar
+      // preference. loadedBar identifies the 1j archive; state.bar is restored
+      // when the user leaves "1a" for an intraday period.
+      if(!isBtcAnnual)state.bar=requestedBar;
+      syncControls();
       resetView(false);renderState();if(state.mode==="candles")draw();accepted=true;return true;
     }catch(error){
       if(token!==requestToken)return false;
