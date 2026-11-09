@@ -52,7 +52,7 @@ need('reason:"external-asset-changed"' in JS, "external asset candles reload pat
 need('state.errorCode=null' in JS, "external asset error context not reset")
 need('if(!state.rows.length&&!state.loadedInstrument)state.instrument=primary;' in JS, "requested instrument not projected before first successful load")
 need("movingAverage(state.rows,n).slice(view.start,view.start+rows.length)" in JS, "MA full-history projection")
-need("exponentialAverage(state.rows,n).slice(view.start,view.start+rows.length)" in JS, "EMA full-history projection")
+need("exponentialAverage(state.rows,period).slice(view.start,view.start+rows.length)" in JS, "EMA full-history projection")
 need('method:"PIVOTS_VISIBLES_W2"' in JS, "S/R method")
 need("low<=current" in JS and "high>=current" in JS, "S/R current-edge fallback missing")
 need("support_resistance_current_edge_support:currentEdgeSupport" in JS, "S/R current-edge support self-test missing")
