@@ -34,8 +34,21 @@ for(const [owner,pattern] of [
   ["Source Dock",/function atlasEnsureSourceDock\([^]*?if \(atlasExternalChartDetailMismatch\(coin\)\) return;/]
 ])assert.match(app,pattern,owner+" cannot accept a mismatched Market update");
 assert.match(app,/function atlasExternalChartDetail\([^]*?atlasEnsureSourceDock\(coin\);/);
-assert.match(app,/Prix snapshot \$\{currency\}/,"External price currency must be sourced");
-assert.match(app,/Dernier point \(\$\{currency\}\)/,"External last point must carry series currency");
+// The snapshot display choice and the historical series' native quote are
+// different facts. A former regression test assumed one shared `currency`
+// variable, which would encourage a false USD/USDC/EUR equivalence.
+assert.match(app,/const displayCurrency=preference==="EUR"\?"EUR":"USD";/,
+  "Snapshot display currency must be explicitly selected");
+assert.match(app,/const historicalQuote=atlasHistoricalDisplayQuote\(result\);/,
+  "Historical quote must be resolved through verified provenance");
+assert.match(app,/const historyCurrencyLabel=historyCurrency\|\|"devise non qualifiée";/,
+  "Unknown historical quote must remain unknown");
+assert.match(app,/Prix snapshot \$\{displayCurrency\}/,
+  "Snapshot label uses the snapshot's own display currency");
+assert.match(app,/Dernier point \(\$\{historyCurrencyLabel\}\)/,
+  "Historical last point displays only the historical series' qualified quote");
+assert.match(app,/formatHistoricalPrice=value=>historyCurrency&&Number\.isFinite\(value\)/,
+  "Unknown historical quote cannot display a numeric last-point price");
 assert.match(app,/function drawComparisonChart\([^]*?atlasExternalChartActive\(\)\) return \[\];/);
 assert.match(app,/function atlasRenderComparisonDetail\([^]*?if \(atlasExternalChartActive\(\)\) return;/);
 assert.match(app,/function atlasRenderComparisonCaption\([^]*?if \(atlasExternalChartActive\(\)\) return;/);
