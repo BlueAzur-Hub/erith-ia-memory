@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import json
-import re
 from pathlib import Path
 
 ROOT = Path("public/agent_crypto_erith_ia/administrator")
@@ -20,19 +19,6 @@ BUILD = json.loads((ROOT / "build.json").read_text(encoding="utf-8"))
 def need(ok, msg):
     if not ok:
         raise SystemExit("MARKET_MICROSCOPE_GUARD_FAIL: " + msg)
-
-def script_pin_consistent(filename, attribute):
-    # Frozen shared modules may use an older intentional cache token.
-    # Guard the exact URL/owner annotation agreement instead of re-tagging
-    # unchanged trusted modules at every application build.
-    match = re.search(
-        r'<script\b[^>]*\bsrc="\./js/' + re.escape(filename)
-        + r'\?v=([^"]+)"[^>]*\b' + re.escape(attribute)
-        + r'="([^"]+)"', INDEX
-    )
-    return bool(match and match.group(1) == match.group(2)
-        and re.fullmatch(r'40\.6\.\d+', match.group(1)))
-
 
 CURRENT = str(BUILD.get("build") or "").strip()
 PARENT = str(BUILD.get("parent_build") or "").strip()
@@ -66,7 +52,7 @@ need('reason:"external-asset-changed"' in JS, "external asset candles reload pat
 need('state.errorCode=null' in JS, "external asset error context not reset")
 need('if(!state.rows.length&&!state.loadedInstrument)state.instrument=primary;' in JS, "requested instrument not projected before first successful load")
 need("movingAverage(state.rows,n).slice(view.start,view.start+rows.length)" in JS, "MA full-history projection")
-need("exponentialAverage(state.rows,period).slice(view.start,view.start+rows.length)" in JS, "EMA full-history projection")
+need("exponentialAverage(state.rows,n).slice(view.start,view.start+rows.length)" in JS, "EMA full-history projection")
 need('method:"PIVOTS_VISIBLES_W2"' in JS, "S/R method")
 need("low<=current" in JS and "high>=current" in JS, "S/R current-edge fallback missing")
 need("support_resistance_current_edge_support:currentEdgeSupport" in JS, "S/R current-edge support self-test missing")
@@ -91,9 +77,9 @@ need("backend_http_detail_truth:backendDetailTruth" in JS, "backend HTTP detail 
 need("response_error_detail:true" in JS, "backend error detail runtime contract missing")
 need("aucune série valide chargée" in JS, "zero-series error truth missing")
 need("canTryNextPair(error)" in JS, "bounded next-pair fallback")
-need(script_pin_consistent("okx-market-pair-resolver.js", "data-agent-crypto-okx-market-pair-resolver"), "shared pair resolver cache token")
-need(script_pin_consistent("market-instrument-resolver.js", "data-agent-crypto-market-instrument-resolver"), "market instrument resolver cache token")
-need(script_pin_consistent("quote-currency-architecture-406497.js", "data-agent-crypto-quote-architecture"), "dynamic EXEC/SETTLE cache token")
+need(f"okx-market-pair-resolver.js?v={CURRENT}" in INDEX, "shared pair resolver cache token")
+need(f"market-instrument-resolver.js?v={CURRENT}" in INDEX, "market instrument resolver cache token")
+need(f"quote-currency-architecture-406497.js?v={CURRENT}" in INDEX, "dynamic EXEC/SETTLE cache token")
 need(INDEX.find("js/okx-market-pair-resolver.js") < INDEX.find("js/market-instrument-resolver.js") < INDEX.find("js/market-microscope-candles.js"), "market resolver load order")
 need("AgentCryptoMarketInstrumentResolver" in JS, "Candles do not consume market instrument resolver")
 need("normalizeSelectedAsset" in JS and "pairResolver()?.normalizeAsset" in JS, "Candles canonical asset normalizer missing")
