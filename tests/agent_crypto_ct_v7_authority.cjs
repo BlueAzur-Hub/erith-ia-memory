@@ -34,7 +34,18 @@ assert.equal(check({surface:"",query:"",selection:CT}),false,
   "A normal Administrator view is not affected");
 assert.equal(check({surface:"trader",query:"",selection:{id:"bitcoin"}}),false);
 
-assert.match(app,/function atlasWorkspaceRestoreCachedGraph\(ids, period, preset\) \{\s*\/\/[^\n]*\n[^\n]*\n\s*if \(atlasTraderCtSelectionOwnsView\(\)\) return false;/);
+// Restoration now validates the stored series' native quote before the CT
+// guard. Preserve both controls without requiring an obsolete comment layout.
+const restoreBegin=app.indexOf("function atlasWorkspaceRestoreCachedGraph(ids, period, preset) {");
+const restoreCoins=app.indexOf("const coins = (ids || [])",restoreBegin);
+const restoreGuard=app.indexOf("if (atlasTraderCtSelectionOwnsView()) return false;",restoreBegin);
+assert.ok(restoreBegin>0&&restoreCoins>restoreBegin&&restoreGuard>restoreBegin&&
+  restoreGuard<restoreCoins&&restoreCoins-restoreBegin<2000,
+  "CT guard preempts restored Market cache before any coin selection");
+const restorePrefix=app.slice(restoreBegin,restoreCoins);
+assert.match(restorePrefix,/const requestedCurrency = atlasRequestedHistoricalCurrency\(\);/);
+assert.match(restorePrefix,/atlasHistoricalDisplayQuote\(result\)\.currency === requestedCurrency/,
+  "Restored Market series must match qualified native quote before presenting");
 assert.match(app,/function atlasRenderChartResult\([^]*?\{\s*if \(atlasTraderCtSelectionOwnsView\(\) && c\?\.id!=="concrete"\) return;/);
 assert.match(app,/function drawLineChart\([^]*?\{\s*\/\/[^\n]*\n\s*if \(atlasTraderCtSelectionOwnsView\(\) && result\?\.coin\?\.id!=="concrete"\) return;/);
 assert.match(app,/function drawComparisonChart\([^]*?\{\s*if \(atlasTraderCtSelectionOwnsView\(\)\) return \[\];/);
