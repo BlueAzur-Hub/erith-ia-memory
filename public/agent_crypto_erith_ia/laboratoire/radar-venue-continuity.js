@@ -11,8 +11,8 @@
  }
 })(typeof globalThis!=="undefined"?globalThis:null,()=>{
 "use strict";
-const URL_MATRIX="../data/historical_archive_prototype/cross_venue_gap_matrix/index.json";
-const URL_INCIDENTS="../data/historical_archive_prototype/exchange_incident_register/index.json";
+const URL_MATRIX="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/cross_venue_gap_matrix/index.json";
+const URL_INCIDENTS="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/exchange_incident_register/index.json";
 function compileEvidence(matrix,registry){
   if(matrix?.schema!=="seven.crypto.cross-venue-historical-gap-matrix.v1"||
     matrix.policy!=="native_venue_candles_utc_exact_non_fungible_quotes.v1"||
