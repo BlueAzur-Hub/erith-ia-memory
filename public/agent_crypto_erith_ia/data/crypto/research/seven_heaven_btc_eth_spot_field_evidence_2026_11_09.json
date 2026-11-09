@@ -1,0 +1,91 @@
+{
+  "schema": "seven_heaven.crypto.btc_eth_spot_field_evidence.v1",
+  "observed_date": "2026-11-09",
+  "status": "READ_ONLY_DOCUMENTARY_NOT_PAPER_CERTIFIED",
+  "source_commit": "77b753216fa97c6f1eecfef9cde72750105e4f8b",
+  "sources": {
+    "coingecko": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "blob_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+      "generated_at_utc": "2026-11-09T07:53:59.646Z",
+      "quote": "USD"
+    },
+    "historical_index": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3",
+      "quote": "USDT",
+      "zip_contents_verified_in_this_report": false
+    },
+    "okx_screen_registry": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "blob_sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4",
+      "captured_at_local_date": "2026-11-08"
+    }
+  },
+  "bitcoin": {
+    "coingecko_id": "bitcoin",
+    "price_usd": 73953.11536683573,
+    "change24h_pct": -2.57318,
+    "change7d_pct": -5.1455,
+    "change30d_pct": -10.2806,
+    "marketcap_usd": 1487236037903,
+    "volume24h_usd": 24036848011,
+    "native_archive": {
+      "pair": "BTCUSDT",
+      "quote": "USDT",
+      "months": 85,
+      "indexed_native_1m_candles": 3731040
+    },
+    "okx": {
+      "pair": "BTC-USDC",
+      "quote": "USDC",
+      "observed_in_screen": true,
+      "account_order_permission_verified": false,
+      "public_rules_reverified": false,
+      "book_from_user_screenshot": {
+        "time_local": "2026-11-09T15:10:23+01:00",
+        "best_bid_usdc": 74453.9,
+        "best_ask_usdc": 74454,
+        "spread_usdc": 0.1,
+        "mid_usdc": 74453.95,
+        "spread_bps_approx": 0.01343,
+        "raw_depth_replayed": false
+      }
+    }
+  },
+  "ethereum": {
+    "coingecko_id": "ethereum",
+    "price_usd": 2091.3917165653775,
+    "change24h_pct": -6.5554,
+    "change7d_pct": -7.7385,
+    "change30d_pct": -15.3848,
+    "marketcap_usd": 255631950746,
+    "volume24h_usd": 12046950596,
+    "native_archive": {
+      "pair": "ETHUSDT",
+      "quote": "USDT",
+      "months": 85,
+      "indexed_native_1m_candles": 3731040
+    },
+    "okx": {
+      "pair": "ETH-USDC",
+      "quote": "USDC",
+      "observed_in_screen": true,
+      "account_order_permission_verified": false,
+      "public_rules_reverified": false,
+      "book_from_user_screenshot": null
+    }
+  },
+  "eth_minus_btc_change_points": {
+    "change24h": -3.98222,
+    "change7d": -2.593,
+    "change30d": -5.1042000000000005
+  },
+  "market_returns_aligned_at_same_snapshot": true,
+  "order_access_verified": false,
+  "real_fees_verified": false,
+  "paper_certified": false,
+  "orders_enabled": false,
+  "portfolio_read": false,
+  "user_secrets_included": false
+}

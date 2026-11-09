@@ -74,6 +74,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 ## Partie A — Top 5, cinq études fondamentales avec archives
 ### 1 BTC
 
+**Complément daté du 09/11/2026 :** [dossier terrain BTC/USDC et comparaison ETH/USDC — sources, carnet et conditions PAPER](./SEVEN_HEAVEN_AGENT_CRYPTO_BTC_USDC_ETH_USDC_SPOT_FIELD_EVIDENCE_2026_11_09.md). Ce lien complète la monographie archivée, sans changer son snapshot de référence.
+
 **Bitcoin · rang CoinGecko #1**
 **Identité :** [bitcoin](https://www.coingecko.com/en/coins/bitcoin). **Périmètre :** monographie fondamentale.
 
@@ -96,6 +98,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 **Source documentaire du protocole :** https://bitcoin.org/fr/ · **Source marché :** https://www.coingecko.com/en/coins/bitcoin.
 
 ### 2 ETH
+
+**Complément daté du 09/11/2026 :** [dossier terrain BTC/USDC et comparaison ETH/USDC — sources, carnet et conditions PAPER](./SEVEN_HEAVEN_AGENT_CRYPTO_BTC_USDC_ETH_USDC_SPOT_FIELD_EVIDENCE_2026_11_09.md). Ce lien complète la monographie archivée, sans changer son snapshot de référence.
 
 **Ethereum · rang CoinGecko #2**
 **Identité :** [ethereum](https://www.coingecko.com/en/coins/ethereum). **Périmètre :** monographie fondamentale.
