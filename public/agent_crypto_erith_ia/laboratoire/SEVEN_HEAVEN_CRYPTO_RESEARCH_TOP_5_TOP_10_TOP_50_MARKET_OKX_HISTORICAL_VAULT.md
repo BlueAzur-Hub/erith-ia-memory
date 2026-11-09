@@ -172,6 +172,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ### 5 SOL
 
+**Complément terrain du 09/11/2026 :** [SOL/USDC — carnet OKX d'octobre, règles Spot historiques, audit SOLUSDT et comparaison BTC/ETH/XRP](./SEVEN_HEAVEN_AGENT_CRYPTO_SOL_USDC_SPOT_RESEARCH_2026_11_09.md). Recherche documentaire datée, sans changer le snapshot original du 08/11.
+
 **Solana · rang CoinGecko #7**
 **Identité :** [solana](https://www.coingecko.com/en/coins/solana). **Périmètre :** monographie fondamentale.
 
