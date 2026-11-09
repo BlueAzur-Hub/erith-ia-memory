@@ -268,6 +268,14 @@ async function get(url){
   if(!r.ok)throw Error("HTTP "+r.status);return await r.json();
  }finally{clearTimeout(timer)}
 }
+async function readPublicIdentityRegistry(){
+ try{return await get("../administrator/data/new-listings-public-feed.json");}
+ catch(_){
+  // The lightweight GitHub Pages site deliberately excludes cold data/**.
+  // Read the identical canonical public feed from GitHub RAW, fail closed.
+  return get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json");
+ }
+}
 async function refresh(){
  if(loading)return;loading=true;$("refresh").disabled=true;display("status","Lecture des sources publiques…");
  const errors=[];
@@ -275,7 +283,7 @@ async function refresh(){
   const sources=await Promise.allSettled([
    get("../data/crypto/latest.json"),
    get("../data/trader_flux/btc_ct_auto_paper/state.json"),
-   get("../administrator/data/new-listings-public-feed.json")
+   readPublicIdentityRegistry()
   ]);
   try{market=validMarket(sources[0].value)}catch(e){market=null;errors.push("Top 250 : "+e.message)}
   try{paper=verifyPaper(sources[1].value)}catch(e){paper=null;errors.push("PAPER : "+e.message)}
