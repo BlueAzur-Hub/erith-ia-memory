@@ -119,11 +119,23 @@ console.log("PASS CT V7 identity preempts stale BTC chart/detail; no listing vie
 const quoteBegin=app.indexOf("function atlasChartQuoteBasis(");
 const quoteEnd=app.indexOf("function atlasHorizonMetricForCoin(",quoteBegin);
 assert.ok(quoteBegin>0&&quoteEnd>quoteBegin,"Chart quote truth helper in active Administrator");
-const quoteSource=app.slice(quoteBegin,quoteEnd)
+// Execute the real provenance and history-quote helpers as well. A mocked
+// currency would silently bypass cross-venue/native-quote protections.
+const provenanceBegin=app.indexOf("function atlasHistoryQuoteProvenance(");
+const provenanceEnd=app.indexOf("\n// 40.6.714",provenanceBegin);
+const historyBegin=app.indexOf("function atlasHistoricalDisplayQuote(");
+const historyEnd=app.indexOf("\n// The operator's requested display currency",historyBegin);
+assert.ok(provenanceBegin>0&&provenanceEnd>provenanceBegin&&historyBegin>0&&historyEnd>historyBegin);
+const quoteSource=app.slice(provenanceBegin,provenanceEnd)+"\n"
+  +app.slice(historyBegin,historyEnd)+"\n"
+  +app.slice(quoteBegin,quoteEnd)
   +"\nthis.chartQuote=atlasChartQuoteBasis;this.chartGap=atlasChartReferenceGap;this.currentGap=atlasCurrentChartGap;";
 function checkQuote({currency="USD",resultCurrency=null,spotUsd=null,spotEur=null,lastPrice=81501.61}){
   const coin={id:"bitcoin",symbol:"BTC",priceUsd:spotUsd,priceEur:spotEur};
-  const result={currency:resultCurrency,integrity:{metrics:{lastPrice}}};
+  const result={currency:resultCurrency,sourceFamily:resultCurrency?"coingecko":null,
+    source:resultCurrency==="USD"?"CoinGecko market_chart USD":
+      resultCurrency==="EUR"?"CoinGecko market_chart EUR":null,
+    integrity:{metrics:{lastPrice}}};
   const sandbox={
     AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:currency})},
     atlasChartContextMatches:()=>true,
@@ -143,6 +155,9 @@ assert.equal(checkQuote({currency:"USD",spotEur:72515.50}).gap,null,
 const eurCompare=checkQuote({currency:"USD",resultCurrency:"EUR",spotEur:72515.50,lastPrice:72515.50});
 assert.equal(eurCompare.quote,"EUR","Native quote overrides visual preference");
 assert.equal(eurCompare.gap,0);
+const unknownQuote=checkQuote({currency:"USD",resultCurrency:"USDC",spotUsd:81501.61});
+assert.equal(unknownQuote.quote,null,"USDC cannot be silently substituted for USD");
+assert.equal(unknownQuote.gap,null);
 assert.equal(checkQuote({currency:"GBP",spotEur:72515.50}).gap,null,
   "Unknown display quote fails closed");
 assert.match(app,/non calculable · référence ou devise manquante/);
