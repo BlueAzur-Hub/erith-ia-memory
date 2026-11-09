@@ -229,5 +229,59 @@
     "paper_fills": 0,
     "paper_certified": false,
     "full_minute_source_verified": false
+  },
+  "market_halt_correlations_2026_11_09": {
+    "status": "OFFICIAL_EXCHANGE_OUTAGE_TIMES_CORRELATED_WITH_ARCHIVED_BTC_ETH_MISSING_1M_WINDOWS",
+    "conclusion": "EXPLAINED_MARKET_INTERRUPTION_NOT_PROVEN_INGESTION_LOSS",
+    "relevant_pairs": [
+      "BTCUSDT",
+      "ETHUSDT"
+    ],
+    "total_archived_missing_minutes_per_pair": 470,
+    "events": [
+      {
+        "date": "2021-08-13",
+        "gap_start": "02:00",
+        "gap_end": "06:30",
+        "mins": 270,
+        "event": "SCHEDULED_SPOT_UPGRADE",
+        "start": "02:00",
+        "resume": "06:30",
+        "sources": [
+          "https://www.binance.com/en/support/announcement/detail/92a9a5bc0129427f8e9928c9b7b09836",
+          "https://www.binance.com/en/support/announcement/detail/3ef1861772a44c67acc2c9f5ec9f87e4"
+        ]
+      },
+      {
+        "date": "2021-09-29",
+        "gap_start": "07:00",
+        "gap_end": "09:00",
+        "mins": 120,
+        "event": "SCHEDULED_SPOT_UPGRADE",
+        "start": "07:00",
+        "resume": "09:00",
+        "sources": [
+          "https://www.binance.com/en/support/announcement/detail/e2f674fc961d48af9b28edd82896607c",
+          "https://www.binance.com/en-KZ/support/announcement/detail/f72eb94584fa47a586127ff5149ef83c"
+        ]
+      },
+      {
+        "date": "2023-03-24",
+        "gap_start": "12:40",
+        "gap_end": "14:00",
+        "mins": 80,
+        "event": "TRAILING_STOP_MATCHING_ENGINE_OUTAGE",
+        "start": "11:27",
+        "resume": "14:00",
+        "sources": [
+          "https://www.binance.com/en/blog/from-our-ceo/6789340645608890113",
+          "https://www.binance.com/en/support/announcement/detail/813a31506e9f478ea8c1058b425df87a"
+        ]
+      }
+    ],
+    "evidentiary_scope": "Official announcements document spot trading stoppages; existing BTC and ETH archive gap indices precisely coincide or fall within each stoppage. This does not prove every missing candle would be empty or validate raw ZIPs.",
+    "raw_csv_or_trades_rechecked": false,
+    "repair_policy": "Flag the affected UTC minutes as MARKET_HALTED; no invented OHLCV or cross-exchange price substitution; exclude from executable backtests and treat resumption as a new session; independently inspect source archive if warranted.",
+    "spot_2026_10_window_unchanged": "The separate audit of 27-28 October 2026 still awaits original ZIP validation; this 2021-2023 event evidence is not a pass for October 2026."
   }
 }

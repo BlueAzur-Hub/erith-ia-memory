@@ -57,3 +57,17 @@ Un script Python 3.8+ **lecture seule** de validation des quatre ZIP, contrôlé
 **Aucune reprise de frais à demander :** le barème Spot utilisateur Maker **0,08 %**, Taker **0,10 %** est déjà enregistré dans le [OKX MEMORY CORE de Notion](https://app.notion.com/p/AETHER-AGENT-INTERFACE-3e07754fe08481eb95c7cdc4fd8ff099), mais il n'est pas nécessaire à un audit de continuité Binance.
 
 *Rapport documentaire sans ordre, sans clé, sans mise à jour runtime.*
+
+## 7. Corrélation officielle des trois suspensions de marché — recherche externe du 09/11
+
+**Découverte : les 470 minutes manquantes sur les trois anciens mois ETH et sur les trois mois partiels BTC correspondent aux interruptions de Spot Binance publiquement annoncées.** Ces périodes ne doivent plus être décrites comme trois mois « mystérieusement manquants ». Il s'agit d'intervalles horaires précis dans des mois existants.
+
+| Date UTC | Trou relevé dans les archives BTCUSDT et ETHUSDT | Durée | Source officielle et cause |
+|---|---|---:|---|
+| 13/08/2021 | 02:00 → 06:30 | **270 minutes** | [Annonce de maintenance Spot dès 02:00](https://www.binance.com/en/support/announcement/detail/92a9a5bc0129427f8e9928c9b7b09836) ; [reprise à 06:30](https://www.binance.com/en/support/announcement/detail/3ef1861772a44c67acc2c9f5ec9f87e4) |
+| 29/09/2021 | 07:00 → 09:00 | **120 minutes** | [Annonce de maintenance Spot dès 07:00](https://www.binance.com/en/support/announcement/detail/e2f674fc961d48af9b28edd82896607c) ; [reprise à 09:00](https://www.binance.com/en-KZ/support/announcement/detail/f72eb94584fa47a586127ff5149ef83c) |
+| 24/03/2023 | 12:40 → 14:00 | **80 minutes** | [Communiqué sur le bogue du moteur et suspension à 11:27](https://www.binance.com/en/blog/from-our-ceo/6789340645608890113) ; [reprise Spot à 14:00](https://www.binance.com/en/support/announcement/detail/813a31506e9f478ea8c1058b425df87a) |
+
+**Précision :** en mars 2023, Binance situe le début de l'interruption à **11:27 UTC**, plus tôt que la portion de **12:40 à 14:00** absente dans nos archives. Cette portion se trouve intégralement **dans** la suspension officielle ; les annonces ne permettent pas, à elles seules, de déduire la composition de chaque bougie dans le reste de l'arrêt. Les fichiers CSV et de transactions n'ont pas été relus pendant cette recherche.
+
+**Décision opérationnelle (sans falsifier l'historique) :** créer dans le registre logique un état `MARKET_HALTED_OFFICIAL` pour les intervalles confirmés, et réserver `MISSING_UNKNOWN` aux minutes sans cause établie. Ces bougies ne sont **pas à reconstituer avec des prix OKX ou Kraken** : les échanges Spot Binance étaient suspendus. Le Trader PAPER doit **suspendre les simulations traversant ces intervalles**, ne pas simuler d'ordre pendant une fermeture, et reprendre sur le premier nouveau point source valide. Les autres minutes restent utilisables dans les fenêtres dont l'intégrité est vérifiée. Le contrôle natif distinct des **5 760 bougies d'octobre 2026** reste ouvert et ne doit pas être automatiquement marqué PASS.
