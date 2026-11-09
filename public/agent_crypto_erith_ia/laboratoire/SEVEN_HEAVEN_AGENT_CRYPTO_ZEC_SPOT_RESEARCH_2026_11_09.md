@@ -68,3 +68,5 @@ Ce sont des preuves **datées** de décisions ou de présentation de marchés. L
 **À vérifier :** carnet et état Spot actuels, accès du compte France, frais maker/taker et minimum notionnel, ZIP des périodes utilisées et lacunes des bougies. Une capture ancienne ne garantit pas une exécution à la taille voulue.
 
 **Décision : RECHERCHE DOCUMENTÉE ; PAS DE CERTIFICATION PAPER.** Aucune opération réelle, aucune modification du Bridge R31, de l'Administrator ou du Trader.
+
+**Étude croisée du 09/11/2026 :** [ZEC/USDC vs HYPE/USDC — 58 couples horodatés, spreads, profondeurs et coûts purement fictifs](./SEVEN_HEAVEN_AGENT_CRYPTO_ZEC_HYPE_SPOT_BOOK_COMPARATIVE_RESEARCH_2026_11_09.md). Les observations datent d'octobre ; aucune exécution ni certification PAPER.

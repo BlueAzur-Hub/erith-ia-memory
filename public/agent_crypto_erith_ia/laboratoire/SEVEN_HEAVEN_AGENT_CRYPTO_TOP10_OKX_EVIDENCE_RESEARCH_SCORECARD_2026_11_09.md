@@ -62,3 +62,6 @@ Ceci est un **travail documentaire** : dix monographies originales conservées p
 
 La paire DOGE/USDC est affichée dans le catalogue public OKX Europe, mais les endpoints publics d'instrument et de carnet n'ont pas fourni de valeurs exploitables le 9 novembre depuis cet environnement. **Aucune règle Spot ni aucun prix bid/ask actuel n'est certifié.**
 
+## 7. ZEC / HYPE — comparaison de carnets d'octobre (09/11)
+
+[Étude ZEC-HYPE comparée](./SEVEN_HEAVEN_AGENT_CRYPTO_ZEC_HYPE_SPOT_BOOK_COMPARATIVE_RESEARCH_2026_11_09.md) : rapprochement de **58 couples de carnets** à moins de cinq minutes d'écart, HYPE a le spread le plus étroit sur **48/58**, ZEC une profondeur médiane bid/ask supérieure sur les cinq niveaux. Sur 1 000 USDC de profondeur affichée des deux côtés : ZEC **52/58**, HYPE **44/58**. Coûts uniquement **fictifs** avec frais et slippage supposés ; aucun ordre exécuté ni résultat PAPER certifié.

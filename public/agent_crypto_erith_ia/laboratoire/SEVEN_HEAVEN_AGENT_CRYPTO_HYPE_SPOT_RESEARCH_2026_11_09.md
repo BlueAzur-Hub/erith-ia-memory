@@ -80,3 +80,5 @@ La documentation du projet distingue **HyperCore**, infrastructure de carnet, tr
 **Non vérifié :** carnet et règles du 9 novembre, permissions personnelles EEE, tarif maker/taker, minimum notionnel et prix réellement exécutés. Une étude PAPER exige des critères **prédéfinis**, un historique vérifié et un journal reproductible ; le livre historique ne suffit pas.
 
 **Statut : RECHERCHE DOCUMENTÉE, PAPER NON CERTIFIÉ.** Aucun ordre réel, aucune donnée de compte privée, aucune modification de l'Administrator, du Trader ou du Bridge R31.
+
+**Étude croisée du 09/11/2026 :** [ZEC/USDC vs HYPE/USDC — 58 couples horodatés, spreads, profondeurs et coûts purement fictifs](./SEVEN_HEAVEN_AGENT_CRYPTO_ZEC_HYPE_SPOT_BOOK_COMPARATIVE_RESEARCH_2026_11_09.md). Les observations datent d'octobre ; aucune exécution ni certification PAPER.
