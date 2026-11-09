@@ -54,13 +54,15 @@ function compile(matrix,incidents) {
        alt.candles_present>minutes||alt.status!=="verified_api_response"))
       throw Error("Sondage Binance alternatif non qualifié : "+key);
    const cb=row.coinbase;
+   const cbSkipped=cb?.status==="skipped_official_trading_suspension";
    if(cb?.pair!==asset+"-USD"||cb.quote!=="USD"||
-      cb.status!=="verified_api_response"||
+      (cb.status!=="verified_api_response"&&!cbSkipped)||
       !integer(cb.expected_minutes)||cb.expected_minutes!==minutes||
       !integer(cb.candles_present)||cb.candles_present>minutes||
       !integer(cb.positive_volume_minutes)||
       cb.positive_volume_minutes>cb.candles_present||
-      cb.missing_minutes!==minutes-cb.candles_present)
+      (cbSkipped?(cb.candles_present!==0||cb.positive_volume_minutes!==0||cb.request_count!==0):
+         cb.missing_minutes!==minutes-cb.candles_present))
       throw Error("Sondage Coinbase invalide : "+key);
    const k=row.kraken;
    if(k&&(k.quote!=="USD"||k.not_entire_interval_coverage!==true||
@@ -82,7 +84,8 @@ function compile(matrix,incidents) {
      incidentUrl:officialVerified?official.url:null,
      coinbasePair:cb.pair,coinbaseQuote:"USD",
      coinbaseCandles:cb.candles_present,coinbasePositive:cb.positive_volume_minutes,
-     coinbaseCoverage:cb.candles_present===minutes?"COMPLETE":
+     coinbaseCoverage:cbSkipped?"NOT_QUERIED_SUSPENDED":
+       cb.candles_present===minutes?"COMPLETE":
        cb.candles_present>0?"PARTIAL":"NONE",
      coinbaseRequestUrls:(cb.requests||[]).map(x=>x.url).filter(x=>/^https:\/\//.test(x)),
      binanceRequestUrls:(alt?.requests||[]).map(x=>x.url).filter(x=>/^https:\/\//.test(x)),
@@ -113,7 +116,8 @@ function selectRows(compiled,filters={}) {
       (filters.proof==="unknown"&&x.binanceClass==="CAUSE_UNKNOWN_BTC_WINDOW")||
       (filters.proof==="complete"&&x.coinbaseCoverage==="COMPLETE")||
       (filters.proof==="partial"&&x.coinbaseCoverage==="PARTIAL")||
-      (filters.proof==="none"&&x.coinbaseCoverage==="NONE")));
+      (filters.proof==="none"&&x.coinbaseCoverage==="NONE")||
+      (filters.proof==="suspended"&&x.coinbaseCoverage==="NOT_QUERIED_SUSPENDED")));
 }
 function mount(doc,fetcher) {
  const tbody=doc.getElementById("top5-evidence-rows");
@@ -143,9 +147,12 @@ function mount(doc,fetcher) {
      txt("td",r.asset,tr);
      const official=r.binanceClass==="OFFICIAL_BTC_WINDOW";
      txt("td",(official?"Incident officiel · ":"Cause non documentée · ")+r.binanceNote,tr);
-     txt("td",r.coinbasePair+" · "+r.coinbasePositive+"/"+r.minutes+
-       " min à volume positif · "+(r.coinbaseCoverage==="COMPLETE"?"couverture complète":
-       r.coinbaseCoverage==="PARTIAL"?"couverture partielle":"activité non attestée"),tr);
+     txt("td",r.coinbasePair+" · "+
+       (r.coinbaseCoverage==="NOT_QUERIED_SUSPENDED"?
+       "sondage non effectué (suspension signalée dans l'archive)":
+       r.coinbasePositive+"/"+r.minutes+" min à volume positif · "+
+       (r.coinbaseCoverage==="COMPLETE"?"couverture complète":
+        r.coinbaseCoverage==="PARTIAL"?"couverture partielle":"activité non attestée")),tr);
      txt("td",r.krakenPair?
        r.krakenPair+" · "+r.krakenPositive+"/"+r.krakenProbes+
        " minutes sondées positives (non exhaustif)":"Aucun sondage documenté",tr);
