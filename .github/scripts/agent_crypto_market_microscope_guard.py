@@ -26,12 +26,12 @@ def script_pin_consistent(filename, attribute):
     # Guard the exact URL/owner annotation agreement instead of re-tagging
     # unchanged trusted modules at every application build.
     match = re.search(
-        r'<script\\b[^>]*\\bsrc="\\./js/' + re.escape(filename)
-        + r'\\?v=([^"]+)"[^>]*\\b' + re.escape(attribute)
+        r'<script\b[^>]*\bsrc="\./js/' + re.escape(filename)
+        + r'\?v=([^"]+)"[^>]*\b' + re.escape(attribute)
         + r'="([^"]+)"', INDEX
     )
     return bool(match and match.group(1) == match.group(2)
-        and re.fullmatch(r'40\\.6\\.\\d+', match.group(1)))
+        and re.fullmatch(r'40\.6\.\d+', match.group(1)))
 
 
 CURRENT = str(BUILD.get("build") or "").strip()
