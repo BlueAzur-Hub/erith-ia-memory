@@ -1,0 +1,108 @@
+{
+  "schema": "seven_heaven.crypto.top10.research_supplement.v1",
+  "date": "2026-11-09",
+  "canonical_rank": 7,
+  "asset": {
+    "id": "zcash",
+    "symbol": "ZEC",
+    "coingecko_rank": 10
+  },
+  "market": {
+    "source_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+    "at_utc": "2026-11-09T07:53:59.646Z",
+    "quote": "USD",
+    "price_usd": 1194.1670514385771,
+    "change24h_pct": -5.54612,
+    "change7d_pct": -4.7574,
+    "change30d_pct": -1.1536
+  },
+  "okx": {
+    "source": "OKX_EEA_PUBLIC_REST",
+    "pair": "ZEC-USDC",
+    "quote": "USDC",
+    "historical_book_count": 85,
+    "range_start_utc": "2026-10-22T05:37:40Z",
+    "range_end_utc": "2026-10-28T08:34:23Z",
+    "median_spread_bps": 2.92,
+    "min_spread_bps": 0.08,
+    "max_spread_bps": 9.79,
+    "last_book": {
+      "bid": 1316.98,
+      "ask": 1317.23,
+      "bid_size": 2.57968,
+      "ask_size": 0.30781,
+      "filled": false
+    },
+    "archived_rules": {
+      "minSz": "0.001",
+      "lotSz": "0.00001",
+      "tickSz": "0.01",
+      "valid_as_of_2026_11_09_verified": false
+    },
+    "original_case": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/zcash.json",
+      "blob_sha": "50b64b080aad9599fadcb44b1069be1767821f3b",
+      "subset_date": "2026-10-24",
+      "book_count": 17,
+      "median_bps": 1.65,
+      "closed_15m_bars": 59,
+      "missing_intervals_15m": 36,
+      "paper_retrospective_not_prospective": true
+    },
+    "book_sources": [
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-22.json",
+        "count": 7,
+        "sha": "275eecee85a1990ef120d736117423672f3fee68"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-23.json",
+        "count": 13,
+        "sha": "84cbde707131a4850f72295999dd1dbd957a2d47"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-24.json",
+        "count": 17,
+        "sha": "5d2f49aecbf348d202d86c9f32e8929e0c39f32c"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-25.json",
+        "count": 15,
+        "sha": "81d44bb5e6781b9915cf90b64081f154fec13eaf"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-26.json",
+        "count": 13,
+        "sha": "58c02af4c1d006695c55a0559c6f04bd8942175f"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-27.json",
+        "count": 15,
+        "sha": "6e23dfe1a8dab5ba25e05b308408f7f940807499"
+      },
+      {
+        "path": "public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-28.json",
+        "count": 5,
+        "sha": "2397f13e5c858ab533b05f395871edd971cc96b7"
+      }
+    ],
+    "current_instrument_state_verified": false,
+    "account_order_permission_verified": false,
+    "real_fees_verified": false
+  },
+  "history": {
+    "pair": "ZECUSDT",
+    "quote": "USDT",
+    "venue": "Binance Spot",
+    "months_indexed": 74,
+    "native_1m_candles_indexed": 3248640,
+    "source_blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3",
+    "all_zips_verified_in_this_study": false
+  },
+  "controls": {
+    "paper_certified": false,
+    "real_orders": 0,
+    "private_access": false,
+    "runtime_changed": false
+  }
+}

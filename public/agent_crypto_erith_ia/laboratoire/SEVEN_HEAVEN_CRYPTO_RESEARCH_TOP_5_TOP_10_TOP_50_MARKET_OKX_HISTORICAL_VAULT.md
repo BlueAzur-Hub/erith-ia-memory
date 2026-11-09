@@ -198,7 +198,11 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 **Source documentaire du protocole :** https://solana.com/docs/core/fees · **Source marché :** https://www.coingecko.com/en/coins/solana.
 
 ## Partie B — Top 10, cinq dossiers fondamentaux complémentaires
+
+**Tableau de qualification documentaire du 09/11/2026 :** [Top 10 — preuves OKX, carnets historiques, lacunes et statut PAPER](./SEVEN_HEAVEN_AGENT_CRYPTO_TOP10_OKX_EVIDENCE_RESEARCH_SCORECARD_2026_11_09.md). Les cinq fiches suivantes restent figées à leur snapshot originel ; leurs compléments datés ne remplacent pas leur contenu.
 ### 6 TRX
+
+**Complément terrain du 09/11/2026 :** [TRX — marché comparé, sources du Coffre et qualification OKX](./SEVEN_HEAVEN_AGENT_CRYPTO_TRX_SPOT_RESEARCH_2026_11_09.md). Il complète la fiche originale sans altérer son rang ni ses prix historiques.
 
 **TRON · rang CoinGecko #8**
 **Identité :** [tron](https://www.coingecko.com/en/coins/tron). **Périmètre :** fiche fondamentale intermédiaire.
@@ -221,6 +225,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ### 7 ZEC
 
+**Complément terrain du 09/11/2026 :** [ZEC — marché comparé, sources du Coffre et qualification OKX](./SEVEN_HEAVEN_AGENT_CRYPTO_ZEC_SPOT_RESEARCH_2026_11_09.md). Il complète la fiche originale sans altérer son rang ni ses prix historiques.
+
 **Zcash · rang CoinGecko #10**
 **Identité :** [zcash](https://www.coingecko.com/en/coins/zcash). **Périmètre :** fiche fondamentale intermédiaire.
 
@@ -241,6 +247,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 **Source documentaire du protocole :** https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html · **Source marché :** https://www.coingecko.com/en/coins/zcash.
 
 ### 8 HYPE
+
+**Complément terrain du 09/11/2026 :** [HYPE — marché comparé, sources du Coffre et qualification OKX](./SEVEN_HEAVEN_AGENT_CRYPTO_HYPE_SPOT_RESEARCH_2026_11_09.md). Il complète la fiche originale sans altérer son rang ni ses prix historiques.
 
 **Hyperliquid · rang CoinGecko #11**
 **Identité :** [hyperliquid](https://www.coingecko.com/en/coins/hyperliquid). **Périmètre :** fiche fondamentale intermédiaire.
@@ -263,6 +271,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ### 9 XMR
 
+**Complément terrain du 09/11/2026 :** [XMR — marché comparé, sources du Coffre et qualification OKX](./SEVEN_HEAVEN_AGENT_CRYPTO_XMR_SPOT_RESEARCH_2026_11_09.md). Il complète la fiche originale sans altérer son rang ni ses prix historiques.
+
 **Monero · rang CoinGecko #12**
 **Identité :** [monero](https://www.coingecko.com/en/coins/monero). **Périmètre :** fiche fondamentale intermédiaire.
 
@@ -283,6 +293,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 **Source documentaire du protocole :** https://www.getmonero.org/get-started/faq/ · **Source marché :** https://www.coingecko.com/en/coins/monero.
 
 ### 10 DOGE
+
+**Complément terrain du 09/11/2026 :** [DOGE — marché comparé, sources du Coffre et qualification OKX](./SEVEN_HEAVEN_AGENT_CRYPTO_DOGE_SPOT_RESEARCH_2026_11_09.md). Il complète la fiche originale sans altérer son rang ni ses prix historiques.
 
 **Dogecoin · rang CoinGecko #13**
 **Identité :** [dogecoin](https://www.coingecko.com/en/coins/dogecoin). **Périmètre :** fiche fondamentale intermédiaire.

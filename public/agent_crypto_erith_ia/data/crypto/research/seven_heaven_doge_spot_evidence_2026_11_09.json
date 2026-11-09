@@ -1,0 +1,89 @@
+{
+  "schema": "seven_heaven.crypto.top10.research_supplement.v1",
+  "research_date": "2026-11-09",
+  "canonical_dossier_rank": 10,
+  "asset": {
+    "id": "dogecoin",
+    "symbol": "DOGE",
+    "name": "Dogecoin",
+    "coingecko_rank_snapshot": 13
+  },
+  "sources": {
+    "coingecko_market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "blob_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+      "generated_at_utc": "2026-11-09T07:53:59.646Z",
+      "source_asset_updated_utc": "2026-11-09T07:52:59.000Z"
+    },
+    "native_archive_index": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "okx_user_screen_registry": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "blob_sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4",
+      "observation_date": "2026-11-08"
+    },
+    "okx_hourly_index": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "blob_sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    }
+  },
+  "market": {
+    "quote": "USD",
+    "price_usd": 0.06812286432666365,
+    "change24h_pct": -4.3626,
+    "change7d_pct": -9.4118,
+    "change30d_pct": -20.5945,
+    "volume24h_usd": 591477164,
+    "relative_to_btc_points": {
+      "h24": -1.7894199999999998,
+      "d7": -4.266299999999999,
+      "d30": -10.3139
+    }
+  },
+  "native_archive": {
+    "venue": "Binance Spot",
+    "pair": "DOGEUSDT",
+    "quote": "USDT",
+    "months_indexed": 73,
+    "indexed_native_1m_candles": 3205440,
+    "full_zip_sha_rechecked": false,
+    "source_gap_audit_completed_here": false
+  },
+  "okx": {
+    "research_status": "USER_SCREEN_AND_PUBLIC_PAIR_LISTING_NOT_ORDER_CERTIFIED",
+    "ui_pairs_observed_2026_11_08": [
+      "DOGE-USDC"
+    ],
+    "hourly_book_pairs_observed_2026_10": [],
+    "current_book_verified": false,
+    "public_instrument_state_current_verified": false,
+    "account_order_permission_verified": false,
+    "real_account_fees_verified": false
+  },
+  "public_primary_sources": [
+    {
+      "title": "Dogecoin — site officiel et ressources",
+      "url": "https://dogecoin.com/"
+    },
+    {
+      "title": "OKX Europe — liste publique Spot USDC",
+      "url": "https://www.okx.com/en-eu/markets/spot/usdc-meme"
+    },
+    {
+      "title": "OKX — Spot group adjustment 30 Jul 2026 (DOGE-USDC)",
+      "url": "https://www.okx.com/en-gb/help/important-notice-token-pairs-adjustment"
+    }
+  ],
+  "controls": {
+    "paper_certified": false,
+    "simulations_executed": 0,
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "secrets_accessed": false,
+    "administrator_code_changed": false
+  },
+  "account_restriction_note": null
+}

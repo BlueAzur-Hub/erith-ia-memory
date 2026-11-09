@@ -1,0 +1,87 @@
+{
+  "schema": "seven_heaven.crypto.top10.research_supplement.v1",
+  "research_date": "2026-11-09",
+  "canonical_dossier_rank": 9,
+  "asset": {
+    "id": "monero",
+    "symbol": "XMR",
+    "name": "Monero",
+    "coingecko_rank_snapshot": 12
+  },
+  "sources": {
+    "coingecko_market": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "blob_sha": "4f1f33162f2bf729f5772562e15a60fdb7017075",
+      "generated_at_utc": "2026-11-09T07:53:59.646Z",
+      "source_asset_updated_utc": "2026-11-09T07:52:59.000Z"
+    },
+    "native_archive_index": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "blob_sha": "71b25904a652fbd8cdea1ac6bb942c9789e930c3"
+    },
+    "okx_user_screen_registry": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/research/okx-spot-screen-candidates.json",
+      "blob_sha": "ab1498c692eaaedb6f5a940f555fee13afa45ab4",
+      "observation_date": "2026-11-08"
+    },
+    "okx_hourly_index": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/research-latest.json",
+      "blob_sha": "3e20270ca0df74825a47a980f1d8b8ea8dd07d05"
+    }
+  },
+  "market": {
+    "quote": "USD",
+    "price_usd": 590.1782469841015,
+    "change24h_pct": -1.3522,
+    "change7d_pct": -2.3136,
+    "change30d_pct": 13.4694,
+    "volume24h_usd": 111728516,
+    "relative_to_btc_points": {
+      "h24": 1.2209799999999997,
+      "d7": 2.8319,
+      "d30": 23.75
+    }
+  },
+  "native_archive": {
+    "venue": "Binance Spot",
+    "pair": "XMRUSDT",
+    "quote": "USDT",
+    "months_indexed": 11,
+    "indexed_native_1m_candles": 480960,
+    "full_zip_sha_rechecked": false,
+    "source_gap_audit_completed_here": false
+  },
+  "okx": {
+    "research_status": "EEA_RESTRICTION_HISTORICAL_NOTICE",
+    "ui_pairs_observed_2026_11_08": [],
+    "hourly_book_pairs_observed_2026_10": [],
+    "current_book_verified": false,
+    "public_instrument_state_current_verified": false,
+    "account_order_permission_verified": false,
+    "real_account_fees_verified": false
+  },
+  "public_primary_sources": [
+    {
+      "title": "GetMonero — FAQ et bases de Monero",
+      "url": "https://www.getmonero.org/get-started/faq/"
+    },
+    {
+      "title": "OKX — retrait des paires XMR, communiqué 29 Dec 2023",
+      "url": "https://www.okx.com/fr/help/okx-to-delist-several-spot-trading-pairs-12-29"
+    },
+    {
+      "title": "OKX — arrêt de la prise en charge XMR en EEE, communiqué 30 Apr 2024",
+      "url": "https://www.okx.com/en-us/help/important-security-updates-and-token-adjustments-at-okx-in-eea"
+    }
+  ],
+  "controls": {
+    "paper_certified": false,
+    "simulations_executed": 0,
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "secrets_accessed": false,
+    "administrator_code_changed": false
+  },
+  "account_restriction_note": "Official OKX EEA April 2024 notice includes XMR discontinued support; current account access not assumed, do not propose bypass"
+}
