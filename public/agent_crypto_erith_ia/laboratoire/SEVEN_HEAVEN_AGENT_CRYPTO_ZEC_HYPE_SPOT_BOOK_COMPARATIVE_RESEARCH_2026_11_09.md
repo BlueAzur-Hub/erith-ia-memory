@@ -81,3 +81,7 @@ La différence entre deux **coûts théoriques moyens calculés à partir des m�
 **Prochaine action documentaire :** relever des carnets et règles **actuels** de ZEC-USDC et HYPE-USDC avec horodatages de l'exchange, vérifier les périodes historiques nécessaires à une simulation, puis établir un scénario PAPER entièrement journalisé **sans exécution réelle**. Tant que ces pièces manquent, **aucune certification PAPER** n'est attribuée.
 
 **Statut : comparaison d'archives documentée et traçable ; Administrator, Trader, MASTER et Bridge R31 inchangés.**
+
+## 6. Étude complémentaire : prix moyen d'achat par taille (9 novembre)
+
+La [nouvelle étude de marche dans les carnets à 100, 500 et 1 000 USDC](./SEVEN_HEAVEN_AGENT_CRYPTO_ZEC_HYPE_SPOT_BOOK5_BUY_SIZE_IMPACT_STUDY_2026_11_09.md) calcule les prix moyens théoriques de **348 scénarios** à partir des cinq niveaux archivés : couverture du budget, écart au meilleur vendeur, frais fictifs et limites des carnets. Le [JSON reproductible](../data/crypto/research/seven_heaven_zec_hype_spot_book5_buy_size_impact_2026_11_09.json) contient les observations. Aucun ordre ou PAPER exécuté, aucune qualification actuelle de paire.
