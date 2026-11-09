@@ -625,6 +625,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-09",
+      "date_utc": "2026-11-09",
+      "first_seen_at_utc": "2026-11-09T18:59:40.006Z",
+      "source_times_utc": [
+        "2026-11-09T18:43:06.459Z",
+        "2026-11-09T18:45:52.952Z"
+      ],
+      "universe_eligible": 414,
+      "policy_matches": 20,
+      "selected": [
+        {
+          "coin_id": "meteora",
+          "symbol": "MET",
+          "source_at_utc": "2026-11-09T18:43:06.459Z",
+          "rank": 173,
+          "price_usd": 0.3320890386277973
+        },
+        {
+          "coin_id": "pyth-network",
+          "symbol": "PYTH",
+          "source_at_utc": "2026-11-09T18:43:06.459Z",
+          "rank": 101,
+          "price_usd": 0.06640933040270591
+        },
+        {
+          "coin_id": "ether-fi",
+          "symbol": "ETHFI",
+          "source_at_utc": "2026-11-09T18:43:06.459Z",
+          "rank": 91,
+          "price_usd": 0.6277768851878249
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1481,6 +1516,27 @@
       "sha256": "dbbad21959ff418c6171dc6ea58d60a8886a33e0f5a457bb974756acacfe2a12",
       "recorded_at_utc": "2026-11-08T20:40:47.686Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-07",
+      "file": "observations/2026-11-09T185940006Z--2026-11-07.json",
+      "sha256": "d6382543179f783f0de0c0f5760d26e3816a8ed8692c7fe5561dd7b7f755dd52",
+      "recorded_at_utc": "2026-11-09T18:59:40.006Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-08",
+      "file": "observations/2026-11-09T185940006Z--2026-11-08.json",
+      "sha256": "af6f4017b31dcc3c6d4273a8be7ab3142806358d0ba8267682f67399142d7b7f",
+      "recorded_at_utc": "2026-11-09T18:59:40.006Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-09",
+      "file": "observations/2026-11-09T185940006Z--2026-11-09.json",
+      "sha256": "8dd1edf7c7c89c307cd10249a7c5cc13cd7ddd24e16564ad6e54a8286f14f0cb",
+      "recorded_at_utc": "2026-11-09T18:59:40.006Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
