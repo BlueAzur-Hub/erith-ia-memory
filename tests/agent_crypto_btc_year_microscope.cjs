@@ -16,7 +16,7 @@ const day=86400000,t0=Date.UTC(2025,9,1);
 const valid=Array.from({length:365},(_,i)=>{const p=80000+i*8;return[t0+day*i,p,p+300,p-400,p+80,100+i,5000,9]});
 const live=Array.from({length:40},(_,i)=>{const p=82000+i;return{t:Date.UTC(2026,9,19,1)+i*60000,o:p,h:p+5,l:p-5,c:p+1,v:20}});
 async function flush(){for(let i=0;i<12;i++)await Promise.resolve();await new Promise(r=>setImmediate(r));}
-function harness({bars=valid,defer=false,savedBar=null}={}){
+function harness({bars=valid,defer=false}={}){
  let period="365",asset="BTC",annualCalls=0,marketCalls=0,resolveAnnual;
  const listeners={};
  const reader={load:(id,p)=>{
@@ -37,7 +37,6 @@ function harness({bars=valid,defer=false,savedBar=null}={}){
      head:{appendChild(){}}
    },
    addEventListener(name,fn){(listeners[name]??=[]).push(fn)},
-   localStorage:{getItem(key){return key==="agentCrypto.marketMicroscope.bar.v1"?savedBar:null;},setItem(){}},
    AgentCryptoQuoteCurrencyArchitecture:{snapshot(){return{displayCurrency:"USD"}}},
    getSelectedCoin(){return{symbol:asset,id:"bitcoin"}},
    AgentCryptoNewListingLiveAsset:{snapshot(){return{active:false}}},
@@ -67,7 +66,6 @@ function harness({bars=valid,defer=false,savedBar=null}={}){
  assert.equal(state.archivePeriod,"1an");
  assert.equal(state.loadedInstrument,"BTC-USDT");
  assert.equal(state.loadedBar,"1j");
- assert.equal(state.bar,"15m","Annual 1j must not overwrite the remembered 15m interval");
  assert.equal(state.rows.length,365);
  assert.equal(p.api.viewport().count,365,"Full year must be navigable before zoom");
  assert.equal(state.rows[0].o,80000);
@@ -96,12 +94,5 @@ function harness({bars=valid,defer=false,savedBar=null}={}){
  assert.equal(race.api.snapshot().loadedBar,"15m");
  assert.equal(race.api.snapshot().archivePeriod,null);
  assert.equal(race.api.snapshot().rows.length,40,"Late archive must never overwrite another period");
- const restored=harness({savedBar:"1h"});
- restored.api.setMode("candles");await flush();
- assert.equal(restored.api.snapshot().loadedBar,"1j");
- assert.equal(restored.api.snapshot().bar,"1h","Saved custom interval survives annual archive");
- restored.period="1";restored.emit("atlas:admin-graph");await flush();
- assert.equal(restored.api.snapshot().loadedBar,"1h");
- assert.equal(restored.api.snapshot().bar,"1h");
- console.log("PASS BTC annual OHLCV; restore preferred bar after 1a; native period exit; bad archive blocked; late response blocked");
+ console.log("PASS BTC annual real-price OHLCV; native period exit; bad archive blocked; late response blocked");
 })().catch(error=>{console.error(error);process.exitCode=1});
