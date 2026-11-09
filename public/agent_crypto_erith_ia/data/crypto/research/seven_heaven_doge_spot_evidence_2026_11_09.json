@@ -298,6 +298,54 @@
         "dated public books response with five levels and exchange ts",
         "test size and true account eligibility separately before PAPER validation"
       ]
+    },
+    "public_rest_endpoint_followup_2026_11_09": {
+      "source_type": "OFFICIAL_PUBLIC_DOCUMENTATION_AND_FAILED_PUBLIC_GET_ATTEMPTS",
+      "observed_date": "2026-11-09",
+      "domain_for_eu_accounts_documented": "eea.okx.com",
+      "region_note": "Documentation uses region-dependent USD/USDC unified-book and migration rules; no DOGE-specific EEA instrument mapping established.",
+      "catalog_doge_usdc_label_verified": true,
+      "direct_public_get_attempts": [
+        {
+          "endpoint": "https://eea.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USDC",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        },
+        {
+          "endpoint": "https://eea.okx.com/api/v5/market/books?instId=DOGE-USDC&sz=5",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        },
+        {
+          "endpoint": "https://eea.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USD",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        },
+        {
+          "endpoint": "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USD",
+          "result": "TOOL_ACCESS_ERROR_NO_JSON"
+        }
+      ],
+      "other_network_attempt": "DNS resolution failure from an isolated runtime; not an OKX HTTP response",
+      "current_instid_proven": false,
+      "current_instrument_state_verified": false,
+      "current_spot_rules_verified": false,
+      "current_exchange_book_timestamp_verified": false,
+      "account_permissions_verified": false,
+      "paper_certified": false,
+      "required_evidence": [
+        "same regional-domain public instrument response",
+        "same regional-domain public book response",
+        "source timestamp and retrieval timestamp",
+        "instId, state, minSz, lotSz, tickSz",
+        "bids, asks, ts",
+        "do not infer account rights"
+      ],
+      "source_urls": [
+        "https://www.okx.com/en-eu/markets/spot/usdc-meme",
+        "https://www.okx.com/docs-v5",
+        "https://www.okx.com/en-eu/help/how-do-i-trade-a-usd-pair-using-usdc-or-another-stablecoin",
+        "https://www.okx.com/docs-v5/log_en/"
+      ],
+      "no_private_api_or_orders": true,
+      "no_master_or_bridge_change": true
     }
   },
   "public_primary_sources": [

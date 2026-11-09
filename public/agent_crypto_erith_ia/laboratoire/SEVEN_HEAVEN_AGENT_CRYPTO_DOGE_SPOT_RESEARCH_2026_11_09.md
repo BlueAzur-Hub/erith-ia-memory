@@ -112,3 +112,31 @@ Les chemins et SHA Git des 14 archives figurent dans le [registre des preuves DO
 Collecter un couple de réponses publiques de la même période depuis un environnement autorisé : métadonnées de l'instrument et carnet cinq niveaux, avec code HTTP, horodatage exchange du carnet et heure de réception UTC, plus provenance. Vérifier alors `instId`, `state`, `minSz`, `lotSz`, `tickSz`, `bids`, `asks` et la couverture du montant. **Ne pas utiliser l'historique Binance DOGEUSDT comme substitut au carnet OKX DOGE-USDC.**
 
 **Statut documentaire : `PUBLIC_PAIR_LISTED / DOGE_NOT_IN_EXAMINED_ARCHIVES / CURRENT_RULES_AND_BOOK_UNVERIFIED / PAPER_NOT_CERTIFIED`.** Aucun ordre réel ou PAPER, aucune modification de l'Administrator, du Trader ou du Bridge R31.
+
+## 7. Contrôle complémentaire — restrictions d'accès API et identifiants USD/USDC (09/11/2026)
+
+**Objet :** vérifier sans connexion privée si un relevé Spot public **actuel** peut être produit pour DOGE, et éviter d'attribuer des paramètres chiffrés au seul catalogue visuel.
+
+**Preuves officielles consultées :**
+- [OKX Europe — catalogue Spot USDC](https://www.okx.com/en-eu/markets/spot/usdc-meme) : affiche **DOGE/USDC**, mais ne livre pas de bid, ask ni de profondeur exploitable dans l'extraction disponible.
+- [OKX — documentation API V5](https://www.okx.com/docs-v5) : spécifie **`state`**, **`minSz`**, **`lotSz`**, **`tickSz`** pour les instruments ; indique que les utilisateurs EU enregistrés sur `my.okx.com` doivent employer le domaine régional **`eea.okx.com`**.
+- [OKX Europe — utilisation de USDC avec une paire USD, 03/09/2026](https://www.okx.com/en-eu/help/how-do-i-trade-a-usd-pair-using-usdc-or-another-stablecoin) : explique la liquidité partagée des carnets USD/stablecoins sur les marchés concernés.
+- [OKX — journal API du 30/09/2026](https://www.okx.com/docs-v5/log_en/) : annonce une migration `Crypto-USD` vers `Crypto-USDC` pour **des instruments concernés**, sans prouver par lui-même la disponibilité ou l'identifiant applicable à **DOGE sur ce compte EEE**. Les communications régionales et les changements datés ne doivent pas être fusionnés en une règle universelle.
+
+**Tests publics tentés le 09/11/2026 (aucune clé) :**
+1. `GET https://eea.okx.com/api/v5/public/instruments?instType=SPOT&instId=DOGE-USDC`
+2. `GET https://eea.okx.com/api/v5/market/books?instId=DOGE-USDC&sz=5`
+3. Contrôle de découverte de l'alias possible `DOGE-USD` sur le domaine EEE et le domaine standard.
+
+L'outil de consultation distante n'a **pas pu accéder** aux réponses de ces endpoints. Un essai réseau indépendant a également échoué à la résolution du domaine, **sans réponse HTTP attribuable à OKX**. Ces échecs décrivent **l'environnement de recherche**, pas une suspension de DOGE, un dysfonctionnement du Bridge R31 ni un refus du compte.
+
+| Preuve requise | Résultat |
+|---|---|
+| Publication de la paire DOGE/USDC | **Oui, dans le catalogue Europe** |
+| Identifiant réellement accepté par l'API EEE (`DOGE-USDC` ou autre) | **Non établi** |
+| `state`, `minSz`, `lotSz`, `tickSz` avec horodatage | **Non obtenus** |
+| Carnet cinq niveaux OKX avec `ts`, bids et asks | **Non obtenu** |
+| Éligibilité du compte et frais personnels | **Non vérifiés** |
+| Certification PAPER / exécution réelle | **Aucune** |
+
+**Décision :** ne pas réinterpréter la liste publique comme un carnet, ne pas recopier d'anciennes règles comme si elles étaient actuelles et ne pas modifier le MASTER. Pour clore ce point, le prochain *relevé public vérifiable* doit contenir le JSON brut `public/instruments` et `market/books` du même domaine régional, son heure de collecte UTC, l'identifiant renvoyé et la provenance. Si l'API du poste local devient accessible, cette collecte reste **GET, sans authentification ni ordre**. Tant qu'elle manque, DOGE conserve son état **USER_SCREEN_AND_PUBLIC_PAIR_LISTING_NOT_ORDER_CERTIFIED**.
