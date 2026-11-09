@@ -391,6 +391,7 @@ async function fetchEntryMinute(timestamp){
   return null;
 }
 async function refreshEntryQuote(force=false){
+  if(ledgerPosition?.recentLots?.status==="reconciled_recent_lots")return false;
   const match=ledgerPosition?.matched;
   if(!token()||!match||!Number.isFinite(match.timestamp))return false;
   const timestamp=match.timestamp;
@@ -412,6 +413,12 @@ function signedMoney(amount){
   return (amount>0?"+":amount<0?"−":"")+moneyEUR(Math.abs(amount));
 }
 function updateCostBreakdown(position,quote){
+  if(position?.recentLots?.status==="reconciled_recent_lots"){
+    text("costbreakdown","Deux achats BTC rapprochés en EUR et USDC. "+
+      "Le cours historique Binance BTC/EUR n'est pas une conversion USDC/EUR ni une facture : "+
+      "aucune performance nette globale inventée.");
+    return;
+  }
   const match=position?.matched;
   if(!match||!quote||!Number.isFinite(currentBtcHeld) ||
     Math.abs(currentBtcHeld-match.btc)>=Math.max(1e-12,match.btc*1e-7)){
@@ -494,6 +501,66 @@ function btcQuantityChain({movements,acquisition,held,complete,usdcEntries=[]}={
     paired_usdc:counter!==null,credit_usdc:counter?.balanceChange??null});
 }
 
+/* Reconcile RECENT BTC acquisition lots using private OKX balance changes.
+   A EUR or USDC debit is an observed account movement, NOT an external payment
+   receipt, fee certificate, FX conversion or historical trade price.
+   Never combine quote currencies into a fabricated average cost or P&L. */
+function reconcileBtcRecentLots({movements,held,complete}={}){
+ const unknown=reason=>Object.freeze({status:"unknown",reason,read_only:true});
+ if(complete!==true||!Array.isArray(movements)||!Number.isFinite(held)||held<=0)
+   return unknown("Journaux BTC/EUR/USDC incomplets ou solde BTC non vérifiable");
+ const tolerance=Math.max(1e-12,held*1e-8);
+ const credits=movements.filter(x=>x?.currency==="BTC"&&x.source==="Compte de trading"&&
+   Number.isFinite(x.timestamp)&&x.timestamp>0&&Number.isFinite(x.balanceChange)&&x.balanceChange>0&&
+   ((x.type==="30"&&x.subType==="320")||(x.type==="2"&&x.subType==="1")))
+   .sort((a,b)=>b.timestamp-a.timestamp);
+ if(credits.length<2)return unknown("Moins de deux acquisitions admissibles");
+ const chosen=[],used=new Set();let sum=0;
+ for(const credit of credits){
+   if(sum>=held-tolerance)break;
+   const currency=credit.type==="30"?"EUR":"USDC",type=credit.type,
+     subType=credit.type==="30"?"321":"2";
+   const debits=movements.filter(x=>x?.source==="Compte de trading"&&
+     x.currency===currency&&x.type===type&&x.subType===subType&&
+     Number.isFinite(x.timestamp)&&Math.abs(x.timestamp-credit.timestamp)<=120000&&
+     Number.isFinite(x.balanceChange)&&x.balanceChange<0);
+   if(debits.length!==1||used.has(debits[0]))
+     return unknown("Contrepartie "+currency+" absente, multiple ou déjà utilisée");
+   used.add(debits[0]);
+   const paid=-debits[0].balanceChange;
+   if(!Number.isFinite(paid)||paid<=0)return unknown("Montant de sortie incohérent");
+   chosen.push(Object.freeze({
+     btc:credit.balanceChange,quote:currency,quote_out:paid,
+     implied_quote_per_btc:paid/credit.balanceChange,
+     at_utc:new Date(credit.timestamp).toISOString(),
+     kind:credit.type==="30"?"OKX_EUR_BTC_ACCOUNT_CONVERSION":"OKX_USDC_BTC_SPOT_LEDGER"
+   }));
+   sum+=credit.balanceChange;
+ }
+ if(chosen.length<2||Math.abs(sum-held)>tolerance)
+   return unknown("Somme des lots BTC différente de la position détenue");
+ const earliest=Math.min(...chosen.map(x=>Date.parse(x.at_utc)));
+ const following=movements.filter(x=>x?.currency==="BTC"&&
+   Number.isFinite(x.timestamp)&&x.timestamp>=earliest);
+ if(following.length!==chosen.length||
+    following.some(x=>!credits.some(c=>c===x&&chosen.some(l=>l.at_utc===new Date(c.timestamp).toISOString()&&
+       Math.abs(l.btc-c.balanceChange)<tolerance))))
+   return unknown("Autres mouvements BTC après le premier lot : traçabilité non complète");
+ const totals=Object.freeze({
+   EUR:chosen.filter(x=>x.quote==="EUR").reduce((a,x)=>a+x.quote_out,0),
+   USDC:chosen.filter(x=>x.quote==="USDC").reduce((a,x)=>a+x.quote_out,0)
+ });
+ if(!(totals.EUR>0&&totals.USDC>0))
+   return unknown("Aucune acquisition croisée EUR / USDC à afficher");
+ return Object.freeze({
+   status:"reconciled_recent_lots",read_only:true,total_btc:sum,
+   lots:Object.freeze(chosen.sort((a,b)=>a.at_utc.localeCompare(b.at_utc))),
+   paid:Object.freeze(totals),distinct_quotes:Object.freeze(["EUR","USDC"]),
+   historical_eur_usdc_conversion_verified:false,fees_complete:false,
+   net_pnl_verified:false,real_orders_enabled:false
+ });
+}
+
 /* BTC : hypothèses sur une cotation PUBLIQUE BTC/EUR seulement.
    Pas de carnet BTC/USDC comparable, donc aucun net après frais revendiqué. */
 function btcScenarioGrid(evidence={},now=Date.now()){
@@ -571,7 +638,19 @@ function btcPositionReport(evidence={},now=Date.now()){
   const matchValid=matched&&Number.isFinite(matched.btc)&&matched.btc>0
     &&Number.isFinite(matched.eur)&&matched.eur>0&&Number.isFinite(matched.timestamp)&&matched.timestamp>0;
   let delta=null;
-  if(matchValid){
+  const recentLots=ledgerRecent?ledger?.recentLots:null;
+  if(recentLots?.status==="reconciled_recent_lots"){
+    lines.push("Deux acquisitions BTC rapprochées au solde : "+fmt(recentLots.total_btc)+
+      " BTC ; sorties observées "+moneyEUR(recentLots.paid.EUR)+" et "+
+      fmt(recentLots.paid.USDC)+" USDC.");
+    for(const lot of recentLots.lots)
+      lines.push(new Date(lot.at_utc).toLocaleString("fr-FR")+" : "+
+        fmt(lot.btc)+" BTC contre "+(lot.quote==="EUR"?moneyEUR(lot.quote_out):fmt(lot.quote_out)+" USDC")+
+        " ; taux déduit "+fmt(lot.implied_quote_per_btc)+" "+lot.quote+"/BTC.");
+    lines.push("La comparaison des deux lots ne donne PAS un prix moyen unique : "+
+      "il manque un taux USDC/EUR historique qualifié, l'ensemble des frais et un justificatif de paiement externe. "+
+      "Le gain/perte net global n'est pas calculé ; les devises ne sont pas assimilées.");
+  }else if(matchValid){
     const sameHolding=Math.abs(qty-matched.btc)<Math.max(1e-12,matched.btc*1e-7);
     lines.push("Écritures OKX rapprochées : "+moneyEUR(matched.eur)+" sortis pour "
       +fmt(matched.btc)+" BTC crédités. Ce rapprochement ne prouve pas le coût PayPal ni tous les frais.");
@@ -778,6 +857,24 @@ function updatePositionView(){
   text("eurestimate",quote&&Number.isFinite(currentBtcHeld)&&currentBtcHeld>0
     ?"Estimation en EUR : "+moneyEUR(currentBtcHeld*quote.price)+" · "+quote.source
     :"Estimation en EUR : cours BTC/EUR indisponible");
+  if(position?.recentLots?.status==="reconciled_recent_lots"){
+    const lots=position.recentLots;
+    const euro=v=>v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
+    const fx=v=>v.toLocaleString("fr-FR",{maximumFractionDigits:2});
+    const eurLot=lots.lots.find(x=>x.quote==="EUR");
+    const usdcLot=lots.lots.find(x=>x.quote==="USDC");
+    text("avgcost","2 lots · EUR / USDC");
+    text("avgcosthint","Taux déduits : "+fx(eurLot.implied_quote_per_btc)+" €/BTC et "+
+      fx(usdcLot.implied_quote_per_btc)+" USDC/BTC ; moyenne multidevise impossible sans taux historique");
+    text("committed",euro(lots.paid.EUR)+" EUR + "+euro(lots.paid.USDC)+" USDC");
+    text("committedhint","Débits du compte rapprochés, coûts externes et frais non attestés");
+    text("pnl","NON CALCULABLE EN UNE DEVISE");
+    text("pnlhint","Conversion historique USDC/EUR et frais à justifier pour un P&L global");
+    text("positionproof",lots.lots.length+" acquisitions BTC rapprochées au solde : "+
+      fmt(lots.total_btc)+" BTC, financés par "+euro(lots.paid.EUR)+" EUR et "+
+      euro(lots.paid.USDC)+" USDC. Écritures OKX cohérentes ; aucun bénéfice net ni paiement externe certifié.");
+    return;
+  }
   if(position?.matched){
     const sameHolding=Number.isFinite(currentBtcHeld)&&Math.abs(currentBtcHeld-position.matched.btc)<Math.max(1e-12,position.matched.btc*1e-7);
     if(sameHolding){
@@ -978,6 +1075,17 @@ function ledgerPaint(results){
     ledgerPosition.matched={btc:matches[0].btc.balanceChange,eur:Math.abs(matches[0].eur.balanceChange),timestamp:matches[0].btc.timestamp};
     if(entryQuote?.timestamp!==matches[0].btc.timestamp)entryQuote=null;
   }
+  const fullBtcEurUsdc=["BTC","EUR","USDC"].every(ccy=>{
+    const p=results[ccy]?.payload;
+    return results[ccy]?.ok===true&&p?.read_only===true&&p?.ccy===ccy&&
+      ["trading_account","funding_account"].every(k=>{
+        const x=p.sources?.[k];
+        return x?.state==="ok"&&x.has_more!==true&&Array.isArray(x.records);
+      });
+  });
+  ledgerPosition.recentLots=reconcileBtcRecentLots({
+    movements:recent,held:currentBtcHeld,complete:fullBtcEurUsdc
+  });
   if(ledgerPosition.matched){
     const source=results.USDC?.payload;
     const journal=source?.sources?.trading_account;
@@ -1060,9 +1168,10 @@ async function refreshLedger(force=false){
         if(error?.status===401)break;
       }
     }
-    if(token())ledgerPaint(result);
-    else ledgerClear("Session Aether Trust terminée.");
-    if(token())ledgerCheckedAt=Date.now();
+    if(token()){
+      ledgerCheckedAt=Date.now();
+      ledgerPaint(result);
+    }else ledgerClear("Session Aether Trust terminée.");
     updateBtcReading();
     updateCapitalJourney();
     return true;
@@ -1324,7 +1433,7 @@ function mount(){
   return true;
 }
 
-if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount,summarizeSpotFeeMode,summarizeSpotOrderGates});
+if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,reconcileBtcRecentLots,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount,summarizeSpotFeeMode,summarizeSpotOrderGates});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false,ticketReadOnly,basePositionReadOnly});
