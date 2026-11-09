@@ -147,6 +147,8 @@ Les chiffres USD sont archivés ; **USD ≠ USDT ≠ USDC ≠ EUR**. Le nombre d
 
 ### 4 XRP
 
+**Complément terrain du 09/11/2026 :** [XRP/USDC — carnet historique OKX, règles Spot datées, audit XRPUSDT et comparaison BTC/ETH](./SEVEN_HEAVEN_AGENT_CRYPTO_XRP_USDC_SPOT_RESEARCH_2026_11_09.md). Cette étude complète la monographie figée du 08/11 sans remplacer son rang ni ses prix historiques.
+
 **XRP · rang CoinGecko #5**
 **Identité :** [ripple](https://www.coingecko.com/en/coins/ripple). **Périmètre :** monographie fondamentale.
 
