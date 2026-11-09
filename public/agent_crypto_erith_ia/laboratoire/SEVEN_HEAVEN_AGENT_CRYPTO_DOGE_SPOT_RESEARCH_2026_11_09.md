@@ -87,3 +87,28 @@ Le [rapport de réconciliation du 12 octobre 2026](https://github.com/BlueAzur-H
 3. **PAPER** : toujours **non certifié**, faute de règles actuelles, d'un carnet horodaté et d'une série réellement validée sur les périodes retenues. Aucune conversion implicite USD/USDT/USDC.
 
 **Statut : USER_SCREEN_AND_PUBLIC_PAIR_LISTING_NOT_ORDER_CERTIFIED.** Aucun ordre réel, aucune action Bridge, aucun changement de l'Administrator, du Trader ni des droits OKX. Document à publier via PR de recherche, pas une mise à jour logicielle.
+
+## 7. Contrôle ciblé DOGE/USDC — couverture des archives et preuve publique (9 novembre 2026)
+
+**Audit complémentaire, sans modification de l'application :** les 14 fichiers quotidiens de `case-market-hourly` et `okx-hourly` du 22 au 28 octobre ont été ouverts, analysés et rapprochés des empreintes Git. Ils contiennent 172 blocs horaires (85 + 87), mais **aucune observation mentionnant DOGE**. L'absence concerne uniquement ces deux collecteurs ; elle n'établit pas que le marché DOGE/USDC était absent de la plateforme.
+
+| Collecteur | Fichiers | Blocs horaires archivés | Observations DOGE |
+|---|---:|---:|---:|
+| `case-market-hourly` | 7 | 85 | 0 |
+| `okx-hourly` | 7 | 87 | 0 |
+| **Total** | **14** | **172** | **0** |
+
+Les chemins et SHA Git des 14 archives figurent dans le [registre des preuves DOGE](../data/crypto/research/seven_heaven_doge_spot_evidence_2026_11_09.json). Dans les répertoires examinés, le dernier fichier quotidien est daté du **28 octobre 2026**. Les index `latest.json` de ces deux collecteurs pointent eux aussi sur le 28 octobre.
+
+### Contrôle de la paire et des règles de négociation
+
+- **Référencement public constaté :** [catalogue OKX Europe Spot / USDC](https://www.okx.com/en-eu/markets/spot/usdc-all) et [catalogue Meme / USDC](https://www.okx.com/en-eu/markets/spot/usdc-meme) citent DOGE/USDC. Les tableaux récupérés ne présentent pas de bid/ask chiffré exploitable.
+- **Contrat officiel de données** : [documentation API OKX](https://www.okx.com/docs-v5/en/) pour les requêtes `GET /api/v5/public/instruments?instType=SPOT&instId=DOGE-USDC`, `GET /api/v5/market/books?instId=DOGE-USDC&sz=5` et éventuellement `GET /api/v5/market/ticker?instId=DOGE-USDC`.
+- **Vérification non aboutie :** l'accès à ces réponses actuelles depuis l'environnement d'analyse a échoué. Il n'y a donc **aucune valeur DOGE courante vérifiée** pour `state`, `minSz`, `lotSz`, `tickSz`, `ts`, bids/asks, spread ou profondeur. L'échec d'accès du client n'établit pas une indisponibilité du service OKX.
+- **Droits régionaux :** une paire affichée dans un catalogue public ne prouve pas l'éligibilité d'un compte individuel EEE, les frais maker/taker personnels ni l'autorisation d'ordre.
+
+### La prochaine preuve utile (sans clé privée)
+
+Collecter un couple de réponses publiques de la même période depuis un environnement autorisé : métadonnées de l'instrument et carnet cinq niveaux, avec code HTTP, horodatage exchange du carnet et heure de réception UTC, plus provenance. Vérifier alors `instId`, `state`, `minSz`, `lotSz`, `tickSz`, `bids`, `asks` et la couverture du montant. **Ne pas utiliser l'historique Binance DOGEUSDT comme substitut au carnet OKX DOGE-USDC.**
+
+**Statut documentaire : `PUBLIC_PAIR_LISTED / DOGE_NOT_IN_EXAMINED_ARCHIVES / CURRENT_RULES_AND_BOOK_UNVERIFIED / PAPER_NOT_CERTIFIED`.** Aucun ordre réel ou PAPER, aucune modification de l'Administrator, du Trader ou du Bridge R31.
