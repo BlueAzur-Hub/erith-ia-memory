@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="Continuité historique BTC et ETH : interruptions Spot Binance comparées aux données Coinbase et Kraken archivées.">
-<title>Seven Heaven · Continuité des marchés BTC / ETH</title>
+<meta name="description" content="Continuité historique BTC, ETH, BNB, XRP et SOL : archives Binance, Coinbase et Kraken qualifiées sans substitution des devises.">
+<title>Seven Heaven · Continuité des marchés · Top 5</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark;background:#071522;color:#eef6fa;font-size:15px;line-height:1.58}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 75% 0%,#173e52 0%,#0a2030 46%,#071522 85%);color:#eef6fa}
@@ -37,8 +37,17 @@ td{font-size:.91rem}
 .note{border-left:3px solid #7fbfc2;padding:4px 14px;color:#c0d6e1;margin:18px 0}
 footer{color:#aec3cf;border-top:1px solid #35546a;padding-top:22px;margin-top:26px;font-size:.83rem}
 @media(max-width:700px){.cards{grid-template-columns:1fr}.card strong{font-size:1.85rem}section{padding:16px}main{padding-bottom:48px}}
+.top5-controls label{min-width:165px;max-width:initial;flex:1 1 170px}
+.evidence-detail{min-width:240px;max-width:420px;padding:6px 0;color:#cadce4;font-size:.86rem;overflow-wrap:anywhere}
+.evidence-detail p{margin:8px 0}
+.evidence-detail a{display:inline-block;margin:0 4px 4px 0}
+details summary{cursor:pointer;color:#9ae4ea;font-weight:650;white-space:nowrap}
+details[open] summary{margin-bottom:9px}
+#top5-evidence-rows td:nth-child(3),#top5-evidence-rows td:nth-child(4),#top5-evidence-rows td:nth-child(5){min-width:185px}
+@media(max-width:700px){.top5-controls label{min-width:calc(50% - 12px)}.top5-controls button{width:100%}}
 </style>
 <script src="./radar-venue-continuity.js" defer></script>
+<script src="./radar-venue-top5.js" defer></script>
 </head>
 <body>
 <main>
@@ -55,6 +64,51 @@ footer{color:#aec3cf;border-top:1px solid #35546a;padding-top:22px;margin-top:26
 <div class="card"><small>BTC/USD · Coinbase</small><strong>470 / 470 min</strong><p>Activité vérifiée sur les trois intervalles</p></div>
 <div class="card"><small>ETH/USD · Coinbase</small><strong>470 / 470 min</strong><p>Bougies natives documentées dans le Coffre</p></div>
 </div>
+
+<section aria-labelledby="top5-evidence-heading">
+<h2 id="top5-evidence-heading">Explorer le Coffre multi-plateformes · Top 5</h2>
+<p><strong>42 fenêtres actif/date</strong> déjà archivées : BTC, ETH, BNB, XRP, SOL. Consultez les preuves sans confondre <em>arrêt Binance officiellement documenté</em>, <em>absence de bougies observées</em> et <em>activité sur une autre plateforme</em>. Les dates sont historiques ; elles ne démontrent aucune disponibilité actuelle sur OKX.</p>
+<div class="controls top5-controls">
+<label for="top5-asset">Cryptomonnaie
+<select id="top5-asset">
+<option value="all">Top 5 complet</option>
+<option value="BTC">BTC · Bitcoin</option>
+<option value="ETH">ETH · Ethereum</option>
+<option value="BNB">BNB · BNB</option>
+<option value="XRP">XRP · XRP</option>
+<option value="SOL">SOL · Solana</option>
+</select></label>
+<label for="top5-date">Date UTC
+<select id="top5-date"><option value="all">Toutes les dates</option></select></label>
+<label for="top5-venue">Plateforme / preuve
+<select id="top5-venue">
+<option value="all">Toutes les plateformes</option>
+<option value="binance">Binance · incident officiel BTC</option>
+<option value="coinbase">Coinbase · activité attestée</option>
+<option value="kraken">Kraken · sondes positives</option>
+</select></label>
+<label for="top5-proof">Qualité / couverture
+<select id="top5-proof">
+<option value="all">Tous les niveaux</option>
+<option value="official">Incident Binance documenté</option>
+<option value="unknown">Cause Binance inconnue</option>
+<option value="complete">Coinbase · couverture complète</option>
+<option value="partial">Coinbase · couverture partielle</option>
+<option value="none">Coinbase · aucune activité attestée</option>
+<option value="suspended">Coinbase · sondage non effectué</option>
+</select></label>
+<button type="button" id="top5-evidence-reload">Relire le Coffre</button>
+</div>
+<p id="top5-evidence-summary" class="muted">En attente des preuves historiques…</p>
+<p id="top5-evidence-status" class="status" role="status" aria-live="polite">Chargement du Coffre…</p>
+<div class="table-wrap">
+<table aria-label="Top 5 : fenêtres historiques vérifiées par plateforme">
+<thead><tr><th>Date et heures UTC</th><th>Actif</th><th>Binance Spot · USDT</th><th>Coinbase · USD</th><th>Kraken · USD</th><th>Justificatifs</th></tr></thead>
+<tbody id="top5-evidence-rows"><tr><td colspan="6">Chargement…</td></tr></tbody>
+</table>
+</div>
+<p class="note"><strong>Attention :</strong> pour les actifs autres que BTC, un sondage API à zéro bougie n'est pas la même preuve qu'un ZIP de transactions natives vérifié. Une sonde Kraken positive établit une activité ponctuelle, pas toutes les minutes. Aucun cours USD ne remplace un cours USDT ou USDC.</p>
+</section>
 <section aria-labelledby="venue-continuity-heading">
 <h2 id="venue-continuity-heading">Comparer les plateformes sur les interruptions</h2>
 <p>La matrice d'archives et le registre officiel des incidents sont relus <strong>directement depuis le Coffre public</strong>. On peut choisir une date et inspecter les preuves exactes.</p>
@@ -87,7 +141,7 @@ footer{color:#aec3cf;border-top:1px solid #35546a;padding-top:22px;margin-top:26
 <h2 id="proofs">Origine des preuves</h2>
 <p><a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/cross_venue_gap_matrix/index.json" target="_blank" rel="noopener noreferrer">Matrice multi-plateformes du Coffre</a> et <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/exchange_incident_register/index.json" target="_blank" rel="noopener noreferrer">registre des incidents Binance</a>. Ces fichiers existaient déjà dans le projet ; cette page les rassemble visuellement, sans les recopier.</p>
 </section>
-<footer>Seven Heaven · Agent-Crypto · Étude historique, aucune opération réelle · BTC/ETH · USD ≠ USDT ≠ USDC</footer>
+<footer>Seven Heaven · Agent-Crypto · Étude historique, aucune opération réelle · BTC/ETH/BNB/XRP/SOL · USD ≠ USDT ≠ USDC</footer>
 </main>
 </body>
 </html>

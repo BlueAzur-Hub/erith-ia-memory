@@ -1,0 +1,34 @@
+name: Seven Heaven Top 5 venue continuity
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/laboratoire/venue-continuity.html"
+      - "public/agent_crypto_erith_ia/laboratoire/radar-venue-top5.js"
+      - "public/agent_crypto_erith_ia/laboratoire/test-radar-venue-top5.cjs"
+      - ".github/workflows/venue-top5-evidence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-evidence:
+    name: Offline real-archive contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/agent_crypto_erith_ia/laboratoire
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/cross_venue_gap_matrix
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/exchange_incident_register
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - name: Validate JavaScript syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-venue-top5.js
+          node --check public/agent_crypto_erith_ia/laboratoire/test-radar-venue-top5.cjs
+      - name: Check source-backed historical contracts
+        run: node public/agent_crypto_erith_ia/laboratoire/test-radar-venue-top5.cjs
