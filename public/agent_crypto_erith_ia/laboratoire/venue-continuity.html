@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Continuité historique BTC et ETH : interruptions Spot Binance comparées aux données Coinbase et Kraken archivées.">
+<title>Seven Heaven · Continuité des marchés BTC / ETH</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark;background:#071522;color:#eef6fa;font-size:15px;line-height:1.58}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 75% 0%,#173e52 0%,#0a2030 46%,#071522 85%);color:#eef6fa}
+main{max-width:1220px;margin:auto;padding:24px clamp(16px,3vw,36px) 80px}
+a{color:#91e5ed;text-underline-offset:3px}a:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #ffc777;outline-offset:3px}
+nav{display:flex;gap:12px 22px;flex-wrap:wrap;align-items:center;padding-bottom:18px;border-bottom:1px solid #315267;font-size:.9rem}
+.kicker{color:#8fe5df;font-size:.76rem;font-weight:750;letter-spacing:.15em;text-transform:uppercase;margin:42px 0 10px}
+h1{font:500 clamp(2.15rem,5vw,4.2rem)/1.1 Georgia,serif;max-width:780px;letter-spacing:-.025em;margin:0}
+.lead{font-size:1.08rem;max-width:830px;color:#c1d4e1;margin:20px 0 25px}
+h2{font-size:1.3rem;margin:0 0 12px}h3{font-size:1.04rem;color:#bdebee;margin:0 0 10px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:26px 0}
+.card,section{border:1px solid #34566a;border-radius:14px;background:#102637;padding:21px}
+.card small{display:block;color:#afc5d0;font-size:.83rem}
+.card strong{display:block;margin-top:7px;font-size:clamp(1.35rem,3vw,2.15rem);font-weight:750;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.card p{color:#b6d0da;font-size:.83rem;margin:6px 0 0}
+section{margin:16px 0}p{margin:10px 0}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:19px 0 12px}
+.controls label{display:grid;gap:5px;flex:1;max-width:420px;color:#c0d5df}
+select,button{font:inherit;min-height:44px;border:1px solid #5a8296;background:#092133;color:#f0f8fc;border-radius:9px;padding:9px 12px}
+button{cursor:pointer;background:#1a5365;font-weight:700}
+button:disabled{opacity:.5;cursor:progress}
+.status{border-left:3px solid #eac98e;background:#152d3c;padding:11px 14px;border-radius:0 8px 8px 0;color:#e4eff6;min-height:42px}
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:800px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:13px 10px;text-align:left;border-bottom:1px solid #29485a;vertical-align:top}
+th{color:#bcd0d9;font-size:.82rem;font-weight:600}
+td{font-size:.91rem}
+.muted{color:#b4c9d4;font-size:.87rem}
+.note{border-left:3px solid #7fbfc2;padding:4px 14px;color:#c0d6e1;margin:18px 0}
+footer{color:#aec3cf;border-top:1px solid #35546a;padding-top:22px;margin-top:26px;font-size:.83rem}
+@media(max-width:700px){.cards{grid-template-columns:1fr}.card strong{font-size:1.85rem}section{padding:16px}main{padding-bottom:48px}}
+</style>
+<script src="./radar-venue-continuity.js" defer></script>
+</head>
+<body>
+<main>
+<nav aria-label="Navigation du projet">
+<a href="./radar-historique.html">← Radar historique</a>
+<a href="../administrator/historical-vault.html">Coffre historique</a>
+<a href="./radar.html">Radar</a>
+</nav>
+<div class="kicker">Seven Heaven · Agent-Crypto · Archives croisées</div>
+<h1>Quand une plateforme s'arrête, le marché continue ailleurs.</h1>
+<p class="lead">Trois interruptions de Binance Spot, comparées aux véritables données historiques de Coinbase Exchange et à des contrôles ponctuels sur Kraken. Les sources restent distinctes : aucune bougie inventée, aucun ordre transmis.</p>
+<div class="cards" aria-label="Résumé de la recherche">
+<div class="card"><small>Suspensions Binance étudiées</small><strong>3</strong><p>13 août 2021 · 29 septembre 2021 · 24 mars 2023</p></div>
+<div class="card"><small>BTC/USD · Coinbase</small><strong>470 / 470 min</strong><p>Activité vérifiée sur les trois intervalles</p></div>
+<div class="card"><small>ETH/USD · Coinbase</small><strong>470 / 470 min</strong><p>Bougies natives documentées dans le Coffre</p></div>
+</div>
+<section aria-labelledby="venue-continuity-heading">
+<h2 id="venue-continuity-heading">Comparer les plateformes sur les interruptions</h2>
+<p>La matrice d'archives et le registre officiel des incidents sont relus <strong>directement depuis le Coffre public</strong>. On peut choisir une date et inspecter les preuves exactes.</p>
+<div class="controls">
+<label for="venue-continuity-date">Période historique
+<select id="venue-continuity-date">
+<option value="all">Les trois interruptions</option>
+<option value="2021-08-13">13 août 2021</option>
+<option value="2021-09-29">29 septembre 2021</option>
+<option value="2023-03-24">24 mars 2023</option>
+</select></label>
+<button type="button" id="venue-continuity-reload">Actualiser les preuves</button>
+</div>
+<p id="venue-continuity-status" class="status" role="status" aria-live="polite">Lecture des registres historiques…</p>
+<div class="table-wrap">
+<table aria-label="Preuves comparatives Binance, Coinbase et Kraken">
+<thead><tr><th>Heures UTC</th><th>Actif</th><th>Binance Spot USDT</th><th>Coinbase USD</th><th>Kraken USD</th><th>Preuve de l'arrêt</th></tr></thead>
+<tbody id="venue-continuity-rows"><tr><td colspan="6">Chargement en cours…</td></tr></tbody>
+</table>
+</div>
+<noscript><p>Activer JavaScript pour consulter les registres et filtrer les périodes.</p></noscript>
+</section>
+<section aria-labelledby="interpretation">
+<h2 id="interpretation">Comment lire ces résultats</h2>
+<p><strong>Binance arrêté :</strong> aucune transaction ne peut être simulée sur ce marché pendant l'interruption. <strong>Coinbase actif :</strong> les bougies BTC/USD et ETH/USD démontrent que l'activité continuait sur une autre plateforme. <strong>Kraken :</strong> les quelques transactions vérifiées prouvent une activité ponctuelle, pas nécessairement une série complète.</p>
+<p class="note">Important : BTC/USD sur Coinbase n'est pas BTC/USDT sur Binance. Il est interdit de recopier les cours ou volumes de l'un dans l'historique natif de l'autre.</p>
+<p class="muted">Ce panneau est documentaire, en lecture seule. Il ne modifie ni la stratégie PAPER existante, ni les fonctions du Trader, ni le Bridge R31.</p>
+</section>
+<section aria-labelledby="proofs">
+<h2 id="proofs">Origine des preuves</h2>
+<p><a href="../data/historical_archive_prototype/cross_venue_gap_matrix/index.json" target="_blank" rel="noopener noreferrer">Matrice multi-plateformes du Coffre</a> et <a href="../data/historical_archive_prototype/exchange_incident_register/index.json" target="_blank" rel="noopener noreferrer">registre des incidents Binance</a>. Ces fichiers existaient déjà dans le projet ; cette page les rassemble visuellement, sans les recopier.</p>
+</section>
+<footer>Seven Heaven · Agent-Crypto · Étude historique, aucune opération réelle · BTC/ETH · USD ≠ USDT ≠ USDC</footer>
+</main>
+</body>
+</html>
