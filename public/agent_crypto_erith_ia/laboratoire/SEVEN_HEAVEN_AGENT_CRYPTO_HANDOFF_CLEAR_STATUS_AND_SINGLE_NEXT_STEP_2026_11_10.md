@@ -69,15 +69,23 @@ On a cherché à expliquer deux mouvements BTC, puis à augmenter les sources, p
 
 **Correction de méthode :** ne plus prendre « il manque une source » comme permission d'ajouter immédiatement un nouveau collecteur. D'abord démontrer une utilité lisible pour le créateur, puis décider si un développement supplémentaire est nécessaire.
 
-## 6. Unique prochaine étape, après la passation
+## 6. Recette de réception de l'Observatoire — 10 novembre 2026
 
-**Rendre l'observatoire EXISTANT compréhensible et accessible, sans écrire un nouveau moteur :**
+**La page publique est publiée et la chaîne automatisée a réussi après correction.**
 
-- Contrôler la page publique et son rapport dans un navigateur (Firefox si possible) : peut-on lire clairement le prix, l'heure UTC, les événements réellement observés et l'avertissement de couverture ?
-- Vérifier qu'elle ne prétend pas être dans le Trader, ne remplace pas les actualités de l'Interface et ne montre aucune donnée privée.
-- Corriger uniquement un défaut de lecture ou d'accès prouvé, s'il existe.
+- Le créateur a fourni une capture de la page initiale : elle se chargeait et affichait les statistiques, mais **0 liquidation** apparaissait aussi quand une heure n'avait aucun flux de connexion.
+- Correction publiée au commit `49344a175e1d8d08752516c0da3a60fc63123515` : [ouvrir l'Observatoire corrigé](https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/btc-market-operations/dashboard.html). Le tableau écrit maintenant **« Non observé »** (pas un faux zéro) pour les heures sans connexion.
+- Un résumé humain explique la variation du BTC, le plus gros volume horaire, les fenêtres de liquidation observées et le nombre d'actualités ; toutes les heures visibles sont au fuseau **Europe/Paris**.
+- Un ancien rapport déclenche un avertissement de fraîcheur **dans le navigateur** ; le bouton Actualiser relit le dernier JSON public, il ne force pas d'ordre ni de collecte instantanée.
+- [Exécution GitHub Actions après correction](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42851464876) **réussie** : tests du backend Python, **cinq tests de comportement de la page**, récupération Spot OKX, génération du rapport et publication GitHub.
+- Rapport contrôlé au `2026-11-10T16:08:35Z` : `OPERATIONAL_PARTIAL_COVERAGE`, 1277 messages de liquidation observés, 6 fenêtres de connexion dans la période mobile. Ces nombres sont **un instantané daté**, pas des totaux mondiaux ni des données en temps réel.
+- Un test navigateur automatisé local a été tenté mais le navigateur de cet environnement a refusé même la navigation `localhost`/`file:` ; **ne pas revendiquer une recette visuelle Firefox de la page mise à jour** sans vérification réelle.
 
-**Ne pas encore** déployer de service 24 h/24, changer de plateforme, créer une autre suite d'IA, ajouter de nouveaux dossiers Top 50, modifier le Trader ni refaire le Bridge. Décider ensuite, avec le créateur, si cette surveillance mérite un hébergement permanent.
+**Une seule vérification utilisateur utile** : ouvrir l'[Observatoire Seven](https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/btc-market-operations/dashboard.html) dans Firefox, actualiser complètement la page (Ctrl+F5 si nécessaire), constater le bloc **« Ce que montrent les données »** et **« Non observé »** dans le tableau. Si ces éléments sont visibles, la réception de la **page de consultation** est terminée.
+
+**Limite structurante, indépendante du fonctionnement de la page** : les liquidations ne sont pas collectées 24 h/24. Un hébergement persistant géré et supervisé est nécessaire pour une couverture réellement continue ; ne pas promettre cette capacité avec les GitHub Actions échantillonnées. Ne pas entreprendre d'hébergement privé ou de modification du Bridge sans décision explicite du créateur.
+
+**Pas de nouveau collecteur, pas de nouvelle refonte, pas de modification du Trader ou de la présentation des actualités dans Administrator.**
 
 ## 7. Procédure de réveil pour une autre IA / un autre fil
 
