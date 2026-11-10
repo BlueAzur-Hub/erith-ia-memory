@@ -1,0 +1,96 @@
+{
+  "schema": "seven.btc.market.news.analysis.proof.v1",
+  "version": "2026-11-10-proof-of-concept",
+  "status": "MATCHED",
+  "kind": "READ_ONLY_HISTORICAL_OBSERVATION",
+  "orders_enabled": false,
+  "real_orders": false,
+  "paper_only": true,
+  "advice": false,
+  "causal_claim": false,
+  "provenance": {
+    "instrument": "BTC-USDC",
+    "venue": "OKX",
+    "market_type": "SPOT",
+    "candle_source": "OKX public candles / SYNTHETIC FIXTURE; not real observed market data",
+    "candle_bar": "1h",
+    "market_last_loaded_at": "2026-11-07T00:00:00.000Z",
+    "news_schema": "atlas_news_sentinel_world_to_market_v1",
+    "news_generated_at_utc": "2026-11-06T18:00:00.000Z",
+    "observed_at_utc": "2026-11-07T00:00:00.000Z"
+  },
+  "technical": {
+    "ema_periods": [
+      5,
+      13,
+      34
+    ],
+    "ema_latest": [
+      74460,
+      74420,
+      74315
+    ],
+    "ema_fast_relative_to_slow": "ABOVE",
+    "last_closed_candle_utc": "2026-11-06T23:00:00.000Z",
+    "last_closed_price": 74480,
+    "crossover_last_two_closed_candles": "NONE",
+    "note": "EMA = descriptive trend indicator, not a forecast or trading order."
+  },
+  "counts": {
+    "market_candles": 48,
+    "news_events_total": 1,
+    "btc_events_qualified": 1,
+    "matched": 1,
+    "unmatched": 0,
+    "news_events_skipped": 0
+  },
+  "coverage": {
+    "institutional_flows": {
+      "events_72h": 5,
+      "distinct_sources": 3
+    },
+    "leverage": {
+      "events_72h": 0,
+      "distinct_sources": 0
+    },
+    "sources_ok": 14,
+    "sources_total": 15,
+    "quantitative_etf_flows_verified": false,
+    "quantitative_derivatives_liquidations_verified": false
+  },
+  "warnings": [
+    "CORRELATION_IS_NOT_CAUSATION",
+    "ETF_FLOWS_NOT_QUANTIFIED_FROM_NEWS_HEADLINES",
+    "DERIVATIVES_LIQUIDATIONS_NOT_QUANTIFIED_FROM_SPOT_VOLUME",
+    "NO_TRADER_ORDER_OR_PERSONAL_ACCOUNT_ACCESS",
+    "LEVERAGE_NEWS_COVERAGE_GAP"
+  ],
+  "matches": [
+    {
+      "event_id": "synthetic_event",
+      "event_at_utc": "2026-11-05T20:30:00.000Z",
+      "headline": "SYNTHETIC ONLY: hypothetical institutional flows story",
+      "source_name": "Synthetic Fixture",
+      "source_url": "https://example.org/synthetic",
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "source_count": 1,
+      "evidence": {
+        "pre_event_candle_utc": "2026-11-05T19:00:00.000Z",
+        "pre_event_close_usdc": 74200,
+        "first_post_event_candle_utc": "2026-11-05T21:00:00.000Z",
+        "post_event_close_usdc": 74220,
+        "change_pct_one_closed_bar": 0.02695,
+        "volume_btc_first_post_event_bar": 10,
+        "volume_ratio_to_previous_three_closed_bars": 0.83333333,
+        "change_pct_three_closed_bars": 0.05391,
+        "post_event_closed_bars": 3,
+        "partial_event_bar_excluded": true,
+        "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+      }
+    }
+  ],
+  "unmatched": [],
+  "conclusion": "This prototype only aligns published BTC news with completed OKX Spot candles. It cannot identify the cause of a candle, the executed ETF trades, or futures liquidations. No orders."
+}
