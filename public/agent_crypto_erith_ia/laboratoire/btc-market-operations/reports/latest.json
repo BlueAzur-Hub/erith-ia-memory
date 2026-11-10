@@ -32,24 +32,8 @@
       }
     }
   },
-  "generated_at_utc": "2026-11-10T16:08:35Z",
+  "generated_at_utc": "2026-11-10T17:46:49Z",
   "hourly": [
-    {
-      "causal_claim": false,
-      "close_usdc": "74719.9",
-      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
-      "hour_utc": "2026-11-09T17:00:00Z",
-      "news_published_in_hour": 0,
-      "observed_derivative_liquidation_messages_by_provider": {
-        "binance": 0,
-        "bybit": 0,
-        "okx": 0
-      },
-      "open_usdc": "74996.3",
-      "providers_with_any_connection_in_hour": [],
-      "spot_volume_btc": "29.29209722",
-      "spot_volume_usdc": "2190116.25163181"
-    },
     {
       "causal_claim": false,
       "close_usdc": "74632.4",
@@ -231,7 +215,7 @@
       "close_usdc": "74735.4",
       "coverage_status": "NO_DOCUMENTED_OBSERVATION",
       "hour_utc": "2026-11-10T05:00:00Z",
-      "news_published_in_hour": 1,
+      "news_published_in_hour": 0,
       "observed_derivative_liquidation_messages_by_provider": {
         "binance": 0,
         "bybit": 0,
@@ -405,6 +389,22 @@
       ],
       "spot_volume_btc": "236.49627083",
       "spot_volume_usdc": "17344341.284658482"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "72830.3",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-10T16:00:00Z",
+      "news_published_in_hour": 2,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "73150",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "127.55348552",
+      "spot_volume_usdc": "9316128.070671473"
     }
   ],
   "limitations": [
@@ -422,18 +422,6 @@
       {
         "causal_claim": false,
         "driver_domains": [
-          "macro_liquidity"
-        ],
-        "event_at_utc": "2026-11-09T19:06:03Z",
-        "event_id": "feed_3dd75c9ad10b29cb",
-        "event_ms": 1794251163000,
-        "headline": "Bitcoin in Limbo as Stocks Rebound Ahead of US Inflation Report",
-        "source_name": "Decrypt",
-        "source_url": "https://decrypt.co/382861/bitcoin-limbo-stocks-rebound-us-inflation"
-      },
-      {
-        "causal_claim": false,
-        "driver_domains": [
           "macro_liquidity",
           "institutional_flows"
         ],
@@ -443,16 +431,6 @@
         "headline": "Bitcoin faces U.S. CPI test as analysts warn inflation relief may not be enough",
         "source_name": "CoinDesk",
         "source_url": "https://www.coindesk.com/markets/2026/11/10/bitcoin-faces-u-s-cpi-test-as-analysts-warn-inflation-relief-may-not-be-enough"
-      },
-      {
-        "causal_claim": false,
-        "driver_domains": [],
-        "event_at_utc": "2026-11-10T05:18:31Z",
-        "event_id": "feed_d83af6d65e06d86c",
-        "event_ms": 1794287911000,
-        "headline": "Bitcoin miner MARA sold 13,597 BTC for $1.1 billion in six weeks, plans to sell more",
-        "source_name": "CoinDesk",
-        "source_url": "https://www.coindesk.com/markets/2026/11/10/bitcoin-miner-mara-sold-13-597-btc-for-usd1-1-billion-in-six-weeks-plans-to-sell-more"
       },
       {
         "causal_claim": false,
@@ -484,9 +462,9 @@
           "macro_liquidity"
         ],
         "event_at_utc": "2026-11-10T10:41:45Z",
-        "event_id": "feed_5f04923b634ee588",
+        "event_id": "feed_02ed52af8c40478a",
         "event_ms": 1794307305000,
-        "headline": "Live news: Bitcoin trading near $74,000 after disappointing inflation data",
+        "headline": "Live news: Bitcoin falls to nearly three-month low after disappointing inflation data",
         "source_name": "CoinDesk",
         "source_url": "https://www.coindesk.com/markets/2026/11/10/live-news-traders-price-in-fed-rate-hike-for-december-as-bitcoin-and-gold-retreat"
       },
@@ -555,29 +533,75 @@
         "headline": "Here’s what happened in crypto today",
         "source_name": "Cointelegraph",
         "source_url": "https://cointelegraph.com/news/what-happened-in-crypto-today"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity"
+        ],
+        "event_at_utc": "2026-11-10T16:25:03Z",
+        "event_id": "feed_c0fde4f6f53f898e",
+        "event_ms": 1794327903000,
+        "headline": "Bitcoin nears 11-week low after ‘discouraging’ US CPI inflation beat",
+        "source_name": "Cointelegraph",
+        "source_url": "https://cointelegraph.com/markets/bitcoin-11-week-low-discouraging-us-cpi-inflation"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity"
+        ],
+        "event_at_utc": "2026-11-10T16:27:57Z",
+        "event_id": "feed_2b12c21829242d40",
+        "event_ms": 1794328077000,
+        "headline": "Bitcoin Falls as Hot US Inflation Fuels Fears of Bigger Fed Rate Hike",
+        "source_name": "Decrypt",
+        "source_url": "https://decrypt.co/382950/bitcoin-falls-hot-us-inflation-fears-bigger-fed-rate-hike"
       }
     ],
-    "events_relevant_to_btc_24h": 13,
+    "events_relevant_to_btc_24h": 14,
     "owner": "Interface Administrator",
-    "source_generated_at": "2026-11-10T15:13:05.844334+00:00"
+    "source_generated_at": "2026-11-10T17:20:02.062581+00:00"
   },
   "observation_only": true,
   "orders_enabled": false,
   "real_orders": 0,
   "schema": "seven.crypto.btc-evidence-monitor.v1",
   "spot": {
-    "age_after_close_ms": 515299,
-    "archive_last_success_at": "2026-11-10T16:08:34.893000+00:00",
+    "age_after_close_ms": 2809065,
+    "archive_last_success_at": "2026-11-10T17:46:48.779000+00:00",
     "bar": "1H",
     "closed_hours_in_window": 23,
     "fresh": true,
     "instrument": "BTC-USDC",
-    "latest_hour_utc": "2026-11-10T15:00:00Z",
+    "latest_hour_utc": "2026-11-10T16:00:00Z",
     "market_type": "SPOT",
     "source_exchange_signed": false,
     "venue": "OKX"
   },
   "status": "OPERATIONAL_PARTIAL_COVERAGE",
-  "window_end_utc": "2026-11-10T16:08:35Z",
-  "window_start_utc": "2026-11-09T16:08:35Z"
+  "strategy_context": {
+    "bar": "1H",
+    "ema_13_usdc": 74036.95,
+    "ema_34_usdc": 74504.11,
+    "ema_5_usdc": 73517.59,
+    "from_utc": "2026-11-07T18:00:00Z",
+    "instrument": "BTC-USDC",
+    "last_close_usdc": 72830.3,
+    "limitations": [
+      "Hourly EMA structure, not a tested multi-day swing strategy",
+      "No entry/exit decisions, fees, slippage or performance backtest",
+      "Observations are not a signal or investment recommendation"
+    ],
+    "observed_condition": "ALIGNEMENT_BAISSIER_HORAIRE",
+    "observed_hours": 71,
+    "orders_enabled": false,
+    "status": "OBSERVED_NOT_BACKTESTED",
+    "strategy": "SWING_EMA_5_13_34",
+    "strategy_validated": false,
+    "to_utc": "2026-11-10T16:00:00Z",
+    "venue": "OKX"
+  },
+  "window_end_utc": "2026-11-10T17:46:49Z",
+  "window_start_utc": "2026-11-09T17:46:49Z"
 }

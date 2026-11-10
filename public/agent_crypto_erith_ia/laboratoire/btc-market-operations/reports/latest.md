@@ -1,14 +1,14 @@
-# Seven Heaven — suivi public BTC : 2026-11-10T16:08:35Z
+# Seven Heaven — suivi public BTC : 2026-11-10T17:46:49Z
 
 **Statut : OPERATIONAL_PARTIAL_COVERAGE** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-09T16:08:35Z au 2026-11-10T16:08:35Z.
+Fenêtre UTC : 2026-11-09T17:46:49Z au 2026-11-10T17:46:49Z.
 
 ## Santé et provenance
 
-- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-10T15:00:00Z ; source fraîche : OUI.
+- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-10T16:00:00Z ; source fraîche : OUI.
 - **Liquidations dérivées** : 1277 messages observés dans les archives ; 6 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
-- **Actualités de l'Interface** : 13 événements BTC ; relevé source 2026-11-10T15:13:05.844334+00:00.
+- **Actualités de l'Interface** : 14 événements BTC ; relevé source 2026-11-10T17:20:02.062581+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
@@ -26,7 +26,6 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 
 | UTC | Ouverture (USDC) | Clôture (USDC) | Volume Spot BTC | Messages de liquidations observés | Couverture |
 |---|---:|---:|---:|---:|---|
-| 2026-11-10T04:00:00Z | 74489.9 | 74721.3 | 15.55906391 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T05:00:00Z | 74705.5 | 74735.4 | 4.32549021 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T06:00:00Z | 74735.4 | 74580.3 | 9.79738434 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T07:00:00Z | 74576.6 | 74767 | 15.18796694 | 0 | NO_DOCUMENTED_OBSERVATION |
@@ -38,6 +37,14 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 | 2026-11-10T13:00:00Z | 74313.4 | 73679.9 | 114.17539267 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T14:00:00Z | 73671.6 | 74336.5 | 47.59983469 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T15:00:00Z | 74337 | 73152.8 | 236.49627083 | 1277 | SAMPLED_WITH_GAPS |
+| 2026-11-10T16:00:00Z | 73150 | 72830.3 | 127.55348552 | 0 | NO_DOCUMENTED_OBSERVATION |
+
+## Étude de stratégie — structure EMA 5/13/34 (observation, pas backtest)
+
+- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-07T18:00:00Z au 2026-11-10T16:00:00Z.
+- Dernière clôture : 72830.3 USDC/BTC ; EMA 5 : 73517.59 ; EMA 13 : 74036.95 ; EMA 34 : 74504.11 USDC.
+- Structure horaire observée : **ALIGNEMENT_BAISSIER_HORAIRE**.
+- **Stratégie Swing Trading NON validée** : cet échantillon horaire ne démontre ni rentabilité, ni règles de sortie, ni tenue sur plusieurs jours. Aucun conseil d'achat ou de vente.
 
 ## Restrictions
 
