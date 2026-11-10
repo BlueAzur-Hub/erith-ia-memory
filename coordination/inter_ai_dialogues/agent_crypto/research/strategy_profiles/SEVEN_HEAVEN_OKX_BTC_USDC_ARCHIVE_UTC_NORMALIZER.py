@@ -192,7 +192,7 @@ def _fixture(directory: Path, date: str, confirm: str,
     if duplicate:
         rows = rows + [r[:] for r in rows]
     if corrupt:
-        rows[-1][1] = "99999"  # duplicated timestamp with different open
+        rows[-1][1] = str(Decimal(rows[-1][1]) + Decimal("0.5"))  # conflicting, valid OHLC
     csvout = io.StringIO()
     writer = csv.writer(csvout, lineterminator="\n")
     writer.writerow(["instrument_name", "open", "high", "low", "close",
