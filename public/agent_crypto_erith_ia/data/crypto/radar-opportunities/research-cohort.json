@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-10T15:44:42Z",
+  "source_qualification_at_utc": "2026-11-10T16:24:09Z",
   "source_observation_date_utc": "2026-11-10",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -43,32 +43,6 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
-      "coin_id": "aria-ai",
-      "symbol": "ARIA",
-      "name": "Aria.AI",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 600,
-      "change24h_pct_at_snapshot": 7.67468,
-      "change7d_pct_at_snapshot": 54.0039,
-      "volume24h_aggregate_usd": 13884617,
-      "spot": {
-        "venue": "Bitget",
-        "pair": "ARIAUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 17.03658,
-        "roundtrip_cost_pct_assumed": 0.40671
-      },
-      "detections_archived": 3,
-      "j1_observed": 2,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
       "coin_id": "beam-2",
       "symbol": "BEAM",
       "name": "Beam",
@@ -82,8 +56,8 @@
         "venue": "Bitget",
         "pair": "BEAMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 11.83852,
-        "roundtrip_cost_pct_assumed": 0.31798
+        "spread_bps_at_snapshot": 13.96648,
+        "roundtrip_cost_pct_assumed": 0.34381
       },
       "detections_archived": 6,
       "j1_observed": 5,
@@ -108,8 +82,8 @@
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 16.2206,
-        "roundtrip_cost_pct_assumed": 0.36165
+        "spread_bps_at_snapshot": 13.94006,
+        "roundtrip_cost_pct_assumed": 0.33893
       },
       "detections_archived": 9,
       "j1_observed": 8,
@@ -134,8 +108,8 @@
         "venue": "Binance",
         "pair": "KITEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.64678,
-        "roundtrip_cost_pct_assumed": 0.30326
+        "spread_bps_at_snapshot": 8.58738,
+        "roundtrip_cost_pct_assumed": 0.28557
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -161,8 +135,8 @@
         "venue": "Bitget",
         "pair": "MAGMAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.00554,
-        "roundtrip_cost_pct_assumed": 0.26979
+        "spread_bps_at_snapshot": 10.99729,
+        "roundtrip_cost_pct_assumed": 0.30959
       },
       "detections_archived": 8,
       "j1_observed": 6,
@@ -187,8 +161,8 @@
         "venue": "Binance",
         "pair": "MUBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.11218,
-        "roundtrip_cost_pct_assumed": 0.21347
+        "spread_bps_at_snapshot": 0.97604,
+        "roundtrip_cost_pct_assumed": 0.20964
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -214,8 +188,8 @@
         "venue": "Binance",
         "pair": "TQQQBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.77195,
-        "roundtrip_cost_pct_assumed": 0.23397
+        "spread_bps_at_snapshot": 1.77857,
+        "roundtrip_cost_pct_assumed": 0.2328
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -241,8 +215,8 @@
         "venue": "Binance",
         "pair": "SNDKBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 3.13303,
-        "roundtrip_cost_pct_assumed": 0.23116
+        "spread_bps_at_snapshot": 0.11659,
+        "roundtrip_cost_pct_assumed": 0.20106
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -268,12 +242,39 @@
         "venue": "Binance",
         "pair": "SOXLBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.79517,
-        "roundtrip_cost_pct_assumed": 0.21781
+        "spread_bps_at_snapshot": 3.61337,
+        "roundtrip_cost_pct_assumed": 0.23595
       },
       "detections_archived": 6,
       "j1_observed": 5,
       "j7_observed": 3,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "sign-global",
+      "symbol": "SIGN",
+      "name": "Sign",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 707,
+      "change24h_pct_at_snapshot": 9.32999,
+      "change7d_pct_at_snapshot": -10.3679,
+      "volume24h_aggregate_usd": 11122445,
+      "spot": {
+        "venue": "Binance",
+        "pair": "SIGNUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 11.25492,
+        "roundtrip_cost_pct_assumed": 0.31216
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -295,8 +296,8 @@
         "venue": "Binance",
         "pair": "GRAMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.23788,
-        "roundtrip_cost_pct_assumed": 0.29205
+        "spread_bps_at_snapshot": 9.06208,
+        "roundtrip_cost_pct_assumed": 0.2903
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -304,6 +305,32 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "aria-ai",
+      "symbol": "ARIA",
+      "name": "Aria.AI",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 600,
+      "change24h_pct_at_snapshot": 7.67468,
+      "change7d_pct_at_snapshot": 54.0039,
+      "volume24h_aggregate_usd": 13884617,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "ARIAUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 16.66898,
+        "roundtrip_cost_pct_assumed": 0.51445
+      },
+      "detections_archived": 3,
+      "j1_observed": 2,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -322,8 +349,8 @@
         "venue": "OKX",
         "pair": "CARDS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 22.89902,
-        "roundtrip_cost_pct_assumed": 0.46615
+        "spread_bps_at_snapshot": 9.11993,
+        "roundtrip_cost_pct_assumed": 0.53444
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -375,8 +402,8 @@
         "venue": "Binance",
         "pair": "INITUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 22.11625,
-        "roundtrip_cost_pct_assumed": 0.42322
+        "spread_bps_at_snapshot": 22.94694,
+        "roundtrip_cost_pct_assumed": 0.49206
       },
       "detections_archived": 7,
       "j1_observed": 6,
@@ -384,33 +411,6 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "extreme_24h_move",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "sign-global",
-      "symbol": "SIGN",
-      "name": "Sign",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 707,
-      "change24h_pct_at_snapshot": 9.32999,
-      "change7d_pct_at_snapshot": -10.3679,
-      "volume24h_aggregate_usd": 11122445,
-      "spot": {
-        "venue": "Binance",
-        "pair": "SIGNUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 22.54791,
-        "roundtrip_cost_pct_assumed": 0.4483
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
         "book_time_unverified"
       ],
       "identity_certified": false,

@@ -277,6 +277,15 @@
       "cost_evaluable": 2,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-10|2026-11-10T16:24:09Z",
+      "qualified_at_utc": "2026-11-10T16:24:09Z",
+      "candidates": 20,
+      "okx_pairs": 4,
+      "cost_evaluable": 3,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -1827,6 +1836,25 @@
       "entry_investment_usdt": "99.999585972",
       "net_sellable_qty": "878.57",
       "break_even_bid_rise_pct": 0.7264,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "collector-crypt|2026-11-10",
+      "coin_id": "collector-crypt",
+      "symbol": "CARDS",
+      "pair": "CARDS-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-10T16:24:22Z",
+      "entry_bid_usdt": "0.218",
+      "entry_ask_usdt": "0.2185",
+      "entry_investment_usdt": "99.99947475",
+      "net_sellable_qty": "456.29",
+      "break_even_bid_rise_pct": 0.8336,
       "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
       "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
       "contract_identity_proven": false,
