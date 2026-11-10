@@ -40,6 +40,9 @@ for(const date of examples){
             record[k+'Count']=v.length;
             record[k+'Fields']=v.length&&typeof v[0]==='object'?Object.keys(v[0]):[];
             if(v.length&&typeof v[0]==='object'){
+              if(Array.isArray(v[0].groupDetails)){
+                record[k+'NestedGroupDetails']=v[0].groupDetails.slice(0,2).map(z=>({keys:Object.keys(z),...Object.fromEntries(Object.entries(z).filter(([kk,vv])=>!(/url|link|href/i.test(kk))&&typeof vv!=='object').map(([kk,vv])=>[kk,String(vv).slice(0,110)])),downloadFieldPresent:Object.entries(z).some(([kk,vv])=>/url|link|href/i.test(kk)&&Boolean(vv))}));
+              }
               record[k+'Example']={};
               for(const [kk,vv] of Object.entries(v[0])){
                 if(/url|href|link/i.test(kk))record[k+'Example'][kk+'Present']=Boolean(vv);
