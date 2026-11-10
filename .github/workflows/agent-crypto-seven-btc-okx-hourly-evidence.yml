@@ -1,0 +1,84 @@
+name: Seven Heaven BTC OKX Hourly Evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-seven-btc-okx-hourly-evidence.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/collect_okx_btc_hourly.py'
+      - 'public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/test_collect_okx_btc_hourly.py'
+      - 'public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-btc-okx-hourly-2026-11-05-08
+  cancel-in-progress: false
+
+jobs:
+  collect-two-verified-utc-days:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline source-contract and safety tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector -p 'test_*.py' -v
+      - name: Fetch 5 and 8 November original public OKX Spot 1H candles
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/collect_okx_btc_hourly.py \
+            --output public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence
+      - name: Validate manifest, exact 48 UTC hours, hashes and order prohibition
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,pathlib
+          root=pathlib.Path('public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence')
+          index=json.loads((root/'index.json').read_text(encoding='utf-8'))
+          assert index['instrument']=='BTC-USDC' and index['bar']=='1H'
+          assert index['dates_utc']==['2026-11-05','2026-11-08']
+          assert index['complete_days']==2 and index['total_candles']==48
+          assert index['orders_enabled'] is False and len(index['files'])==2
+          for f in index['files']:
+              raw=(root/f['file']).read_bytes()
+              assert hashlib.sha256(raw).hexdigest()==f['sha256']
+              p=json.loads(raw)
+              assert p['venue']=='OKX' and p['market_type']=='SPOT'
+              assert p['instrument']=='BTC-USDC' and p['bar']=='1H'
+              assert p['hour_count']==len(p['rows'])==24
+              assert p['no_orders'] is True and p['private_account_access'] is False
+              assert p['causal_claim'] is False and all(row['confirm']=='1' for row in p['rows'])
+          print('PASS: 2 validated UTC trading days, 48 OKX Spot 1H candles, provenance SHA-256')
+          PY
+      - name: Preserve evidence as GitHub Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-btc-okx-hourly-evidence-2026-11-05-08
+          path: public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish validated public data ONLY in isolated evidence directory
+        run: |
+          set -euo pipefail
+          target='public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: identical source records already published.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'data: record public OKX BTC USDC hourly evidence for November 5 and 8'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
