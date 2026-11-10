@@ -1,0 +1,453 @@
+{
+  "status": "VERIFIED_NO_LIVE_ORDERS",
+  "meta": {
+    "source": "https://www.okx.com/api/v5/market/history-candles",
+    "instrument": "BTC-USDC",
+    "bar": "1Dutc",
+    "pages": [
+      {
+        "n": 100,
+        "oldest": "2026-08-03",
+        "latest": "2026-11-10"
+      },
+      {
+        "n": 100,
+        "oldest": "2026-04-25",
+        "latest": "2026-08-02"
+      },
+      {
+        "n": 100,
+        "oldest": "2026-01-15",
+        "latest": "2026-04-24"
+      },
+      {
+        "n": 100,
+        "oldest": "2025-10-07",
+        "latest": "2026-01-14"
+      },
+      {
+        "n": 47,
+        "oldest": "2025-08-21",
+        "latest": "2025-10-06"
+      }
+    ],
+    "retrieved_at_utc": "2026-11-10T21:39:31.304644+00:00",
+    "first": "2025-08-21",
+    "last": "2026-11-09",
+    "closed_candles": 446,
+    "last_api_timestamp": "2026-11-10"
+  },
+  "binance_sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+  "methodology": {
+    "asset_reference": "BTC Spot in USDC vs USDT (different quote assets)",
+    "signal_at": "UTC daily close",
+    "fictitious_fill": "next UTC daily open",
+    "fee_each_side": 0.001,
+    "slippage_each_side": 0.0005,
+    "no_leverage": true,
+    "capital_start": 1000,
+    "same_indicator_warmup_start": "2025-08-21",
+    "recent_period_disjoint_from_previous_overlap": true,
+    "date_utc_today_excluded": "2026-11-10 (not closed as of research)",
+    "blind_future_out_of_sample": false
+  },
+  "crossvenue_signal_mismatches": {
+    "EMA20_50": [],
+    "EMA50_200": [],
+    "MOM180": []
+  },
+  "results": [
+    {
+      "method": "EMA20_50",
+      "start": "2026-04-01",
+      "end": "2026-09-30",
+      "days": 183,
+      "net_return_pct": 11.872,
+      "buy_hold_pct": 22.3182,
+      "alpha_pct_points": -10.4462,
+      "max_drawdown_pct": -10.7147,
+      "trades": 2,
+      "wins": 1,
+      "losses": 1,
+      "exposure_pct": 47.54,
+      "closed_day_signals": 87,
+      "buy_days": [
+        "2026-04-16",
+        "2026-08-21"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-04-16",
+          "sold": "2026-06-01",
+          "net_pct": -1.947149466971787
+        },
+        {
+          "bought": "2026-08-21",
+          "sold": "2026-09-30",
+          "net_pct": 14.093540447538345,
+          "forced_close": true
+        }
+      ],
+      "venue": "OKX",
+      "period": "overlap",
+      "double_cost_net_return_pct": 11.2021
+    },
+    {
+      "method": "EMA50_200",
+      "start": "2026-04-01",
+      "end": "2026-09-30",
+      "days": 183,
+      "net_return_pct": 2.5511,
+      "buy_hold_pct": 22.3182,
+      "alpha_pct_points": -19.7671,
+      "max_drawdown_pct": -3.6352,
+      "trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "exposure_pct": 6.01,
+      "closed_day_signals": 11,
+      "buy_days": [
+        "2026-09-20"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-09-20",
+          "sold": "2026-09-30",
+          "net_pct": 2.5511398755096115,
+          "forced_close": true
+        }
+      ],
+      "venue": "OKX",
+      "period": "overlap"
+    },
+    {
+      "method": "MOM180",
+      "start": "2026-04-01",
+      "end": "2026-09-30",
+      "days": 183,
+      "net_return_pct": 20.9176,
+      "buy_hold_pct": 22.3182,
+      "alpha_pct_points": -1.4006,
+      "max_drawdown_pct": -7.0043,
+      "trades": 2,
+      "wins": 2,
+      "losses": 0,
+      "exposure_pct": 23.5,
+      "closed_day_signals": 43,
+      "buy_days": [
+        "2026-08-05",
+        "2026-08-20"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-08-05",
+          "sold": "2026-08-06",
+          "net_pct": 0.5726694630745488
+        },
+        {
+          "bought": "2026-08-20",
+          "sold": "2026-09-30",
+          "net_pct": 20.22907983832227,
+          "forced_close": true
+        }
+      ],
+      "venue": "OKX",
+      "period": "overlap"
+    },
+    {
+      "method": "EMA20_50",
+      "start": "2026-10-01",
+      "end": "2026-11-09",
+      "days": 40,
+      "net_return_pct": -8.4715,
+      "buy_hold_pct": -10.1712,
+      "alpha_pct_points": 1.6997,
+      "max_drawdown_pct": -11.3316,
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "exposure_pct": 82.5,
+      "closed_day_signals": 33,
+      "buy_days": [
+        "2026-10-01"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-10-01",
+          "sold": "2026-11-03",
+          "net_pct": -8.47145992976418
+        }
+      ],
+      "venue": "OKX",
+      "period": "recent",
+      "double_cost_net_return_pct": -8.7459
+    },
+    {
+      "method": "EMA50_200",
+      "start": "2026-10-01",
+      "end": "2026-11-09",
+      "days": 40,
+      "net_return_pct": -10.1712,
+      "buy_hold_pct": -10.1712,
+      "alpha_pct_points": 0,
+      "max_drawdown_pct": -13.5691,
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "exposure_pct": 100,
+      "closed_day_signals": 40,
+      "buy_days": [
+        "2026-10-01"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-10-01",
+          "sold": "2026-11-09",
+          "net_pct": -10.171181076420998,
+          "forced_close": true
+        }
+      ],
+      "venue": "OKX",
+      "period": "recent"
+    },
+    {
+      "method": "MOM180",
+      "start": "2026-10-01",
+      "end": "2026-11-09",
+      "days": 40,
+      "net_return_pct": -12.5038,
+      "buy_hold_pct": -10.1712,
+      "alpha_pct_points": -2.3327,
+      "max_drawdown_pct": -15.2367,
+      "trades": 2,
+      "wins": 0,
+      "losses": 2,
+      "exposure_pct": 75,
+      "closed_day_signals": 30,
+      "buy_days": [
+        "2026-10-01",
+        "2026-11-05"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-10-01",
+          "sold": "2026-10-30",
+          "net_pct": -7.112494335181752
+        },
+        {
+          "bought": "2026-11-05",
+          "sold": "2026-11-06",
+          "net_pct": -5.804163087063463
+        }
+      ],
+      "venue": "OKX",
+      "period": "recent"
+    },
+    {
+      "method": "EMA20_50",
+      "start": "2026-04-01",
+      "end": "2026-11-09",
+      "days": 223,
+      "net_return_pct": 2.6863,
+      "buy_hold_pct": 10.1898,
+      "alpha_pct_points": -7.5035,
+      "max_drawdown_pct": -11.4394,
+      "trades": 2,
+      "wins": 1,
+      "losses": 1,
+      "exposure_pct": 53.81,
+      "closed_day_signals": 120,
+      "buy_days": [
+        "2026-04-16",
+        "2026-08-21"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-04-16",
+          "sold": "2026-06-01",
+          "net_pct": -1.947149466971787
+        },
+        {
+          "bought": "2026-08-21",
+          "sold": "2026-11-03",
+          "net_pct": 4.72546855814997
+        }
+      ],
+      "venue": "OKX",
+      "period": "combined",
+      "double_cost_net_return_pct": 2.0714
+    },
+    {
+      "method": "EMA50_200",
+      "start": "2026-04-01",
+      "end": "2026-11-09",
+      "days": 223,
+      "net_return_pct": -7.6172,
+      "buy_hold_pct": 10.1898,
+      "alpha_pct_points": -17.8071,
+      "max_drawdown_pct": -13.6742,
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "exposure_pct": 22.87,
+      "closed_day_signals": 51,
+      "buy_days": [
+        "2026-09-20"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-09-20",
+          "sold": "2026-11-09",
+          "net_pct": -7.617246679382628,
+          "forced_close": true
+        }
+      ],
+      "venue": "OKX",
+      "period": "combined"
+    },
+    {
+      "method": "MOM180",
+      "start": "2026-04-01",
+      "end": "2026-11-09",
+      "days": 223,
+      "net_return_pct": 6.0995,
+      "buy_hold_pct": 10.1898,
+      "alpha_pct_points": -4.0904,
+      "max_drawdown_pct": -15.3398,
+      "trades": 3,
+      "wins": 2,
+      "losses": 1,
+      "exposure_pct": 32.74,
+      "closed_day_signals": 73,
+      "buy_days": [
+        "2026-08-05",
+        "2026-08-20",
+        "2026-11-05"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-08-05",
+          "sold": "2026-08-06",
+          "net_pct": 0.5726694630745488
+        },
+        {
+          "bought": "2026-08-20",
+          "sold": "2026-10-30",
+          "net_pct": 11.995750421928175
+        },
+        {
+          "bought": "2026-11-05",
+          "sold": "2026-11-06",
+          "net_pct": -5.804163087063452
+        }
+      ],
+      "venue": "OKX",
+      "period": "combined"
+    },
+    {
+      "method": "EMA20_50",
+      "start": "2026-04-01",
+      "end": "2026-09-30",
+      "days": 183,
+      "net_return_pct": 12.0974,
+      "buy_hold_pct": 22.0966,
+      "alpha_pct_points": -9.9992,
+      "max_drawdown_pct": -10.6426,
+      "trades": 2,
+      "wins": 1,
+      "losses": 1,
+      "exposure_pct": 47.54,
+      "closed_day_signals": 87,
+      "buy_days": [
+        "2026-04-16",
+        "2026-08-21"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-04-16",
+          "sold": "2026-06-01",
+          "net_pct": -1.8130806798925314
+        },
+        {
+          "bought": "2026-08-21",
+          "sold": "2026-09-30",
+          "net_pct": 14.16736119663784,
+          "forced_close": true
+        }
+      ],
+      "venue": "BINANCE",
+      "period": "overlap"
+    },
+    {
+      "method": "EMA50_200",
+      "start": "2026-04-01",
+      "end": "2026-09-30",
+      "days": 183,
+      "net_return_pct": 2.613,
+      "buy_hold_pct": 22.0966,
+      "alpha_pct_points": -19.4836,
+      "max_drawdown_pct": -3.6019,
+      "trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "exposure_pct": 6.01,
+      "closed_day_signals": 11,
+      "buy_days": [
+        "2026-09-20"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-09-20",
+          "sold": "2026-09-30",
+          "net_pct": 2.6129624071842272,
+          "forced_close": true
+        }
+      ],
+      "venue": "BINANCE",
+      "period": "overlap"
+    },
+    {
+      "method": "MOM180",
+      "start": "2026-04-01",
+      "end": "2026-09-30",
+      "days": 183,
+      "net_return_pct": 20.9315,
+      "buy_hold_pct": 22.0966,
+      "alpha_pct_points": -1.165,
+      "max_drawdown_pct": -6.9224,
+      "trades": 2,
+      "wins": 2,
+      "losses": 0,
+      "exposure_pct": 23.5,
+      "closed_day_signals": 43,
+      "buy_days": [
+        "2026-08-05",
+        "2026-08-20"
+      ],
+      "trade_log": [
+        {
+          "bought": "2026-08-05",
+          "sold": "2026-08-06",
+          "net_pct": 0.5692405267728962
+        },
+        {
+          "bought": "2026-08-20",
+          "sold": "2026-09-30",
+          "net_pct": 20.247041520202337,
+          "forced_close": true
+        }
+      ],
+      "venue": "BINANCE",
+      "period": "overlap"
+    }
+  ],
+  "evidence": {
+    "run_id": 42907074282,
+    "job_id": 130147745287,
+    "check": "success",
+    "run_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42907074282",
+    "research_only": true,
+    "personal_account_access": false,
+    "orders": false
+  }
+}
