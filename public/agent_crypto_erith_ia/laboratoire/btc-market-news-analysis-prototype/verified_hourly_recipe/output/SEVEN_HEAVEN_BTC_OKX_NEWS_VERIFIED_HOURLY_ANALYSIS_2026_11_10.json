@@ -1,0 +1,433 @@
+{
+  "schema": "seven.btc.okx.news.verified-hourly-recipe.v1",
+  "generated_from_frozen_inputs_at_utc": "2026-11-10T15:00:00Z",
+  "source": "GitHub public immutable captures and selected source news, not private Trader runtime",
+  "status": "HISTORICAL_READ_ONLY",
+  "instrument": "BTC-USDC",
+  "venue": "OKX",
+  "bar": "1H",
+  "days": 2,
+  "candles": 48,
+  "source_files": {
+    "manifest_sha256": "c90734992f33752dd6ce682b15dd12550d6a6a417b562d1bd1899665dc4caf81",
+    "news_snapshot_sha256": "8dc4f1e85797579f7f6d11c463b0a4d21080ca622e6ba78f4a9b7c864ab05210",
+    "news_original_blob_sha": "3edeec8bc719f72929d2d9f7b282157da7327b74",
+    "news_generated_at": "2026-11-10T08:52:17.689742+00:00"
+  },
+  "orders_enabled": false,
+  "real_orders": 0,
+  "private_account_access": false,
+  "causal_claim": false,
+  "quantitative_etf_flows_from_candles": false,
+  "quantitative_liquidations_from_candles": false,
+  "exchange_signed": false,
+  "findings": [
+    {
+      "date_utc": "2026-11-05",
+      "evidence_file_sha256": "fd2064d06f0e11d7b5fea392081e241638f18673cb8ca1ffefbba4d57eac6aaa",
+      "api_response_sha256": "86f291b470bcff07dbdd0cb78c0dc449c4e11bbbd4d6e681c4442135bb619d01",
+      "candle_count": 24,
+      "summary": {
+        "open_usdc": 80437.5,
+        "close_usdc": 75994.3,
+        "day_change_pct": -5.52379,
+        "volume_btc": 1753.3190429000003,
+        "peak_hour_utc": "2026-11-05T15:00:00.000Z",
+        "peak_open_usdc": 78181.5,
+        "peak_close_usdc": 75945.4,
+        "peak_low_usdc": 75484,
+        "peak_volume_btc": 351.96708213,
+        "peak_quote_volume_usdc": 26939304.074056275,
+        "peak_change_pct": -2.86014,
+        "peak_share_of_day_pct": 20.07433
+      },
+      "news_events_selected": 5,
+      "news_publications_relative_to_peak": [
+        {
+          "event_id": "feed_1a9daa6a8d32a9ac",
+          "event_at_utc": "2026-11-05T11:30:00.000Z",
+          "headline": "Bitcoin holds above $80,000 after Wednesday’s jump as injective rallies on staked ETF listing",
+          "source_url": "https://www.coindesk.com/markets/2026/11/05/bitcoin-holds-above-usd80-000-after-wednesday-s-jump-as-injective-rallies-on-staked-etf-listing",
+          "driver_domains": [
+            "institutional_flows"
+          ],
+          "relation_to_peak_hour": "OUTSIDE_TWO_HOUR_CONTEXT"
+        },
+        {
+          "event_id": "feed_3cc964db3296ed38",
+          "event_at_utc": "2026-11-05T05:13:45.000Z",
+          "headline": "Bitcoin holds above $80,000 as Zcash jumps 12% in post-election crypto rebound",
+          "source_url": "https://www.coindesk.com/markets/2026/11/05/bitcoin-holds-above-usd80-000-as-zcash-jumps-12-in-post-election-crypto-rebound",
+          "driver_domains": [
+            "macro_liquidity",
+            "regulation"
+          ],
+          "relation_to_peak_hour": "OUTSIDE_TWO_HOUR_CONTEXT"
+        },
+        {
+          "event_id": "feed_4038b5f117c00932",
+          "event_at_utc": "2026-11-05T08:22:30.000Z",
+          "headline": "Bitcoin, Ether ETFs draw $128M as crypto rebounds after midterms",
+          "source_url": "https://cointelegraph.com/markets/bitcoin-ether-etfs-turn-green-post-election-rebound",
+          "driver_domains": [
+            "institutional_flows"
+          ],
+          "relation_to_peak_hour": "OUTSIDE_TWO_HOUR_CONTEXT"
+        },
+        {
+          "event_id": "feed_1d8640b66287b3a1",
+          "event_at_utc": "2026-11-05T12:25:00.000Z",
+          "headline": "James Wynn maintient sa prévision de krach de Bitcoin malgré de nouveaux flux entrants sur les ETF - BeInCrypto",
+          "source_url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE1YMzlXS2JIYWVBSlpFcXhzckR5UXhySjNVMzFtTGNzQmVja0NKMU9RNjYzWFVzZnZESi11SmJUYUYyY2k3WnpRSGw4bE96d21rdzRVbXU1ZlJxUG9xQkpScFhYWHQ1Y0NlUHFBMXZLRWZ0YTZNT0JwYl9B?oc=5",
+          "driver_domains": [
+            "institutional_flows"
+          ],
+          "relation_to_peak_hour": "OUTSIDE_TWO_HOUR_CONTEXT"
+        },
+        {
+          "event_id": "feed_aa7455f60ccbb77d",
+          "event_at_utc": "2026-11-05T16:29:11.000Z",
+          "headline": "Bitcoin Erases Election Rally as AI Stocks Plunge, $428 Million in Crypto Longs Get Wiped Out",
+          "source_url": "https://decrypt.co/382612/bitcoin-erases-election-rally-ai-stocks-plunge-428-million-crypto-longs",
+          "driver_domains": [
+            "leverage"
+          ],
+          "relation_to_peak_hour": "AFTER_PEAK_HOUR"
+        }
+      ],
+      "news_publications_before_or_during_peak_nearby": 0,
+      "temporal_core": {
+        "schema": "seven.btc.market.news.analysis.proof.v1",
+        "version": "2026-11-10-proof-of-concept",
+        "status": "MATCHED",
+        "kind": "READ_ONLY_HISTORICAL_OBSERVATION",
+        "orders_enabled": false,
+        "real_orders": false,
+        "paper_only": true,
+        "advice": false,
+        "causal_claim": false,
+        "provenance": {
+          "instrument": "BTC-USDC",
+          "venue": "OKX",
+          "market_type": "SPOT",
+          "candle_source": "OKX PUBLIC API ARCHIVE (SHA256 verified, not exchange-signed)",
+          "candle_bar": "1h",
+          "market_last_loaded_at": "2026-11-10T14:32:21+00:00",
+          "news_schema": "atlas_news_sentinel_world_to_market_v1",
+          "news_generated_at_utc": "2026-11-10T08:52:17.689Z",
+          "observed_at_utc": "2026-11-10T15:00:00.000Z"
+        },
+        "technical": {
+          "ema_periods": [
+            5,
+            13,
+            34
+          ],
+          "ema_latest": [
+            75992.24900958,
+            76950.32904481,
+            null
+          ],
+          "ema_fast_relative_to_slow": "BELOW",
+          "last_closed_candle_utc": "2026-11-05T23:00:00.000Z",
+          "last_closed_price": 75994.3,
+          "crossover_last_two_closed_candles": "NONE",
+          "note": "EMA = descriptive trend indicator, not a forecast or trading order."
+        },
+        "counts": {
+          "market_candles": 24,
+          "news_events_total": 5,
+          "btc_events_qualified": 5,
+          "matched": 5,
+          "unmatched": 0,
+          "news_events_skipped": 0
+        },
+        "coverage": {
+          "institutional_flows": {
+            "events_72h": 5,
+            "distinct_sources": 3
+          },
+          "leverage": {
+            "events_72h": 0,
+            "distinct_sources": 0
+          },
+          "sources_ok": 14,
+          "sources_total": 15,
+          "quantitative_etf_flows_verified": false,
+          "quantitative_derivatives_liquidations_verified": false
+        },
+        "warnings": [
+          "CORRELATION_IS_NOT_CAUSATION",
+          "ETF_FLOWS_NOT_QUANTIFIED_FROM_NEWS_HEADLINES",
+          "DERIVATIVES_LIQUIDATIONS_NOT_QUANTIFIED_FROM_SPOT_VOLUME",
+          "NO_TRADER_ORDER_OR_PERSONAL_ACCOUNT_ACCESS",
+          "LEVERAGE_NEWS_COVERAGE_GAP"
+        ],
+        "matches": [
+          {
+            "event_id": "feed_1a9daa6a8d32a9ac",
+            "event_at_utc": "2026-11-05T11:30:00.000Z",
+            "headline": "Bitcoin holds above $80,000 after Wednesday’s jump as injective rallies on staked ETF listing",
+            "source_name": "CoinDesk",
+            "source_url": "https://www.coindesk.com/markets/2026/11/05/bitcoin-holds-above-usd80-000-after-wednesday-s-jump-as-injective-rallies-on-staked-etf-listing",
+            "driver_domains": [
+              "institutional_flows"
+            ],
+            "source_count": 1,
+            "evidence": {
+              "pre_event_candle_utc": "2026-11-05T10:00:00.000Z",
+              "pre_event_close_usdc": 80211.6,
+              "first_post_event_candle_utc": "2026-11-05T12:00:00.000Z",
+              "post_event_close_usdc": 79604.3,
+              "change_pct_one_closed_bar": -0.75712,
+              "volume_btc_first_post_event_bar": 88.61284037,
+              "volume_ratio_to_previous_three_closed_bars": 1.50091869,
+              "change_pct_three_closed_bars": -2.48019,
+              "post_event_closed_bars": 3,
+              "partial_event_bar_excluded": true,
+              "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+            }
+          },
+          {
+            "event_id": "feed_3cc964db3296ed38",
+            "event_at_utc": "2026-11-05T05:13:45.000Z",
+            "headline": "Bitcoin holds above $80,000 as Zcash jumps 12% in post-election crypto rebound",
+            "source_name": "CoinDesk",
+            "source_url": "https://www.coindesk.com/markets/2026/11/05/bitcoin-holds-above-usd80-000-as-zcash-jumps-12-in-post-election-crypto-rebound",
+            "driver_domains": [
+              "macro_liquidity",
+              "regulation"
+            ],
+            "source_count": 1,
+            "evidence": {
+              "pre_event_candle_utc": "2026-11-05T04:00:00.000Z",
+              "pre_event_close_usdc": 80456.1,
+              "first_post_event_candle_utc": "2026-11-05T06:00:00.000Z",
+              "post_event_close_usdc": 80577.1,
+              "change_pct_one_closed_bar": 0.15039,
+              "volume_btc_first_post_event_bar": 11.03440544,
+              "volume_ratio_to_previous_three_closed_bars": 1.26762394,
+              "change_pct_three_closed_bars": -0.02001,
+              "post_event_closed_bars": 3,
+              "partial_event_bar_excluded": true,
+              "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+            }
+          },
+          {
+            "event_id": "feed_4038b5f117c00932",
+            "event_at_utc": "2026-11-05T08:22:30.000Z",
+            "headline": "Bitcoin, Ether ETFs draw $128M as crypto rebounds after midterms",
+            "source_name": "Cointelegraph",
+            "source_url": "https://cointelegraph.com/markets/bitcoin-ether-etfs-turn-green-post-election-rebound",
+            "driver_domains": [
+              "institutional_flows"
+            ],
+            "source_count": 1,
+            "evidence": {
+              "pre_event_candle_utc": "2026-11-05T07:00:00.000Z",
+              "pre_event_close_usdc": 80288.2,
+              "first_post_event_candle_utc": "2026-11-05T09:00:00.000Z",
+              "post_event_close_usdc": 80389.1,
+              "change_pct_one_closed_bar": 0.12567,
+              "volume_btc_first_post_event_bar": 59.70577604,
+              "volume_ratio_to_previous_three_closed_bars": 2.78085306,
+              "change_pct_three_closed_bars": 0.03849,
+              "post_event_closed_bars": 3,
+              "partial_event_bar_excluded": true,
+              "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+            }
+          },
+          {
+            "event_id": "feed_1d8640b66287b3a1",
+            "event_at_utc": "2026-11-05T12:25:00.000Z",
+            "headline": "James Wynn maintient sa prévision de krach de Bitcoin malgré de nouveaux flux entrants sur les ETF - BeInCrypto",
+            "source_name": "Google News FR · ETF / flux institutionnels",
+            "source_url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE1YMzlXS2JIYWVBSlpFcXhzckR5UXhySjNVMzFtTGNzQmVja0NKMU9RNjYzWFVzZnZESi11SmJUYUYyY2k3WnpRSGw4bE96d21rdzRVbXU1ZlJxUG9xQkpScFhYWHQ1Y0NlUHFBMXZLRWZ0YTZNT0JwYl9B?oc=5",
+            "driver_domains": [
+              "institutional_flows"
+            ],
+            "source_count": 1,
+            "evidence": {
+              "pre_event_candle_utc": "2026-11-05T11:00:00.000Z",
+              "pre_event_close_usdc": 80319.1,
+              "first_post_event_candle_utc": "2026-11-05T13:00:00.000Z",
+              "post_event_close_usdc": 79592.3,
+              "change_pct_one_closed_bar": -0.90489,
+              "volume_btc_first_post_event_bar": 24.07403619,
+              "volume_ratio_to_previous_three_closed_bars": 0.55576248,
+              "change_pct_three_closed_bars": -5.4454,
+              "post_event_closed_bars": 3,
+              "partial_event_bar_excluded": true,
+              "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+            }
+          },
+          {
+            "event_id": "feed_aa7455f60ccbb77d",
+            "event_at_utc": "2026-11-05T16:29:11.000Z",
+            "headline": "Bitcoin Erases Election Rally as AI Stocks Plunge, $428 Million in Crypto Longs Get Wiped Out",
+            "source_name": "Decrypt",
+            "source_url": "https://decrypt.co/382612/bitcoin-erases-election-rally-ai-stocks-plunge-428-million-crypto-longs",
+            "driver_domains": [
+              "leverage"
+            ],
+            "source_count": 1,
+            "evidence": {
+              "pre_event_candle_utc": "2026-11-05T15:00:00.000Z",
+              "pre_event_close_usdc": 75945.4,
+              "first_post_event_candle_utc": "2026-11-05T17:00:00.000Z",
+              "post_event_close_usdc": 75855.9,
+              "change_pct_one_closed_bar": -0.11785,
+              "volume_btc_first_post_event_bar": 80.65460576,
+              "volume_ratio_to_previous_three_closed_bars": 0.46596718,
+              "change_pct_three_closed_bars": 0.41306,
+              "post_event_closed_bars": 3,
+              "partial_event_bar_excluded": true,
+              "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+            }
+          }
+        ],
+        "unmatched": [],
+        "conclusion": "This prototype only aligns published BTC news with completed OKX Spot candles. It cannot identify the cause of a candle, the executed ETF trades, or futures liquidations. No orders."
+      },
+      "warning": "A headline publication timestamp is not the occurrence time of its underlying market event."
+    },
+    {
+      "date_utc": "2026-11-08",
+      "evidence_file_sha256": "67254e161da5143784dcac915ef13eb07ec690867f35e13fab4344b5a48c03ca",
+      "api_response_sha256": "4c99496ccba123f7371ba8d3185b4b46ff7171804ec74c86988771a3828c66a6",
+      "candle_count": 24,
+      "summary": {
+        "open_usdc": 75769.7,
+        "close_usdc": 74774.4,
+        "day_change_pct": -1.31359,
+        "volume_btc": 993.84651648,
+        "peak_hour_utc": "2026-11-08T21:00:00.000Z",
+        "peak_open_usdc": 75675.7,
+        "peak_close_usdc": 74074,
+        "peak_low_usdc": 73380,
+        "peak_volume_btc": 258.13505081,
+        "peak_quote_volume_usdc": 19201500.25868244,
+        "peak_change_pct": -2.11653,
+        "peak_share_of_day_pct": 25.97333
+      },
+      "news_events_selected": 1,
+      "news_publications_relative_to_peak": [
+        {
+          "event_id": "feed_3f9520ecf91f8dd2",
+          "event_at_utc": "2026-11-08T11:14:31.000Z",
+          "headline": "Les ETF bitcoin perdent 412 M$ tandis que les ETF ethereum enregistrent des sorties de 93 M - KuCoin",
+          "source_url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNWTliYVAyY0ttNS1MR2FYRllRY3FHYkpzdnYwY1RrMXBOLXFaTnB3c0VLN0swSmdfUkkwVEpJb3J5bWpqVlpKTjd4bmpCQjJxTGxZSjluVVhfd0JGaDZZZ0k2QzNqc0xrSHMyU2tBWTFwdVBDbzRrb3RhaU5NSlE4VmFUeWFzTGc0TzBWVTZ1SWVCZTJ3RmI4OXF2NEw?oc=5",
+          "driver_domains": [
+            "institutional_flows"
+          ],
+          "relation_to_peak_hour": "OUTSIDE_TWO_HOUR_CONTEXT"
+        }
+      ],
+      "news_publications_before_or_during_peak_nearby": 0,
+      "temporal_core": {
+        "schema": "seven.btc.market.news.analysis.proof.v1",
+        "version": "2026-11-10-proof-of-concept",
+        "status": "MATCHED",
+        "kind": "READ_ONLY_HISTORICAL_OBSERVATION",
+        "orders_enabled": false,
+        "real_orders": false,
+        "paper_only": true,
+        "advice": false,
+        "causal_claim": false,
+        "provenance": {
+          "instrument": "BTC-USDC",
+          "venue": "OKX",
+          "market_type": "SPOT",
+          "candle_source": "OKX PUBLIC API ARCHIVE (SHA256 verified, not exchange-signed)",
+          "candle_bar": "1h",
+          "market_last_loaded_at": "2026-11-10T14:32:22+00:00",
+          "news_schema": "atlas_news_sentinel_world_to_market_v1",
+          "news_generated_at_utc": "2026-11-10T08:52:17.689Z",
+          "observed_at_utc": "2026-11-10T15:00:00.000Z"
+        },
+        "technical": {
+          "ema_periods": [
+            5,
+            13,
+            34
+          ],
+          "ema_latest": [
+            74886.13406124,
+            75302.40606212,
+            null
+          ],
+          "ema_fast_relative_to_slow": "BELOW",
+          "last_closed_candle_utc": "2026-11-08T23:00:00.000Z",
+          "last_closed_price": 74774.4,
+          "crossover_last_two_closed_candles": "NONE",
+          "note": "EMA = descriptive trend indicator, not a forecast or trading order."
+        },
+        "counts": {
+          "market_candles": 24,
+          "news_events_total": 1,
+          "btc_events_qualified": 1,
+          "matched": 1,
+          "unmatched": 0,
+          "news_events_skipped": 0
+        },
+        "coverage": {
+          "institutional_flows": {
+            "events_72h": 5,
+            "distinct_sources": 3
+          },
+          "leverage": {
+            "events_72h": 0,
+            "distinct_sources": 0
+          },
+          "sources_ok": 14,
+          "sources_total": 15,
+          "quantitative_etf_flows_verified": false,
+          "quantitative_derivatives_liquidations_verified": false
+        },
+        "warnings": [
+          "CORRELATION_IS_NOT_CAUSATION",
+          "ETF_FLOWS_NOT_QUANTIFIED_FROM_NEWS_HEADLINES",
+          "DERIVATIVES_LIQUIDATIONS_NOT_QUANTIFIED_FROM_SPOT_VOLUME",
+          "NO_TRADER_ORDER_OR_PERSONAL_ACCOUNT_ACCESS",
+          "LEVERAGE_NEWS_COVERAGE_GAP"
+        ],
+        "matches": [
+          {
+            "event_id": "feed_3f9520ecf91f8dd2",
+            "event_at_utc": "2026-11-08T11:14:31.000Z",
+            "headline": "Les ETF bitcoin perdent 412 M$ tandis que les ETF ethereum enregistrent des sorties de 93 M - KuCoin",
+            "source_name": "Google News FR · ETF / flux institutionnels",
+            "source_url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNWTliYVAyY0ttNS1MR2FYRllRY3FHYkpzdnYwY1RrMXBOLXFaTnB3c0VLN0swSmdfUkkwVEpJb3J5bWpqVlpKTjd4bmpCQjJxTGxZSjluVVhfd0JGaDZZZ0k2QzNqc0xrSHMyU2tBWTFwdVBDbzRrb3RhaU5NSlE4VmFUeWFzTGc0TzBWVTZ1SWVCZTJ3RmI4OXF2NEw?oc=5",
+            "driver_domains": [
+              "institutional_flows"
+            ],
+            "source_count": 1,
+            "evidence": {
+              "pre_event_candle_utc": "2026-11-08T10:00:00.000Z",
+              "pre_event_close_usdc": 75809.8,
+              "first_post_event_candle_utc": "2026-11-08T12:00:00.000Z",
+              "post_event_close_usdc": 75898.3,
+              "change_pct_one_closed_bar": 0.11674,
+              "volume_btc_first_post_event_bar": 27.27148471,
+              "volume_ratio_to_previous_three_closed_bars": 0.99548578,
+              "change_pct_three_closed_bars": 0.19694,
+              "post_event_closed_bars": 3,
+              "partial_event_bar_excluded": true,
+              "interpretation": "Temporal association only; no proof of cause or buyer/seller dominance."
+            }
+          }
+        ],
+        "unmatched": [],
+        "conclusion": "This prototype only aligns published BTC news with completed OKX Spot candles. It cannot identify the cause of a candle, the executed ETF trades, or futures liquidations. No orders."
+      },
+      "warning": "A headline publication timestamp is not the occurrence time of its underlying market event."
+    }
+  ],
+  "limitations": [
+    "Spot OHLCV cannot disclose the direction of individual trade initiators or liquidations.",
+    "News publication times do not identify what triggered earlier price movements.",
+    "No native one-minute bars or derivative liquidation records are included.",
+    "The 24-hour daily fragments do not support a continuous 34-hour EMA; EMA34 will be unavailable.",
+    "Captured OKX public responses are not cryptographically exchange-signed."
+  ]
+}
