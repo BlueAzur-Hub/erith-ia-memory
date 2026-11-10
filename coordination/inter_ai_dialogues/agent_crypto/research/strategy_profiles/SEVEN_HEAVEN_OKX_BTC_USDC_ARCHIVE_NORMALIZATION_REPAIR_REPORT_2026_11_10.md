@@ -40,6 +40,20 @@ Ces chiffres **vérifient la reconstruction des données**, ils ne constituent n
 - [Référence antérieure : diagnostic des archives](./SEVEN_HEAVEN_OKX_BTC_USDC_OFFICIAL_BULK_ARCHIVE_FINDINGS_2026_11_10.md).
 - Le correctif est indépendant du [laboratoire de stratégies Swing](./SEVEN_HEAVEN_BTC_SWING_EVIDENCE_BASED_REASSESSMENT_2026_11_10.md). Aucune règle Swing ou paramètre de simulation n'a été modifié pour produire un meilleur rendement.
 
+## Rectification de méthode — le blocage avait été introduit par l'IA
+
+**Correction du 10 novembre 2026.** L'IA avait mélangé deux statuts différents : « le traitement d'une archive a réussi » et « les données suffisent à valider une stratégie Swing sur plusieurs années ». Une journée UTC vérifiée est **un point de donnée exploitable**, pas une simulation effectuée. Les anciens résultats de normalisation affichaient `used_for_backtest=true` pour deux journées isolées, alors qu'aucun backtest n'avait été exécuté dessus.
+
+Ce message ambigu est maintenant **corrigé dans le normaliseur et les preuves JSON** :
+- `used_for_backtest=false` tant qu'aucun moteur de stratégie n'a réellement consommé la journée ;
+- `eligible_as_backtest_input=true` uniquement pour les journées correctement reconstruites et marquées `confirm=1` ;
+- `research_readiness.ready_for_two_year_comparison=false` et `longest_contiguous_confirmed_utc_days=1` pour les huit fichiers échantillonnés ;
+- tests automatisés séparant explicitement **validité des fichiers**, **quantité de journées disponibles**, et **validité d'une stratégie**.
+
+**Décision réparatrice : cette incertitude sur les archives OKX 2023–2024 n'empêche PAS l'étude Swing Trading des IA.** Des données historiques continues Binance BTC/USDT, avec les trois stratégies déjà testées pour 2020–2026, sont disponibles dans le Coffre. La comparaison indépendante OKX BTC/USDC d'avril à septembre 2026 a également été vérifiée. Ce sont deux résultats existants ; pas de nouveau raccordement, pas de nouveau collecteur et pas de reconstruction complète nécessaire.
+
+Une future reconstitution pluriannuelle OKX peut renforcer la validation multi-sources, mais doit être **un contrôle complémentaire**, pas une condition préalable qui paralyse la recherche IA.
+
 ## Portée et conclusion
 
 **La réparation est faite et testée sur des données réelles.** Le projet n'a pas été reconstruit ; nous avons ajouté une méthode vérifiée pour nettoyer et qualifier les archives OKX.
