@@ -74,6 +74,22 @@ class CollectorTest(unittest.TestCase):
             self.assertEqual(x['observed_events_this_run'],0)
             self.assertFalse(x['claim_complete_market_total'])
             self.assertIn('SAMPLED',x['coverage'])
+    def test_coverage_gap_history_survives_status_overwrite(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)
+            mod.store(p,[],[{"provider":"bybit","observed_connection_ms":0,
+                             "status":"NO_VERIFIED_COVERAGE"}])
+            ledgers=list((p/"run-ledger").glob("*.jsonl"))
+            self.assertEqual(len(ledgers),1)
+            first=json.loads(ledgers[0].read_text().splitlines()[0])
+            self.assertFalse(first['zero_market_events_proven'])
+            self.assertEqual(first['health'][0]['status'],'NO_VERIFIED_COVERAGE')
+            mod.store(p,[],[{"provider":"binance","observed_connection_ms":1000,
+                             "status":"OBSERVED_PARTIAL_EXCHANGE_FEED"}])
+            rows=[json.loads(l) for l in ledgers[0].read_text().splitlines()]
+            self.assertEqual(len(rows),2)
+            self.assertTrue(any(x['health'][0]['status']=='NO_VERIFIED_COVERAGE' for x in rows))
+
     def test_dedup_same_day(self):
         ev=mod.parse('bybit',self.bybit(),NOW)[0]
         with tempfile.TemporaryDirectory() as d:
