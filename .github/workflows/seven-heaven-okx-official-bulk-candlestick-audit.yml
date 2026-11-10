@@ -41,25 +41,44 @@ jobs:
       - name: Inspect downloaded historical OHLC ZIP contents and coverage
         run: |
           python - <<'PY'
-          import glob, hashlib, io, json, os, zipfile
+          import glob, csv, collections, datetime, io, json, os, zipfile
           facts=[]
           for path in sorted(glob.glob('/tmp/seven_okx_sample_*.zip')):
               date=os.path.basename(path).removeprefix('seven_okx_sample_').removesuffix('.zip')
               with zipfile.ZipFile(path) as archive:
-                  names=archive.namelist()
                   files=[]
-                  for name in names[:5]:
+                  for name in archive.namelist()[:5]:
                       info=archive.getinfo(name)
                       if info.file_size>3_000_000:
                           raise ValueError('Uncompressed file exceeds sample limit')
-                      content=archive.read(name)
-                      lines=content.decode('utf-8-sig',errors='replace').splitlines()
-                      files.append({'name':name,'rows':len(lines),
-                          'firstLine':lines[0][:250] if lines else '',
-                          'secondLine':lines[1][:250] if len(lines)>1 else '',
-                          'lastLine':lines[-1][:250] if lines else ''})
+                      content=archive.read(name).decode('utf-8-sig',errors='replace')
+                      lines=list(csv.DictReader(io.StringIO(content)))
+                      times=[int(x['open_time']) for x in lines]
+                      counted=collections.Counter(times)
+                      uniqueRows={}
+                      conflicting=0
+                      for row in lines:
+                          stamp=int(row['open_time'])
+                          key=tuple(row.get(v) for v in ['open','high','low','close','vol'])
+                          if stamp in uniqueRows and uniqueRows[stamp]!=key: conflicting+=1
+                          uniqueRows[stamp]=key
+                      flags=dict(collections.Counter(x['confirm'] for x in lines))
+                      badOHLC=0
+                      for row in lines:
+                          o,h,l,c=(float(row[x]) for x in ['open','high','low','close'])
+                          if not (0<l<=min(o,c)<=max(o,c)<=h):badOHLC+=1
+                      span=(max(times)-min(times))//60000+1 if times else 0
+                      files.append({
+                          'filename':name,'rows':len(lines),'uniqueTimestamps':len(counted),
+                          'duplicateRows':len(lines)-len(counted),'conflictingDuplicateRows':conflicting,
+                          'missingMinutesInTimeSpan':span-len(counted),
+                          'confirmCounts':flags,'badOHLC':badOHLC,
+                          'minTimestampUTC':datetime.datetime.fromtimestamp(min(times)/1000,datetime.timezone.utc).isoformat() if times else None,
+                          'maxTimestampUTC':datetime.datetime.fromtimestamp(max(times)/1000,datetime.timezone.utc).isoformat() if times else None,
+                          'firstCandle':{k:lines[0].get(k) for k in ['open','high','low','close','vol','confirm']} if lines else None
+                      })
                   facts.append({'date':date,'files':files})
-          print('OFFICIAL_ARCHIVE_SAMPLE_CONTENT '+json.dumps(facts,ensure_ascii=False))
+          print('OFFICIAL_ARCHIVE_SAMPLE_AUDIT '+json.dumps(facts,ensure_ascii=False))
           with open('/tmp/seven_okx_sample_structure.json','w') as f:
               json.dump(facts,f,indent=2,ensure_ascii=False)
           PY
