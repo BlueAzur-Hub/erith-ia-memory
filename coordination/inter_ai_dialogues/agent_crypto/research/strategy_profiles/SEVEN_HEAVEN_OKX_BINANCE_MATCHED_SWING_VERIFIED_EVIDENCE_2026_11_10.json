@@ -1,0 +1,170 @@
+{
+  "schema": "seven.crypto.crossvenue.btc-swing-verified-evidence.v1",
+  "generated_from": "GitHub Actions validated historical comparison",
+  "generated_on_utc": "2026-11-10",
+  "run_id": 42884464618,
+  "run_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42884464618",
+  "ci_outcome": "success",
+  "account_access": false,
+  "orders_enabled": false,
+  "research_only": true,
+  "okx_history": {
+    "instrument": "BTC-USDC",
+    "bar": "1Dutc",
+    "verified_days": 446,
+    "first_date": "2025-08-21",
+    "last_date": "2026-11-09",
+    "contiguous": true,
+    "record_digest": "23070154d94d0f5e60dfb820a5f93b6f8da700df29a08a6f2d594f076946ff32"
+  },
+  "binance_archive": {
+    "instrument": "BTC-USDT",
+    "bar": "1d",
+    "first_date": "2018-05-01",
+    "last_date": "2026-09-30",
+    "sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd"
+  },
+  "study": {
+    "window": {
+      "from": "2026-04-01",
+      "to": "2026-09-30",
+      "tradingDays": 183,
+      "identicalDailyBarWindow": true,
+      "sameIndicatorWarmupStart": "2025-08-21",
+      "warmupDays": 223,
+      "quoteCurrenciesNotIdentical": true,
+      "minCloseDifferencePct": -0.47588714824918776,
+      "maxCloseDifferencePct": 0.5274444910670972
+    },
+    "results": [
+      {
+        "venue": "OKX",
+        "method": "PULLBACK",
+        "capitalCapPct": 25,
+        "returnPct": 0,
+        "benchmarkReturnPct": 5.579551966972551,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "OKX",
+        "method": "PULLBACK",
+        "capitalCapPct": 100,
+        "returnPct": 0,
+        "benchmarkReturnPct": 22.318207867890205,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "OKX",
+        "method": "BREAKOUT",
+        "capitalCapPct": 25,
+        "returnPct": -0.9455834386973949,
+        "benchmarkReturnPct": 5.579551966972551,
+        "trades": 1,
+        "wins": 0,
+        "maxDrawdownPct": -0.9760343260617477
+      },
+      {
+        "venue": "OKX",
+        "method": "BREAKOUT",
+        "capitalCapPct": 100,
+        "returnPct": -3.7823337547895575,
+        "benchmarkReturnPct": 22.318207867890205,
+        "trades": 1,
+        "wins": 0,
+        "maxDrawdownPct": -3.9041373042469907
+      },
+      {
+        "venue": "OKX",
+        "method": "REBOUND",
+        "capitalCapPct": 25,
+        "returnPct": 0,
+        "benchmarkReturnPct": 5.579551966972551,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "OKX",
+        "method": "REBOUND",
+        "capitalCapPct": 100,
+        "returnPct": 0,
+        "benchmarkReturnPct": 22.318207867890205,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "BINANCE",
+        "method": "PULLBACK",
+        "capitalCapPct": 25,
+        "returnPct": 0,
+        "benchmarkReturnPct": 5.524143072072785,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "BINANCE",
+        "method": "PULLBACK",
+        "capitalCapPct": 100,
+        "returnPct": 0,
+        "benchmarkReturnPct": 22.09657228829114,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "BINANCE",
+        "method": "BREAKOUT",
+        "capitalCapPct": 25,
+        "returnPct": -0.9371357453834994,
+        "benchmarkReturnPct": 5.524143072072785,
+        "trades": 1,
+        "wins": 0,
+        "maxDrawdownPct": -0.9726990240898403
+      },
+      {
+        "venue": "BINANCE",
+        "method": "BREAKOUT",
+        "capitalCapPct": 100,
+        "returnPct": -3.7485429815339977,
+        "benchmarkReturnPct": 22.09657228829114,
+        "trades": 1,
+        "wins": 0,
+        "maxDrawdownPct": -3.8907960963593946
+      },
+      {
+        "venue": "BINANCE",
+        "method": "REBOUND",
+        "capitalCapPct": 25,
+        "returnPct": 0,
+        "benchmarkReturnPct": 5.524143072072785,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      },
+      {
+        "venue": "BINANCE",
+        "method": "REBOUND",
+        "capitalCapPct": 100,
+        "returnPct": 0,
+        "benchmarkReturnPct": 22.09657228829114,
+        "trades": 0,
+        "wins": 0,
+        "maxDrawdownPct": 0
+      }
+    ]
+  },
+  "comments": [
+    "Identical 2026-04-01 to 2026-09-30 calendar window, with same indicator warmup starting 2025-08-21",
+    "No 2022-2025 validation possible with this OKX history API coverage; do not invent older OKX prices",
+    "Quotes USDC vs USDT are close but not identical",
+    "Hypothetical execution at next open, fixed modeled 0.10% fees + 0.05% slippage per side",
+    "Illustrates the limitations of the exact tested rules, NOT the value of all swing trading approaches",
+    "Research-only; no Trader/Administrator/Bridge changes"
+  ]
+}
