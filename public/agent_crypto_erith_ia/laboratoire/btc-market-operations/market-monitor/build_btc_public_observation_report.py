@@ -56,6 +56,67 @@ def days_between(now_ms,lookback_ms):
     return [(first+timedelta(days=i)).isoformat() for i in range((last-first).days+1)]
 
 
+
+def assess_swing_context(spot, now_ms):
+    """Observed hourly EMA structure only: not a swing strategy backtest or trade signal.
+
+    Uses the already archived public 72h Spot OKX BTC-USDC candles.
+    Missing candles, mixed venues or invalid rows fail closed.
+    """
+    unavailable={'status':'INSUFFICIENT_EVIDENCE','strategy':'SWING_EMA_5_13_34',
+                 'instrument':'BTC-USDC','venue':'OKX','bar':'1H',
+                 'strategy_validated':False,'orders_enabled':False,
+                 'reason':'Historical coverage insufficient for a verified EMA 34 reading'}
+    start=now_ms-72*HOUR_MS
+    candidates=[c for c in spot if isinstance(c,dict)
+                and isinstance(c.get('t'),int) and start<=c['t']
+                and c['t']+HOUR_MS<=now_ms]
+    if not candidates:
+        return unavailable
+    for c in candidates:
+        if (c.get('instrument')!='BTC-USDC' or c.get('market_type')!='SPOT'
+            or c.get('venue')!='OKX' or c.get('bar')!='1H'
+            or c.get('confirm')!='1' or c.get('orders_enabled') is not False
+            or c['t']%HOUR_MS):
+            return unavailable | {'reason':'Inconsistent source or unfinished candle'}
+    candles=sorted(candidates,key=lambda c:c['t'])
+    stamps=[c['t'] for c in candles]
+    if len(set(stamps))!=len(stamps) or any(b-a!=HOUR_MS for a,b in zip(stamps,stamps[1:])):
+        return unavailable | {'reason':'Discontinuous or duplicated hourly evidence'}
+    try:
+        import math
+        closes=[float(c['c']) for c in candles]
+        if not all(math.isfinite(v) and v>0 for v in closes):
+            raise ValueError('Invalid close')
+    except (ValueError,TypeError,KeyError,OverflowError):
+        return unavailable | {'reason':'Invalid or missing close'}
+    if len(closes)<34:
+        return unavailable | {'observed_hours':len(closes)}
+    def ema(period):
+        value=sum(closes[:period])/period
+        alpha=2/(period+1)
+        for close in closes[period:]:
+            value+=alpha*(close-value)
+        return value
+    e5,e13,e34=ema(5),ema(13),ema(34)
+    last=closes[-1]
+    if last>e34 and e5>e13>e34:
+        condition='ALIGNEMENT_HAUSSIER_HORAIRE'
+    elif last<e34 and e5<e13<e34:
+        condition='ALIGNEMENT_BAISSIER_HORAIRE'
+    else:
+        condition='STRUCTURE_HORAIRE_MIXTE'
+    return {'status':'OBSERVED_NOT_BACKTESTED','strategy':'SWING_EMA_5_13_34',
+            'instrument':'BTC-USDC','venue':'OKX','bar':'1H',
+            'from_utc':stamp(stamps[0]),'to_utc':stamp(stamps[-1]),
+            'observed_hours':len(closes),'last_close_usdc':last,
+            'ema_5_usdc':round(e5,2),'ema_13_usdc':round(e13,2),
+            'ema_34_usdc':round(e34,2),'observed_condition':condition,
+            'strategy_validated':False,'orders_enabled':False,
+            'limitations':['Hourly EMA structure, not a tested multi-day swing strategy',
+                           'No entry/exit decisions, fees, slippage or performance backtest',
+                           'Observations are not a signal or investment recommendation']}
+
 def assemble(now_ms,spot,liquidations,coverage_runs,news,spot_status=None,liq_status=None):
     """Pure deterministic assembly for regression tests and archive rebuild."""
     since=now_ms-DAY_MS
@@ -142,6 +203,7 @@ def assemble(now_ms,spot,liquidations,coverage_runs,news,spot_status=None,liq_st
                     'source_generated_at':(news or {}).get('generated_at'),
                     'event_examples':events[-12:],'causality_proven':False},
             'hourly':hourly,
+            'strategy_context':assess_swing_context(spot,now_ms),
             'limitations':['GitHub cron may be delayed or dropped; no 24/7 claim',
                            'Derivatives subscriptions are partial or venue-sampled; not market totals',
                            'No recorded feed event does not imply no liquidation',
@@ -173,6 +235,19 @@ def render_md(doc):
     for h in doc['hourly'][-12:]:
         n=sum(h['observed_derivative_liquidation_messages_by_provider'].values())
         rows.append(f"| {h['hour_utc']} | {h['open_usdc']} | {h['close_usdc']} | {h['spot_volume_btc']} | {n} | {h['coverage_status']} |")
+
+    study=doc.get('strategy_context') or {}
+    rows.extend(['', '## Étude de stratégie — structure EMA 5/13/34 (observation, pas backtest)', ''])
+    if study.get('status')=='OBSERVED_NOT_BACKTESTED':
+        rows.extend([
+            f"- Source : OKX Spot BTC-USDC 1H ; {study['observed_hours']} bougies consécutives du {study['from_utc']} au {study['to_utc']}.",
+            f"- Dernière clôture : {study['last_close_usdc']} USDC/BTC ; EMA 5 : {study['ema_5_usdc']} ; EMA 13 : {study['ema_13_usdc']} ; EMA 34 : {study['ema_34_usdc']} USDC.",
+            f"- Structure horaire observée : **{study['observed_condition']}**.",
+            '- **Stratégie Swing Trading NON validée** : cet échantillon horaire ne démontre ni rentabilité, ni règles de sortie, ni tenue sur plusieurs jours. Aucun conseil d\'achat ou de vente.',
+        ])
+    else:
+        rows.append(f"- Étude impossible sur les archives disponibles : {study.get('reason','couverture insuffisante')}. Aucune EMA ni conclusion inventée.")
+
     rows.extend(['','## Restrictions','']+['- '+s for s in doc['limitations']])
     rows.extend(['', 'Fichiers sources : `../spot-hourly/`, `../../liquidation-monitor/observations/` et `../../../data/news/latest.json`.', ''])
     return '\n'.join(rows)
@@ -202,7 +277,7 @@ def main():
     args=p.parse_args()
     now=utc(args.now_utc) if args.now_utc else int(datetime.now(timezone.utc).timestamp()*1000)
     if now is None: raise SystemExit('invalid --now-utc')
-    dates=days_between(now,DAY_MS+HOUR_MS)
+    dates=days_between(now,3*DAY_MS+HOUR_MS)
     spot=read_lines(args.spot,dates)
     liquid=read_lines(args.liquidations,dates)
     ledger=read_lines(args.liquidations/'run-ledger',dates)

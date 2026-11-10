@@ -37,6 +37,12 @@
 <ul id="reading-points"><li>Chargement du résumé vérifié…</li></ul>
 <p class="important" id="coverage-explanation">Attention : absence de connexion ≠ absence de liquidation.</p>
 </section>
+<section aria-label="Étude de stratégie BTC" id="strategy-study">
+<h2>À quoi sert ce relevé pour notre étude de stratégie ?</h2>
+<p class="small">Seven examine la structure horaire du Bitcoin avec les EMA 5, 13 et 34 calculées sur des bougies OKX déjà archivées. C'est un élément de recherche pour les IA, pas une décision de trading.</p>
+<p id="strategy-finding" aria-live="polite">Examen des bougies historiques disponibles…</p>
+<p id="strategy-limit" class="important">Une tendance horaire ne suffit pas à valider une stratégie Swing Trading sur plusieurs jours. Aucun ordre ni signal d'achat ou de vente.</p>
+</section>
 <section><h2>Évolution des clôtures Spot BTC/USDC</h2><p class="small">Série de bougies horaires clôturées, prix en USDC. Les points ne sont pas des transactions individuelles. <span id="chart-period">Période en attente.</span></p><svg id="chart" role="img" aria-label="Évolution des clôtures horaires du Bitcoin" viewBox="0 0 900 250" preserveAspectRatio="none"><text x="20" y="125">Chargement du relevé de marché…</text></svg></section>
 <section><h2>État des observations par exchange</h2><p class="small">Un événement est un message de liquidation effectivement reçu. Une absence de message hors des fenêtres de connexion ne prouve aucune absence de liquidation.</p><div class="table-scroll"><table><thead><tr><th>Plateforme dérivés</th><th>Messages reçus</th><th>Fenêtres documentées</th><th>Dernier message (heure de Paris)</th></tr></thead><tbody id="providers"><tr><td colspan="4">En attente des archives publiques.</td></tr></tbody></table></div></section>
 <section><h2>Dernières heures et limites de couverture</h2><p class="small">La colonne « liquidations » affiche <b>Non observé</b> lorsque aucun flux n'a été connecté pendant l'heure. <b>0 observé</b> signifie uniquement qu'aucun message n'a été reçu pendant la partie couverte ; jamais zéro liquidation sur toute l'heure.</p><div class="table-scroll"><table><thead><tr><th>Heure de Paris</th><th>Clôture USDC</th><th>Volume BTC</th><th>Messages observés</th><th>Couverture</th></tr></thead><tbody id="hourly"><tr><td colspan="5">En attente des archives publiques.</td></tr></tbody></table></div></section>
@@ -70,6 +76,25 @@ function explain(d,hourly){
  $('coverage-explanation').textContent=`Couverture dérivés discontinue : ${hourly.length-witnessed} des ${hourly.length} heures Spot affichées n'ont aucune connexion documentée. « Non observé » ne signifie pas « zéro liquidation ». Les chiffres Bybit/Binance/OKX ne sont pas un total mondial et ne se mélangent pas au volume Spot.`;
  $('chart-period').textContent=`Du ${paris(first?.hour_utc)} au ${paris(last?.hour_utc)} (Paris).`;
 }
+function renderStrategyStudy(study){
+ const title=$('strategy-finding'),limit=$('strategy-limit');
+ const valid=study && study.instrument==='BTC-USDC' && study.venue==='OKX' &&
+    study.bar==='1H' && study.status==='OBSERVED_NOT_BACKTESTED' &&
+    study.strategy_validated===false && study.orders_enabled===false &&
+    [study.ema_5_usdc,study.ema_13_usdc,study.ema_34_usdc,study.last_close_usdc].every(v=>Number.isFinite(num(v)));
+ if(!valid){
+   title.textContent='Étude non concluante : les bougies archivées ne suffisent pas à comparer les EMA 5, 13 et 34 en sécurité.';
+   limit.textContent='Aucune conclusion inventée. Il faut au moins 34 bougies horaires consécutives d’une même paire OKX Spot BTC/USDC ; et bien davantage pour tester une stratégie sur plusieurs jours.';
+   return;
+ }
+ const condition=study.observed_condition==='ALIGNEMENT_HAUSSIER_HORAIRE'
+  ?'Structure horaire haussière sur cet échantillon'
+  :study.observed_condition==='ALIGNEMENT_BAISSIER_HORAIRE'
+  ?'Structure horaire baissière sur cet échantillon'
+  :'Structure horaire mixte sur cet échantillon';
+ title.textContent=`${condition}. ${fmt(study.observed_hours,0)} bougies closes consécutives (${paris(study.from_utc)} → ${paris(study.to_utc)}, Paris). Dernière clôture : ${fmt(study.last_close_usdc)} USDC. EMA 5 : ${fmt(study.ema_5_usdc)} ; EMA 13 : ${fmt(study.ema_13_usdc)} ; EMA 34 : ${fmt(study.ema_34_usdc)} USDC.`;
+ limit.textContent='Résultat de recherche, pas une stratégie validée : pas de backtest sur plusieurs semaines, ni frais, ni règles de sortie évaluées. L’Observatoire ne peut donc pas conclure à la rentabilité du Swing Trading et ne fournit aucun signal.';
+}
 function derivativeHour(x){const has=Array.isArray(x.providers_with_any_connection_in_hour)&&x.providers_with_any_connection_in_hour.length>0;if(!has)return 'Non observé';const n=Object.values(x.observed_derivative_liquidation_messages_by_provider||{}).reduce((s,v)=>s+(Number.isFinite(num(v))?num(v):0),0);return n===0?'0 observé (partiel)':`${fmt(n,0)} (partiel)`;}
 async function load(){const err=$('load-error');err.textContent='';$('refresh').disabled=true;
  try{
@@ -91,7 +116,7 @@ async function load(){const err=$('load-error');err.textContent='';$('refresh').
  rows('providers',provider,[p=>p.name,p=>fmt(p.recorded_events,0),p=>fmt(p.observed_windows,0),p=>paris(p.last_event_utc)],'Aucune donnée de connexion publiée');
  rows('hourly',hourly.slice(-12).reverse(),[x=>paris(x.hour_utc),x=>fmt(x.close_usdc),x=>fmt(x.spot_volume_btc,4),derivativeHour,x=>x.coverage_status==='SAMPLED_WITH_GAPS'?'Partielle':'Non documentée'],'Aucune bougie disponible');
  $('news').textContent=`${fmt(d.news?.events_relevant_to_btc_24h,0)} actualités BTC indexées ; dernier relevé du flux : ${paris(d.news?.source_generated_at)} (Paris). Consulter les articles dans l’Interface.`;
- explain(d,hourly);chart(hourly);
+ renderStrategyStudy(d.strategy_context);explain(d,hourly);chart(hourly);
  if(stale)err.textContent='Attention : ce relevé est ancien. Le bouton Actualiser récupère uniquement le dernier rapport publié ; il ne lance pas une collecte OKX immédiate.';
  else if(!ok)err.textContent='Certaines sources sont indisponibles ou incomplètes. Les nombres présentés datent du rapport indiqué, ne les interprétez pas comme une vue en direct.';
  }catch(e){const ss=$('system-state');ss.textContent='Rapport indisponible';ss.className='bad';err.textContent='Le suivi n’a pas pu être chargé ou validé : '+String(e.message||e)+'. Vérifier les exécutions GitHub Actions.';

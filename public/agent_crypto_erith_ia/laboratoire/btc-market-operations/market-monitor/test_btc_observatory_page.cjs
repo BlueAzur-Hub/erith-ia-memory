@@ -22,3 +22,22 @@ test('stale reports are marked stale even if backend status is green',async()=>{
 test('a reload clears stale status when newer data arrive',async()=>{const ui=await run(report(Date.now()-4*3600000));ui.set(report(Date.now()));await ui.refresh();assert.match(ui.get('system-state'),/Données récentes/);assert.doesNotMatch(ui.get('load-error'),/ancien/)});
 test('invalid or unreachable data never become green',async()=>{const ui=await run(new Error('offline'));assert.match(ui.get('system-state'),/Rapport indisponible/);assert.match(ui.get('load-error'),/offline/)});
 test('contract rejects any 24/7 false assertion',async()=>{const d=report(Date.now());d.derivatives.claim_24_7=true;const ui=await run(d);assert.match(ui.get('system-state'),/Rapport indisponible/)});
+
+test('strategy study refuses to present missing EMA evidence as a conclusion',async()=>{
+ const ui=await run(report(Date.now()));
+ assert.match(ui.get('strategy-finding'),/non concluante/);
+ assert.match(ui.get('strategy-limit'),/au moins 34 bougies/);
+});
+test('verified hourly EMA research remains descriptive and never an order',async()=>{
+ const d=report(Date.now());
+ const h=d.hourly.at(-1).hour_utc;
+ d.strategy_context={status:'OBSERVED_NOT_BACKTESTED',instrument:'BTC-USDC',venue:'OKX',bar:'1H',
+  strategy_validated:false,orders_enabled:false,observed_condition:'ALIGNEMENT_BAISSIER_HORAIRE',
+  observed_hours:64,from_utc:d.hourly[0].hour_utc,to_utc:h,
+  last_close_usdc:73152.8,ema_5_usdc:73861.23,ema_13_usdc:74238.06,ema_34_usdc:74628.9};
+ const ui=await run(d);
+ assert.match(ui.get('strategy-finding'),/Structure horaire baissière/);
+ assert.match(ui.get('strategy-finding'),/64 bougies closes consécutives/);
+ assert.match(ui.get('strategy-limit'),/pas une stratégie validée/);
+ assert.match(ui.get('strategy-limit'),/aucun signal/);
+});
