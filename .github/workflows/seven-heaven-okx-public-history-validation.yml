@@ -1,0 +1,34 @@
+name: Seven Heaven - verify independent OKX BTC/USDC history
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/seven-heaven-okx-public-history-validation.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_HISTORY_READONLY_COVERAGE_CHECK.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  public-read-only-okx-data-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read OKX public historical daily Spot BTC/USDC (no credentials)
+        run: |
+          script=coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_HISTORY_READONLY_COVERAGE_CHECK.mjs
+          node --check "$script"
+          node "$script"
+      - name: Preserve coverage evidence for reproducibility
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-spot-btc-usdc-daily-coverage-evidence
+          path: |
+            /tmp/seven_okx_history_coverage.json
+          if-no-files-found: warn
+          retention-days: 30
