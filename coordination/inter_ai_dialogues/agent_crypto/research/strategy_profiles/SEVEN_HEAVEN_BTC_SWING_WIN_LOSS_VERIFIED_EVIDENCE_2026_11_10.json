@@ -1,0 +1,573 @@
+{
+  "schema": "seven.crypto.btc.strategy-failures.v1",
+  "read_only": true,
+  "orders_enabled": false,
+  "source": {
+    "pair": "BTCUSDT Spot Binance daily",
+    "sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+    "rows": 3075
+  },
+  "model": {
+    "period_start": "2019-01-01",
+    "period_end": "2026-09-30",
+    "days": 2830,
+    "starting_balance_usdt": 1000,
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "no_leverage": true,
+    "close_signal_next_open_fill": true,
+    "annual_capital_reset": false,
+    "stops_ohlc_simplification": true,
+    "all_rules_declared_before_calculation": true,
+    "no_untouched_out_of_sample": true,
+    "prospective_validity_not_proven": true
+  },
+  "rsi_signal_invariants": {
+    "filtered": 13,
+    "unfiltered": 57
+  },
+  "strategies": [
+    {
+      "key": "CASH",
+      "net_pct": 0,
+      "max_dd_pct": 0,
+      "trades": 0,
+      "wins": 0,
+      "losses": 0,
+      "exposure_pct": 0,
+      "yearly": {
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 0,
+        "2026": 0
+      },
+      "label": "Liquidités, témoin",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024"
+      ]
+    },
+    {
+      "key": "BUY_HOLD",
+      "net_pct": 2152.576,
+      "max_dd_pct": -76.629,
+      "trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "exposure_pct": 100,
+      "yearly": {
+        "2019": 93.819,
+        "2020": 301.983,
+        "2021": 59.79,
+        "2022": -64.207,
+        "2023": 155.607,
+        "2024": 121.306,
+        "2025": -6.335,
+        "2026": -4.592
+      },
+      "label": "Acheter et conserver, témoin",
+      "underperforms_buy_hold": false,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2025",
+        "2026"
+      ],
+      "underperform_years": []
+    },
+    {
+      "key": "EMA20_50",
+      "net_pct": 2432.824,
+      "max_dd_pct": -51.678,
+      "trades": 22,
+      "wins": 10,
+      "losses": 12,
+      "exposure_pct": 55.87,
+      "yearly": {
+        "2019": 119.428,
+        "2020": 232.819,
+        "2021": 93.643,
+        "2022": -39.125,
+        "2023": 80.265,
+        "2024": 58.407,
+        "2025": -0.804,
+        "2026": 3.868
+      },
+      "label": "Tendance EMA20 > EMA50",
+      "underperforms_buy_hold": false,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2025"
+      ],
+      "underperform_years": [
+        "2020",
+        "2023",
+        "2024"
+      ]
+    },
+    {
+      "key": "EMA50_200",
+      "net_pct": 863.06,
+      "max_dd_pct": -71.426,
+      "trades": 7,
+      "wins": 5,
+      "losses": 2,
+      "exposure_pct": 64.31,
+      "yearly": {
+        "2019": 37.278,
+        "2020": 77.022,
+        "2021": 13.979,
+        "2022": -9.508,
+        "2023": 63.304,
+        "2024": 121.306,
+        "2025": -1.454,
+        "2026": 7.886
+      },
+      "label": "Tendance EMA50 > EMA200",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2025"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023"
+      ]
+    },
+    {
+      "key": "PRICE_EMA200",
+      "net_pct": 1264.149,
+      "max_dd_pct": -56.41,
+      "trades": 42,
+      "wins": 11,
+      "losses": 31,
+      "exposure_pct": 60.57,
+      "yearly": {
+        "2019": 73.71,
+        "2020": 174.291,
+        "2021": 7.125,
+        "2022": -8.086,
+        "2023": 64.2,
+        "2024": 71.374,
+        "2025": -8.702,
+        "2026": 13.182
+      },
+      "label": "Clôture au-dessus de EMA200",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2025"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2025"
+      ]
+    },
+    {
+      "key": "MOM90",
+      "net_pct": 985.849,
+      "max_dd_pct": -66.659,
+      "trades": 48,
+      "wins": 15,
+      "losses": 33,
+      "exposure_pct": 56.89,
+      "yearly": {
+        "2019": 144.125,
+        "2020": 45.406,
+        "2021": 46.526,
+        "2022": -34.545,
+        "2023": 59.793,
+        "2024": 98.772,
+        "2025": 13.717,
+        "2026": -11.696
+      },
+      "label": "Momentum positif 90 jours",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2026"
+      ],
+      "underperform_years": [
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2026"
+      ]
+    },
+    {
+      "key": "MOM180",
+      "net_pct": 874.371,
+      "max_dd_pct": -64.857,
+      "trades": 27,
+      "wins": 13,
+      "losses": 14,
+      "exposure_pct": 60.6,
+      "yearly": {
+        "2019": 7.471,
+        "2020": 182.841,
+        "2021": 13.919,
+        "2022": -17.729,
+        "2023": 45.418,
+        "2024": 90.925,
+        "2025": 1.866,
+        "2026": 20.932
+      },
+      "label": "Momentum positif 180 jours",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2022"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024"
+      ]
+    },
+    {
+      "key": "DON20",
+      "net_pct": 515.408,
+      "max_dd_pct": -51.87,
+      "trades": 51,
+      "wins": 20,
+      "losses": 31,
+      "exposure_pct": 38.62,
+      "yearly": {
+        "2019": 35.295,
+        "2020": 172.475,
+        "2021": 28.697,
+        "2022": -37.438,
+        "2023": 66.511,
+        "2024": 24.922,
+        "2025": -7.66,
+        "2026": 7.946
+      },
+      "label": "Cassure 20 j, sortie 10 j",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2025"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2025"
+      ]
+    },
+    {
+      "key": "DON55",
+      "net_pct": 387.115,
+      "max_dd_pct": -33.53,
+      "trades": 29,
+      "wins": 16,
+      "losses": 13,
+      "exposure_pct": 29.19,
+      "yearly": {
+        "2019": 67.413,
+        "2020": 56.394,
+        "2021": 19.757,
+        "2022": -10.695,
+        "2023": 27.382,
+        "2024": 48.174,
+        "2025": -4.033,
+        "2026": -3.962
+      },
+      "label": "Cassure 55 j, sortie 20 j",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2022",
+        "2025",
+        "2026"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024"
+      ]
+    },
+    {
+      "key": "DON20_TREND",
+      "net_pct": 190.356,
+      "max_dd_pct": -45.264,
+      "trades": 36,
+      "wins": 14,
+      "losses": 22,
+      "exposure_pct": 25.12,
+      "yearly": {
+        "2019": 0.002,
+        "2020": 86.65,
+        "2021": -7.68,
+        "2022": 0,
+        "2023": 51.762,
+        "2024": 24.922,
+        "2025": -7.66,
+        "2026": -3.749
+      },
+      "label": "Cassure 20 j avec filtre EMA50/200",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2021",
+        "2025",
+        "2026"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2025"
+      ]
+    },
+    {
+      "key": "PULLBACK_FILTERED",
+      "net_pct": 314.38,
+      "max_dd_pct": -44.9,
+      "trades": 79,
+      "wins": 25,
+      "losses": 54,
+      "exposure_pct": 24.7,
+      "yearly": {
+        "2019": 49.391,
+        "2020": 78.85,
+        "2021": -6.574,
+        "2022": 0,
+        "2023": 10.645,
+        "2024": 38.121,
+        "2025": 9.253,
+        "2026": -0.576
+      },
+      "label": "Repli EMA10 avec filtre EMA50/200",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2021",
+        "2026"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024"
+      ]
+    },
+    {
+      "key": "REBOUND_FILTERED",
+      "net_pct": 15.244,
+      "max_dd_pct": -15.866,
+      "trades": 12,
+      "wins": 6,
+      "losses": 6,
+      "exposure_pct": 2.4,
+      "yearly": {
+        "2019": 6.313,
+        "2020": -3.46,
+        "2021": 13.453,
+        "2022": 0,
+        "2023": 7.318,
+        "2024": 1.728,
+        "2025": -9.345,
+        "2026": 0
+      },
+      "label": "Rebond RSI35 au-dessus de EMA200",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2020",
+        "2025"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2025"
+      ]
+    },
+    {
+      "key": "REBOUND_UNFILTERED",
+      "net_pct": 14.558,
+      "max_dd_pct": -24.984,
+      "trades": 38,
+      "wins": 23,
+      "losses": 15,
+      "exposure_pct": 9.75,
+      "yearly": {
+        "2019": -5.771,
+        "2020": 5.351,
+        "2021": 8.22,
+        "2022": -2.658,
+        "2023": 8.578,
+        "2024": 13.32,
+        "2025": -7.489,
+        "2026": -3.76
+      },
+      "label": "Rebond RSI35 sans filtre EMA200 (ablation)",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2019",
+        "2022",
+        "2025",
+        "2026"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2025"
+      ]
+    },
+    {
+      "key": "MEANREV_Z2",
+      "net_pct": 38.782,
+      "max_dd_pct": -55.835,
+      "trades": 71,
+      "wins": 38,
+      "losses": 33,
+      "exposure_pct": 18.3,
+      "yearly": {
+        "2019": -1.546,
+        "2020": 20.487,
+        "2021": 25.314,
+        "2022": -45.446,
+        "2023": 49.627,
+        "2024": 24.214,
+        "2025": 19.888,
+        "2026": -23.197
+      },
+      "label": "Retour à la moyenne, écart-type 2 sur 20 j",
+      "underperforms_buy_hold": true,
+      "loses_money": false,
+      "loss_years": [
+        "2019",
+        "2022",
+        "2026"
+      ],
+      "underperform_years": [
+        "2019",
+        "2020",
+        "2021",
+        "2023",
+        "2024",
+        "2026"
+      ]
+    }
+  ],
+  "double_costs": [
+    {
+      "key": "CASH",
+      "net_pct": 0,
+      "trades": 0
+    },
+    {
+      "key": "BUY_HOLD",
+      "net_pct": 2145.822,
+      "trades": 1
+    },
+    {
+      "key": "EMA20_50",
+      "net_pct": 2270.898,
+      "trades": 22
+    },
+    {
+      "key": "EMA50_200",
+      "net_pct": 843.027,
+      "trades": 7
+    },
+    {
+      "key": "PRICE_EMA200",
+      "net_pct": 1102.502,
+      "trades": 42
+    },
+    {
+      "key": "MOM90",
+      "net_pct": 840.087,
+      "trades": 48
+    },
+    {
+      "key": "MOM180",
+      "net_pct": 798.486,
+      "trades": 27
+    },
+    {
+      "key": "DON20",
+      "net_pct": 429.504,
+      "trades": 51
+    },
+    {
+      "key": "DON55",
+      "net_pct": 347.486,
+      "trades": 29
+    },
+    {
+      "key": "DON20_TREND",
+      "net_pct": 161.187,
+      "trades": 36
+    },
+    {
+      "key": "PULLBACK_FILTERED",
+      "net_pct": 226.865,
+      "trades": 79
+    },
+    {
+      "key": "REBOUND_FILTERED",
+      "net_pct": 11.226,
+      "trades": 12
+    },
+    {
+      "key": "REBOUND_UNFILTERED",
+      "net_pct": 2.26,
+      "trades": 38
+    },
+    {
+      "key": "MEANREV_Z2",
+      "net_pct": 11.429,
+      "trades": 71
+    }
+  ],
+  "verification": {
+    "github_actions_run_id": 42904207046,
+    "github_actions_job_id": 130137810811,
+    "github_actions_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42904207046",
+    "research_only": true,
+    "account_access": false,
+    "code": "SEVEN_HEAVEN_BTC_SWING_WIN_LOSS_CATALOG_2026_11_10.py",
+    "ci_success": true
+  }
+}
