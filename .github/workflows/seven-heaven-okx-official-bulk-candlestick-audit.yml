@@ -91,8 +91,14 @@ jobs:
       - name: Normalize real OKX archive minute candles into fail-closed UTC days
         run: |
           set -euo pipefail
+          # The download probe uses a temporary prefix. Restore the official
+          # ZIP basename so the canonicalizer can match its inner CSV securely.
+          for archive in /tmp/seven_okx_sample_*.zip; do
+            date=${archive##*/seven_okx_sample_}
+            cp "$archive" "/tmp/BTC-USDC-candlesticks-$date"
+          done
           python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_NORMALIZER.py \
-            /tmp/seven_okx_sample_*.zip \
+            /tmp/BTC-USDC-candlesticks-*.zip \
             --output /tmp/seven_okx_normalized_utc_evidence.json
           python3 - <<'PY'
           import json
