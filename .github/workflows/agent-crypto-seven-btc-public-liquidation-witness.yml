@@ -1,0 +1,79 @@
+name: Seven Heaven BTC Public Liquidation Witness — sampled pilot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-seven-btc-public-liquidation-witness.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/collect_btc_liquidation_witness.py'
+      - 'public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/test_collect_btc_liquidation_witness.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '17,47 * * * *'
+
+permissions:
+  contents: write
+concurrency:
+  group: seven-btc-public-liquidation-witness
+  cancel-in-progress: false
+
+jobs:
+  record-public-sampled-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source and safety regressions
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/collect_btc_liquidation_witness.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/laboratoire/liquidation-monitor -p 'test_*.py' -v
+      - name: Install public WebSocket runtime
+        run: python -m pip install 'websockets==15.0.1'
+      - name: Collect public liquidation stream samples and preserve coverage
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/collect_btc_liquidation_witness.py --duration 360
+      - name: Validate recorded data remains public and observation-only
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/observations')
+          doc=json.loads((root/'status.json').read_text(encoding='utf-8'))
+          assert doc['schema']=='seven.crypto.public-liquidation-witness.v1'
+          assert doc['orders_enabled'] is False and doc['real_orders']==0
+          assert doc['claim_complete_market_total'] is False and doc['historical_backfill'] is False
+          assert doc['coverage']=='SAMPLED_RUNS_WITH_GAPS_NOT_24_7'
+          assert sorted(doc['sources'])==['binance','bybit','okx']
+          for p in root.glob('*.jsonl'):
+            for line in p.read_text(encoding='utf-8').splitlines():
+              e=json.loads(line)
+              assert e['provider'] in ('bybit','binance','okx')
+              assert e['orders_enabled'] is False and e['causal_claim'] is False
+              assert e['venue_market']=='DERIVATIVES'
+              assert 'api_key' not in e and 'user_id' not in e
+              if e['provider']=='okx': assert e['indicative_notional_usdt'] is None
+          print('PUBLIC-LIQUIDATION-WITNESS: PASS / sampled data only / no real orders')
+          PY
+      - name: Publish only public liquidation observations
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/observations
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no observational change'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'data: record sampled public BTC derivative liquidation observations'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
