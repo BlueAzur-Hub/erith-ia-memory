@@ -5,6 +5,7 @@
 // module 3 is derivatives funding data and MUST NOT be used for spot candles.
 // Date groups in module 2 are UTC+8; UTC reaggregation is required later.
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 const endpoint='https://www.okx.com/api/v5/public/market-data-history';
 const examples=['2022-06-15','2023-10-15','2024-06-15','2025-02-15'];
 const evidence={schema:'seven.crypto.okx.spot.btc-usdc.official-archive-discovery.v1',
@@ -30,6 +31,30 @@ for(const date of examples){
     item.message=String(body.msg||'').slice(0,250);
     item.itemCount=Array.isArray(body.data)?body.data.length:null;
     item.itemKeys=Array.isArray(body.data)&&body.data[0]?Object.keys(body.data[0]):[];
+    const files=(Array.isArray(body.data)?body.data:[]).flatMap(top=>
+      (Array.isArray(top.details)?top.details:[]).flatMap(detail=>
+      Array.isArray(detail.groupDetails)?detail.groupDetails:[]));
+    const located=files.find(x=>x.filename==='BTC-USDC-candlesticks-'+date+'.zip'&&typeof x.url==='string');
+    if(located){
+      const link=new URL(located.url);
+      item.zipHost=link.hostname;
+      if(link.protocol!=='https:')throw Error('Archive link is not HTTPS');
+      if(Number(located.sizeMB)>5)throw Error('Sample archive exceeds 5 MB');
+      const download=await fetch(link,{signal:AbortSignal.timeout(20000)});
+      item.downloadHTTP=download.status;
+      if(download.ok){
+        const bytes=Buffer.from(await download.arrayBuffer());
+        if(bytes.length>5e6)throw Error('Sample archive unexpectedly large');
+        item.downloadedBytes=bytes.length;
+        item.zipSignature=bytes.subarray(0,4).toString('hex');
+        item.zipSha256=crypto.createHash('sha256').update(bytes).digest('hex');
+        if(item.zipSignature==='504b0304' && bytes.length>128){
+          item.zipVerified=true;
+          fs.writeFileSync('/tmp/seven_okx_sample_'+date+'.zip',bytes);
+        }else item.zipVerified=false;
+      }
+    }
+
     item.details=[];
     if(Array.isArray(body.data)){
       for(const x of body.data.slice(0,4)){
