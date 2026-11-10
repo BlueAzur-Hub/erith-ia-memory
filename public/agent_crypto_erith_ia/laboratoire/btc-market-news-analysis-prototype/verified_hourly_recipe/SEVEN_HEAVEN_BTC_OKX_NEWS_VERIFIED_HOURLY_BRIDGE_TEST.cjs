@@ -16,7 +16,7 @@ function makeFixture(){
   const start=Date.parse(date+'T00:00:00Z');
   const rows=Array.from({length:24},(_,i)=>{
    const o=80000-k*3000-i*100,c=o-(i===15?1300:35),h=o+10,l=c-15,v=i===15?250:10;
-   return {t:start+i*3600000,utc:new Date(start+i*3600000).toISOString(),o:String(o),h:String(h),l:String(l),c:String(c),v_btc:String(v),v_usdc_quote:String(v*o),confirm:'1'};
+   return {t:start+i*3600000,utc:new Date(start+i*3600000).toISOString().replace('.000Z','Z'),o:String(o),h:String(h),l:String(l),c:String(c),v_btc:String(v),v_usdc_quote:String(v*o),confirm:'1'};
   });
   const volumes=rows.reduce((s,x)=>s+Number(x.v_btc),0);
   const doc={schema:'seven.crypto.okx-btc-hourly-event-study.v1',date_utc:date,venue:'OKX',instrument:'BTC-USDC',base:'BTC',quote:'USDC',bar:'1H',interval_minutes:60,market_type:'SPOT',

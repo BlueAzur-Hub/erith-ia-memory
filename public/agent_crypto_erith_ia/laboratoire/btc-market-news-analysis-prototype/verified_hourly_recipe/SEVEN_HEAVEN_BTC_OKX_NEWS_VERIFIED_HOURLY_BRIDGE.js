@@ -55,7 +55,7 @@ function readEvidence(base=BASE) {
     const start=Date.parse(`${date}T00:00:00Z`),end=start+24*HOUR;
     const rows=obj.rows.map((r,j)=>{
       const t=Number(r?.t),o=numeric(r?.o,`o${j}`),h=numeric(r?.h,`h${j}`),l=numeric(r?.l,`l${j}`),c=numeric(r?.c,`c${j}`),v=numeric(r?.v_btc,`v_btc${j}`),vquote=numeric(r?.v_usdc_quote,`v_usdc${j}`);
-      assert(t===start+j*HOUR && t+HOUR<=end && r.utc===new Date(t).toISOString(),'CANDLE_TIME_GAP');
+      assert(t===start+j*HOUR && t+HOUR<=end && typeof r.utc==='string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(r.utc) && Date.parse(r.utc)===t,'CANDLE_TIME_GAP');
       assert(r.confirm==='1' && o>0 && h>=Math.max(o,c,l) && l<=Math.min(o,c,h) && l>0 && c>0 && v>=0 && vquote>=0,'CANDLE_INVALID');
       return {t,o,h,l,c,v,vquote,confirm:'1'};
     });
