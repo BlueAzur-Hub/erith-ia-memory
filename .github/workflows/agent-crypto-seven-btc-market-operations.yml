@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/agent-crypto-seven-btc-market-operations.yml'
       - 'public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor/**'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-operations/dashboard.html'
   schedule:
     - cron: '23 * * * *'
 
@@ -34,6 +35,8 @@ jobs:
           base=public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor
           python -m py_compile "$base/collect_btc_spot_hourly.py" "$base/build_btc_public_observation_report.py"
           python -m unittest discover -s "$base" -p 'test_*.py' -v
+      - name: Validate observatory interpretation, stale status and coverage disclaimers
+        run: node --test public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor/test_btc_observatory_page.cjs
       - name: Archive most recent completed public OKX BTC-USDC Spot hourly candles
         run: |
           set -euo pipefail
