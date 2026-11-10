@@ -1,0 +1,132 @@
+{
+  "schema": "atlas_news_sentinel_world_to_market_v1",
+  "generated_at": "2026-11-10T08:52:17.689742+00:00",
+  "status": "ok",
+  "causal_claim": false,
+  "freeze": {
+    "source": "public/agent_crypto_erith_ia/data/news/latest.json",
+    "source_blob_sha": "3edeec8bc719f72929d2d9f7b282157da7327b74",
+    "target_dates": [
+      "2026-11-05",
+      "2026-11-08"
+    ],
+    "selection": "asset BTC; target event publication date; domains institutional_flows/macro_liquidity/regulation/leverage; no causal claim",
+    "archived_at_reference_utc": "2026-11-10T15:00:00Z"
+  },
+  "summary": {
+    "sources_ok": 14,
+    "sources_total": 15,
+    "driver_coverage": {
+      "macro_liquidity": {
+        "events_72h": 7,
+        "distinct_sources": 3
+      },
+      "institutional_flows": {
+        "events_72h": 5,
+        "distinct_sources": 3
+      },
+      "regulation": {
+        "events_72h": 5,
+        "distinct_sources": 3
+      },
+      "leverage": {
+        "events_72h": 0,
+        "distinct_sources": 0
+      }
+    }
+  },
+  "events": [
+    {
+      "event_id": "feed_1a9daa6a8d32a9ac",
+      "headline": "Bitcoin holds above $80,000 after Wednesday’s jump as injective rallies on staked ETF listing",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/11/05/bitcoin-holds-above-usd80-000-after-wednesday-s-jump-as-injective-rallies-on-staked-etf-listing",
+      "event_time": "2026-11-05T11:30:00+00:00",
+      "assets": [
+        "BTC"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "source_count": 1,
+      "causal_claim": false
+    },
+    {
+      "event_id": "feed_3cc964db3296ed38",
+      "headline": "Bitcoin holds above $80,000 as Zcash jumps 12% in post-election crypto rebound",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/11/05/bitcoin-holds-above-usd80-000-as-zcash-jumps-12-in-post-election-crypto-rebound",
+      "event_time": "2026-11-05T05:13:45+00:00",
+      "assets": [
+        "BTC"
+      ],
+      "driver_domains": [
+        "macro_liquidity",
+        "regulation"
+      ],
+      "source_count": 1,
+      "causal_claim": false
+    },
+    {
+      "event_id": "feed_4038b5f117c00932",
+      "headline": "Bitcoin, Ether ETFs draw $128M as crypto rebounds after midterms",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/bitcoin-ether-etfs-turn-green-post-election-rebound",
+      "event_time": "2026-11-05T08:22:30+00:00",
+      "assets": [
+        "BTC"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "source_count": 1,
+      "causal_claim": false
+    },
+    {
+      "event_id": "feed_3f9520ecf91f8dd2",
+      "headline": "Les ETF bitcoin perdent 412 M$ tandis que les ETF ethereum enregistrent des sorties de 93 M - KuCoin",
+      "source_name": "Google News FR · ETF / flux institutionnels",
+      "source_url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNWTliYVAyY0ttNS1MR2FYRllRY3FHYkpzdnYwY1RrMXBOLXFaTnB3c0VLN0swSmdfUkkwVEpJb3J5bWpqVlpKTjd4bmpCQjJxTGxZSjluVVhfd0JGaDZZZ0k2QzNqc0xrSHMyU2tBWTFwdVBDbzRrb3RhaU5NSlE4VmFUeWFzTGc0TzBWVTZ1SWVCZTJ3RmI4OXF2NEw?oc=5",
+      "event_time": "2026-11-08T11:14:31+00:00",
+      "assets": [
+        "BTC",
+        "ETH"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "source_count": 1,
+      "causal_claim": false
+    },
+    {
+      "event_id": "feed_1d8640b66287b3a1",
+      "headline": "James Wynn maintient sa prévision de krach de Bitcoin malgré de nouveaux flux entrants sur les ETF - BeInCrypto",
+      "source_name": "Google News FR · ETF / flux institutionnels",
+      "source_url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE1YMzlXS2JIYWVBSlpFcXhzckR5UXhySjNVMzFtTGNzQmVja0NKMU9RNjYzWFVzZnZESi11SmJUYUYyY2k3WnpRSGw4bE96d21rdzRVbXU1ZlJxUG9xQkpScFhYWHQ1Y0NlUHFBMXZLRWZ0YTZNT0JwYl9B?oc=5",
+      "event_time": "2026-11-05T12:25:00+00:00",
+      "assets": [
+        "BTC"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "source_count": 1,
+      "causal_claim": false
+    },
+    {
+      "event_id": "feed_aa7455f60ccbb77d",
+      "headline": "Bitcoin Erases Election Rally as AI Stocks Plunge, $428 Million in Crypto Longs Get Wiped Out",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/382612/bitcoin-erases-election-rally-ai-stocks-plunge-428-million-crypto-longs",
+      "event_time": "2026-11-05T16:29:11+00:00",
+      "assets": [
+        "BTC"
+      ],
+      "driver_domains": [
+        "leverage"
+      ],
+      "source_count": 1,
+      "causal_claim": false
+    }
+  ]
+}

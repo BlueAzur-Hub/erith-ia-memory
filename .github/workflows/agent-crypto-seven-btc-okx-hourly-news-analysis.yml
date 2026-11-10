@@ -1,0 +1,64 @@
+name: Agent Crypto Seven BTC Hourly OKX News Evidence Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-seven-btc-okx-hourly-news-analysis.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/SEVEN_HEAVEN_AGENT_CRYPTO_BTC_MARKET_NEWS_READ_ONLY_ANALYSIS_CORE.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/*.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/*.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/*.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/README.md'
+      - 'public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence/index.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence/btc-usdc-okx-1h-2026-11-05.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/okx-hourly-collector/evidence/btc-usdc-okx-1h-2026-11-08.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-seven-btc-okx-hourly-news-analysis
+  cancel-in-progress: false
+
+jobs:
+  reconcile-public-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout public immutable evidence and read-only code
+        uses: actions/checkout@v4
+      - name: Install Node.js 22 for test runner
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax validation and regression tests
+        run: |
+          set -euo pipefail
+          lab=public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype
+          node --check "$lab/SEVEN_HEAVEN_AGENT_CRYPTO_BTC_MARKET_NEWS_READ_ONLY_ANALYSIS_CORE.js"
+          node --check "$lab/verified_hourly_recipe/SEVEN_HEAVEN_BTC_OKX_NEWS_VERIFIED_HOURLY_BRIDGE.js"
+          node --test "$lab/SEVEN_HEAVEN_AGENT_CRYPTO_BTC_MARKET_NEWS_READ_ONLY_ANALYSIS_TEST.cjs" "$lab/SEVEN_HEAVEN_AGENT_CRYPTO_BTC_MARKET_NEWS_RUNTIME_ADAPTER_TEST.cjs" "$lab/verified_hourly_recipe/SEVEN_HEAVEN_BTC_OKX_NEWS_VERIFIED_HOURLY_BRIDGE_TEST.cjs"
+      - name: Revalidate hashes, candles, instrument, sources, dates
+        run: |
+          set -euo pipefail
+          node public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/SEVEN_HEAVEN_BTC_OKX_NEWS_VERIFIED_HOURLY_BRIDGE.js --check
+      - name: Generate frozen machine and human reports
+        run: |
+          set -euo pipefail
+          node public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/SEVEN_HEAVEN_BTC_OKX_NEWS_VERIFIED_HOURLY_BRIDGE.js --write
+      - name: Commit only generated public read-only dossier
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/laboratoire/btc-market-news-analysis-prototype/verified_hourly_recipe/output
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: Historical evidence and reports are already identical.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: publish verified BTC OKX hourly and news evidence crosscheck'
+          git pull --rebase origin main
+          git push origin HEAD:main
