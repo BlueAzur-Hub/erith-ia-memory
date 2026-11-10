@@ -133,6 +133,7 @@ def audit(paths: list[str | Path]) -> dict:
             reconstructed.append({
                 "utc_date": day, "status": "INCOMPLETE",
                 "available_minutes": len(found), "used_for_backtest": False,
+                "eligible_as_backtest_input": False,
             })
             continue
         counts = dict(Counter(row[5] for row in found))
@@ -141,7 +142,8 @@ def audit(paths: list[str | Path]) -> dict:
             "utc_date": day,
             "status": "VALIDATED" if confirmed else "QUARANTINED_UNCONFIRMED",
             "available_minutes": 1440, "confirm_counts": counts,
-            "used_for_backtest": confirmed,
+            "used_for_backtest": False,  # normalizing files is NOT running a backtest
+            "eligible_as_backtest_input": confirmed,
         }
         if confirmed:
             record["ohlcv"] = {
@@ -152,8 +154,25 @@ def audit(paths: list[str | Path]) -> dict:
                 "base_volume": str(sum((x[4] for x in found), Decimal("0"))),
             }
         reconstructed.append(record)
+    # Distinguish a PASSED parser test from a dataset ready for strategy tests.
+    # Even a complete confirmed sample day does not validate a trading method.
+    max_streak = streak = 0
+    previous_date = None
+    for day in reconstructed:
+        current = datetime.fromisoformat(day["utc_date"]).date()
+        if day["eligible_as_backtest_input"]:
+            if previous_date is not None and (current - previous_date).days == 1:
+                streak += 1
+            else:
+                streak = 1
+            max_streak = max(max_streak, streak)
+            previous_date = current
+        else:
+            streak = 0
+            previous_date = None
+
     summary = {
-        "schema": "seven.okx.btc-usdc.archive-utc-audit.v1",
+        "schema": "seven.okx.btc-usdc.archive-utc-audit.v2",
         "research_only": True, "orders_enabled": False,
         "rules": {
             "identical_duplicates": "deduplicate by minute timestamp",
@@ -171,6 +190,14 @@ def audit(paths: list[str | Path]) -> dict:
             "incomplete_days": sum(x["status"] == "INCOMPLETE" for x in reconstructed),
         },
         "utc_days": reconstructed,
+        "research_readiness": {
+            "normalizer_tests_mean_strategy_validated": False,
+            "longest_contiguous_confirmed_utc_days": max_streak,
+            "ready_for_250_day_replay": max_streak >= 250,
+            "ready_for_two_year_comparison": max_streak >= 730,
+            "status": "SOURCE_SAMPLE_ONLY" if max_streak < 250 else "HISTORICAL_INPUT_CANDIDATE",
+            "note": "Existing Binance multi-year strategy research is independent and not blocked by OKX source qualification.",
+        },
     }
     return summary
 
@@ -216,8 +243,12 @@ def self_test() -> None:
         assert fa["identical_duplicates_removed"] == 1440
         good = audit([a, b])
         assert good["summary"]["validated_days"] == 1
+        assert good["research_readiness"]["longest_contiguous_confirmed_utc_days"] == 1
+        assert good["research_readiness"]["ready_for_250_day_replay"] is False
         day = next(x for x in good["utc_days"] if x["utc_date"] == "2025-02-15")
         assert day["status"] == "VALIDATED"
+        assert day["eligible_as_backtest_input"] is True
+        assert day["used_for_backtest"] is False
         assert day["ohlcv"]["open"] == str(Decimal(20000) + Decimal(480) / 10)
         assert day["ohlcv"]["close"] == str(Decimal(20000) + Decimal(479) / 10 + 1)
         assert day["ohlcv"]["base_volume"] == "1440"
@@ -225,6 +256,7 @@ def self_test() -> None:
         _fixture(root, "2025-02-16", "0")
         hold = audit([a, b])
         assert hold["summary"]["validated_days"] == 0
+        assert hold["research_readiness"]["longest_contiguous_confirmed_utc_days"] == 0
         assert any(x["status"] == "QUARANTINED_UNCONFIRMED" for x in hold["utc_days"])
         # Conflicting duplicates must STOP, not pick an arbitrary market price.
         _fixture(root, "2025-02-15", "1", duplicate=True, corrupt=True)
@@ -258,6 +290,7 @@ def main() -> None:
         Path(args.output).write_text(serialized, encoding="utf-8")
     print("OKX_ARCHIVE_AUDIT " + json.dumps({
         "summary": data["summary"],
+        "research_readiness": data["research_readiness"],
         "files": [{k: x[k] for k in ("archive_date", "decision",
                     "identical_duplicates_removed", "confirm_counts_unique")}
                   for x in data["files"]],

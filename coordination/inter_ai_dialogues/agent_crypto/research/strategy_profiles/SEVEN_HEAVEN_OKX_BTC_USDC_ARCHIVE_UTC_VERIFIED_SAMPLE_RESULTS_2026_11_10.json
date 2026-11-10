@@ -1,5 +1,5 @@
 {
-  "schema": "seven.crypto.okx.btc-usdc.archive-utc-repair-evidence.v1",
+  "schema": "seven.crypto.okx.btc-usdc.archive-utc-repair-evidence.v2",
   "publication_date": "2026-11-10",
   "source": "Official OKX Spot BTC-USDC public minute archive (GET /api/v5/public/market-data-history, module 2)",
   "github_actions_run": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42889836677",
@@ -158,7 +158,8 @@
       "utc_date": "2022-06-14",
       "status": "INCOMPLETE",
       "available_minutes": 480,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2022-06-15",
@@ -167,26 +168,29 @@
       "confirm_counts": {
         "1": 1440
       },
-      "used_for_backtest": true,
+      "used_for_backtest": false,
       "ohlcv": {
         "open": "22107.1",
         "high": "22794.4",
         "low": "20066.0",
         "close": "22551.9",
         "base_volume": "777.77969843"
-      }
+      },
+      "eligible_as_backtest_input": true
     },
     {
       "utc_date": "2022-06-16",
       "status": "INCOMPLETE",
       "available_minutes": 960,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2023-10-14",
       "status": "INCOMPLETE",
       "available_minutes": 480,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2023-10-15",
@@ -195,19 +199,22 @@
       "confirm_counts": {
         "0": 1440
       },
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2023-10-16",
       "status": "INCOMPLETE",
       "available_minutes": 960,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2024-06-14",
       "status": "INCOMPLETE",
       "available_minutes": 480,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2024-06-15",
@@ -216,19 +223,22 @@
       "confirm_counts": {
         "0": 1440
       },
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2024-06-16",
       "status": "INCOMPLETE",
       "available_minutes": 960,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2025-02-14",
       "status": "INCOMPLETE",
       "available_minutes": 480,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     },
     {
       "utc_date": "2025-02-15",
@@ -237,20 +247,22 @@
       "confirm_counts": {
         "1": 1440
       },
-      "used_for_backtest": true,
+      "used_for_backtest": false,
       "ohlcv": {
         "open": "97514",
         "high": "97984.9",
         "low": "97236.1",
         "close": "97605.9",
         "base_volume": "295.51960606"
-      }
+      },
+      "eligible_as_backtest_input": true
     },
     {
       "utc_date": "2025-02-16",
       "status": "INCOMPLETE",
       "available_minutes": 960,
-      "used_for_backtest": false
+      "used_for_backtest": false,
+      "eligible_as_backtest_input": false
     }
   ],
   "caveats": [
@@ -258,5 +270,13 @@
     "UTC edge days of each two-ZIP window are incomplete by design",
     "Unconfirmed OKX 2023-2024 bars are excluded, not silently rewritten to completed candles",
     "No strategy has been recalculated on those two validated isolated days; insufficient history"
-  ]
+  ],
+  "research_readiness": {
+    "normalizer_tests_mean_strategy_validated": false,
+    "longest_contiguous_confirmed_utc_days": 1,
+    "ready_for_250_day_replay": false,
+    "ready_for_two_year_comparison": false,
+    "status": "SOURCE_SAMPLE_ONLY",
+    "note": "Existing Binance multi-year strategy research is independent and not blocked by OKX source qualification."
+  }
 }
