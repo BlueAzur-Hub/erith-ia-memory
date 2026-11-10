@@ -53,6 +53,16 @@ class CollectorTest(unittest.TestCase):
     def test_okx_long_liquidated_on_sell(self):
         r=mod.parse('okx',self.okx(side='sell'),NOW)[0]
         self.assertEqual(r['liquidated_position_side'],'long')
+    def test_okx_bad_detail_does_not_discard_valid_neighbor(self):
+        payload=self.okx(side='sell')
+        payload['data'][0]['details'].insert(0,{'side':'sell','sz':'0.5','bkPx':'0','ts':str(NOW-3000)})
+        rejected=[]
+        records=mod.parse('okx',payload,NOW,rejected)
+        self.assertEqual(len(records),1)
+        self.assertEqual(records[0]['liquidated_position_side'],'long')
+        self.assertEqual(rejected,['BAD_DETAIL:OKX_INVALID_NUMERIC_OR_TIMESTAMP'])
+        with self.assertRaises(ValueError):mod.parse('okx',payload,NOW)
+
     def test_okx_wrong_contract_ignored(self):
         self.assertEqual(mod.parse('okx',self.okx(sym='ETH-USDT-SWAP'),NOW),[])
     def test_okx_wrong_channel_ignored(self):

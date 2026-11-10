@@ -77,7 +77,7 @@ def record(provider: str, instrument: str, event_ms: int, received_ms: int,
     }
 
 
-def parse(provider: str, payload: dict, received_ms: int) -> list[dict]:
+def parse(provider: str, payload: dict, received_ms: int, rejected: list[str] | None = None) -> list[dict]:
     """Strict allowlist; discard unrelated instruments or subscription acknowledgements."""
     if not isinstance(payload, dict) or provider not in SOURCES: raise ValueError("invalid payload")
     data = payload.get("data", payload)
@@ -115,10 +115,18 @@ def parse(provider: str, payload: dict, received_ms: int) -> list[dict]:
             if sym not in ("BTC-USDT-SWAP", "BTC-USDC-SWAP"): continue
             for x in group.get("details", []):
                 if not isinstance(x, dict) or x.get("side") not in ("buy", "sell"): continue
-                out.append(record(provider, sym, safe_timestamp(x.get("ts"), received_ms), received_ms,
-                                  "long" if x["side"] == "sell" else "short", x["side"],
-                                  safe_decimal(x.get("sz")), safe_decimal(x.get("bkPx") or x.get("px")),
-                                  "LIQUIDATION_PRICE_PROVIDER", "unknown_contracts"))
+                try:
+                    out.append(record(provider, sym, safe_timestamp(x.get("ts"), received_ms), received_ms,
+                                      "long" if x["side"] == "sell" else "short", x["side"],
+                                      safe_decimal(x.get("sz")), safe_decimal(x.get("bkPx") or x.get("px")),
+                                      "LIQUIDATION_PRICE_PROVIDER", "unknown_contracts"))
+                except ValueError:
+                    # An OKX envelope can mix valid BTC entries with zero/missing
+                    # bankruptcy prices; reject the bad DETAIL, keep the other ones.
+                    # A standalone parse still fails closed unless a caller collects
+                    # explicit rejection evidence.
+                    if rejected is None: raise
+                    rejected.append("BAD_DETAIL:OKX_INVALID_NUMERIC_OR_TIMESTAMP")
     return out
 
 
@@ -129,6 +137,7 @@ async def listen(provider: str, duration: float, max_events: int) -> tuple[list[
     events, seen = [], set()
     connected_ms = 0
     errors = []
+    rejected_details = []
     reconnects = 0
     while asyncio.get_running_loop().time() < cutoff and len(events) < max_events:
         socket_started = None
@@ -146,7 +155,7 @@ async def listen(provider: str, duration: float, max_events: int) -> tuple[list[
                     received_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
                     try:
                         obj = json.loads(raw)
-                        for ev in parse(provider, obj, received_ms):
+                        for ev in parse(provider, obj, received_ms, rejected_details):
                             if ev["event_key"] not in seen:
                                 seen.add(ev["event_key"]);events.append(ev)
                     except (ValueError, TypeError, json.JSONDecodeError) as exc:
@@ -167,7 +176,8 @@ async def listen(provider: str, duration: float, max_events: int) -> tuple[list[
         "window_ms": max(1, end_ms - started_ms),
         "coverage_ratio_within_run": round(min(1, connected_ms / max(1, end_ms - started_ms)), 4),
         "recorded_events": len(events), "reconnects": reconnects,
-        "errors": sorted(set(errors))[:10],
+        "errors": sorted(set(errors + rejected_details))[:10],
+        "rejected_details": len(rejected_details),
         "status": "OBSERVED_PARTIAL_EXCHANGE_FEED" if connected_ms > 0 else "NO_VERIFIED_COVERAGE",
         "source_completeness": "bybit_per_instrument_reported_all" if provider == "bybit" else "underreported_by_provider",
     }

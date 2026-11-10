@@ -1,0 +1,83 @@
+name: Seven Heaven BTC Public Market Operations — rolling hourly evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-seven-btc-market-operations.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor/**'
+  schedule:
+    - cron: '23 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-btc-market-operations
+  cancel-in-progress: false
+
+jobs:
+  archive-hourly-public-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Python source and all safety regressions
+        run: |
+          set -euo pipefail
+          base=public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor
+          python -m py_compile "$base/collect_btc_spot_hourly.py" "$base/build_btc_public_observation_report.py"
+          python -m unittest discover -s "$base" -p 'test_*.py' -v
+      - name: Archive most recent completed public OKX BTC-USDC Spot hourly candles
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor/collect_btc_spot_hourly.py
+      - name: Build provenance and uptime-aware BTC evidence report
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor/build_btc_public_observation_report.py
+      - name: Verify public-only output and factual status
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('public/agent_crypto_erith_ia/laboratoire/btc-market-operations')
+          s=json.loads((root/'spot-hourly/status.json').read_text())
+          p=json.loads((root/'reports/latest.json').read_text())
+          assert s['schema']=='seven.crypto.okx-spot-hourly-rolling.v1'
+          assert s['instrument']=='BTC-USDC' and s['bar']=='1H'
+          assert s['orders_enabled'] is False and s['real_orders']==0
+          assert p['schema']=='seven.crypto.btc-evidence-monitor.v1'
+          assert p['orders_enabled'] is False and p['real_orders']==0
+          assert p['derivatives']['claim_24_7'] is False
+          assert p['derivatives']['claim_market_total'] is False
+          assert p['spot']['instrument']=='BTC-USDC' and p['spot']['source_exchange_signed'] is False
+          for f in (root/'spot-hourly').glob('*.jsonl'):
+              for raw in f.read_text().splitlines():
+                  r=json.loads(raw)
+                  assert r['instrument']=='BTC-USDC' and r['market_type']=='SPOT'
+                  assert r['confirm']=='1' and r['orders_enabled'] is False
+          print('PASS: public Spot hourly archive + explicit derivatives coverage limits')
+          PY
+      - name: Commit only the public rolling market evidence and reports
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/laboratoire/btc-market-operations
+          git add -- "$target/spot-hourly" "$target/reports"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no new public evidence'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'data: archive audited public BTC Spot and liquidation/news evidence'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
