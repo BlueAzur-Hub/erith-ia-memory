@@ -1,0 +1,262 @@
+{
+  "schema": "seven.crypto.okx.btc-usdc.archive-utc-repair-evidence.v1",
+  "publication_date": "2026-11-10",
+  "source": "Official OKX Spot BTC-USDC public minute archive (GET /api/v5/public/market-data-history, module 2)",
+  "github_actions_run": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42889836677",
+  "tests": "success",
+  "research_only": true,
+  "orders_enabled": false,
+  "archive_days_checked": 8,
+  "archives": [
+    {
+      "date": "2022-06-15",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2022-06-15.zip",
+      "sha256": "1b33d71320d19350312576d4aaa064d42f9da3a80ff218c98eed71867ad27e0d",
+      "bytes": 45865
+    },
+    {
+      "date": "2022-06-16",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2022-06-16.zip",
+      "sha256": "ccf623dd3f985822d6fabd9783e454dafb0996c3c8669ccd9e34a672f9a0aebd",
+      "bytes": 44597
+    },
+    {
+      "date": "2023-10-15",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2023-10-15.zip",
+      "sha256": "0e2a706778f673e76839ed40943cdde3edc40c43e113cd6c09b2387f355960c7",
+      "bytes": 22888
+    },
+    {
+      "date": "2023-10-16",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2023-10-16.zip",
+      "sha256": "eff3c0c9a7c2b73cde3e2661b8ffbe5f46b78047f809cef3b5fae688342b7756",
+      "bytes": 37582
+    },
+    {
+      "date": "2024-06-15",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2024-06-15.zip",
+      "sha256": "4f72419d234fbbe0b1cf23ef35c76a6556f39afd24ff56dc845f5014349f143c",
+      "bytes": 38970
+    },
+    {
+      "date": "2024-06-16",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2024-06-16.zip",
+      "sha256": "3445d578355fc4cebbb302c2fee7add545f8cf9a9b1c138221f73c165fdb0f56",
+      "bytes": 33263
+    },
+    {
+      "date": "2025-02-15",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2025-02-15.zip",
+      "sha256": "42bf1e47dd5d7617a1a95344ce68fcf2bc2675a0faf0695e790db6e0c283d3a0",
+      "bytes": 40810
+    },
+    {
+      "date": "2025-02-16",
+      "download_verified": true,
+      "http": 200,
+      "filename": "BTC-USDC-candlesticks-2025-02-16.zip",
+      "sha256": "989600248f5854547e3fbcd222fb6010e6cf5d36abc63b33bbeaff2133953a89",
+      "bytes": 37605
+    }
+  ],
+  "normalization_rules": {
+    "identical_duplicates": "collapsed",
+    "conflicting_duplicates": "fatal",
+    "confirm_zero": "quarantined",
+    "day": "UTC midnight to midnight; strictly 1440 unique minute bars",
+    "missing_minutes": "excluded"
+  },
+  "summary": {
+    "files_checked": 8,
+    "duplicate_minutes_removed": 2880,
+    "validated_days": 2,
+    "quarantined_days": 2,
+    "incomplete_days": 8
+  },
+  "source_file_diagnostics": [
+    {
+      "archive_date": "2022-06-15",
+      "decision": "CONFIRMED",
+      "identical_duplicates_removed": 1440,
+      "confirm_counts_unique": {
+        "1": 1440
+      }
+    },
+    {
+      "archive_date": "2022-06-16",
+      "decision": "CONFIRMED",
+      "identical_duplicates_removed": 1440,
+      "confirm_counts_unique": {
+        "1": 1440
+      }
+    },
+    {
+      "archive_date": "2023-10-15",
+      "decision": "QUARANTINED_UNCONFIRMED",
+      "identical_duplicates_removed": 0,
+      "confirm_counts_unique": {
+        "0": 1440
+      }
+    },
+    {
+      "archive_date": "2023-10-16",
+      "decision": "QUARANTINED_UNCONFIRMED",
+      "identical_duplicates_removed": 0,
+      "confirm_counts_unique": {
+        "0": 1440
+      }
+    },
+    {
+      "archive_date": "2024-06-15",
+      "decision": "QUARANTINED_UNCONFIRMED",
+      "identical_duplicates_removed": 0,
+      "confirm_counts_unique": {
+        "0": 1440
+      }
+    },
+    {
+      "archive_date": "2024-06-16",
+      "decision": "QUARANTINED_UNCONFIRMED",
+      "identical_duplicates_removed": 0,
+      "confirm_counts_unique": {
+        "0": 1440
+      }
+    },
+    {
+      "archive_date": "2025-02-15",
+      "decision": "CONFIRMED",
+      "identical_duplicates_removed": 0,
+      "confirm_counts_unique": {
+        "1": 1440
+      }
+    },
+    {
+      "archive_date": "2025-02-16",
+      "decision": "CONFIRMED",
+      "identical_duplicates_removed": 0,
+      "confirm_counts_unique": {
+        "1": 1440
+      }
+    }
+  ],
+  "utc_day_evidence": [
+    {
+      "utc_date": "2022-06-14",
+      "status": "INCOMPLETE",
+      "available_minutes": 480,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2022-06-15",
+      "status": "VALIDATED",
+      "available_minutes": 1440,
+      "confirm_counts": {
+        "1": 1440
+      },
+      "used_for_backtest": true,
+      "ohlcv": {
+        "open": "22107.1",
+        "high": "22794.4",
+        "low": "20066.0",
+        "close": "22551.9",
+        "base_volume": "777.77969843"
+      }
+    },
+    {
+      "utc_date": "2022-06-16",
+      "status": "INCOMPLETE",
+      "available_minutes": 960,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2023-10-14",
+      "status": "INCOMPLETE",
+      "available_minutes": 480,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2023-10-15",
+      "status": "QUARANTINED_UNCONFIRMED",
+      "available_minutes": 1440,
+      "confirm_counts": {
+        "0": 1440
+      },
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2023-10-16",
+      "status": "INCOMPLETE",
+      "available_minutes": 960,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2024-06-14",
+      "status": "INCOMPLETE",
+      "available_minutes": 480,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2024-06-15",
+      "status": "QUARANTINED_UNCONFIRMED",
+      "available_minutes": 1440,
+      "confirm_counts": {
+        "0": 1440
+      },
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2024-06-16",
+      "status": "INCOMPLETE",
+      "available_minutes": 960,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2025-02-14",
+      "status": "INCOMPLETE",
+      "available_minutes": 480,
+      "used_for_backtest": false
+    },
+    {
+      "utc_date": "2025-02-15",
+      "status": "VALIDATED",
+      "available_minutes": 1440,
+      "confirm_counts": {
+        "1": 1440
+      },
+      "used_for_backtest": true,
+      "ohlcv": {
+        "open": "97514",
+        "high": "97984.9",
+        "low": "97236.1",
+        "close": "97605.9",
+        "base_volume": "295.51960606"
+      }
+    },
+    {
+      "utc_date": "2025-02-16",
+      "status": "INCOMPLETE",
+      "available_minutes": 960,
+      "used_for_backtest": false
+    }
+  ],
+  "caveats": [
+    "Four separate two-day archive windows, not continuous years",
+    "UTC edge days of each two-ZIP window are incomplete by design",
+    "Unconfirmed OKX 2023-2024 bars are excluded, not silently rewritten to completed candles",
+    "No strategy has been recalculated on those two validated isolated days; insufficient history"
+  ]
+}
