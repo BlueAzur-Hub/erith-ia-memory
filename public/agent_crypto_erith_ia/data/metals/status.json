@@ -6,8 +6,8 @@
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": "2026-11-09T06:19:25.587Z",
-  "last_success_at": "2026-11-09T06:19:25.587Z",
+  "last_attempt_at": "2026-11-10T02:43:33.820Z",
+  "last_success_at": "2026-11-10T02:43:33.820Z",
   "last_error": null,
   "assets_expected": 5,
   "assets_received": 5,
@@ -49,15 +49,15 @@
     "available": true,
     "preserved": false,
     "file": "history/public_1y.json",
-    "snapshots": 261,
+    "snapshots": 262,
     "oldest_at": "2025-10-27T04:00:00.000Z",
-    "newest_at": "2026-11-09T05:00:00.000Z",
+    "newest_at": "2026-11-10T02:33:43.000Z",
     "series_points": {
-      "gold": 261,
-      "silver": 261,
-      "platinum": 261,
-      "palladium": 261,
-      "copper": 261
+      "gold": 262,
+      "silver": 262,
+      "platinum": 262,
+      "palladium": 262,
+      "copper": 262
     },
     "source_id": "yahoo_finance"
   },
@@ -67,14 +67,14 @@
     "file": "history/intraday_24h.json",
     "assets": 5,
     "series_points": {
-      "gold": 62,
-      "silver": 62,
-      "platinum": 61,
-      "palladium": 55,
-      "copper": 62
+      "gold": 318,
+      "silver": 317,
+      "platinum": 315,
+      "palladium": 294,
+      "copper": 317
     },
     "oldest_at": "2026-11-08T23:10:00.000Z",
-    "newest_at": "2026-11-09T06:09:30.000Z",
+    "newest_at": "2026-11-10T02:33:43.000Z",
     "interval": "5m",
     "window_hours": 24,
     "source_id": "yahoo_finance"
@@ -83,18 +83,18 @@
     "available": true,
     "complete_24h": true,
     "file": "history/spot_48h.json",
-    "snapshots": 7,
-    "oldest_at": "2026-11-07T14:53:52.309Z",
-    "newest_at": "2026-11-09T06:19:25.587Z",
-    "span_hours": 39.425911,
+    "snapshots": 5,
+    "oldest_at": "2026-11-08T05:57:14.102Z",
+    "newest_at": "2026-11-10T02:43:33.820Z",
+    "span_hours": 44.772144,
     "retention_hours": 48,
     "minimum_complete_hours": 20,
     "source_id": "gold_api"
   },
   "fx": {
     "pair": "USD/EUR",
-    "source_date": "2026-11-06",
-    "eur_per_usd": 0.8956560680698611
+    "source_date": "2026-11-09",
+    "eur_per_usd": 0.893415527561869
   },
   "fallback": {
     "last_valid_snapshot_preserved": false,
@@ -116,6 +116,6 @@
     "history_never_fabricated": true,
     "intraday_futures_and_current_spot_separated": true
   },
-  "updated_at": "2026-11-09T06:19:25.587Z",
+  "updated_at": "2026-11-10T02:43:33.820Z",
   "collector": "tools/collect_public_metals.py"
 }
