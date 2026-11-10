@@ -53,7 +53,8 @@ def binance():
     d=json.loads(gzip.decompress(content))
     assert d['pair']=='BTCUSDT' and d['interval']=='1d' and len(d['rows'])==3075
     rows=[]
-    for t,o,h,l,c,v in d['rows']:
+    for row in d['rows']:
+        t,o,h,l,c,v=row[:6]
         if WARM<=daily(t)<='2026-09-30':
             rows.append(dict(t=t,date=daily(t),o=o,h=h,l=l,c=c,v=v))
     assert rows[0]['date']==WARM and rows[-1]['date']=='2026-09-30'
