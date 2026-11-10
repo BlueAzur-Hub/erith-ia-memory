@@ -109,13 +109,17 @@ jobs:
           assert d['summary']['files_checked']==8
           assert d['summary']['duplicate_minutes_removed'] >= 1440
           for day in d['utc_days']:
-              assert day['used_for_backtest'] == (day['status']=='VALIDATED')
+              assert day['used_for_backtest'] is False, 'Normalizer does not execute trading backtests'
+              assert day['eligible_as_backtest_input'] == (day['status']=='VALIDATED')
               if day['status'] != 'VALIDATED':
                   assert 'ohlcv' not in day, 'Cannot publish unconfirmed OHLC as validated'
           from pathlib import Path
           ref=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_VERIFIED_SAMPLE_RESULTS_2026_11_10.json')
           pinned=json.loads(ref.read_text(encoding='utf-8'))
           assert pinned['summary']==d['summary'], 'Summary differs from pinned research evidence'
+          assert pinned['research_readiness']==d['research_readiness'], 'Readiness status differs from pinned evidence'
+          assert d['research_readiness']['ready_for_two_year_comparison'] is False
+          assert d['research_readiness']['longest_contiguous_confirmed_utc_days']==1
           assert pinned['utc_day_evidence']==d['utc_days'], 'Live archive replay differs from pinned UTC daily evidence'
           latest=json.load(open('/tmp/seven_okx_bulk_archive_discovery.json'))
           actual_hashes={x['date']:x['zipSha256'] for x in latest['files']}
