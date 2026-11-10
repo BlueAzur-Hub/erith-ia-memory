@@ -1,0 +1,31 @@
+name: Seven Heaven BTC strategy evidence - independent regression tests
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-seven-btc-strategy-review.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/btc-market-operations/**'
+
+permissions:
+  contents: read
+
+jobs:
+  seven-btc-laboratory-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python contracts and study regression
+        run: |
+          set -euo pipefail
+          base=public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor
+          python -m py_compile "$base/collect_btc_spot_hourly.py" "$base/build_btc_public_observation_report.py"
+          python -m unittest discover -s "$base" -p 'test_*.py' -v
+      - name: Observatory page behavior in an isolated browser model
+        run: node --test public/agent_crypto_erith_ia/laboratoire/btc-market-operations/market-monitor/test_btc_observatory_page.cjs
