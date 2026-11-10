@@ -660,6 +660,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-10",
+      "date_utc": "2026-11-10",
+      "first_seen_at_utc": "2026-11-10T02:51:07.738Z",
+      "source_times_utc": [
+        "2026-11-10T02:44:58.235Z",
+        "2026-11-10T02:44:49.199Z"
+      ],
+      "universe_eligible": 395,
+      "policy_matches": 15,
+      "selected": [
+        {
+          "coin_id": "collector-crypt",
+          "symbol": "CARDS",
+          "source_at_utc": "2026-11-10T02:44:58.235Z",
+          "rank": 155,
+          "price_usd": 0.23948011784947093
+        },
+        {
+          "coin_id": "beam-2",
+          "symbol": "BEAM",
+          "source_at_utc": "2026-11-10T02:44:58.235Z",
+          "rank": 150,
+          "price_usd": 0.0044284668323612995
+        },
+        {
+          "coin_id": "avalanche-2",
+          "symbol": "AVAX",
+          "source_at_utc": "2026-11-10T02:44:58.235Z",
+          "rank": 26,
+          "price_usd": 8.603892742288439
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1536,6 +1571,27 @@
       "file": "observations/2026-11-09T185940006Z--2026-11-09.json",
       "sha256": "8dd1edf7c7c89c307cd10249a7c5cc13cd7ddd24e16564ad6e54a8286f14f0cb",
       "recorded_at_utc": "2026-11-09T18:59:40.006Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
+    },
+    {
+      "cohort_id": "2026-11-08",
+      "file": "observations/2026-11-10T025107738Z--2026-11-08.json",
+      "sha256": "2588a639fc2a4b95914af2d1ff18b7f2d7b065fa0c5d2f624ddc376136735b19",
+      "recorded_at_utc": "2026-11-10T02:51:07.738Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-09",
+      "file": "observations/2026-11-10T025107738Z--2026-11-09.json",
+      "sha256": "c564a27ef5816e3505d8cac8f78fd3eb0c275bee10bf8a328f8ff76873ed4e72",
+      "recorded_at_utc": "2026-11-10T02:51:07.738Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-10",
+      "file": "observations/2026-11-10T025107738Z--2026-11-10.json",
+      "sha256": "c8ff10749147f5f4d6714cee3587951cb03ca3105b33642b44b781b5fc3c5897",
+      "recorded_at_utc": "2026-11-10T02:51:07.738Z",
       "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
