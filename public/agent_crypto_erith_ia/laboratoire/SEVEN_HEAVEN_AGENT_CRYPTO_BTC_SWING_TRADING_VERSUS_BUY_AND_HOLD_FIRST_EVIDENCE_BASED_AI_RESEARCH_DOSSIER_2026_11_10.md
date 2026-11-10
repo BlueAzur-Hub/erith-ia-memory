@@ -60,12 +60,27 @@ Le laboratoire collecte également des **actualités de l'Administrator** et des
 - Les flux de liquidation sont **échantillonnés**, pas surveillés en continu. Une heure sans connexion documentée est **inconnue**, pas une heure à zéro liquidation.
 - Le volume Spot OKX, les liquidations des dérivés et les flux ETF ne mesurent **pas** la même chose ; ne jamais additionner leurs unités ni attribuer une bougie à un article.
 
-## 6. Ce qui manque pour une véritable étude IA des stratégies
+## 6. Ne pas refaire l'historique : la bibliothèque Seven Heaven existe déjà
 
-1. Un **historique multi-mois**, incluant des hausses, des baisses et des marchés plats, plutôt que 71 heures.
+La [Bibliothèque des stratégies Seven Heaven](https://app.notion.com/p/4117754fe08481fdb8b2fa09c7a11141) et son [rapport historique de simulations 2022–2025](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_AGENT_CRYPTO_STRATEGY_FIELD_GUIDE_COFFRE_SIMULATIONS_AND_PAPER_PROFILES_2026_11_07.md) contiennent **déjà** des résultats pédagogiques à partir de bougies **Binance Spot BTC/USDT quotidiennes**, à ne pas confondre avec les données **OKX Spot BTC/USDC horaires** de ce dossier :
+
+| Simulation déjà documentée | 2022 | 2023 | 2024 | 2025 |
+|---|---:|---:|---:|---:|
+| Buy & Hold, résultat annuel simulé | −54,75 % | +85,03 % | +124,37 % | −17,67 % |
+| EMA 5/13, résultat annuel simulé | −35,97 % | +47,62 % | +79,20 % | −3,22 % |
+
+**Ces résultats existants sont des simulations, pas des gains réels, et l'EMA 5/13 historique n'est PAS notre règle exploratoire Swing 5/13/34.** Les périodes, sources, granularités, devise cotée, règles et coûts diffèrent. **Ne pas additionner ni fusionner les séries sans alignement et validation.**
+
+La fiche [Swing Trading — profil 06](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_AGENT_CRYPTO_STRATEGY_PROFILE_06_SWING_TRADING_SETUPS_AND_RISK_EDUCATIONAL_FIELD_GUIDE_2026_11_07.md) indique précisément qu'un Swing Trading autonome **n'est pas encore chiffré** faute de règles complètes, même si d'autres profils EMA le sont déjà.
+
+**Conclusion méthodologique :** les IA doivent **réutiliser** le Coffre historique et les sept fiches existantes pour bâtir l'étude Swing complète, pas repartir à zéro ni ajouter un nouveau collecteur.
+
+## 7. Ce qui manque pour une véritable étude IA des stratégies
+
+1. **Réutiliser les années 2022–2025 déjà simulées** et leurs données de provenance ; obtenir des séries OKX historiques supplémentaires uniquement si une comparaison exige réellement cette même paire et la même granularité.
 2. Une définition **canonique** de chaque stratégie : durée et taille des positions, critères d'entrée/sortie, stop éventuel, règles de frais, glissement et benchmark.
 3. Un backtest sur données **hors échantillon**, avec frais/spread/glissement, pertes maximales, nombre de transactions et résultats par régime de marché.
 4. Une comparaison Buy & Hold à l'**horizon réellement prévu** (mois ou années), pas seulement 36 heures.
 5. Des dossiers d'enquête horodatés, distinguant observations / hypothèses / inconnues, accessibles aux IA via le Coffre, sans dépendre de l'état d'un navigateur.
 
-**Conclusion opérationnelle pour Aerith-7 / Seven Heaven :** premier usage stratégique **concret** de l'Observatoire documenté ; capital fictif du Swing resté inactif durant cette baisse, tandis qu'un achat-valorisation court reculait après coûts. **Statut de validation des deux stratégies : NON VALIDÉES sur cet échantillon.** Pour poursuivre, les IA doivent d'abord relire les stratégies déjà documentées et chercher un historique historique suffisamment long, pas développer une nouvelle interface ou modifier Trader/Administrator/Bridge. **Aucun ordre réel, aucune recommandation personnelle.**
+**Conclusion opérationnelle pour Aerith-7 / Seven Heaven :** premier usage stratégique **concret** de l'Observatoire documenté ; capital fictif du Swing resté inactif durant cette baisse, tandis qu'un achat-valorisation court reculait après coûts. **Statut de validation des deux stratégies : NON VALIDÉES sur cet échantillon.** Pour poursuivre, les IA doivent d'abord relire les **sept fiches et simulations historiques déjà disponibles** et définir un Swing Trading autonome avant de le tester ; pas développer une nouvelle interface ou modifier Trader/Administrator/Bridge. **Aucun ordre réel, aucune recommandation personnelle.**
