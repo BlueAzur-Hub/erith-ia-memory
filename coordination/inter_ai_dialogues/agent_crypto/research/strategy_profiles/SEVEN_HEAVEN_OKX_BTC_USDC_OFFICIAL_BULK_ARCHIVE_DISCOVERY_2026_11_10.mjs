@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 const endpoint='https://www.okx.com/api/v5/public/market-data-history';
-const examples=['2022-06-15','2023-10-15','2024-06-15','2025-02-15'];
+const examples=['2022-06-15','2022-06-16','2023-10-15','2023-10-16','2024-06-15','2024-06-16','2025-02-15','2025-02-16'];
 const evidence={schema:'seven.crypto.okx.spot.btc-usdc.official-archive-discovery.v1',
   checkedAtUTC:new Date().toISOString(),endpoint,readOnly:true,ordersEnabled:false,
   checkedInstrument:'BTC-USDC',instrumentType:'SPOT',dataset:'1-minute candlesticks',

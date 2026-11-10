@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/workflows/seven-heaven-okx-official-bulk-candlestick-audit.yml'
       - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_OFFICIAL_BULK_ARCHIVE_DISCOVERY_2026_11_10.mjs'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_NORMALIZER.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_VERIFIED_SAMPLE_RESULTS_2026_11_10.json'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_NORMALIZATION_REPAIR_REPORT_2026_11_10.md'
       - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_OFFICIAL_BULK_ARCHIVE_FINDINGS_2026_11_10.md'
 
 permissions:
@@ -34,8 +37,9 @@ jobs:
           assert.equal(r.readOnly,true);
           assert.equal(r.checkedInstrument,'BTC-USDC');
           assert.equal(r.module,'2');
-          assert.equal(r.files.length,4);
-          assert.deepEqual(r.files.map(x=>x.date),['2022-06-15','2023-10-15','2024-06-15','2025-02-15']);
+          assert.equal(r.files.length,8);
+          assert.deepEqual(r.files.map(x=>x.date),['2022-06-15','2022-06-16','2023-10-15','2023-10-16','2024-06-15','2024-06-16','2025-02-15','2025-02-16']);
+          assert(r.files.every(x=>x.zipVerified===true),'Official ZIP missing or invalid; cannot normalize');
           console.log('PUBLIC_BULK_DISCOVERY_AUDITED');
           NODE
       - name: Inspect downloaded historical OHLC ZIP contents and coverage
@@ -82,11 +86,50 @@ jobs:
           with open('/tmp/seven_okx_sample_structure.json','w') as f:
               json.dump(facts,f,indent=2,ensure_ascii=False)
           PY
+      - name: Test canonicalizer on synthetic duplicates, conflicts and UTC day boundaries
+        run: |
+          set -euo pipefail
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_NORMALIZER.py --self-test
+      - name: Normalize real OKX archive minute candles into fail-closed UTC days
+        run: |
+          set -euo pipefail
+          # The download probe uses a temporary prefix. Restore the official
+          # ZIP basename so the canonicalizer can match its inner CSV securely.
+          for archive in /tmp/seven_okx_sample_*.zip; do
+            date=${archive##*/seven_okx_sample_}
+            cp "$archive" "/tmp/BTC-USDC-candlesticks-$date"
+          done
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_NORMALIZER.py \
+            /tmp/BTC-USDC-candlesticks-*.zip \
+            --output /tmp/seven_okx_normalized_utc_evidence.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/seven_okx_normalized_utc_evidence.json'))
+          assert d['orders_enabled'] is False
+          assert d['summary']['files_checked']==8
+          assert d['summary']['duplicate_minutes_removed'] >= 1440
+          for day in d['utc_days']:
+              assert day['used_for_backtest'] == (day['status']=='VALIDATED')
+              if day['status'] != 'VALIDATED':
+                  assert 'ohlcv' not in day, 'Cannot publish unconfirmed OHLC as validated'
+          from pathlib import Path
+          ref=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_UTC_VERIFIED_SAMPLE_RESULTS_2026_11_10.json')
+          pinned=json.loads(ref.read_text(encoding='utf-8'))
+          assert pinned['summary']==d['summary'], 'Summary differs from pinned research evidence'
+          assert pinned['utc_day_evidence']==d['utc_days'], 'Live archive replay differs from pinned UTC daily evidence'
+          latest=json.load(open('/tmp/seven_okx_bulk_archive_discovery.json'))
+          actual_hashes={x['date']:x['zipSha256'] for x in latest['files']}
+          for f in pinned['archives']:
+              assert f['date'] in actual_hashes
+              assert f['sha256']==actual_hashes[f['date']], 'Historical source ZIP changed; review before use'
+          print('CANONICAL_UTC_OKX_VALIDATION_PASSED',d['summary'])
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seven-heaven-okx-btc-usdc-bulk-archive-discovery
           path: |
             /tmp/seven_okx_bulk_archive_discovery.json
             /tmp/seven_okx_sample_structure.json
+            /tmp/seven_okx_normalized_utc_evidence.json
           retention-days: 30
           if-no-files-found: error
