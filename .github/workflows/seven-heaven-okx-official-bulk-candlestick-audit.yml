@@ -38,9 +38,36 @@ jobs:
           assert.deepEqual(r.files.map(x=>x.date),['2022-06-15','2023-10-15','2024-06-15','2025-02-15']);
           console.log('PUBLIC_BULK_DISCOVERY_AUDITED');
           NODE
+      - name: Inspect downloaded historical OHLC ZIP contents and coverage
+        run: |
+          python - <<'PY'
+          import glob, hashlib, io, json, os, zipfile
+          facts=[]
+          for path in sorted(glob.glob('/tmp/seven_okx_sample_*.zip')):
+              date=os.path.basename(path).removeprefix('seven_okx_sample_').removesuffix('.zip')
+              with zipfile.ZipFile(path) as archive:
+                  names=archive.namelist()
+                  files=[]
+                  for name in names[:5]:
+                      info=archive.getinfo(name)
+                      if info.file_size>3_000_000:
+                          raise ValueError('Uncompressed file exceeds sample limit')
+                      content=archive.read(name)
+                      lines=content.decode('utf-8-sig',errors='replace').splitlines()
+                      files.append({'name':name,'rows':len(lines),
+                          'firstLine':lines[0][:250] if lines else '',
+                          'secondLine':lines[1][:250] if len(lines)>1 else '',
+                          'lastLine':lines[-1][:250] if lines else ''})
+                  facts.append({'date':date,'files':files})
+          print('OFFICIAL_ARCHIVE_SAMPLE_CONTENT '+json.dumps(facts,ensure_ascii=False))
+          with open('/tmp/seven_okx_sample_structure.json','w') as f:
+              json.dump(facts,f,indent=2,ensure_ascii=False)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seven-heaven-okx-btc-usdc-bulk-archive-discovery
-          path: /tmp/seven_okx_bulk_archive_discovery.json
+          path: |
+            /tmp/seven_okx_bulk_archive_discovery.json
+            /tmp/seven_okx_sample_structure.json
           retention-days: 30
           if-no-files-found: error
