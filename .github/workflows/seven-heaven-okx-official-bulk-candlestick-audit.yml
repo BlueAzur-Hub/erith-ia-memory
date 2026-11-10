@@ -1,0 +1,46 @@
+name: Seven Heaven - verify official OKX historical candlestick archive dates
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/seven-heaven-okx-official-bulk-candlestick-audit.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_OFFICIAL_BULK_ARCHIVE_DISCOVERY_2026_11_10.mjs'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_OFFICIAL_BULK_ARCHIVE_FINDINGS_2026_11_10.md'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-public-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect official OKX public bulk-history availability
+        run: |
+          set -euo pipefail
+          script=coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_OFFICIAL_BULK_ARCHIVE_DISCOVERY_2026_11_10.mjs
+          node --check "$script"
+          node "$script"
+      - name: Audit research-only responses and date coverage
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const r=JSON.parse(fs.readFileSync('/tmp/seven_okx_bulk_archive_discovery.json','utf8'));
+          assert.equal(r.ordersEnabled,false);
+          assert.equal(r.readOnly,true);
+          assert.equal(r.checkedInstrument,'BTC-USDC');
+          assert.equal(r.module,'2');
+          assert.equal(r.files.length,4);
+          assert.deepEqual(r.files.map(x=>x.date),['2022-06-15','2023-10-15','2024-06-15','2025-02-15']);
+          console.log('PUBLIC_BULK_DISCOVERY_AUDITED');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-btc-usdc-bulk-archive-discovery
+          path: /tmp/seven_okx_bulk_archive_discovery.json
+          retention-days: 30
+          if-no-files-found: error
