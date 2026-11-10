@@ -1,20 +1,20 @@
-# Seven Heaven — suivi public BTC : 2026-11-10T15:42:29Z
+# Seven Heaven — suivi public BTC : 2026-11-10T16:08:35Z
 
 **Statut : OPERATIONAL_PARTIAL_COVERAGE** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-09T15:42:29Z au 2026-11-10T15:42:29Z.
+Fenêtre UTC : 2026-11-09T16:08:35Z au 2026-11-10T16:08:35Z.
 
 ## Santé et provenance
 
-- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-10T14:00:00Z ; source fraîche : OUI.
-- **Liquidations dérivées** : 577 messages observés dans les archives ; 3 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
+- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-10T15:00:00Z ; source fraîche : OUI.
+- **Liquidations dérivées** : 1277 messages observés dans les archives ; 6 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
 - **Actualités de l'Interface** : 13 événements BTC ; relevé source 2026-11-10T15:13:05.844334+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
-| bybit | 459 | 1 |
-| binance | 79 | 1 |
-| okx | 39 | 1 |
+| bybit | 1039 | 2 |
+| binance | 151 | 2 |
+| okx | 87 | 2 |
 
 ## Interprétation autorisée
 
@@ -26,7 +26,6 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 
 | UTC | Ouverture (USDC) | Clôture (USDC) | Volume Spot BTC | Messages de liquidations observés | Couverture |
 |---|---:|---:|---:|---:|---|
-| 2026-11-10T03:00:00Z | 74788.1 | 74487.9 | 20.44863997 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T04:00:00Z | 74489.9 | 74721.3 | 15.55906391 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T05:00:00Z | 74705.5 | 74735.4 | 4.32549021 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T06:00:00Z | 74735.4 | 74580.3 | 9.79738434 | 0 | NO_DOCUMENTED_OBSERVATION |
@@ -38,6 +37,7 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 | 2026-11-10T12:00:00Z | 74344.7 | 74329.9 | 13.67210178 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T13:00:00Z | 74313.4 | 73679.9 | 114.17539267 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-10T14:00:00Z | 73671.6 | 74336.5 | 47.59983469 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-10T15:00:00Z | 74337 | 73152.8 | 236.49627083 | 1277 | SAMPLED_WITH_GAPS |
 
 ## Restrictions
 
