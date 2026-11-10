@@ -1,4 +1,4 @@
-name: Seven Heaven BTC Public Liquidation Witness — sampled pilot
+name: Seven Heaven BTC Public Liquidation Witness — recurring sampled archive
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
       - '.github/workflows/agent-crypto-seven-btc-public-liquidation-witness.yml'
       - 'public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/collect_btc_liquidation_witness.py'
       - 'public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/test_collect_btc_liquidation_witness.py'
+      - 'public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/merge_public_liquidation_archive.py'
+      - 'public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/test_merge_public_liquidation_archive.py'
   workflow_dispatch:
   schedule:
     - cron: '17,47 * * * *'
@@ -61,19 +63,31 @@ jobs:
               if e['provider']=='okx': assert e['indicative_notional_usdt'] is None
           print('PUBLIC-LIQUIDATION-WITNESS: PASS / sampled data only / no real orders')
           PY
-      - name: Publish only public liquidation observations
+      - name: Merge public observations across concurrent GitHub writers and publish
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/observations
-          git add -- "$target"
-          git diff --cached --check
-          if git diff --cached --quiet; then
-            echo 'NOOP: no observational change'
-            exit 0
-          fi
+          merger=public/agent_crypto_erith_ia/laboratoire/liquidation-monitor/merge_public_liquidation_archive.py
+          staging="$(mktemp -d)"
+          cp -a "$target/." "$staging/"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'data: record sampled public BTC derivative liquidation observations'
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python "$merger" --incoming "$staging" --dest "$target"
+            git add -- "$target"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'NOOP: these public observations are already archived'
+              exit 0
+            fi
+            git commit -m 'data: merge audited BTC liquidation witness and coverage ledger'
+            if git push origin HEAD:main; then
+              echo 'ARCHIVED: concurrent runs merged without losing data'
+              exit 0
+            fi
+            echo "::warning::Remote main advanced during archival, retry $attempt/3"
+          done
+          echo '::error::Unable to merge new observations after three safe attempts'
+          exit 1
