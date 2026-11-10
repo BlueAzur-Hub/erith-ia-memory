@@ -2,6 +2,10 @@
 
 **Purpose:** operational and reproducible BTC market observation, not a trading bot. This is the production archival **pipeline** for the public prototype; it does not imply continuous exchange-feed coverage. Administrator retains news. Trader retains candles and PAPER. This pipeline makes no changes to either interface or to R31/OKX private credentials.
 
+## Human-readable status page
+
+Open the [Seven Heaven public BTC dashboard](../dashboard.html) (rendered on GitHub Pages). It shows the observed hourly Spot prices, the distinct derivative source counts, news source freshness, and coverage gaps. The page never displays the full news feed inside Trader and never initiates trading.
+
 ## What automatically runs
 
 Workflow: `.github/workflows/agent-crypto-seven-btc-market-operations.yml` (UTC hourly, minute 23, and manual dispatch). It does the following atomically after validation:
