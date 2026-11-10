@@ -1,0 +1,28 @@
+{
+  "bar": "1H",
+  "base_volume_unit": "BTC",
+  "historical_source_not_exchange_signed": true,
+  "instrument": "BTC-USDC",
+  "last_source": {
+    "exchange_signed": false,
+    "response_sha256": "99c5f7b701f042f41571a076830956513c046608613ebf7297df460ffd7299b5",
+    "url": "https://eea.okx.com/api/v5/market/history-candles?instId=BTC-USDC&bar=1H&after=1794322800000&limit=100"
+  },
+  "latest_closed_hour_utc": "2026-11-10T14:00:00Z",
+  "limits": [
+    "GitHub schedule can be delayed or skipped",
+    "Only last fetched window is repaired automatically",
+    "No exchange signature or authenticated transaction-level audit"
+  ],
+  "market_type": "SPOT",
+  "no_interpolation": true,
+  "notional_volume_unit": "USDC",
+  "observation_only": true,
+  "oldest_fetched_hour_utc": "2026-11-07T15:00:00Z",
+  "orders_enabled": false,
+  "real_orders": 0,
+  "schema": "seven.crypto.okx-spot-hourly-rolling.v1",
+  "status": "READY_PUBLIC_SOURCE_NOT_EXCHANGE_SIGNED",
+  "updated_at_utc": "2026-11-10T15:32:54.672000+00:00",
+  "validated_fetched_hours": 72
+}
