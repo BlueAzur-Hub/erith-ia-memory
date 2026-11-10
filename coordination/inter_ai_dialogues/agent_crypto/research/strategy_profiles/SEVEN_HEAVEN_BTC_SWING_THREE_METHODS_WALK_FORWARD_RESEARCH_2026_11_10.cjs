@@ -204,7 +204,7 @@ const stress=Object.keys(plans).map(name=>aggregate(name,1,[2023,2024,2025,2026]
 const output={
  schema:'seven.crypto.btc.swing-research-multifamily-split-v1',researchOnly:true,ordersEnabled:false,
  source:{archive:'public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_native_daily_reconciliation/bitcoin-Max.json.gz',
-   sha256:sha,market:'Binance Spot',pair:'BTCUSDT',bar:'1d',rows:bars.length,start:dates[0],end:dates.at(-1]},
+   sha256:sha,market:'Binance Spot',pair:'BTCUSDT',bar:'1d',rows:bars.length,start:dates[0],end:dates.at(-1)},
  design:{methods:plans,entryExecution:'Next day open after completed daily close',
   exitExecution:'Next day open after completed close, immediate historical stop with conservative gaps',
   position:'One BTC long position at a time; no borrowing, no shorts, no real orders; 1000 USDT annual reset',
