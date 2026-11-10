@@ -204,6 +204,31 @@ def store(directory: Path, observations: list[dict], health: list[dict]) -> dict
                         "Zero received events is not proof of zero liquidations",
                         "Never aggregate this feed as all-market total or compare directly with OKX Spot volume"]}
     (directory / "status.json").write_text(json.dumps(latest, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    # Retain connection history even when no liquidation is observed. Otherwise
+    # a later status update would erase the very coverage gaps Seven must audit.
+    ledger_dir = directory / "run-ledger"
+    ledger_dir.mkdir(parents=True, exist_ok=True)
+    day = latest["updated_at_utc"][:10]
+    ledger = ledger_dir / f"{day}.jsonl"
+    started = min((h.get("started_at_utc", latest["updated_at_utc"]) for h in health),
+                  default=latest["updated_at_utc"])
+    run_key = hashlib.sha256((started + "|" + latest["updated_at_utc"] +
+                              "|" + ",".join(sorted(h.get("provider", "") for h in health))).encode()).hexdigest()[:24]
+    witness = {"run_key": run_key, "started_at_utc": started,
+               "finished_at_utc": latest["updated_at_utc"],
+               "health": health, "recorded_events": len(observations),
+               "coverage": "SAMPLED_NOT_24_7", "zero_market_events_proven": False,
+               "orders_enabled": False}
+    prior_runs = {}
+    if ledger.is_file():
+        for line in ledger.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                old_run = json.loads(line)
+                if old_run.get("run_key"): prior_runs[old_run["run_key"]] = old_run
+    prior_runs[run_key] = witness
+    rows = sorted(prior_runs.values(), key=lambda x: (x["started_at_utc"], x["run_key"]))
+    ledger.write_text("".join(json.dumps(x, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n"
+                              for x in rows), encoding="utf-8")
     return latest
 
 
