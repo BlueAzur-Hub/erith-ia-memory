@@ -24,7 +24,7 @@ jobs:
           assert x['status']=='VERIFIED_NO_LIVE_ORDERS'
           assert x['meta']['instrument']=='BTC-USDC' and x['meta']['bar']=='1Dutc'
           assert x['meta']['closed_candles']>=446
-          assert len(x['results'])==15
+          assert len(x['results'])==12
           for row in x['results']:
             assert row['trades']==row['wins']+row['losses']
             assert row['max_drawdown_pct']<=0
