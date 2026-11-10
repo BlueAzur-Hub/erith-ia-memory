@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-11-10T00:52:42.838757+00:00",
+  "generated_at": "2026-11-10T08:52:17.689742+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -14,20 +14,20 @@
     "events_24h": 25,
     "operator_eligible_24h": 25,
     "context_only_24h": 0,
-    "critical_24h": 16,
-    "strong_24h": 3,
+    "critical_24h": 15,
+    "strong_24h": 4,
     "sources_ok": 14,
     "sources_total": 15,
     "sources_failed": 1,
-    "lead_event_id": "feed_62d3bb33953a54c1",
+    "lead_event_id": "feed_c5818f74a0b74e96",
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
-        "events_72h": 5,
+        "events_72h": 7,
         "distinct_sources": 3
       },
       "institutional_flows": {
-        "events_72h": 3,
+        "events_72h": 5,
         "distinct_sources": 3
       },
       "regulation": {
@@ -57,9 +57,9 @@
       "group": "finance",
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
-      "fetched_count": 50,
-      "qualified_count": 3,
-      "latency_ms": 131,
+      "fetched_count": 44,
+      "qualified_count": 1,
+      "latency_ms": 176,
       "error": null
     },
     {
@@ -68,9 +68,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 29,
-      "qualified_count": 1,
-      "latency_ms": 192,
+      "fetched_count": 34,
+      "qualified_count": 2,
+      "latency_ms": 211,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 10,
-      "latency_ms": 149,
+      "latency_ms": 126,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "error",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 1922,
+      "latency_ms": 1667,
       "error": "ParseError: unclosed token: line 76843, column 8"
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 336,
+      "latency_ms": 158,
       "error": null
     },
     {
@@ -113,8 +113,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 25,
-      "latency_ms": 190,
+      "qualified_count": 26,
+      "latency_ms": 162,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 39,
       "qualified_count": 24,
-      "latency_ms": 265,
+      "latency_ms": 41,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 6,
-      "latency_ms": 692,
+      "latency_ms": 463,
       "error": null
     },
     {
@@ -147,7 +147,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 128,
+      "latency_ms": 146,
       "error": null
     },
     {
@@ -158,7 +158,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 2,
-      "latency_ms": 356,
+      "latency_ms": 239,
       "error": null
     },
     {
@@ -169,7 +169,7 @@
       "status": "ok",
       "fetched_count": 3,
       "qualified_count": 3,
-      "latency_ms": 321,
+      "latency_ms": 326,
       "error": null
     },
     {
@@ -180,7 +180,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 8,
-      "latency_ms": 353,
+      "latency_ms": 272,
       "error": null
     },
     {
@@ -191,7 +191,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 324,
+      "latency_ms": 269,
       "error": null
     },
     {
@@ -202,7 +202,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 204,
+      "latency_ms": 72,
       "error": null
     },
     {
@@ -213,7 +213,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8193,
+      "latency_ms": 8153,
       "error": null
     }
   ],
@@ -845,6 +845,157 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
+      "id": "feed_c5818f74a0b74e96",
+      "event_id": "feed_c5818f74a0b74e96",
+      "fingerprint": "c5818f74a0b74e96",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "BlackRock Bitcoin ETF outflows hit $1.66B over seven trading sessions",
+      "body": "US spot Bitcoin ETFs shed $201 million Monday, with seven straight sessions of net withdrawals from BlackRock’s IBIT totaling $1.66 billion.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/blackrock-ibit-bitcoin-etf-outflows",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/markets/blackrock-ibit-bitcoin-etf-outflows"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-11-10T08:02:05+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.198330+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.198330+00:00",
+      "freshness": {
+        "iso": "2026-11-10T08:02:05+00:00",
+        "hours": 0.83,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 19,
+      "matched_topics": [
+        "money_flow",
+        "crypto",
+        "institutional"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "ETF / flux institutionnels",
+      "article_ids": [
+        "feed_c5818f74a0b74e96"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 93,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 100,
+        "reasons": [
+          "asset_anchor",
+          "driver_domain:institutional_flows",
+          "market_topic:money_flow",
+          "market_mechanism"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "BlackRock Bitcoin ETF outflows hit $1.66B over seven trading sessions",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] BlackRock Bitcoin ETF outflows hit $1.66B over seven trading sessions",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ],
+      "news_intelligence": {
+        "schema": "atlas_news_source_aware_article_triage_v1",
+        "build": "news-truth-2026-10-31",
+        "category": "GENERAL_NEWS_NO_EXECUTION",
+        "watch": "CONTEXT_ONLY",
+        "money_role": "UNCLASSIFIED",
+        "reported_usd_loss": null,
+        "reported_usd_profit": null,
+        "automated_trading_profit_proven": false,
+        "bot_is_ai_agent_confirmed": false,
+        "claim_conflict_requires_review": false,
+        "multi_story_requires_separation": false,
+        "independent_primary_confirmation_in_feed": false,
+        "publisher_article_count": 1,
+        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
+        "market_causality_proven": false,
+        "direct_market_trade_approved": false,
+        "read_only": true
+      }
+    },
+    {
       "id": "feed_62d3bb33953a54c1",
       "event_id": "feed_62d3bb33953a54c1",
       "fingerprint": "62d3bb33953a54c1",
@@ -868,11 +1019,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-11-09T08:17:35+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.267435+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.267435+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.236715+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.236715+00:00",
       "freshness": {
         "iso": "2026-11-09T08:17:35+00:00",
-        "hours": 16.58,
+        "hours": 24.58,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1464,161 +1615,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_7f91166d65c6188f",
-      "event_id": "feed_7f91166d65c6188f",
-      "fingerprint": "7f91166d65c6188f",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "BlackRock’s IBIT sees biggest Bitcoin ETF outflows since June",
-      "body": "BlackRock’s Bitcoin ETF shed $405.3 million on Monday as US spot Bitcoin funds opened November with nearly $399 million in net outflows.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/markets/blackrocks-ibit-biggest-bitcoin-etf-outflow-june",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/markets/blackrocks-ibit-biggest-bitcoin-etf-outflow-june"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-11-03T07:49:51+00:00",
-      "first_seen_at": "2026-11-04T08:05:40.940398+00:00",
-      "last_seen_at": "2026-11-04T08:05:40.940398+00:00",
-      "freshness": {
-        "iso": "2026-11-03T07:49:51+00:00",
-        "hours": 24.26,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 19,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "ETF / flux institutionnels",
-      "article_ids": [
-        "feed_7f91166d65c6188f"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 93,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 100,
-        "reasons": [
-          "asset_anchor",
-          "driver_domain:institutional_flows",
-          "market_topic:money_flow",
-          "market_mechanism"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_7f91166d65c6188f"
-      ],
-      "headline_original": "BlackRock’s IBIT sees biggest Bitcoin ETF outflows since June",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] BlackRock’s IBIT sees biggest Bitcoin ETF outflows since June",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "news_intelligence": {
-        "schema": "atlas_news_source_aware_article_triage_v1",
-        "build": "news-truth-2026-10-31",
-        "category": "GENERAL_NEWS_NO_EXECUTION",
-        "watch": "CONTEXT_ONLY",
-        "money_role": "UNCLASSIFIED",
-        "reported_usd_loss": null,
-        "reported_usd_profit": null,
-        "automated_trading_profit_proven": false,
-        "bot_is_ai_agent_confirmed": false,
-        "claim_conflict_requires_review": false,
-        "multi_story_requires_separation": false,
-        "independent_primary_confirmation_in_feed": false,
-        "publisher_article_count": 1,
-        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
-        "market_causality_proven": false,
-        "direct_market_trade_approved": false,
-        "read_only": true
-      },
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_8f9c647680335576",
       "event_id": "feed_8f9c647680335576",
       "fingerprint": "8f9c647680335576",
@@ -1774,159 +1770,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_30082dab2f365afd",
-      "event_id": "feed_30082dab2f365afd",
-      "fingerprint": "30082dab2f365afd",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Binance begins second withdrawal phase, exchange outflows slow",
-      "body": "The exchange says additional assets will become available for withdrawal from 04:00 UTC on Tuesday as security checks are completed, following an initial reopening on Sunday.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/binance-begins-second-withdrawal-phase-following-record-hack",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/binance-begins-second-withdrawal-phase-following-record-hack"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-11-03T03:03:44+00:00",
-      "first_seen_at": "2026-11-04T08:05:40.945432+00:00",
-      "last_seen_at": "2026-11-04T08:05:40.945432+00:00",
-      "freshness": {
-        "iso": "2026-11-03T03:03:44+00:00",
-        "hours": 29.03,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [
-        "Exchanges"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 15,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "ETF / flux institutionnels",
-      "article_ids": [
-        "feed_30082dab2f365afd"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 93,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 100,
-        "reasons": [
-          "crypto_market_anchor",
-          "driver_domain:institutional_flows",
-          "market_topic:money_flow",
-          "market_mechanism"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_30082dab2f365afd"
-      ],
-      "headline_original": "Binance begins second withdrawal phase, exchange outflows slow",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Binance begins second withdrawal phase, exchange outflows slow",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "news_intelligence": {
-        "schema": "atlas_news_source_aware_article_triage_v1",
-        "build": "news-truth-2026-10-31",
-        "category": "GENERAL_NEWS_NO_EXECUTION",
-        "watch": "CONTEXT_ONLY",
-        "money_role": "UNCLASSIFIED",
-        "reported_usd_loss": null,
-        "reported_usd_profit": null,
-        "automated_trading_profit_proven": false,
-        "bot_is_ai_agent_confirmed": false,
-        "claim_conflict_requires_review": false,
-        "multi_story_requires_separation": false,
-        "independent_primary_confirmation_in_feed": false,
-        "publisher_article_count": 1,
-        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
-        "market_causality_proven": false,
-        "direct_market_trade_approved": false,
-        "read_only": true
-      },
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_b986639903366cf4",
       "event_id": "feed_b986639903366cf4",
       "fingerprint": "b986639903366cf4",
@@ -1950,11 +1793,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-11-09T12:30:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.411905+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.411905+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.171253+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.171253+00:00",
       "freshness": {
         "iso": "2026-11-09T12:30:00+00:00",
-        "hours": 12.38,
+        "hours": 20.37,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2103,11 +1946,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-11-08T11:14:31+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.737336+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.737336+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.502802+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.502802+00:00",
       "freshness": {
         "iso": "2026-11-08T11:14:31+00:00",
-        "hours": 37.63,
+        "hours": 45.63,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2253,11 +2096,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-11-06T18:00:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.736292+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.736292+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.501681+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.501681+00:00",
       "freshness": {
         "iso": "2026-11-06T18:00:00+00:00",
-        "hours": 78.88,
+        "hours": 86.87,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2402,11 +2245,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-11-05T12:25:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.741016+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.741016+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.506713+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.506713+00:00",
       "freshness": {
         "iso": "2026-11-05T12:25:00+00:00",
-        "hours": 108.46,
+        "hours": 116.45,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2551,11 +2394,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-11-04T07:42:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.735238+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.735238+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.500513+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.500513+00:00",
       "freshness": {
         "iso": "2026-11-04T07:42:00+00:00",
-        "hours": 137.18,
+        "hours": 145.17,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2608,7 +2451,7 @@
         "feed_5757384fd54c9594"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 5,
       "source_tier_label": "Agrégateur / découverte",
       "market_reaction": {
@@ -2631,6 +2474,9 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_5757384fd54c9594"
+      ],
       "headline_original": "ETF Bitcoin : plus de 1 milliard de dollars de sorties - CryptoTicker.io",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
@@ -2860,12 +2706,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-11-09T20:26:34+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.243775+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.406228+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.210270+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.223514+00:00",
       "freshness": {
         "iso": "2026-11-09T20:26:34+00:00",
-        "hours": 4.43,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.43,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2998,6 +2844,154 @@
       }
     },
     {
+      "id": "feed_e654a97a6d5dfe27",
+      "event_id": "feed_e654a97a6d5dfe27",
+      "fingerprint": "e654a97a6d5dfe27",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin faces U.S. CPI test as analysts warn inflation relief may not be enough",
+      "body": "Bitcoin trades below $75,000 ahead of the October inflation data. Analysts warning that sustainable recovery depends on improving liquidity and spot ETF demand rather than temporary macro relief.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/11/10/bitcoin-faces-u-s-cpi-test-as-analysts-warn-inflation-relief-may-not-be-enough",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/11/10/bitcoin-faces-u-s-cpi-test-as-analysts-warn-inflation-relief-may-not-be-enough"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-11-10T03:22:26+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.155728+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.155728+00:00",
+      "freshness": {
+        "iso": "2026-11-10T03:22:26+00:00",
+        "hours": 5.5,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 17,
+      "matched_topics": [
+        "crypto",
+        "macro",
+        "institutional"
+      ],
+      "driver_domains": [
+        "macro_liquidity",
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Macroéconomie / banque centrale",
+      "article_ids": [
+        "feed_e654a97a6d5dfe27"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 88,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 90,
+        "reasons": [
+          "asset_anchor",
+          "driver_domain:institutional_flows,macro_liquidity",
+          "market_mechanism"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Bitcoin faces U.S. CPI test as analysts warn inflation relief may not be enough",
+      "language_original": "fr",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": "Bitcoin faces U.S. CPI test as analysts warn inflation relief may not be enough",
+      "translation_engine": "native-fr-source",
+      "translation_quality_score": 100,
+      "translation_quality_flags": [],
+      "translation_status": "ORIGINAL_FR",
+      "display_headline": "Bitcoin faces U.S. CPI test as analysts warn inflation relief may not be enough",
+      "display_language": "fr",
+      "headline_fr_display": "Bitcoin faces U.S. CPI test as analysts warn inflation relief may not be enough",
+      "headline_fr_display_status": "native_fr",
+      "headline_fr_status": "original_fr",
+      "headline_fr_engine": "native-fr-source",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "native",
+      "headline_fr_quality_reasons": [],
+      "news_intelligence": {
+        "schema": "atlas_news_source_aware_article_triage_v1",
+        "build": "news-truth-2026-10-31",
+        "category": "GENERAL_NEWS_NO_EXECUTION",
+        "watch": "CONTEXT_ONLY",
+        "money_role": "UNCLASSIFIED",
+        "reported_usd_loss": null,
+        "reported_usd_profit": null,
+        "automated_trading_profit_proven": false,
+        "bot_is_ai_agent_confirmed": false,
+        "claim_conflict_requires_review": false,
+        "multi_story_requires_separation": false,
+        "independent_primary_confirmation_in_feed": false,
+        "publisher_article_count": 1,
+        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
+        "market_causality_proven": false,
+        "direct_market_trade_approved": false,
+        "read_only": true
+      }
+    },
+    {
       "id": "feed_3dd75c9ad10b29cb",
       "event_id": "feed_3dd75c9ad10b29cb",
       "fingerprint": "3dd75c9ad10b29cb",
@@ -3021,12 +3015,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-11-09T19:06:03+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.314055+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.314055+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.034228+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.034228+00:00",
       "freshness": {
         "iso": "2026-11-09T19:06:03+00:00",
-        "hours": 5.78,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.77,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3079,7 +3073,7 @@
         "feed_3dd75c9ad10b29cb"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -3102,6 +3096,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_3dd75c9ad10b29cb"
+      ],
       "headline_original": "Bitcoin in Limbo as Stocks Rebound Ahead of US Inflation Report",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
@@ -3764,11 +3761,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-11-05T10:06:47+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.781131+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.781131+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.600823+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.600823+00:00",
       "freshness": {
         "iso": "2026-11-05T10:06:47+00:00",
-        "hours": 110.76,
+        "hours": 118.76,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4512,11 +4509,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-09T12:41:35+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.409524+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.409524+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.168769+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.168769+00:00",
       "freshness": {
         "iso": "2026-11-09T12:41:35+00:00",
-        "hours": 12.18,
+        "hours": 20.18,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4665,12 +4662,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-09T19:52:34+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.245840+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.245840+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.211709+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.211709+00:00",
       "freshness": {
         "iso": "2026-11-09T19:52:34+00:00",
-        "hours": 5.0,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.99,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -4721,7 +4718,7 @@
         "feed_5ff542e7e8695d8c"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -4743,6 +4740,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_5ff542e7e8695d8c"
+      ],
       "headline_original": "Formation Securities plans Solana stock trading venue under SEC exemption",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -4813,12 +4813,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-09T17:46:02+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.316129+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.316129+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.038335+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.038335+00:00",
       "freshness": {
         "iso": "2026-11-09T17:46:02+00:00",
-        "hours": 7.11,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.1,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -4964,12 +4964,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-09T13:29:47+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.259919+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.259919+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.227669+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.227669+00:00",
       "freshness": {
         "iso": "2026-11-09T13:29:47+00:00",
-        "hours": 11.38,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 19.37,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -5268,12 +5268,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-11-09T17:48:35+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.249307+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.249307+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.215315+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.215315+00:00",
       "freshness": {
         "iso": "2026-11-09T17:48:35+00:00",
-        "hours": 7.07,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.06,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -5327,7 +5327,7 @@
         "feed_3c9876781387fd01"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -5349,6 +5349,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_3c9876781387fd01"
+      ],
       "headline_original": "PNC Bank tests turning USDC payments into dollar deposits",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -5572,11 +5575,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-04T16:28:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.441869+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.441869+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.099070+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.099070+00:00",
       "freshness": {
         "iso": "2026-11-04T16:28:00+00:00",
-        "hours": 128.41,
+        "hours": 136.4,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7794,154 +7797,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_3d4018a71120d87b",
-      "event_id": "feed_3d4018a71120d87b",
-      "fingerprint": "3d4018a71120d87b",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Crypto.com to withdraw Hong Kong consumer app citing regulatory changes",
-      "body": "Crypto.com will discontinue its consumer app services in Hong Kong in February next year.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/crypto-com-hong-kong-app-shutdown-license-pending",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/crypto-com-hong-kong-app-shutdown-license-pending"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-11-03T05:10:19+00:00",
-      "first_seen_at": "2026-11-04T08:05:40.941640+00:00",
-      "last_seen_at": "2026-11-04T08:05:40.941640+00:00",
-      "freshness": {
-        "iso": "2026-11-03T05:10:19+00:00",
-        "hours": 26.92,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Régulation / justice",
-      "article_ids": [
-        "feed_3d4018a71120d87b"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 71,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 60,
-        "reasons": [
-          "crypto_market_anchor",
-          "driver_domain:regulation"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_3d4018a71120d87b"
-      ],
-      "headline_original": "Crypto.com to withdraw Hong Kong consumer app citing regulatory changes",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Crypto.com to withdraw Hong Kong consumer app citing regulatory changes",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "news_intelligence": {
-        "schema": "atlas_news_source_aware_article_triage_v1",
-        "build": "news-truth-2026-10-31",
-        "category": "GENERAL_NEWS_NO_EXECUTION",
-        "watch": "CONTEXT_ONLY",
-        "money_role": "UNCLASSIFIED",
-        "reported_usd_loss": null,
-        "reported_usd_profit": null,
-        "automated_trading_profit_proven": false,
-        "bot_is_ai_agent_confirmed": false,
-        "claim_conflict_requires_review": false,
-        "multi_story_requires_separation": false,
-        "independent_primary_confirmation_in_feed": false,
-        "publisher_article_count": 1,
-        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
-        "market_causality_proven": false,
-        "direct_market_trade_approved": false,
-        "read_only": true
-      },
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_390c905e9017a377",
       "event_id": "feed_390c905e9017a377",
       "fingerprint": "390c905e9017a377",
@@ -8089,7 +7944,8 @@
         "market_causality_proven": false,
         "direct_market_trade_approved": false,
         "read_only": true
-      }
+      },
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_f661a135f82f9958",
@@ -8744,11 +8600,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-11-06T21:06:03+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.333623+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.333623+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.061175+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.061175+00:00",
       "freshness": {
         "iso": "2026-11-06T21:06:03+00:00",
-        "hours": 75.78,
+        "hours": 83.77,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8894,11 +8750,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-03T13:50:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.506434+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.506434+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.374289+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.374289+00:00",
       "freshness": {
         "iso": "2026-11-03T13:50:00+00:00",
-        "hours": 155.04,
+        "hours": 163.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9229,7 +9085,7 @@
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-11-06T20:36:25+00:00",
       "first_seen_at": "2026-11-09T17:50:32.480799+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.349007+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.079933+00:00",
       "freshness": {
         "iso": "2026-11-06T20:36:25+00:00",
         "hours": 69.24,
@@ -9446,11 +9302,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-11-09T09:33:27+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.420323+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.420323+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.180763+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.180763+00:00",
       "freshness": {
         "iso": "2026-11-09T09:33:27+00:00",
-        "hours": 15.32,
+        "hours": 23.31,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9859,7 +9715,8 @@
         "market_causality_proven": false,
         "direct_market_trade_approved": false,
         "read_only": true
-      }
+      },
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_2b83e6adb52ebf3e",
@@ -9885,11 +9742,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-06T19:46:03+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.337900+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.337900+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.065813+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.065813+00:00",
       "freshness": {
         "iso": "2026-11-06T19:46:03+00:00",
-        "hours": 77.11,
+        "hours": 85.1,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10032,11 +9889,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-11-06T17:42:31+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.341680+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.341680+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.071168+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.071168+00:00",
       "freshness": {
         "iso": "2026-11-06T17:42:31+00:00",
-        "hours": 79.17,
+        "hours": 87.16,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10179,11 +10036,11 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-11-09T10:51:48+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.417219+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.417219+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.177030+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.177030+00:00",
       "freshness": {
         "iso": "2026-11-09T10:51:48+00:00",
-        "hours": 14.01,
+        "hours": 22.01,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10231,7 +10088,7 @@
         "feed_9e200c5666aa0fc2"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -10253,6 +10110,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_9e200c5666aa0fc2"
+      ],
       "headline_original": "Live news: Crypto prices give ground even as stocks and gold surge, oil plunges",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -10624,11 +10484,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-11-09T06:36:45+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.423539+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.423539+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.184273+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.184273+00:00",
       "freshness": {
         "iso": "2026-11-09T06:36:45+00:00",
-        "hours": 18.26,
+        "hours": 26.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10773,11 +10633,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-11-05T20:16:03+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.361058+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.361058+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.092847+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.092847+00:00",
       "freshness": {
         "iso": "2026-11-05T20:16:03+00:00",
-        "hours": 100.61,
+        "hours": 108.6,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10923,12 +10783,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-11-09T13:24:29+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.322986+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.322986+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.047598+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.047598+00:00",
       "freshness": {
         "iso": "2026-11-09T13:24:29+00:00",
-        "hours": 11.47,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 19.46,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -11376,12 +11236,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-11-09T18:25:29+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.247303+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.247303+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.213215+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.213215+00:00",
       "freshness": {
         "iso": "2026-11-09T18:25:29+00:00",
-        "hours": 6.45,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.44,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -11432,7 +11292,7 @@
         "feed_ff2801d1858ad32d"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -11453,6 +11313,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_ff2801d1858ad32d"
+      ],
       "headline_original": "Mercado Bitcoin begins post-hack reopening without a timeline for withdrawals",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -11805,7 +11668,8 @@
         "market_causality_proven": false,
         "direct_market_trade_approved": false,
         "read_only": true
-      }
+      },
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_447388668ad3ff43",
@@ -12703,12 +12567,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-11-08T02:32:00+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.783700+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.783700+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.603648+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.603648+00:00",
       "freshness": {
         "iso": "2026-11-08T02:32:00+00:00",
-        "hours": 46.34,
-        "label": "Récente · moins de 48 h",
+        "hours": 54.34,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -12757,7 +12621,7 @@
         "feed_bdaf48031a0ecbc2"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 5,
       "source_tier_label": "Agrégateur / découverte",
       "market_reaction": {
@@ -12778,6 +12642,9 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_bdaf48031a0ecbc2"
+      ],
       "headline_original": "UE, Asie ou États-Unis : qui gagnera la régulation des cryptos ? - Bitcoin News",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
@@ -12844,11 +12711,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-11-09T11:50:36+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.325406+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.325406+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.050290+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.050290+00:00",
       "freshness": {
         "iso": "2026-11-09T11:50:36+00:00",
-        "hours": 13.03,
+        "hours": 21.03,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12992,11 +12859,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-11-06T18:36:03+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.340360+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.340360+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.069005+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.069005+00:00",
       "freshness": {
         "iso": "2026-11-06T18:36:03+00:00",
-        "hours": 78.28,
+        "hours": 86.27,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -13140,11 +13007,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-11-09T03:21:49+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.429356+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.429356+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.190731+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.190731+00:00",
       "freshness": {
         "iso": "2026-11-09T03:21:49+00:00",
-        "hours": 21.51,
+        "hours": 29.51,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13717,6 +13584,150 @@
         "read_only": true
       },
       "semantic_refresh_build": "40.6.418"
+    },
+    {
+      "id": "feed_b32323c3de383ff1",
+      "event_id": "feed_b32323c3de383ff1",
+      "fingerprint": "b32323c3de383ff1",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Crypto exchanges need hard dollar caps on hot wallets, CertiK says",
+      "body": "“Cold storage is a useful measure of online exposure, but it is not a standalone security score,” the cybersecurity firm told Cointelegraph.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/crypto-exchanges-need-dollar-caps-on-hot-wallets-certik",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/crypto-exchanges-need-dollar-caps-on-hot-wallets-certik"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-11-10T05:05:58+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.203733+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.203733+00:00",
+      "freshness": {
+        "iso": "2026-11-10T05:05:58+00:00",
+        "hours": 3.77,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 58,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "macro"
+      ],
+      "driver_domains": [
+        "macro_liquidity"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_b32323c3de383ff1"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 63,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 60,
+        "reasons": [
+          "crypto_market_anchor",
+          "driver_domain:macro_liquidity"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Crypto exchanges need hard dollar caps on hot wallets, CertiK says",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Crypto exchanges need hard dollar caps on hot wallets, CertiK says",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ],
+      "news_intelligence": {
+        "schema": "atlas_news_source_aware_article_triage_v1",
+        "build": "news-truth-2026-10-31",
+        "category": "GENERAL_NEWS_NO_EXECUTION",
+        "watch": "CONTEXT_ONLY",
+        "money_role": "UNCLASSIFIED",
+        "reported_usd_loss": null,
+        "reported_usd_profit": null,
+        "automated_trading_profit_proven": false,
+        "bot_is_ai_agent_confirmed": false,
+        "claim_conflict_requires_review": false,
+        "multi_story_requires_separation": false,
+        "independent_primary_confirmation_in_feed": false,
+        "publisher_article_count": 1,
+        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
+        "market_causality_proven": false,
+        "direct_market_trade_approved": false,
+        "read_only": true
+      }
     },
     {
       "id": "feed_e53afc37a2f3e170",
@@ -14496,11 +14507,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-11-09T09:00:17+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.266430+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.266430+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.235604+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.235604+00:00",
       "freshness": {
         "iso": "2026-11-09T09:00:17+00:00",
-        "hours": 15.87,
+        "hours": 23.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15096,11 +15107,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-11-06T01:29:01+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.782504+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.782504+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.602311+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.602311+00:00",
       "freshness": {
         "iso": "2026-11-06T01:29:01+00:00",
-        "hours": 95.39,
+        "hours": 103.39,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -15245,11 +15256,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-11-06T10:57:06+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.353454+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.353454+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.084562+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.084562+00:00",
       "freshness": {
         "iso": "2026-11-06T10:57:06+00:00",
-        "hours": 85.92,
+        "hours": 93.92,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -15834,17 +15845,17 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-11-09T12:37:13+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.410956+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.410956+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.170254+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.170254+00:00",
       "freshness": {
         "iso": "2026-11-09T12:37:13+00:00",
-        "hours": 12.26,
+        "hours": 20.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
-        "score": 81,
-        "level": "Assez élevé"
+        "score": 91,
+        "level": "Élevé"
       },
       "impact": {
         "score": 84,
@@ -15896,7 +15907,7 @@
         "causal_claim": false
       },
       "operator_relevance": {
-        "score": 58,
+        "score": 59,
         "status": "eligible",
         "eligible": true,
         "market_anchor_score": 35,
@@ -15959,6 +15970,150 @@
       }
     },
     {
+      "id": "feed_850db0c7925e2e3e",
+      "event_id": "feed_850db0c7925e2e3e",
+      "fingerprint": "850db0c7925e2e3e",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "An 11-year-old Ethereum wallet moved $4.6 million and dodged a scam set up in minutes",
+      "body": "Bots spotted a wallet from Ethereum’s 2015 launch the moment it stirred and planted lookalike addresses in its history, but the owner sent the money to the right place anyway.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/tech/2026/11/10/an-11-year-old-ethereum-wallet-moved-usd4-6-million-and-dodged-a-scam-set-up-in-minutes",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/tech/2026/11/10/an-11-year-old-ethereum-wallet-moved-usd4-6-million-and-dodged-a-scam-set-up-in-minutes"
+      ],
+      "declared_status": "reported",
+      "event_type": "onchain_movement",
+      "event_label": "Mouvement on-chain / transferts",
+      "event_time": "2026-11-10T07:01:06+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.149419+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.149419+00:00",
+      "freshness": {
+        "iso": "2026-11-10T07:01:06+00:00",
+        "hours": 1.85,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 73,
+        "level": "Fort"
+      },
+      "direction": "flux on-chain à qualifier ; causalité non présumée",
+      "assets": [
+        "ETH"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Mouvement on-chain / transferts",
+      "article_ids": [
+        "feed_850db0c7925e2e3e"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 58,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "An 11-year-old Ethereum wallet moved $4.6 million and dodged a scam set up in minutes",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] An 11-year-old Ethereum wallet moved $4.6 million and dodged a scam set up in minutes",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ],
+      "news_intelligence": {
+        "schema": "atlas_news_source_aware_article_triage_v1",
+        "build": "news-truth-2026-10-31",
+        "category": "GENERAL_NEWS_NO_EXECUTION",
+        "watch": "CONTEXT_ONLY",
+        "money_role": "UNCLASSIFIED",
+        "reported_usd_loss": null,
+        "reported_usd_profit": null,
+        "automated_trading_profit_proven": false,
+        "bot_is_ai_agent_confirmed": false,
+        "claim_conflict_requires_review": false,
+        "multi_story_requires_separation": false,
+        "independent_primary_confirmation_in_feed": false,
+        "publisher_article_count": 1,
+        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
+        "market_causality_proven": false,
+        "direct_market_trade_approved": false,
+        "read_only": true
+      }
+    },
+    {
       "id": "feed_55c38e44e942ac7b",
       "event_id": "feed_55c38e44e942ac7b",
       "fingerprint": "55c38e44e942ac7b",
@@ -15982,11 +16137,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-11-09T11:38:52+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.262313+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.262313+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.230653+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.230653+00:00",
       "freshness": {
         "iso": "2026-11-09T11:38:52+00:00",
-        "hours": 13.23,
+        "hours": 21.22,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -16129,7 +16284,7 @@
       "event_label": "ETF / institutionnels",
       "event_time": "2026-11-04T10:36:19+00:00",
       "first_seen_at": "2026-11-06T07:26:47.334003+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.739265+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.504848+00:00",
       "freshness": {
         "iso": "2026-11-04T10:36:19+00:00",
         "hours": 44.84,
@@ -16977,7 +17132,8 @@
         "market_causality_proven": false,
         "direct_market_trade_approved": false,
         "read_only": true
-      }
+      },
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_a0032c53c2b2816e",
@@ -17125,7 +17281,8 @@
         "market_causality_proven": false,
         "direct_market_trade_approved": false,
         "read_only": true
-      }
+      },
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_27f2b681a6105866",
@@ -17300,12 +17457,12 @@
       "event_type": "tokenomics",
       "event_label": "Tokenomics / unlock / burn",
       "event_time": "2026-11-09T17:08:21+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.320097+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.320097+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.044612+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.044612+00:00",
       "freshness": {
         "iso": "2026-11-09T17:08:21+00:00",
-        "hours": 7.74,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.73,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -17596,12 +17753,12 @@
       "declared_status": "reported",
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
-      "event_time": "2026-11-09T22:06:26+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.240546+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.240546+00:00",
+      "event_time": "2026-11-10T06:00:00+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.201560+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.201560+00:00",
       "freshness": {
-        "iso": "2026-11-09T22:06:26+00:00",
-        "hours": 2.77,
+        "iso": "2026-11-10T06:00:00+00:00",
+        "hours": 2.87,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -18166,6 +18323,293 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
+      "id": "feed_d83af6d65e06d86c",
+      "event_id": "feed_d83af6d65e06d86c",
+      "fingerprint": "d83af6d65e06d86c",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin miner MARA sold 13,597 BTC for $1.1 billion in six weeks, plans to sell more",
+      "body": "MARA paid off every loan backed by its bitcoin and says the rest of its coins can fund AI datacenters.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/11/10/bitcoin-miner-mara-sold-13-597-btc-for-usd1-1-billion-in-six-weeks-plans-to-sell-more",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/11/10/bitcoin-miner-mara-sold-13-597-btc-for-usd1-1-billion-in-six-weeks-plans-to-sell-more"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-11-10T05:18:31+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.151696+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.151696+00:00",
+      "freshness": {
+        "iso": "2026-11-10T05:18:31+00:00",
+        "hours": 3.56,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 55,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "IA"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_d83af6d65e06d86c"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 53,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Bitcoin miner MARA sold 13,597 BTC for $1.1 billion in six weeks, plans to sell more",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Bitcoin miner MARA sold 13,597 BTC for $1.1 billion in six weeks, plans to sell more",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ],
+      "news_intelligence": {
+        "schema": "atlas_news_source_aware_article_triage_v1",
+        "build": "news-truth-2026-10-31",
+        "category": "GENERAL_NEWS_NO_EXECUTION",
+        "watch": "CONTEXT_ONLY",
+        "money_role": "UNCLASSIFIED",
+        "reported_usd_loss": null,
+        "reported_usd_profit": null,
+        "automated_trading_profit_proven": false,
+        "bot_is_ai_agent_confirmed": false,
+        "claim_conflict_requires_review": false,
+        "multi_story_requires_separation": false,
+        "independent_primary_confirmation_in_feed": false,
+        "publisher_article_count": 1,
+        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
+        "market_causality_proven": false,
+        "direct_market_trade_approved": false,
+        "read_only": true
+      }
+    },
+    {
+      "id": "feed_97cc52aca92ea71c",
+      "event_id": "feed_97cc52aca92ea71c",
+      "fingerprint": "97cc52aca92ea71c",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "XRP Ledger maps out quantum-proof accounts, with no extra fees for users",
+      "body": "The XRP Ledger Foundation’s design lets owners add a quantum-resistant key and switch off the old one, part of a roadmap that puts the network on track for a full transition by 2028.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/tech/2026/11/10/xrp-ledger-maps-out-quantum-proof-accounts-with-no-extra-fees-for-users",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/tech/2026/11/10/xrp-ledger-maps-out-quantum-proof-accounts-with-no-extra-fees-for-users"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-11-10T04:51:20+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.154169+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.154169+00:00",
+      "freshness": {
+        "iso": "2026-11-10T04:51:20+00:00",
+        "hours": 4.01,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 55,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "XRP"
+      ],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_97cc52aca92ea71c"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 53,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "XRP Ledger maps out quantum-proof accounts, with no extra fees for users",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] XRP Ledger maps out quantum-proof accounts, with no extra fees for users",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ],
+      "news_intelligence": {
+        "schema": "atlas_news_source_aware_article_triage_v1",
+        "build": "news-truth-2026-10-31",
+        "category": "GENERAL_NEWS_NO_EXECUTION",
+        "watch": "CONTEXT_ONLY",
+        "money_role": "UNCLASSIFIED",
+        "reported_usd_loss": null,
+        "reported_usd_profit": null,
+        "automated_trading_profit_proven": false,
+        "bot_is_ai_agent_confirmed": false,
+        "claim_conflict_requires_review": false,
+        "multi_story_requires_separation": false,
+        "independent_primary_confirmation_in_feed": false,
+        "publisher_article_count": 1,
+        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
+        "market_causality_proven": false,
+        "direct_market_trade_approved": false,
+        "read_only": true
+      }
+    },
+    {
       "id": "feed_a2a758f0b85b51cc",
       "event_id": "feed_a2a758f0b85b51cc",
       "fingerprint": "a2a758f0b85b51cc",
@@ -18189,12 +18633,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-11-09T16:19:45+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.404011+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.404011+00:00",
+      "first_seen_at": "2026-11-10T08:52:09.163107+00:00",
+      "last_seen_at": "2026-11-10T08:52:09.163107+00:00",
       "freshness": {
         "iso": "2026-11-09T16:19:45+00:00",
-        "hours": 8.55,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 16.54,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -18311,440 +18755,6 @@
         "direct_market_trade_approved": false,
         "read_only": true
       }
-    },
-    {
-      "id": "feed_0f08a69ff5e2752c",
-      "event_id": "feed_0f08a69ff5e2752c",
-      "fingerprint": "0f08a69ff5e2752c",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "NYSE picks Avalanche to settle tokenized stocks amid Wall Street's blockchain race",
-      "body": "Avalanche will serve as the core settlement ledger for the exchange's planned blockchain stock market",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/11/09/nyse-picks-avalanche-to-settle-tokenized-stocks-amid-wall-street-s-blockchain-race",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/11/09/nyse-picks-avalanche-to-settle-tokenized-stocks-amid-wall-street-s-blockchain-race"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-11-09T13:40:06+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.408261+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.408261+00:00",
-      "freshness": {
-        "iso": "2026-11-09T13:40:06+00:00",
-        "hours": 11.21,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 55,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [
-        "AVAX"
-      ],
-      "sectors": [
-        "Exchanges",
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Information de marché à qualifier",
-      "article_ids": [
-        "feed_0f08a69ff5e2752c"
-      ],
-      "article_count": 1,
-      "cluster_reason": "single_article",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 53,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "NYSE picks Avalanche to settle tokenized stocks amid Wall Street's blockchain race",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] NYSE picks Avalanche to settle tokenized stocks amid Wall Street's blockchain race",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "news_intelligence": {
-        "schema": "atlas_news_source_aware_article_triage_v1",
-        "build": "news-truth-2026-10-31",
-        "category": "GENERAL_NEWS_NO_EXECUTION",
-        "watch": "CONTEXT_ONLY",
-        "money_role": "UNCLASSIFIED",
-        "reported_usd_loss": null,
-        "reported_usd_profit": null,
-        "automated_trading_profit_proven": false,
-        "bot_is_ai_agent_confirmed": false,
-        "claim_conflict_requires_review": false,
-        "multi_story_requires_separation": false,
-        "independent_primary_confirmation_in_feed": false,
-        "publisher_article_count": 1,
-        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
-        "market_causality_proven": false,
-        "direct_market_trade_approved": false,
-        "read_only": true
-      }
-    },
-    {
-      "id": "feed_1b61d189d642a60e",
-      "event_id": "feed_1b61d189d642a60e",
-      "fingerprint": "1b61d189d642a60e",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "SpaceX proposes a $24 billion Texas supercomputer and a gas plant",
-      "body": "The $24 billion project, which includes an AI supercomputer in Texas with its own gas-fired power plant, is about 17 times the value of SpaceX's bitcoin holdings.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/11/09/spacex-proposes-a-usd24-billion-texas-supercomputer-worth-17-times-its-bitcoin-pile",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/11/09/spacex-proposes-a-usd24-billion-texas-supercomputer-worth-17-times-its-bitcoin-pile"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-11-09T06:54:41+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.422312+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.422312+00:00",
-      "freshness": {
-        "iso": "2026-11-09T06:54:41+00:00",
-        "hours": 17.96,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 55,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "IA"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Information de marché à qualifier",
-      "article_ids": [
-        "feed_1b61d189d642a60e"
-      ],
-      "article_count": 1,
-      "cluster_reason": "single_article",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 53,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "SpaceX proposes a $24 billion Texas supercomputer and a gas plant",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] SpaceX proposes a $24 billion Texas supercomputer and a gas plant",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "news_intelligence": {
-        "schema": "atlas_news_source_aware_article_triage_v1",
-        "build": "news-truth-2026-10-31",
-        "category": "GENERAL_NEWS_NO_EXECUTION",
-        "watch": "CONTEXT_ONLY",
-        "money_role": "UNCLASSIFIED",
-        "reported_usd_loss": null,
-        "reported_usd_profit": null,
-        "automated_trading_profit_proven": false,
-        "bot_is_ai_agent_confirmed": false,
-        "claim_conflict_requires_review": false,
-        "multi_story_requires_separation": false,
-        "independent_primary_confirmation_in_feed": false,
-        "publisher_article_count": 1,
-        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
-        "market_causality_proven": false,
-        "direct_market_trade_approved": false,
-        "read_only": true
-      }
-    },
-    {
-      "id": "feed_3461b42fdabc7540",
-      "event_id": "feed_3461b42fdabc7540",
-      "fingerprint": "3461b42fdabc7540",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Two rival Ethereum proposals aim to stop Glamsterdam breaking old contracts",
-      "body": "The proposals aim to keep Ethereum’s planned gas changes from breaking existing contracts, using different approaches to what contracts see and what users pay.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/tech/2026/11/09/two-rival-ethereum-proposals-aim-to-stop-glamsterdam-breaking-old-contracts",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/tech/2026/11/09/two-rival-ethereum-proposals-aim-to-stop-glamsterdam-breaking-old-contracts"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-11-09T05:16:54+00:00",
-      "first_seen_at": "2026-11-10T00:52:34.425652+00:00",
-      "last_seen_at": "2026-11-10T00:52:34.425652+00:00",
-      "freshness": {
-        "iso": "2026-11-09T05:16:54+00:00",
-        "hours": 19.59,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 55,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [
-        "ETH"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Information de marché à qualifier",
-      "article_ids": [
-        "feed_3461b42fdabc7540"
-      ],
-      "article_count": 1,
-      "cluster_reason": "single_article",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 53,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Two rival Ethereum proposals aim to stop Glamsterdam breaking old contracts",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Two rival Ethereum proposals aim to stop Glamsterdam breaking old contracts",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "news_intelligence": {
-        "schema": "atlas_news_source_aware_article_triage_v1",
-        "build": "news-truth-2026-10-31",
-        "category": "GENERAL_NEWS_NO_EXECUTION",
-        "watch": "CONTEXT_ONLY",
-        "money_role": "UNCLASSIFIED",
-        "reported_usd_loss": null,
-        "reported_usd_profit": null,
-        "automated_trading_profit_proven": false,
-        "bot_is_ai_agent_confirmed": false,
-        "claim_conflict_requires_review": false,
-        "multi_story_requires_separation": false,
-        "independent_primary_confirmation_in_feed": false,
-        "publisher_article_count": 1,
-        "source_truth": "RSS_SUMMARY_ONLY_NOT_FULL_ARTICLE_FACT_CHECK",
-        "market_causality_proven": false,
-        "direct_market_trade_approved": false,
-        "read_only": true
-      }
     }
   ],
   "event_core": {
@@ -18765,8 +18775,8 @@
     "secret_required": false,
     "paid_service": false,
     "total_events": 120,
-    "accepted_french": 10,
-    "archive_english": 110,
+    "accepted_french": 11,
+    "archive_english": 109,
     "display_coverage": 120,
     "operator_lane_rule": "native French only; English preserved as archive evidence"
   },
@@ -18780,8 +18790,8 @@
     "secret_required": false,
     "paid_service": false,
     "total_events": 120,
-    "accepted_french": 10,
-    "archive_english": 110,
+    "accepted_french": 11,
+    "archive_english": 109,
     "display_coverage": 120,
     "operator_lane_rule": "native French only; English preserved as archive evidence"
   },
