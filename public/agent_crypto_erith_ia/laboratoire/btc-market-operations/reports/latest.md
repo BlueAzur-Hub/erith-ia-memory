@@ -1,20 +1,20 @@
-# Seven Heaven — suivi public BTC : 2026-11-10T15:32:55Z
+# Seven Heaven — suivi public BTC : 2026-11-10T15:42:29Z
 
-**Statut : DEGRADED_OR_UNVERIFIED** — lecture seule, couverture partielle documentée, aucune exécution réelle.
+**Statut : OPERATIONAL_PARTIAL_COVERAGE** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-09T15:32:55Z au 2026-11-10T15:32:55Z.
+Fenêtre UTC : 2026-11-09T15:42:29Z au 2026-11-10T15:42:29Z.
 
 ## Santé et provenance
 
 - **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-10T14:00:00Z ; source fraîche : OUI.
-- **Liquidations dérivées** : 22 messages observés dans les archives ; 0 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
+- **Liquidations dérivées** : 577 messages observés dans les archives ; 3 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
 - **Actualités de l'Interface** : 13 événements BTC ; relevé source 2026-11-10T15:13:05.844334+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
-| bybit | 6 | 0 |
-| binance | 11 | 0 |
-| okx | 5 | 0 |
+| bybit | 459 | 1 |
+| binance | 79 | 1 |
+| okx | 39 | 1 |
 
 ## Interprétation autorisée
 

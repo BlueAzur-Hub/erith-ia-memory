@@ -2,37 +2,37 @@
   "derivatives": {
     "claim_24_7": false,
     "claim_market_total": false,
-    "connection_windows_in_24h": 0,
+    "connection_windows_in_24h": 3,
     "coverage": "SAMPLED_WINDOWS_WITH_UNOBSERVED_GAPS",
-    "events_observed_in_24h": 22,
-    "fresh_coverage_evidence": false,
-    "last_window_end_utc": null,
+    "events_observed_in_24h": 577,
+    "fresh_coverage_evidence": true,
+    "last_window_end_utc": "2026-11-10T15:38:58Z",
     "okx_notional_usdt_unavailable": true,
     "providers": {
       "binance": {
-        "last_event_utc": "2026-11-10T15:16:17.171Z",
+        "last_event_utc": "2026-11-10T15:38:44.195Z",
         "market_total_certified": false,
-        "observed_windows": 0,
-        "recorded_events": 11,
+        "observed_windows": 1,
+        "recorded_events": 79,
         "stream_has_gaps": true
       },
       "bybit": {
-        "last_event_utc": "2026-11-10T15:16:04.836Z",
+        "last_event_utc": "2026-11-10T15:38:44.413Z",
         "market_total_certified": false,
-        "observed_windows": 0,
-        "recorded_events": 6,
+        "observed_windows": 1,
+        "recorded_events": 459,
         "stream_has_gaps": true
       },
       "okx": {
-        "last_event_utc": "2026-11-10T15:16:11.776Z",
+        "last_event_utc": "2026-11-10T15:38:38.780Z",
         "market_total_certified": false,
-        "observed_windows": 0,
-        "recorded_events": 5,
+        "observed_windows": 1,
+        "recorded_events": 39,
         "stream_has_gaps": true
       }
     }
   },
-  "generated_at_utc": "2026-11-10T15:32:55Z",
+  "generated_at_utc": "2026-11-10T15:42:29Z",
   "hourly": [
     {
       "causal_claim": false,
@@ -562,8 +562,8 @@
   "real_orders": 0,
   "schema": "seven.crypto.btc-evidence-monitor.v1",
   "spot": {
-    "age_after_close_ms": 1975098,
-    "archive_last_success_at": "2026-11-10T15:32:54.672000+00:00",
+    "age_after_close_ms": 2549106,
+    "archive_last_success_at": "2026-11-10T15:42:28.777000+00:00",
     "bar": "1H",
     "closed_hours_in_window": 23,
     "fresh": true,
@@ -573,7 +573,7 @@
     "source_exchange_signed": false,
     "venue": "OKX"
   },
-  "status": "DEGRADED_OR_UNVERIFIED",
-  "window_end_utc": "2026-11-10T15:32:55Z",
-  "window_start_utc": "2026-11-09T15:32:55Z"
+  "status": "OPERATIONAL_PARTIAL_COVERAGE",
+  "window_end_utc": "2026-11-10T15:42:29Z",
+  "window_start_utc": "2026-11-09T15:42:29Z"
 }
