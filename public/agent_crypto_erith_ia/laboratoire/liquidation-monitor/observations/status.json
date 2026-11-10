@@ -1,0 +1,65 @@
+{
+  "claim_complete_market_total": false,
+  "coverage": "SAMPLED_RUNS_WITH_GAPS_NOT_24_7",
+  "historical_backfill": false,
+  "notes": [
+    "No live stream history before collection started",
+    "Provider-side sampling and missed periods undercount liquidations",
+    "Zero received events is not proof of zero liquidations",
+    "Never aggregate this feed as all-market total or compare directly with OKX Spot volume"
+  ],
+  "observation_only": true,
+  "observed_events_this_run": 22,
+  "orders_enabled": false,
+  "real_orders": 0,
+  "schema": "seven.crypto.public-liquidation-witness.v1",
+  "sources": [
+    "bybit",
+    "binance",
+    "okx"
+  ],
+  "this_run": [
+    {
+      "coverage_ratio_within_run": 0.9984,
+      "errors": [],
+      "finished_at_utc": "2026-11-10T15:18:52.422Z",
+      "observed_connection_ms": 359599,
+      "provider": "bybit",
+      "reconnects": 0,
+      "recorded_events": 6,
+      "source_completeness": "bybit_per_instrument_reported_all",
+      "started_at_utc": "2026-11-10T15:12:52.248Z",
+      "status": "OBSERVED_PARTIAL_EXCHANGE_FEED",
+      "window_ms": 360174
+    },
+    {
+      "coverage_ratio_within_run": 0.9989,
+      "errors": [],
+      "finished_at_utc": "2026-11-10T15:18:56.278Z",
+      "observed_connection_ms": 363600,
+      "provider": "binance",
+      "reconnects": 0,
+      "recorded_events": 11,
+      "source_completeness": "underreported_by_provider",
+      "started_at_utc": "2026-11-10T15:12:52.273Z",
+      "status": "OBSERVED_PARTIAL_EXCHANGE_FEED",
+      "window_ms": 364005
+    },
+    {
+      "coverage_ratio_within_run": 0.9989,
+      "errors": [
+        "BAD_RECORD:ValueError"
+      ],
+      "finished_at_utc": "2026-11-10T15:18:52.383Z",
+      "observed_connection_ms": 359695,
+      "provider": "okx",
+      "reconnects": 0,
+      "recorded_events": 5,
+      "source_completeness": "underreported_by_provider",
+      "started_at_utc": "2026-11-10T15:12:52.274Z",
+      "status": "OBSERVED_PARTIAL_EXCHANGE_FEED",
+      "window_ms": 360109
+    }
+  ],
+  "updated_at_utc": "2026-11-10T15:18:56.279Z"
+}
