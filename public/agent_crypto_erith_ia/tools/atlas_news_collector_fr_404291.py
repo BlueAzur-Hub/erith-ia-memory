@@ -71,6 +71,14 @@ FR_DISCOVERY_SOURCES = (
         "fr",
         58,
     ),
+    Source(
+        "google_news_leverage_liquidations",
+        "Google News FR · liquidations et levier",
+        google_news_fr_rss("bitcoin crypto liquidations positions levier longs shorts cascade futures when:7d"),
+        "finance",
+        "fr",
+        58,
+    ),
 )
 
 LEGACY_DISCOVERY_IDS = {s.id for s in FR_DISCOVERY_SOURCES}
@@ -102,9 +110,10 @@ base.analyze_item = analyze_item_with_source_language
 
 
 def self_test() -> int:
-    assert len(SOURCES) == 15
+    assert len(SOURCES) == 16
     ids = {s.id for s in SOURCES}
     assert LEGACY_DISCOVERY_IDS.issubset(ids)
+    assert "google_news_leverage_liquidations" in ids
     for source in FR_DISCOVERY_SOURCES:
         assert source.language == "fr"
         assert "hl=fr" in source.url and "gl=FR" in source.url and "ceid=FR:fr" in source.url
