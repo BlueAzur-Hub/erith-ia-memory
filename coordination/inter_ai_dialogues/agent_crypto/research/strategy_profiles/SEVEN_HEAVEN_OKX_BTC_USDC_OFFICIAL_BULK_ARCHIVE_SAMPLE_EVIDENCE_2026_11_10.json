@@ -1,0 +1,154 @@
+{
+  "schema": "seven.crypto.okx.spot.btc-usdc.bulk-sample-audit.v1",
+  "captured_at_utc": "2026-11-10T19:39:17.499Z",
+  "verified_by": "GitHub Actions",
+  "run_id": 42887309443,
+  "run_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/42887309443",
+  "read_only": true,
+  "orders_enabled": false,
+  "source_endpoint": "https://www.okx.com/api/v5/public/market-data-history",
+  "query": {
+    "module": 2,
+    "instType": "SPOT",
+    "instIdList": "BTC-USDC",
+    "dateAggrType": "daily",
+    "groupTimezone": "UTC+08:00"
+  },
+  "files": [
+    {
+      "date": "2022-06-15",
+      "code": "0",
+      "http": 200,
+      "name": "BTC-USDC-candlesticks-2022-06-15.zip",
+      "archive_url_host": "static.okx.com",
+      "archive_size_bytes": 45865,
+      "zip_sha256": "1b33d71320d19350312576d4aaa064d42f9da3a80ff218c98eed71867ad27e0d",
+      "zip_verified": true,
+      "sample": {
+        "filename": "BTC-USDC-candlesticks-2022-06-15.csv",
+        "rows": 2880,
+        "uniqueTimestamps": 1440,
+        "duplicateRows": 1440,
+        "conflictingDuplicateRows": 0,
+        "missingMinutesInTimeSpan": 0,
+        "confirmCounts": {
+          "1": 2880
+        },
+        "badOHLC": 0,
+        "minTimestampUTC": "2022-06-14T16:00:00+00:00",
+        "maxTimestampUTC": "2022-06-15T15:59:00+00:00",
+        "firstCandle": {
+          "open": "22658.3",
+          "high": "22658.4",
+          "low": "22601.3",
+          "close": "22601.3",
+          "vol": "0.19429286",
+          "confirm": "1"
+        }
+      }
+    },
+    {
+      "date": "2023-10-15",
+      "code": "0",
+      "http": 200,
+      "name": "BTC-USDC-candlesticks-2023-10-15.zip",
+      "archive_url_host": "static.okx.com",
+      "archive_size_bytes": 22888,
+      "zip_sha256": "0e2a706778f673e76839ed40943cdde3edc40c43e113cd6c09b2387f355960c7",
+      "zip_verified": true,
+      "sample": {
+        "filename": "BTC-USDC-candlesticks-2023-10-15.csv",
+        "rows": 1440,
+        "uniqueTimestamps": 1440,
+        "duplicateRows": 0,
+        "conflictingDuplicateRows": 0,
+        "missingMinutesInTimeSpan": 0,
+        "confirmCounts": {
+          "0": 1440
+        },
+        "badOHLC": 0,
+        "minTimestampUTC": "2023-10-14T16:00:00+00:00",
+        "maxTimestampUTC": "2023-10-15T15:59:00+00:00",
+        "firstCandle": {
+          "open": "26941.4",
+          "high": "26948.3",
+          "low": "26941.3",
+          "close": "26948.2",
+          "vol": "0.07305165",
+          "confirm": "0"
+        }
+      }
+    },
+    {
+      "date": "2024-06-15",
+      "code": "0",
+      "http": 200,
+      "name": "BTC-USDC-candlesticks-2024-06-15.zip",
+      "archive_url_host": "static.okx.com",
+      "archive_size_bytes": 38970,
+      "zip_sha256": "4f72419d234fbbe0b1cf23ef35c76a6556f39afd24ff56dc845f5014349f143c",
+      "zip_verified": true,
+      "sample": {
+        "filename": "BTC-USDC-candlesticks-2024-06-15.csv",
+        "rows": 1440,
+        "uniqueTimestamps": 1440,
+        "duplicateRows": 0,
+        "conflictingDuplicateRows": 0,
+        "missingMinutesInTimeSpan": 0,
+        "confirmCounts": {
+          "0": 1440
+        },
+        "badOHLC": 0,
+        "minTimestampUTC": "2024-06-14T16:00:00+00:00",
+        "maxTimestampUTC": "2024-06-15T15:59:00+00:00",
+        "firstCandle": {
+          "open": "66352.2",
+          "high": "66416.1",
+          "low": "66352.2",
+          "close": "66416.1",
+          "vol": "1.14439716",
+          "confirm": "0"
+        }
+      }
+    },
+    {
+      "date": "2025-02-15",
+      "code": "0",
+      "http": 200,
+      "name": "BTC-USDC-candlesticks-2025-02-15.zip",
+      "archive_url_host": "static.okx.com",
+      "archive_size_bytes": 40810,
+      "zip_sha256": "42bf1e47dd5d7617a1a95344ce68fcf2bc2675a0faf0695e790db6e0c283d3a0",
+      "zip_verified": true,
+      "sample": {
+        "filename": "BTC-USDC-candlesticks-2025-02-15.csv",
+        "rows": 1440,
+        "uniqueTimestamps": 1440,
+        "duplicateRows": 0,
+        "conflictingDuplicateRows": 0,
+        "missingMinutesInTimeSpan": 0,
+        "confirmCounts": {
+          "1": 1440
+        },
+        "badOHLC": 0,
+        "minTimestampUTC": "2025-02-14T16:00:00+00:00",
+        "maxTimestampUTC": "2025-02-15T15:59:00+00:00",
+        "firstCandle": {
+          "open": "96954.6",
+          "high": "96954.6",
+          "low": "96850.9",
+          "close": "96863.4",
+          "vol": "0.33455758",
+          "confirm": "1"
+        }
+      }
+    }
+  ],
+  "cautions": [
+    "Four chosen sample days, not proof of a full continuous archive.",
+    "2022 sample contains 1440 exact duplicate rows; do not count twice.",
+    "2023 and 2024 samples have 0 confirm flags for all 1440 minutes; not cleared as confirmed bars.",
+    "Daily ZIP buckets are UTC+08:00 and cannot directly substitute for UTC daily OHLC.",
+    "An OKX list of file links is not proof that a complete multi-year backtest is ready."
+  ]
+}
