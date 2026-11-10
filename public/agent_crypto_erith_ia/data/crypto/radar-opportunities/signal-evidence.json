@@ -100,10 +100,10 @@
         }
       },
       "later_descriptive_validation": {
-        "signals_total": 80,
+        "signals_total": 81,
         "followups_observed": 67,
-        "followups_missing": 13,
-        "distinct_signal_days": 32,
+        "followups_missing": 14,
+        "distinct_signal_days": 33,
         "distinct_assets": 27,
         "mean_observed_gross_change_pct": -5.78495,
         "median_observed_gross_change_pct": -6.33034,
@@ -160,12 +160,13 @@
       "2026-11-06",
       "2026-11-07",
       "2026-11-08",
-      "2026-11-09"
+      "2026-11-09",
+      "2026-11-10"
     ],
     "horizon": "J+1 dated CoinGecko USD observations",
     "quote": "USD",
     "notional": null,
-    "days_available": 24,
+    "days_available": 25,
     "historical_holdout": false,
     "needs_prospective_observations": true,
     "fixed_existing_groups_not_tuned_here": [
@@ -175,18 +176,18 @@
     "reference_no_trade_change_pct": 0,
     "buckets": {
       "momentum_24h_7d": {
-        "signals_total": 274,
-        "followups_observed": 237,
+        "signals_total": 286,
+        "followups_observed": 249,
         "followups_missing": 37,
-        "distinct_signal_days": 24,
+        "distinct_signal_days": 25,
         "distinct_assets": 154,
-        "mean_observed_gross_change_pct": -1.16536,
-        "median_observed_gross_change_pct": -3.50657,
-        "observed_positive": 84,
-        "observed_non_positive": 153,
+        "mean_observed_gross_change_pct": -1.1333,
+        "median_observed_gross_change_pct": -3.05917,
+        "observed_positive": 88,
+        "observed_non_positive": 161,
         "status_counts": {
           "NO_MATCHING_VERIFIED_PRICE": 13,
-          "OBSERVED_DAILY_SNAPSHOT": 237,
+          "OBSERVED_DAILY_SNAPSHOT": 249,
           "MISSING_DATED_SNAPSHOT": 12,
           "AWAITING_FUTURE_DAY": 12
         },
@@ -194,18 +195,18 @@
         "okx_spot_identity_proven": false
       },
       "rebound_24h_only": {
-        "signals_total": 213,
-        "followups_observed": 177,
+        "signals_total": 225,
+        "followups_observed": 189,
         "followups_missing": 36,
-        "distinct_signal_days": 24,
-        "distinct_assets": 152,
-        "mean_observed_gross_change_pct": 0.74869,
-        "median_observed_gross_change_pct": -1.39787,
-        "observed_positive": 68,
-        "observed_non_positive": 109,
+        "distinct_signal_days": 25,
+        "distinct_assets": 156,
+        "mean_observed_gross_change_pct": 0.64041,
+        "median_observed_gross_change_pct": -1.08674,
+        "observed_positive": 74,
+        "observed_non_positive": 115,
         "status_counts": {
           "NO_MATCHING_VERIFIED_PRICE": 12,
-          "OBSERVED_DAILY_SNAPSHOT": 177,
+          "OBSERVED_DAILY_SNAPSHOT": 189,
           "MISSING_DATED_SNAPSHOT": 12,
           "AWAITING_FUTURE_DAY": 12
         },
@@ -214,18 +215,18 @@
       }
     },
     "excluded_other_groups": {
-      "seven_capital_scout": 10
+      "seven_capital_scout": 11
     }
   },
   "okx_context": {
-    "qualification_at_utc": "2026-11-09T23:31:20Z",
+    "qualification_at_utc": "2026-11-10T02:53:31Z",
     "radar_total": 20,
-    "okx_pairs_observed": 9,
-    "okx_native_spot_rules": 9,
-    "okx_public_books": 7,
+    "okx_pairs_observed": 4,
+    "okx_native_spot_rules": 4,
+    "okx_public_books": 3,
     "okx_native_daily_vault_overlap": 0,
     "okx_hurdle_journal_published": true,
-    "paper_cost_studies": 34,
+    "paper_cost_studies": 36,
     "future_bid_followups": 60,
     "quote": "USDT",
     "contract_identity_proven": false,
