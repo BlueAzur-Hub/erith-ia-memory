@@ -219,3 +219,14 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - Parmi les événements encore admissibles après trois jours, le déplacement de cours médian associé au délai C3 est **défavorable de +1,447 %** pour l'EMA (17/21 cas défavorables), **+1,307 %** pour le consensus (14/20 cas défavorables) ; SuperTrend **−2,189 %** (9 cas, 4 défavorables). Les variations locales ne sont **pas** un rendement de portefeuille.
 - Parmi les 13 épisodes EMA de moins de 3 jours, **1** est suivi d'un mouvement BTC favorable au signal d'au moins 3 % à J+7, **4** défavorables et **8** neutres ; classification uniquement *ex post*.
 - **Interprétation :** C3 filtre des bascules courtes mais retarde aussi des mouvements durables ; aucune supériorité générale démontrée, aucune modification du Trader ou Bridge.
+
+## Trois bougies quotidiennes : rebond, creux, volumes et EMA — 11 novembre 2026
+
+Étude **PAPER rétrospective**, distincte du filtrage EMA/SuperTrend précédent. Analyse des panneaux illustrant « observer trois jours » : une clôture en 15 minutes ne constitue pas une clôture quotidienne, et les probabilités illustratives 40/35/25 **ne sont pas calibrées**.
+
+- **Sources :** 22 ZIP Binance Spot BTC/USDT 1m, SHA-256 contrôlés, 960 480 minutes / 667 journées UTC, cinq périodes **déjà explorées** (2022–2026) ; **ce n'est PAS un test indépendant**.
+- **Protocole publié avant calcul :** [règles arrêtées](./SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11_PROTOCOL.md) (commit `42c4be6`) : première clôture montante après baisse ≥5 % depuis le sommet des 30 dernières clôtures, comparaison C1 vs 3 clôtures quotidiennes ascendantes C3, creux ascendants, volumes Binance et EMA ; valorisation fictive au même jour J+10.
+- **Bilan :** [rapport](./SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11_REPORT.md) — 22 reprises candidates dont **20 évaluables**, **4** confirmées en C3, **16** refusées, dont **4** où l'entrée C1 aurait gagné et **12** où elle aurait perdu sur la même fenêtre. Les épisodes sont isolés, leurs retours ne se cumulent pas.
+- **Exécution et preuve :** [script Python](./SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11.py) · [manifestes et résultats JSON](./SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11_PROOFS.json) · [45 épisodes haussiers/baissiers CSV](./SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11_EVENTS.csv) · [667 journées OHLCV/EMA CSV](./SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11_DAILY_FEATURES.csv). **224 contrôles causaux et comptables** et vérification des 22 ZIP.
+- **Verdict :** ces petits effectifs ne permettent ni de prédire la reprise, ni de classer C3 comme stratégie gagnante. Les fréquences ex post ne sont pas des probabilités prévisionnelles. Aucune intégration dans Administrator / Trader / Bridge.
+
