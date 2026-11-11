@@ -46,7 +46,7 @@ Les résultats favorables et défavorables restent dans le Coffre. Aucun classem
 
 | Profil | Méthode | Statut de preuve du Coffre | Données supplémentaires nécessaires pour étude crédible |
 |---|---|---|---|
-| D11 | Spot Grid | **54 configurations auditées** sur BTC/ETH Binance 2024–oct. 2026 : durée en fourchette et ambiguïtés des bougies ; **P&L du bot non backtesté** | Archives minute / transactions, chronologie des franchissements, ordres limites effectivement remplis, inventaire total |
+| D11 | Spot Grid | **54 configurations horaires de faisabilité** + **4 mois BTCUSDT natifs 1 minute vérifiés**, avec reconstitution d'inventaire et P&L **fictif sous deux hypothèses de remplissage** | Données d'ordres et exécutions (non disponibles), validation inter-plateformes, durée continue sans réinitialisation et risque hors fourchette |
 | D12 | Spot DCA Martingale | Documentée, **non backtestée** | Séquence intrajournalière, budgets/plafonds, liquidité, risque de ruine |
 | D13 | Rééquilibrage BTC/ETH/liquidités | **Backtest historique réalisé**, Binance Spot USDT 2024–octobre 2026 | Vérification prospective / autre plateforme, autres pondérations déclarées avant test |
 | D14 | Arbitrage entre marchés | Documentée, **non backtestée** | Carnets simultanés sur plusieurs places, latence, coûts et transferts |
@@ -81,6 +81,20 @@ Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swi
 - [Programme Python de reproduction](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py)
 
 **Aucun résultat n'est un rendement garanti** et le statut documentaire des autres profils est conservé. Les performances du panier BTC/ETH sont indépendantes du portefeuille BTC personnel.
+
+## D11 — Exploitation des ZIP natifs 1 minute : quatre mois, journal d'inventaire simulé
+
+**11 novembre 2026 — étape supplémentaire terminée et vérifiée.** Quatre ZIP BTCUSDT natifs conservés sous Releases GitHub (janvier 2024, janvier 2025, janvier 2026, octobre 2026) ont été téléchargés puis validés contre **leurs empreintes SHA-256 originales déjà inscrites au Coffre**. La continuité de 44 640 bougies d'une minute par mois et la reconstruction de 744 bougies horaires par mois concordent avec les archives précédentes (OHLC, volumes et nombre de transactions).
+
+La même grille arithmétique **±10 %, 10 intervalles, 1 000 USDT fictifs** est rejouée **séparément pour chacun des quatre mois**, avec cinq lots initiaux de BTC (5 × 100 USDT) et cinq lots en liquidités, 0,10 % de frais et 0,05 % de glissement estimés de chaque côté. Un lot ne peut recevoir qu'un remplissage hypothétique par minute. Deux hypothèses sont conservées : **TOUCH** (limite incluse dans high/low) et **CLOSE** (clôture au-delà de la limite). Aucun modèle ne certifie un remplissage d'ordre réel ; leurs rendements ne sont pas des bornes statistiques certaines.
+
+**Le cas de janvier 2026 est révélateur** : scénario TOUCH **+42,28 USDT réalisés sur les lots clôturés**, mais **−98,12 USDT latents** sur l'inventaire restant, résultat global **−5,58 %** après coûts. La grille terminait avec dix lots en BTC et sans liquidités disponibles. Le bénéfice cumulé des cycles fermés ne suffit pas pour conclure à une stratégie profitable.
+
+- [Rapport minute : inventaire, comparaisons mensuelles avec Buy & Hold 50 % / 100 %](./SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.md)
+- [Preuves structurées : empreintes, agrégation 1m→1h, lots, P&L réalisé/latent et courbes](./SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.json)
+- [Moteur Python reproductible et hypothèses explicites](./SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.py)
+
+**Portée :** 4 mois non consécutifs, chaque mois réinitialisé. Ne pas comparer directement avec l'audit horaire qui fige une fourchette pour une année entière. Binance BTC/USDT ≠ OKX BTC/USDC ; ce n'est ni un backtest certifié de remplissages réels, ni une observation prospective.
 
 ## D11 — Spot Grid : audit de faisabilité sur les archives horaires vérifié
 
