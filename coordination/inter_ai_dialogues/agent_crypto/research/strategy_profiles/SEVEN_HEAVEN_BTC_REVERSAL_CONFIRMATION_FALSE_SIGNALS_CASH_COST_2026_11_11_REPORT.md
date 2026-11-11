@@ -128,7 +128,7 @@ Mesurer si un filtrage **par deux clôtures quotidiennes concordantes** réduit 
 - Dépendance 2 : `SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11.py` (validations et lecture d’archives).
 - Dépendance 3 : `SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11.py` et `SEVEN_HEAVEN_SPOT_GRID_BTC_2024_2025_Q1_CONTINUOUS_REPLAY_2026_11_11.py`.
 - Exécution après téléchargement des ZIP originaux nommés `BTCUSDT-1m-YYYY-MM.zip` : `python SEVEN_HEAVEN_BTC_REVERSAL_CONFIRMATION_FALSE_SIGNALS_CASH_COST_2026_11_11.py` (nécessite `numpy`).
-- `*_PROOFS.json` : périodes, sources, paramètres, résultats par stratégie, transactions et statistiques de cash.
+- `*_PROOFS.json` : manifeste vérifiable reconstruit depuis les CSV GitHub (sources SHA-256, périodes, résultats, **comptage** des opérations et statistiques de cash). Le détail des transactions peut être régénéré avec le script Python et les ZIP originaux.
 - `*_CASH_WINDOWS.csv` : inventaire chronologique des intervalles de cash avec durée, variations BTC et censure des fenêtres non terminées.
 - `*_EQUITY_DAILY.csv` : valeur liquidable fictive quotidienne et position BTC/cash pour chaque stratégie et chaque période.
 - `*_RUN_LOG.txt` : terminal des assertions et des résultats ; ne pas le confondre avec une preuve d’exécution d’ordres.
