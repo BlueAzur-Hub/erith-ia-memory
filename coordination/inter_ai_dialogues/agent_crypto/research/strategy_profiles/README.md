@@ -27,6 +27,13 @@ L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue p
 - **Contrôle indépendant** : 183 jours appariés Binance BTC/USDT – OKX BTC/USDC, plus OKX continu sur 224 jours. Sur cette fenêtre OKX, DCA sur 12 mois n'a pas encore investi toutes ses mensualités : **ne pas le comparer à un DCA entièrement déployé**.
 - **Différence méthodologique** : les règles pédagogiques du 7 novembre sont réimplémentées explicitement dans le nouveau moteur (notamment convention illustrative SuperTrend), sans prétendre reproduire à l'identique l'ancien simulateur annuel. La comparaison doit être lue comme **une nouvelle expérience exploratoire**, pas une performance prouvée.
 
+## Nouvelle validation D13/D18 — Rééquilibrage BTC/ETH et source VWAP
+
+- [**Audit et backtest du rééquilibrage 50 % BTC / 25 % ETH / 25 % liquidités**](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.md) : comparaison passif, mensuel, trimestriel et témoins, de janvier 2024 à octobre 2026, sur **six archives binaires horaires Binance Spot USDT vérifiées SHA-256**.
+- [**JSON : empreintes, séries, frais et rendements, défauts de source VWAP**](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.json) · [**moteur Python**](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py) — preuves structurées accessibles aux IA.
+- Contrôle D18 : volumes de base et de cotation présents dans les deux séries, 24 840 heures par actif ; leur ratio permet une **référence VWAP de session**, **pas encore une stratégie d'entrée/sortie évaluée**.
+- **Limites :** USDT supposé stable, capital fictif, aucune prévision, rééquilibrages mensuels ou trimestriels testés sur Binance uniquement, pondérations choisies comme expérience et non optimisées.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
