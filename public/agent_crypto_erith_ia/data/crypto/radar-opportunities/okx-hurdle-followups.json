@@ -304,6 +304,15 @@
       "cost_evaluable": 4,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-11|2026-11-11T16:06:01Z",
+      "qualified_at_utc": "2026-11-11T16:06:01Z",
+      "candidates": 20,
+      "okx_pairs": 6,
+      "cost_evaluable": 4,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -2043,6 +2052,25 @@
       "entry_investment_usdt": "99.999074952",
       "net_sellable_qty": "535.44",
       "break_even_bid_rise_pct": 0.7652,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "midnight-3|2026-11-11",
+      "coin_id": "midnight-3",
+      "symbol": "NIGHT",
+      "pair": "NIGHT-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-11T16:06:13Z",
+      "entry_bid_usdt": "0.046598",
+      "entry_ask_usdt": "0.04662",
+      "entry_investment_usdt": "99.999032868",
+      "net_sellable_qty": "2138.5",
+      "break_even_bid_rise_pct": 0.6524,
       "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
       "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
       "contract_identity_proven": false,
