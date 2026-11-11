@@ -1,0 +1,90 @@
+name: Seven Heaven - Ten continuous BTC strategy backtests and OKX crosscheck
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.py'
+      - '.github/workflows/seven-heaven-ten-continuous-strategies-btc.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-ten-continuous-btc-backtest-main
+  cancel-in-progress: false
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Reproduce ten continuous strategies on verified Binance BTC history and OKX market data
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.py
+      - name: Verify data lineage, simulation completeness and CSV integrity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+          p=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11')
+          j=json.loads(p.with_suffix('.json').read_text(encoding='utf-8'))
+          assert j['research_only'] and j['orders_enabled'] is False
+          assert j['sources']['binance_daily_candles']==3075
+          assert j['sources']['okx_confirmed_utc_candles']==447
+          assert j['method_status']=='INDEPENDENT_REIMPLEMENTATION_NOT_IDENTICAL_TO_2026_11_07_ENGINE'
+          assert len(j['methods'])==11 and len(j['windows'])==4
+          assert [w['days'] for w in j['windows']]==[2830,183,183,224]
+          for w in j['windows']:
+              assert {x['key'] for x in w['methods']}==set(j['methods'])
+              for x in w['methods']:
+                  a=x['full100'];b=x['quarter25']
+                  assert b['days']==w['days'] and a['days']==w['days']
+                  assert a['buys']==b['buys'] and a['sells']==b['sells']
+                  assert b['completed_positions']==b['sells']
+                  assert b['max_daily_drawdown_pct']<=0
+                  assert -100<b['return_pct']
+                  assert x['double_cost25_return_pct']>-100
+          assert len(p.with_suffix('.md').read_text(encoding='utf-8'))>4500
+          with p.with_suffix('.csv').open(newline='',encoding='utf-8') as f:
+              reader=csv.reader(f);header=next(reader)
+              assert len(header)==12
+              count=0
+              for row in reader:
+                  assert len(row)==12 and row[0] and all(float(v)>0 for v in row[1:])
+                  count+=1
+              assert count==2830
+          print('SEVEN_TEN_CONTINUOUS_STRATEGIES_REPRODUCIBLE_PROOF_PASSED')
+          PY
+      - name: Retain downloadable research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-ten-continuous-btc-strategies
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.json
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.csv
+      - name: Archive completed study for other IA in shared GitHub
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.json \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.csv
+          if git diff --cached --quiet; then
+            echo "Shared evidence already archived"
+          else
+            git commit -m "Archive continuous ten-method BTC and OKX research evidence"
+            git push origin HEAD:main
+          fi
