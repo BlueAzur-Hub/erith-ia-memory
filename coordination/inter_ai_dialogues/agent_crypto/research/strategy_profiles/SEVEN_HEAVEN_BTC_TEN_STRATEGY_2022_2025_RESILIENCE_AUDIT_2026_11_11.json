@@ -1,0 +1,539 @@
+{
+  "schema": "seven.crypto.btc.ten-method-resilience-2022-2025.v1",
+  "date": "2026-11-11",
+  "status": "REANALYSIS_OF_EXISTING_HISTORICAL_RESULTS_NOT_NEW_BACKTEST",
+  "read_only": true,
+  "orders_enabled": false,
+  "source_file": "SEVEN_HEAVEN_AGENT_CRYPTO_STRATEGY_FIELD_GUIDE_COFFRE_SIMULATIONS_AND_PAPER_PROFILES_2026_11_07.md",
+  "tested_method_count": 10,
+  "years": [
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "original_protocol": {
+    "market": "Binance Spot BTC/USDT",
+    "resolution": "1d",
+    "study_window_each_year": "Jan 22–Dec 31",
+    "capital_per_year_usdt": 1000,
+    "annual_capital_reset": true,
+    "signal_at_daily_close": true,
+    "hypothetical_next_open_fills": true,
+    "fee_per_side": 0.001,
+    "assumed_slippage_per_side": 0.0005,
+    "no_leverage": true
+  },
+  "findings": [
+    {
+      "name": "Bollinger 20/2",
+      "years": {
+        "2022": {
+          "net_pct": -25.47,
+          "max_daily_drawdown_pct": -44.6,
+          "number_of_model_operations": 12,
+          "difference_from_buy_hold_return_percentage_points": 29.28,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 22.13,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 44.43,
+          "max_daily_drawdown_pct": -9.71,
+          "number_of_model_operations": 12,
+          "difference_from_buy_hold_return_percentage_points": -40.6,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 10.29,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 15.69,
+          "max_daily_drawdown_pct": -20.15,
+          "number_of_model_operations": 10,
+          "difference_from_buy_hold_return_percentage_points": -108.68,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 6.0,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": 16.12,
+          "max_daily_drawdown_pct": -20.07,
+          "number_of_model_operations": 18,
+          "difference_from_buy_hold_return_percentage_points": 33.79,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 11.95,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 3,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -25.47,
+      "deepest_daily_drawdown_pct": -44.6,
+      "total_model_operations": 52
+    },
+    {
+      "name": "Breakout 20/10",
+      "years": {
+        "2022": {
+          "net_pct": -38.36,
+          "max_daily_drawdown_pct": -39.16,
+          "number_of_model_operations": 10,
+          "difference_from_buy_hold_return_percentage_points": 16.39,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 27.57,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 26.59,
+          "max_daily_drawdown_pct": -11.98,
+          "number_of_model_operations": 9,
+          "difference_from_buy_hold_return_percentage_points": -58.44,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 8.02,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 59.79,
+          "max_daily_drawdown_pct": -30.7,
+          "number_of_model_operations": 11,
+          "difference_from_buy_hold_return_percentage_points": -64.58,
+          "drawdown_improvement_vs_buy_hold_percentage_points": -4.55,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -15.62,
+          "max_daily_drawdown_pct": -29.27,
+          "number_of_model_operations": 10,
+          "difference_from_buy_hold_return_percentage_points": 2.05,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 2.75,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -38.36,
+      "deepest_daily_drawdown_pct": -39.16,
+      "total_model_operations": 40
+    },
+    {
+      "name": "Buy & Hold",
+      "years": {
+        "2022": {
+          "net_pct": -54.75,
+          "max_daily_drawdown_pct": -66.73,
+          "number_of_model_operations": 1,
+          "difference_from_buy_hold_return_percentage_points": 0.0,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 0.0,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2023": {
+          "net_pct": 85.03,
+          "max_daily_drawdown_pct": -20.0,
+          "number_of_model_operations": 1,
+          "difference_from_buy_hold_return_percentage_points": 0.0,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 0.0,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 124.37,
+          "max_daily_drawdown_pct": -26.15,
+          "number_of_model_operations": 1,
+          "difference_from_buy_hold_return_percentage_points": 0.0,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 0.0,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -17.67,
+          "max_daily_drawdown_pct": -32.02,
+          "number_of_model_operations": 1,
+          "difference_from_buy_hold_return_percentage_points": 0.0,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 0.0,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 0,
+      "dominating_hold_years": 0,
+      "worst_calendar_return_pct": -54.75,
+      "deepest_daily_drawdown_pct": -66.73,
+      "total_model_operations": 4
+    },
+    {
+      "name": "DCA mensuel",
+      "years": {
+        "2022": {
+          "net_pct": -30.65,
+          "max_daily_drawdown_pct": -37.1,
+          "number_of_model_operations": 12,
+          "difference_from_buy_hold_return_percentage_points": 24.1,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 29.63,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 48.02,
+          "max_daily_drawdown_pct": -12.4,
+          "number_of_model_operations": 12,
+          "difference_from_buy_hold_return_percentage_points": -37.01,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 7.6,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 44.57,
+          "max_daily_drawdown_pct": -15.18,
+          "number_of_model_operations": 12,
+          "difference_from_buy_hold_return_percentage_points": -79.8,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 10.97,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -12.33,
+          "max_daily_drawdown_pct": -26.77,
+          "number_of_model_operations": 12,
+          "difference_from_buy_hold_return_percentage_points": 5.34,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 5.25,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -30.65,
+      "deepest_daily_drawdown_pct": -37.1,
+      "total_model_operations": 48
+    },
+    {
+      "name": "EMA 10/20",
+      "years": {
+        "2022": {
+          "net_pct": -55.08,
+          "max_daily_drawdown_pct": -55.94,
+          "number_of_model_operations": 16,
+          "difference_from_buy_hold_return_percentage_points": -0.33,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 10.79,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2023": {
+          "net_pct": 51.04,
+          "max_daily_drawdown_pct": -16.59,
+          "number_of_model_operations": 13,
+          "difference_from_buy_hold_return_percentage_points": -33.99,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 3.41,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 86.43,
+          "max_daily_drawdown_pct": -24.53,
+          "number_of_model_operations": 14,
+          "difference_from_buy_hold_return_percentage_points": -37.94,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 1.62,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": 7.56,
+          "max_daily_drawdown_pct": -21.02,
+          "number_of_model_operations": 14,
+          "difference_from_buy_hold_return_percentage_points": 25.23,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 11.0,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 3,
+      "beating_hold_years": 1,
+      "dominating_hold_years": 1,
+      "worst_calendar_return_pct": -55.08,
+      "deepest_daily_drawdown_pct": -55.94,
+      "total_model_operations": 57
+    },
+    {
+      "name": "EMA 5/13",
+      "years": {
+        "2022": {
+          "net_pct": -35.97,
+          "max_daily_drawdown_pct": -40.58,
+          "number_of_model_operations": 22,
+          "difference_from_buy_hold_return_percentage_points": 18.78,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 26.15,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 47.62,
+          "max_daily_drawdown_pct": -17.66,
+          "number_of_model_operations": 24,
+          "difference_from_buy_hold_return_percentage_points": -37.41,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 2.34,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 79.2,
+          "max_daily_drawdown_pct": -33.73,
+          "number_of_model_operations": 18,
+          "difference_from_buy_hold_return_percentage_points": -45.17,
+          "drawdown_improvement_vs_buy_hold_percentage_points": -7.58,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -3.22,
+          "max_daily_drawdown_pct": -22.99,
+          "number_of_model_operations": 20,
+          "difference_from_buy_hold_return_percentage_points": 14.45,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 9.03,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -35.97,
+      "deepest_daily_drawdown_pct": -40.58,
+      "total_model_operations": 84
+    },
+    {
+      "name": "MACD 12/26/9",
+      "years": {
+        "2022": {
+          "net_pct": -28.32,
+          "max_daily_drawdown_pct": -38.4,
+          "number_of_model_operations": 26,
+          "difference_from_buy_hold_return_percentage_points": 26.43,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 28.33,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 25.59,
+          "max_daily_drawdown_pct": -16.43,
+          "number_of_model_operations": 22,
+          "difference_from_buy_hold_return_percentage_points": -59.44,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 3.57,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 77.62,
+          "max_daily_drawdown_pct": -15.46,
+          "number_of_model_operations": 24,
+          "difference_from_buy_hold_return_percentage_points": -46.75,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 10.69,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -17.02,
+          "max_daily_drawdown_pct": -22.25,
+          "number_of_model_operations": 29,
+          "difference_from_buy_hold_return_percentage_points": 0.65,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 9.77,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -28.32,
+      "deepest_daily_drawdown_pct": -38.4,
+      "total_model_operations": 101
+    },
+    {
+      "name": "RSI 14, entrée 30 / sortie 55",
+      "years": {
+        "2022": {
+          "net_pct": 7.96,
+          "max_daily_drawdown_pct": -40.35,
+          "number_of_model_operations": 8,
+          "difference_from_buy_hold_return_percentage_points": 62.71,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 26.38,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 20.3,
+          "max_daily_drawdown_pct": -9.21,
+          "number_of_model_operations": 4,
+          "difference_from_buy_hold_return_percentage_points": -64.73,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 10.79,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 26.5,
+          "max_daily_drawdown_pct": -11.2,
+          "number_of_model_operations": 4,
+          "difference_from_buy_hold_return_percentage_points": -97.87,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 14.95,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -6.76,
+          "max_daily_drawdown_pct": -19.04,
+          "number_of_model_operations": 3,
+          "difference_from_buy_hold_return_percentage_points": 10.91,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 12.98,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 3,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -6.76,
+      "deepest_daily_drawdown_pct": -40.35,
+      "total_model_operations": 19
+    },
+    {
+      "name": "SMA 50/200",
+      "years": {
+        "2022": {
+          "net_pct": 0.0,
+          "max_daily_drawdown_pct": 0.0,
+          "number_of_model_operations": 0,
+          "difference_from_buy_hold_return_percentage_points": 54.75,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 66.73,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 35.54,
+          "max_daily_drawdown_pct": -20.0,
+          "number_of_model_operations": 3,
+          "difference_from_buy_hold_return_percentage_points": -49.49,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 0.0,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 33.35,
+          "max_daily_drawdown_pct": -12.57,
+          "number_of_model_operations": 1,
+          "difference_from_buy_hold_return_percentage_points": -91.02,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 13.58,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -15.86,
+          "max_daily_drawdown_pct": -24.38,
+          "number_of_model_operations": 2,
+          "difference_from_buy_hold_return_percentage_points": 1.81,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 7.64,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -15.86,
+      "deepest_daily_drawdown_pct": -24.38,
+      "total_model_operations": 6
+    },
+    {
+      "name": "SuperTrend 10×3",
+      "years": {
+        "2022": {
+          "net_pct": -45.17,
+          "max_daily_drawdown_pct": -45.88,
+          "number_of_model_operations": 10,
+          "difference_from_buy_hold_return_percentage_points": 9.58,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 20.85,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        },
+        "2023": {
+          "net_pct": 59.19,
+          "max_daily_drawdown_pct": -20.03,
+          "number_of_model_operations": 5,
+          "difference_from_buy_hold_return_percentage_points": -25.84,
+          "drawdown_improvement_vs_buy_hold_percentage_points": -0.03,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2024": {
+          "net_pct": 50.0,
+          "max_daily_drawdown_pct": -40.72,
+          "number_of_model_operations": 10,
+          "difference_from_buy_hold_return_percentage_points": -74.37,
+          "drawdown_improvement_vs_buy_hold_percentage_points": -14.57,
+          "higher_return_than_buy_hold": false,
+          "shallower_drawdown_than_buy_hold": false,
+          "dominates_buy_hold_within_year": false
+        },
+        "2025": {
+          "net_pct": -14.4,
+          "max_daily_drawdown_pct": -16.91,
+          "number_of_model_operations": 8,
+          "difference_from_buy_hold_return_percentage_points": 3.27,
+          "drawdown_improvement_vs_buy_hold_percentage_points": 15.11,
+          "higher_return_than_buy_hold": true,
+          "shallower_drawdown_than_buy_hold": true,
+          "dominates_buy_hold_within_year": true
+        }
+      },
+      "positive_final_years": 2,
+      "beating_hold_years": 2,
+      "dominating_hold_years": 2,
+      "worst_calendar_return_pct": -45.17,
+      "deepest_daily_drawdown_pct": -45.88,
+      "total_model_operations": 33
+    }
+  ]
+}
