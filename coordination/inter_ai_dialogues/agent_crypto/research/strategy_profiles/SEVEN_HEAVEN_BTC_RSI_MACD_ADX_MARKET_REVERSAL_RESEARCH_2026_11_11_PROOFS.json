@@ -1,0 +1,5748 @@
+{
+  "schema": "seven.heaven.btc.daily-reversal-rsi-macd-adx-v1",
+  "study_date": "2026-11-11",
+  "read_only": true,
+  "no_real_orders": true,
+  "minute_source": "16 supplied Binance BTCUSDT 1m ZIPs 2024Q1, 2025Q1, 2026 Jan-Oct",
+  "reference_source_registry": "GitHub public monthly archive registry; verified against archived SHA in reference parsers",
+  "total_minute_bars_verified": 698400,
+  "source_verification": {
+    "2024-01": {
+      "month": "2024-01",
+      "sha256_verified": "40b78258091a468f8756843f207f5913eafc1d6e756c40a78711320d93fa5e75",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms"
+    },
+    "2024-02": {
+      "month": "2024-02",
+      "sha256_verified": "431132e0db8b9fe6e5c93c8e9ba3ae37dbcfa0edcdd57618b1b78ac18d14be79",
+      "minute_candles_verified": 41760,
+      "timestamp_unit": "ms"
+    },
+    "2024-03": {
+      "month": "2024-03",
+      "sha256_verified": "a9af86295eae839f1d072643c67eed7fcc47bb1d82c12ef312d041eec9511e7b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms"
+    },
+    "2025-01": {
+      "month": "2025-01",
+      "sha256_verified": "8d028b2f91aad57d6b693d44449c93f9c4b7044f55f298c8a3ac40ab676dafac",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2025-02": {
+      "month": "2025-02",
+      "sha256_verified": "26b3795072983a66bdbe8327e0d5e71069bdd5ca831d4da3850ba68ef7a991ef",
+      "minute_candles_verified": 40320,
+      "timestamp_unit": "us"
+    },
+    "2025-03": {
+      "month": "2025-03",
+      "sha256_verified": "e333601b6c721434f3cdd6670ffde2371bef7946572864c49ba6431a690ab1ca",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2026-01": {
+      "month": "2026-01",
+      "sha256_verified": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2026-02": {
+      "month": "2026-02",
+      "sha256_verified": "cee2e913ed07e02834e2387c65ca430fe3576f620588bad8a02229238f385407",
+      "minute_candles_verified": 40320,
+      "timestamp_unit": "us"
+    },
+    "2026-03": {
+      "month": "2026-03",
+      "sha256_verified": "a2c1e689d39aa7877e218f436f15162e9a4436778a377d32e9d9b81b081381cd",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2026-04": {
+      "month": "2026-04",
+      "sha256_verified": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    "2026-05": {
+      "month": "2026-05",
+      "sha256_verified": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2026-06": {
+      "month": "2026-06",
+      "sha256_verified": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    "2026-07": {
+      "month": "2026-07",
+      "sha256_verified": "3ef15c84353da48e1c7c5fd99b9751cb036bf8986ed47f7cd1be63359c0d4f6b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2026-08": {
+      "month": "2026-08",
+      "sha256_verified": "acab442e02745177063031d402929703ae983715010064b40cf811c4beb843d4",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    "2026-09": {
+      "month": "2026-09",
+      "sha256_verified": "7a021fb5981cfdb1a56457d68fa81360ab27350c981ddfe63112b2322df44b56",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    "2026-10": {
+      "month": "2026-10",
+      "sha256_verified": "17168f260306752e39177a6c038bb8952f52bf08ff20e36d8da6068732621f1c",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    }
+  },
+  "protocol": {
+    "daily_signal": "evaluate after UTC close D; trade at D+1 UTC open",
+    "entry": "100% BTC when risk on, otherwise 100% cash",
+    "warmup": "first 31 calendar days of January 2024/25/26, portfolios start Feb 1 with 1000 USDT",
+    "costs": {
+      "fee_per_side": 0.001,
+      "slip_per_side": 0.0005,
+      "stress_factor": 2
+    },
+    "parameters": [
+      "RSI Wilder 14 bullish RSI>=50",
+      "MACD EMA12-EMA26, signal EMA9, bullish histogram>0 and MACD>0",
+      "ADX Wilder 14 bullish ADX>=20 and +DI>-DI",
+      "two-of-three EMA10/30, MACD, ADX; no weight tuning",
+      "SuperTrend and EMA10/30 reused from preceding canonical study"
+    ],
+    "event": "first 10% close-to-close drop from rolling 30d closing max; repeat after recovery above -5%; NEXT 14 days used ONLY for hindsight labeling",
+    "trade_fill": "fictional next open, fees and slippage; no book/slippage/tax validation",
+    "caveat": "thresholds chosen as fixed education rules, uncalibrated, studies retrospective and NOT prospectively validated"
+  },
+  "results": {
+    "2024": {
+      "sample_start": "2024-02-01",
+      "sample_end": "2024-03-31",
+      "verified_daily_bars": 91,
+      "trade_days": 60,
+      "prefix_invariance_checks": 56,
+      "returns": {
+        "BUY_HOLD": {
+          "final_equity_usdt": 1669.009377,
+          "net_return_pct": 66.9009,
+          "max_close_to_close_drawdown_pct": -15.2383,
+          "exposure_days": 60,
+          "days": 60,
+          "buys": 1,
+          "sells": 0,
+          "total_trades": 1,
+          "long_intervals_under_4_days": 0
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 1458.597098,
+          "net_return_pct": 45.8597,
+          "max_close_to_close_drawdown_pct": -20.5297,
+          "exposure_days": 52,
+          "days": 60,
+          "buys": 2,
+          "sells": 1,
+          "total_trades": 3,
+          "long_intervals_under_4_days": 0
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1310.16703,
+          "net_return_pct": 31.0167,
+          "max_close_to_close_drawdown_pct": -15.2383,
+          "exposure_days": 39,
+          "days": 60,
+          "buys": 1,
+          "sells": 1,
+          "total_trades": 2,
+          "long_intervals_under_4_days": 0
+        },
+        "RSI14_50": {
+          "final_equity_usdt": 1429.207704,
+          "net_return_pct": 42.9208,
+          "max_close_to_close_drawdown_pct": -20.5297,
+          "exposure_days": 56,
+          "days": 60,
+          "buys": 4,
+          "sells": 3,
+          "total_trades": 7,
+          "long_intervals_under_4_days": 1
+        },
+        "MACD_12_26_9": {
+          "final_equity_usdt": 1363.320731,
+          "net_return_pct": 36.3321,
+          "max_close_to_close_drawdown_pct": -10.6357,
+          "exposure_days": 35,
+          "days": 60,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 0
+        },
+        "ADX14_DI_20": {
+          "final_equity_usdt": 1258.086053,
+          "net_return_pct": 25.8086,
+          "max_close_to_close_drawdown_pct": -15.9881,
+          "exposure_days": 42,
+          "days": 60,
+          "buys": 2,
+          "sells": 1,
+          "total_trades": 3,
+          "long_intervals_under_4_days": 0
+        },
+        "TWO_OF_THREE": {
+          "final_equity_usdt": 1416.027061,
+          "net_return_pct": 41.6027,
+          "max_close_to_close_drawdown_pct": -15.9881,
+          "exposure_days": 47,
+          "days": 60,
+          "buys": 2,
+          "sells": 1,
+          "total_trades": 3,
+          "long_intervals_under_4_days": 0
+        }
+      },
+      "stress_results": {
+        "BUY_HOLD": {
+          "final_equity_usdt": 1664.004852,
+          "net_return_pct": 66.4005,
+          "max_close_to_close_drawdown_pct": -15.2383,
+          "exposure_days": 60,
+          "days": 60,
+          "buys": 1,
+          "sells": 0,
+          "total_trades": 1,
+          "long_intervals_under_4_days": 0
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 1449.863004,
+          "net_return_pct": 44.9863,
+          "max_close_to_close_drawdown_pct": -20.768,
+          "exposure_days": 52,
+          "days": 60,
+          "buys": 2,
+          "sells": 1,
+          "total_trades": 3,
+          "long_intervals_under_4_days": 0
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1306.238494,
+          "net_return_pct": 30.6238,
+          "max_close_to_close_drawdown_pct": -15.2383,
+          "exposure_days": 39,
+          "days": 60,
+          "buys": 1,
+          "sells": 1,
+          "total_trades": 2,
+          "long_intervals_under_4_days": 0
+        },
+        "RSI14_50": {
+          "final_equity_usdt": 1412.142728,
+          "net_return_pct": 41.2143,
+          "max_close_to_close_drawdown_pct": -20.768,
+          "exposure_days": 56,
+          "days": 60,
+          "buys": 4,
+          "sells": 3,
+          "total_trades": 7,
+          "long_intervals_under_4_days": 1
+        },
+        "MACD_12_26_9": {
+          "final_equity_usdt": 1355.157152,
+          "net_return_pct": 35.5157,
+          "max_close_to_close_drawdown_pct": -10.6357,
+          "exposure_days": 35,
+          "days": 60,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 0
+        },
+        "ADX14_DI_20": {
+          "final_equity_usdt": 1250.55262,
+          "net_return_pct": 25.0553,
+          "max_close_to_close_drawdown_pct": -16.24,
+          "exposure_days": 42,
+          "days": 60,
+          "buys": 2,
+          "sells": 1,
+          "total_trades": 3,
+          "long_intervals_under_4_days": 0
+        },
+        "TWO_OF_THREE": {
+          "final_equity_usdt": 1407.547876,
+          "net_return_pct": 40.7548,
+          "max_close_to_close_drawdown_pct": -16.24,
+          "exposure_days": 47,
+          "days": 60,
+          "buys": 2,
+          "sells": 1,
+          "total_trades": 3,
+          "long_intervals_under_4_days": 0
+        }
+      },
+      "events": [
+        {
+          "date_utc": "2024-03-16",
+          "peak_utc": "2024-03-13",
+          "drawdown_at_event_pct": -10.636,
+          "days_to_threshold": 3,
+          "after_14d_status": "RECOVERED",
+          "after_14d_change_vs_event_pct": 6.557,
+          "indicators": {
+            "EMA10_30": {
+              "already_risk_off_at_event_close": false,
+              "days_to_first_later_off_signal": 3,
+              "change_before_later_exit_signal_pct": -5.15
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_event_close": false,
+              "days_to_first_later_off_signal": 3,
+              "change_before_later_exit_signal_pct": -5.15
+            },
+            "RSI14_50": {
+              "already_risk_off_at_event_close": false,
+              "days_to_first_later_off_signal": 3,
+              "change_before_later_exit_signal_pct": -5.15
+            },
+            "MACD_12_26_9": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "ADX14_DI_20": {
+              "already_risk_off_at_event_close": false,
+              "days_to_first_later_off_signal": 3,
+              "change_before_later_exit_signal_pct": -5.15
+            },
+            "TWO_OF_THREE": {
+              "already_risk_off_at_event_close": false,
+              "days_to_first_later_off_signal": 3,
+              "change_before_later_exit_signal_pct": -5.15
+            }
+          }
+        }
+      ],
+      "transaction_ledgers": {
+        "BUY_HOLD": [
+          {
+            "date_utc": "2024-02-01",
+            "signal_date_utc": "2024-01-31",
+            "side": "BUY",
+            "open_usdt": 42580.0
+          }
+        ],
+        "EMA10_30": [
+          {
+            "date_utc": "2024-02-08",
+            "signal_date_utc": "2024-02-07",
+            "side": "BUY",
+            "open_usdt": 44349.6
+          },
+          {
+            "date_utc": "2024-03-20",
+            "signal_date_utc": "2024-03-19",
+            "side": "SELL",
+            "open_usdt": 61937.41
+          },
+          {
+            "date_utc": "2024-03-21",
+            "signal_date_utc": "2024-03-20",
+            "side": "BUY",
+            "open_usdt": 67840.51
+          }
+        ],
+        "SUPERTREND_ATR14_X3": [
+          {
+            "date_utc": "2024-02-10",
+            "signal_date_utc": "2024-02-09",
+            "side": "BUY",
+            "open_usdt": 47132.78
+          },
+          {
+            "date_utc": "2024-03-20",
+            "signal_date_utc": "2024-03-19",
+            "side": "SELL",
+            "open_usdt": 61937.41
+          }
+        ],
+        "RSI14_50": [
+          {
+            "date_utc": "2024-02-01",
+            "signal_date_utc": "2024-01-31",
+            "side": "BUY",
+            "open_usdt": 42580.0
+          },
+          {
+            "date_utc": "2024-02-05",
+            "signal_date_utc": "2024-02-04",
+            "side": "SELL",
+            "open_usdt": 42582.88
+          },
+          {
+            "date_utc": "2024-02-06",
+            "signal_date_utc": "2024-02-05",
+            "side": "BUY",
+            "open_usdt": 42708.7
+          },
+          {
+            "date_utc": "2024-03-20",
+            "signal_date_utc": "2024-03-19",
+            "side": "SELL",
+            "open_usdt": 61937.41
+          },
+          {
+            "date_utc": "2024-03-21",
+            "signal_date_utc": "2024-03-20",
+            "side": "BUY",
+            "open_usdt": 67840.51
+          },
+          {
+            "date_utc": "2024-03-23",
+            "signal_date_utc": "2024-03-22",
+            "side": "SELL",
+            "open_usdt": 63796.64
+          },
+          {
+            "date_utc": "2024-03-25",
+            "signal_date_utc": "2024-03-24",
+            "side": "BUY",
+            "open_usdt": 67210.0
+          }
+        ],
+        "MACD_12_26_9": [
+          {
+            "date_utc": "2024-02-08",
+            "signal_date_utc": "2024-02-07",
+            "side": "BUY",
+            "open_usdt": 44349.6
+          },
+          {
+            "date_utc": "2024-02-24",
+            "signal_date_utc": "2024-02-23",
+            "side": "SELL",
+            "open_usdt": 50744.15
+          },
+          {
+            "date_utc": "2024-02-27",
+            "signal_date_utc": "2024-02-26",
+            "side": "BUY",
+            "open_usdt": 54476.48
+          },
+          {
+            "date_utc": "2024-03-17",
+            "signal_date_utc": "2024-03-16",
+            "side": "SELL",
+            "open_usdt": 65300.64
+          }
+        ],
+        "ADX14_DI_20": [
+          {
+            "date_utc": "2024-02-13",
+            "signal_date_utc": "2024-02-12",
+            "side": "BUY",
+            "open_usdt": 49917.28
+          },
+          {
+            "date_utc": "2024-03-20",
+            "signal_date_utc": "2024-03-19",
+            "side": "SELL",
+            "open_usdt": 61937.41
+          },
+          {
+            "date_utc": "2024-03-26",
+            "signal_date_utc": "2024-03-25",
+            "side": "BUY",
+            "open_usdt": 69880.0
+          }
+        ],
+        "TWO_OF_THREE": [
+          {
+            "date_utc": "2024-02-08",
+            "signal_date_utc": "2024-02-07",
+            "side": "BUY",
+            "open_usdt": 44349.6
+          },
+          {
+            "date_utc": "2024-03-20",
+            "signal_date_utc": "2024-03-19",
+            "side": "SELL",
+            "open_usdt": 61937.41
+          },
+          {
+            "date_utc": "2024-03-26",
+            "signal_date_utc": "2024-03-25",
+            "side": "BUY",
+            "open_usdt": 69880.0
+          }
+        ]
+      },
+      "indicator_daily": [
+        {
+          "date_utc": "2024-02-01",
+          "close_usdt": 43082.94,
+          "rsi14": 53.0802,
+          "macd_hist": 305.829,
+          "adx14": 16.2807,
+          "di_plus": 20.5661,
+          "di_minus": 22.8749,
+          "atr_pct": 3.9169
+        },
+        {
+          "date_utc": "2024-02-02",
+          "close_usdt": 43200.0,
+          "rsi14": 53.6582,
+          "macd_hist": 320.2701,
+          "adx14": 15.3406,
+          "di_plus": 20.6067,
+          "di_minus": 21.9339,
+          "atr_pct": 3.7828
+        },
+        {
+          "date_utc": "2024-02-03",
+          "close_usdt": 43011.09,
+          "rsi14": 52.5335,
+          "macd_hist": 304.8316,
+          "adx14": 14.4677,
+          "di_plus": 20.1329,
+          "di_minus": 21.4295,
+          "atr_pct": 3.6111
+        },
+        {
+          "date_utc": "2024-02-04",
+          "close_usdt": 42582.88,
+          "rsi14": 49.9765,
+          "macd_hist": 255.508,
+          "adx14": 14.1603,
+          "di_plus": 19.2765,
+          "di_minus": 23.6382,
+          "atr_pct": 3.5374
+        },
+        {
+          "date_utc": "2024-02-05",
+          "close_usdt": 42708.7,
+          "rsi14": 50.7353,
+          "macd_hist": 222.3062,
+          "adx14": 13.4742,
+          "di_plus": 20.2235,
+          "di_minus": 22.1542,
+          "atr_pct": 3.4944
+        },
+        {
+          "date_utc": "2024-02-06",
+          "close_usdt": 43098.95,
+          "rsi14": 53.1109,
+          "macd_hist": 217.3182,
+          "adx14": 12.8372,
+          "di_plus": 19.3977,
+          "di_minus": 21.2496,
+          "atr_pct": 3.3523
+        },
+        {
+          "date_utc": "2024-02-07",
+          "close_usdt": 44349.6,
+          "rsi14": 59.8011,
+          "macd_hist": 284.689,
+          "adx14": 12.4571,
+          "di_plus": 22.7546,
+          "di_minus": 19.5733,
+          "atr_pct": 3.2841
+        },
+        {
+          "date_utc": "2024-02-08",
+          "close_usdt": 45288.65,
+          "rsi14": 63.9593,
+          "macd_hist": 373.3468,
+          "adx14": 12.9755,
+          "di_plus": 27.3339,
+          "di_minus": 18.331,
+          "atr_pct": 3.1887
+        },
+        {
+          "date_utc": "2024-02-09",
+          "close_usdt": 47132.77,
+          "rsi14": 70.4284,
+          "macd_hist": 527.6077,
+          "adx14": 14.7858,
+          "di_plus": 35.5119,
+          "di_minus": 15.836,
+          "atr_pct": 3.2933
+        },
+        {
+          "date_utc": "2024-02-10",
+          "close_usdt": 47751.09,
+          "rsi14": 72.2283,
+          "macd_hist": 635.4707,
+          "adx14": 16.4667,
+          "di_plus": 33.2542,
+          "di_minus": 14.8292,
+          "atr_pct": 3.2234
+        },
+        {
+          "date_utc": "2024-02-11",
+          "close_usdt": 48299.99,
+          "rsi14": 73.7555,
+          "macd_hist": 702.7193,
+          "adx14": 18.213,
+          "di_plus": 33.6263,
+          "di_minus": 14.0996,
+          "atr_pct": 3.1123
+        },
+        {
+          "date_utc": "2024-02-12",
+          "close_usdt": 49917.27,
+          "rsi14": 77.6545,
+          "macd_hist": 807.5662,
+          "adx14": 20.4988,
+          "di_plus": 37.5038,
+          "di_minus": 12.43,
+          "atr_pct": 3.172
+        },
+        {
+          "date_utc": "2024-02-13",
+          "close_usdt": 49699.59,
+          "rsi14": 76.0175,
+          "macd_hist": 811.5393,
+          "adx14": 22.6329,
+          "di_plus": 34.2296,
+          "di_minus": 11.2954,
+          "atr_pct": 3.2555
+        },
+        {
+          "date_utc": "2024-02-14",
+          "close_usdt": 51795.17,
+          "rsi14": 80.3188,
+          "macd_hist": 897.8556,
+          "adx14": 25.1424,
+          "di_plus": 37.2074,
+          "di_minus": 9.9606,
+          "atr_pct": 3.2893
+        },
+        {
+          "date_utc": "2024-02-15",
+          "close_usdt": 51880.0,
+          "rsi14": 80.4715,
+          "macd_hist": 900.8903,
+          "adx14": 27.6805,
+          "di_plus": 38.1115,
+          "di_minus": 9.3277,
+          "atr_pct": 3.2563
+        },
+        {
+          "date_utc": "2024-02-16",
+          "close_usdt": 52124.11,
+          "rsi14": 80.93,
+          "macd_hist": 859.6783,
+          "adx14": 30.0372,
+          "di_plus": 36.442,
+          "di_minus": 8.9191,
+          "atr_pct": 3.1474
+        },
+        {
+          "date_utc": "2024-02-17",
+          "close_usdt": 51642.64,
+          "rsi14": 77.0859,
+          "macd_hist": 744.6295,
+          "adx14": 31.2083,
+          "di_plus": 33.9911,
+          "di_minus": 12.4347,
+          "atr_pct": 3.1625
+        },
+        {
+          "date_utc": "2024-02-18",
+          "close_usdt": 52137.67,
+          "rsi14": 78.2308,
+          "macd_hist": 649.9531,
+          "adx14": 32.377,
+          "di_plus": 33.1073,
+          "di_minus": 11.7623,
+          "atr_pct": 3.075
+        },
+        {
+          "date_utc": "2024-02-19",
+          "close_usdt": 51774.73,
+          "rsi14": 75.2616,
+          "macd_hist": 516.7737,
+          "adx14": 33.5065,
+          "di_plus": 32.3823,
+          "di_minus": 11.3214,
+          "atr_pct": 2.9874
+        },
+        {
+          "date_utc": "2024-02-20",
+          "close_usdt": 52258.82,
+          "rsi14": 76.5406,
+          "macd_hist": 419.3206,
+          "adx14": 33.5555,
+          "di_plus": 29.1565,
+          "di_minus": 14.2982,
+          "atr_pct": 3.0524
+        },
+        {
+          "date_utc": "2024-02-21",
+          "close_usdt": 51849.39,
+          "rsi14": 73.0984,
+          "macd_hist": 291.3905,
+          "adx14": 33.4592,
+          "di_plus": 26.8972,
+          "di_minus": 13.7925,
+          "atr_pct": 3.0967
+        },
+        {
+          "date_utc": "2024-02-22",
+          "close_usdt": 51288.42,
+          "rsi14": 68.5497,
+          "macd_hist": 140.7294,
+          "adx14": 33.3697,
+          "di_plus": 25.5217,
+          "di_minus": 13.0871,
+          "atr_pct": 3.0636
+        },
+        {
+          "date_utc": "2024-02-23",
+          "close_usdt": 50744.15,
+          "rsi14": 64.3648,
+          "macd_hist": -15.5363,
+          "adx14": 32.8094,
+          "di_plus": 24.2993,
+          "di_minus": 14.4169,
+          "atr_pct": 3.0199
+        },
+        {
+          "date_utc": "2024-02-24",
+          "close_usdt": 51568.22,
+          "rsi14": 67.5909,
+          "macd_hist": -79.7633,
+          "adx14": 32.3902,
+          "di_plus": 23.7241,
+          "di_minus": 13.6541,
+          "atr_pct": 2.9136
+        },
+        {
+          "date_utc": "2024-02-25",
+          "close_usdt": 51728.85,
+          "rsi14": 68.1953,
+          "macd_hist": -125.0929,
+          "adx14": 32.1808,
+          "di_plus": 24.2165,
+          "di_minus": 13.1955,
+          "atr_pct": 2.7908
+        },
+        {
+          "date_utc": "2024-02-26",
+          "close_usdt": 54476.47,
+          "rsi14": 76.3279,
+          "macd_hist": 9.1792,
+          "adx14": 33.4776,
+          "di_plus": 32.9131,
+          "di_minus": 10.8731,
+          "atr_pct": 2.9863
+        },
+        {
+          "date_utc": "2024-02-27",
+          "close_usdt": 57037.34,
+          "rsi14": 81.1626,
+          "macd_hist": 237.0444,
+          "adx14": 35.4775,
+          "di_plus": 39.6876,
+          "di_minus": 9.4683,
+          "atr_pct": 3.0415
+        },
+        {
+          "date_utc": "2024-02-28",
+          "close_usdt": 62432.1,
+          "rsi14": 87.1272,
+          "macd_hist": 691.9389,
+          "adx14": 38.3429,
+          "di_plus": 51.447,
+          "di_minus": 7.151,
+          "atr_pct": 3.4163
+        },
+        {
+          "date_utc": "2024-02-29",
+          "close_usdt": 61130.98,
+          "rsi14": 80.5063,
+          "macd_hist": 836.3921,
+          "adx14": 41.0036,
+          "di_plus": 45.958,
+          "di_minus": 6.388,
+          "atr_pct": 3.6268
+        },
+        {
+          "date_utc": "2024-03-01",
+          "close_usdt": 62387.9,
+          "rsi14": 81.9345,
+          "macd_hist": 940.0362,
+          "adx14": 43.4743,
+          "di_plus": 42.5107,
+          "di_minus": 5.9089,
+          "atr_pct": 3.5675
+        },
+        {
+          "date_utc": "2024-03-02",
+          "close_usdt": 61987.28,
+          "rsi14": 79.9245,
+          "macd_hist": 904.7457,
+          "adx14": 45.7685,
+          "di_plus": 41.2669,
+          "di_minus": 5.736,
+          "atr_pct": 3.4345
+        },
+        {
+          "date_utc": "2024-03-03",
+          "close_usdt": 63113.97,
+          "rsi14": 81.3129,
+          "macd_hist": 879.6311,
+          "adx14": 47.9997,
+          "di_plus": 41.2998,
+          "di_minus": 5.3653,
+          "atr_pct": 3.3487
+        },
+        {
+          "date_utc": "2024-03-04",
+          "close_usdt": 68245.71,
+          "rsi14": 86.0464,
+          "macd_hist": 1115.7991,
+          "adx14": 50.5497,
+          "di_plus": 49.3384,
+          "di_minus": 4.3777,
+          "atr_pct": 3.5245
+        },
+        {
+          "date_utc": "2024-03-05",
+          "close_usdt": 63724.01,
+          "rsi14": 69.3722,
+          "macd_hist": 884.7505,
+          "adx14": 50.7657,
+          "di_plus": 37.3876,
+          "di_minus": 11.3025,
+          "atr_pct": 4.6253
+        },
+        {
+          "date_utc": "2024-03-06",
+          "close_usdt": 66074.04,
+          "rsi14": 72.369,
+          "macd_hist": 809.4929,
+          "adx14": 50.9663,
+          "di_plus": 33.1777,
+          "di_minus": 10.0298,
+          "atr_pct": 4.6678
+        },
+        {
+          "date_utc": "2024-03-07",
+          "close_usdt": 66823.17,
+          "rsi14": 73.267,
+          "macd_hist": 731.8163,
+          "adx14": 51.2162,
+          "di_plus": 32.0795,
+          "di_minus": 9.4569,
+          "atr_pct": 4.5454
+        },
+        {
+          "date_utc": "2024-03-08",
+          "close_usdt": 68124.19,
+          "rsi14": 74.7988,
+          "macd_hist": 690.248,
+          "adx14": 51.8033,
+          "di_plus": 33.823,
+          "di_minus": 8.6053,
+          "atr_pct": 4.5498
+        },
+        {
+          "date_utc": "2024-03-09",
+          "close_usdt": 68313.27,
+          "rsi14": 75.0228,
+          "macd_hist": 600.9561,
+          "adx14": 52.3485,
+          "di_plus": 33.2616,
+          "di_minus": 8.4625,
+          "atr_pct": 4.2842
+        },
+        {
+          "date_utc": "2024-03-10",
+          "close_usdt": 68955.88,
+          "rsi14": 75.8098,
+          "macd_hist": 514.0063,
+          "adx14": 53.0813,
+          "di_plus": 35.1446,
+          "di_minus": 8.0817,
+          "atr_pct": 4.1268
+        },
+        {
+          "date_utc": "2024-03-11",
+          "close_usdt": 72078.1,
+          "rsi14": 79.2333,
+          "macd_hist": 590.1539,
+          "adx14": 54.1732,
+          "di_plus": 37.2087,
+          "di_minus": 6.9904,
+          "atr_pct": 4.2384
+        },
+        {
+          "date_utc": "2024-03-12",
+          "close_usdt": 71452.01,
+          "rsi14": 76.8835,
+          "macd_hist": 523.9826,
+          "adx14": 55.2126,
+          "di_plus": 33.9668,
+          "di_minus": 6.2962,
+          "atr_pct": 4.4079
+        },
+        {
+          "date_utc": "2024-03-13",
+          "close_usdt": 73072.41,
+          "rsi14": 78.6484,
+          "macd_hist": 514.2489,
+          "adx14": 56.2625,
+          "di_plus": 33.6507,
+          "di_minus": 5.959,
+          "atr_pct": 4.2288
+        },
+        {
+          "date_utc": "2024-03-14",
+          "close_usdt": 71388.94,
+          "rsi14": 72.4589,
+          "macd_hist": 328.382,
+          "adx14": 55.4333,
+          "di_plus": 29.7796,
+          "di_minus": 11.394,
+          "atr_pct": 4.5418
+        },
+        {
+          "date_utc": "2024-03-15",
+          "close_usdt": 69499.85,
+          "rsi14": 66.1662,
+          "macd_hist": 27.9911,
+          "adx14": 53.16,
+          "di_plus": 25.6324,
+          "di_minus": 15.8416,
+          "atr_pct": 5.0329
+        },
+        {
+          "date_utc": "2024-03-16",
+          "close_usdt": 65300.63,
+          "rsi14": 54.7781,
+          "macd_hist": -475.9252,
+          "adx14": 50.6812,
+          "di_plus": 22.9734,
+          "di_minus": 15.8145,
+          "atr_pct": 5.5496
+        },
+        {
+          "date_utc": "2024-03-17",
+          "close_usdt": 68393.48,
+          "rsi14": 60.2102,
+          "macd_hist": -614.5435,
+          "adx14": 48.2666,
+          "di_plus": 21.0227,
+          "di_minus": 14.9514,
+          "atr_pct": 5.3767
+        },
+        {
+          "date_utc": "2024-03-18",
+          "close_usdt": 67609.99,
+          "rsi14": 58.2997,
+          "macd_hist": -762.9118,
+          "adx14": 46.0422,
+          "di_plus": 20.1242,
+          "di_minus": 14.2393,
+          "atr_pct": 5.3031
+        },
+        {
+          "date_utc": "2024-03-19",
+          "close_usdt": 61937.4,
+          "rsi14": 46.7369,
+          "macd_hist": -1219.8855,
+          "adx14": 43.5237,
+          "di_plus": 17.6384,
+          "di_minus": 21.9016,
+          "atr_pct": 6.1329
+        },
+        {
+          "date_utc": "2024-03-20",
+          "close_usdt": 67840.51,
+          "rsi14": 56.4228,
+          "macd_hist": -1104.8175,
+          "adx14": 41.4298,
+          "di_plus": 15.3599,
+          "di_minus": 20.448,
+          "atr_pct": 5.9705
+        },
+        {
+          "date_utc": "2024-03-21",
+          "close_usdt": 65501.27,
+          "rsi14": 52.3594,
+          "macd_hist": -1160.7261,
+          "adx14": 39.4251,
+          "di_plus": 14.5978,
+          "di_minus": 19.1016,
+          "atr_pct": 6.1468
+        },
+        {
+          "date_utc": "2024-03-22",
+          "close_usdt": 63796.64,
+          "rsi14": 49.5586,
+          "macd_hist": -1277.724,
+          "adx14": 38.269,
+          "di_plus": 13.4683,
+          "di_minus": 21.6232,
+          "atr_pct": 6.3517
+        },
+        {
+          "date_utc": "2024-03-23",
+          "close_usdt": 63990.01,
+          "rsi14": 49.8861,
+          "macd_hist": -1302.84,
+          "adx14": 37.1954,
+          "di_plus": 12.7428,
+          "di_minus": 20.4585,
+          "atr_pct": 6.215
+        },
+        {
+          "date_utc": "2024-03-24",
+          "close_usdt": 67209.99,
+          "rsi14": 55.1123,
+          "macd_hist": -1072.9291,
+          "adx14": 35.4353,
+          "di_plus": 14.7917,
+          "di_minus": 19.0384,
+          "atr_pct": 5.9044
+        },
+        {
+          "date_utc": "2024-03-25",
+          "close_usdt": 69880.01,
+          "rsi14": 58.9364,
+          "macd_hist": -727.8763,
+          "adx14": 33.3573,
+          "di_plus": 19.7896,
+          "di_minus": 17.4286,
+          "atr_pct": 5.7602
+        },
+        {
+          "date_utc": "2024-03-26",
+          "close_usdt": 69988.0,
+          "rsi14": 59.0882,
+          "macd_hist": -490.5867,
+          "adx14": 31.566,
+          "di_plus": 19.7157,
+          "di_minus": 16.7006,
+          "atr_pct": 5.5733
+        },
+        {
+          "date_utc": "2024-03-27",
+          "close_usdt": 69469.99,
+          "rsi14": 57.9809,
+          "macd_hist": -372.112,
+          "adx14": 29.5354,
+          "di_plus": 18.4733,
+          "di_minus": 17.3497,
+          "atr_pct": 5.5645
+        },
+        {
+          "date_utc": "2024-03-28",
+          "close_usdt": 70780.6,
+          "rsi14": 60.0222,
+          "macd_hist": -216.7723,
+          "adx14": 27.6497,
+          "di_plus": 17.5485,
+          "di_minus": 16.4811,
+          "atr_pct": 5.3386
+        },
+        {
+          "date_utc": "2024-03-29",
+          "close_usdt": 69850.54,
+          "rsi14": 57.8736,
+          "macd_hist": -188.9698,
+          "adx14": 25.8988,
+          "di_plus": 16.8927,
+          "di_minus": 15.8652,
+          "atr_pct": 5.2183
+        },
+        {
+          "date_utc": "2024-03-30",
+          "close_usdt": 69582.18,
+          "rsi14": 57.2369,
+          "macd_hist": -199.9038,
+          "adx14": 24.2729,
+          "di_plus": 16.6187,
+          "di_minus": 15.6079,
+          "atr_pct": 4.9445
+        },
+        {
+          "date_utc": "2024-03-31",
+          "close_usdt": 71280.01,
+          "rsi14": 60.2187,
+          "macd_hist": -108.6105,
+          "adx14": 23.2309,
+          "di_plus": 18.2204,
+          "di_minus": 15.0031,
+          "atr_pct": 4.6626
+        }
+      ]
+    },
+    "2025": {
+      "sample_start": "2025-02-01",
+      "sample_end": "2025-03-31",
+      "verified_daily_bars": 90,
+      "trade_days": 59,
+      "prefix_invariance_checks": 56,
+      "returns": {
+        "BUY_HOLD": {
+          "final_equity_usdt": 803.504855,
+          "net_return_pct": -19.6495,
+          "max_close_to_close_drawdown_pct": -23.4983,
+          "exposure_days": 59,
+          "days": 59,
+          "buys": 1,
+          "sells": 0,
+          "total_trades": 1,
+          "long_intervals_under_4_days": 0
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 942.244132,
+          "net_return_pct": -5.7756,
+          "max_close_to_close_drawdown_pct": -5.7756,
+          "exposure_days": 2,
+          "days": 59,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 2
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 740.740818,
+          "net_return_pct": -25.9259,
+          "max_close_to_close_drawdown_pct": -25.9259,
+          "exposure_days": 32,
+          "days": 59,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 0
+        },
+        "RSI14_50": {
+          "final_equity_usdt": 806.270841,
+          "net_return_pct": -19.3729,
+          "max_close_to_close_drawdown_pct": -19.3729,
+          "exposure_days": 8,
+          "days": 59,
+          "buys": 5,
+          "sells": 5,
+          "total_trades": 10,
+          "long_intervals_under_4_days": 4
+        },
+        "MACD_12_26_9": {
+          "final_equity_usdt": 1000.0,
+          "net_return_pct": 0.0,
+          "max_close_to_close_drawdown_pct": 0.0,
+          "exposure_days": 0,
+          "days": 59,
+          "buys": 0,
+          "sells": 0,
+          "total_trades": 0,
+          "long_intervals_under_4_days": 0
+        },
+        "ADX14_DI_20": {
+          "final_equity_usdt": 990.292213,
+          "net_return_pct": -0.9708,
+          "max_close_to_close_drawdown_pct": -0.9708,
+          "exposure_days": 2,
+          "days": 59,
+          "buys": 1,
+          "sells": 1,
+          "total_trades": 2,
+          "long_intervals_under_4_days": 1
+        },
+        "TWO_OF_THREE": {
+          "final_equity_usdt": 1000.0,
+          "net_return_pct": 0.0,
+          "max_close_to_close_drawdown_pct": 0.0,
+          "exposure_days": 0,
+          "days": 59,
+          "buys": 0,
+          "sells": 0,
+          "total_trades": 0,
+          "long_intervals_under_4_days": 0
+        }
+      },
+      "stress_results": {
+        "BUY_HOLD": {
+          "final_equity_usdt": 801.095545,
+          "net_return_pct": -19.8904,
+          "max_close_to_close_drawdown_pct": -23.7277,
+          "exposure_days": 59,
+          "days": 59,
+          "buys": 1,
+          "sells": 0,
+          "total_trades": 1,
+          "long_intervals_under_4_days": 0
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 936.601964,
+          "net_return_pct": -6.3398,
+          "max_close_to_close_drawdown_pct": -6.3398,
+          "exposure_days": 2,
+          "days": 59,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 2
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 736.305254,
+          "net_return_pct": -26.3695,
+          "max_close_to_close_drawdown_pct": -26.3695,
+          "exposure_days": 32,
+          "days": 59,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 0
+        },
+        "RSI14_50": {
+          "final_equity_usdt": 794.255097,
+          "net_return_pct": -20.5745,
+          "max_close_to_close_drawdown_pct": -20.5745,
+          "exposure_days": 8,
+          "days": 59,
+          "buys": 5,
+          "sells": 5,
+          "total_trades": 10,
+          "long_intervals_under_4_days": 4
+        },
+        "MACD_12_26_9": {
+          "final_equity_usdt": 1000.0,
+          "net_return_pct": 0.0,
+          "max_close_to_close_drawdown_pct": 0.0,
+          "exposure_days": 0,
+          "days": 59,
+          "buys": 0,
+          "sells": 0,
+          "total_trades": 0,
+          "long_intervals_under_4_days": 0
+        },
+        "ADX14_DI_20": {
+          "final_equity_usdt": 987.322821,
+          "net_return_pct": -1.2677,
+          "max_close_to_close_drawdown_pct": -1.2677,
+          "exposure_days": 2,
+          "days": 59,
+          "buys": 1,
+          "sells": 1,
+          "total_trades": 2,
+          "long_intervals_under_4_days": 1
+        },
+        "TWO_OF_THREE": {
+          "final_equity_usdt": 1000.0,
+          "net_return_pct": 0.0,
+          "max_close_to_close_drawdown_pct": 0.0,
+          "exposure_days": 0,
+          "days": 59,
+          "buys": 0,
+          "sells": 0,
+          "total_trades": 0,
+          "long_intervals_under_4_days": 0
+        }
+      },
+      "events": [
+        {
+          "date_utc": "2025-02-24",
+          "peak_utc": "2025-01-30",
+          "drawdown_at_event_pct": -12.576,
+          "days_to_threshold": 25,
+          "after_14d_status": "PERSISTENT",
+          "after_14d_change_vs_event_pct": -14.152,
+          "indicators": {
+            "EMA10_30": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "RSI14_50": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "MACD_12_26_9": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "ADX14_DI_20": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "TWO_OF_THREE": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            }
+          }
+        }
+      ],
+      "transaction_ledgers": {
+        "BUY_HOLD": [
+          {
+            "date_utc": "2025-02-01",
+            "signal_date_utc": "2025-01-31",
+            "side": "BUY",
+            "open_usdt": 102429.56
+          }
+        ],
+        "EMA10_30": [
+          {
+            "date_utc": "2025-02-01",
+            "signal_date_utc": "2025-01-31",
+            "side": "BUY",
+            "open_usdt": 102429.56
+          },
+          {
+            "date_utc": "2025-02-02",
+            "signal_date_utc": "2025-02-01",
+            "side": "SELL",
+            "open_usdt": 100635.66
+          },
+          {
+            "date_utc": "2025-02-04",
+            "signal_date_utc": "2025-02-03",
+            "side": "BUY",
+            "open_usdt": 101328.51
+          },
+          {
+            "date_utc": "2025-02-05",
+            "signal_date_utc": "2025-02-04",
+            "side": "SELL",
+            "open_usdt": 97763.14
+          }
+        ],
+        "SUPERTREND_ATR14_X3": [
+          {
+            "date_utc": "2025-02-01",
+            "signal_date_utc": "2025-01-31",
+            "side": "BUY",
+            "open_usdt": 102429.56
+          },
+          {
+            "date_utc": "2025-02-25",
+            "signal_date_utc": "2025-02-24",
+            "side": "SELL",
+            "open_usdt": 91552.88
+          },
+          {
+            "date_utc": "2025-03-03",
+            "signal_date_utc": "2025-03-02",
+            "side": "BUY",
+            "open_usdt": 94269.99
+          },
+          {
+            "date_utc": "2025-03-11",
+            "signal_date_utc": "2025-03-10",
+            "side": "SELL",
+            "open_usdt": 78595.86
+          }
+        ],
+        "RSI14_50": [
+          {
+            "date_utc": "2025-02-01",
+            "signal_date_utc": "2025-01-31",
+            "side": "BUY",
+            "open_usdt": 102429.56
+          },
+          {
+            "date_utc": "2025-02-02",
+            "signal_date_utc": "2025-02-01",
+            "side": "SELL",
+            "open_usdt": 100635.66
+          },
+          {
+            "date_utc": "2025-02-04",
+            "signal_date_utc": "2025-02-03",
+            "side": "BUY",
+            "open_usdt": 101328.51
+          },
+          {
+            "date_utc": "2025-02-05",
+            "signal_date_utc": "2025-02-04",
+            "side": "SELL",
+            "open_usdt": 97763.14
+          },
+          {
+            "date_utc": "2025-02-21",
+            "signal_date_utc": "2025-02-20",
+            "side": "BUY",
+            "open_usdt": 98305.01
+          },
+          {
+            "date_utc": "2025-02-22",
+            "signal_date_utc": "2025-02-21",
+            "side": "SELL",
+            "open_usdt": 96181.99
+          },
+          {
+            "date_utc": "2025-03-03",
+            "signal_date_utc": "2025-03-02",
+            "side": "BUY",
+            "open_usdt": 94269.99
+          },
+          {
+            "date_utc": "2025-03-04",
+            "signal_date_utc": "2025-03-03",
+            "side": "SELL",
+            "open_usdt": 86221.16
+          },
+          {
+            "date_utc": "2025-03-25",
+            "signal_date_utc": "2025-03-24",
+            "side": "BUY",
+            "open_usdt": 87498.16
+          },
+          {
+            "date_utc": "2025-03-29",
+            "signal_date_utc": "2025-03-28",
+            "side": "SELL",
+            "open_usdt": 84424.38
+          }
+        ],
+        "MACD_12_26_9": [],
+        "ADX14_DI_20": [
+          {
+            "date_utc": "2025-03-25",
+            "signal_date_utc": "2025-03-24",
+            "side": "BUY",
+            "open_usdt": 87498.16
+          },
+          {
+            "date_utc": "2025-03-27",
+            "signal_date_utc": "2025-03-26",
+            "side": "SELL",
+            "open_usdt": 86909.17
+          }
+        ],
+        "TWO_OF_THREE": []
+      },
+      "indicator_daily": [
+        {
+          "date_utc": "2025-02-01",
+          "close_usdt": 100635.65,
+          "rsi14": 49.7076,
+          "macd_hist": -400.6743,
+          "adx14": 13.5266,
+          "di_plus": 16.9933,
+          "di_minus": 22.333,
+          "atr_pct": 3.9636
+        },
+        {
+          "date_utc": "2025-02-02",
+          "close_usdt": 97700.59,
+          "rsi14": 43.733,
+          "macd_hist": -705.3771,
+          "adx14": 14.5698,
+          "di_plus": 15.4157,
+          "di_minus": 27.484,
+          "atr_pct": 4.1791
+        },
+        {
+          "date_utc": "2025-02-03",
+          "close_usdt": 101328.52,
+          "rsi14": 51.4939,
+          "macd_hist": -642.3352,
+          "adx14": 16.4505,
+          "di_plus": 12.716,
+          "di_minus": 30.3152,
+          "atr_pct": 4.536
+        },
+        {
+          "date_utc": "2025-02-04",
+          "close_usdt": 97763.13,
+          "rsi14": 44.9344,
+          "macd_hist": -809.6997,
+          "adx14": 18.1968,
+          "di_plus": 11.6295,
+          "di_minus": 27.725,
+          "atr_pct": 4.7735
+        },
+        {
+          "date_utc": "2025-02-05",
+          "close_usdt": 96612.43,
+          "rsi14": 43.0293,
+          "macd_hist": -956.7595,
+          "adx14": 19.8183,
+          "di_plus": 11.0826,
+          "di_minus": 26.4211,
+          "atr_pct": 4.7067
+        },
+        {
+          "date_utc": "2025-02-06",
+          "close_usdt": 96554.35,
+          "rsi14": 42.9303,
+          "macd_hist": -1011.4746,
+          "adx14": 21.4133,
+          "di_plus": 10.4725,
+          "di_minus": 25.7315,
+          "atr_pct": 4.6278
+        },
+        {
+          "date_utc": "2025-02-07",
+          "close_usdt": 96506.8,
+          "rsi14": 42.8435,
+          "macd_hist": -1002.4642,
+          "adx14": 22.4254,
+          "di_plus": 11.3429,
+          "di_minus": 23.8747,
+          "atr_pct": 4.6338
+        },
+        {
+          "date_utc": "2025-02-08",
+          "close_usdt": 96444.74,
+          "rsi14": 42.722,
+          "macd_hist": -952.6253,
+          "adx14": 23.3653,
+          "di_plus": 11.115,
+          "di_minus": 23.395,
+          "atr_pct": 4.3938
+        },
+        {
+          "date_utc": "2025-02-09",
+          "close_usdt": 96462.75,
+          "rsi14": 42.7727,
+          "macd_hist": -872.5276,
+          "adx14": 24.4626,
+          "di_plus": 10.6122,
+          "di_minus": 24.0265,
+          "atr_pct": 4.2725
+        },
+        {
+          "date_utc": "2025-02-10",
+          "close_usdt": 97430.82,
+          "rsi14": 45.5627,
+          "macd_hist": -715.0437,
+          "adx14": 24.9643,
+          "di_plus": 11.837,
+          "di_minus": 22.7168,
+          "atr_pct": 4.1543
+        },
+        {
+          "date_utc": "2025-02-11",
+          "close_usdt": 95778.2,
+          "rsi14": 41.8148,
+          "macd_hist": -682.9278,
+          "adx14": 25.5301,
+          "di_plus": 11.0788,
+          "di_minus": 21.9359,
+          "atr_pct": 4.1928
+        },
+        {
+          "date_utc": "2025-02-12",
+          "close_usdt": 97869.99,
+          "rsi14": 47.6812,
+          "macd_hist": -490.5577,
+          "adx14": 26.2652,
+          "di_plus": 10.2845,
+          "di_minus": 21.7656,
+          "atr_pct": 4.1043
+        },
+        {
+          "date_utc": "2025-02-13",
+          "close_usdt": 96608.14,
+          "rsi14": 44.7501,
+          "macd_hist": -420.7312,
+          "adx14": 26.9479,
+          "di_plus": 9.7493,
+          "di_minus": 20.633,
+          "atr_pct": 4.0729
+        },
+        {
+          "date_utc": "2025-02-14",
+          "close_usdt": 97500.48,
+          "rsi14": 47.221,
+          "macd_hist": -292.9386,
+          "adx14": 27.1396,
+          "di_plus": 10.6636,
+          "di_minus": 19.6447,
+          "atr_pct": 3.9359
+        },
+        {
+          "date_utc": "2025-02-15",
+          "close_usdt": 97569.66,
+          "rsi14": 47.4173,
+          "macd_hist": -187.3777,
+          "adx14": 27.3177,
+          "di_plus": 10.506,
+          "di_minus": 19.3543,
+          "atr_pct": 3.7069
+        },
+        {
+          "date_utc": "2025-02-16",
+          "close_usdt": 96118.12,
+          "rsi14": 43.7407,
+          "macd_hist": -197.9065,
+          "adx14": 27.8719,
+          "di_plus": 10.1481,
+          "di_minus": 21.1137,
+          "atr_pct": 3.6174
+        },
+        {
+          "date_utc": "2025-02-17",
+          "close_usdt": 95780.0,
+          "rsi14": 42.9061,
+          "macd_hist": -209.1393,
+          "adx14": 28.6471,
+          "di_plus": 9.7508,
+          "di_minus": 22.0753,
+          "atr_pct": 3.5082
+        },
+        {
+          "date_utc": "2025-02-18",
+          "close_usdt": 95671.74,
+          "rsi14": 42.6257,
+          "macd_hist": -205.0786,
+          "adx14": 29.8728,
+          "di_plus": 9.0532,
+          "di_minus": 24.3579,
+          "atr_pct": 3.5126
+        },
+        {
+          "date_utc": "2025-02-19",
+          "close_usdt": 96644.37,
+          "rsi14": 46.0381,
+          "macd_hist": -122.1979,
+          "adx14": 30.9078,
+          "di_plus": 9.0023,
+          "di_minus": 23.3581,
+          "atr_pct": 3.3671
+        },
+        {
+          "date_utc": "2025-02-20",
+          "close_usdt": 98305.0,
+          "rsi14": 51.3575,
+          "macd_hist": 49.926,
+          "adx14": 30.6639,
+          "di_plus": 12.6002,
+          "di_minus": 22.1554,
+          "atr_pct": 3.2406
+        },
+        {
+          "date_utc": "2025-02-21",
+          "close_usdt": 96181.98,
+          "rsi14": 45.2202,
+          "macd_hist": 27.3853,
+          "adx14": 30.9388,
+          "di_plus": 11.3398,
+          "di_minus": 23.2927,
+          "atr_pct": 3.4174
+        },
+        {
+          "date_utc": "2025-02-22",
+          "close_usdt": 96551.01,
+          "rsi14": 46.4188,
+          "macd_hist": 42.9886,
+          "adx14": 31.1942,
+          "di_plus": 11.0276,
+          "di_minus": 22.6515,
+          "atr_pct": 3.2506
+        },
+        {
+          "date_utc": "2025-02-23",
+          "close_usdt": 96258.0,
+          "rsi14": 45.5663,
+          "macd_hist": 39.334,
+          "adx14": 31.6089,
+          "di_plus": 10.6562,
+          "di_minus": 23.1735,
+          "atr_pct": 3.1332
+        },
+        {
+          "date_utc": "2025-02-24",
+          "close_usdt": 91552.88,
+          "rsi14": 34.5827,
+          "macd_hist": -257.8596,
+          "adx14": 33.0122,
+          "di_plus": 9.4189,
+          "di_minus": 29.2268,
+          "atr_pct": 3.4607
+        },
+        {
+          "date_utc": "2025-02-25",
+          "close_usdt": 88680.4,
+          "rsi14": 29.8518,
+          "macd_hist": -605.9159,
+          "adx14": 35.1848,
+          "di_plus": 8.1368,
+          "di_minus": 36.361,
+          "atr_pct": 3.8404
+        },
+        {
+          "date_utc": "2025-02-26",
+          "close_usdt": 84250.09,
+          "rsi14": 24.3248,
+          "macd_hist": -1065.6424,
+          "adx14": 37.6241,
+          "di_plus": 7.0044,
+          "di_minus": 38.6791,
+          "atr_pct": 4.3604
+        },
+        {
+          "date_utc": "2025-02-27",
+          "close_usdt": 84708.58,
+          "rsi14": 25.8548,
+          "macd_hist": -1256.8413,
+          "adx14": 39.8892,
+          "di_plus": 6.4182,
+          "di_minus": 35.442,
+          "atr_pct": 4.3949
+        },
+        {
+          "date_utc": "2025-02-28",
+          "close_usdt": 84349.94,
+          "rsi14": 25.4218,
+          "macd_hist": -1318.9921,
+          "adx14": 42.3875,
+          "di_plus": 5.6212,
+          "di_minus": 39.1086,
+          "atr_pct": 4.6793
+        },
+        {
+          "date_utc": "2025-03-01",
+          "close_usdt": 86064.53,
+          "rsi14": 31.3414,
+          "macd_hist": -1161.685,
+          "adx14": 43.971,
+          "di_plus": 7.9977,
+          "di_minus": 37.1308,
+          "atr_pct": 4.4854
+        },
+        {
+          "date_utc": "2025-03-02",
+          "close_usdt": 94270.0,
+          "rsi14": 51.2742,
+          "macd_hist": -458.1919,
+          "adx14": 42.2497,
+          "di_plus": 20.7132,
+          "di_minus": 30.9873,
+          "atr_pct": 4.5563
+        },
+        {
+          "date_utc": "2025-03-03",
+          "close_usdt": 86220.61,
+          "rsi14": 39.2394,
+          "macd_hist": -485.541,
+          "adx14": 40.6513,
+          "di_plus": 17.7561,
+          "di_minus": 26.5634,
+          "atr_pct": 5.3963
+        },
+        {
+          "date_utc": "2025-03-04",
+          "close_usdt": 87281.98,
+          "rsi14": 41.1992,
+          "macd_hist": -387.0001,
+          "adx14": 39.8476,
+          "di_plus": 15.8048,
+          "di_minus": 28.9673,
+          "atr_pct": 5.561
+        },
+        {
+          "date_utc": "2025-03-05",
+          "close_usdt": 90606.01,
+          "rsi14": 46.9683,
+          "macd_hist": -69.4397,
+          "adx14": 38.4809,
+          "di_plus": 17.716,
+          "di_minus": 26.9729,
+          "atr_pct": 5.3421
+        },
+        {
+          "date_utc": "2025-03-06",
+          "close_usdt": 89931.89,
+          "rsi14": 45.983,
+          "macd_hist": 113.7564,
+          "adx14": 36.6902,
+          "di_plus": 19.0847,
+          "di_minus": 24.9967,
+          "atr_pct": 5.3929
+        },
+        {
+          "date_utc": "2025-03-07",
+          "close_usdt": 86801.75,
+          "rsi14": 41.6172,
+          "macd_hist": 46.1354,
+          "adx14": 35.6605,
+          "di_plus": 17.2722,
+          "di_minus": 27.1717,
+          "atr_pct": 5.7327
+        },
+        {
+          "date_utc": "2025-03-08",
+          "close_usdt": 86222.45,
+          "rsi14": 40.8443,
+          "macd_hist": -12.4645,
+          "adx14": 34.7043,
+          "di_plus": 16.8353,
+          "di_minus": 26.4844,
+          "atr_pct": 5.498
+        },
+        {
+          "date_utc": "2025-03-09",
+          "close_usdt": 80734.37,
+          "rsi14": 34.3382,
+          "macd_hist": -375.5767,
+          "adx14": 34.7242,
+          "di_plus": 15.2291,
+          "di_minus": 31.6174,
+          "atr_pct": 6.0274
+        },
+        {
+          "date_utc": "2025-03-10",
+          "close_usdt": 78595.86,
+          "rsi14": 32.1867,
+          "macd_hist": -695.8988,
+          "adx14": 35.1093,
+          "di_plus": 13.7778,
+          "di_minus": 32.237,
+          "atr_pct": 6.3548
+        },
+        {
+          "date_utc": "2025-03-11",
+          "close_usdt": 82932.99,
+          "rsi14": 40.3498,
+          "macd_hist": -557.7626,
+          "adx14": 35.5858,
+          "di_plus": 12.435,
+          "di_minus": 30.2822,
+          "atr_pct": 6.1961
+        },
+        {
+          "date_utc": "2025-03-12",
+          "close_usdt": 83680.12,
+          "rsi14": 41.6527,
+          "macd_hist": -367.3491,
+          "adx14": 35.7111,
+          "di_plus": 13.0478,
+          "di_minus": 28.5987,
+          "atr_pct": 6.0378
+        },
+        {
+          "date_utc": "2025-03-13",
+          "close_usdt": 81115.78,
+          "rsi14": 38.5409,
+          "macd_hist": -364.6441,
+          "adx14": 35.9341,
+          "di_plus": 12.2293,
+          "di_minus": 27.7574,
+          "atr_pct": 6.1709
+        },
+        {
+          "date_utc": "2025-03-14",
+          "close_usdt": 83983.2,
+          "rsi14": 43.6137,
+          "macd_hist": -132.2596,
+          "adx14": 35.7836,
+          "di_plus": 12.839,
+          "di_minus": 25.9655,
+          "atr_pct": 5.9165
+        },
+        {
+          "date_utc": "2025-03-15",
+          "close_usdt": 84338.44,
+          "rsi14": 44.2278,
+          "macd_hist": 71.8816,
+          "adx14": 35.6439,
+          "di_plus": 12.6321,
+          "di_minus": 25.5469,
+          "atr_pct": 5.5604
+        },
+        {
+          "date_utc": "2025-03-16",
+          "close_usdt": 82574.53,
+          "rsi14": 41.7936,
+          "macd_hist": 112.2159,
+          "adx14": 35.8247,
+          "di_plus": 12.0141,
+          "di_minus": 26.8508,
+          "atr_pct": 5.5447
+        },
+        {
+          "date_utc": "2025-03-17",
+          "close_usdt": 84010.03,
+          "rsi14": 44.4721,
+          "macd_hist": 251.6881,
+          "adx14": 35.9926,
+          "di_plus": 11.567,
+          "di_minus": 25.8515,
+          "atr_pct": 5.2563
+        },
+        {
+          "date_utc": "2025-03-18",
+          "close_usdt": 82715.03,
+          "rsi14": 42.569,
+          "macd_hist": 271.1587,
+          "adx14": 36.4044,
+          "di_plus": 11.0131,
+          "di_minus": 26.8051,
+          "atr_pct": 5.2066
+        },
+        {
+          "date_utc": "2025-03-19",
+          "close_usdt": 86845.94,
+          "rsi14": 49.9297,
+          "macd_hist": 560.0449,
+          "adx14": 35.5381,
+          "di_plus": 15.1294,
+          "di_minus": 24.8303,
+          "atr_pct": 4.971
+        },
+        {
+          "date_utc": "2025-03-20",
+          "close_usdt": 84223.39,
+          "rsi14": 45.907,
+          "macd_hist": 570.3852,
+          "adx14": 34.5577,
+          "di_plus": 14.9274,
+          "di_minus": 23.2562,
+          "atr_pct": 5.0818
+        },
+        {
+          "date_utc": "2025-03-21",
+          "close_usdt": 84088.79,
+          "rsi14": 45.7035,
+          "macd_hist": 563.0714,
+          "adx14": 33.7707,
+          "di_plus": 14.4912,
+          "di_minus": 23.414,
+          "atr_pct": 4.8686
+        },
+        {
+          "date_utc": "2025-03-22",
+          "close_usdt": 83840.59,
+          "rsi14": 45.3046,
+          "macd_hist": 536.5427,
+          "adx14": 33.0399,
+          "di_plus": 14.2465,
+          "di_minus": 23.0187,
+          "atr_pct": 4.6121
+        },
+        {
+          "date_utc": "2025-03-23",
+          "close_usdt": 86082.5,
+          "rsi14": 49.5845,
+          "macd_hist": 657.0513,
+          "adx14": 31.6708,
+          "di_plus": 16.6424,
+          "di_minus": 22.0032,
+          "atr_pct": 4.3637
+        },
+        {
+          "date_utc": "2025-03-24",
+          "close_usdt": 87498.16,
+          "rsi14": 52.1317,
+          "macd_hist": 809.1758,
+          "adx14": 29.4145,
+          "di_plus": 20.6661,
+          "di_minus": 20.6316,
+          "atr_pct": 4.2514
+        },
+        {
+          "date_utc": "2025-03-25",
+          "close_usdt": 87392.87,
+          "rsi14": 51.9216,
+          "macd_hist": 874.2342,
+          "adx14": 27.3195,
+          "di_plus": 19.7553,
+          "di_minus": 19.7223,
+          "atr_pct": 4.1347
+        },
+        {
+          "date_utc": "2025-03-26",
+          "close_usdt": 86909.17,
+          "rsi14": 50.9065,
+          "macd_hist": 855.169,
+          "adx14": 25.5315,
+          "di_plus": 18.7893,
+          "di_minus": 19.6691,
+          "atr_pct": 4.0593
+        },
+        {
+          "date_utc": "2025-03-27",
+          "close_usdt": 87232.01,
+          "rsi14": 51.5868,
+          "macd_hist": 833.8986,
+          "adx14": 23.8949,
+          "di_plus": 18.0206,
+          "di_minus": 18.9899,
+          "atr_pct": 3.9156
+        },
+        {
+          "date_utc": "2025-03-28",
+          "close_usdt": 84424.38,
+          "rsi14": 45.6608,
+          "macd_hist": 610.6811,
+          "adx14": 23.2013,
+          "di_plus": 16.5551,
+          "di_minus": 22.0283,
+          "atr_pct": 4.0893
+        },
+        {
+          "date_utc": "2025-03-29",
+          "close_usdt": 82648.54,
+          "rsi14": 42.3472,
+          "macd_hist": 337.043,
+          "adx14": 23.1749,
+          "di_plus": 15.5244,
+          "di_minus": 24.7105,
+          "atr_pct": 4.1364
+        },
+        {
+          "date_utc": "2025-03-30",
+          "close_usdt": 82389.99,
+          "rsi14": 41.8707,
+          "macd_hist": 142.2087,
+          "adx14": 23.1748,
+          "di_plus": 14.8655,
+          "di_minus": 23.8338,
+          "atr_pct": 4.0237
+        },
+        {
+          "date_utc": "2025-03-31",
+          "close_usdt": 82550.01,
+          "rsi14": 42.3034,
+          "macd_hist": 33.3685,
+          "adx14": 22.9645,
+          "di_plus": 14.8925,
+          "di_minus": 22.446,
+          "atr_pct": 3.9596
+        }
+      ]
+    },
+    "2026": {
+      "sample_start": "2026-02-01",
+      "sample_end": "2026-10-31",
+      "verified_daily_bars": 304,
+      "trade_days": 273,
+      "prefix_invariance_checks": 84,
+      "returns": {
+        "BUY_HOLD": {
+          "final_equity_usdt": 982.327467,
+          "net_return_pct": -1.7673,
+          "max_close_to_close_drawdown_pct": -28.6891,
+          "exposure_days": 273,
+          "days": 273,
+          "buys": 1,
+          "sells": 0,
+          "total_trades": 1,
+          "long_intervals_under_4_days": 0
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 1032.382233,
+          "net_return_pct": 3.2382,
+          "max_close_to_close_drawdown_pct": -11.7554,
+          "exposure_days": 110,
+          "days": 273,
+          "buys": 12,
+          "sells": 12,
+          "total_trades": 24,
+          "long_intervals_under_4_days": 7
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1158.036835,
+          "net_return_pct": 15.8037,
+          "max_close_to_close_drawdown_pct": -14.775,
+          "exposure_days": 172,
+          "days": 273,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 0
+        },
+        "RSI14_50": {
+          "final_equity_usdt": 1077.692972,
+          "net_return_pct": 7.7693,
+          "max_close_to_close_drawdown_pct": -14.7845,
+          "exposure_days": 138,
+          "days": 273,
+          "buys": 15,
+          "sells": 15,
+          "total_trades": 30,
+          "long_intervals_under_4_days": 8
+        },
+        "MACD_12_26_9": {
+          "final_equity_usdt": 955.522205,
+          "net_return_pct": -4.4478,
+          "max_close_to_close_drawdown_pct": -14.3688,
+          "exposure_days": 74,
+          "days": 273,
+          "buys": 9,
+          "sells": 9,
+          "total_trades": 18,
+          "long_intervals_under_4_days": 2
+        },
+        "ADX14_DI_20": {
+          "final_equity_usdt": 988.826448,
+          "net_return_pct": -1.1174,
+          "max_close_to_close_drawdown_pct": -13.7993,
+          "exposure_days": 97,
+          "days": 273,
+          "buys": 6,
+          "sells": 6,
+          "total_trades": 12,
+          "long_intervals_under_4_days": 3
+        },
+        "TWO_OF_THREE": {
+          "final_equity_usdt": 1081.231429,
+          "net_return_pct": 8.1231,
+          "max_close_to_close_drawdown_pct": -14.3688,
+          "exposure_days": 109,
+          "days": 273,
+          "buys": 9,
+          "sells": 9,
+          "total_trades": 18,
+          "long_intervals_under_4_days": 4
+        }
+      },
+      "stress_results": {
+        "BUY_HOLD": {
+          "final_equity_usdt": 979.381957,
+          "net_return_pct": -2.0618,
+          "max_close_to_close_drawdown_pct": -28.6891,
+          "exposure_days": 273,
+          "days": 273,
+          "buys": 1,
+          "sells": 0,
+          "total_trades": 1,
+          "long_intervals_under_4_days": 0
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 995.841586,
+          "net_return_pct": -0.4158,
+          "max_close_to_close_drawdown_pct": -12.2838,
+          "exposure_days": 110,
+          "days": 273,
+          "buys": 12,
+          "sells": 12,
+          "total_trades": 24,
+          "long_intervals_under_4_days": 7
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1151.102498,
+          "net_return_pct": 15.1102,
+          "max_close_to_close_drawdown_pct": -15.0305,
+          "exposure_days": 172,
+          "days": 273,
+          "buys": 2,
+          "sells": 2,
+          "total_trades": 4,
+          "long_intervals_under_4_days": 0
+        },
+        "RSI14_50": {
+          "final_equity_usdt": 1030.225325,
+          "net_return_pct": 3.0225,
+          "max_close_to_close_drawdown_pct": -16.5571,
+          "exposure_days": 138,
+          "days": 273,
+          "buys": 15,
+          "sells": 15,
+          "total_trades": 30,
+          "long_intervals_under_4_days": 8
+        },
+        "MACD_12_26_9": {
+          "final_equity_usdt": 930.043124,
+          "net_return_pct": -6.9957,
+          "max_close_to_close_drawdown_pct": -14.8816,
+          "exposure_days": 74,
+          "days": 273,
+          "buys": 9,
+          "sells": 9,
+          "total_trades": 18,
+          "long_intervals_under_4_days": 2
+        },
+        "ADX14_DI_20": {
+          "final_equity_usdt": 971.169293,
+          "net_return_pct": -2.8831,
+          "max_close_to_close_drawdown_pct": -14.8285,
+          "exposure_days": 97,
+          "days": 273,
+          "buys": 6,
+          "sells": 6,
+          "total_trades": 12,
+          "long_intervals_under_4_days": 3
+        },
+        "TWO_OF_THREE": {
+          "final_equity_usdt": 1052.400301,
+          "net_return_pct": 5.24,
+          "max_close_to_close_drawdown_pct": -14.8816,
+          "exposure_days": 109,
+          "days": 273,
+          "buys": 9,
+          "sells": 9,
+          "total_trades": 18,
+          "long_intervals_under_4_days": 4
+        }
+      },
+      "events": [
+        {
+          "date_utc": "2026-02-01",
+          "peak_utc": "2026-01-14",
+          "drawdown_at_event_pct": -20.612,
+          "days_to_threshold": 18,
+          "after_14d_status": "PERSISTENT",
+          "after_14d_change_vs_event_pct": -10.57,
+          "indicators": {
+            "EMA10_30": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "RSI14_50": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "MACD_12_26_9": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "ADX14_DI_20": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "TWO_OF_THREE": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            }
+          }
+        },
+        {
+          "date_utc": "2026-03-27",
+          "peak_utc": "2026-03-16",
+          "drawdown_at_event_pct": -11.321,
+          "days_to_threshold": 11,
+          "after_14d_status": "RECOVERED",
+          "after_14d_change_vs_event_pct": 9.872,
+          "indicators": {
+            "EMA10_30": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_event_close": false,
+              "days_to_first_later_off_signal": null,
+              "change_before_later_exit_signal_pct": null
+            },
+            "RSI14_50": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "MACD_12_26_9": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "ADX14_DI_20": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "TWO_OF_THREE": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            }
+          }
+        },
+        {
+          "date_utc": "2026-05-28",
+          "peak_utc": "2026-05-10",
+          "drawdown_at_event_pct": -10.452,
+          "days_to_threshold": 18,
+          "after_14d_status": "PERSISTENT",
+          "after_14d_change_vs_event_pct": -13.572,
+          "indicators": {
+            "EMA10_30": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "RSI14_50": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "MACD_12_26_9": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "ADX14_DI_20": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "TWO_OF_THREE": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            }
+          }
+        },
+        {
+          "date_utc": "2026-10-30",
+          "peak_utc": "2026-10-04",
+          "drawdown_at_event_pct": -10.587,
+          "days_to_threshold": 26,
+          "after_14d_status": "CENSORED",
+          "after_14d_change_vs_event_pct": null,
+          "indicators": {
+            "EMA10_30": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "RSI14_50": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "MACD_12_26_9": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "ADX14_DI_20": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            },
+            "TWO_OF_THREE": {
+              "already_risk_off_at_event_close": true,
+              "days_to_first_later_off_signal": 0,
+              "change_before_later_exit_signal_pct": null
+            }
+          }
+        }
+      ],
+      "transaction_ledgers": {
+        "BUY_HOLD": [
+          {
+            "date_utc": "2026-02-01",
+            "signal_date_utc": "2026-01-31",
+            "side": "BUY",
+            "open_usdt": 78741.1
+          }
+        ],
+        "EMA10_30": [
+          {
+            "date_utc": "2026-03-16",
+            "signal_date_utc": "2026-03-15",
+            "side": "BUY",
+            "open_usdt": 72815.25
+          },
+          {
+            "date_utc": "2026-03-20",
+            "signal_date_utc": "2026-03-19",
+            "side": "SELL",
+            "open_usdt": 69930.01
+          },
+          {
+            "date_utc": "2026-03-26",
+            "signal_date_utc": "2026-03-25",
+            "side": "BUY",
+            "open_usdt": 71336.53
+          },
+          {
+            "date_utc": "2026-03-27",
+            "signal_date_utc": "2026-03-26",
+            "side": "SELL",
+            "open_usdt": 68820.31
+          },
+          {
+            "date_utc": "2026-04-10",
+            "signal_date_utc": "2026-04-09",
+            "side": "BUY",
+            "open_usdt": 71787.98
+          },
+          {
+            "date_utc": "2026-05-17",
+            "signal_date_utc": "2026-05-16",
+            "side": "SELL",
+            "open_usdt": 78148.05
+          },
+          {
+            "date_utc": "2026-07-18",
+            "signal_date_utc": "2026-07-17",
+            "side": "BUY",
+            "open_usdt": 63931.67
+          },
+          {
+            "date_utc": "2026-07-25",
+            "signal_date_utc": "2026-07-24",
+            "side": "SELL",
+            "open_usdt": 64140.0
+          },
+          {
+            "date_utc": "2026-07-26",
+            "signal_date_utc": "2026-07-25",
+            "side": "BUY",
+            "open_usdt": 64375.01
+          },
+          {
+            "date_utc": "2026-07-28",
+            "signal_date_utc": "2026-07-27",
+            "side": "SELL",
+            "open_usdt": 63755.86
+          },
+          {
+            "date_utc": "2026-07-31",
+            "signal_date_utc": "2026-07-30",
+            "side": "BUY",
+            "open_usdt": 64780.03
+          },
+          {
+            "date_utc": "2026-08-01",
+            "signal_date_utc": "2026-07-31",
+            "side": "SELL",
+            "open_usdt": 62887.88
+          },
+          {
+            "date_utc": "2026-08-08",
+            "signal_date_utc": "2026-08-07",
+            "side": "BUY",
+            "open_usdt": 64923.2
+          },
+          {
+            "date_utc": "2026-08-11",
+            "signal_date_utc": "2026-08-10",
+            "side": "SELL",
+            "open_usdt": 63970.01
+          },
+          {
+            "date_utc": "2026-08-20",
+            "signal_date_utc": "2026-08-19",
+            "side": "BUY",
+            "open_usdt": 69334.78
+          },
+          {
+            "date_utc": "2026-09-16",
+            "signal_date_utc": "2026-09-15",
+            "side": "SELL",
+            "open_usdt": 75644.48
+          },
+          {
+            "date_utc": "2026-09-17",
+            "signal_date_utc": "2026-09-16",
+            "side": "BUY",
+            "open_usdt": 76206.0
+          },
+          {
+            "date_utc": "2026-10-09",
+            "signal_date_utc": "2026-10-08",
+            "side": "SELL",
+            "open_usdt": 81754.46
+          },
+          {
+            "date_utc": "2026-10-10",
+            "signal_date_utc": "2026-10-09",
+            "side": "BUY",
+            "open_usdt": 82635.56
+          },
+          {
+            "date_utc": "2026-10-13",
+            "signal_date_utc": "2026-10-12",
+            "side": "SELL",
+            "open_usdt": 81850.01
+          },
+          {
+            "date_utc": "2026-10-14",
+            "signal_date_utc": "2026-10-13",
+            "side": "BUY",
+            "open_usdt": 83169.01
+          },
+          {
+            "date_utc": "2026-10-15",
+            "signal_date_utc": "2026-10-14",
+            "side": "SELL",
+            "open_usdt": 81682.02
+          },
+          {
+            "date_utc": "2026-10-21",
+            "signal_date_utc": "2026-10-20",
+            "side": "BUY",
+            "open_usdt": 83028.14
+          },
+          {
+            "date_utc": "2026-10-23",
+            "signal_date_utc": "2026-10-22",
+            "side": "SELL",
+            "open_usdt": 81416.09
+          }
+        ],
+        "SUPERTREND_ATR14_X3": [
+          {
+            "date_utc": "2026-03-17",
+            "signal_date_utc": "2026-03-16",
+            "side": "BUY",
+            "open_usdt": 74884.67
+          },
+          {
+            "date_utc": "2026-05-28",
+            "signal_date_utc": "2026-05-27",
+            "side": "SELL",
+            "open_usdt": 74449.31
+          },
+          {
+            "date_utc": "2026-07-22",
+            "signal_date_utc": "2026-07-21",
+            "side": "BUY",
+            "open_usdt": 66556.15
+          },
+          {
+            "date_utc": "2026-10-30",
+            "signal_date_utc": "2026-10-29",
+            "side": "SELL",
+            "open_usdt": 77991.89
+          }
+        ],
+        "RSI14_50": [
+          {
+            "date_utc": "2026-03-05",
+            "signal_date_utc": "2026-03-04",
+            "side": "BUY",
+            "open_usdt": 72666.77
+          },
+          {
+            "date_utc": "2026-03-07",
+            "signal_date_utc": "2026-03-06",
+            "side": "SELL",
+            "open_usdt": 68114.02
+          },
+          {
+            "date_utc": "2026-03-11",
+            "signal_date_utc": "2026-03-10",
+            "side": "BUY",
+            "open_usdt": 69948.64
+          },
+          {
+            "date_utc": "2026-03-20",
+            "signal_date_utc": "2026-03-19",
+            "side": "SELL",
+            "open_usdt": 69930.01
+          },
+          {
+            "date_utc": "2026-03-24",
+            "signal_date_utc": "2026-03-23",
+            "side": "BUY",
+            "open_usdt": 70906.45
+          },
+          {
+            "date_utc": "2026-03-27",
+            "signal_date_utc": "2026-03-26",
+            "side": "SELL",
+            "open_usdt": 68820.31
+          },
+          {
+            "date_utc": "2026-04-06",
+            "signal_date_utc": "2026-04-05",
+            "side": "BUY",
+            "open_usdt": 69034.18
+          },
+          {
+            "date_utc": "2026-05-17",
+            "signal_date_utc": "2026-05-16",
+            "side": "SELL",
+            "open_usdt": 78148.05
+          },
+          {
+            "date_utc": "2026-07-06",
+            "signal_date_utc": "2026-07-05",
+            "side": "BUY",
+            "open_usdt": 63650.01
+          },
+          {
+            "date_utc": "2026-07-09",
+            "signal_date_utc": "2026-07-08",
+            "side": "SELL",
+            "open_usdt": 62290.01
+          },
+          {
+            "date_utc": "2026-07-10",
+            "signal_date_utc": "2026-07-09",
+            "side": "BUY",
+            "open_usdt": 63230.01
+          },
+          {
+            "date_utc": "2026-07-14",
+            "signal_date_utc": "2026-07-13",
+            "side": "SELL",
+            "open_usdt": 62334.52
+          },
+          {
+            "date_utc": "2026-07-15",
+            "signal_date_utc": "2026-07-14",
+            "side": "BUY",
+            "open_usdt": 65043.99
+          },
+          {
+            "date_utc": "2026-07-25",
+            "signal_date_utc": "2026-07-24",
+            "side": "SELL",
+            "open_usdt": 64140.0
+          },
+          {
+            "date_utc": "2026-07-26",
+            "signal_date_utc": "2026-07-25",
+            "side": "BUY",
+            "open_usdt": 64375.01
+          },
+          {
+            "date_utc": "2026-07-28",
+            "signal_date_utc": "2026-07-27",
+            "side": "SELL",
+            "open_usdt": 63755.86
+          },
+          {
+            "date_utc": "2026-07-31",
+            "signal_date_utc": "2026-07-30",
+            "side": "BUY",
+            "open_usdt": 64780.03
+          },
+          {
+            "date_utc": "2026-08-01",
+            "signal_date_utc": "2026-07-31",
+            "side": "SELL",
+            "open_usdt": 62887.88
+          },
+          {
+            "date_utc": "2026-08-05",
+            "signal_date_utc": "2026-08-04",
+            "side": "BUY",
+            "open_usdt": 64106.55
+          },
+          {
+            "date_utc": "2026-08-11",
+            "signal_date_utc": "2026-08-10",
+            "side": "SELL",
+            "open_usdt": 63970.01
+          },
+          {
+            "date_utc": "2026-08-18",
+            "signal_date_utc": "2026-08-17",
+            "side": "BUY",
+            "open_usdt": 64532.11
+          },
+          {
+            "date_utc": "2026-09-16",
+            "signal_date_utc": "2026-09-15",
+            "side": "SELL",
+            "open_usdt": 75644.48
+          },
+          {
+            "date_utc": "2026-09-17",
+            "signal_date_utc": "2026-09-16",
+            "side": "BUY",
+            "open_usdt": 76206.0
+          },
+          {
+            "date_utc": "2026-10-09",
+            "signal_date_utc": "2026-10-08",
+            "side": "SELL",
+            "open_usdt": 81754.46
+          },
+          {
+            "date_utc": "2026-10-10",
+            "signal_date_utc": "2026-10-09",
+            "side": "BUY",
+            "open_usdt": 82635.56
+          },
+          {
+            "date_utc": "2026-10-13",
+            "signal_date_utc": "2026-10-12",
+            "side": "SELL",
+            "open_usdt": 81850.01
+          },
+          {
+            "date_utc": "2026-10-14",
+            "signal_date_utc": "2026-10-13",
+            "side": "BUY",
+            "open_usdt": 83169.01
+          },
+          {
+            "date_utc": "2026-10-15",
+            "signal_date_utc": "2026-10-14",
+            "side": "SELL",
+            "open_usdt": 81682.02
+          },
+          {
+            "date_utc": "2026-10-21",
+            "signal_date_utc": "2026-10-20",
+            "side": "BUY",
+            "open_usdt": 83028.14
+          },
+          {
+            "date_utc": "2026-10-23",
+            "signal_date_utc": "2026-10-22",
+            "side": "SELL",
+            "open_usdt": 81416.09
+          }
+        ],
+        "MACD_12_26_9": [
+          {
+            "date_utc": "2026-03-16",
+            "signal_date_utc": "2026-03-15",
+            "side": "BUY",
+            "open_usdt": 72815.25
+          },
+          {
+            "date_utc": "2026-03-23",
+            "signal_date_utc": "2026-03-22",
+            "side": "SELL",
+            "open_usdt": 67859.0
+          },
+          {
+            "date_utc": "2026-03-26",
+            "signal_date_utc": "2026-03-25",
+            "side": "BUY",
+            "open_usdt": 71336.53
+          },
+          {
+            "date_utc": "2026-03-27",
+            "signal_date_utc": "2026-03-26",
+            "side": "SELL",
+            "open_usdt": 68820.31
+          },
+          {
+            "date_utc": "2026-04-10",
+            "signal_date_utc": "2026-04-09",
+            "side": "BUY",
+            "open_usdt": 71787.98
+          },
+          {
+            "date_utc": "2026-04-29",
+            "signal_date_utc": "2026-04-28",
+            "side": "SELL",
+            "open_usdt": 76342.78
+          },
+          {
+            "date_utc": "2026-05-05",
+            "signal_date_utc": "2026-05-04",
+            "side": "BUY",
+            "open_usdt": 79861.01
+          },
+          {
+            "date_utc": "2026-05-13",
+            "signal_date_utc": "2026-05-12",
+            "side": "SELL",
+            "open_usdt": 80504.47
+          },
+          {
+            "date_utc": "2026-07-16",
+            "signal_date_utc": "2026-07-15",
+            "side": "BUY",
+            "open_usdt": 64756.28
+          },
+          {
+            "date_utc": "2026-07-28",
+            "signal_date_utc": "2026-07-27",
+            "side": "SELL",
+            "open_usdt": 63755.86
+          },
+          {
+            "date_utc": "2026-08-08",
+            "signal_date_utc": "2026-08-07",
+            "side": "BUY",
+            "open_usdt": 64923.2
+          },
+          {
+            "date_utc": "2026-08-12",
+            "signal_date_utc": "2026-08-11",
+            "side": "SELL",
+            "open_usdt": 63600.01
+          },
+          {
+            "date_utc": "2026-08-20",
+            "signal_date_utc": "2026-08-19",
+            "side": "BUY",
+            "open_usdt": 69334.78
+          },
+          {
+            "date_utc": "2026-09-03",
+            "signal_date_utc": "2026-09-02",
+            "side": "SELL",
+            "open_usdt": 77340.01
+          },
+          {
+            "date_utc": "2026-09-04",
+            "signal_date_utc": "2026-09-03",
+            "side": "BUY",
+            "open_usdt": 81270.37
+          },
+          {
+            "date_utc": "2026-09-05",
+            "signal_date_utc": "2026-09-04",
+            "side": "SELL",
+            "open_usdt": 79660.77
+          },
+          {
+            "date_utc": "2026-09-22",
+            "signal_date_utc": "2026-09-21",
+            "side": "BUY",
+            "open_usdt": 86620.01
+          },
+          {
+            "date_utc": "2026-09-30",
+            "signal_date_utc": "2026-09-29",
+            "side": "SELL",
+            "open_usdt": 83663.66
+          }
+        ],
+        "ADX14_DI_20": [
+          {
+            "date_utc": "2026-03-05",
+            "signal_date_utc": "2026-03-04",
+            "side": "BUY",
+            "open_usdt": 72666.77
+          },
+          {
+            "date_utc": "2026-03-07",
+            "signal_date_utc": "2026-03-06",
+            "side": "SELL",
+            "open_usdt": 68114.02
+          },
+          {
+            "date_utc": "2026-03-11",
+            "signal_date_utc": "2026-03-10",
+            "side": "BUY",
+            "open_usdt": 69948.64
+          },
+          {
+            "date_utc": "2026-03-23",
+            "signal_date_utc": "2026-03-22",
+            "side": "SELL",
+            "open_usdt": 67859.0
+          },
+          {
+            "date_utc": "2026-04-23",
+            "signal_date_utc": "2026-04-22",
+            "side": "BUY",
+            "open_usdt": 78178.22
+          },
+          {
+            "date_utc": "2026-05-19",
+            "signal_date_utc": "2026-05-18",
+            "side": "SELL",
+            "open_usdt": 77001.88
+          },
+          {
+            "date_utc": "2026-05-21",
+            "signal_date_utc": "2026-05-20",
+            "side": "BUY",
+            "open_usdt": 77552.24
+          },
+          {
+            "date_utc": "2026-05-23",
+            "signal_date_utc": "2026-05-22",
+            "side": "SELL",
+            "open_usdt": 75539.5
+          },
+          {
+            "date_utc": "2026-08-21",
+            "signal_date_utc": "2026-08-20",
+            "side": "BUY",
+            "open_usdt": 73027.02
+          },
+          {
+            "date_utc": "2026-10-14",
+            "signal_date_utc": "2026-10-13",
+            "side": "SELL",
+            "open_usdt": 83169.01
+          },
+          {
+            "date_utc": "2026-10-20",
+            "signal_date_utc": "2026-10-19",
+            "side": "BUY",
+            "open_usdt": 81938.39
+          },
+          {
+            "date_utc": "2026-10-21",
+            "signal_date_utc": "2026-10-20",
+            "side": "SELL",
+            "open_usdt": 83028.14
+          }
+        ],
+        "TWO_OF_THREE": [
+          {
+            "date_utc": "2026-03-16",
+            "signal_date_utc": "2026-03-15",
+            "side": "BUY",
+            "open_usdt": 72815.25
+          },
+          {
+            "date_utc": "2026-03-23",
+            "signal_date_utc": "2026-03-22",
+            "side": "SELL",
+            "open_usdt": 67859.0
+          },
+          {
+            "date_utc": "2026-03-26",
+            "signal_date_utc": "2026-03-25",
+            "side": "BUY",
+            "open_usdt": 71336.53
+          },
+          {
+            "date_utc": "2026-03-27",
+            "signal_date_utc": "2026-03-26",
+            "side": "SELL",
+            "open_usdt": 68820.31
+          },
+          {
+            "date_utc": "2026-04-10",
+            "signal_date_utc": "2026-04-09",
+            "side": "BUY",
+            "open_usdt": 71787.98
+          },
+          {
+            "date_utc": "2026-05-17",
+            "signal_date_utc": "2026-05-16",
+            "side": "SELL",
+            "open_usdt": 78148.05
+          },
+          {
+            "date_utc": "2026-07-18",
+            "signal_date_utc": "2026-07-17",
+            "side": "BUY",
+            "open_usdt": 63931.67
+          },
+          {
+            "date_utc": "2026-07-25",
+            "signal_date_utc": "2026-07-24",
+            "side": "SELL",
+            "open_usdt": 64140.0
+          },
+          {
+            "date_utc": "2026-07-26",
+            "signal_date_utc": "2026-07-25",
+            "side": "BUY",
+            "open_usdt": 64375.01
+          },
+          {
+            "date_utc": "2026-07-28",
+            "signal_date_utc": "2026-07-27",
+            "side": "SELL",
+            "open_usdt": 63755.86
+          },
+          {
+            "date_utc": "2026-08-08",
+            "signal_date_utc": "2026-08-07",
+            "side": "BUY",
+            "open_usdt": 64923.2
+          },
+          {
+            "date_utc": "2026-08-11",
+            "signal_date_utc": "2026-08-10",
+            "side": "SELL",
+            "open_usdt": 63970.01
+          },
+          {
+            "date_utc": "2026-08-20",
+            "signal_date_utc": "2026-08-19",
+            "side": "BUY",
+            "open_usdt": 69334.78
+          },
+          {
+            "date_utc": "2026-09-16",
+            "signal_date_utc": "2026-09-15",
+            "side": "SELL",
+            "open_usdt": 75644.48
+          },
+          {
+            "date_utc": "2026-09-17",
+            "signal_date_utc": "2026-09-16",
+            "side": "BUY",
+            "open_usdt": 76206.0
+          },
+          {
+            "date_utc": "2026-10-09",
+            "signal_date_utc": "2026-10-08",
+            "side": "SELL",
+            "open_usdt": 81754.46
+          },
+          {
+            "date_utc": "2026-10-10",
+            "signal_date_utc": "2026-10-09",
+            "side": "BUY",
+            "open_usdt": 82635.56
+          },
+          {
+            "date_utc": "2026-10-13",
+            "signal_date_utc": "2026-10-12",
+            "side": "SELL",
+            "open_usdt": 81850.01
+          }
+        ]
+      },
+      "indicator_daily": [
+        {
+          "date_utc": "2026-02-01",
+          "close_usdt": 76968.21,
+          "rsi14": 24.6942,
+          "macd_hist": -1453.3675,
+          "adx14": 28.5583,
+          "di_plus": 12.6882,
+          "di_minus": 39.1729,
+          "atr_pct": 4.0624
+        },
+        {
+          "date_utc": "2026-02-02",
+          "close_usdt": 78738.61,
+          "rsi14": 30.6182,
+          "macd_hist": -1427.5697,
+          "adx14": 30.3389,
+          "di_plus": 11.3592,
+          "di_minus": 37.4835,
+          "atr_pct": 4.1189
+        },
+        {
+          "date_utc": "2026-02-03",
+          "close_usdt": 75770.21,
+          "rsi14": 26.81,
+          "macd_hist": -1512.0113,
+          "adx14": 32.2399,
+          "di_plus": 9.8944,
+          "di_minus": 36.0766,
+          "atr_pct": 4.5629
+        },
+        {
+          "date_utc": "2026-02-04",
+          "close_usdt": 73165.83,
+          "rsi14": 23.9906,
+          "macd_hist": -1634.4453,
+          "adx14": 34.1549,
+          "di_plus": 8.889,
+          "di_minus": 34.5246,
+          "atr_pct": 4.8841
+        },
+        {
+          "date_utc": "2026-02-05",
+          "close_usdt": 62909.86,
+          "rsi14": 16.5913,
+          "macd_hist": -2258.8554,
+          "adx14": 36.8726,
+          "di_plus": 7.1877,
+          "di_minus": 44.5272,
+          "atr_pct": 6.5231
+        },
+        {
+          "date_utc": "2026-02-06",
+          "close_usdt": 70580.26,
+          "rsi14": 33.1883,
+          "macd_hist": -2015.9942,
+          "adx14": 39.5517,
+          "di_plus": 5.8902,
+          "di_minus": 40.0916,
+          "atr_pct": 6.5881
+        },
+        {
+          "date_utc": "2026-02-07",
+          "close_usdt": 69289.38,
+          "rsi14": 32.033,
+          "macd_hist": -1809.5686,
+          "adx14": 42.0395,
+          "di_plus": 5.4914,
+          "di_minus": 37.3771,
+          "atr_pct": 6.6841
+        },
+        {
+          "date_utc": "2026-02-08",
+          "close_usdt": 70330.38,
+          "rsi14": 34.0274,
+          "macd_hist": -1483.8616,
+          "adx14": 44.0751,
+          "di_plus": 6.1134,
+          "di_minus": 35.3884,
+          "atr_pct": 6.4584
+        },
+        {
+          "date_utc": "2026-02-09",
+          "close_usdt": 70138.0,
+          "rsi14": 33.8298,
+          "macd_hist": -1175.795,
+          "adx14": 46.0141,
+          "di_plus": 5.8042,
+          "di_minus": 34.5312,
+          "atr_pct": 6.3339
+        },
+        {
+          "date_utc": "2026-02-10",
+          "close_usdt": 68841.29,
+          "rsi14": 32.4618,
+          "macd_hist": -962.7303,
+          "adx14": 47.8584,
+          "di_plus": 5.5424,
+          "di_minus": 33.8138,
+          "atr_pct": 6.2753
+        },
+        {
+          "date_utc": "2026-02-11",
+          "close_usdt": 67082.52,
+          "rsi14": 30.6512,
+          "macd_hist": -847.6734,
+          "adx14": 49.7413,
+          "di_plus": 5.2141,
+          "di_minus": 35.2344,
+          "atr_pct": 6.3564
+        },
+        {
+          "date_utc": "2026-02-12",
+          "close_usdt": 66272.17,
+          "rsi14": 29.8258,
+          "macd_hist": -737.6194,
+          "adx14": 51.5406,
+          "di_plus": 4.9217,
+          "di_minus": 34.3453,
+          "atr_pct": 6.3294
+        },
+        {
+          "date_utc": "2026-02-13",
+          "close_usdt": 68853.96,
+          "rsi14": 35.7613,
+          "macd_hist": -418.3108,
+          "adx14": 52.6155,
+          "di_plus": 6.4607,
+          "di_minus": 32.2125,
+          "atr_pct": 6.0315
+        },
+        {
+          "date_utc": "2026-02-14",
+          "close_usdt": 69822.95,
+          "rsi14": 37.8848,
+          "macd_hist": -86.5558,
+          "adx14": 53.0298,
+          "di_plus": 8.1784,
+          "di_minus": 31.1565,
+          "atr_pct": 5.7101
+        },
+        {
+          "date_utc": "2026-02-15",
+          "close_usdt": 68832.58,
+          "rsi14": 36.5547,
+          "macd_hist": 110.7647,
+          "adx14": 53.5173,
+          "di_plus": 7.7334,
+          "di_minus": 30.7929,
+          "atr_pct": 5.6881
+        },
+        {
+          "date_utc": "2026-02-16",
+          "close_usdt": 68892.43,
+          "rsi14": 36.6994,
+          "macd_hist": 280.2506,
+          "adx14": 54.0695,
+          "di_plus": 7.3257,
+          "di_minus": 30.4834,
+          "atr_pct": 5.5709
+        },
+        {
+          "date_utc": "2026-02-17",
+          "close_usdt": 67503.52,
+          "rsi14": 34.7213,
+          "macd_hist": 330.3103,
+          "adx14": 54.6777,
+          "di_plus": 6.9601,
+          "di_minus": 30.2439,
+          "atr_pct": 5.5567
+        },
+        {
+          "date_utc": "2026-02-18",
+          "close_usdt": 66461.0,
+          "rsi14": 33.2716,
+          "macd_hist": 324.2446,
+          "adx14": 55.3487,
+          "di_plus": 6.607,
+          "di_minus": 30.1716,
+          "atr_pct": 5.5208
+        },
+        {
+          "date_utc": "2026-02-19",
+          "close_usdt": 67003.73,
+          "rsi14": 34.7978,
+          "macd_hist": 383.7467,
+          "adx14": 56.0061,
+          "di_plus": 6.3812,
+          "di_minus": 29.6225,
+          "atr_pct": 5.2649
+        },
+        {
+          "date_utc": "2026-02-20",
+          "close_usdt": 68020.01,
+          "rsi14": 37.6725,
+          "macd_hist": 510.5723,
+          "adx14": 55.9464,
+          "di_plus": 8.194,
+          "di_minus": 28.362,
+          "atr_pct": 5.0299
+        },
+        {
+          "date_utc": "2026-02-21",
+          "close_usdt": 67975.93,
+          "rsi14": 37.5951,
+          "macd_hist": 604.1132,
+          "adx14": 55.6376,
+          "di_plus": 8.8183,
+          "di_minus": 27.6386,
+          "atr_pct": 4.7959
+        },
+        {
+          "date_utc": "2026-02-22",
+          "close_usdt": 67643.4,
+          "rsi14": 36.9777,
+          "macd_hist": 652.1033,
+          "adx14": 55.4263,
+          "di_plus": 8.6041,
+          "di_minus": 27.7609,
+          "atr_pct": 4.5867
+        },
+        {
+          "date_utc": "2026-02-23",
+          "close_usdt": 64656.02,
+          "rsi14": 31.908,
+          "macd_hist": 498.1146,
+          "adx14": 55.8511,
+          "di_plus": 7.864,
+          "di_minus": 32.8536,
+          "atr_pct": 4.8752
+        },
+        {
+          "date_utc": "2026-02-24",
+          "close_usdt": 64058.15,
+          "rsi14": 30.9923,
+          "macd_hist": 376.9596,
+          "adx14": 56.4561,
+          "di_plus": 7.409,
+          "di_minus": 34.1222,
+          "atr_pct": 4.8498
+        },
+        {
+          "date_utc": "2026-02-25",
+          "close_usdt": 67988.04,
+          "rsi14": 42.6449,
+          "macd_hist": 570.8271,
+          "adx14": 54.3383,
+          "di_plus": 17.1199,
+          "di_minus": 29.6603,
+          "atr_pct": 4.8814
+        },
+        {
+          "date_utc": "2026-02-26",
+          "close_usdt": 67485.18,
+          "rsi14": 41.6752,
+          "macd_hist": 667.7929,
+          "adx14": 52.3718,
+          "di_plus": 16.232,
+          "di_minus": 28.122,
+          "atr_pct": 4.8163
+        },
+        {
+          "date_utc": "2026-02-27",
+          "close_usdt": 65872.1,
+          "rsi14": 38.6398,
+          "macd_hist": 626.566,
+          "adx14": 50.9535,
+          "di_plus": 15.0553,
+          "di_minus": 29.5639,
+          "atr_pct": 4.9399
+        },
+        {
+          "date_utc": "2026-02-28",
+          "close_usdt": 66973.26,
+          "rsi14": 41.7583,
+          "macd_hist": 672.6719,
+          "adx14": 50.0742,
+          "di_plus": 13.5412,
+          "di_minus": 30.5974,
+          "atr_pct": 5.0161
+        },
+        {
+          "date_utc": "2026-03-01",
+          "close_usdt": 65776.47,
+          "rsi14": 39.4137,
+          "macd_hist": 622.9166,
+          "adx14": 49.0366,
+          "di_plus": 13.5717,
+          "di_minus": 28.5426,
+          "atr_pct": 5.0839
+        },
+        {
+          "date_utc": "2026-03-02",
+          "close_usdt": 68830.06,
+          "rsi14": 47.5115,
+          "macd_hist": 785.5152,
+          "adx14": 47.1646,
+          "di_plus": 16.1376,
+          "di_minus": 25.6849,
+          "atr_pct": 5.0133
+        },
+        {
+          "date_utc": "2026-03-03",
+          "close_usdt": 68338.0,
+          "rsi14": 46.4344,
+          "macd_hist": 844.6238,
+          "adx14": 45.4263,
+          "di_plus": 15.0944,
+          "di_minus": 24.0246,
+          "atr_pct": 5.0128
+        },
+        {
+          "date_utc": "2026-03-04",
+          "close_usdt": 72666.77,
+          "rsi14": 55.9044,
+          "macd_hist": 1141.4975,
+          "adx14": 42.4436,
+          "di_plus": 22.4956,
+          "di_minus": 20.9032,
+          "atr_pct": 5.0311
+        },
+        {
+          "date_utc": "2026-03-05",
+          "close_usdt": 70890.72,
+          "rsi14": 51.8538,
+          "macd_hist": 1179.638,
+          "adx14": 39.674,
+          "di_plus": 21.1966,
+          "di_minus": 19.6961,
+          "atr_pct": 5.0823
+        },
+        {
+          "date_utc": "2026-03-06",
+          "close_usdt": 68114.02,
+          "rsi14": 46.2159,
+          "macd_hist": 987.0625,
+          "adx14": 37.552,
+          "di_plus": 19.6543,
+          "di_minus": 24.0056,
+          "atr_pct": 5.297
+        },
+        {
+          "date_utc": "2026-03-07",
+          "close_usdt": 67262.91,
+          "rsi14": 44.6146,
+          "macd_hist": 780.6106,
+          "adx14": 35.832,
+          "di_plus": 18.992,
+          "di_minus": 24.9056,
+          "atr_pct": 5.1546
+        },
+        {
+          "date_utc": "2026-03-08",
+          "close_usdt": 65971.2,
+          "rsi14": 42.2235,
+          "macd_hist": 546.3866,
+          "adx14": 34.615,
+          "di_plus": 17.9632,
+          "di_minus": 26.2776,
+          "atr_pct": 5.1596
+        },
+        {
+          "date_utc": "2026-03-09",
+          "close_usdt": 68432.16,
+          "rsi14": 47.9473,
+          "macd_hist": 545.2753,
+          "adx14": 32.9501,
+          "di_plus": 19.3251,
+          "di_minus": 24.2526,
+          "atr_pct": 5.0044
+        },
+        {
+          "date_utc": "2026-03-10",
+          "close_usdt": 69948.63,
+          "rsi14": 51.1582,
+          "macd_hist": 628.8149,
+          "adx14": 30.6185,
+          "di_plus": 22.6776,
+          "di_minus": 22.5387,
+          "atr_pct": 4.892
+        },
+        {
+          "date_utc": "2026-03-11",
+          "close_usdt": 70191.86,
+          "rsi14": 51.6732,
+          "macd_hist": 678.3443,
+          "adx14": 28.4534,
+          "di_plus": 21.5429,
+          "di_minus": 21.4109,
+          "atr_pct": 4.7652
+        },
+        {
+          "date_utc": "2026-03-12",
+          "close_usdt": 70541.34,
+          "rsi14": 52.4489,
+          "macd_hist": 709.195,
+          "adx14": 26.443,
+          "di_plus": 20.7811,
+          "di_minus": 20.6537,
+          "atr_pct": 4.5644
+        },
+        {
+          "date_utc": "2026-03-13",
+          "close_usdt": 70930.0,
+          "rsi14": 53.3458,
+          "macd_hist": 727.6048,
+          "adx14": 25.66,
+          "di_plus": 26.0266,
+          "di_minus": 19.0483,
+          "atr_pct": 4.5704
+        },
+        {
+          "date_utc": "2026-03-14",
+          "close_usdt": 71211.95,
+          "rsi14": 54.0233,
+          "macd_hist": 728.7836,
+          "adx14": 24.9031,
+          "di_plus": 25.4286,
+          "di_minus": 18.7707,
+          "atr_pct": 4.3265
+        },
+        {
+          "date_utc": "2026-03-15",
+          "close_usdt": 72815.24,
+          "rsi14": 57.778,
+          "macd_hist": 801.7644,
+          "adx14": 24.7858,
+          "di_plus": 28.4858,
+          "di_minus": 17.7345,
+          "atr_pct": 4.1586
+        },
+        {
+          "date_utc": "2026-03-16",
+          "close_usdt": 74884.67,
+          "rsi14": 62.0823,
+          "macd_hist": 943.8439,
+          "adx14": 25.1478,
+          "di_plus": 30.7676,
+          "di_minus": 16.6204,
+          "atr_pct": 4.0065
+        },
+        {
+          "date_utc": "2026-03-17",
+          "close_usdt": 73909.36,
+          "rsi14": 59.0281,
+          "macd_hist": 925.3259,
+          "adx14": 25.7632,
+          "di_plus": 31.4663,
+          "di_minus": 15.5814,
+          "atr_pct": 4.0208
+        },
+        {
+          "date_utc": "2026-03-18",
+          "close_usdt": 71246.54,
+          "rsi14": 51.5687,
+          "macd_hist": 697.3171,
+          "adx14": 25.0203,
+          "di_plus": 28.3992,
+          "di_minus": 20.8357,
+          "atr_pct": 4.2914
+        },
+        {
+          "date_utc": "2026-03-19",
+          "close_usdt": 69930.0,
+          "rsi14": 48.3176,
+          "macd_hist": 434.2834,
+          "adx14": 23.6694,
+          "di_plus": 26.5175,
+          "di_minus": 23.4645,
+          "atr_pct": 4.348
+        },
+        {
+          "date_utc": "2026-03-20",
+          "close_usdt": 70510.73,
+          "rsi14": 49.8204,
+          "macd_hist": 283.1749,
+          "adx14": 22.4151,
+          "di_plus": 25.2532,
+          "di_minus": 22.3457,
+          "atr_pct": 4.2046
+        },
+        {
+          "date_utc": "2026-03-21",
+          "close_usdt": 68918.12,
+          "rsi14": 45.8804,
+          "macd_hist": 70.7974,
+          "adx14": 20.9273,
+          "di_plus": 23.6979,
+          "di_minus": 22.9576,
+          "atr_pct": 4.2567
+        },
+        {
+          "date_utc": "2026-03-22",
+          "close_usdt": 67859.0,
+          "rsi14": 43.4211,
+          "macd_hist": -134.9645,
+          "adx14": 19.7815,
+          "di_plus": 22.3898,
+          "di_minus": 24.6899,
+          "atr_pct": 4.2489
+        },
+        {
+          "date_utc": "2026-03-23",
+          "close_usdt": 70906.45,
+          "rsi14": 51.4801,
+          "macd_hist": -63.414,
+          "adx14": 18.8595,
+          "di_plus": 25.375,
+          "di_minus": 22.1109,
+          "atr_pct": 4.2162
+        },
+        {
+          "date_utc": "2026-03-24",
+          "close_usdt": 70556.74,
+          "rsi14": 50.5896,
+          "macd_hist": -38.4547,
+          "adx14": 18.0034,
+          "di_plus": 23.8547,
+          "di_minus": 20.7861,
+          "atr_pct": 4.1852
+        },
+        {
+          "date_utc": "2026-03-25",
+          "close_usdt": 71336.53,
+          "rsi14": 52.5602,
+          "macd_hist": 28.1635,
+          "adx14": 17.4429,
+          "di_plus": 24.4548,
+          "di_minus": 19.9454,
+          "atr_pct": 4.0058
+        },
+        {
+          "date_utc": "2026-03-26",
+          "close_usdt": 68820.31,
+          "rsi14": 46.1624,
+          "macd_hist": -93.0074,
+          "adx14": 16.4178,
+          "di_plus": 22.4687,
+          "di_minus": 23.9027,
+          "atr_pct": 4.1965
+        },
+        {
+          "date_utc": "2026-03-27",
+          "close_usdt": 66407.28,
+          "rsi14": 41.0074,
+          "macd_hist": -318.7316,
+          "adx14": 16.3669,
+          "di_plus": 20.4874,
+          "di_minus": 28.121,
+          "atr_pct": 4.4289
+        },
+        {
+          "date_utc": "2026-03-28",
+          "close_usdt": 66377.03,
+          "rsi14": 40.9457,
+          "macd_hist": -445.3649,
+          "adx14": 16.3195,
+          "di_plus": 19.7853,
+          "di_minus": 27.1572,
+          "atr_pct": 4.2604
+        },
+        {
+          "date_utc": "2026-03-29",
+          "close_usdt": 66010.93,
+          "rsi14": 40.1578,
+          "macd_hist": -523.6699,
+          "adx14": 16.5841,
+          "di_plus": 18.7015,
+          "di_minus": 28.0661,
+          "atr_pct": 4.2086
+        },
+        {
+          "date_utc": "2026-03-30",
+          "close_usdt": 66797.37,
+          "rsi14": 42.7081,
+          "macd_hist": -492.8327,
+          "adx14": 16.3329,
+          "di_plus": 20.2504,
+          "di_minus": 26.3384,
+          "atr_pct": 4.1153
+        },
+        {
+          "date_utc": "2026-03-31",
+          "close_usdt": 68284.48,
+          "rsi14": 47.2833,
+          "macd_hist": -349.3655,
+          "adx14": 15.901,
+          "di_plus": 19.9766,
+          "di_minus": 24.5576,
+          "atr_pct": 4.0092
+        },
+        {
+          "date_utc": "2026-04-01",
+          "close_usdt": 68113.92,
+          "rsi14": 46.8214,
+          "macd_hist": -247.817,
+          "adx14": 15.1574,
+          "di_plus": 20.9805,
+          "di_minus": 23.4184,
+          "atr_pct": 3.9137
+        },
+        {
+          "date_utc": "2026-04-02",
+          "close_usdt": 66901.99,
+          "rsi14": 43.5654,
+          "macd_hist": -243.7588,
+          "adx14": 15.1973,
+          "di_plus": 19.3392,
+          "di_minus": 26.5512,
+          "atr_pct": 4.014
+        },
+        {
+          "date_utc": "2026-04-03",
+          "close_usdt": 66964.3,
+          "rsi14": 43.7818,
+          "macd_hist": -219.1437,
+          "adx14": 15.2344,
+          "di_plus": 18.7545,
+          "di_minus": 25.7485,
+          "atr_pct": 3.8399
+        },
+        {
+          "date_utc": "2026-04-04",
+          "close_usdt": 67300.42,
+          "rsi14": 45.0072,
+          "macd_hist": -164.961,
+          "adx14": 15.1632,
+          "di_plus": 18.8857,
+          "di_minus": 25.1562,
+          "atr_pct": 3.6314
+        },
+        {
+          "date_utc": "2026-04-05",
+          "close_usdt": 69034.18,
+          "rsi14": 50.9466,
+          "macd_hist": -5.516,
+          "adx14": 14.2723,
+          "di_plus": 22.0829,
+          "di_minus": 23.3044,
+          "atr_pct": 3.5485
+        },
+        {
+          "date_utc": "2026-04-06",
+          "close_usdt": 68853.66,
+          "rsi14": 50.337,
+          "macd_hist": 89.3946,
+          "adx14": 13.6295,
+          "di_plus": 24.3316,
+          "di_minus": 21.894,
+          "atr_pct": 3.5165
+        },
+        {
+          "date_utc": "2026-04-07",
+          "close_usdt": 71924.22,
+          "rsi14": 59.2654,
+          "macd_hist": 346.1535,
+          "adx14": 13.9939,
+          "di_plus": 27.5802,
+          "di_minus": 18.8779,
+          "atr_pct": 3.6254
+        },
+        {
+          "date_utc": "2026-04-08",
+          "close_usdt": 71069.93,
+          "rsi14": 56.2362,
+          "macd_hist": 439.6324,
+          "adx14": 14.3675,
+          "di_plus": 26.2017,
+          "di_minus": 17.7521,
+          "atr_pct": 3.6229
+        },
+        {
+          "date_utc": "2026-04-09",
+          "close_usdt": 71787.97,
+          "rsi14": 58.1714,
+          "macd_hist": 525.2106,
+          "adx14": 14.8252,
+          "di_plus": 25.0567,
+          "di_minus": 16.4365,
+          "atr_pct": 3.5971
+        },
+        {
+          "date_utc": "2026-04-10",
+          "close_usdt": 72962.7,
+          "rsi14": 61.1946,
+          "macd_hist": 629.2985,
+          "adx14": 15.3652,
+          "di_plus": 24.4549,
+          "di_minus": 15.5089,
+          "atr_pct": 3.4829
+        },
+        {
+          "date_utc": "2026-04-11",
+          "close_usdt": 73043.16,
+          "rsi14": 61.4004,
+          "macd_hist": 668.2634,
+          "adx14": 16.0122,
+          "di_plus": 24.5823,
+          "di_minus": 14.9318,
+          "atr_pct": 3.3554
+        },
+        {
+          "date_utc": "2026-04-12",
+          "close_usdt": 70740.98,
+          "rsi14": 52.7765,
+          "macd_hist": 510.7902,
+          "adx14": 15.3909,
+          "di_plus": 22.707,
+          "di_minus": 19.6118,
+          "atr_pct": 3.4829
+        },
+        {
+          "date_utc": "2026-04-13",
+          "close_usdt": 74417.99,
+          "rsi14": 61.9652,
+          "macd_hist": 618.8622,
+          "adx14": 15.5758,
+          "di_plus": 24.849,
+          "di_minus": 17.2749,
+          "atr_pct": 3.4902
+        },
+        {
+          "date_utc": "2026-04-14",
+          "close_usdt": 74131.55,
+          "rsi14": 60.97,
+          "macd_hist": 633.3588,
+          "adx14": 16.1816,
+          "di_plus": 26.4618,
+          "di_minus": 16.199,
+          "atr_pct": 3.4695
+        },
+        {
+          "date_utc": "2026-04-15",
+          "close_usdt": 74809.99,
+          "rsi14": 62.506,
+          "macd_hist": 648.5771,
+          "adx14": 16.5727,
+          "di_plus": 25.0312,
+          "di_minus": 16.1195,
+          "atr_pct": 3.3749
+        },
+        {
+          "date_utc": "2026-04-16",
+          "close_usdt": 75154.29,
+          "rsi14": 63.2955,
+          "macd_hist": 640.6477,
+          "adx14": 16.8064,
+          "di_plus": 23.4421,
+          "di_minus": 15.6787,
+          "atr_pct": 3.3309
+        },
+        {
+          "date_utc": "2026-04-17",
+          "close_usdt": 77072.0,
+          "rsi14": 67.4115,
+          "macd_hist": 717.5766,
+          "adx14": 18.0551,
+          "di_plus": 28.6876,
+          "di_minus": 14.038,
+          "atr_pct": 3.3686
+        },
+        {
+          "date_utc": "2026-04-18",
+          "close_usdt": 75691.76,
+          "rsi14": 62.0208,
+          "macd_hist": 631.5574,
+          "adx14": 19.2145,
+          "di_plus": 27.1018,
+          "di_minus": 13.2619,
+          "atr_pct": 3.3714
+        },
+        {
+          "date_utc": "2026-04-19",
+          "close_usdt": 73801.79,
+          "rsi14": 55.4785,
+          "macd_hist": 413.9454,
+          "adx14": 19.2206,
+          "di_plus": 25.2182,
+          "di_minus": 17.0588,
+          "atr_pct": 3.4505
+        },
+        {
+          "date_utc": "2026-04-20",
+          "close_usdt": 75840.97,
+          "rsi14": 60.3396,
+          "macd_hist": 375.067,
+          "adx14": 19.3543,
+          "di_plus": 24.1142,
+          "di_minus": 15.7135,
+          "atr_pct": 3.3849
+        },
+        {
+          "date_utc": "2026-04-21",
+          "close_usdt": 76336.15,
+          "rsi14": 61.4406,
+          "macd_hist": 350.864,
+          "adx14": 19.6307,
+          "di_plus": 23.7227,
+          "di_minus": 14.7808,
+          "atr_pct": 3.3198
+        },
+        {
+          "date_utc": "2026-04-22",
+          "close_usdt": 78178.23,
+          "rsi14": 65.2997,
+          "macd_hist": 422.2844,
+          "adx14": 20.8038,
+          "di_plus": 28.5538,
+          "di_minus": 13.4202,
+          "atr_pct": 3.3151
+        },
+        {
+          "date_utc": "2026-04-23",
+          "close_usdt": 78257.48,
+          "rsi14": 65.4599,
+          "macd_hist": 436.4336,
+          "adx14": 21.8932,
+          "di_plus": 27.1804,
+          "di_minus": 12.7747,
+          "atr_pct": 3.2306
+        },
+        {
+          "date_utc": "2026-04-24",
+          "close_usdt": 77437.13,
+          "rsi14": 62.2566,
+          "macd_hist": 355.5394,
+          "adx14": 22.9047,
+          "di_plus": 26.1325,
+          "di_minus": 12.2822,
+          "atr_pct": 3.1532
+        },
+        {
+          "date_utc": "2026-04-25",
+          "close_usdt": 77625.0,
+          "rsi14": 62.7067,
+          "macd_hist": 282.8464,
+          "adx14": 23.7463,
+          "di_plus": 25.5332,
+          "di_minus": 12.3818,
+          "atr_pct": 2.9895
+        },
+        {
+          "date_utc": "2026-04-26",
+          "close_usdt": 78657.55,
+          "rsi14": 65.1654,
+          "macd_hist": 272.3653,
+          "adx14": 24.9288,
+          "di_plus": 27.6032,
+          "di_minus": 11.7454,
+          "atr_pct": 2.8879
+        },
+        {
+          "date_utc": "2026-04-27",
+          "close_usdt": 77371.32,
+          "rsi14": 59.8702,
+          "macd_hist": 152.8269,
+          "adx14": 25.331,
+          "di_plus": 25.0376,
+          "di_minus": 13.3164,
+          "atr_pct": 3.0056
+        },
+        {
+          "date_utc": "2026-04-28",
+          "close_usdt": 76342.77,
+          "rsi14": 55.9547,
+          "macd_hist": -12.7039,
+          "adx14": 25.1076,
+          "di_plus": 23.6222,
+          "di_minus": 15.0386,
+          "atr_pct": 2.998
+        },
+        {
+          "date_utc": "2026-04-29",
+          "close_usdt": 75780.0,
+          "rsi14": 53.8785,
+          "macd_hist": -168.6304,
+          "adx14": 24.3798,
+          "di_plus": 21.4799,
+          "di_minus": 15.9029,
+          "atr_pct": 3.0842
+        },
+        {
+          "date_utc": "2026-04-30",
+          "close_usdt": 76346.57,
+          "rsi14": 55.6622,
+          "macd_hist": -237.9071,
+          "adx14": 23.704,
+          "di_plus": 20.569,
+          "di_minus": 15.2285,
+          "atr_pct": 2.9685
+        },
+        {
+          "date_utc": "2026-05-01",
+          "close_usdt": 78231.13,
+          "rsi14": 61.0572,
+          "macd_hist": -164.5885,
+          "adx14": 24.143,
+          "di_plus": 25.908,
+          "di_minus": 13.9964,
+          "atr_pct": 2.9269
+        },
+        {
+          "date_utc": "2026-05-02",
+          "close_usdt": 78686.85,
+          "rsi14": 62.2533,
+          "macd_hist": -96.5474,
+          "adx14": 24.6682,
+          "di_plus": 25.8594,
+          "di_minus": 13.4716,
+          "atr_pct": 2.8074
+        },
+        {
+          "date_utc": "2026-05-03",
+          "close_usdt": 78568.57,
+          "rsi14": 61.7234,
+          "macd_hist": -71.7924,
+          "adx14": 25.2609,
+          "di_plus": 25.5106,
+          "di_minus": 12.8612,
+          "atr_pct": 2.7347
+        },
+        {
+          "date_utc": "2026-05-04",
+          "close_usdt": 79861.01,
+          "rsi14": 65.2083,
+          "macd_hist": 14.7266,
+          "adx14": 26.3398,
+          "di_plus": 27.717,
+          "di_minus": 11.7757,
+          "atr_pct": 2.7285
+        },
+        {
+          "date_utc": "2026-05-05",
+          "close_usdt": 80905.52,
+          "rsi14": 67.7627,
+          "macd_hist": 119.5667,
+          "adx14": 27.6957,
+          "di_plus": 29.2509,
+          "di_minus": 11.0053,
+          "atr_pct": 2.676
+        },
+        {
+          "date_utc": "2026-05-06",
+          "close_usdt": 81447.01,
+          "rsi14": 69.0321,
+          "macd_hist": 198.0201,
+          "adx14": 29.2885,
+          "di_plus": 30.7005,
+          "di_minus": 10.2348,
+          "atr_pct": 2.6541
+        },
+        {
+          "date_utc": "2026-05-07",
+          "close_usdt": 80006.0,
+          "rsi14": 62.0319,
+          "macd_hist": 128.8524,
+          "adx14": 29.7318,
+          "di_plus": 28.4638,
+          "di_minus": 13.5509,
+          "atr_pct": 2.7061
+        },
+        {
+          "date_utc": "2026-05-08",
+          "close_usdt": 80193.17,
+          "rsi14": 62.5629,
+          "macd_hist": 74.3974,
+          "adx14": 29.8896,
+          "di_plus": 27.1901,
+          "di_minus": 14.0255,
+          "atr_pct": 2.6244
+        },
+        {
+          "date_utc": "2026-05-09",
+          "close_usdt": 80678.4,
+          "rsi14": 63.9698,
+          "macd_hist": 50.8707,
+          "adx14": 30.2739,
+          "di_plus": 28.3263,
+          "di_minus": 13.5548,
+          "atr_pct": 2.5064
+        },
+        {
+          "date_utc": "2026-05-10",
+          "close_usdt": 82210.07,
+          "rsi14": 68.0513,
+          "macd_hist": 114.6279,
+          "adx14": 31.1522,
+          "di_plus": 31.0512,
+          "di_minus": 12.5082,
+          "atr_pct": 2.4751
+        },
+        {
+          "date_utc": "2026-05-11",
+          "close_usdt": 81745.65,
+          "rsi14": 65.6239,
+          "macd_hist": 102.1037,
+          "adx14": 31.9677,
+          "di_plus": 28.953,
+          "di_minus": 11.663,
+          "atr_pct": 2.4789
+        },
+        {
+          "date_utc": "2026-05-12",
+          "close_usdt": 80504.47,
+          "rsi14": 59.514,
+          "macd_hist": -7.3794,
+          "adx14": 32.1677,
+          "di_plus": 26.9628,
+          "di_minus": 13.0509,
+          "atr_pct": 2.5098
+        },
+        {
+          "date_utc": "2026-05-13",
+          "close_usdt": 79313.61,
+          "rsi14": 54.2911,
+          "macd_hist": -168.6671,
+          "adx14": 31.4497,
+          "di_plus": 24.5599,
+          "di_minus": 15.664,
+          "atr_pct": 2.597
+        },
+        {
+          "date_utc": "2026-05-14",
+          "close_usdt": 81089.99,
+          "rsi14": 59.9388,
+          "macd_hist": -164.2232,
+          "adx14": 31.1332,
+          "di_plus": 24.4118,
+          "di_minus": 14.0264,
+          "atr_pct": 2.634
+        },
+        {
+          "date_utc": "2026-05-15",
+          "close_usdt": 79113.21,
+          "rsi14": 52.2081,
+          "macd_hist": -295.2785,
+          "adx14": 30.6211,
+          "di_plus": 22.0276,
+          "di_minus": 13.5112,
+          "atr_pct": 2.7784
+        },
+        {
+          "date_utc": "2026-05-16",
+          "close_usdt": 78148.05,
+          "rsi14": 48.8924,
+          "macd_hist": -439.1596,
+          "adx14": 29.3381,
+          "di_plus": 20.868,
+          "di_minus": 16.1783,
+          "atr_pct": 2.7569
+        },
+        {
+          "date_utc": "2026-05-17",
+          "close_usdt": 77457.67,
+          "rsi14": 46.612,
+          "macd_hist": -565.0006,
+          "adx14": 27.5012,
+          "di_plus": 19.5653,
+          "di_minus": 18.1974,
+          "atr_pct": 2.7548
+        },
+        {
+          "date_utc": "2026-05-18",
+          "close_usdt": 77001.87,
+          "rsi14": 45.1159,
+          "macd_hist": -656.6794,
+          "adx14": 25.7319,
+          "di_plus": 18.4049,
+          "di_minus": 19.4382,
+          "atr_pct": 2.7354
+        },
+        {
+          "date_utc": "2026-05-19",
+          "close_usdt": 76834.36,
+          "rsi14": 44.5499,
+          "macd_hist": -702.2454,
+          "adx14": 24.0889,
+          "di_plus": 17.5891,
+          "di_minus": 18.5766,
+          "atr_pct": 2.6636
+        },
+        {
+          "date_utc": "2026-05-20",
+          "close_usdt": 77552.23,
+          "rsi14": 47.5845,
+          "macd_hist": -658.4167,
+          "adx14": 22.4931,
+          "di_plus": 18.317,
+          "di_minus": 17.6882,
+          "atr_pct": 2.5735
+        },
+        {
+          "date_utc": "2026-05-21",
+          "close_usdt": 77615.52,
+          "rsi14": 47.8554,
+          "macd_hist": -601.1278,
+          "adx14": 21.2625,
+          "di_plus": 18.5933,
+          "di_minus": 16.7333,
+          "atr_pct": 2.524
+        },
+        {
+          "date_utc": "2026-05-22",
+          "close_usdt": 75539.5,
+          "rsi14": 40.4664,
+          "macd_hist": -673.5611,
+          "adx14": 20.3552,
+          "di_plus": 16.9065,
+          "di_minus": 20.0721,
+          "atr_pct": 2.6484
+        },
+        {
+          "date_utc": "2026-05-23",
+          "close_usdt": 76752.01,
+          "rsi14": 45.7363,
+          "macd_hist": -612.1033,
+          "adx14": 20.1664,
+          "di_plus": 15.0984,
+          "di_minus": 21.5982,
+          "atr_pct": 2.7102
+        },
+        {
+          "date_utc": "2026-05-24",
+          "close_usdt": 77064.96,
+          "rsi14": 47.0394,
+          "macd_hist": -525.9596,
+          "adx14": 19.875,
+          "di_plus": 14.8255,
+          "di_minus": 20.5097,
+          "atr_pct": 2.6394
+        },
+        {
+          "date_utc": "2026-05-25",
+          "close_usdt": 77322.01,
+          "rsi14": 48.1409,
+          "macd_hist": -431.2276,
+          "adx14": 19.2948,
+          "di_plus": 15.6107,
+          "di_minus": 19.7686,
+          "atr_pct": 2.5343
+        },
+        {
+          "date_utc": "2026-05-26",
+          "close_usdt": 75930.01,
+          "rsi14": 42.9331,
+          "macd_hist": -440.3343,
+          "adx14": 19.5164,
+          "di_plus": 14.2655,
+          "di_minus": 22.5001,
+          "atr_pct": 2.6224
+        },
+        {
+          "date_utc": "2026-05-27",
+          "close_usdt": 74449.3,
+          "rsi14": 38.1993,
+          "macd_hist": -518.7054,
+          "adx14": 20.4481,
+          "di_plus": 13.2756,
+          "di_minus": 26.0941,
+          "atr_pct": 2.6687
+        },
+        {
+          "date_utc": "2026-05-28",
+          "close_usdt": 73617.51,
+          "rsi14": 35.8106,
+          "macd_hist": -593.7869,
+          "adx14": 21.9896,
+          "di_plus": 12.318,
+          "di_minus": 30.1794,
+          "atr_pct": 2.7009
+        },
+        {
+          "date_utc": "2026-05-29",
+          "close_usdt": 73460.78,
+          "rsi14": 35.3619,
+          "macd_hist": -618.4366,
+          "adx14": 23.4473,
+          "di_plus": 11.4327,
+          "di_minus": 28.2629,
+          "atr_pct": 2.708
+        },
+        {
+          "date_utc": "2026-05-30",
+          "close_usdt": 73884.38,
+          "rsi14": 37.6363,
+          "macd_hist": -571.7395,
+          "adx14": 24.8009,
+          "di_plus": 11.0368,
+          "di_minus": 27.2841,
+          "atr_pct": 2.5898
+        },
+        {
+          "date_utc": "2026-05-31",
+          "close_usdt": 73674.39,
+          "rsi14": 36.9423,
+          "macd_hist": -521.9028,
+          "adx14": 25.9191,
+          "di_plus": 11.1737,
+          "di_minus": 26.3562,
+          "atr_pct": 2.4966
+        },
+        {
+          "date_utc": "2026-06-01",
+          "close_usdt": 71408.9,
+          "rsi14": 30.4245,
+          "macd_hist": -602.6983,
+          "adx14": 27.9447,
+          "di_plus": 9.7808,
+          "di_minus": 33.0035,
+          "atr_pct": 2.7324
+        },
+        {
+          "date_utc": "2026-06-02",
+          "close_usdt": 66760.83,
+          "rsi14": 21.8909,
+          "macd_hist": -911.8133,
+          "adx14": 30.782,
+          "di_plus": 8.1126,
+          "di_minus": 42.0687,
+          "atr_pct": 3.272
+        },
+        {
+          "date_utc": "2026-06-03",
+          "close_usdt": 64142.75,
+          "rsi14": 18.7079,
+          "macd_hist": -1216.2027,
+          "adx14": 33.7134,
+          "di_plus": 7.2398,
+          "di_minus": 44.1437,
+          "atr_pct": 3.5435
+        },
+        {
+          "date_utc": "2026-06-04",
+          "close_usdt": 63885.99,
+          "rsi14": 18.425,
+          "macd_hist": -1348.2077,
+          "adx14": 36.7401,
+          "di_plus": 6.4964,
+          "di_minus": 47.8382,
+          "atr_pct": 3.6816
+        },
+        {
+          "date_utc": "2026-06-05",
+          "close_usdt": 61056.47,
+          "rsi14": 15.6211,
+          "macd_hist": -1526.3602,
+          "adx14": 39.7545,
+          "di_plus": 5.6075,
+          "di_minus": 47.6516,
+          "atr_pct": 4.1441
+        },
+        {
+          "date_utc": "2026-06-06",
+          "close_usdt": 60884.62,
+          "rsi14": 15.4671,
+          "macd_hist": -1551.013,
+          "adx14": 42.5537,
+          "di_plus": 5.2816,
+          "di_minus": 44.8816,
+          "atr_pct": 4.0971
+        },
+        {
+          "date_utc": "2026-06-07",
+          "close_usdt": 63332.01,
+          "rsi14": 26.5667,
+          "macd_hist": -1307.4738,
+          "adx14": 43.3307,
+          "di_plus": 12.2987,
+          "di_minus": 40.5222,
+          "atr_pct": 4.0509
+        },
+        {
+          "date_utc": "2026-06-08",
+          "close_usdt": 63085.99,
+          "rsi14": 26.1943,
+          "macd_hist": -1077.511,
+          "adx14": 44.0523,
+          "di_plus": 11.6716,
+          "di_minus": 38.456,
+          "atr_pct": 3.9791
+        },
+        {
+          "date_utc": "2026-06-09",
+          "close_usdt": 61730.0,
+          "rsi14": 24.1826,
+          "macd_hist": -936.4925,
+          "adx14": 45.0234,
+          "di_plus": 10.7657,
+          "di_minus": 40.0727,
+          "atr_pct": 4.0938
+        },
+        {
+          "date_utc": "2026-06-10",
+          "close_usdt": 61510.99,
+          "rsi14": 23.8638,
+          "macd_hist": -783.9211,
+          "adx14": 45.9296,
+          "di_plus": 10.118,
+          "di_minus": 37.7334,
+          "atr_pct": 4.0591
+        },
+        {
+          "date_utc": "2026-06-11",
+          "close_usdt": 63625.99,
+          "rsi14": 33.0433,
+          "macd_hist": -481.3688,
+          "adx14": 46.0419,
+          "di_plus": 12.4975,
+          "di_minus": 35.1133,
+          "atr_pct": 3.9158
+        },
+        {
+          "date_utc": "2026-06-12",
+          "close_usdt": 63580.01,
+          "rsi14": 32.9503,
+          "macd_hist": -237.4833,
+          "adx14": 45.8401,
+          "di_plus": 13.2805,
+          "di_minus": 33.4952,
+          "atr_pct": 3.8145
+        },
+        {
+          "date_utc": "2026-06-13",
+          "close_usdt": 64458.01,
+          "rsi14": 36.6191,
+          "macd_hist": 16.3537,
+          "adx14": 45.4034,
+          "di_plus": 13.858,
+          "di_minus": 32.1257,
+          "atr_pct": 3.6428
+        },
+        {
+          "date_utc": "2026-06-14",
+          "close_usdt": 65746.45,
+          "rsi14": 41.6636,
+          "macd_hist": 289.2775,
+          "adx14": 44.3111,
+          "di_plus": 16.1348,
+          "di_minus": 30.0383,
+          "atr_pct": 3.5467
+        },
+        {
+          "date_utc": "2026-06-15",
+          "close_usdt": 66328.74,
+          "rsi14": 43.839,
+          "macd_hist": 514.1334,
+          "adx14": 42.4016,
+          "di_plus": 19.7917,
+          "di_minus": 28.2332,
+          "atr_pct": 3.4732
+        },
+        {
+          "date_utc": "2026-06-16",
+          "close_usdt": 65675.01,
+          "rsi14": 41.9477,
+          "macd_hist": 617.0221,
+          "adx14": 40.6284,
+          "di_plus": 18.7695,
+          "di_minus": 26.7749,
+          "atr_pct": 3.4346
+        },
+        {
+          "date_utc": "2026-06-17",
+          "close_usdt": 64509.4,
+          "rsi14": 38.7386,
+          "macd_hist": 603.9973,
+          "adx14": 39.5567,
+          "di_plus": 17.2786,
+          "di_minus": 29.185,
+          "atr_pct": 3.5271
+        },
+        {
+          "date_utc": "2026-06-18",
+          "close_usdt": 62958.01,
+          "rsi14": 34.9105,
+          "macd_hist": 493.0067,
+          "adx14": 39.1291,
+          "di_plus": 15.9152,
+          "di_minus": 32.0006,
+          "atr_pct": 3.6433
+        },
+        {
+          "date_utc": "2026-06-19",
+          "close_usdt": 63543.91,
+          "rsi14": 37.4254,
+          "macd_hist": 461.7046,
+          "adx14": 38.7321,
+          "di_plus": 15.2261,
+          "di_minus": 30.615,
+          "atr_pct": 3.5036
+        },
+        {
+          "date_utc": "2026-06-20",
+          "close_usdt": 64298.01,
+          "rsi14": 40.6063,
+          "macd_hist": 491.6723,
+          "adx14": 37.871,
+          "di_plus": 17.0131,
+          "di_minus": 29.3925,
+          "atr_pct": 3.3489
+        },
+        {
+          "date_utc": "2026-06-21",
+          "close_usdt": 63311.99,
+          "rsi14": 37.8938,
+          "macd_hist": 446.3009,
+          "adx14": 36.9342,
+          "di_plus": 16.9304,
+          "di_minus": 28.0708,
+          "atr_pct": 3.3068
+        },
+        {
+          "date_utc": "2026-06-22",
+          "close_usdt": 64020.01,
+          "rsi14": 40.9443,
+          "macd_hist": 463.1792,
+          "adx14": 35.37,
+          "di_plus": 19.11,
+          "di_minus": 25.874,
+          "atr_pct": 3.2945
+        },
+        {
+          "date_utc": "2026-06-23",
+          "close_usdt": 62734.57,
+          "rsi14": 37.3568,
+          "macd_hist": 389.916,
+          "adx14": 34.5259,
+          "di_plus": 17.6089,
+          "di_minus": 28.4591,
+          "atr_pct": 3.388
+        },
+        {
+          "date_utc": "2026-06-24",
+          "close_usdt": 61077.99,
+          "rsi14": 33.3066,
+          "macd_hist": 239.4206,
+          "adx14": 34.7369,
+          "di_plus": 15.3161,
+          "di_minus": 33.6788,
+          "atr_pct": 3.715
+        },
+        {
+          "date_utc": "2026-06-25",
+          "close_usdt": 59794.0,
+          "rsi14": 30.5425,
+          "macd_hist": 71.6387,
+          "adx14": 35.2184,
+          "di_plus": 13.5489,
+          "di_minus": 32.7549,
+          "atr_pct": 3.9834
+        },
+        {
+          "date_utc": "2026-06-26",
+          "close_usdt": 60097.27,
+          "rsi14": 31.9784,
+          "macd_hist": 2.9494,
+          "adx14": 35.6655,
+          "di_plus": 12.5656,
+          "di_minus": 30.3778,
+          "atr_pct": 3.9682
+        },
+        {
+          "date_utc": "2026-06-27",
+          "close_usdt": 60029.0,
+          "rsi14": 31.8189,
+          "macd_hist": -23.7473,
+          "adx14": 35.945,
+          "di_plus": 12.705,
+          "di_minus": 29.3496,
+          "atr_pct": 3.8181
+        },
+        {
+          "date_utc": "2026-06-28",
+          "close_usdt": 59577.01,
+          "rsi14": 30.7265,
+          "macd_hist": -47.1584,
+          "adx14": 36.5088,
+          "di_plus": 12.0421,
+          "di_minus": 30.841,
+          "atr_pct": 3.7689
+        },
+        {
+          "date_utc": "2026-06-29",
+          "close_usdt": 60260.21,
+          "rsi14": 34.3932,
+          "macd_hist": 5.2698,
+          "adx14": 36.8425,
+          "di_plus": 12.0714,
+          "di_minus": 28.9744,
+          "atr_pct": 3.6829
+        },
+        {
+          "date_utc": "2026-06-30",
+          "close_usdt": 58624.71,
+          "rsi14": 30.2635,
+          "macd_hist": -45.5018,
+          "adx14": 37.3865,
+          "di_plus": 11.2613,
+          "di_minus": 29.29,
+          "atr_pct": 3.7682
+        },
+        {
+          "date_utc": "2026-07-01",
+          "close_usdt": 60024.0,
+          "rsi14": 37.2101,
+          "macd_hist": 35.4814,
+          "adx14": 37.0327,
+          "di_plus": 13.3062,
+          "di_minus": 26.0808,
+          "atr_pct": 3.838
+        },
+        {
+          "date_utc": "2026-07-02",
+          "close_usdt": 61560.0,
+          "rsi14": 43.8251,
+          "macd_hist": 203.4443,
+          "adx14": 36.0572,
+          "di_plus": 14.8984,
+          "di_minus": 23.9885,
+          "atr_pct": 3.778
+        },
+        {
+          "date_utc": "2026-07-03",
+          "close_usdt": 62583.26,
+          "rsi14": 47.7725,
+          "macd_hist": 383.9339,
+          "adx14": 34.6032,
+          "di_plus": 16.5313,
+          "di_minus": 22.6895,
+          "atr_pct": 3.6483
+        },
+        {
+          "date_utc": "2026-07-04",
+          "close_usdt": 63144.01,
+          "rsi14": 49.8521,
+          "macd_hist": 532.4222,
+          "adx14": 32.9244,
+          "di_plus": 17.4877,
+          "di_minus": 21.8547,
+          "atr_pct": 3.4859
+        },
+        {
+          "date_utc": "2026-07-05",
+          "close_usdt": 63650.0,
+          "rsi14": 51.7203,
+          "macd_hist": 648.3605,
+          "adx14": 31.0043,
+          "di_plus": 18.3618,
+          "di_minus": 20.7232,
+          "atr_pct": 3.3865
+        },
+        {
+          "date_utc": "2026-07-06",
+          "close_usdt": 64042.02,
+          "rsi14": 53.1757,
+          "macd_hist": 729.0683,
+          "adx14": 29.8488,
+          "di_plus": 16.3785,
+          "di_minus": 22.0811,
+          "atr_pct": 3.5038
+        },
+        {
+          "date_utc": "2026-07-07",
+          "close_usdt": 63363.99,
+          "rsi14": 50.3487,
+          "macd_hist": 713.5137,
+          "adx14": 28.7758,
+          "di_plus": 15.5054,
+          "di_minus": 20.904,
+          "atr_pct": 3.4735
+        },
+        {
+          "date_utc": "2026-07-08",
+          "close_usdt": 62290.0,
+          "rsi14": 46.1622,
+          "macd_hist": 611.5437,
+          "adx14": 28.3733,
+          "di_plus": 14.3902,
+          "di_minus": 23.0555,
+          "atr_pct": 3.5353
+        },
+        {
+          "date_utc": "2026-07-09",
+          "close_usdt": 63230.0,
+          "rsi14": 50.075,
+          "macd_hist": 587.8898,
+          "adx14": 27.9996,
+          "di_plus": 13.5413,
+          "di_minus": 21.6954,
+          "atr_pct": 3.4367
+        },
+        {
+          "date_utc": "2026-07-10",
+          "close_usdt": 64161.72,
+          "rsi14": 53.6693,
+          "macd_hist": 612.6947,
+          "adx14": 26.7113,
+          "di_plus": 16.7181,
+          "di_minus": 20.4183,
+          "atr_pct": 3.3416
+        },
+        {
+          "date_utc": "2026-07-11",
+          "close_usdt": 63819.0,
+          "rsi14": 52.1811,
+          "macd_hist": 583.844,
+          "adx14": 25.5151,
+          "di_plus": 16.3171,
+          "di_minus": 19.9285,
+          "atr_pct": 3.1963
+        },
+        {
+          "date_utc": "2026-07-12",
+          "close_usdt": 63780.0,
+          "rsi14": 52.0044,
+          "macd_hist": 540.9274,
+          "adx14": 24.5213,
+          "di_plus": 15.9271,
+          "di_minus": 20.108,
+          "atr_pct": 3.0425
+        },
+        {
+          "date_utc": "2026-07-13",
+          "close_usdt": 62334.52,
+          "rsi14": 45.8119,
+          "macd_hist": 400.4532,
+          "adx14": 24.6498,
+          "di_plus": 14.4389,
+          "di_minus": 24.7549,
+          "atr_pct": 3.1886
+        },
+        {
+          "date_utc": "2026-07-14",
+          "close_usdt": 65043.98,
+          "rsi14": 56.313,
+          "macd_hist": 470.4416,
+          "adx14": 24.2053,
+          "di_plus": 15.3692,
+          "di_minus": 22.3129,
+          "atr_pct": 3.148
+        },
+        {
+          "date_utc": "2026-07-15",
+          "close_usdt": 64756.28,
+          "rsi14": 55.0921,
+          "macd_hist": 476.3309,
+          "adx14": 23.3909,
+          "di_plus": 16.5542,
+          "di_minus": 21.4159,
+          "atr_pct": 3.0592
+        },
+        {
+          "date_utc": "2026-07-16",
+          "close_usdt": 63830.2,
+          "rsi14": 51.2412,
+          "macd_hist": 399.9098,
+          "adx14": 23.0709,
+          "di_plus": 15.7886,
+          "di_minus": 23.1521,
+          "atr_pct": 3.0216
+        },
+        {
+          "date_utc": "2026-07-17",
+          "close_usdt": 63931.67,
+          "rsi14": 51.6401,
+          "macd_hist": 340.5687,
+          "adx14": 23.4128,
+          "di_plus": 14.7035,
+          "di_minus": 26.0595,
+          "atr_pct": 3.0081
+        },
+        {
+          "date_utc": "2026-07-18",
+          "close_usdt": 64834.22,
+          "rsi14": 55.1542,
+          "macd_hist": 345.3906,
+          "adx14": 23.322,
+          "di_plus": 15.9859,
+          "di_minus": 25.0781,
+          "atr_pct": 2.8621
+        },
+        {
+          "date_utc": "2026-07-19",
+          "close_usdt": 64722.54,
+          "rsi14": 54.6253,
+          "macd_hist": 324.6628,
+          "adx14": 23.1486,
+          "di_plus": 15.9552,
+          "di_minus": 24.3835,
+          "atr_pct": 2.7381
+        },
+        {
+          "date_utc": "2026-07-20",
+          "close_usdt": 65255.51,
+          "rsi14": 56.7567,
+          "macd_hist": 329.4076,
+          "adx14": 23.6242,
+          "di_plus": 14.282,
+          "di_minus": 26.4112,
+          "atr_pct": 2.8172
+        },
+        {
+          "date_utc": "2026-07-21",
+          "close_usdt": 66556.16,
+          "rsi14": 61.5086,
+          "macd_hist": 398.1102,
+          "adx14": 23.0798,
+          "di_plus": 17.7793,
+          "di_minus": 24.5543,
+          "atr_pct": 2.7588
+        },
+        {
+          "date_utc": "2026-07-22",
+          "close_usdt": 66114.49,
+          "rsi14": 59.1323,
+          "macd_hist": 391.2007,
+          "adx14": 22.5744,
+          "di_plus": 16.9376,
+          "di_minus": 23.3918,
+          "atr_pct": 2.707
+        },
+        {
+          "date_utc": "2026-07-23",
+          "close_usdt": 65098.97,
+          "rsi14": 53.9696,
+          "macd_hist": 299.7477,
+          "adx14": 22.6321,
+          "di_plus": 15.8076,
+          "di_minus": 25.4561,
+          "atr_pct": 2.7354
+        },
+        {
+          "date_utc": "2026-07-24",
+          "close_usdt": 64139.99,
+          "rsi14": 49.5684,
+          "macd_hist": 163.0237,
+          "adx14": 23.1619,
+          "di_plus": 14.5108,
+          "di_minus": 26.9773,
+          "atr_pct": 2.8083
+        },
+        {
+          "date_utc": "2026-07-25",
+          "close_usdt": 64375.0,
+          "rsi14": 50.6309,
+          "macd_hist": 80.9181,
+          "adx14": 23.6538,
+          "di_plus": 14.1099,
+          "di_minus": 26.232,
+          "atr_pct": 2.6721
+        },
+        {
+          "date_utc": "2026-07-26",
+          "close_usdt": 65399.99,
+          "rsi14": 55.0765,
+          "macd_hist": 87.5806,
+          "adx14": 23.0995,
+          "di_plus": 18.0036,
+          "di_minus": 24.8084,
+          "atr_pct": 2.5825
+        },
+        {
+          "date_utc": "2026-07-27",
+          "close_usdt": 63755.86,
+          "rsi14": 47.6626,
+          "macd_hist": -21.0046,
+          "adx14": 22.9948,
+          "di_plus": 16.4053,
+          "di_minus": 25.4625,
+          "atr_pct": 2.6995
+        },
+        {
+          "date_utc": "2026-07-28",
+          "close_usdt": 63915.0,
+          "rsi14": 48.3868,
+          "macd_hist": -81.0043,
+          "adx14": 23.3697,
+          "di_plus": 15.4669,
+          "di_minus": 27.6428,
+          "atr_pct": 2.6521
+        },
+        {
+          "date_utc": "2026-07-29",
+          "close_usdt": 63984.28,
+          "rsi14": 48.7195,
+          "macd_hist": -112.9563,
+          "adx14": 23.1356,
+          "di_plus": 17.2373,
+          "di_minus": 25.9059,
+          "atr_pct": 2.625
+        },
+        {
+          "date_utc": "2026-07-30",
+          "close_usdt": 64780.02,
+          "rsi14": 52.5061,
+          "macd_hist": -79.0351,
+          "adx14": 22.5423,
+          "di_plus": 17.9239,
+          "di_minus": 24.1653,
+          "atr_pct": 2.5809
+        },
+        {
+          "date_utc": "2026-07-31",
+          "close_usdt": 62887.88,
+          "rsi14": 44.1566,
+          "macd_hist": -176.9582,
+          "adx14": 22.6644,
+          "di_plus": 15.786,
+          "di_minus": 25.8939,
+          "atr_pct": 2.803
+        },
+        {
+          "date_utc": "2026-08-01",
+          "close_usdt": 62823.64,
+          "rsi14": 43.9014,
+          "macd_hist": -235.3297,
+          "adx14": 22.8838,
+          "di_plus": 15.2054,
+          "di_minus": 25.7444,
+          "atr_pct": 2.7049
+        },
+        {
+          "date_utc": "2026-08-02",
+          "close_usdt": 63570.0,
+          "rsi14": 47.6851,
+          "macd_hist": -213.5843,
+          "adx14": 22.4887,
+          "di_plus": 17.3536,
+          "di_minus": 24.6405,
+          "atr_pct": 2.5935
+        },
+        {
+          "date_utc": "2026-08-03",
+          "close_usdt": 63520.0,
+          "rsi14": 47.4542,
+          "macd_hist": -193.0981,
+          "adx14": 22.4364,
+          "di_plus": 16.0229,
+          "di_minus": 24.9333,
+          "atr_pct": 2.6103
+        },
+        {
+          "date_utc": "2026-08-04",
+          "close_usdt": 64106.56,
+          "rsi14": 50.4835,
+          "macd_hist": -133.4111,
+          "adx14": 21.9489,
+          "di_plus": 17.2192,
+          "di_minus": 23.5903,
+          "atr_pct": 2.5384
+        },
+        {
+          "date_utc": "2026-08-05",
+          "close_usdt": 64665.23,
+          "rsi14": 53.2481,
+          "macd_hist": -53.7586,
+          "adx14": 21.0647,
+          "di_plus": 18.4697,
+          "di_minus": 22.3788,
+          "atr_pct": 2.4632
+        },
+        {
+          "date_utc": "2026-08-06",
+          "close_usdt": 64323.61,
+          "rsi14": 51.3598,
+          "macd_hist": -23.0994,
+          "adx14": 20.2436,
+          "di_plus": 17.7604,
+          "di_minus": 21.5193,
+          "atr_pct": 2.3912
+        },
+        {
+          "date_utc": "2026-08-07",
+          "close_usdt": 64923.19,
+          "rsi14": 54.4153,
+          "macd_hist": 35.3623,
+          "adx14": 19.1092,
+          "di_plus": 18.5823,
+          "di_minus": 20.2771,
+          "atr_pct": 2.3347
+        },
+        {
+          "date_utc": "2026-08-08",
+          "close_usdt": 64962.6,
+          "rsi14": 54.6171,
+          "macd_hist": 72.3561,
+          "adx14": 18.0557,
+          "di_plus": 18.2051,
+          "di_minus": 19.8654,
+          "atr_pct": 2.2115
+        },
+        {
+          "date_utc": "2026-08-09",
+          "close_usdt": 64901.59,
+          "rsi14": 54.2169,
+          "macd_hist": 87.3815,
+          "adx14": 16.7933,
+          "di_plus": 18.9589,
+          "di_minus": 19.104,
+          "atr_pct": 2.1374
+        },
+        {
+          "date_utc": "2026-08-10",
+          "close_usdt": 63970.01,
+          "rsi14": 48.3875,
+          "macd_hist": 32.0929,
+          "adx14": 16.465,
+          "di_plus": 17.4273,
+          "di_minus": 22.2695,
+          "atr_pct": 2.1906
+        },
+        {
+          "date_utc": "2026-08-11",
+          "close_usdt": 63600.0,
+          "rsi14": 46.26,
+          "macd_hist": -28.6038,
+          "adx14": 16.6172,
+          "di_plus": 16.2854,
+          "di_minus": 23.7253,
+          "atr_pct": 2.1894
+        },
+        {
+          "date_utc": "2026-08-12",
+          "close_usdt": 63479.99,
+          "rsi14": 45.5603,
+          "macd_hist": -73.4888,
+          "adx14": 16.7584,
+          "di_plus": 15.2811,
+          "di_minus": 22.2622,
+          "atr_pct": 2.1708
+        },
+        {
+          "date_utc": "2026-08-13",
+          "close_usdt": 63490.86,
+          "rsi14": 45.6405,
+          "macd_hist": -97.5905,
+          "adx14": 17.298,
+          "di_plus": 14.316,
+          "di_minus": 23.5132,
+          "atr_pct": 2.1512
+        },
+        {
+          "date_utc": "2026-08-14",
+          "close_usdt": 63043.56,
+          "rsi14": 42.8434,
+          "macd_hist": -136.419,
+          "adx14": 18.0057,
+          "di_plus": 13.4935,
+          "di_minus": 23.5799,
+          "atr_pct": 2.1344
+        },
+        {
+          "date_utc": "2026-08-15",
+          "close_usdt": 63086.01,
+          "rsi14": 43.1991,
+          "macd_hist": -150.8769,
+          "adx14": 18.6629,
+          "di_plus": 13.2899,
+          "di_minus": 23.2241,
+          "atr_pct": 2.0109
+        },
+        {
+          "date_utc": "2026-08-16",
+          "close_usdt": 62900.0,
+          "rsi14": 41.9665,
+          "macd_hist": -163.5379,
+          "adx14": 19.4436,
+          "di_plus": 12.7681,
+          "di_minus": 23.5006,
+          "atr_pct": 1.9493
+        },
+        {
+          "date_utc": "2026-08-17",
+          "close_usdt": 64532.1,
+          "rsi14": 54.2911,
+          "macd_hist": -58.0085,
+          "adx14": 18.5554,
+          "di_plus": 18.2891,
+          "di_minus": 21.0462,
+          "atr_pct": 1.9701
+        },
+        {
+          "date_utc": "2026-08-18",
+          "close_usdt": 64725.42,
+          "rsi14": 55.4967,
+          "macd_hist": 24.3809,
+          "adx14": 17.2371,
+          "di_plus": 19.7713,
+          "di_minus": 19.8105,
+          "atr_pct": 1.9377
+        },
+        {
+          "date_utc": "2026-08-19",
+          "close_usdt": 69334.79,
+          "rsi14": 73.4665,
+          "macd_hist": 369.714,
+          "adx14": 19.0993,
+          "di_plus": 36.8809,
+          "di_minus": 14.5898,
+          "atr_pct": 2.2807
+        },
+        {
+          "date_utc": "2026-08-20",
+          "close_usdt": 73025.15,
+          "rsi14": 80.3186,
+          "macd_hist": 802.2605,
+          "adx14": 21.8133,
+          "di_plus": 43.8304,
+          "di_minus": 11.9707,
+          "atr_pct": 2.4507
+        },
+        {
+          "date_utc": "2026-08-21",
+          "close_usdt": 78338.03,
+          "rsi14": 85.9456,
+          "macd_hist": 1368.5128,
+          "adx14": 25.3131,
+          "di_plus": 54.799,
+          "di_minus": 9.3645,
+          "atr_pct": 2.7117
+        },
+        {
+          "date_utc": "2026-08-22",
+          "close_usdt": 77074.93,
+          "rsi14": 80.0834,
+          "macd_hist": 1566.1026,
+          "adx14": 28.5629,
+          "di_plus": 50.5384,
+          "di_minus": 8.6364,
+          "atr_pct": 2.775
+        },
+        {
+          "date_utc": "2026-08-23",
+          "close_usdt": 77734.0,
+          "rsi14": 80.8186,
+          "macd_hist": 1641.3629,
+          "adx14": 30.9117,
+          "di_plus": 46.3582,
+          "di_minus": 11.0704,
+          "atr_pct": 2.7853
+        },
+        {
+          "date_utc": "2026-08-24",
+          "close_usdt": 78992.75,
+          "rsi14": 82.1722,
+          "macd_hist": 1670.5332,
+          "adx14": 33.3888,
+          "di_plus": 47.6399,
+          "di_minus": 9.8992,
+          "atr_pct": 2.8463
+        },
+        {
+          "date_utc": "2026-08-25",
+          "close_usdt": 78539.14,
+          "rsi14": 79.9818,
+          "macd_hist": 1556.1999,
+          "adx14": 35.8619,
+          "di_plus": 46.5451,
+          "di_minus": 8.8618,
+          "atr_pct": 2.9694
+        },
+        {
+          "date_utc": "2026-08-26",
+          "close_usdt": 79023.75,
+          "rsi14": 80.5775,
+          "macd_hist": 1414.2429,
+          "adx14": 38.0043,
+          "di_plus": 44.1856,
+          "di_minus": 9.0965,
+          "atr_pct": 2.8867
+        },
+        {
+          "date_utc": "2026-08-27",
+          "close_usdt": 80249.58,
+          "rsi14": 82.0337,
+          "macd_hist": 1306.4931,
+          "adx14": 40.2175,
+          "di_plus": 45.9995,
+          "di_minus": 8.4411,
+          "atr_pct": 2.8446
+        },
+        {
+          "date_utc": "2026-08-28",
+          "close_usdt": 77845.87,
+          "rsi14": 70.8205,
+          "macd_hist": 991.2256,
+          "adx14": 41.1491,
+          "di_plus": 39.8367,
+          "di_minus": 12.1491,
+          "atr_pct": 3.1442
+        },
+        {
+          "date_utc": "2026-08-29",
+          "close_usdt": 78230.0,
+          "rsi14": 71.4911,
+          "macd_hist": 738.0711,
+          "adx14": 42.0142,
+          "di_plus": 38.6846,
+          "di_minus": 11.7978,
+          "atr_pct": 2.9918
+        },
+        {
+          "date_utc": "2026-08-30",
+          "close_usdt": 77682.0,
+          "rsi14": 69.0528,
+          "macd_hist": 475.95,
+          "adx14": 43.0349,
+          "di_plus": 39.1159,
+          "di_minus": 10.9352,
+          "atr_pct": 3.0184
+        },
+        {
+          "date_utc": "2026-08-31",
+          "close_usdt": 78581.29,
+          "rsi14": 70.8121,
+          "macd_hist": 313.2276,
+          "adx14": 43.9827,
+          "di_plus": 36.8686,
+          "di_minus": 10.3069,
+          "atr_pct": 2.9396
+        },
+        {
+          "date_utc": "2026-09-01",
+          "close_usdt": 77439.0,
+          "rsi14": 65.7027,
+          "macd_hist": 90.3338,
+          "adx14": 44.1459,
+          "di_plus": 33.7235,
+          "di_minus": 12.3884,
+          "atr_pct": 3.0282
+        },
+        {
+          "date_utc": "2026-09-02",
+          "close_usdt": 77340.01,
+          "rsi14": 65.2633,
+          "macd_hist": -92.2149,
+          "adx14": 44.1828,
+          "di_plus": 32.1138,
+          "di_minus": 12.2844,
+          "atr_pct": 2.9566
+        },
+        {
+          "date_utc": "2026-09-03",
+          "close_usdt": 81270.37,
+          "rsi14": 72.9886,
+          "macd_hist": 17.4475,
+          "adx14": 45.2235,
+          "di_plus": 40.0882,
+          "di_minus": 10.4161,
+          "atr_pct": 3.0813
+        },
+        {
+          "date_utc": "2026-09-04",
+          "close_usdt": 79660.77,
+          "rsi14": 66.469,
+          "macd_hist": -49.0737,
+          "adx14": 46.1898,
+          "di_plus": 36.947,
+          "di_minus": 9.5999,
+          "atr_pct": 3.1672
+        },
+        {
+          "date_utc": "2026-09-05",
+          "close_usdt": 79831.75,
+          "rsi14": 66.8082,
+          "macd_hist": -108.7919,
+          "adx14": 47.0871,
+          "di_plus": 36.1124,
+          "di_minus": 9.383,
+          "atr_pct": 3.0025
+        },
+        {
+          "date_utc": "2026-09-06",
+          "close_usdt": 80341.83,
+          "rsi14": 67.8529,
+          "macd_hist": -139.2271,
+          "adx14": 47.9932,
+          "di_plus": 35.7454,
+          "di_minus": 8.9998,
+          "atr_pct": 2.8883
+        },
+        {
+          "date_utc": "2026-09-07",
+          "close_usdt": 79112.01,
+          "rsi14": 62.7267,
+          "macd_hist": -260.4317,
+          "adx14": 48.3855,
+          "di_plus": 33.7707,
+          "di_minus": 10.2345,
+          "atr_pct": 2.8829
+        },
+        {
+          "date_utc": "2026-09-08",
+          "close_usdt": 78455.8,
+          "rsi14": 60.117,
+          "macd_hist": -394.9752,
+          "adx14": 47.926,
+          "di_plus": 31.7722,
+          "di_minus": 12.9923,
+          "atr_pct": 2.8692
+        },
+        {
+          "date_utc": "2026-09-09",
+          "close_usdt": 78306.43,
+          "rsi14": 59.51,
+          "macd_hist": -497.5806,
+          "adx14": 47.5846,
+          "di_plus": 30.6291,
+          "di_minus": 12.165,
+          "atr_pct": 2.8509
+        },
+        {
+          "date_utc": "2026-09-10",
+          "close_usdt": 76568.72,
+          "rsi14": 52.8279,
+          "macd_hist": -675.0191,
+          "adx14": 46.2947,
+          "di_plus": 28.5619,
+          "di_minus": 15.5404,
+          "atr_pct": 2.9032
+        },
+        {
+          "date_utc": "2026-09-11",
+          "close_usdt": 77225.7,
+          "rsi14": 54.8902,
+          "macd_hist": -735.698,
+          "adx14": 45.5711,
+          "di_plus": 29.2578,
+          "di_minus": 13.7162,
+          "atr_pct": 3.0284
+        },
+        {
+          "date_utc": "2026-09-12",
+          "close_usdt": 77278.73,
+          "rsi14": 55.061,
+          "macd_hist": -756.8792,
+          "adx14": 44.8993,
+          "di_plus": 28.8349,
+          "di_minus": 13.518,
+          "atr_pct": 2.8514
+        },
+        {
+          "date_utc": "2026-09-13",
+          "close_usdt": 76842.01,
+          "rsi14": 53.2723,
+          "macd_hist": -781.7232,
+          "adx14": 43.8465,
+          "di_plus": 27.9093,
+          "di_minus": 14.9754,
+          "atr_pct": 2.7511
+        },
+        {
+          "date_utc": "2026-09-14",
+          "close_usdt": 78189.21,
+          "rsi14": 57.824,
+          "macd_hist": -691.9334,
+          "adx14": 43.6385,
+          "di_plus": 31.9942,
+          "di_minus": 13.4086,
+          "atr_pct": 2.8039
+        },
+        {
+          "date_utc": "2026-09-15",
+          "close_usdt": 75644.48,
+          "rsi14": 48.261,
+          "macd_hist": -781.797,
+          "adx14": 42.4495,
+          "di_plus": 28.6899,
+          "di_minus": 16.4939,
+          "atr_pct": 3.0012
+        },
+        {
+          "date_utc": "2026-09-16",
+          "close_usdt": 76206.01,
+          "rsi14": 50.2175,
+          "macd_hist": -779.537,
+          "adx14": 41.3453,
+          "di_plus": 27.3058,
+          "di_minus": 15.6982,
+          "atr_pct": 2.9065
+        },
+        {
+          "date_utc": "2026-09-17",
+          "close_usdt": 76417.01,
+          "rsi14": 50.9678,
+          "macd_hist": -740.2475,
+          "adx14": 40.5683,
+          "di_plus": 28.2955,
+          "di_minus": 15.0805,
+          "atr_pct": 2.8017
+        },
+        {
+          "date_utc": "2026-09-18",
+          "close_usdt": 80883.87,
+          "rsi14": 63.5071,
+          "macd_hist": -406.522,
+          "adx14": 41.1333,
+          "di_plus": 36.7248,
+          "di_minus": 12.7435,
+          "atr_pct": 2.9086
+        },
+        {
+          "date_utc": "2026-09-19",
+          "close_usdt": 81249.99,
+          "rsi14": 64.3127,
+          "macd_hist": -166.5172,
+          "adx14": 41.7872,
+          "di_plus": 37.1813,
+          "di_minus": 12.2986,
+          "atr_pct": 2.786
+        },
+        {
+          "date_utc": "2026-09-20",
+          "close_usdt": 81178.0,
+          "rsi14": 64.0134,
+          "macd_hist": -25.4159,
+          "adx14": 41.8896,
+          "di_plus": 35.5258,
+          "di_minus": 14.0841,
+          "atr_pct": 2.7099
+        },
+        {
+          "date_utc": "2026-09-21",
+          "close_usdt": 86620.0,
+          "rsi14": 73.8996,
+          "macd_hist": 398.2458,
+          "adx14": 43.1757,
+          "di_plus": 45.6927,
+          "di_minus": 11.4609,
+          "atr_pct": 2.898
+        },
+        {
+          "date_utc": "2026-09-22",
+          "close_usdt": 86208.56,
+          "rsi14": 72.2828,
+          "macd_hist": 602.3412,
+          "adx14": 44.3698,
+          "di_plus": 43.5526,
+          "di_minus": 10.9241,
+          "atr_pct": 2.8367
+        },
+        {
+          "date_utc": "2026-09-23",
+          "close_usdt": 84397.6,
+          "rsi14": 65.491,
+          "macd_hist": 567.4308,
+          "adx14": 44.5051,
+          "di_plus": 38.9261,
+          "di_minus": 14.3012,
+          "atr_pct": 3.0104
+        },
+        {
+          "date_utc": "2026-09-24",
+          "close_usdt": 84410.24,
+          "rsi14": 65.5154,
+          "macd_hist": 499.6309,
+          "adx14": 44.272,
+          "di_plus": 36.633,
+          "di_minus": 15.2397,
+          "atr_pct": 2.9699
+        },
+        {
+          "date_utc": "2026-09-25",
+          "close_usdt": 84099.99,
+          "rsi14": 64.3155,
+          "macd_hist": 393.0257,
+          "adx14": 44.1318,
+          "di_plus": 35.3448,
+          "di_minus": 14.3287,
+          "atr_pct": 2.9439
+        },
+        {
+          "date_utc": "2026-09-26",
+          "close_usdt": 84433.1,
+          "rsi14": 65.0555,
+          "macd_hist": 307.8486,
+          "adx14": 44.0015,
+          "di_plus": 34.6182,
+          "di_minus": 14.0342,
+          "atr_pct": 2.78
+        },
+        {
+          "date_utc": "2026-09-27",
+          "close_usdt": 84472.0,
+          "rsi14": 65.1464,
+          "macd_hist": 221.0898,
+          "adx14": 44.0625,
+          "di_plus": 35.6642,
+          "di_minus": 13.5772,
+          "atr_pct": 2.6671
+        },
+        {
+          "date_utc": "2026-09-28",
+          "close_usdt": 83500.01,
+          "rsi14": 60.8849,
+          "macd_hist": 72.8712,
+          "adx14": 43.1038,
+          "di_plus": 32.9257,
+          "di_minus": 17.4804,
+          "atr_pct": 2.7138
+        },
+        {
+          "date_utc": "2026-09-29",
+          "close_usdt": 83663.66,
+          "rsi14": 61.3434,
+          "macd_hist": -33.7917,
+          "adx14": 42.2137,
+          "di_plus": 31.0415,
+          "di_minus": 16.4801,
+          "atr_pct": 2.6677
+        },
+        {
+          "date_utc": "2026-09-30",
+          "close_usdt": 83623.6,
+          "rsi14": 61.1544,
+          "macd_hist": -121.7399,
+          "adx14": 41.7488,
+          "di_plus": 31.8292,
+          "di_minus": 15.08,
+          "atr_pct": 2.7084
+        },
+        {
+          "date_utc": "2026-10-01",
+          "close_usdt": 84880.05,
+          "rsi14": 64.8155,
+          "macd_hist": -110.3302,
+          "adx14": 41.3172,
+          "di_plus": 29.7218,
+          "di_minus": 14.0815,
+          "atr_pct": 2.6534
+        },
+        {
+          "date_utc": "2026-10-02",
+          "close_usdt": 84518.01,
+          "rsi14": 62.9738,
+          "macd_hist": -140.2797,
+          "adx14": 41.5215,
+          "di_plus": 32.6534,
+          "di_minus": 12.6428,
+          "atr_pct": 2.756
+        },
+        {
+          "date_utc": "2026-10-03",
+          "close_usdt": 84753.56,
+          "rsi14": 63.6965,
+          "macd_hist": -156.1258,
+          "adx14": 41.7112,
+          "di_plus": 32.038,
+          "di_minus": 12.4045,
+          "atr_pct": 2.6011
+        },
+        {
+          "date_utc": "2026-10-04",
+          "close_usdt": 86530.0,
+          "rsi14": 68.6645,
+          "macd_hist": -63.6097,
+          "adx14": 42.372,
+          "di_plus": 35.6035,
+          "di_minus": 11.5651,
+          "atr_pct": 2.5374
+        },
+        {
+          "date_utc": "2026-10-05",
+          "close_usdt": 85766.87,
+          "rsi14": 64.5763,
+          "macd_hist": -69.9485,
+          "adx14": 43.0366,
+          "di_plus": 33.894,
+          "di_minus": 10.7983,
+          "atr_pct": 2.546
+        },
+        {
+          "date_utc": "2026-10-06",
+          "close_usdt": 85549.93,
+          "rsi14": 63.4203,
+          "macd_hist": -102.8994,
+          "adx14": 43.6538,
+          "di_plus": 32.1252,
+          "di_minus": 10.2348,
+          "atr_pct": 2.5006
+        },
+        {
+          "date_utc": "2026-10-07",
+          "close_usdt": 83321.81,
+          "rsi14": 52.9384,
+          "macd_hist": -278.9171,
+          "adx14": 42.4259,
+          "di_plus": 29.1762,
+          "di_minus": 16.9659,
+          "atr_pct": 2.625
+        },
+        {
+          "date_utc": "2026-10-08",
+          "close_usdt": 81754.45,
+          "rsi14": 47.0477,
+          "macd_hist": -492.5754,
+          "adx14": 39.8919,
+          "di_plus": 26.285,
+          "di_minus": 22.8689,
+          "atr_pct": 2.7575
+        },
+        {
+          "date_utc": "2026-10-09",
+          "close_usdt": 82635.55,
+          "rsi14": 50.3897,
+          "macd_hist": -561.2481,
+          "adx14": 37.5425,
+          "di_plus": 24.6896,
+          "di_minus": 21.459,
+          "atr_pct": 2.6997
+        },
+        {
+          "date_utc": "2026-10-10",
+          "close_usdt": 82988.36,
+          "rsi14": 51.7041,
+          "macd_hist": -567.8817,
+          "adx14": 35.3609,
+          "di_plus": 24.1667,
+          "di_minus": 21.0046,
+          "atr_pct": 2.5502
+        },
+        {
+          "date_utc": "2026-10-11",
+          "close_usdt": 83773.12,
+          "rsi14": 54.5863,
+          "macd_hist": -506.4222,
+          "adx14": 33.8416,
+          "di_plus": 26.5493,
+          "di_minus": 19.9914,
+          "atr_pct": 2.4647
+        },
+        {
+          "date_utc": "2026-10-12",
+          "close_usdt": 81850.0,
+          "rsi14": 47.159,
+          "macd_hist": -577.1616,
+          "adx14": 31.7964,
+          "di_plus": 24.2033,
+          "di_minus": 21.8064,
+          "atr_pct": 2.5695
+        },
+        {
+          "date_utc": "2026-10-13",
+          "close_usdt": 83169.0,
+          "rsi14": 51.9846,
+          "macd_hist": -518.8323,
+          "adx14": 29.5581,
+          "di_plus": 21.714,
+          "di_minus": 21.9145,
+          "atr_pct": 2.6173
+        },
+        {
+          "date_utc": "2026-10-14",
+          "close_usdt": 81682.01,
+          "rsi14": 46.7961,
+          "macd_hist": -560.5522,
+          "adx14": 27.4796,
+          "di_plus": 19.8212,
+          "di_minus": 20.0042,
+          "atr_pct": 2.7109
+        },
+        {
+          "date_utc": "2026-10-15",
+          "close_usdt": 82245.93,
+          "rsi14": 48.8799,
+          "macd_hist": -530.6321,
+          "adx14": 26.4415,
+          "di_plus": 18.0446,
+          "di_minus": 23.4116,
+          "atr_pct": 2.7462
+        },
+        {
+          "date_utc": "2026-10-16",
+          "close_usdt": 81615.64,
+          "rsi14": 46.6793,
+          "macd_hist": -532.3801,
+          "adx14": 25.2794,
+          "di_plus": 17.7965,
+          "di_minus": 21.8271,
+          "atr_pct": 2.7563
+        },
+        {
+          "date_utc": "2026-10-17",
+          "close_usdt": 81491.04,
+          "rsi14": 46.2361,
+          "macd_hist": -520.4001,
+          "adx14": 24.2003,
+          "di_plus": 17.2364,
+          "di_minus": 21.1401,
+          "atr_pct": 2.6466
+        },
+        {
+          "date_utc": "2026-10-18",
+          "close_usdt": 82116.0,
+          "rsi14": 48.8587,
+          "macd_hist": -451.4225,
+          "adx14": 22.8319,
+          "di_plus": 18.072,
+          "di_minus": 19.9913,
+          "atr_pct": 2.579
+        },
+        {
+          "date_utc": "2026-10-19",
+          "close_usdt": 81938.4,
+          "rsi14": 48.14,
+          "macd_hist": -400.5243,
+          "adx14": 21.4115,
+          "di_plus": 20.1725,
+          "di_minus": 19.0179,
+          "atr_pct": 2.5228
+        },
+        {
+          "date_utc": "2026-10-20",
+          "close_usdt": 83028.15,
+          "rsi14": 52.734,
+          "macd_hist": -281.834,
+          "adx14": 20.0359,
+          "di_plus": 18.621,
+          "di_minus": 19.4406,
+          "atr_pct": 2.5045
+        },
+        {
+          "date_utc": "2026-10-21",
+          "close_usdt": 84093.42,
+          "rsi14": 56.7658,
+          "macd_hist": -127.7947,
+          "adx14": 19.3571,
+          "di_plus": 22.1631,
+          "di_minus": 17.939,
+          "atr_pct": 2.4883
+        },
+        {
+          "date_utc": "2026-10-22",
+          "close_usdt": 81416.09,
+          "rsi14": 46.1182,
+          "macd_hist": -198.227,
+          "adx14": 18.2843,
+          "di_plus": 19.6765,
+          "di_minus": 21.4608,
+          "atr_pct": 2.6882
+        },
+        {
+          "date_utc": "2026-10-23",
+          "close_usdt": 81189.43,
+          "rsi14": 45.3428,
+          "macd_hist": -248.8139,
+          "adx14": 17.5283,
+          "di_plus": 18.6613,
+          "di_minus": 21.7753,
+          "atr_pct": 2.6393
+        },
+        {
+          "date_utc": "2026-10-24",
+          "close_usdt": 80888.16,
+          "rsi14": 44.2772,
+          "macd_hist": -288.5044,
+          "adx14": 17.5049,
+          "di_plus": 17.4154,
+          "di_minus": 24.6507,
+          "atr_pct": 2.6359
+        },
+        {
+          "date_utc": "2026-10-25",
+          "close_usdt": 80154.09,
+          "rsi14": 41.7053,
+          "macd_hist": -346.2475,
+          "adx14": 17.4831,
+          "di_plus": 16.6997,
+          "di_minus": 23.6377,
+          "atr_pct": 2.5759
+        },
+        {
+          "date_utc": "2026-10-26",
+          "close_usdt": 80150.56,
+          "rsi14": 41.6928,
+          "macd_hist": -364.868,
+          "adx14": 17.7125,
+          "di_plus": 15.8293,
+          "di_minus": 24.0908,
+          "atr_pct": 2.5235
+        },
+        {
+          "date_utc": "2026-10-27",
+          "close_usdt": 80909.77,
+          "rsi14": 45.4895,
+          "macd_hist": -308.4832,
+          "adx14": 17.5672,
+          "di_plus": 16.4392,
+          "di_minus": 22.5521,
+          "atr_pct": 2.4797
+        },
+        {
+          "date_utc": "2026-10-28",
+          "close_usdt": 81343.5,
+          "rsi14": 47.5892,
+          "macd_hist": -228.1106,
+          "adx14": 17.0281,
+          "di_plus": 17.4884,
+          "di_minus": 21.3831,
+          "atr_pct": 2.4155
+        },
+        {
+          "date_utc": "2026-10-29",
+          "close_usdt": 77991.89,
+          "rsi14": 36.0374,
+          "macd_hist": -377.9679,
+          "adx14": 17.8149,
+          "di_plus": 15.0893,
+          "di_minus": 26.8512,
+          "atr_pct": 2.7113
+        },
+        {
+          "date_utc": "2026-10-30",
+          "close_usdt": 77368.77,
+          "rsi14": 34.3672,
+          "macd_hist": -489.2856,
+          "adx14": 19.1664,
+          "di_plus": 13.8416,
+          "di_minus": 29.9167,
+          "atr_pct": 2.7667
+        },
+        {
+          "date_utc": "2026-10-31",
+          "close_usdt": 77582.02,
+          "rsi14": 35.4695,
+          "macd_hist": -516.1218,
+          "adx14": 20.4214,
+          "di_plus": 13.5105,
+          "di_minus": 29.201,
+          "atr_pct": 2.6248
+        }
+      ]
+    }
+  }
+}
