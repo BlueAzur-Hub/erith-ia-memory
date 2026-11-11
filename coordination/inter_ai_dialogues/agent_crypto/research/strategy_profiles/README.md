@@ -117,3 +117,13 @@ Les rapports suivants ont été réalisés avec des archives **Binance Spot BTC/
 - **[EMA, SuperTrend et volatilité : sélection mensuelle Grid / Hold](./SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11_REPORT.md)** — trois périodes disjointes, 698 400 minutes, indicateurs calculés à la clôture précédente ; signal non prédictif et dépendant de la fenêtre. [Journal des décisions](./SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11_MONTHLY_DECISIONS.csv).
 
 **Limite méthodologique :** les niveaux touchés dans des bougies OHLC ne prouvent pas l'exécution d'ordres limites ; les ajustements de grille restent théoriques. La recherche ne constitue ni une validation prospective ni un conseil financier.
+
+## Retournements BTC : délai de réaction EMA / SuperTrend / ATR — 11 novembre 2026
+
+Étude de la **latence des signaux** réalisée sur les 16 archives Binance Spot BTC/USDT 1 minute déjà vérifiées SHA-256 (698 400 minutes). Les positions BTC / cash sont simulées après clôture journalière, avec exécution hypothétique à l'ouverture suivante. Cette expérience est **distincte** des stratégies Spot Grid ; janvier sert au chauffage et les portefeuilles commencent au 1er février de chaque période.
+
+- **[Rapport : EMA 10/30, SuperTrend ATR14 ×3, volatilité ATR 5 %, stop de baisse 10 % / reprise 5 %](./SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11_REPORT.md)** — cas documentés de février–mars 2025 et mars 2024, résultats 2026, latences, drawdowns, faux signaux, frais normaux et doublés.
+- **[Preuves JSON et transactions fictives](./SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11_PROOFS.json)** · [**Courbes quotidiennes CSV**](./SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11_EQUITY_DAILY.csv) · [**Épisodes de drawdown CSV**](./SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11_DRAWDOWN_EVENTS.csv).
+- **[Script Python reproductible](./SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11.py)** · dépendances source [**moteur EMA/SuperTrend précédent**](./SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11.py) et [**parseur / moteur Spot Grid trimestriel**](./SEVEN_HEAVEN_SPOT_GRID_BTC_2024_2025_Q1_CONTINUOUS_REPLAY_2026_11_11.py) désormais publiées dans ce répertoire.
+
+**Statut :** recherche rétrospective et explicative, non test prospectif et non conseil d'investissement. Les stratégies ont des performances variables selon la fenêtre ; les sorties sont fictives au cours d'ouverture, et le seuil de drawdown est une règle de test, pas un signal validé sur OKX. **Aucun ordre, aucune modification des interfaces ou du Bridge.**
