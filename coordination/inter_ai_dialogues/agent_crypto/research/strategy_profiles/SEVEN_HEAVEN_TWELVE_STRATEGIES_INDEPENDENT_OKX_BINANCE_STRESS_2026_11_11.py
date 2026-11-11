@@ -61,6 +61,8 @@ def guarded_engine():
          "source=dict(pair=obj['pair']+' Spot 1Dutc',sha256=sha,rows=len(B)),"),
         ("double_costs=[dict(key=r['key'],net_pct=r['net_pct'],trades=r['trades']) for r in double])",
          "double_costs=[dict(key=r['key'],net_pct=r['net_pct'],trades=r['trades']) for r in double],quarter25=quarter25,stress25=stress25)"),
+        ("r['underperform_years']=[y for y,p in r['yearly'].items() if p<hold['yearly'][y]]",
+         "r['underperform_years']=[y for y,p in r['yearly'].items() if y in hold['yearly'] and p<hold['yearly'][y]]"),
     ]
     for old,new in replacements:
         if src.count(old)!=1:
