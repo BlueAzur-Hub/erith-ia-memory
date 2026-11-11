@@ -1,0 +1,80 @@
+name: Seven Heaven - Parabolic SAR BTC continuous Binance OKX research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.py'
+      - '.github/workflows/seven-heaven-btc-parabolic-sar-research.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-parabolic-sar-btc-research
+  cancel-in-progress: false
+
+jobs:
+  verify-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Compile and execute classic slow fast Parabolic SAR with existing BTC capital simulator
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.py
+      - name: Verify original BTC baselines and integrity of SAR source evidence
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11')
+          x=json.loads(p.with_suffix('.json').read_text(encoding='utf-8'))
+          assert x['research_only'] is True and x['orders_enabled'] is False
+          assert x['baseline_reproduction_verified'] and x['synthetic_invariant_tests_passed']
+          assert x['rules']['indicator_evaluated_on_closed_bar'] and x['rules']['trade_next_day_open']
+          assert x['rules']['reverse_to_cash_not_short']
+          assert len(x['windows'])==4
+          assert [w['days'] for w in x['windows']]==[2830,183,183,224]
+          for w in x['windows']:
+              assert {m['key'] for m in w['methods']}=={'SAR_STANDARD','SAR_SLOW','SAR_FAST'}
+              for m in w['methods']:
+                  assert len(m['flip_dates_in_window'])==m['flip_count_in_window']
+                  a=m['long100'];b=m['quarter25']
+                  assert a['buys']==b['buys'] and a['sells']==b['sells']
+                  assert a['days']==b['days']==w['days']
+                  assert a['completed_positions']==a['sells']
+                  assert b['completed_positions']==b['sells']
+                  assert b['max_daily_drawdown_pct']<=0
+                  assert b['return_pct']>-100
+          assert len(p.with_suffix('.md').read_text(encoding='utf-8'))>2500
+          print('SAR_BTC_RESEARCH_ALL_VENUES_AND_BASELINES_VERIFIED')
+          PY
+      - name: Preserve complete SAR research
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-parabolic-sar-study
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.json
+      - name: Publish verified report and structured results to shared research
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Shared reports already match"
+          else
+            git commit -m "Archive independent Parabolic SAR BTC research across Binance and OKX"
+            git push origin HEAD:main
+          fi
