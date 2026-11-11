@@ -48,12 +48,12 @@ Les résultats favorables et défavorables restent dans le Coffre. Aucun classem
 |---|---|---|---|
 | D11 | Spot Grid | Documentée, **non backtestée** | Bougies fines, chronologie des niveaux, exécutions et ordres limites |
 | D12 | Spot DCA Martingale | Documentée, **non backtestée** | Séquence intrajournalière, budgets/plafonds, liquidité, risque de ruine |
-| D13 | Rééquilibrage BTC/ETH/liquidités | Documentée, **non backtestée** | Plusieurs actifs alignés dans le temps, frais et allocation cible |
+| D13 | Rééquilibrage BTC/ETH/liquidités | **Backtest historique réalisé**, Binance Spot USDT 2024–octobre 2026 | Vérification prospective / autre plateforme, autres pondérations déclarées avant test |
 | D14 | Arbitrage entre marchés | Documentée, **non backtestée** | Carnets simultanés sur plusieurs places, latence, coûts et transferts |
 | D15 | TWAP | Exécution, **non backtestée** | Transactions et liquidité intrajournalière, taille/temps d'exécution |
 | D16 | Iceberg | Exécution, **non backtestée** | Carnets/ordres et files d'attente, remplissages et impact |
 | D17 | Scalping | Documentée, **non backtestée** | Transactions minute/seconde, spread, carnet, latence et frais réels |
-| D18 | VWAP | Indicateur/repère, **pas de règle autonome évaluée** | Volume et fenêtre définis ; convertir en stratégie seulement avec entrée/sortie spécifiées |
+| D18 | VWAP | **Source historique de VWAP de session qualifiée** via volumes BTC/ETH horaires, **stratégie non testée** | Fixer règle d'entrée/sortie, horizon et ancrage ; valider indépendamment |
 | D19 | SAR parabolique | Indicateur/repère, **pas de règle autonome évaluée** | Choix explicite des règles d'entrée/sortie ; données journalières possibles selon protocole |
 
 Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swing et le risque. Les guides ne sont ni sept simulations distinctes, ni des profils à charger automatiquement dans Trader.
@@ -71,6 +71,16 @@ Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swi
 | **Internet — CryptoDataDownload** [catalogue](https://www.cryptodatadownload.com/data/) | Agrégateur historique tiers ; couverture variable selon marché et instrument | **Recoupement secondaire uniquement** ; contrôler provenance, dates, devises, conditions d'utilisation. Ne pas remplacer sans trace les bougies primaires. |
 
 **Ne pas supprimer les résultats défavorables. Ne pas fabriquer un prix manquant. Ne pas concaténer BTC/USDT, BTC/USDC, BTC/USD ou BTC/EUR comme une seule série.**
+
+## Nouveau contrôle D13 et D18 : archives horaires BTC/ETH vérifiées
+
+**11 novembre 2026 :** six archives Binance Spot (BTCUSDT et ETHUSDT, 2024–octobre 2026) ont été vérifiées SHA-256, 24 840 bougies horaires par actif, mêmes timestamps, aucun trou. Le backtest **D13 rééquilibrage** compare allocation passive 50/25/25, rééquilibrage mensuel et trimestriel, plus trois témoins à 1 000 USDT fictifs. La source D18 **VWAP journalier de session** est désormais qualifiée via somme des volumes de base et de cotation des bougies horaires, mais aucune stratégie VWAP n'a été simulée. D19 SAR et D11/D12/D14–D17 demeurent à auditer selon leurs spécifications.
+
+- [Rapport D13/D18 vérifié](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.md)
+- [Preuves structurées, empreintes sources, courbes et ratio VWAP](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.json)
+- [Programme Python de reproduction](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py)
+
+**Aucun résultat n'est un rendement garanti** et le statut documentaire des autres profils est conservé. Les performances du panier BTC/ETH sont indépendantes du portefeuille BTC personnel.
 
 ## Nouveau backtest continu P01–P10 : statut du 11 novembre
 
