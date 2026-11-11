@@ -1,0 +1,73 @@
+name: Seven Heaven - OKX BTC-USDC multi-year Donchian 55 source audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.py'
+      - '.github/workflows/seven-heaven-okx-btc-multicycle-donchian55.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-multicycle-research-main
+  cancel-in-progress: false
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Audit official multi-year OKX coverage then run fixed-strategy backtest only if qualified
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.py
+      - name: Contract tests for source provenance and honest readiness labels
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.json')
+          md=p.with_suffix('.md')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          assert x['read_only'] and x['orders_enabled'] is False
+          assert x['source_pair']=='BTC-USDC' and x['bar']=='1Dutc'
+          assert x['page_coverage'] and x['source_sha256_utc_daily_rows']
+          assert x['status'] in ('VERIFIED_MULTICYCLE_REPLAY','SOURCE_QUALIFICATION_BLOCKED','INSUFFICIENT_CONTIGUOUS_2022_OR_2023_HISTORY')
+          assert len(md.read_text(encoding='utf-8'))>1100
+          if x['status']=='VERIFIED_MULTICYCLE_REPLAY':
+              assert len(x['simulations'])>=5
+              assert any(r['kind']=='continuous' for r in x['simulations'])
+              assert all(r['model25']['trades']==r['model25']['wins']+r['model25']['losses'] for r in x['simulations'])
+          else:
+              assert not x['simulations'], 'Never create spurious multi-cycle backtest'
+          print('MULTICYCLE_SOURCE_INTEGRITY_AND_RESEARCH_STATUS_VALIDATED', x['status'])
+          PY
+      - name: Retain independent evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-multicycle-donchian55-study
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.json
+      - name: Archive the checked evidence in shared GitHub
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Shared reports already match"
+          else
+            git commit -m "Archive qualified multi-cycle OKX Donchian 55 evidence"
+            git push origin HEAD:main
+          fi
