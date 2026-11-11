@@ -1,0 +1,1171 @@
+{
+  "schema": "seven.heaven.crypto.reversal-latency-daily-2026-11-11.v1",
+  "research_date": "2026-11-11",
+  "source": "Binance Spot BTCUSDT original user ZIPs; SHA256 and 1m continuity verified",
+  "all_verified_sources": [
+    {
+      "month": "2024-01",
+      "sha256_verified": "40b78258091a468f8756843f207f5913eafc1d6e756c40a78711320d93fa5e75",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms"
+    },
+    {
+      "month": "2024-02",
+      "sha256_verified": "431132e0db8b9fe6e5c93c8e9ba3ae37dbcfa0edcdd57618b1b78ac18d14be79",
+      "minute_candles_verified": 41760,
+      "timestamp_unit": "ms"
+    },
+    {
+      "month": "2024-03",
+      "sha256_verified": "a9af86295eae839f1d072643c67eed7fcc47bb1d82c12ef312d041eec9511e7b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms"
+    },
+    {
+      "month": "2025-01",
+      "sha256_verified": "8d028b2f91aad57d6b693d44449c93f9c4b7044f55f298c8a3ac40ab676dafac",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2025-02",
+      "sha256_verified": "26b3795072983a66bdbe8327e0d5e71069bdd5ca831d4da3850ba68ef7a991ef",
+      "minute_candles_verified": 40320,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2025-03",
+      "sha256_verified": "e333601b6c721434f3cdd6670ffde2371bef7946572864c49ba6431a690ab1ca",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-01",
+      "sha256_verified": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-02",
+      "sha256_verified": "cee2e913ed07e02834e2387c65ca430fe3576f620588bad8a02229238f385407",
+      "minute_candles_verified": 40320,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-03",
+      "sha256_verified": "a2c1e689d39aa7877e218f436f15162e9a4436778a377d32e9d9b81b081381cd",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-04",
+      "sha256_verified": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-05",
+      "sha256_verified": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-06",
+      "sha256_verified": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-07",
+      "sha256_verified": "3ef15c84353da48e1c7c5fd99b9751cb036bf8986ed47f7cd1be63359c0d4f6b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-08",
+      "sha256_verified": "acab442e02745177063031d402929703ae983715010064b40cf811c4beb843d4",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-09",
+      "sha256_verified": "7a021fb5981cfdb1a56457d68fa81360ab27350c981ddfe63112b2322df44b56",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-10",
+      "sha256_verified": "17168f260306752e39177a6c038bb8952f52bf08ff20e36d8da6068732621f1c",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    }
+  ],
+  "total_verified_minutes": 698400,
+  "signal_rule": "A day D closes and indicators evaluate using only the OHLC through D; hypothetical fills occur at D+1 UTC open",
+  "period_warmup": "January daily candles are used for indicators; start paper portfolios on Feb 1 UTC open of each period with fresh 1000 USDT",
+  "policies": {
+    "EMA10_30": "Long BTC if EMA10>EMA30 AND close>EMA30, else cash",
+    "SUPERTREND_ATR14_X3": "Long BTC if SuperTrend direction from existing canonical study is bullish, else cash",
+    "ATR14_PCT5_RISKOFF": "Long BTC if Wilder ATR14 / close <=5%, else cash; ATR is not direction-sensitive",
+    "DRAWDOWN30_10_5": "Causal 30d rolling high close; exit BTC when close drawdown reaches 10%, reenter when recovery improves above -5%",
+    "HOLD_BTC": "Buy BTC at Feb 1 UTC open and keep through period end"
+  },
+  "execution_assumptions": {
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "stress_cost_multiplier": 2,
+    "no_live_orders": true
+  },
+  "event_definition": "A first 10% daily-close drawdown from 30d rolling peak, next event only after recovery above -5%; labels are retrospective evaluation not future trading inputs",
+  "not_forecasting_or_certified_execution": true,
+  "years": {
+    "2024": {
+      "start_date_utc": "2024-02-01",
+      "end_date_utc": "2024-03-31",
+      "trading_days": 60,
+      "prefix_causality_assertions": 48,
+      "results": {
+        "HOLD_BTC": {
+          "final_equity_usdt": 1669.00938,
+          "net_return_pct": 66.9009,
+          "max_daily_drawdown_pct": -15.2383,
+          "buy_count": 1,
+          "sell_count": 0,
+          "exposed_days": 60,
+          "days": 60,
+          "transaction_log": [
+            {
+              "date_utc": "2024-02-01",
+              "type": "BUY",
+              "price_usdt": 42580.0,
+              "signal_day_utc": "2024-01-31"
+            }
+          ]
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 1458.5971,
+          "net_return_pct": 45.8597,
+          "max_daily_drawdown_pct": -20.5297,
+          "buy_count": 2,
+          "sell_count": 1,
+          "exposed_days": 52,
+          "days": 60,
+          "transaction_log": [
+            {
+              "date_utc": "2024-02-08",
+              "type": "BUY",
+              "price_usdt": 44349.6,
+              "signal_day_utc": "2024-02-07"
+            },
+            {
+              "date_utc": "2024-03-20",
+              "type": "SELL",
+              "price_usdt": 61937.41,
+              "signal_day_utc": "2024-03-19"
+            },
+            {
+              "date_utc": "2024-03-21",
+              "type": "BUY",
+              "price_usdt": 67840.51,
+              "signal_day_utc": "2024-03-20"
+            }
+          ]
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1310.16703,
+          "net_return_pct": 31.0167,
+          "max_daily_drawdown_pct": -15.2383,
+          "buy_count": 1,
+          "sell_count": 1,
+          "exposed_days": 39,
+          "days": 60,
+          "transaction_log": [
+            {
+              "date_utc": "2024-02-10",
+              "type": "BUY",
+              "price_usdt": 47132.78,
+              "signal_day_utc": "2024-02-09"
+            },
+            {
+              "date_utc": "2024-03-20",
+              "type": "SELL",
+              "price_usdt": 61937.41,
+              "signal_day_utc": "2024-03-19"
+            }
+          ]
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "final_equity_usdt": 1662.03932,
+          "net_return_pct": 66.2039,
+          "max_daily_drawdown_pct": -6.6256,
+          "buy_count": 2,
+          "sell_count": 1,
+          "exposed_days": 45,
+          "days": 60,
+          "transaction_log": [
+            {
+              "date_utc": "2024-02-01",
+              "type": "BUY",
+              "price_usdt": 42580.0,
+              "signal_day_utc": "2024-01-31"
+            },
+            {
+              "date_utc": "2024-03-16",
+              "type": "SELL",
+              "price_usdt": 69499.84,
+              "signal_day_utc": "2024-03-15"
+            },
+            {
+              "date_utc": "2024-03-31",
+              "type": "BUY",
+              "price_usdt": 69582.17,
+              "signal_day_utc": "2024-03-30"
+            }
+          ]
+        },
+        "DRAWDOWN30_10_5": {
+          "final_equity_usdt": 1554.96279,
+          "net_return_pct": 55.4963,
+          "max_daily_drawdown_pct": -11.4263,
+          "buy_count": 2,
+          "sell_count": 1,
+          "exposed_days": 51,
+          "days": 60,
+          "transaction_log": [
+            {
+              "date_utc": "2024-02-01",
+              "type": "BUY",
+              "price_usdt": 42580.0,
+              "signal_day_utc": "2024-01-31"
+            },
+            {
+              "date_utc": "2024-03-17",
+              "type": "SELL",
+              "price_usdt": 65300.64,
+              "signal_day_utc": "2024-03-16"
+            },
+            {
+              "date_utc": "2024-03-26",
+              "type": "BUY",
+              "price_usdt": 69880.0,
+              "signal_day_utc": "2024-03-25"
+            }
+          ]
+        }
+      },
+      "stress_results": {
+        "HOLD_BTC": {
+          "final_equity_usdt": 1664.00485,
+          "net_return_pct": 66.4005,
+          "max_daily_drawdown_pct": -15.2383,
+          "buy_count": 1,
+          "sell_count": 0,
+          "exposed_days": 60,
+          "days": 60
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 1449.863,
+          "net_return_pct": 44.9863,
+          "max_daily_drawdown_pct": -20.768,
+          "buy_count": 2,
+          "sell_count": 1,
+          "exposed_days": 52,
+          "days": 60
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1306.23849,
+          "net_return_pct": 30.6238,
+          "max_daily_drawdown_pct": -15.2383,
+          "buy_count": 1,
+          "sell_count": 1,
+          "exposed_days": 39,
+          "days": 60
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "final_equity_usdt": 1652.08702,
+          "net_return_pct": 65.2087,
+          "max_daily_drawdown_pct": -6.6256,
+          "buy_count": 2,
+          "sell_count": 1,
+          "exposed_days": 45,
+          "days": 60
+        },
+        "DRAWDOWN30_10_5": {
+          "final_equity_usdt": 1545.65165,
+          "net_return_pct": 54.5652,
+          "max_daily_drawdown_pct": -11.6918,
+          "buy_count": 2,
+          "sell_count": 1,
+          "exposed_days": 51,
+          "days": 60
+        }
+      },
+      "drawdown_events": [
+        {
+          "threshold_day_utc": "2024-03-16",
+          "trailing_peak_day_utc": "2024-03-13",
+          "trailing_peak_close_usdt": 73072.41,
+          "threshold_close_usdt": 65300.63,
+          "threshold_drawdown_pct": -10.6357,
+          "days_from_peak_to_threshold": 3,
+          "signals": {
+            "EMA10_30": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": 3,
+              "next_hypothetical_sell_day_utc": "2024-03-20",
+              "change_from_threshold_to_signal_close_pct": -5.15,
+              "observation_right_censored": false
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": 3,
+              "next_hypothetical_sell_day_utc": "2024-03-20",
+              "change_from_threshold_to_signal_close_pct": -5.15,
+              "observation_right_censored": false
+            },
+            "ATR14_PCT5_RISKOFF": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2024-03-16",
+              "not_holding_btc_at_threshold_day_close": true
+            }
+          }
+        }
+      ],
+      "focused_case": null
+    },
+    "2025": {
+      "start_date_utc": "2025-02-01",
+      "end_date_utc": "2025-03-31",
+      "trading_days": 59,
+      "prefix_causality_assertions": 40,
+      "results": {
+        "HOLD_BTC": {
+          "final_equity_usdt": 803.50486,
+          "net_return_pct": -19.6495,
+          "max_daily_drawdown_pct": -23.4983,
+          "buy_count": 1,
+          "sell_count": 0,
+          "exposed_days": 59,
+          "days": 59,
+          "transaction_log": [
+            {
+              "date_utc": "2025-02-01",
+              "type": "BUY",
+              "price_usdt": 102429.56,
+              "signal_day_utc": "2025-01-31"
+            }
+          ]
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 942.24413,
+          "net_return_pct": -5.7756,
+          "max_daily_drawdown_pct": -5.7756,
+          "buy_count": 2,
+          "sell_count": 2,
+          "exposed_days": 2,
+          "days": 59,
+          "transaction_log": [
+            {
+              "date_utc": "2025-02-01",
+              "type": "BUY",
+              "price_usdt": 102429.56,
+              "signal_day_utc": "2025-01-31"
+            },
+            {
+              "date_utc": "2025-02-02",
+              "type": "SELL",
+              "price_usdt": 100635.66,
+              "signal_day_utc": "2025-02-01"
+            },
+            {
+              "date_utc": "2025-02-04",
+              "type": "BUY",
+              "price_usdt": 101328.51,
+              "signal_day_utc": "2025-02-03"
+            },
+            {
+              "date_utc": "2025-02-05",
+              "type": "SELL",
+              "price_usdt": 97763.14,
+              "signal_day_utc": "2025-02-04"
+            }
+          ]
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 740.74082,
+          "net_return_pct": -25.9259,
+          "max_daily_drawdown_pct": -25.9259,
+          "buy_count": 2,
+          "sell_count": 2,
+          "exposed_days": 32,
+          "days": 59,
+          "transaction_log": [
+            {
+              "date_utc": "2025-02-01",
+              "type": "BUY",
+              "price_usdt": 102429.56,
+              "signal_day_utc": "2025-01-31"
+            },
+            {
+              "date_utc": "2025-02-25",
+              "type": "SELL",
+              "price_usdt": 91552.88,
+              "signal_day_utc": "2025-02-24"
+            },
+            {
+              "date_utc": "2025-03-03",
+              "type": "BUY",
+              "price_usdt": 94269.99,
+              "signal_day_utc": "2025-03-02"
+            },
+            {
+              "date_utc": "2025-03-11",
+              "type": "SELL",
+              "price_usdt": 78595.86,
+              "signal_day_utc": "2025-03-10"
+            }
+          ]
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "final_equity_usdt": 794.22001,
+          "net_return_pct": -20.578,
+          "max_daily_drawdown_pct": -20.732,
+          "buy_count": 3,
+          "sell_count": 2,
+          "exposed_days": 42,
+          "days": 59,
+          "transaction_log": [
+            {
+              "date_utc": "2025-02-01",
+              "type": "BUY",
+              "price_usdt": 102429.56,
+              "signal_day_utc": "2025-01-31"
+            },
+            {
+              "date_utc": "2025-03-04",
+              "type": "SELL",
+              "price_usdt": 86221.16,
+              "signal_day_utc": "2025-03-03"
+            },
+            {
+              "date_utc": "2025-03-20",
+              "type": "BUY",
+              "price_usdt": 86845.93,
+              "signal_day_utc": "2025-03-19"
+            },
+            {
+              "date_utc": "2025-03-21",
+              "type": "SELL",
+              "price_usdt": 84223.38,
+              "signal_day_utc": "2025-03-20"
+            },
+            {
+              "date_utc": "2025-03-22",
+              "type": "BUY",
+              "price_usdt": 84088.79,
+              "signal_day_utc": "2025-03-21"
+            }
+          ]
+        },
+        "DRAWDOWN30_10_5": {
+          "final_equity_usdt": 891.13476,
+          "net_return_pct": -10.8865,
+          "max_daily_drawdown_pct": -10.8865,
+          "buy_count": 1,
+          "sell_count": 1,
+          "exposed_days": 24,
+          "days": 59,
+          "transaction_log": [
+            {
+              "date_utc": "2025-02-01",
+              "type": "BUY",
+              "price_usdt": 102429.56,
+              "signal_day_utc": "2025-01-31"
+            },
+            {
+              "date_utc": "2025-02-25",
+              "type": "SELL",
+              "price_usdt": 91552.88,
+              "signal_day_utc": "2025-02-24"
+            }
+          ]
+        }
+      },
+      "stress_results": {
+        "HOLD_BTC": {
+          "final_equity_usdt": 801.09555,
+          "net_return_pct": -19.8904,
+          "max_daily_drawdown_pct": -23.7277,
+          "buy_count": 1,
+          "sell_count": 0,
+          "exposed_days": 59,
+          "days": 59
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 936.60196,
+          "net_return_pct": -6.3398,
+          "max_daily_drawdown_pct": -6.3398,
+          "buy_count": 2,
+          "sell_count": 2,
+          "exposed_days": 2,
+          "days": 59
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 736.30525,
+          "net_return_pct": -26.3695,
+          "max_daily_drawdown_pct": -26.3695,
+          "buy_count": 2,
+          "sell_count": 2,
+          "exposed_days": 32,
+          "days": 59
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "final_equity_usdt": 787.097,
+          "net_return_pct": -21.2903,
+          "max_daily_drawdown_pct": -21.4429,
+          "buy_count": 3,
+          "sell_count": 2,
+          "exposed_days": 42,
+          "days": 59
+        },
+        "DRAWDOWN30_10_5": {
+          "final_equity_usdt": 888.46269,
+          "net_return_pct": -11.1537,
+          "max_daily_drawdown_pct": -11.1537,
+          "buy_count": 1,
+          "sell_count": 1,
+          "exposed_days": 24,
+          "days": 59
+        }
+      },
+      "drawdown_events": [
+        {
+          "threshold_day_utc": "2025-02-24",
+          "trailing_peak_day_utc": "2025-01-30",
+          "trailing_peak_close_usdt": 104722.94,
+          "threshold_close_usdt": 91552.88,
+          "threshold_drawdown_pct": -12.5761,
+          "days_from_peak_to_threshold": 25,
+          "signals": {
+            "EMA10_30": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2025-02-05",
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": null,
+              "not_holding_btc_at_threshold_day_close": false
+            },
+            "ATR14_PCT5_RISKOFF": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": 7,
+              "next_hypothetical_sell_day_utc": "2025-03-04",
+              "change_from_threshold_to_signal_close_pct": -5.824,
+              "observation_right_censored": false
+            }
+          }
+        }
+      ],
+      "focused_case": {
+        "reference_day": "2025-02-01",
+        "reference_close_usdt": 100635.65,
+        "EMA10_30": {
+          "long_on_reference_close": false,
+          "first_risk_off_day_on_or_after_reference": "2025-02-01",
+          "earliest_risk_off_execution_day": "2025-02-02",
+          "open_price_usdt_at_execution": 100635.66,
+          "change_vs_reference_close_pct": 0.0,
+          "actual_sells_in_window": [
+            {
+              "date_utc": "2025-02-02",
+              "type": "SELL",
+              "price_usdt": 100635.66,
+              "signal_day_utc": "2025-02-01"
+            },
+            {
+              "date_utc": "2025-02-05",
+              "type": "SELL",
+              "price_usdt": 97763.14,
+              "signal_day_utc": "2025-02-04"
+            }
+          ]
+        },
+        "SUPERTREND_ATR14_X3": {
+          "long_on_reference_close": true,
+          "first_risk_off_day_on_or_after_reference": "2025-02-24",
+          "earliest_risk_off_execution_day": "2025-02-25",
+          "open_price_usdt_at_execution": 91552.88,
+          "change_vs_reference_close_pct": -9.0254,
+          "actual_sells_in_window": [
+            {
+              "date_utc": "2025-02-25",
+              "type": "SELL",
+              "price_usdt": 91552.88,
+              "signal_day_utc": "2025-02-24"
+            },
+            {
+              "date_utc": "2025-03-11",
+              "type": "SELL",
+              "price_usdt": 78595.86,
+              "signal_day_utc": "2025-03-10"
+            }
+          ]
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "long_on_reference_close": true,
+          "first_risk_off_day_on_or_after_reference": "2025-03-03",
+          "earliest_risk_off_execution_day": "2025-03-04",
+          "open_price_usdt_at_execution": 86221.16,
+          "change_vs_reference_close_pct": -14.3234,
+          "actual_sells_in_window": [
+            {
+              "date_utc": "2025-03-04",
+              "type": "SELL",
+              "price_usdt": 86221.16,
+              "signal_day_utc": "2025-03-03"
+            },
+            {
+              "date_utc": "2025-03-21",
+              "type": "SELL",
+              "price_usdt": 84223.38,
+              "signal_day_utc": "2025-03-20"
+            }
+          ]
+        }
+      }
+    },
+    "2026": {
+      "start_date_utc": "2026-02-01",
+      "end_date_utc": "2026-10-31",
+      "trading_days": 273,
+      "prefix_causality_assertions": 64,
+      "results": {
+        "HOLD_BTC": {
+          "final_equity_usdt": 982.32747,
+          "net_return_pct": -1.7673,
+          "max_daily_drawdown_pct": -28.6891,
+          "buy_count": 1,
+          "sell_count": 0,
+          "exposed_days": 273,
+          "days": 273,
+          "transaction_log": [
+            {
+              "date_utc": "2026-02-01",
+              "type": "BUY",
+              "price_usdt": 78741.1,
+              "signal_day_utc": "2026-01-31"
+            }
+          ]
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 1032.38223,
+          "net_return_pct": 3.2382,
+          "max_daily_drawdown_pct": -11.7554,
+          "buy_count": 12,
+          "sell_count": 12,
+          "exposed_days": 110,
+          "days": 273,
+          "transaction_log": [
+            {
+              "date_utc": "2026-03-16",
+              "type": "BUY",
+              "price_usdt": 72815.25,
+              "signal_day_utc": "2026-03-15"
+            },
+            {
+              "date_utc": "2026-03-20",
+              "type": "SELL",
+              "price_usdt": 69930.01,
+              "signal_day_utc": "2026-03-19"
+            },
+            {
+              "date_utc": "2026-03-26",
+              "type": "BUY",
+              "price_usdt": 71336.53,
+              "signal_day_utc": "2026-03-25"
+            },
+            {
+              "date_utc": "2026-03-27",
+              "type": "SELL",
+              "price_usdt": 68820.31,
+              "signal_day_utc": "2026-03-26"
+            },
+            {
+              "date_utc": "2026-04-10",
+              "type": "BUY",
+              "price_usdt": 71787.98,
+              "signal_day_utc": "2026-04-09"
+            },
+            {
+              "date_utc": "2026-05-17",
+              "type": "SELL",
+              "price_usdt": 78148.05,
+              "signal_day_utc": "2026-05-16"
+            },
+            {
+              "date_utc": "2026-07-18",
+              "type": "BUY",
+              "price_usdt": 63931.67,
+              "signal_day_utc": "2026-07-17"
+            },
+            {
+              "date_utc": "2026-07-25",
+              "type": "SELL",
+              "price_usdt": 64140.0,
+              "signal_day_utc": "2026-07-24"
+            },
+            {
+              "date_utc": "2026-07-26",
+              "type": "BUY",
+              "price_usdt": 64375.01,
+              "signal_day_utc": "2026-07-25"
+            },
+            {
+              "date_utc": "2026-07-28",
+              "type": "SELL",
+              "price_usdt": 63755.86,
+              "signal_day_utc": "2026-07-27"
+            },
+            {
+              "date_utc": "2026-07-31",
+              "type": "BUY",
+              "price_usdt": 64780.03,
+              "signal_day_utc": "2026-07-30"
+            },
+            {
+              "date_utc": "2026-08-01",
+              "type": "SELL",
+              "price_usdt": 62887.88,
+              "signal_day_utc": "2026-07-31"
+            },
+            {
+              "date_utc": "2026-08-08",
+              "type": "BUY",
+              "price_usdt": 64923.2,
+              "signal_day_utc": "2026-08-07"
+            },
+            {
+              "date_utc": "2026-08-11",
+              "type": "SELL",
+              "price_usdt": 63970.01,
+              "signal_day_utc": "2026-08-10"
+            },
+            {
+              "date_utc": "2026-08-20",
+              "type": "BUY",
+              "price_usdt": 69334.78,
+              "signal_day_utc": "2026-08-19"
+            },
+            {
+              "date_utc": "2026-09-16",
+              "type": "SELL",
+              "price_usdt": 75644.48,
+              "signal_day_utc": "2026-09-15"
+            },
+            {
+              "date_utc": "2026-09-17",
+              "type": "BUY",
+              "price_usdt": 76206.0,
+              "signal_day_utc": "2026-09-16"
+            },
+            {
+              "date_utc": "2026-10-09",
+              "type": "SELL",
+              "price_usdt": 81754.46,
+              "signal_day_utc": "2026-10-08"
+            },
+            {
+              "date_utc": "2026-10-10",
+              "type": "BUY",
+              "price_usdt": 82635.56,
+              "signal_day_utc": "2026-10-09"
+            },
+            {
+              "date_utc": "2026-10-13",
+              "type": "SELL",
+              "price_usdt": 81850.01,
+              "signal_day_utc": "2026-10-12"
+            },
+            {
+              "date_utc": "2026-10-14",
+              "type": "BUY",
+              "price_usdt": 83169.01,
+              "signal_day_utc": "2026-10-13"
+            },
+            {
+              "date_utc": "2026-10-15",
+              "type": "SELL",
+              "price_usdt": 81682.02,
+              "signal_day_utc": "2026-10-14"
+            },
+            {
+              "date_utc": "2026-10-21",
+              "type": "BUY",
+              "price_usdt": 83028.14,
+              "signal_day_utc": "2026-10-20"
+            },
+            {
+              "date_utc": "2026-10-23",
+              "type": "SELL",
+              "price_usdt": 81416.09,
+              "signal_day_utc": "2026-10-22"
+            }
+          ]
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1158.03684,
+          "net_return_pct": 15.8037,
+          "max_daily_drawdown_pct": -14.775,
+          "buy_count": 2,
+          "sell_count": 2,
+          "exposed_days": 172,
+          "days": 273,
+          "transaction_log": [
+            {
+              "date_utc": "2026-03-17",
+              "type": "BUY",
+              "price_usdt": 74884.67,
+              "signal_day_utc": "2026-03-16"
+            },
+            {
+              "date_utc": "2026-05-28",
+              "type": "SELL",
+              "price_usdt": 74449.31,
+              "signal_day_utc": "2026-05-27"
+            },
+            {
+              "date_utc": "2026-07-22",
+              "type": "BUY",
+              "price_usdt": 66556.15,
+              "signal_day_utc": "2026-07-21"
+            },
+            {
+              "date_utc": "2026-10-30",
+              "type": "SELL",
+              "price_usdt": 77991.89,
+              "signal_day_utc": "2026-10-29"
+            }
+          ]
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "final_equity_usdt": 865.23772,
+          "net_return_pct": -13.4762,
+          "max_daily_drawdown_pct": -34.6185,
+          "buy_count": 3,
+          "sell_count": 2,
+          "exposed_days": 247,
+          "days": 273,
+          "transaction_log": [
+            {
+              "date_utc": "2026-02-01",
+              "type": "BUY",
+              "price_usdt": 78741.1,
+              "signal_day_utc": "2026-01-31"
+            },
+            {
+              "date_utc": "2026-02-06",
+              "type": "SELL",
+              "price_usdt": 62909.87,
+              "signal_day_utc": "2026-02-05"
+            },
+            {
+              "date_utc": "2026-02-22",
+              "type": "BUY",
+              "price_usdt": 67975.93,
+              "signal_day_utc": "2026-02-21"
+            },
+            {
+              "date_utc": "2026-03-01",
+              "type": "SELL",
+              "price_usdt": 66973.26,
+              "signal_day_utc": "2026-02-28"
+            },
+            {
+              "date_utc": "2026-03-11",
+              "type": "BUY",
+              "price_usdt": 69948.64,
+              "signal_day_utc": "2026-03-10"
+            }
+          ]
+        },
+        "DRAWDOWN30_10_5": {
+          "final_equity_usdt": 1135.81966,
+          "net_return_pct": 13.582,
+          "max_daily_drawdown_pct": -13.0408,
+          "buy_count": 3,
+          "sell_count": 3,
+          "exposed_days": 192,
+          "days": 273,
+          "transaction_log": [
+            {
+              "date_utc": "2026-03-05",
+              "type": "BUY",
+              "price_usdt": 72666.77,
+              "signal_day_utc": "2026-03-04"
+            },
+            {
+              "date_utc": "2026-03-28",
+              "type": "SELL",
+              "price_usdt": 66407.28,
+              "signal_day_utc": "2026-03-27"
+            },
+            {
+              "date_utc": "2026-04-08",
+              "type": "BUY",
+              "price_usdt": 71924.22,
+              "signal_day_utc": "2026-04-07"
+            },
+            {
+              "date_utc": "2026-05-29",
+              "type": "SELL",
+              "price_usdt": 73617.52,
+              "signal_day_utc": "2026-05-28"
+            },
+            {
+              "date_utc": "2026-07-05",
+              "type": "BUY",
+              "price_usdt": 63144.01,
+              "signal_day_utc": "2026-07-04"
+            },
+            {
+              "date_utc": "2026-10-31",
+              "type": "SELL",
+              "price_usdt": 77368.76,
+              "signal_day_utc": "2026-10-30"
+            }
+          ]
+        }
+      },
+      "stress_results": {
+        "HOLD_BTC": {
+          "final_equity_usdt": 979.38196,
+          "net_return_pct": -2.0618,
+          "max_daily_drawdown_pct": -28.6891,
+          "buy_count": 1,
+          "sell_count": 0,
+          "exposed_days": 273,
+          "days": 273
+        },
+        "EMA10_30": {
+          "final_equity_usdt": 995.84159,
+          "net_return_pct": -0.4158,
+          "max_daily_drawdown_pct": -12.2838,
+          "buy_count": 12,
+          "sell_count": 12,
+          "exposed_days": 110,
+          "days": 273
+        },
+        "SUPERTREND_ATR14_X3": {
+          "final_equity_usdt": 1151.1025,
+          "net_return_pct": 15.1102,
+          "max_daily_drawdown_pct": -15.0305,
+          "buy_count": 2,
+          "sell_count": 2,
+          "exposed_days": 172,
+          "days": 273
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "final_equity_usdt": 857.47779,
+          "net_return_pct": -14.2522,
+          "max_daily_drawdown_pct": -35.2048,
+          "buy_count": 3,
+          "sell_count": 2,
+          "exposed_days": 247,
+          "days": 273
+        },
+        "DRAWDOWN30_10_5": {
+          "final_equity_usdt": 1125.633,
+          "net_return_pct": 12.5633,
+          "max_daily_drawdown_pct": -13.3016,
+          "buy_count": 3,
+          "sell_count": 3,
+          "exposed_days": 192,
+          "days": 273
+        }
+      },
+      "drawdown_events": [
+        {
+          "threshold_day_utc": "2026-02-01",
+          "trailing_peak_day_utc": "2026-01-14",
+          "trailing_peak_close_usdt": 96951.78,
+          "threshold_close_usdt": 76968.21,
+          "threshold_drawdown_pct": -20.6119,
+          "days_from_peak_to_threshold": 18,
+          "signals": {
+            "EMA10_30": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": null,
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": null,
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "ATR14_PCT5_RISKOFF": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": 4,
+              "next_hypothetical_sell_day_utc": "2026-02-06",
+              "change_from_threshold_to_signal_close_pct": -18.265,
+              "observation_right_censored": false
+            }
+          }
+        },
+        {
+          "threshold_day_utc": "2026-03-27",
+          "trailing_peak_day_utc": "2026-03-16",
+          "trailing_peak_close_usdt": 74884.67,
+          "threshold_close_usdt": 66407.28,
+          "threshold_drawdown_pct": -11.3206,
+          "days_from_peak_to_threshold": 11,
+          "signals": {
+            "EMA10_30": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2026-03-27",
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": null,
+              "next_hypothetical_sell_day_utc": null,
+              "change_from_threshold_to_signal_close_pct": null,
+              "observation_right_censored": false
+            },
+            "ATR14_PCT5_RISKOFF": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": null,
+              "next_hypothetical_sell_day_utc": null,
+              "change_from_threshold_to_signal_close_pct": null,
+              "observation_right_censored": false
+            }
+          }
+        },
+        {
+          "threshold_day_utc": "2026-05-28",
+          "trailing_peak_day_utc": "2026-05-10",
+          "trailing_peak_close_usdt": 82210.07,
+          "threshold_close_usdt": 73617.51,
+          "threshold_drawdown_pct": -10.452,
+          "days_from_peak_to_threshold": 18,
+          "signals": {
+            "EMA10_30": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2026-05-17",
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2026-05-28",
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "ATR14_PCT5_RISKOFF": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": null,
+              "next_hypothetical_sell_day_utc": null,
+              "change_from_threshold_to_signal_close_pct": null,
+              "observation_right_censored": false
+            }
+          }
+        },
+        {
+          "threshold_day_utc": "2026-10-30",
+          "trailing_peak_day_utc": "2026-10-04",
+          "trailing_peak_close_usdt": 86530.0,
+          "threshold_close_usdt": 77368.77,
+          "threshold_drawdown_pct": -10.5873,
+          "days_from_peak_to_threshold": 26,
+          "signals": {
+            "EMA10_30": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2026-10-23",
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "SUPERTREND_ATR14_X3": {
+              "already_risk_off_at_threshold_close": true,
+              "days_after_threshold_to_next_off_signal": 0,
+              "last_actual_simulated_sell_before_or_on_threshold": "2026-10-30",
+              "not_holding_btc_at_threshold_day_close": true
+            },
+            "ATR14_PCT5_RISKOFF": {
+              "already_risk_off_at_threshold_close": false,
+              "days_after_threshold_to_next_off_signal": null,
+              "next_hypothetical_sell_day_utc": null,
+              "change_from_threshold_to_signal_close_pct": null,
+              "observation_right_censored": true
+            }
+          }
+        }
+      ],
+      "focused_case": {
+        "reference_day": "2026-05-01",
+        "reference_close_usdt": 78231.13,
+        "EMA10_30": {
+          "long_on_reference_close": true,
+          "first_risk_off_day_on_or_after_reference": "2026-05-16",
+          "earliest_risk_off_execution_day": "2026-05-17",
+          "open_price_usdt_at_execution": 78148.05,
+          "change_vs_reference_close_pct": -0.1062,
+          "actual_sells_in_window": [
+            {
+              "date_utc": "2026-05-17",
+              "type": "SELL",
+              "price_usdt": 78148.05,
+              "signal_day_utc": "2026-05-16"
+            },
+            {
+              "date_utc": "2026-07-25",
+              "type": "SELL",
+              "price_usdt": 64140.0,
+              "signal_day_utc": "2026-07-24"
+            },
+            {
+              "date_utc": "2026-07-28",
+              "type": "SELL",
+              "price_usdt": 63755.86,
+              "signal_day_utc": "2026-07-27"
+            }
+          ]
+        },
+        "SUPERTREND_ATR14_X3": {
+          "long_on_reference_close": true,
+          "first_risk_off_day_on_or_after_reference": "2026-05-27",
+          "earliest_risk_off_execution_day": "2026-05-28",
+          "open_price_usdt_at_execution": 74449.31,
+          "change_vs_reference_close_pct": -4.8342,
+          "actual_sells_in_window": [
+            {
+              "date_utc": "2026-05-28",
+              "type": "SELL",
+              "price_usdt": 74449.31,
+              "signal_day_utc": "2026-05-27"
+            },
+            {
+              "date_utc": "2026-10-30",
+              "type": "SELL",
+              "price_usdt": 77991.89,
+              "signal_day_utc": "2026-10-29"
+            }
+          ]
+        },
+        "ATR14_PCT5_RISKOFF": {
+          "long_on_reference_close": true,
+          "first_risk_off_day_on_or_after_reference": null,
+          "earliest_risk_off_execution_day": null,
+          "open_price_usdt_at_execution": null,
+          "change_vs_reference_close_pct": null,
+          "actual_sells_in_window": []
+        }
+      }
+    }
+  }
+}
