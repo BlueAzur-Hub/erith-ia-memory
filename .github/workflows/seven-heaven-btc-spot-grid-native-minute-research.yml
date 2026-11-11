@@ -1,0 +1,108 @@
+name: Seven Heaven - Verified native BTC minute Spot Grid inventory experiment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.py'
+      - '.github/workflows/seven-heaven-btc-spot-grid-native-minute-research.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-btc-minute-grid-inventory-study
+  cancel-in-progress: false
+
+jobs:
+  verify-minute-sources-and-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Download ONLY four already-archived immutable BTCUSDT native minute releases
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/seven-btc-minute-research"
+          for month in 2024-01 2025-01 2026-01 2026-10; do
+            tag="crypto-spot-bulk-${month}-1m"
+            asset="BTCUSDT-1m-${month}.zip"
+            gh release download "$tag" --repo "${{ github.repository }}" --pattern "$asset" --dir "$RUNNER_TEMP/seven-btc-minute-research" --clobber
+            test -s "$RUNNER_TEMP/seven-btc-minute-research/$asset"
+          done
+      - name: Check original ZIP SHA and 1m-to-1h parity then calculate inventory research
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.py --zip-dir "$RUNNER_TEMP/seven-btc-minute-research"
+      - name: Refuse fictitious exchange fills and verify exact source parity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          s=Path("coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11")
+          x=json.loads(s.with_suffix(".json").read_text(encoding="utf-8"))
+          assert x["research_only"] and x["orders_enabled"] is False
+          assert not x["true_exchange_order_fills_verified"]
+          assert x["minute_ohlcv_and_hourly_reconciliation_verified"]
+          assert x["months"]==["2024-01","2025-01","2026-01","2026-10"]
+          assert len(x["periods"])==4
+          for month,result in x["periods"].items():
+              assert result["source"]["minute_count"]==44640
+              assert result["source"]["hour_count"]==744
+              assert result["source"]["all_hourly_ohlcv_match_native_minute"]
+              assert set(result["simulations"])=={"TOUCH","CLOSE"}
+              assert 0<=result["multi_level_minutes"]<=result["source"]["minute_count"]
+              assert 0<=result["multi_level_hours"]<=result["source"]["hour_count"]
+              for model in result["simulations"].values():
+                  assert model["fills_are_assumed_not_verified"]
+                  assert model["completed_buy_sell_cycles"]>=0
+                  assert model["slots_left_with_btc"]>=0 and model["slots_left_with_btc"]<=10
+                  assert len(model["net_equity_daily"])==31
+                  assert model["final_net_liquidation_usdt"]>0
+                  assert model["max_daily_drawdown_pct"]<=0
+                  assert model["at_final_cash_usdt"]>=0
+              assert len(result["baselines"]["HOLD50"]["net_equity_daily"])==31
+          assert len(s.with_suffix(".md").read_text(encoding="utf-8"))>3500
+          print("NATIVE_MINUTE_SOURCE_PARITY_INVENTORY_EXPERIMENT_CHECKS_PASSED")
+          PY
+      - name: Preserve study artifact without republishing immutable source ZIPs
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-native-minute-btc-grid-simulated-inventory
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.json
+      - name: Publish checked report and structured evidence for other IA
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Study is already in shared library"
+          else
+            git commit -m "Archive native minute Spot Grid source and simulated inventory study"
+            for attempt in 1 2 3 4 5 6; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "Checked minute Spot Grid evidence published"
+                break
+              fi
+              if [ "$attempt" = 6 ]; then
+                echo "Source branch changed too frequently"
+                exit 1
+              fi
+              sleep 2
+            done
+          fi
