@@ -187,3 +187,10 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - **Résultats :** 43 rebonds candidats dont **40 évaluables**, 10 confirmés sur 3 clôtures (C3), 6 avec creux ascendants, 5 avec volume BTC supérieur à sa moyenne 20 jours, et seulement 2 qui remplissent aussi les filtres de tendance. Parmi les dix C3, les creux ascendants sont associés à **2/6** résultats positifs, le volume supérieur à **2/5**, les EMA haussières à **3/5**. **Effectifs insuffisants** pour démontrer l'utilité additionnelle de ces filtres.
 - **Méthode :** issue comparée sur **un même horizon J+3→J+10** après frais/glissement ; rendements par épisode indépendants, **non composables en portefeuille continu** ; ancien critère 5 % / 21 jours reproduit comme contrôle. 342 assertions de cohérence et causalité. **Aucune prévision fiable, aucun changement Administrator/Trader/Bridge, aucun ordre réel.**
 
+## Audit documentaire : stratégie des 4 Rois (source publique) — 11 novembre 2026
+
+- [**Lire l'audit des 4 Rois : rôles ♣/♠/♦/♥, MACD, RSI, OBV, Fibonacci, preuves et limites**](./SEVEN_HEAVEN_FOUR_KINGS_STRATEGY_PUBLIC_RULES_CRITICAL_AUDIT_2026_11_11.md).
+- **Source primaire consultée :** https://www.4-kings.fr/strategie — rôles publics des quatre « Rois » : ♣ double bottom hebdomadaire, ♠ pullback, ♦ ventes partielles (+110 % / +410 % cités), ♥ sortie finale et conservation résiduelle.
+- **Distinction essentielle :** ces principes sont libres d'accès mais ne spécifient pas une stratégie calculable de bout en bout ; aucun backtest reproductible ni rendement audité n'a été établi à partir de la page consultée. Les affirmations de « risque nul » et les pourcentages 90 % / 8 sur 10 ne sont pas étayés sur cette page.
+- **Consigne inter-IA :** ne pas assimiler les anciens replays EMA/MACD/volumes du Coffre à une validation des 4 Rois. Toute implémentation doit être appelée **variante publique Seven**, avec règles figées, preuves et témoins, jamais reproduction certifiée des auteurs. Aucun achat de contenu payant ni ordre réel.
+
