@@ -72,6 +72,21 @@ Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swi
 
 **Ne pas supprimer les résultats défavorables. Ne pas fabriquer un prix manquant. Ne pas concaténer BTC/USDT, BTC/USDC, BTC/USD ou BTC/EUR comme une seule série.**
 
+## Nouveau backtest continu P01–P10 : statut du 11 novembre
+
+**Travail réalisé et vérifié :** les **dix protocoles P01–P10** ont désormais également été étudiés avec un portefeuille continu du **1er janvier 2019 au 30 septembre 2026 (2 830 jours)** sur la même archive Binance Spot BTC/USDT. Hypothèses : 1 000 USDT fictifs au départ, allocations 100 % ou 25 %, frais 0,10 % et glissement 0,05 % par côté, stress avec coûts doublés, valorisation quotidienne et stops uniquement si leur règle l'impose. **Aucun versement externe.**
+
+**Contrôle inter-plateformes :** 183 jours appariés Binance/OKX (avril–septembre 2026) après préchauffage identique, et 224 jours OKX continu (avril–10 novembre 2026). **DCA12 n'est déployé que partiellement sur la fenêtre de 224 jours** : il reste en liquidités sur les mensualités futures.
+
+**Règles / limitations essentielles :** les signaux P01–P10 sont **réimplémentés** selon la documentation pédagogique ; le programme source de la comparaison annuelle 2022–2025 n'était pas disponible comme exécutable dans le répertoire. Ce test continu n'est **pas une réplication exacte des anciens résultats annuels**, en particulier pour SuperTrend dont les conventions varient. Tous les résultats sont des simulations rétrospectives ; pas de preuve prospective.
+
+- [Rapport du backtest continu P01–P10](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.md)
+- [Données et journal JSON](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.json)
+- [Courbes quotidiennes CSV](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.csv)
+- [Moteur Python reproductible](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.py)
+
+**L'ordre du chantier restant** devient : (1) confronter précisément les conventions du nouveau moteur aux anciens profils et aux sources originales si elles sont retrouvées ; (2) vérifier la robustesse des méthodes sur d'autres périodes et sources ; (3) étudier séparément les profils D11–D19 qui exigent des données particulières. **Ne pas recommencer les tests déjà archivés à l'identique.**
+
 ## Cahier de tests commun, réutilisable par toutes les IA
 
 Pour chaque méthode, imposer un dossier comportant :
