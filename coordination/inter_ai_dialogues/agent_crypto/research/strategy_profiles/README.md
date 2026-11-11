@@ -1,5 +1,8 @@
 # Seven Heaven — Bibliothèque documentaire des stratégies crypto
 
+> **Passation pour les autres IA (études Bitcoin 2024–2026) :** [ouvrir le dossier d'exploitation avec code, preuves JSON, séries CSV et sources](./SEVEN_HEAVEN_CRYPTO_STRATEGY_RESEARCH_HANDOFF_2026_11_11.md). Les recherches sont PAPER et ne remplacent aucune validation sur OKX.
+
+
 **Édition :** 7 novembre 2026 · **Public :** Christophe, Yoann et assistants documentaires · **Statut :** LECTURE SEULE / RECHERCHE.
 
 Ce répertoire du Coffre Agent-Crypto partage **sept fiches pédagogiques approfondies**, un rapport historique de référence et une comparaison par **états du marché**. Aucune stratégie n'est importable ni activée ; aucun ordre, clé API ou bot exécutable.
