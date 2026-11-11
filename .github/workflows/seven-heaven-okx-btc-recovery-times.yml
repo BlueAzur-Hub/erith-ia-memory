@@ -1,0 +1,68 @@
+name: Seven Heaven - OKX BTC capital recovery and underwater risk study
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.py'
+      - '.github/workflows/seven-heaven-okx-btc-recovery-times.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capital-recovery-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Replay verified OKX capital paths and calculate unrecovered drawdown durations
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.json')
+          d=json.loads(f.read_text(encoding='utf-8'))
+          assert d['read_only'] is True and d['orders_enabled'] is False
+          assert d['verification']['original_don55_224_daily_rows_identical']
+          assert d['verification']['original_25pct_buyhold_net_and_dd_identical']
+          assert set(d['scenarios'])=={'DON55_25','HOLD_25','HOLD_100'}
+          for s in d['scenarios'].values():
+              r=s['recovery']
+              assert len(s['daily_equity'])==224
+              assert r['daily_count']==224
+              assert 0<=r['underwater_days']<=224
+              assert 0<=r['longest_consecutive_underwater_days']<=224
+              assert r['max_drawdown_pct']<=0
+              assert r['recovered_episodes']+r['unfinished_episodes']==len(r['episodes'])
+          assert len(f.with_suffix('.md').read_text(encoding='utf-8'))>1000
+          print('BTC_RECOVERY_DURATION_SIMULATIONS_VERIFIED')
+          PY
+      - name: Preserve research artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-btc-capital-recovery-duration
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.json
+      - name: Publish verified report and daily evidence to shared directory
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_CAPITAL_RECOVERY_UNDERWATER_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Shared research already present"
+          else
+            git commit -m "Archive Bitcoin capital recovery time and underwater evidence"
+            git push origin HEAD:main
+          fi
