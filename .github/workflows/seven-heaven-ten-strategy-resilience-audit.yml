@@ -1,0 +1,68 @@
+name: Seven Heaven - Ten BTC strategies resilience evidence audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.py'
+      - '.github/workflows/seven-heaven-ten-strategy-resilience-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-ten-strategy-resilience-main
+  cancel-in-progress: false
+
+jobs:
+  verify-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Reanalyze all ten documented strategy/year results and validate
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11')
+          x=json.loads(base.with_suffix('.json').read_text(encoding='utf-8'))
+          assert x['read_only'] and not x['orders_enabled']
+          assert x['tested_method_count']==10 and len(x['findings'])==10
+          assert x['status']=='REANALYSIS_OF_EXISTING_HISTORICAL_RESULTS_NOT_NEW_BACKTEST'
+          assert x['original_protocol']['annual_capital_reset']
+          assert len({r['name'] for r in x['findings']})==10
+          assert len(base.with_suffix('.md').read_text(encoding='utf-8'))>3000
+          for r in x['findings']:
+              assert set(r['years'])=={'2022','2023','2024','2025'}
+              assert all(v['max_daily_drawdown_pct']<=0 for v in r['years'].values())
+          print('TEN_BTC_STRATEGIES_YEARLY_EVIDENCE_AUDIT_PASSED')
+          PY
+      - name: Preserve research evidence as downloadable workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-ten-btc-strategies-resilience-audit
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.json
+      - name: Publish shared verified study
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Already archived"
+          else
+            git commit -m "Archive ten-strategy resilience study from existing BTC evidence"
+            git push origin HEAD:main
+          fi
