@@ -1,0 +1,3602 @@
+{
+  "schema": "seven.crypto.btc.25pct-comparison.v1",
+  "date": "2026-11-11",
+  "computed_at_utc": "2026-11-11T14:52:29.835582+00:00",
+  "research_only": true,
+  "orders_enabled": false,
+  "source": {
+    "pair": "BTCUSDT Spot Binance daily",
+    "sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+    "rows": 3075
+  },
+  "model": {
+    "period_start": "2019-01-01",
+    "period_end": "2026-09-30",
+    "days": 2830,
+    "starting_balance_usdt": 1000,
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "no_leverage": true,
+    "close_signal_next_open_fill": true,
+    "annual_capital_reset": false,
+    "stops_ohlc_simplification": true,
+    "all_rules_declared_before_calculation": true,
+    "no_untouched_out_of_sample": true,
+    "prospective_validity_not_proven": true
+  },
+  "allocation_rule": "Invest 25 percent of remaining cash at each original entry. Other cash stays uninvested; full account drawdown includes cash.",
+  "comparison_rule": "Net return strictly greater than 25 percent Donchian, maximum daily historical drawdown no worse than 25 percent Donchian.",
+  "original_baseline_verified": true,
+  "methods": [
+    {
+      "key": "EMA20_50",
+      "label": "Tendance EMA20 > EMA50",
+      "initial_usdt": 1000,
+      "final_usdt": 3458.0,
+      "net_return_pct": 245.8,
+      "max_daily_drawdown_pct": -21.09,
+      "trade_count": 22,
+      "wins": 10,
+      "losses": 12,
+      "days_in_market_pct": 55.87,
+      "annual_returns_pct": {
+        "2019": 31.574,
+        "2020": 49.551,
+        "2021": 37.341,
+        "2022": -10.894,
+        "2023": 19.025,
+        "2024": 18.859,
+        "2025": 0.321,
+        "2026": 1.181
+      },
+      "double_cost_return_pct": 239.377,
+      "beats_don55_return": true,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-02-24",
+          "sold": "2019-08-29",
+          "profit": 338.3845921344513,
+          "entry_capital": 250.0,
+          "exit_proceeds": 588.3845921344513
+        },
+        {
+          "bought": "2019-11-07",
+          "sold": "2019-11-12",
+          "profit": -22.64171203580719,
+          "entry_capital": 334.59614803361285,
+          "exit_proceeds": 311.95443599780566
+        },
+        {
+          "bought": "2020-01-13",
+          "sold": "2020-03-09",
+          "profit": -7.004173372351602,
+          "entry_capital": 328.93572002466107,
+          "exit_proceeds": 321.93154665230946
+        },
+        {
+          "bought": "2020-04-29",
+          "sold": "2020-09-11",
+          "profit": 108.54485509603091,
+          "entry_capital": 327.18467668157314,
+          "exit_proceeds": 435.72953177760405
+        },
+        {
+          "bought": "2020-10-11",
+          "sold": "2021-05-15",
+          "profit": 1204.8364133889254,
+          "entry_capital": 354.32089045558087,
+          "exit_proceeds": 1559.1573038445063
+        },
+        {
+          "bought": "2021-08-01",
+          "sold": "2021-09-28",
+          "profit": 8.841441881192509,
+          "entry_capital": 655.5299938028122,
+          "exit_proceeds": 664.3714356840047
+        },
+        {
+          "bought": "2021-10-04",
+          "sold": "2021-12-04",
+          "profit": 71.51115855403918,
+          "entry_capital": 657.7403542731104,
+          "exit_proceeds": 729.2515128271496
+        },
+        {
+          "bought": "2022-03-25",
+          "sold": "2022-04-16",
+          "profit": -54.690753871746324,
+          "entry_capital": 675.6181439116201,
+          "exit_proceeds": 620.9273900398738
+        },
+        {
+          "bought": "2022-08-15",
+          "sold": "2022-08-20",
+          "profit": -96.22799413806172,
+          "entry_capital": 661.9454554436835,
+          "exit_proceeds": 565.7174613056218
+        },
+        {
+          "bought": "2022-11-02",
+          "sold": "2022-11-10",
+          "profit": -143.5003031343726,
+          "entry_capital": 637.8884569091681,
+          "exit_proceeds": 494.3881537747955
+        },
+        {
+          "bought": "2023-01-14",
+          "sold": "2023-05-20",
+          "profit": 207.50884094480773,
+          "entry_capital": 602.0133811255749,
+          "exit_proceeds": 809.5222220703827
+        },
+        {
+          "bought": "2023-06-23",
+          "sold": "2023-08-18",
+          "profit": -73.10831693438979,
+          "entry_capital": 653.8905913617768,
+          "exit_proceeds": 580.782274427387
+        },
+        {
+          "bought": "2023-10-07",
+          "sold": "2024-05-02",
+          "profit": 688.587848874418,
+          "entry_capital": 635.6135121281794,
+          "exit_proceeds": 1324.2013610025974
+        },
+        {
+          "bought": "2024-05-19",
+          "sold": "2024-06-23",
+          "profit": -34.352215724033044,
+          "entry_capital": 807.7604743467839,
+          "exit_proceeds": 773.4082586227509
+        },
+        {
+          "bought": "2024-07-24",
+          "sold": "2024-08-06",
+          "profit": -146.40320370311338,
+          "entry_capital": 799.1724204157757,
+          "exit_proceeds": 652.7692167126623
+        },
+        {
+          "bought": "2024-09-23",
+          "sold": "2025-02-18",
+          "profit": 382.7834560273852,
+          "entry_capital": 762.5716194899974,
+          "exit_proceeds": 1145.3550755173826
+        },
+        {
+          "bought": "2025-04-25",
+          "sold": "2025-08-30",
+          "profit": 128.5127839400409,
+          "entry_capital": 858.2674834968436,
+          "exit_proceeds": 986.7802674368845
+        },
+        {
+          "bought": "2025-09-16",
+          "sold": "2025-09-26",
+          "profit": -51.57763854434984,
+          "entry_capital": 890.3956794818538,
+          "exit_proceeds": 838.818040937504
+        },
+        {
+          "bought": "2025-10-02",
+          "sold": "2025-10-18",
+          "profit": -92.35782308210719,
+          "entry_capital": 877.5012698457664,
+          "exit_proceeds": 785.1434467636592
+        },
+        {
+          "bought": "2026-01-18",
+          "sold": "2026-01-21",
+          "profit": -62.724938485159214,
+          "entry_capital": 854.4118140752396,
+          "exit_proceeds": 791.6868755900804
+        },
+        {
+          "bought": "2026-04-16",
+          "sold": "2026-06-01",
+          "profit": -15.206862092430129,
+          "entry_capital": 838.7305794539498,
+          "exit_proceeds": 823.5237173615196
+        },
+        {
+          "bought": "2026-08-21",
+          "sold": "2026-09-30",
+          "profit": 118.2873878880672,
+          "entry_capital": 834.9288639308422,
+          "exit_proceeds": 953.2162518189094
+        }
+      ]
+    },
+    {
+      "key": "MOM90",
+      "label": "Momentum positif 90 jours",
+      "initial_usdt": 1000,
+      "final_usdt": 3142.41,
+      "net_return_pct": 214.241,
+      "max_daily_drawdown_pct": -28.205,
+      "trade_count": 48,
+      "wins": 15,
+      "losses": 33,
+      "days_in_market_pct": 56.89,
+      "annual_returns_pct": {
+        "2019": 37.628,
+        "2020": 33.212,
+        "2021": 29.031,
+        "2022": -9.634,
+        "2023": 14.607,
+        "2024": 27.114,
+        "2025": 3.739,
+        "2026": -2.733
+      },
+      "double_cost_return_pct": 202.565,
+      "beats_don55_return": true,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-02-23",
+          "sold": "2019-02-25",
+          "profit": -14.491266150858166,
+          "entry_capital": 250.0,
+          "exit_proceeds": 235.50873384914183
+        },
+        {
+          "bought": "2019-03-06",
+          "sold": "2019-03-21",
+          "profit": 11.07125663657871,
+          "entry_capital": 246.37718346228547,
+          "exit_proceeds": 257.4484400988642
+        },
+        {
+          "bought": "2019-03-22",
+          "sold": "2019-03-25",
+          "profit": -0.0913809696371004,
+          "entry_capital": 249.14499762143015,
+          "exit_proceeds": 249.05361665179305
+        },
+        {
+          "bought": "2019-03-26",
+          "sold": "2019-09-21",
+          "profit": 392.59632426131,
+          "entry_capital": 249.1221523790209,
+          "exit_proceeds": 641.7184766403309
+        },
+        {
+          "bought": "2019-10-28",
+          "sold": "2019-10-29",
+          "profit": -12.805906419615383,
+          "entry_capital": 347.27123344434835,
+          "exit_proceeds": 334.46532702473297
+        },
+        {
+          "bought": "2020-01-15",
+          "sold": "2020-01-24",
+          "profit": -16.99161821042958,
+          "entry_capital": 344.0697568394445,
+          "exit_proceeds": 327.0781386290149
+        },
+        {
+          "bought": "2020-01-29",
+          "sold": "2020-02-03",
+          "profit": -2.5993029576482627,
+          "entry_capital": 339.82185228683716,
+          "exit_proceeds": 337.2225493291889
+        },
+        {
+          "bought": "2020-02-06",
+          "sold": "2020-03-13",
+          "profit": -170.3054368435702,
+          "entry_capital": 339.1720265474251,
+          "exit_proceeds": 168.8665897038549
+        },
+        {
+          "bought": "2020-05-08",
+          "sold": "2020-05-09",
+          "profit": -6.404734948019893,
+          "entry_capital": 296.5956673365326,
+          "exit_proceeds": 290.1909323885127
+        },
+        {
+          "bought": "2020-05-20",
+          "sold": "2020-05-21",
+          "profit": -8.818060671390413,
+          "entry_capital": 294.9944835995276,
+          "exit_proceeds": 286.1764229281372
+        },
+        {
+          "bought": "2020-05-27",
+          "sold": "2021-05-16",
+          "profit": 1251.2329987725539,
+          "entry_capital": 292.78996843168,
+          "exit_proceeds": 1544.0229672042337
+        },
+        {
+          "bought": "2021-08-14",
+          "sold": "2021-12-05",
+          "profit": 15.268990888829194,
+          "entry_capital": 605.5982181248185,
+          "exit_proceeds": 620.8672090136477
+        },
+        {
+          "bought": "2021-12-07",
+          "sold": "2021-12-14",
+          "profit": -46.86540301523871,
+          "entry_capital": 609.4154658470258,
+          "exit_proceeds": 562.550062831787
+        },
+        {
+          "bought": "2021-12-15",
+          "sold": "2021-12-18",
+          "profit": -28.951534489304436,
+          "entry_capital": 597.699115093216,
+          "exit_proceeds": 568.7475806039116
+        },
+        {
+          "bought": "2021-12-20",
+          "sold": "2021-12-31",
+          "profit": 3.7749326157537553,
+          "entry_capital": 590.46123147089,
+          "exit_proceeds": 594.2361640866437
+        },
+        {
+          "bought": "2022-03-30",
+          "sold": "2022-03-31",
+          "profit": -6.331612423223646,
+          "entry_capital": 591.4049646248284,
+          "exit_proceeds": 585.0733522016047
+        },
+        {
+          "bought": "2022-04-05",
+          "sold": "2022-04-12",
+          "profit": -90.77062861115377,
+          "entry_capital": 589.8220615190224,
+          "exit_proceeds": 499.0514329078687
+        },
+        {
+          "bought": "2022-04-21",
+          "sold": "2022-05-01",
+          "profit": -52.65855258023669,
+          "entry_capital": 567.129404366234,
+          "exit_proceeds": 514.4708517859973
+        },
+        {
+          "bought": "2022-05-02",
+          "sold": "2022-05-03",
+          "profit": -0.844313776136687,
+          "entry_capital": 553.9647662211748,
+          "exit_proceeds": 553.1204524450382
+        },
+        {
+          "bought": "2022-05-04",
+          "sold": "2022-05-06",
+          "profit": -18.867646419679204,
+          "entry_capital": 553.7536877771406,
+          "exit_proceeds": 534.8860413574614
+        },
+        {
+          "bought": "2022-09-13",
+          "sold": "2022-09-14",
+          "profit": -55.951136776134035,
+          "entry_capital": 549.0367761722208,
+          "exit_proceeds": 493.0856393960868
+        },
+        {
+          "bought": "2022-09-17",
+          "sold": "2022-09-18",
+          "profit": 6.72867394320258,
+          "entry_capital": 535.0489919781872,
+          "exit_proceeds": 541.7776659213898
+        },
+        {
+          "bought": "2022-09-30",
+          "sold": "2022-10-02",
+          "profit": -9.21018353978127,
+          "entry_capital": 536.7311604639879,
+          "exit_proceeds": 527.5209769242066
+        },
+        {
+          "bought": "2023-01-14",
+          "sold": "2023-06-16",
+          "profit": 149.9449356896705,
+          "entry_capital": 534.4286145790426,
+          "exit_proceeds": 684.3735502687131
+        },
+        {
+          "bought": "2023-06-21",
+          "sold": "2023-07-16",
+          "profit": 38.19952746612921,
+          "entry_capital": 571.9148485014603,
+          "exit_proceeds": 610.1143759675895
+        },
+        {
+          "bought": "2023-07-17",
+          "sold": "2023-07-18",
+          "profit": -3.544692522093669,
+          "entry_capital": 581.4647303679926,
+          "exit_proceeds": 577.920037845899
+        },
+        {
+          "bought": "2023-07-19",
+          "sold": "2023-07-27",
+          "profit": -11.571913029751954,
+          "entry_capital": 580.5785572374692,
+          "exit_proceeds": 569.0066442077173
+        },
+        {
+          "bought": "2023-07-29",
+          "sold": "2023-08-04",
+          "profit": -4.098383869330064,
+          "entry_capital": 577.6855789800312,
+          "exit_proceeds": 573.5871951107011
+        },
+        {
+          "bought": "2023-08-05",
+          "sold": "2023-08-18",
+          "profit": -50.91125998374946,
+          "entry_capital": 576.6609830126987,
+          "exit_proceeds": 525.7497230289492
+        },
+        {
+          "bought": "2023-08-30",
+          "sold": "2023-09-01",
+          "profit": -37.70837812072455,
+          "entry_capital": 563.9331680167613,
+          "exit_proceeds": 526.2247898960368
+        },
+        {
+          "bought": "2023-09-04",
+          "sold": "2023-09-05",
+          "profit": -4.7519993486887415,
+          "entry_capital": 554.5060734865801,
+          "exit_proceeds": 549.7540741378914
+        },
+        {
+          "bought": "2023-09-09",
+          "sold": "2023-09-10",
+          "profit": -1.8475086143965882,
+          "entry_capital": 553.318073649408,
+          "exit_proceeds": 551.4705650350114
+        },
+        {
+          "bought": "2023-09-13",
+          "sold": "2023-09-18",
+          "profit": 13.006411308642782,
+          "entry_capital": 552.8561964958088,
+          "exit_proceeds": 565.8626078044516
+        },
+        {
+          "bought": "2023-10-23",
+          "sold": "2024-06-03",
+          "profit": 696.6092719425493,
+          "entry_capital": 556.1077993229695,
+          "exit_proceeds": 1252.7170712655188
+        },
+        {
+          "bought": "2024-06-04",
+          "sold": "2024-06-10",
+          "profit": 6.681335305406378,
+          "entry_capital": 730.2601173086068,
+          "exit_proceeds": 736.9414526140132
+        },
+        {
+          "bought": "2024-06-15",
+          "sold": "2024-06-16",
+          "profit": -0.1572945870307194,
+          "entry_capital": 731.9304511349584,
+          "exit_proceeds": 731.7731565479277
+        },
+        {
+          "bought": "2024-06-18",
+          "sold": "2024-06-19",
+          "profit": -16.77526103338414,
+          "entry_capital": 731.8911274882007,
+          "exit_proceeds": 715.1158664548166
+        },
+        {
+          "bought": "2024-06-21",
+          "sold": "2024-06-23",
+          "profit": -8.98029614925099,
+          "entry_capital": 727.6973122298547,
+          "exit_proceeds": 718.7170160806037
+        },
+        {
+          "bought": "2024-07-16",
+          "sold": "2024-08-03",
+          "profit": -38.22059478235781,
+          "entry_capital": 725.4522381925419,
+          "exit_proceeds": 687.2316434101841
+        },
+        {
+          "bought": "2024-08-09",
+          "sold": "2024-08-11",
+          "profit": -10.967751320489924,
+          "entry_capital": 715.8970894969525,
+          "exit_proceeds": 704.9293381764626
+        },
+        {
+          "bought": "2024-09-22",
+          "sold": "2024-10-14",
+          "profit": -7.512625231183733,
+          "entry_capital": 713.1551516668301,
+          "exit_proceeds": 705.6425264356463
+        },
+        {
+          "bought": "2024-10-15",
+          "sold": "2024-10-26",
+          "profit": 4.460908519415852,
+          "entry_capital": 711.2769953590341,
+          "exit_proceeds": 715.73790387845
+        },
+        {
+          "bought": "2024-10-28",
+          "sold": "2025-02-20",
+          "profit": 296.7328412715334,
+          "entry_capital": 712.3922224888881,
+          "exit_proceeds": 1009.1250637604215
+        },
+        {
+          "bought": "2025-02-24",
+          "sold": "2025-02-25",
+          "profit": -40.68980920678803,
+          "entry_capital": 786.5754328067715,
+          "exit_proceeds": 745.8856235999834
+        },
+        {
+          "bought": "2025-05-07",
+          "sold": "2025-10-11",
+          "profit": 125.09920920185311,
+          "entry_capital": 776.4029805050744,
+          "exit_proceeds": 901.5021897069275
+        },
+        {
+          "bought": "2026-05-03",
+          "sold": "2026-05-04",
+          "profit": -3.6304457447259892,
+          "entry_capital": 807.6777828055376,
+          "exit_proceeds": 804.0473370608116
+        },
+        {
+          "bought": "2026-05-05",
+          "sold": "2026-06-03",
+          "profit": -134.36118536049253,
+          "entry_capital": 806.7701713693561,
+          "exit_proceeds": 672.4089860088636
+        },
+        {
+          "bought": "2026-08-22",
+          "sold": "2026-09-30",
+          "profit": 49.694308743255306,
+          "entry_capital": 773.179875029233,
+          "exit_proceeds": 822.8741837724883
+        }
+      ]
+    },
+    {
+      "key": "PRICE_EMA200",
+      "label": "Clôture au-dessus de EMA200",
+      "initial_usdt": 1000,
+      "final_usdt": 2702.19,
+      "net_return_pct": 170.219,
+      "max_daily_drawdown_pct": -34.392,
+      "trade_count": 42,
+      "wins": 11,
+      "losses": 31,
+      "days_in_market_pct": 60.57,
+      "annual_returns_pct": {
+        "2019": 18.485,
+        "2020": 50.384,
+        "2021": 9.628,
+        "2022": -2.022,
+        "2023": 15.696,
+        "2024": 21.168,
+        "2025": -2.52,
+        "2026": 3.318
+      },
+      "double_cost_return_pct": 161.368,
+      "beats_don55_return": true,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-04-03",
+          "sold": "2019-09-25",
+          "profit": 186.05907285462735,
+          "entry_capital": 250.0,
+          "exit_proceeds": 436.05907285462735
+        },
+        {
+          "bought": "2019-10-26",
+          "sold": "2019-11-15",
+          "profit": -1.2129628553822727,
+          "entry_capital": 296.51476821365685,
+          "exit_proceeds": 295.3018053582746
+        },
+        {
+          "bought": "2020-01-11",
+          "sold": "2020-01-12",
+          "profit": -7.329797143244377,
+          "entry_capital": 296.21152749981127,
+          "exit_proceeds": 288.8817303565669
+        },
+        {
+          "bought": "2020-01-13",
+          "sold": "2020-01-14",
+          "profit": -3.5581929946588957,
+          "entry_capital": 294.3790782140002,
+          "exit_proceeds": 290.8208852193413
+        },
+        {
+          "bought": "2020-01-15",
+          "sold": "2020-03-01",
+          "profit": -10.540450755002553,
+          "entry_capital": 293.48952996533546,
+          "exit_proceeds": 282.9490792103329
+        },
+        {
+          "bought": "2020-03-03",
+          "sold": "2020-03-09",
+          "profit": -29.391538567202474,
+          "entry_capital": 290.85441727658485,
+          "exit_proceeds": 261.4628787093824
+        },
+        {
+          "bought": "2020-04-30",
+          "sold": "2021-05-20",
+          "profit": 897.2516343403233,
+          "entry_capital": 283.5065326347842,
+          "exit_proceeds": 1180.7581669751075
+        },
+        {
+          "bought": "2021-07-28",
+          "sold": "2021-08-04",
+          "profit": -17.555864731836948,
+          "entry_capital": 507.81944121986504,
+          "exit_proceeds": 490.2635764880281
+        },
+        {
+          "bought": "2021-08-05",
+          "sold": "2021-09-22",
+          "profit": 11.264944781808595,
+          "entry_capital": 503.4304750369058,
+          "exit_proceeds": 514.6954198187144
+        },
+        {
+          "bought": "2021-09-23",
+          "sold": "2021-09-29",
+          "profit": -30.741113277505463,
+          "entry_capital": 506.24671123235794,
+          "exit_proceeds": 475.5055979548525
+        },
+        {
+          "bought": "2021-10-01",
+          "sold": "2021-12-05",
+          "profit": 58.994123106856364,
+          "entry_capital": 498.56143291298156,
+          "exit_proceeds": 557.5555560198379
+        },
+        {
+          "bought": "2021-12-07",
+          "sold": "2021-12-10",
+          "profit": -31.021832707879867,
+          "entry_capital": 513.3099636896957,
+          "exit_proceeds": 482.2881309818158
+        },
+        {
+          "bought": "2021-12-13",
+          "sold": "2021-12-14",
+          "profit": -35.260663267951145,
+          "entry_capital": 505.5545055127257,
+          "exit_proceeds": 470.29384224477457
+        },
+        {
+          "bought": "2021-12-24",
+          "sold": "2021-12-29",
+          "profit": -33.58779365134217,
+          "entry_capital": 496.73933969573795,
+          "exit_proceeds": 463.1515460443958
+        },
+        {
+          "bought": "2022-03-28",
+          "sold": "2022-04-07",
+          "profit": -39.48901071472693,
+          "entry_capital": 488.34239128290244,
+          "exit_proceeds": 448.8533805681755
+        },
+        {
+          "bought": "2023-01-17",
+          "sold": "2023-01-19",
+          "profit": -12.876404814774787,
+          "entry_capital": 478.47013860422067,
+          "exit_proceeds": 465.5937337894459
+        },
+        {
+          "bought": "2023-01-20",
+          "sold": "2023-03-09",
+          "profit": 12.804935828690589,
+          "entry_capital": 475.25103740052697,
+          "exit_proceeds": 488.05597322921756
+        },
+        {
+          "bought": "2023-03-13",
+          "sold": "2023-06-15",
+          "profit": 66.45099469034676,
+          "entry_capital": 478.4522713576996,
+          "exit_proceeds": 544.9032660480464
+        },
+        {
+          "bought": "2023-06-16",
+          "sold": "2023-08-18",
+          "profit": 18.27870256371716,
+          "entry_capital": 495.0650200302863,
+          "exit_proceeds": 513.3437225940035
+        },
+        {
+          "bought": "2023-08-30",
+          "sold": "2023-09-01",
+          "profit": -33.40894824977454,
+          "entry_capital": 499.6346956712156,
+          "exit_proceeds": 466.22574742144104
+        },
+        {
+          "bought": "2023-09-20",
+          "sold": "2023-09-22",
+          "profit": -13.031798578697703,
+          "entry_capital": 491.282458608772,
+          "exit_proceeds": 478.2506600300743
+        },
+        {
+          "bought": "2023-09-29",
+          "sold": "2023-09-30",
+          "profit": -3.5228566154692658,
+          "entry_capital": 488.02450896409755,
+          "exit_proceeds": 484.5016523486283
+        },
+        {
+          "bought": "2023-10-01",
+          "sold": "2023-10-12",
+          "profit": -3.0277826754699504,
+          "entry_capital": 487.14379481023025,
+          "exit_proceeds": 484.1160121347603
+        },
+        {
+          "bought": "2023-10-16",
+          "sold": "2024-07-05",
+          "profit": 532.4350096898678,
+          "entry_capital": 486.38684914136275,
+          "exit_proceeds": 1018.8218588312305
+        },
+        {
+          "bought": "2024-07-14",
+          "sold": "2024-08-05",
+          "profit": -12.737406347474234,
+          "entry_capital": 619.4956015638297,
+          "exit_proceeds": 606.7581952163555
+        },
+        {
+          "bought": "2024-08-09",
+          "sold": "2024-08-12",
+          "profit": -31.465407970412457,
+          "entry_capital": 616.3112499769611,
+          "exit_proceeds": 584.8458420065487
+        },
+        {
+          "bought": "2024-08-14",
+          "sold": "2024-08-15",
+          "profit": -20.884475882787456,
+          "entry_capital": 608.444897984358,
+          "exit_proceeds": 587.5604221015706
+        },
+        {
+          "bought": "2024-08-18",
+          "sold": "2024-08-19",
+          "profit": -12.570216381405771,
+          "entry_capital": 603.2237790136612,
+          "exit_proceeds": 590.6535626322554
+        },
+        {
+          "bought": "2024-08-20",
+          "sold": "2024-08-21",
+          "profit": -6.072997304420255,
+          "entry_capital": 600.0812249183098,
+          "exit_proceeds": 594.0082276138895
+        },
+        {
+          "bought": "2024-08-22",
+          "sold": "2024-08-28",
+          "profit": -18.782817692559433,
+          "entry_capital": 598.5629755922047,
+          "exit_proceeds": 579.7801578996452
+        },
+        {
+          "bought": "2024-09-14",
+          "sold": "2024-09-16",
+          "profit": -15.148331427128937,
+          "entry_capital": 593.8672711690649,
+          "exit_proceeds": 578.718939741936
+        },
+        {
+          "bought": "2024-09-18",
+          "sold": "2025-02-27",
+          "profit": 231.70825469885438,
+          "entry_capital": 590.0801883122826,
+          "exit_proceeds": 821.788443011137
+        },
+        {
+          "bought": "2025-03-02",
+          "sold": "2025-03-10",
+          "profit": -41.953214749134986,
+          "entry_capital": 648.0072519869963,
+          "exit_proceeds": 606.0540372378613
+        },
+        {
+          "bought": "2025-03-20",
+          "sold": "2025-03-21",
+          "profit": -21.104264892227093,
+          "entry_capital": 637.5189482997125,
+          "exit_proceeds": 616.4146834074854
+        },
+        {
+          "bought": "2025-03-24",
+          "sold": "2025-03-29",
+          "profit": -14.036279257178535,
+          "entry_capital": 632.2428820766557,
+          "exit_proceeds": 618.2066028194772
+        },
+        {
+          "bought": "2025-04-13",
+          "sold": "2025-04-14",
+          "profit": -13.03443849374628,
+          "entry_capital": 628.7338122623611,
+          "exit_proceeds": 615.6993737686148
+        },
+        {
+          "bought": "2025-04-20",
+          "sold": "2025-10-18",
+          "profit": 154.65219174457798,
+          "entry_capital": 625.4752026389245,
+          "exit_proceeds": 780.1273943835025
+        },
+        {
+          "bought": "2025-10-20",
+          "sold": "2025-10-23",
+          "profit": -8.543874936634438,
+          "entry_capital": 664.138250575069,
+          "exit_proceeds": 655.5943756384346
+        },
+        {
+          "bought": "2025-10-24",
+          "sold": "2025-10-31",
+          "profit": -12.508426810248125,
+          "entry_capital": 662.0022818409104,
+          "exit_proceeds": 649.4938550306623
+        },
+        {
+          "bought": "2025-11-01",
+          "sold": "2025-11-04",
+          "profit": -20.103459570884752,
+          "entry_capital": 658.8751751383484,
+          "exit_proceeds": 638.7717155674636
+        },
+        {
+          "bought": "2026-05-11",
+          "sold": "2026-05-12",
+          "profit": -5.641829959394158,
+          "entry_capital": 653.8493102456272,
+          "exit_proceeds": 648.207480286233
+        },
+        {
+          "bought": "2026-08-21",
+          "sold": "2026-09-30",
+          "profit": 92.43336885711108,
+          "entry_capital": 652.4388527557786,
+          "exit_proceeds": 744.8722216128897
+        }
+      ]
+    },
+    {
+      "key": "EMA50_200",
+      "label": "Tendance EMA50 > EMA200",
+      "initial_usdt": 1000,
+      "final_usdt": 2575.7,
+      "net_return_pct": 157.57,
+      "max_daily_drawdown_pct": -37.584,
+      "trade_count": 7,
+      "wins": 5,
+      "losses": 2,
+      "days_in_market_pct": 64.31,
+      "annual_returns_pct": {
+        "2019": 9.319,
+        "2020": 36.11,
+        "2021": 7.776,
+        "2022": -2.339,
+        "2023": 15.197,
+        "2024": 41.096,
+        "2025": -0.773,
+        "2026": 1.972
+      },
+      "double_cost_return_pct": 155.797,
+      "beats_don55_return": true,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-04-29",
+          "sold": "2019-11-24",
+          "profit": 93.19459040946128,
+          "entry_capital": 250.0,
+          "exit_proceeds": 343.1945904094613
+        },
+        {
+          "bought": "2020-02-01",
+          "sold": "2020-03-16",
+          "profit": -117.11532380521683,
+          "entry_capital": 273.29864760236535,
+          "exit_proceeds": 156.18332379714852
+        },
+        {
+          "bought": "2020-05-14",
+          "sold": "2021-06-24",
+          "profit": 636.0374372126205,
+          "entry_capital": 244.01981665106115,
+          "exit_proceeds": 880.0572538636817
+        },
+        {
+          "bought": "2021-08-15",
+          "sold": "2022-01-11",
+          "profit": -45.99261037433081,
+          "entry_capital": 403.02917595421627,
+          "exit_proceeds": 357.03656557988546
+        },
+        {
+          "bought": "2023-02-19",
+          "sold": "2023-09-25",
+          "profit": 24.441815597913603,
+          "entry_capital": 391.5310233606336,
+          "exit_proceeds": 415.9728389585472
+        },
+        {
+          "bought": "2023-10-04",
+          "sold": "2025-11-18",
+          "profit": 935.3304188246784,
+          "entry_capital": 397.64147726011197,
+          "exit_proceeds": 1332.9718960847904
+        },
+        {
+          "bought": "2026-09-13",
+          "sold": "2026-09-30",
+          "profit": 49.79879008163016,
+          "entry_capital": 631.4740819662816,
+          "exit_proceeds": 681.2728720479117
+        }
+      ]
+    },
+    {
+      "key": "MOM180",
+      "label": "Momentum positif 180 jours",
+      "initial_usdt": 1000,
+      "final_usdt": 2446.09,
+      "net_return_pct": 144.609,
+      "max_daily_drawdown_pct": -37.137,
+      "trade_count": 27,
+      "wins": 13,
+      "losses": 14,
+      "days_in_market_pct": 60.6,
+      "annual_returns_pct": {
+        "2019": 1.868,
+        "2020": 51.307,
+        "2021": 9.962,
+        "2022": -2.79,
+        "2023": 12.195,
+        "2024": 23.913,
+        "2025": 1.501,
+        "2026": 5.211
+      },
+      "double_cost_return_pct": 139.316,
+      "beats_don55_return": true,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-05-12",
+          "sold": "2019-11-22",
+          "profit": 18.67846872459984,
+          "entry_capital": 250.0,
+          "exit_proceeds": 268.67846872459984
+        },
+        {
+          "bought": "2020-02-14",
+          "sold": "2020-02-16",
+          "profit": -8.789595897802286,
+          "entry_capital": 254.66961718114996,
+          "exit_proceeds": 245.88002128334767
+        },
+        {
+          "bought": "2020-02-19",
+          "sold": "2020-02-20",
+          "profit": -14.874956524399323,
+          "entry_capital": 252.47221820669938,
+          "exit_proceeds": 237.59726168230006
+        },
+        {
+          "bought": "2020-05-07",
+          "sold": "2020-05-11",
+          "profit": -12.154673816020818,
+          "entry_capital": 248.75347907559956,
+          "exit_proceeds": 236.59880525957874
+        },
+        {
+          "bought": "2020-05-13",
+          "sold": "2021-07-06",
+          "profit": 690.9975537728998,
+          "entry_capital": 245.71481062159435,
+          "exit_proceeds": 936.7123643944941
+        },
+        {
+          "bought": "2021-07-12",
+          "sold": "2021-07-13",
+          "profit": -15.527418193278208,
+          "entry_capital": 418.4641990648193,
+          "exit_proceeds": 402.9367808715411
+        },
+        {
+          "bought": "2021-07-23",
+          "sold": "2021-08-08",
+          "profit": 156.0276486992887,
+          "entry_capital": 414.58234451649975,
+          "exit_proceeds": 570.6099932157884
+        },
+        {
+          "bought": "2021-08-10",
+          "sold": "2021-08-11",
+          "profit": -7.850625887859678,
+          "entry_capital": 453.5892566913219,
+          "exit_proceeds": 445.73863080346223
+        },
+        {
+          "bought": "2021-08-23",
+          "sold": "2021-08-24",
+          "profit": 0.9294680421475618,
+          "entry_capital": 451.626600219357,
+          "exit_proceeds": 452.55606826150455
+        },
+        {
+          "bought": "2021-08-25",
+          "sold": "2021-08-29",
+          "profit": 10.18729707441338,
+          "entry_capital": 451.8589672298939,
+          "exit_proceeds": 462.0462643043073
+        },
+        {
+          "bought": "2021-08-30",
+          "sold": "2021-08-31",
+          "profit": -17.94329570625399,
+          "entry_capital": 454.4057914984972,
+          "exit_proceeds": 436.4624957922432
+        },
+        {
+          "bought": "2021-09-02",
+          "sold": "2021-09-04",
+          "profit": 9.564924622427043,
+          "entry_capital": 449.91996757193374,
+          "exit_proceeds": 459.4848921943608
+        },
+        {
+          "bought": "2021-10-16",
+          "sold": "2022-01-23",
+          "profit": -195.86493119458282,
+          "entry_capital": 452.3111987275405,
+          "exit_proceeds": 256.4462675329577
+        },
+        {
+          "bought": "2022-03-21",
+          "sold": "2022-03-22",
+          "profit": -3.74109585970524,
+          "entry_capital": 403.3449659288948,
+          "exit_proceeds": 399.60387006918955
+        },
+        {
+          "bought": "2022-03-24",
+          "sold": "2022-03-31",
+          "profit": 37.95048449738857,
+          "entry_capital": 402.40969196396844,
+          "exit_proceeds": 440.360176461357
+        },
+        {
+          "bought": "2023-01-21",
+          "sold": "2023-01-24",
+          "profit": 3.32804761945323,
+          "entry_capital": 411.89731308831557,
+          "exit_proceeds": 415.2253607077688
+        },
+        {
+          "bought": "2023-01-30",
+          "sold": "2023-02-05",
+          "profit": -8.441348444165271,
+          "entry_capital": 412.7293249931789,
+          "exit_proceeds": 404.28797654901365
+        },
+        {
+          "bought": "2023-02-16",
+          "sold": "2023-03-10",
+          "profit": -67.89397327070685,
+          "entry_capital": 410.61898788213756,
+          "exit_proceeds": 342.7250146114307
+        },
+        {
+          "bought": "2023-03-13",
+          "sold": "2023-09-14",
+          "profit": 74.17968750318425,
+          "entry_capital": 393.6454945644608,
+          "exit_proceeds": 467.8251820676451
+        },
+        {
+          "bought": "2023-10-18",
+          "sold": "2024-08-28",
+          "profit": 447.6837123681321,
+          "entry_capital": 412.19041644025685,
+          "exit_proceeds": 859.874128808389
+        },
+        {
+          "bought": "2024-09-30",
+          "sold": "2024-10-01",
+          "profit": -19.686898785691824,
+          "entry_capital": 524.1113445322899,
+          "exit_proceeds": 504.42444574659805
+        },
+        {
+          "bought": "2024-10-15",
+          "sold": "2025-06-15",
+          "profit": 306.5198190959253,
+          "entry_capital": 519.1896198358669,
+          "exit_proceeds": 825.7094389317922
+        },
+        {
+          "bought": "2025-06-17",
+          "sold": "2025-11-05",
+          "profit": -31.25109140571101,
+          "entry_capital": 595.8195746098482,
+          "exit_proceeds": 564.5684832041372
+        },
+        {
+          "bought": "2025-11-06",
+          "sold": "2025-11-07",
+          "profit": -16.09072820879385,
+          "entry_capital": 588.0068017584206,
+          "exit_proceeds": 571.9160735496267
+        },
+        {
+          "bought": "2025-11-10",
+          "sold": "2025-11-12",
+          "profit": -11.001068272464408,
+          "entry_capital": 583.9841197062221,
+          "exit_proceeds": 572.9830514337577
+        },
+        {
+          "bought": "2026-08-05",
+          "sold": "2026-08-06",
+          "profit": 3.3086186445395924,
+          "entry_capital": 581.2338526381061,
+          "exit_proceeds": 584.5424712826457
+        },
+        {
+          "bought": "2026-08-20",
+          "sold": "2026-09-30",
+          "profit": 117.85013382078535,
+          "entry_capital": 582.061007299241,
+          "exit_proceeds": 699.9111411200264
+        }
+      ]
+    },
+    {
+      "key": "DON20",
+      "label": "Cassure 20 j, sortie 10 j",
+      "initial_usdt": 1000,
+      "final_usdt": 1843.16,
+      "net_return_pct": 84.316,
+      "max_daily_drawdown_pct": -16.597,
+      "trade_count": 51,
+      "wins": 20,
+      "losses": 31,
+      "days_in_market_pct": 38.62,
+      "annual_returns_pct": {
+        "2019": 11.64,
+        "2020": 33.295,
+        "2021": 9.664,
+        "2022": -10.711,
+        "2023": 15.384,
+        "2024": 9.083,
+        "2025": -1.763,
+        "2026": 2.303
+      },
+      "double_cost_return_pct": 77.294,
+      "beats_don55_return": true,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-02-19",
+          "sold": "2019-02-24",
+          "profit": -9.440089343151271,
+          "entry_capital": 250.0,
+          "exit_proceeds": 240.55991065684873
+        },
+        {
+          "bought": "2019-03-30",
+          "sold": "2019-05-17",
+          "profit": 171.93591113457737,
+          "entry_capital": 247.63997766421218,
+          "exit_proceeds": 419.57588879878955
+        },
+        {
+          "bought": "2019-05-27",
+          "sold": "2019-06-05",
+          "profit": -32.00760409468347,
+          "entry_capital": 290.62395544785653,
+          "exit_proceeds": 258.61635135317306
+        },
+        {
+          "bought": "2019-06-21",
+          "sold": "2019-06-27",
+          "profit": 45.55518042854402,
+          "entry_capital": 282.62205442418565,
+          "exit_proceeds": 328.17723485272967
+        },
+        {
+          "bought": "2019-08-06",
+          "sold": "2019-08-15",
+          "profit": -44.85890567121149,
+          "entry_capital": 294.01084953132164,
+          "exit_proceeds": 249.15194386011015
+        },
+        {
+          "bought": "2019-10-27",
+          "sold": "2019-11-09",
+          "profit": -14.78476918249794,
+          "entry_capital": 282.7961231135188,
+          "exit_proceeds": 268.01135393102084
+        },
+        {
+          "bought": "2020-01-07",
+          "sold": "2020-02-25",
+          "profit": 54.807257696399176,
+          "entry_capital": 279.0999308178943,
+          "exit_proceeds": 333.90718851429347
+        },
+        {
+          "bought": "2020-04-07",
+          "sold": "2020-05-10",
+          "profit": 46.58034529998855,
+          "entry_capital": 292.80174524199407,
+          "exit_proceeds": 339.3820905419826
+        },
+        {
+          "bought": "2020-06-02",
+          "sold": "2020-08-01",
+          "profit": 32.7874735937375,
+          "entry_capital": 304.44683156699125,
+          "exit_proceeds": 337.23430516072875
+        },
+        {
+          "bought": "2020-08-02",
+          "sold": "2020-08-02",
+          "profit": -31.089867332490883,
+          "entry_capital": 312.64369996542564,
+          "exit_proceeds": 281.55383263293476
+        },
+        {
+          "bought": "2020-08-18",
+          "sold": "2020-08-26",
+          "profit": -24.741053949245554,
+          "entry_capital": 304.8712331323029,
+          "exit_proceeds": 280.13017918305735
+        },
+        {
+          "bought": "2020-10-11",
+          "sold": "2020-11-26",
+          "profit": 138.64539498157626,
+          "entry_capital": 298.68596964499153,
+          "exit_proceeds": 437.3313646265678
+        },
+        {
+          "bought": "2020-12-01",
+          "sold": "2021-01-11",
+          "profit": 219.70871410709566,
+          "entry_capital": 333.3473183903856,
+          "exit_proceeds": 553.0560324974813
+        },
+        {
+          "bought": "2021-02-07",
+          "sold": "2021-02-23",
+          "profit": 78.6262697324687,
+          "entry_capital": 388.2744969171595,
+          "exit_proceeds": 466.9007666496282
+        },
+        {
+          "bought": "2021-03-14",
+          "sold": "2021-03-25",
+          "profit": -60.2775808104343,
+          "entry_capital": 407.9310643502767,
+          "exit_proceeds": 347.6534835398424
+        },
+        {
+          "bought": "2021-04-14",
+          "sold": "2021-04-18",
+          "profit": -53.27607259969079,
+          "entry_capital": 392.8616691476681,
+          "exit_proceeds": 339.58559654797733
+        },
+        {
+          "bought": "2021-07-26",
+          "sold": "2021-09-07",
+          "profit": 115.18498712802375,
+          "entry_capital": 379.5426509977454,
+          "exit_proceeds": 494.72763812576915
+        },
+        {
+          "bought": "2021-10-06",
+          "sold": "2021-10-28",
+          "profit": 53.67948728843777,
+          "entry_capital": 408.33889777975133,
+          "exit_proceeds": 462.0183850681891
+        },
+        {
+          "bought": "2021-11-09",
+          "sold": "2021-11-16",
+          "profit": -55.12191438720566,
+          "entry_capital": 421.75876960186076,
+          "exit_proceeds": 366.6368552146551
+        },
+        {
+          "bought": "2022-02-08",
+          "sold": "2022-02-18",
+          "profit": -32.06581131550638,
+          "entry_capital": 407.9782910050593,
+          "exit_proceeds": 375.9124796895529
+        },
+        {
+          "bought": "2022-03-25",
+          "sold": "2022-04-07",
+          "profit": -8.640401956904157,
+          "entry_capital": 399.9618381761827,
+          "exit_proceeds": 391.32143621927855
+        },
+        {
+          "bought": "2022-07-20",
+          "sold": "2022-08-19",
+          "profit": -36.063849320573865,
+          "entry_capital": 397.8017376869567,
+          "exit_proceeds": 361.73788836638283
+        },
+        {
+          "bought": "2022-09-13",
+          "sold": "2022-09-14",
+          "profit": -47.52154041046538,
+          "entry_capital": 388.78577535681325,
+          "exit_proceeds": 341.26423494634787
+        },
+        {
+          "bought": "2022-10-27",
+          "sold": "2022-11-08",
+          "profit": -25.612530186577487,
+          "entry_capital": 376.9053902541969,
+          "exit_proceeds": 351.2928600676194
+        },
+        {
+          "bought": "2022-12-14",
+          "sold": "2022-12-17",
+          "profit": -24.88985685417822,
+          "entry_capital": 370.50225770755253,
+          "exit_proceeds": 345.6124008533743
+        },
+        {
+          "bought": "2023-01-09",
+          "sold": "2023-02-10",
+          "profit": 97.93376525270787,
+          "entry_capital": 364.279793494008,
+          "exit_proceeds": 462.2135587467159
+        },
+        {
+          "bought": "2023-02-16",
+          "sold": "2023-03-03",
+          "profit": -37.56964950412703,
+          "entry_capital": 388.763234807185,
+          "exit_proceeds": 351.19358530305794
+        },
+        {
+          "bought": "2023-03-15",
+          "sold": "2023-04-21",
+          "profit": 43.2945295990537,
+          "entry_capital": 379.3708224311532,
+          "exit_proceeds": 422.6653520302069
+        },
+        {
+          "bought": "2023-06-21",
+          "sold": "2023-07-25",
+          "profit": 10.766220809099082,
+          "entry_capital": 390.1944548309167,
+          "exit_proceeds": 400.9606756400158
+        },
+        {
+          "bought": "2023-10-02",
+          "sold": "2023-10-12",
+          "profit": -16.808645756100987,
+          "entry_capital": 392.8860100331915,
+          "exit_proceeds": 376.0773642770905
+        },
+        {
+          "bought": "2023-10-24",
+          "sold": "2023-12-23",
+          "profit": 126.55202828072123,
+          "entry_capital": 388.68384859416625,
+          "exit_proceeds": 515.2358768748875
+        },
+        {
+          "bought": "2024-01-03",
+          "sold": "2024-01-12",
+          "profit": -33.26294437933592,
+          "entry_capital": 420.3218556643466,
+          "exit_proceeds": 387.05891128501065
+        },
+        {
+          "bought": "2024-02-08",
+          "sold": "2024-03-05",
+          "profit": 153.5478173786446,
+          "entry_capital": 412.00611956951263,
+          "exit_proceeds": 565.5539369481572
+        },
+        {
+          "bought": "2024-03-12",
+          "sold": "2024-03-19",
+          "profit": -52.80844410756174,
+          "entry_capital": 450.3930739141738,
+          "exit_proceeds": 397.58462980661204
+        },
+        {
+          "bought": "2024-05-16",
+          "sold": "2024-06-15",
+          "profit": -2.380019556092293,
+          "entry_capital": 437.1909628872834,
+          "exit_proceeds": 434.8109433311911
+        },
+        {
+          "bought": "2024-07-16",
+          "sold": "2024-08-03",
+          "profit": -23.002144477274214,
+          "entry_capital": 436.5959579982603,
+          "exit_proceeds": 413.5938135209861
+        },
+        {
+          "bought": "2024-08-24",
+          "sold": "2024-09-02",
+          "profit": -46.47178229910264,
+          "entry_capital": 430.84542187894175,
+          "exit_proceeds": 384.3736395798391
+        },
+        {
+          "bought": "2024-09-19",
+          "sold": "2024-10-02",
+          "profit": -7.719748476193274,
+          "entry_capital": 419.2274763041661,
+          "exit_proceeds": 411.5077278279728
+        },
+        {
+          "bought": "2024-10-16",
+          "sold": "2024-12-15",
+          "profit": 211.78987822809165,
+          "entry_capital": 417.2975391851178,
+          "exit_proceeds": 629.0874174132094
+        },
+        {
+          "bought": "2024-12-16",
+          "sold": "2024-12-20",
+          "profit": -46.98213693221436,
+          "entry_capital": 470.2450087421407,
+          "exit_proceeds": 423.26287180992637
+        },
+        {
+          "bought": "2025-01-18",
+          "sold": "2025-02-03",
+          "profit": -29.38221358021059,
+          "entry_capital": 458.4994745090871,
+          "exit_proceeds": 429.11726092887653
+        },
+        {
+          "bought": "2025-04-23",
+          "sold": "2025-05-31",
+          "profit": 49.39594638676982,
+          "entry_capital": 451.15392111403446,
+          "exit_proceeds": 500.5498675008043
+        },
+        {
+          "bought": "2025-07-10",
+          "sold": "2025-08-02",
+          "profit": 7.185526510024658,
+          "entry_capital": 463.50290771072696,
+          "exit_proceeds": 470.6884342207516
+        },
+        {
+          "bought": "2025-08-14",
+          "sold": "2025-08-18",
+          "profit": -32.97330505473417,
+          "entry_capital": 465.2992893382331,
+          "exit_proceeds": 432.32598428349894
+        },
+        {
+          "bought": "2025-09-17",
+          "sold": "2025-09-23",
+          "profit": -17.515073275478812,
+          "entry_capital": 457.05596307454954,
+          "exit_proceeds": 439.5408897990707
+        },
+        {
+          "bought": "2025-10-02",
+          "sold": "2025-10-10",
+          "profit": -9.038060124265712,
+          "entry_capital": 452.67719475567986,
+          "exit_proceeds": 443.63913463141415
+        },
+        {
+          "bought": "2026-01-05",
+          "sold": "2026-01-20",
+          "profit": -12.935653440314013,
+          "entry_capital": 450.41767972461344,
+          "exit_proceeds": 437.4820262842994
+        },
+        {
+          "bought": "2026-03-05",
+          "sold": "2026-03-23",
+          "profit": -30.837849063767862,
+          "entry_capital": 447.1837663645349,
+          "exit_proceeds": 416.34591730076704
+        },
+        {
+          "bought": "2026-04-14",
+          "sold": "2026-05-17",
+          "profit": 20.64485843889679,
+          "entry_capital": 439.47430409859294,
+          "exit_proceeds": 460.11916253748973
+        },
+        {
+          "bought": "2026-07-15",
+          "sold": "2026-09-13",
+          "profit": 82.05273918975092,
+          "entry_capital": 444.63551870831714,
+          "exit_proceeds": 526.6882578980681
+        },
+        {
+          "bought": "2026-09-22",
+          "sold": "2026-09-30",
+          "profit": -17.436299078961383,
+          "entry_capital": 465.14870350575484,
+          "exit_proceeds": 447.71240442679346
+        }
+      ]
+    },
+    {
+      "key": "DON55",
+      "label": "Cassure 55 j, sortie 20 j",
+      "initial_usdt": 1000,
+      "final_usdt": 1618.72,
+      "net_return_pct": 61.872,
+      "max_daily_drawdown_pct": -12.018,
+      "trade_count": 29,
+      "wins": 16,
+      "losses": 13,
+      "days_in_market_pct": 29.19,
+      "annual_returns_pct": {
+        "2019": 16.005,
+        "2020": 14.671,
+        "2021": 6.05,
+        "2022": -2.674,
+        "2023": 7.129,
+        "2024": 12.073,
+        "2025": -0.935,
+        "2026": -0.877
+      },
+      "double_cost_return_pct": 58.31,
+      "beats_don55_return": false,
+      "no_worse_historical_daily_drawdown": true,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-02-24",
+          "sold": "2019-02-24",
+          "profit": -22.190579028945734,
+          "entry_capital": 250.0,
+          "exit_proceeds": 227.80942097105427
+        },
+        {
+          "bought": "2019-04-03",
+          "sold": "2019-05-17",
+          "profit": 105.51831518862096,
+          "entry_capital": 244.45235524276356,
+          "exit_proceeds": 349.9706704313845
+        },
+        {
+          "bought": "2019-05-27",
+          "sold": "2019-06-27",
+          "profit": 76.7198000329019,
+          "entry_capital": 270.8319340399188,
+          "exit_proceeds": 347.5517340728207
+        },
+        {
+          "bought": "2020-01-15",
+          "sold": "2020-02-25",
+          "profit": 15.394006521090319,
+          "entry_capital": 290.0118840481443,
+          "exit_proceeds": 305.4058905692346
+        },
+        {
+          "bought": "2020-05-08",
+          "sold": "2020-05-10",
+          "profit": -43.711224914142576,
+          "entry_capital": 293.86038567841683,
+          "exit_proceeds": 250.14916076427426
+        },
+        {
+          "bought": "2020-06-02",
+          "sold": "2020-08-02",
+          "profit": 11.620641179792472,
+          "entry_capital": 282.9325794498812,
+          "exit_proceeds": 294.55322062967366
+        },
+        {
+          "bought": "2020-08-18",
+          "sold": "2020-09-03",
+          "profit": -32.96134369658216,
+          "entry_capital": 285.8377397448293,
+          "exit_proceeds": 252.87639604824716
+        },
+        {
+          "bought": "2020-10-22",
+          "sold": "2020-11-26",
+          "profit": 81.5499339156429,
+          "entry_capital": 277.5974038206838,
+          "exit_proceeds": 359.1473377363267
+        },
+        {
+          "bought": "2020-12-01",
+          "sold": "2021-01-11",
+          "profit": 196.40138918192662,
+          "entry_capital": 297.9848872995945,
+          "exit_proceeds": 494.3862764815211
+        },
+        {
+          "bought": "2021-02-09",
+          "sold": "2021-02-23",
+          "profit": 5.5412076776254935,
+          "entry_capital": 347.08523459507614,
+          "exit_proceeds": 352.62644227270164
+        },
+        {
+          "bought": "2021-03-14",
+          "sold": "2021-04-18",
+          "profit": -35.687971247256996,
+          "entry_capital": 348.47053651448255,
+          "exit_proceeds": 312.78256526722555
+        },
+        {
+          "bought": "2021-07-31",
+          "sold": "2021-09-07",
+          "profit": 31.47366683250999,
+          "entry_capital": 339.5485437026683,
+          "exit_proceeds": 371.0222105351783
+        },
+        {
+          "bought": "2021-10-07",
+          "sold": "2021-11-16",
+          "profit": 21.052009740676283,
+          "entry_capital": 347.4169604107958,
+          "exit_proceeds": 368.4689701514721
+        },
+        {
+          "bought": "2022-03-28",
+          "sold": "2022-04-10",
+          "profit": -37.71866605457717,
+          "entry_capital": 352.6799628459649,
+          "exit_proceeds": 314.9612967913877
+        },
+        {
+          "bought": "2023-01-13",
+          "sold": "2023-02-10",
+          "profit": 46.95318835897501,
+          "entry_capital": 343.2502963323206,
+          "exit_proceeds": 390.2034846912956
+        },
+        {
+          "bought": "2023-02-16",
+          "sold": "2023-03-03",
+          "profit": -34.305705475068066,
+          "entry_capital": 354.98859342206435,
+          "exit_proceeds": 320.6828879469963
+        },
+        {
+          "bought": "2023-03-18",
+          "sold": "2023-04-21",
+          "profit": 1.1470904698791173,
+          "entry_capital": 346.41216705329737,
+          "exit_proceeds": 347.5592575231765
+        },
+        {
+          "bought": "2023-06-22",
+          "sold": "2023-07-25",
+          "profit": -10.458771762187837,
+          "entry_capital": 346.6989396707672,
+          "exit_proceeds": 336.24016790857934
+        },
+        {
+          "bought": "2023-10-24",
+          "sold": "2024-01-12",
+          "profit": 86.56695586891976,
+          "entry_capital": 344.08424673022023,
+          "exit_proceeds": 430.65120259914
+        },
+        {
+          "bought": "2024-02-13",
+          "sold": "2024-03-05",
+          "profit": 80.3049454051386,
+          "entry_capital": 365.72598569745014,
+          "exit_proceeds": 446.03093110258874
+        },
+        {
+          "bought": "2024-03-12",
+          "sold": "2024-03-19",
+          "profit": -45.235187349963724,
+          "entry_capital": 385.8022220487348,
+          "exit_proceeds": 340.56703469877107
+        },
+        {
+          "bought": "2024-10-16",
+          "sold": "2024-12-20",
+          "profit": 150.485263531131,
+          "entry_capital": 374.49342521124385,
+          "exit_proceeds": 524.9786887423749
+        },
+        {
+          "bought": "2025-05-02",
+          "sold": "2025-06-05",
+          "profit": 25.043971340637768,
+          "entry_capital": 412.1147410940266,
+          "exit_proceeds": 437.1587124346644
+        },
+        {
+          "bought": "2025-07-11",
+          "sold": "2025-08-02",
+          "profit": -11.005172297438946,
+          "entry_capital": 418.375733929186,
+          "exit_proceeds": 407.3705616317471
+        },
+        {
+          "bought": "2025-08-14",
+          "sold": "2025-08-18",
+          "profit": -29.453110697849127,
+          "entry_capital": 415.6244408548263,
+          "exit_proceeds": 386.17133015697715
+        },
+        {
+          "bought": "2026-01-14",
+          "sold": "2026-01-20",
+          "profit": -27.8677170695442,
+          "entry_capital": 408.26116318036395,
+          "exit_proceeds": 380.39344611081975
+        },
+        {
+          "bought": "2026-04-18",
+          "sold": "2026-05-18",
+          "profit": -6.21919819508571,
+          "entry_capital": 401.2942339129779,
+          "exit_proceeds": 395.0750357178922
+        },
+        {
+          "bought": "2026-08-20",
+          "sold": "2026-09-16",
+          "profit": 35.07081769564991,
+          "entry_capital": 399.7394343642065,
+          "exit_proceeds": 434.8102520598564
+        },
+        {
+          "bought": "2026-09-22",
+          "sold": "2026-09-30",
+          "profit": -15.313065680107457,
+          "entry_capital": 408.50713878811894,
+          "exit_proceeds": 393.1940731080115
+        }
+      ]
+    },
+    {
+      "key": "PULLBACK_FILTERED",
+      "label": "Repli EMA10 avec filtre EMA50/200",
+      "initial_usdt": 1000,
+      "final_usdt": 1577.82,
+      "net_return_pct": 57.782,
+      "max_daily_drawdown_pct": -13.914,
+      "trade_count": 79,
+      "wins": 25,
+      "losses": 54,
+      "days_in_market_pct": 24.7,
+      "annual_returns_pct": {
+        "2019": 13.143,
+        "2020": 19.184,
+        "2021": 0.305,
+        "2022": 0.0,
+        "2023": 3.448,
+        "2024": 10.259,
+        "2025": 2.397,
+        "2026": -0.124
+      },
+      "double_cost_return_pct": 48.566,
+      "beats_don55_return": false,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-05-01",
+          "sold": "2019-05-17",
+          "profit": 85.98661540182837,
+          "entry_capital": 250.0,
+          "exit_proceeds": 335.9866154018284
+        },
+        {
+          "bought": "2019-06-11",
+          "sold": "2019-06-12",
+          "profit": -4.072862124195751,
+          "entry_capital": 271.4966538504571,
+          "exit_proceeds": 267.42379172626136
+        },
+        {
+          "bought": "2019-06-13",
+          "sold": "2019-06-27",
+          "profit": 108.43351374975163,
+          "entry_capital": 270.47843831940816,
+          "exit_proceeds": 378.9119520691598
+        },
+        {
+          "bought": "2019-07-04",
+          "sold": "2019-07-14",
+          "profit": -41.8275430002835,
+          "entry_capital": 297.5868167568461,
+          "exit_proceeds": 255.75927375656258
+        },
+        {
+          "bought": "2019-07-21",
+          "sold": "2019-07-22",
+          "profit": -4.861661445747814,
+          "entry_capital": 287.1299310067752,
+          "exit_proceeds": 282.2682695610274
+        },
+        {
+          "bought": "2019-08-01",
+          "sold": "2019-08-14",
+          "profit": 22.12850718140703,
+          "entry_capital": 285.91451564533827,
+          "exit_proceeds": 308.0430228267453
+        },
+        {
+          "bought": "2019-08-20",
+          "sold": "2019-08-22",
+          "profit": -21.476450378693585,
+          "entry_capital": 291.44664244069,
+          "exit_proceeds": 269.97019206199644
+        },
+        {
+          "bought": "2019-09-03",
+          "sold": "2019-09-11",
+          "profit": -7.527359643494378,
+          "entry_capital": 286.0775298460166,
+          "exit_proceeds": 278.5501702025222
+        },
+        {
+          "bought": "2019-09-13",
+          "sold": "2019-09-17",
+          "profit": -5.349455200074317,
+          "entry_capital": 284.195689935143,
+          "exit_proceeds": 278.84623473506866
+        },
+        {
+          "bought": "2020-02-19",
+          "sold": "2020-02-20",
+          "profit": -16.665220964548496,
+          "entry_capital": 282.8583261351244,
+          "exit_proceeds": 266.1931051705759
+        },
+        {
+          "bought": "2020-02-24",
+          "sold": "2020-02-25",
+          "profit": -8.689500404336513,
+          "entry_capital": 278.6920208939873,
+          "exit_proceeds": 270.0025204896508
+        },
+        {
+          "bought": "2020-05-14",
+          "sold": "2020-05-22",
+          "profit": -7.99054445597659,
+          "entry_capital": 276.5196457929032,
+          "exit_proceeds": 268.5291013369266
+        },
+        {
+          "bought": "2020-05-28",
+          "sold": "2020-06-12",
+          "profit": 1.4020026856439927,
+          "entry_capital": 274.52200967890906,
+          "exit_proceeds": 275.92401236455305
+        },
+        {
+          "bought": "2020-06-17",
+          "sold": "2020-06-18",
+          "profit": -2.6025197999463785,
+          "entry_capital": 274.87251035032006,
+          "exit_proceeds": 272.2699905503737
+        },
+        {
+          "bought": "2020-06-23",
+          "sold": "2020-06-25",
+          "profit": -11.75580527750077,
+          "entry_capital": 274.2218804003335,
+          "exit_proceeds": 262.4660751228327
+        },
+        {
+          "bought": "2020-07-07",
+          "sold": "2020-07-10",
+          "profit": -3.9989124616310505,
+          "entry_capital": 271.2829290809583,
+          "exit_proceeds": 267.28401661932725
+        },
+        {
+          "bought": "2020-07-11",
+          "sold": "2020-07-12",
+          "profit": -2.385835923064917,
+          "entry_capital": 270.2832009655505,
+          "exit_proceeds": 267.8973650424856
+        },
+        {
+          "bought": "2020-07-13",
+          "sold": "2020-07-14",
+          "profit": -2.5624315266532562,
+          "entry_capital": 269.68674198478425,
+          "exit_proceeds": 267.124310458131
+        },
+        {
+          "bought": "2020-07-15",
+          "sold": "2020-07-16",
+          "profit": -2.4943163534495625,
+          "entry_capital": 269.04613410312095,
+          "exit_proceeds": 266.5518177496714
+        },
+        {
+          "bought": "2020-07-22",
+          "sold": "2020-08-02",
+          "profit": 40.661645681589164,
+          "entry_capital": 268.4225550147586,
+          "exit_proceeds": 309.08420069634775
+        },
+        {
+          "bought": "2020-08-13",
+          "sold": "2020-08-22",
+          "profit": -1.6300279069083672,
+          "entry_capital": 278.58796643515586,
+          "exit_proceeds": 276.9579385282475
+        },
+        {
+          "bought": "2020-08-25",
+          "sold": "2020-08-26",
+          "profit": -10.979418361342539,
+          "entry_capital": 278.1804594584288,
+          "exit_proceeds": 267.20104109708626
+        },
+        {
+          "bought": "2020-08-31",
+          "sold": "2020-09-03",
+          "profit": -8.39055753015009,
+          "entry_capital": 275.43560486809315,
+          "exit_proceeds": 267.04504733794306
+        },
+        {
+          "bought": "2020-10-09",
+          "sold": "2020-11-08",
+          "profit": 96.28256506861885,
+          "entry_capital": 273.3379654855556,
+          "exit_proceeds": 369.6205305541745
+        },
+        {
+          "bought": "2020-11-30",
+          "sold": "2020-12-11",
+          "profit": 0.2471087040790394,
+          "entry_capital": 297.40860675271034,
+          "exit_proceeds": 297.6557154567894
+        },
+        {
+          "bought": "2020-12-13",
+          "sold": "2021-01-04",
+          "profit": 155.8965848316099,
+          "entry_capital": 297.47038392873014,
+          "exit_proceeds": 453.36696876034006
+        },
+        {
+          "bought": "2021-01-14",
+          "sold": "2021-01-21",
+          "profit": -62.22392056209162,
+          "entry_capital": 336.44453013663264,
+          "exit_proceeds": 274.220609574541
+        },
+        {
+          "bought": "2021-01-29",
+          "sold": "2021-02-01",
+          "profit": -3.60019815757488,
+          "entry_capital": 320.8885499961097,
+          "exit_proceeds": 317.2883518385348
+        },
+        {
+          "bought": "2021-02-02",
+          "sold": "2021-02-22",
+          "profit": 145.92655417365955,
+          "entry_capital": 319.988500456716,
+          "exit_proceeds": 465.91505463037555
+        },
+        {
+          "bought": "2021-03-02",
+          "sold": "2021-03-23",
+          "profit": 31.089077503661713,
+          "entry_capital": 356.47013900013087,
+          "exit_proceeds": 387.5592165037926
+        },
+        {
+          "bought": "2021-03-27",
+          "sold": "2021-04-08",
+          "profit": 5.032054317014627,
+          "entry_capital": 364.2424083760463,
+          "exit_proceeds": 369.2744626930609
+        },
+        {
+          "bought": "2021-04-09",
+          "sold": "2021-04-18",
+          "profit": -10.983103776884207,
+          "entry_capital": 365.50042195529994,
+          "exit_proceeds": 354.51731817841574
+        },
+        {
+          "bought": "2021-05-01",
+          "sold": "2021-05-05",
+          "profit": -29.24576214853562,
+          "entry_capital": 362.7546460110789,
+          "exit_proceeds": 333.50888386254326
+        },
+        {
+          "bought": "2021-05-06",
+          "sold": "2021-05-11",
+          "profit": -11.06022568741946,
+          "entry_capital": 355.443205473945,
+          "exit_proceeds": 344.38297978652554
+        },
+        {
+          "bought": "2021-08-20",
+          "sold": "2021-09-07",
+          "profit": 3.186929586999952,
+          "entry_capital": 352.67814905209013,
+          "exit_proceeds": 355.8650786390901
+        },
+        {
+          "bought": "2021-09-15",
+          "sold": "2021-09-20",
+          "profit": -0.023188214480228453,
+          "entry_capital": 353.4748814488401,
+          "exit_proceeds": 353.4516932343599
+        },
+        {
+          "bought": "2021-10-24",
+          "sold": "2021-10-28",
+          "profit": -17.58122385455954,
+          "entry_capital": 353.4690843952201,
+          "exit_proceeds": 335.88786054066054
+        },
+        {
+          "bought": "2021-10-30",
+          "sold": "2021-11-16",
+          "profit": -12.022402301576676,
+          "entry_capital": 349.0737784315802,
+          "exit_proceeds": 337.0513761300035
+        },
+        {
+          "bought": "2021-11-26",
+          "sold": "2021-11-27",
+          "profit": -31.68143454326031,
+          "entry_capital": 346.068177856186,
+          "exit_proceeds": 314.3867433129257
+        },
+        {
+          "bought": "2023-03-02",
+          "sold": "2023-03-04",
+          "profit": -19.210151343186,
+          "entry_capital": 338.14781922037093,
+          "exit_proceeds": 318.93766787718494
+        },
+        {
+          "bought": "2023-04-05",
+          "sold": "2023-04-20",
+          "profit": 6.454226544288531,
+          "entry_capital": 333.34528138457443,
+          "exit_proceeds": 339.79950792886297
+        },
+        {
+          "bought": "2023-04-27",
+          "sold": "2023-05-02",
+          "profit": -5.082229179256217,
+          "entry_capital": 334.95883802064657,
+          "exit_proceeds": 329.87660884139035
+        },
+        {
+          "bought": "2023-05-04",
+          "sold": "2023-05-08",
+          "profit": -7.8318576976185454,
+          "entry_capital": 333.6882807258325,
+          "exit_proceeds": 325.85642302821395
+        },
+        {
+          "bought": "2023-07-08",
+          "sold": "2023-07-18",
+          "profit": -3.2468089784815106,
+          "entry_capital": 331.7303163014278,
+          "exit_proceeds": 328.4835073229463
+        },
+        {
+          "bought": "2023-07-24",
+          "sold": "2023-07-25",
+          "profit": -10.941364772703594,
+          "entry_capital": 330.9186140568074,
+          "exit_proceeds": 319.97724928410383
+        },
+        {
+          "bought": "2023-08-02",
+          "sold": "2023-08-03",
+          "profit": -6.710888556576606,
+          "entry_capital": 328.18327286363154,
+          "exit_proceeds": 321.47238430705494
+        },
+        {
+          "bought": "2023-08-09",
+          "sold": "2023-08-11",
+          "profit": -4.4189428175286025,
+          "entry_capital": 326.50555072448736,
+          "exit_proceeds": 322.08660790695876
+        },
+        {
+          "bought": "2023-08-15",
+          "sold": "2023-08-16",
+          "profit": -3.520453616385396,
+          "entry_capital": 325.4008150201052,
+          "exit_proceeds": 321.8803614037198
+        },
+        {
+          "bought": "2023-10-16",
+          "sold": "2023-11-15",
+          "profit": 99.08061369336804,
+          "entry_capital": 324.52070161600886,
+          "exit_proceeds": 423.6013153093769
+        },
+        {
+          "bought": "2023-11-16",
+          "sold": "2023-11-22",
+          "profit": -20.51604637742571,
+          "entry_capital": 349.29085503935084,
+          "exit_proceeds": 328.77480866192514
+        },
+        {
+          "bought": "2023-11-23",
+          "sold": "2023-12-11",
+          "profit": 30.19982040947781,
+          "entry_capital": 344.1618434449944,
+          "exit_proceeds": 374.3616638544722
+        },
+        {
+          "bought": "2023-12-14",
+          "sold": "2023-12-30",
+          "profit": -7.61479984766072,
+          "entry_capital": 351.71179854736386,
+          "exit_proceeds": 344.09699869970314
+        },
+        {
+          "bought": "2024-01-02",
+          "sold": "2024-01-03",
+          "profit": -24.389806870531686,
+          "entry_capital": 349.8080985854487,
+          "exit_proceeds": 325.418291714917
+        },
+        {
+          "bought": "2024-01-05",
+          "sold": "2024-01-12",
+          "profit": -14.462321343526185,
+          "entry_capital": 343.71064686781574,
+          "exit_proceeds": 329.24832552428956
+        },
+        {
+          "bought": "2024-01-27",
+          "sold": "2024-02-26",
+          "profit": 79.28652141472224,
+          "entry_capital": 340.0950665319342,
+          "exit_proceeds": 419.38158794665645
+        },
+        {
+          "bought": "2024-03-21",
+          "sold": "2024-03-22",
+          "profit": -13.451704422268222,
+          "entry_capital": 359.9166968856148,
+          "exit_proceeds": 346.46499246334656
+        },
+        {
+          "bought": "2024-03-25",
+          "sold": "2024-04-03",
+          "profit": -10.303364145995715,
+          "entry_capital": 356.5537707800477,
+          "exit_proceeds": 346.250406634052
+        },
+        {
+          "bought": "2024-04-05",
+          "sold": "2024-04-13",
+          "profit": -8.12689350726356,
+          "entry_capital": 353.9779297435488,
+          "exit_proceeds": 345.85103623628527
+        },
+        {
+          "bought": "2024-04-21",
+          "sold": "2024-04-22",
+          "profit": -1.0515277339862337,
+          "entry_capital": 351.9462063667329,
+          "exit_proceeds": 350.89467863274666
+        },
+        {
+          "bought": "2024-05-16",
+          "sold": "2024-06-12",
+          "profit": 4.812662362981655,
+          "entry_capital": 351.68332443323635,
+          "exit_proceeds": 356.495986796218
+        },
+        {
+          "bought": "2024-09-18",
+          "sold": "2024-10-01",
+          "profit": 0.7632456313411353,
+          "entry_capital": 352.88649002398176,
+          "exit_proceeds": 353.6497356553229
+        },
+        {
+          "bought": "2024-10-07",
+          "sold": "2024-10-08",
+          "profit": -4.397197884183242,
+          "entry_capital": 353.07730143181703,
+          "exit_proceeds": 348.6801035476338
+        },
+        {
+          "bought": "2024-10-12",
+          "sold": "2024-11-04",
+          "profit": 26.29643976242039,
+          "entry_capital": 351.9780019607712,
+          "exit_proceeds": 378.2744417231916
+        },
+        {
+          "bought": "2024-11-06",
+          "sold": "2024-12-06",
+          "profit": 141.01394906501883,
+          "entry_capital": 358.5521119013763,
+          "exit_proceeds": 499.5660609663951
+        },
+        {
+          "bought": "2024-12-12",
+          "sold": "2024-12-19",
+          "profit": -19.989993872840046,
+          "entry_capital": 393.805599167631,
+          "exit_proceeds": 373.81560529479094
+        },
+        {
+          "bought": "2024-12-25",
+          "sold": "2024-12-27",
+          "profit": -12.448894182197193,
+          "entry_capital": 388.80810069942095,
+          "exit_proceeds": 376.35920651722375
+        },
+        {
+          "bought": "2025-01-03",
+          "sold": "2025-01-08",
+          "profit": -1.2754404957523207,
+          "entry_capital": 385.69587715387166,
+          "exit_proceeds": 384.42043665811934
+        },
+        {
+          "bought": "2025-01-15",
+          "sold": "2025-01-29",
+          "profit": 17.843955766332783,
+          "entry_capital": 385.3770170299336,
+          "exit_proceeds": 403.2209727962664
+        },
+        {
+          "bought": "2025-01-30",
+          "sold": "2025-02-02",
+          "profit": -12.77426381221835,
+          "entry_capital": 389.8380059715168,
+          "exit_proceeds": 377.06374215929844
+        },
+        {
+          "bought": "2025-02-21",
+          "sold": "2025-02-22",
+          "profit": -9.483631595776274,
+          "entry_capital": 386.6444400184622,
+          "exit_proceeds": 377.16080842268593
+        },
+        {
+          "bought": "2025-05-06",
+          "sold": "2025-05-30",
+          "profit": 36.99877052972073,
+          "entry_capital": 384.2735321195181,
+          "exit_proceeds": 421.27230264923884
+        },
+        {
+          "bought": "2025-06-08",
+          "sold": "2025-06-13",
+          "profit": -0.734669618250507,
+          "entry_capital": 393.52322475194825,
+          "exit_proceeds": 392.78855513369774
+        },
+        {
+          "bought": "2025-06-17",
+          "sold": "2025-06-18",
+          "profit": -9.416500266909168,
+          "entry_capital": 393.3395573473856,
+          "exit_proceeds": 383.92305708047644
+        },
+        {
+          "bought": "2025-06-24",
+          "sold": "2025-07-02",
+          "profit": 0.11327224309320627,
+          "entry_capital": 390.9854322806583,
+          "exit_proceeds": 391.0987045237515
+        },
+        {
+          "bought": "2025-07-03",
+          "sold": "2025-08-01",
+          "profit": 23.592363130346428,
+          "entry_capital": 391.01375034143166,
+          "exit_proceeds": 414.6061134717781
+        },
+        {
+          "bought": "2025-08-08",
+          "sold": "2025-08-16",
+          "profit": -1.627204765052909,
+          "entry_capital": 396.9118411240183,
+          "exit_proceeds": 395.2846363589654
+        },
+        {
+          "bought": "2025-08-23",
+          "sold": "2025-08-24",
+          "profit": -6.252103535421156,
+          "entry_capital": 396.50503993275504,
+          "exit_proceeds": 390.2529363973339
+        },
+        {
+          "bought": "2026-09-15",
+          "sold": "2026-09-16",
+          "profit": -13.998581592895732,
+          "entry_capital": 394.94201404889975,
+          "exit_proceeds": 380.943432456004
+        },
+        {
+          "bought": "2026-09-19",
+          "sold": "2026-09-30",
+          "profit": 12.046449683109017,
+          "entry_capital": 391.44236865067586,
+          "exit_proceeds": 403.4888183337849
+        }
+      ]
+    },
+    {
+      "key": "DON20_TREND",
+      "label": "Cassure 20 j avec filtre EMA50/200",
+      "initial_usdt": 1000,
+      "final_usdt": 1452.29,
+      "net_return_pct": 45.229,
+      "max_daily_drawdown_pct": -14.246,
+      "trade_count": 36,
+      "wins": 14,
+      "losses": 22,
+      "days_in_market_pct": 25.12,
+      "annual_returns_pct": {
+        "2019": 0.957,
+        "2020": 20.667,
+        "2021": 0.275,
+        "2022": 0.0,
+        "2023": 11.992,
+        "2024": 9.083,
+        "2025": -1.763,
+        "2026": -0.937
+      },
+      "double_cost_return_pct": 41.327,
+      "beats_don55_return": false,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-05-04",
+          "sold": "2019-05-17",
+          "profit": 51.25901224778772,
+          "entry_capital": 250.0,
+          "exit_proceeds": 301.2590122477877
+        },
+        {
+          "bought": "2019-05-27",
+          "sold": "2019-06-05",
+          "profit": -28.94486297003857,
+          "entry_capital": 262.81475306194693,
+          "exit_proceeds": 233.86989009190836
+        },
+        {
+          "bought": "2019-06-21",
+          "sold": "2019-06-27",
+          "profit": 41.196099876110594,
+          "entry_capital": 255.5785373194373,
+          "exit_proceeds": 296.7746371955479
+        },
+        {
+          "bought": "2019-08-06",
+          "sold": "2019-08-15",
+          "profit": -40.566450203461955,
+          "entry_capital": 265.87756228846496,
+          "exit_proceeds": 225.311112085003
+        },
+        {
+          "bought": "2019-10-27",
+          "sold": "2019-11-09",
+          "profit": -13.370045341885941,
+          "entry_capital": 255.73594973759947,
+          "exit_proceeds": 242.36590439571353
+        },
+        {
+          "bought": "2020-02-07",
+          "sold": "2020-02-25",
+          "profit": -12.642234635203408,
+          "entry_capital": 252.393438402128,
+          "exit_proceeds": 239.7512037669246
+        },
+        {
+          "bought": "2020-06-02",
+          "sold": "2020-08-01",
+          "profit": 26.84119398193627,
+          "entry_capital": 249.23287974332715,
+          "exit_proceeds": 276.0740737252634
+        },
+        {
+          "bought": "2020-08-02",
+          "sold": "2020-08-02",
+          "profit": -25.451462661747826,
+          "entry_capital": 255.94317823881119,
+          "exit_proceeds": 230.49171557706336
+        },
+        {
+          "bought": "2020-08-18",
+          "sold": "2020-08-26",
+          "profit": -20.254059114090808,
+          "entry_capital": 249.58031257337421,
+          "exit_proceeds": 229.3262534592834
+        },
+        {
+          "bought": "2020-10-11",
+          "sold": "2020-11-26",
+          "profit": 113.50090548341177,
+          "entry_capital": 244.51679779485153,
+          "exit_proceeds": 358.0177032782633
+        },
+        {
+          "bought": "2020-12-01",
+          "sold": "2021-01-11",
+          "profit": 179.86272098734452,
+          "entry_capital": 272.89202416570447,
+          "exit_proceeds": 452.754745153049
+        },
+        {
+          "bought": "2021-02-07",
+          "sold": "2021-02-23",
+          "profit": 64.36674518186521,
+          "entry_capital": 317.8577044125406,
+          "exit_proceeds": 382.2244495944058
+        },
+        {
+          "bought": "2021-03-14",
+          "sold": "2021-03-25",
+          "profit": -49.34574280842833,
+          "entry_capital": 333.9493907080069,
+          "exit_proceeds": 284.60364789957856
+        },
+        {
+          "bought": "2021-04-14",
+          "sold": "2021-04-18",
+          "profit": -43.61401604047802,
+          "entry_capital": 321.61295500589983,
+          "exit_proceeds": 277.9989389654218
+        },
+        {
+          "bought": "2021-08-21",
+          "sold": "2021-09-07",
+          "profit": -20.183065041238876,
+          "entry_capital": 310.70945099578034,
+          "exit_proceeds": 290.52638595454147
+        },
+        {
+          "bought": "2021-10-06",
+          "sold": "2021-10-28",
+          "profit": 40.18199091124745,
+          "entry_capital": 305.6636847354706,
+          "exit_proceeds": 345.84567564671806
+        },
+        {
+          "bought": "2021-11-09",
+          "sold": "2021-11-16",
+          "profit": -41.261725377811786,
+          "entry_capital": 315.70918246328245,
+          "exit_proceeds": 274.44745708547066
+        },
+        {
+          "bought": "2023-03-15",
+          "sold": "2023-04-21",
+          "profit": 34.85212360942609,
+          "entry_capital": 305.3937511188295,
+          "exit_proceeds": 340.2458747282556
+        },
+        {
+          "bought": "2023-06-21",
+          "sold": "2023-07-25",
+          "profit": 8.666814535693618,
+          "entry_capital": 314.10678202118606,
+          "exit_proceeds": 322.7735965568797
+        },
+        {
+          "bought": "2023-10-24",
+          "sold": "2023-12-23",
+          "profit": 102.97585362971631,
+          "entry_capital": 316.2734856551095,
+          "exit_proceeds": 419.2493392848258
+        },
+        {
+          "bought": "2024-01-03",
+          "sold": "2024-01-12",
+          "profit": -27.066180907838543,
+          "entry_capital": 342.01744906253856,
+          "exit_proceeds": 314.9512681547
+        },
+        {
+          "bought": "2024-02-08",
+          "sold": "2024-03-05",
+          "profit": 124.9424270978235,
+          "entry_capital": 335.2509038355789,
+          "exit_proceeds": 460.1933309334024
+        },
+        {
+          "bought": "2024-03-12",
+          "sold": "2024-03-19",
+          "profit": -42.970426351212836,
+          "entry_capital": 366.48651061003477,
+          "exit_proceeds": 323.51608425882193
+        },
+        {
+          "bought": "2024-05-16",
+          "sold": "2024-06-15",
+          "profit": -1.9366307183979643,
+          "entry_capital": 355.7439040222316,
+          "exit_proceeds": 353.80727330383365
+        },
+        {
+          "bought": "2024-07-16",
+          "sold": "2024-08-03",
+          "profit": -18.716930064582925,
+          "entry_capital": 355.2597463426321,
+          "exit_proceeds": 336.5428162780492
+        },
+        {
+          "bought": "2024-08-24",
+          "sold": "2024-09-02",
+          "profit": -37.81426119326335,
+          "entry_capital": 350.5805138264864,
+          "exit_proceeds": 312.7662526332231
+        },
+        {
+          "bought": "2024-09-19",
+          "sold": "2024-10-02",
+          "profit": -6.281587896634335,
+          "entry_capital": 341.1269485281706,
+          "exit_proceeds": 334.84536063153627
+        },
+        {
+          "bought": "2024-10-16",
+          "sold": "2024-12-15",
+          "profit": 172.33420749522526,
+          "entry_capital": 339.556551554012,
+          "exit_proceeds": 511.89075904923726
+        },
+        {
+          "bought": "2024-12-16",
+          "sold": "2024-12-20",
+          "profit": -38.2295386464383,
+          "entry_capital": 382.6401034278183,
+          "exit_proceeds": 344.41056478138
+        },
+        {
+          "bought": "2025-01-18",
+          "sold": "2025-02-03",
+          "profit": -23.908415898647206,
+          "entry_capital": 373.0827187662087,
+          "exit_proceeds": 349.1743028675615
+        },
+        {
+          "bought": "2025-04-23",
+          "sold": "2025-05-31",
+          "profit": 40.19366433023191,
+          "entry_capital": 367.1056147915469,
+          "exit_proceeds": 407.2992791217788
+        },
+        {
+          "bought": "2025-07-10",
+          "sold": "2025-08-02",
+          "profit": 5.846889506246384,
+          "entry_capital": 377.1540308741048,
+          "exit_proceeds": 383.0009203803512
+        },
+        {
+          "bought": "2025-08-14",
+          "sold": "2025-08-18",
+          "profit": -26.830500317801352,
+          "entry_capital": 378.61575325066644,
+          "exit_proceeds": 351.7852529328651
+        },
+        {
+          "bought": "2025-09-17",
+          "sold": "2025-09-23",
+          "profit": -14.252079926594433,
+          "entry_capital": 371.90812817121616,
+          "exit_proceeds": 357.65604824462173
+        },
+        {
+          "bought": "2025-10-02",
+          "sold": "2025-10-10",
+          "profit": -7.354302962165434,
+          "entry_capital": 368.34510818956755,
+          "exit_proceeds": 360.9908052274021
+        },
+        {
+          "bought": "2026-09-22",
+          "sold": "2026-09-30",
+          "profit": -13.738654898981565,
+          "entry_capital": 366.50653244902617,
+          "exit_proceeds": 352.7678775500446
+        }
+      ]
+    },
+    {
+      "key": "MEANREV_Z2",
+      "label": "Retour à la moyenne, écart-type 2 sur 20 j",
+      "initial_usdt": 1000,
+      "final_usdt": 1149.51,
+      "net_return_pct": 14.951,
+      "max_daily_drawdown_pct": -17.608,
+      "trade_count": 71,
+      "wins": 38,
+      "losses": 33,
+      "days_in_market_pct": 18.3,
+      "annual_returns_pct": {
+        "2019": 0.294,
+        "2020": 6.213,
+        "2021": 6.838,
+        "2022": -13.165,
+        "2023": 11.121,
+        "2024": 6.016,
+        "2025": 5.042,
+        "2026": -6.003
+      },
+      "double_cost_return_pct": 8.787,
+      "beats_don55_return": false,
+      "no_worse_historical_daily_drawdown": false,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-01-30",
+          "sold": "2019-02-09",
+          "profit": 17.54099605235632,
+          "entry_capital": 250.0,
+          "exit_proceeds": 267.5409960523563
+        },
+        {
+          "bought": "2019-07-17",
+          "sold": "2019-08-01",
+          "profit": 16.729066979921186,
+          "entry_capital": 254.3852490130891,
+          "exit_proceeds": 271.1143159930103
+        },
+        {
+          "bought": "2019-09-22",
+          "sold": "2019-09-24",
+          "profit": -18.65914842941578,
+          "entry_capital": 258.56751575806936,
+          "exit_proceeds": 239.90836732865358
+        },
+        {
+          "bought": "2019-09-25",
+          "sold": "2019-10-10",
+          "profit": 1.1636130971755563,
+          "entry_capital": 253.9027286507154,
+          "exit_proceeds": 255.06634174789096
+        },
+        {
+          "bought": "2019-10-24",
+          "sold": "2019-10-26",
+          "profit": 39.53138296804201,
+          "entry_capital": 254.1936319250093,
+          "exit_proceeds": 293.7250148930513
+        },
+        {
+          "bought": "2019-11-16",
+          "sold": "2019-11-21",
+          "profit": -22.129652579857748,
+          "entry_capital": 264.0764776670198,
+          "exit_proceeds": 241.94682508716204
+        },
+        {
+          "bought": "2019-11-22",
+          "sold": "2019-11-22",
+          "profit": -25.358163609894262,
+          "entry_capital": 258.54406452205535,
+          "exit_proceeds": 233.1859009121611
+        },
+        {
+          "bought": "2019-11-23",
+          "sold": "2019-11-25",
+          "profit": -26.782933503956542,
+          "entry_capital": 252.20452361958178,
+          "exit_proceeds": 225.42159011562524
+        },
+        {
+          "bought": "2019-12-17",
+          "sold": "2019-12-23",
+          "profit": 20.904645617180307,
+          "entry_capital": 245.50879024359264,
+          "exit_proceeds": 266.41343586077295
+        },
+        {
+          "bought": "2020-02-26",
+          "sold": "2020-02-28",
+          "profit": -21.945372190571504,
+          "entry_capital": 250.73495164788773,
+          "exit_proceeds": 228.78957945731622
+        },
+        {
+          "bought": "2020-02-29",
+          "sold": "2020-03-08",
+          "profit": -9.405658159925764,
+          "entry_capital": 245.24860860024484,
+          "exit_proceeds": 235.84295044031907
+        },
+        {
+          "bought": "2020-03-09",
+          "sold": "2020-03-12",
+          "profit": -25.30841054852445,
+          "entry_capital": 242.89719406026342,
+          "exit_proceeds": 217.58878351173897
+        },
+        {
+          "bought": "2020-03-13",
+          "sold": "2020-03-25",
+          "profit": 94.84812127108944,
+          "entry_capital": 236.57009142313228,
+          "exit_proceeds": 331.4182126942217
+        },
+        {
+          "bought": "2020-08-26",
+          "sold": "2020-08-31",
+          "profit": 8.224808821399904,
+          "entry_capital": 260.28212174090464,
+          "exit_proceeds": 268.50693056230455
+        },
+        {
+          "bought": "2020-09-04",
+          "sold": "2020-09-16",
+          "profit": 15.903955624982984,
+          "entry_capital": 262.3383239462546,
+          "exit_proceeds": 278.2422795712376
+        },
+        {
+          "bought": "2021-04-23",
+          "sold": "2021-05-01",
+          "profit": 30.05401510092514,
+          "entry_capital": 266.31431285250034,
+          "exit_proceeds": 296.3683279534255
+        },
+        {
+          "bought": "2021-05-16",
+          "sold": "2021-05-19",
+          "profit": -46.37365014520057,
+          "entry_capital": 273.82781662773164,
+          "exit_proceeds": 227.45416648253106
+        },
+        {
+          "bought": "2021-05-20",
+          "sold": "2021-06-04",
+          "profit": 17.57667386425379,
+          "entry_capital": 262.2344040914315,
+          "exit_proceeds": 279.8110779556853
+        },
+        {
+          "bought": "2021-06-22",
+          "sold": "2021-06-30",
+          "profit": 35.33772797667922,
+          "entry_capital": 266.6285725574949,
+          "exit_proceeds": 301.96630053417414
+        },
+        {
+          "bought": "2021-07-17",
+          "sold": "2021-07-24",
+          "profit": 18.866239752799345,
+          "entry_capital": 275.46300455166477,
+          "exit_proceeds": 294.3292443044641
+        },
+        {
+          "bought": "2021-09-22",
+          "sold": "2021-10-02",
+          "profit": 49.958529253485665,
+          "entry_capital": 280.1795644898646,
+          "exit_proceeds": 330.1380937433503
+        },
+        {
+          "bought": "2021-11-19",
+          "sold": "2021-11-26",
+          "profit": -17.26342265260149,
+          "entry_capital": 292.66919680323605,
+          "exit_proceeds": 275.40577415063456
+        },
+        {
+          "bought": "2021-12-05",
+          "sold": "2021-12-20",
+          "profit": -15.318043819393381,
+          "entry_capital": 288.3533411400857,
+          "exit_proceeds": 273.03529732069234
+        },
+        {
+          "bought": "2022-01-06",
+          "sold": "2022-01-21",
+          "profit": -18.937988577244596,
+          "entry_capital": 284.5238301852374,
+          "exit_proceeds": 265.5858416079928
+        },
+        {
+          "bought": "2022-01-22",
+          "sold": "2022-02-05",
+          "profit": 38.39879446257726,
+          "entry_capital": 279.78933304092624,
+          "exit_proceeds": 318.1881275035035
+        },
+        {
+          "bought": "2022-04-12",
+          "sold": "2022-04-26",
+          "profit": -11.227420194013064,
+          "entry_capital": 289.3890316565705,
+          "exit_proceeds": 278.16161146255746
+        },
+        {
+          "bought": "2022-04-27",
+          "sold": "2022-05-05",
+          "profit": 10.966432850338549,
+          "entry_capital": 286.58217660806724,
+          "exit_proceeds": 297.5486094584058
+        },
+        {
+          "bought": "2022-05-06",
+          "sold": "2022-05-09",
+          "profit": -29.96469452559637,
+          "entry_capital": 289.3237848206519,
+          "exit_proceeds": 259.3590902950555
+        },
+        {
+          "bought": "2022-05-10",
+          "sold": "2022-05-12",
+          "profit": -29.996203527336178,
+          "entry_capital": 281.8326111892528,
+          "exit_proceeds": 251.83640766191664
+        },
+        {
+          "bought": "2022-05-13",
+          "sold": "2022-05-28",
+          "profit": -4.590089410011046,
+          "entry_capital": 274.3335603074188,
+          "exit_proceeds": 269.74347089740775
+        },
+        {
+          "bought": "2022-06-13",
+          "sold": "2022-06-13",
+          "profit": -32.884615990873726,
+          "entry_capital": 273.18603795491606,
+          "exit_proceeds": 240.30142196404233
+        },
+        {
+          "bought": "2022-06-14",
+          "sold": "2022-06-18",
+          "profit": -43.2801516650984,
+          "entry_capital": 264.9648839571976,
+          "exit_proceeds": 221.68473229209923
+        },
+        {
+          "bought": "2022-08-20",
+          "sold": "2022-08-28",
+          "profit": -14.999335689012582,
+          "entry_capital": 254.14484604092303,
+          "exit_proceeds": 239.14551035191045
+        },
+        {
+          "bought": "2022-11-09",
+          "sold": "2022-11-09",
+          "profit": -22.955247877167523,
+          "entry_capital": 250.39501211866985,
+          "exit_proceeds": 227.43976424150233
+        },
+        {
+          "bought": "2022-11-10",
+          "sold": "2022-11-25",
+          "profit": 9.63600968683292,
+          "entry_capital": 244.65620014937795,
+          "exit_proceeds": 254.29220983621087
+        },
+        {
+          "bought": "2023-02-10",
+          "sold": "2023-02-16",
+          "profit": 27.793708541019072,
+          "entry_capital": 247.0652025710862,
+          "exit_proceeds": 274.85891111210526
+        },
+        {
+          "bought": "2023-03-10",
+          "sold": "2023-03-14",
+          "profit": 45.87975665369083,
+          "entry_capital": 254.01362970634096,
+          "exit_proceeds": 299.8933863600318
+        },
+        {
+          "bought": "2023-06-06",
+          "sold": "2023-06-07",
+          "profit": 14.655501931929109,
+          "entry_capital": 265.4835688697637,
+          "exit_proceeds": 280.1390708016928
+        },
+        {
+          "bought": "2023-06-15",
+          "sold": "2023-06-20",
+          "profit": 17.51548970556098,
+          "entry_capital": 269.147444352746,
+          "exit_proceeds": 286.662934058307
+        },
+        {
+          "bought": "2023-07-25",
+          "sold": "2023-08-09",
+          "profit": 4.731531375041584,
+          "entry_capital": 273.5263167791362,
+          "exit_proceeds": 278.2578481541778
+        },
+        {
+          "bought": "2023-08-17",
+          "sold": "2023-08-17",
+          "profit": -10.990239470037011,
+          "entry_capital": 274.7091996228966,
+          "exit_proceeds": 263.7189601528596
+        },
+        {
+          "bought": "2023-08-18",
+          "sold": "2023-08-30",
+          "profit": 10.316036014827944,
+          "entry_capital": 271.96163975538735,
+          "exit_proceeds": 282.2776757702153
+        },
+        {
+          "bought": "2024-04-14",
+          "sold": "2024-04-23",
+          "profit": 11.572563650909785,
+          "entry_capital": 274.5406487590943,
+          "exit_proceeds": 286.1132124100041
+        },
+        {
+          "bought": "2024-05-02",
+          "sold": "2024-05-05",
+          "profit": 25.362435343841867,
+          "entry_capital": 277.4337896718218,
+          "exit_proceeds": 302.79622501566365
+        },
+        {
+          "bought": "2024-06-15",
+          "sold": "2024-06-24",
+          "profit": -15.104441425687753,
+          "entry_capital": 283.7743985077822,
+          "exit_proceeds": 268.66995708209447
+        },
+        {
+          "bought": "2024-06-25",
+          "sold": "2024-07-04",
+          "profit": -6.5572505758078705,
+          "entry_capital": 279.99828815136027,
+          "exit_proceeds": 273.4410375755524
+        },
+        {
+          "bought": "2024-07-05",
+          "sold": "2024-07-15",
+          "profit": 17.397839362498246,
+          "entry_capital": 278.35897550740833,
+          "exit_proceeds": 295.7568148699066
+        },
+        {
+          "bought": "2024-08-03",
+          "sold": "2024-08-05",
+          "profit": -24.56741752797484,
+          "entry_capital": 282.7084353480329,
+          "exit_proceeds": 258.14101782005804
+        },
+        {
+          "bought": "2024-08-06",
+          "sold": "2024-08-21",
+          "profit": 24.668030393092465,
+          "entry_capital": 276.56658096603917,
+          "exit_proceeds": 301.23461135913163
+        },
+        {
+          "bought": "2024-09-07",
+          "sold": "2024-09-14",
+          "profit": 33.28977339239145,
+          "entry_capital": 282.7335885643123,
+          "exit_proceeds": 316.02336195670375
+        },
+        {
+          "bought": "2025-02-05",
+          "sold": "2025-02-20",
+          "profit": -4.192921272309661,
+          "entry_capital": 291.05603191241016,
+          "exit_proceeds": 286.8631106401005
+        },
+        {
+          "bought": "2025-02-25",
+          "sold": "2025-02-26",
+          "profit": -20.78330536124389,
+          "entry_capital": 290.00780159433276,
+          "exit_proceeds": 269.22449623308887
+        },
+        {
+          "bought": "2025-02-27",
+          "sold": "2025-03-03",
+          "profit": 32.917872925325014,
+          "entry_capital": 284.81197525402183,
+          "exit_proceeds": 317.72984817934685
+        },
+        {
+          "bought": "2025-04-07",
+          "sold": "2025-04-12",
+          "profit": 17.72465563290399,
+          "entry_capital": 293.04144348535306,
+          "exit_proceeds": 310.76609911825705
+        },
+        {
+          "bought": "2025-06-06",
+          "sold": "2025-06-10",
+          "profit": 24.68643240241738,
+          "entry_capital": 297.47260739357904,
+          "exit_proceeds": 322.1590397959964
+        },
+        {
+          "bought": "2025-08-01",
+          "sold": "2025-08-08",
+          "profit": 3.556585419967348,
+          "entry_capital": 303.6442154941834,
+          "exit_proceeds": 307.20080091415076
+        },
+        {
+          "bought": "2025-08-26",
+          "sold": "2025-09-09",
+          "profit": 4.473322114202347,
+          "entry_capital": 304.53336184917526,
+          "exit_proceeds": 309.0066839633776
+        },
+        {
+          "bought": "2025-09-26",
+          "sold": "2025-09-30",
+          "profit": 13.951164229549704,
+          "entry_capital": 305.65169237772585,
+          "exit_proceeds": 319.60285660727556
+        },
+        {
+          "bought": "2025-11-05",
+          "sold": "2025-11-13",
+          "profit": -10.738572724502433,
+          "entry_capital": 309.1394834351133,
+          "exit_proceeds": 298.40091071061084
+        },
+        {
+          "bought": "2025-11-15",
+          "sold": "2025-11-20",
+          "profit": -24.32961089354194,
+          "entry_capital": 306.45484025398764,
+          "exit_proceeds": 282.1252293604457
+        },
+        {
+          "bought": "2025-11-21",
+          "sold": "2025-12-03",
+          "profit": 15.140954166412996,
+          "entry_capital": 300.37243753060216,
+          "exit_proceeds": 315.51339169701515
+        },
+        {
+          "bought": "2025-12-16",
+          "sold": "2025-12-31",
+          "profit": 6.292998617421688,
+          "entry_capital": 304.1576760722054,
+          "exit_proceeds": 310.4506746896271
+        },
+        {
+          "bought": "2026-02-01",
+          "sold": "2026-02-04",
+          "profit": -24.879801714503287,
+          "entry_capital": 305.7309257265608,
+          "exit_proceeds": 280.85112401205754
+        },
+        {
+          "bought": "2026-02-05",
+          "sold": "2026-02-05",
+          "profit": -30.12373206984529,
+          "entry_capital": 299.51097529793503,
+          "exit_proceeds": 269.38724322808974
+        },
+        {
+          "bought": "2026-02-06",
+          "sold": "2026-02-21",
+          "profit": 22.771371059197463,
+          "entry_capital": 291.9800422804737,
+          "exit_proceeds": 314.75141333967116
+        },
+        {
+          "bought": "2026-05-23",
+          "sold": "2026-05-28",
+          "profit": -9.286572275782191,
+          "entry_capital": 297.67288504527306,
+          "exit_proceeds": 288.38631276949087
+        },
+        {
+          "bought": "2026-06-02",
+          "sold": "2026-06-02",
+          "profit": -16.82991530826382,
+          "entry_capital": 295.3512419763275,
+          "exit_proceeds": 278.5213266680637
+        },
+        {
+          "bought": "2026-06-03",
+          "sold": "2026-06-04",
+          "profit": -19.722391961303288,
+          "entry_capital": 291.14376314926153,
+          "exit_proceeds": 271.42137118795824
+        },
+        {
+          "bought": "2026-06-05",
+          "sold": "2026-06-05",
+          "profit": -21.72627812212943,
+          "entry_capital": 286.2131651589357,
+          "exit_proceeds": 264.48688703680625
+        },
+        {
+          "bought": "2026-06-06",
+          "sold": "2026-06-21",
+          "profit": 14.020902736509868,
+          "entry_capital": 280.78159562840335,
+          "exit_proceeds": 294.8024983649132
+        },
+        {
+          "bought": "2026-06-26",
+          "sold": "2026-07-04",
+          "profit": 12.366582657999516,
+          "entry_capital": 284.28682131253083,
+          "exit_proceeds": 296.65340397053035
+        }
+      ]
+    },
+    {
+      "key": "REBOUND_UNFILTERED",
+      "label": "Rebond RSI35 sans filtre EMA200 (ablation)",
+      "initial_usdt": 1000,
+      "final_usdt": 1052.15,
+      "net_return_pct": 5.215,
+      "max_daily_drawdown_pct": -6.481,
+      "trade_count": 38,
+      "wins": 23,
+      "losses": 15,
+      "days_in_market_pct": 9.75,
+      "annual_returns_pct": {
+        "2019": -1.319,
+        "2020": 1.432,
+        "2021": 2.731,
+        "2022": -0.388,
+        "2023": 2.16,
+        "2024": 3.315,
+        "2025": -1.783,
+        "2026": -0.911
+      },
+      "double_cost_return_pct": 2.261,
+      "beats_don55_return": false,
+      "no_worse_historical_daily_drawdown": true,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-10-10",
+          "sold": "2019-10-23",
+          "profit": -24.38761471945415,
+          "entry_capital": 250.0,
+          "exit_proceeds": 225.61238528054585
+        },
+        {
+          "bought": "2019-10-26",
+          "sold": "2019-10-27",
+          "profit": 15.398069653115897,
+          "entry_capital": 243.90309632013646,
+          "exit_proceeds": 259.30116597325235
+        },
+        {
+          "bought": "2019-11-28",
+          "sold": "2019-12-13",
+          "profit": -10.946010171847178,
+          "entry_capital": 247.75261373341544,
+          "exit_proceeds": 236.80660356156827
+        },
+        {
+          "bought": "2019-12-19",
+          "sold": "2019-12-23",
+          "profit": 6.746823520862421,
+          "entry_capital": 245.01611119045364,
+          "exit_proceeds": 251.76293471131606
+        },
+        {
+          "bought": "2020-03-03",
+          "sold": "2020-03-08",
+          "profit": -15.328582336764697,
+          "entry_capital": 246.70281707066925,
+          "exit_proceeds": 231.37423473390456
+        },
+        {
+          "bought": "2020-03-20",
+          "sold": "2020-03-25",
+          "profit": 22.16756363370712,
+          "entry_capital": 242.8706714864781,
+          "exit_proceeds": 265.0382351201852
+        },
+        {
+          "bought": "2020-09-05",
+          "sold": "2020-09-16",
+          "profit": 7.292444816817863,
+          "entry_capital": 248.41256239490485,
+          "exit_proceeds": 255.70500721172272
+        },
+        {
+          "bought": "2021-04-27",
+          "sold": "2021-05-01",
+          "profit": 16.325051110652055,
+          "entry_capital": 250.2356735991093,
+          "exit_proceeds": 266.56072470976136
+        },
+        {
+          "bought": "2021-05-25",
+          "sold": "2021-06-08",
+          "profit": -51.40032113864112,
+          "entry_capital": 254.31693637677233,
+          "exit_proceeds": 202.91661523813121
+        },
+        {
+          "bought": "2021-06-10",
+          "sold": "2021-06-14",
+          "profit": 9.788247790751143,
+          "entry_capital": 241.46685609211204,
+          "exit_proceeds": 251.25510388286318
+        },
+        {
+          "bought": "2021-06-23",
+          "sold": "2021-06-30",
+          "profit": 24.71847384284692,
+          "entry_capital": 243.91391803979982,
+          "exit_proceeds": 268.63239188264674
+        },
+        {
+          "bought": "2021-07-22",
+          "sold": "2021-07-24",
+          "profit": 10.805305164692697,
+          "entry_capital": 250.09353650051156,
+          "exit_proceeds": 260.89884166520426
+        },
+        {
+          "bought": "2021-09-23",
+          "sold": "2021-10-02",
+          "profit": 25.838738276000896,
+          "entry_capital": 252.79486279168472,
+          "exit_proceeds": 278.6336010676856
+        },
+        {
+          "bought": "2021-12-07",
+          "sold": "2021-12-22",
+          "profit": -8.741603687342632,
+          "entry_capital": 259.2545473606849,
+          "exit_proceeds": 250.51294367334228
+        },
+        {
+          "bought": "2022-01-12",
+          "sold": "2022-01-21",
+          "profit": -20.837138978792154,
+          "entry_capital": 257.06914643884926,
+          "exit_proceeds": 236.2320074600571
+        },
+        {
+          "bought": "2022-01-29",
+          "sold": "2022-02-05",
+          "profit": 24.911554870410328,
+          "entry_capital": 251.85986169415122,
+          "exit_proceeds": 276.77141656456155
+        },
+        {
+          "bought": "2022-05-16",
+          "sold": "2022-05-31",
+          "profit": 2.555829076420821,
+          "entry_capital": 258.0877504117538,
+          "exit_proceeds": 260.6435794881746
+        },
+        {
+          "bought": "2022-06-26",
+          "sold": "2022-07-08",
+          "profit": 0.8308014330548303,
+          "entry_capital": 258.726707680859,
+          "exit_proceeds": 259.55750911391385
+        },
+        {
+          "bought": "2022-07-14",
+          "sold": "2022-07-17",
+          "profit": 11.481192615587531,
+          "entry_capital": 258.93440803912273,
+          "exit_proceeds": 270.41560065471026
+        },
+        {
+          "bought": "2022-08-21",
+          "sold": "2022-08-28",
+          "profit": -19.013617366983937,
+          "entry_capital": 261.8047061930196,
+          "exit_proceeds": 242.7910888260357
+        },
+        {
+          "bought": "2022-08-30",
+          "sold": "2022-09-10",
+          "profit": 12.802514359164775,
+          "entry_capital": 257.05130185127365,
+          "exit_proceeds": 269.8538162104384
+        },
+        {
+          "bought": "2022-11-11",
+          "sold": "2022-11-26",
+          "profit": -16.715994782886753,
+          "entry_capital": 260.25193044106487,
+          "exit_proceeds": 243.53593565817812
+        },
+        {
+          "bought": "2023-03-13",
+          "sold": "2023-03-14",
+          "profit": 23.769952864367497,
+          "entry_capital": 256.0729317453432,
+          "exit_proceeds": 279.8428846097107
+        },
+        {
+          "bought": "2023-08-30",
+          "sold": "2023-08-31",
+          "profit": -4.709285412769589,
+          "entry_capital": 262.0154199614351,
+          "exit_proceeds": 257.3061345486655
+        },
+        {
+          "bought": "2023-09-13",
+          "sold": "2023-09-14",
+          "profit": 3.0618652230418206,
+          "entry_capital": 260.8380986082427,
+          "exit_proceeds": 263.89996383128454
+        },
+        {
+          "bought": "2024-05-03",
+          "sold": "2024-05-05",
+          "profit": 20.55235852549714,
+          "entry_capital": 261.6035649140032,
+          "exit_proceeds": 282.1559234395003
+        },
+        {
+          "bought": "2024-06-28",
+          "sold": "2024-07-04",
+          "profit": -12.212473591983354,
+          "entry_capital": 266.74165454537746,
+          "exit_proceeds": 254.5291809533941
+        },
+        {
+          "bought": "2024-07-07",
+          "sold": "2024-07-15",
+          "profit": 10.802914034721368,
+          "entry_capital": 263.6885361473816,
+          "exit_proceeds": 274.491450182103
+        },
+        {
+          "bought": "2024-08-09",
+          "sold": "2024-08-22",
+          "profit": -3.080038667207191,
+          "entry_capital": 266.389264656062,
+          "exit_proceeds": 263.3092259888548
+        },
+        {
+          "bought": "2024-09-08",
+          "sold": "2024-09-13",
+          "profit": 18.62275481955271,
+          "entry_capital": 265.6192549892602,
+          "exit_proceeds": 284.2420098088129
+        },
+        {
+          "bought": "2025-03-03",
+          "sold": "2025-03-03",
+          "profit": -25.257441064295136,
+          "entry_capital": 270.27494369414836,
+          "exit_proceeds": 245.01750262985323
+        },
+        {
+          "bought": "2025-03-12",
+          "sold": "2025-03-20",
+          "profit": 11.625897008787604,
+          "entry_capital": 263.9605834280746,
+          "exit_proceeds": 275.5864804368622
+        },
+        {
+          "bought": "2025-04-10",
+          "sold": "2025-04-12",
+          "profit": 1.8045104284488502,
+          "entry_capital": 266.8670576802715,
+          "exit_proceeds": 268.67156810872035
+        },
+        {
+          "bought": "2025-11-06",
+          "sold": "2025-11-13",
+          "profit": -15.217022687780997,
+          "entry_capital": 267.3181852873837,
+          "exit_proceeds": 252.1011625996027
+        },
+        {
+          "bought": "2025-11-27",
+          "sold": "2025-12-04",
+          "profit": 7.764046497998891,
+          "entry_capital": 263.5139296154384,
+          "exit_proceeds": 271.2779761134373
+        },
+        {
+          "bought": "2026-02-14",
+          "sold": "2026-03-01",
+          "profit": -8.024471596551166,
+          "entry_capital": 265.45494123993814,
+          "exit_proceeds": 257.43046964338697
+        },
+        {
+          "bought": "2026-06-14",
+          "sold": "2026-06-24",
+          "profit": -11.941245762828828,
+          "entry_capital": 263.44882334080035,
+          "exit_proceeds": 251.50757757797152
+        },
+        {
+          "bought": "2026-07-02",
+          "sold": "2026-07-04",
+          "profit": 10.291698254780101,
+          "entry_capital": 260.4635119000931,
+          "exit_proceeds": 270.7552101548732
+        }
+      ]
+    },
+    {
+      "key": "REBOUND_FILTERED",
+      "label": "Rebond RSI35 au-dessus de EMA200",
+      "initial_usdt": 1000,
+      "final_usdt": 1040.92,
+      "net_return_pct": 4.092,
+      "max_daily_drawdown_pct": -4.124,
+      "trade_count": 12,
+      "wins": 6,
+      "losses": 6,
+      "days_in_market_pct": 2.4,
+      "annual_returns_pct": {
+        "2019": 1.578,
+        "2020": -0.831,
+        "2021": 3.349,
+        "2022": 0.0,
+        "2023": 1.861,
+        "2024": 0.506,
+        "2025": -2.336,
+        "2026": 0.0
+      },
+      "double_cost_return_pct": 3.163,
+      "beats_don55_return": false,
+      "no_worse_historical_daily_drawdown": true,
+      "meets_both_historical_criteria": false,
+      "trade_log": [
+        {
+          "bought": "2019-10-26",
+          "sold": "2019-10-27",
+          "profit": 15.782978860695891,
+          "entry_capital": 250.0,
+          "exit_proceeds": 265.7829788606959
+        },
+        {
+          "bought": "2020-03-03",
+          "sold": "2020-03-08",
+          "profit": -15.778612920429339,
+          "entry_capital": 253.945744715174,
+          "exit_proceeds": 238.16713179474465
+        },
+        {
+          "bought": "2020-09-05",
+          "sold": "2020-09-16",
+          "profit": 7.3390779686127985,
+          "entry_capital": 250.00109148506664,
+          "exit_proceeds": 257.34016945367944
+        },
+        {
+          "bought": "2021-04-27",
+          "sold": "2021-05-01",
+          "profit": 16.429445261807928,
+          "entry_capital": 251.83586097721985,
+          "exit_proceeds": 268.2653062390278
+        },
+        {
+          "bought": "2021-09-23",
+          "sold": "2021-10-02",
+          "profit": 26.16053926612551,
+          "entry_capital": 255.9432222926718,
+          "exit_proceeds": 282.1037615587973
+        },
+        {
+          "bought": "2021-12-07",
+          "sold": "2021-12-22",
+          "profit": -8.850473427490755,
+          "entry_capital": 262.48335710920315,
+          "exit_proceeds": 253.6328836817124
+        },
+        {
+          "bought": "2023-03-13",
+          "sold": "2023-03-14",
+          "profit": 24.159614020701724,
+          "entry_capital": 260.2707387523305,
+          "exit_proceeds": 284.4303527730322
+        },
+        {
+          "bought": "2023-08-30",
+          "sold": "2023-08-31",
+          "profit": -4.7864847917468865,
+          "entry_capital": 266.3106422575059,
+          "exit_proceeds": 261.524157465759
+        },
+        {
+          "bought": "2024-05-03",
+          "sold": "2024-05-05",
+          "profit": 20.8281504601959,
+          "entry_capital": 265.11402105956915,
+          "exit_proceeds": 285.94217151976505
+        },
+        {
+          "bought": "2024-06-28",
+          "sold": "2024-07-04",
+          "profit": -12.376352677452303,
+          "entry_capital": 270.32105867461814,
+          "exit_proceeds": 257.94470599716584
+        },
+        {
+          "bought": "2024-08-09",
+          "sold": "2024-08-22",
+          "profit": -3.0897243668564442,
+          "entry_capital": 267.22697050525505,
+          "exit_proceeds": 264.1372461383986
+        },
+        {
+          "bought": "2025-03-03",
+          "sold": "2025-03-03",
+          "profit": -24.90042078472223,
+          "entry_capital": 266.45453941354094,
+          "exit_proceeds": 241.5541186288187
+        }
+      ]
+    }
+  ]
+}
