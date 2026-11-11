@@ -1,0 +1,88 @@
+name: Seven Heaven - Spot Grid BTC ETH hourly feasibility study
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.py'
+      - '.github/workflows/seven-heaven-spot-grid-feasibility.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-spot-grid-feasibility
+  cancel-in-progress: false
+
+jobs:
+  research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify six BTC ETH hourly source files and 54 static grid band scenarios
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.py
+      - name: Enforce no invented fills and validate the research outputs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11')
+          x=json.loads(f.with_suffix('.json').read_text(encoding='utf-8'))
+          assert x['research_only'] and x['orders_enabled'] is False and x['backtest_profit_reported'] is False
+          assert x['hourly_bars_per_asset']==24840
+          assert len(x['scenarios'])==54
+          assert {r['asset'] for r in x['scenarios']}=={'bitcoin','ethereum'}
+          assert {r['year'] for r in x['scenarios']}=={2024,2025,2026}
+          assert {r['width_each_side_pct'] for r in x['scenarios']}=={5,10,20}
+          assert {r['intervals'] for r in x['scenarios']}=={5,10,20}
+          for r in x['scenarios']:
+              assert r['hours']==(8784 if r['year']==2024 else 8760 if r['year']==2025 else 7296)
+              assert r['close_inside_hours']+r['close_above_hours']+r['close_below_hours']==r['hours']
+              assert 0<=r['hours_touching_multiple_levels']<=r['hours_touching_one_or_more_levels']<=r['hours']
+              assert not r['actual_orders_known'] and not r['actual_fills_known']
+              assert not r['intrahour_high_low_sequence_known'] and not r['bot_profit_computed']
+          assert len(f.with_suffix('.md').read_text(encoding='utf-8'))>2500
+          print('SPOT_GRID_FEASIBILITY_CONTRACT_VALIDATED_NO_FAKE_FILLS')
+          PY
+      - name: Preserve research artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-spot-grid-hourly-feasibility
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.json
+      - name: Publish verified study in shared directory without overwriting parallel work
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Research already archived"
+          else
+            git commit -m "Archive Spot Grid hourly source and fill ambiguity research"
+            for attempt in 1 2 3 4 5 6; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "Spot Grid evidence published"
+                break
+              fi
+              if [ "$attempt" = 6 ]; then
+                echo "Concurrent updates prevented safe publication"
+                exit 1
+              fi
+              sleep 2
+            done
+          fi
