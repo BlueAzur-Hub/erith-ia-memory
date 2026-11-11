@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-11-10",
+  "latest_archive_day_utc": "2026-11-11",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,40 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "world-liberty-financial",
-      "symbol": "WLFI",
-      "rank": 49,
-      "observed_at": "2026-09-12T22:20:15.051Z",
-      "price_usd": 0.057959700988770575,
-      "change24h_pct": 6.67413,
-      "change7d_pct": 1.7,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-19",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "ASSET_NOT_IN_TOP50",
-      "source_path": "data/history/2026-09-12.jsonl",
-      "followup_source_path": null
-    },
-    {
-      "id": "crypto-com-chain",
-      "symbol": "CRO",
-      "rank": 35,
-      "observed_at": "2026-09-12T22:20:15.051Z",
-      "price_usd": 0.0595574951072156,
-      "change24h_pct": 6.29727,
-      "change7d_pct": 5.9,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-19",
-      "observed_followup_at": "2026-09-19T23:09:11.833Z",
-      "observed_followup_price_usd": 0.05943535875257738,
-      "followup_change_pct": -0.21,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-12.jsonl",
-      "followup_source_path": "data/history/2026-09-19.jsonl"
-    },
     {
       "id": "bitway",
       "symbol": "BTW",
@@ -2167,12 +2133,12 @@
       "change7d_pct": 2.1769,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-11",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-11T15:16:48.872Z",
+      "observed_followup_price_usd": 176.7181202619253,
+      "followup_change_pct": -14.12,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-11-04.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-11.jsonl"
     },
     {
       "id": "ethereum",
@@ -2184,12 +2150,12 @@
       "change7d_pct": 3.1198,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-11",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-11T15:16:48.872Z",
+      "observed_followup_price_usd": 2059.0024143223727,
+      "followup_change_pct": -15.2,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-11-04.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-11.jsonl"
     },
     {
       "id": "zcash",
@@ -2201,12 +2167,12 @@
       "change7d_pct": 1.3042,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-11",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-11T15:16:48.872Z",
+      "observed_followup_price_usd": 978.2611664481527,
+      "followup_change_pct": -24.95,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-11-04.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-11.jsonl"
     },
     {
       "id": "uniswap",
@@ -2218,12 +2184,12 @@
       "change7d_pct": 6.9274,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-11",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-11T15:16:48.872Z",
+      "observed_followup_price_usd": 6.4562970819284375,
+      "followup_change_pct": -15.87,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-11-04.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-11.jsonl"
     },
     {
       "id": "whitebit",
@@ -2235,12 +2201,12 @@
       "change7d_pct": 0.1085,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-11-11",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-11-11T15:16:48.872Z",
+      "observed_followup_price_usd": 71.01229784341395,
+      "followup_change_pct": -8.99,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-11-04.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-11-11.jsonl"
     },
     {
       "id": "bitway",
@@ -2308,6 +2274,23 @@
       "followup_change_pct": null,
       "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
       "source_path": "data/history/2026-11-09.jsonl",
+      "followup_source_path": null
+    },
+    {
+      "id": "the-open-network",
+      "symbol": "GRAM",
+      "rank": 29,
+      "observed_at": "2026-11-11T15:16:48.872Z",
+      "price_usd": 1.1959965980391947,
+      "change24h_pct": 8.82117,
+      "change7d_pct": 2.6008,
+      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+      "future_7d_date": "2026-11-18",
+      "observed_followup_at": null,
+      "observed_followup_price_usd": null,
+      "followup_change_pct": null,
+      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "source_path": "data/history/2026-11-11.jsonl",
       "followup_source_path": null
     }
   ]
