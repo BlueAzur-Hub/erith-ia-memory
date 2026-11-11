@@ -1,0 +1,2879 @@
+{
+  "schema": "seven.crypto.native-minute-grid-inventory-replay.v1",
+  "date": "2026-11-11",
+  "asset": "BTCUSDT Spot Binance",
+  "research_only": true,
+  "orders_enabled": false,
+  "true_exchange_order_fills_verified": false,
+  "minute_ohlcv_and_hourly_reconciliation_verified": true,
+  "registered_releases": {
+    "2024-01": "crypto-spot-bulk-2024-01-1m",
+    "2025-01": "crypto-spot-bulk-2025-01-1m",
+    "2026-01": "crypto-spot-bulk-2026-01-1m",
+    "2026-10": "crypto-spot-bulk-2026-10-1m"
+  },
+  "months": [
+    "2024-01",
+    "2025-01",
+    "2026-01",
+    "2026-10"
+  ],
+  "capital": 1000.0,
+  "grid_bounds_pct": 10,
+  "grid_levels": 10,
+  "assumptions": {
+    "fee_side": 0.001,
+    "slip_side": 0.0005,
+    "initial_btc_lots": 5,
+    "initial_cash_lots": 5,
+    "lot_initial_notional": 100,
+    "fill_models": [
+      "TOUCH",
+      "CLOSE"
+    ],
+    "one_fill_per_slot_per_minute": true,
+    "forced_liquidation_of_inventory_at_end_for_comparison": true
+  },
+  "periods": {
+    "2024-01": {
+      "source": {
+        "zip_sha256": "40b78258091a468f8756843f207f5913eafc1d6e756c40a78711320d93fa5e75",
+        "minute_count": 44640,
+        "timestamp_unit": "ms",
+        "first_open_utc": "2024-01-01T00:00:00+00:00",
+        "last_open_utc": "2024-01-31T23:59:00+00:00",
+        "release_tag": "crypto-spot-bulk-2024-01-1m",
+        "release_asset": "BTCUSDT-1m-2024-01.zip",
+        "hour_count": 744,
+        "hourly_sha256": "5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5",
+        "all_hourly_ohlcv_match_native_minute": true,
+        "max_absolute_price_difference": 0.0,
+        "max_absolute_base_or_quote_volume_difference": 3.5762786865234375e-07
+      },
+      "grid": {
+        "start_price": 42283.58,
+        "lower": 38055.222,
+        "upper": 46511.938,
+        "levels": 10,
+        "step_price": 845.6716
+      },
+      "minute_band_coverage": {
+        "close_below_pct": 0.0,
+        "close_inside_pct": 95.119,
+        "close_above_pct": 4.881
+      },
+      "multi_level_minutes": 4,
+      "multi_level_hours": 10,
+      "simulations": {
+        "TOUCH": {
+          "fill_assumption": "TOUCH",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 1056.88676,
+          "net_return_pct": 5.689,
+          "max_daily_drawdown_pct": -5.584,
+          "theoretical_limit_fills_after_initial": 64,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 32,
+          "total_realized_lot_usdt": 76.37819,
+          "total_unrealized_lot_usdt": -19.49144,
+          "estimated_fee_slippage_cost_proxy_usdt": 11.15691,
+          "at_final_btc_qty": 0.012844782,
+          "at_final_cash_usdt": 510.77606,
+          "slots_left_with_btc": 5,
+          "ambiguous_fills_same_minute": 4,
+          "net_equity_daily": [
+            {
+              "date": "2024-01-01",
+              "value_net_usdt": 1017.895279,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0070843156
+            },
+            {
+              "date": "2024-01-02",
+              "value_net_usdt": 1024.701574,
+              "cash_usdt": 811.065091,
+              "btc_quantity": 0.0047602229
+            },
+            {
+              "date": "2024-01-03",
+              "value_net_usdt": 1016.985172,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0120439054
+            },
+            {
+              "date": "2024-01-04",
+              "value_net_usdt": 1029.733107,
+              "cash_usdt": 714.091357,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-05",
+              "value_net_usdt": 1033.208603,
+              "cash_usdt": 717.609676,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-06",
+              "value_net_usdt": 1031.94471,
+              "cash_usdt": 717.609676,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-07",
+              "value_net_usdt": 1031.663749,
+              "cash_usdt": 717.609676,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-08",
+              "value_net_usdt": 1044.051285,
+              "cash_usdt": 1044.051285,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2024-01-09",
+              "value_net_usdt": 1049.956488,
+              "cash_usdt": 936.110721,
+              "btc_quantity": 0.0024727117
+            },
+            {
+              "date": "2024-01-10",
+              "value_net_usdt": 1056.267166,
+              "cash_usdt": 1056.267166,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2024-01-11",
+              "value_net_usdt": 1059.902298,
+              "cash_usdt": 1059.902298,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2024-01-12",
+              "value_net_usdt": 1042.945754,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0126692118
+            },
+            {
+              "date": "2024-01-13",
+              "value_net_usdt": 1044.480596,
+              "cash_usdt": 610.498825,
+              "btc_quantity": 0.0101436148
+            },
+            {
+              "date": "2024-01-14",
+              "value_net_usdt": 1031.441381,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0127120044
+            },
+            {
+              "date": "2024-01-15",
+              "value_net_usdt": 1042.911284,
+              "cash_usdt": 612.341671,
+              "btc_quantity": 0.0101436148
+            },
+            {
+              "date": "2024-01-16",
+              "value_net_usdt": 1051.134345,
+              "cash_usdt": 614.215742,
+              "btc_quantity": 0.0101436148
+            },
+            {
+              "date": "2024-01-17",
+              "value_net_usdt": 1048.438584,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0127997771
+            },
+            {
+              "date": "2024-01-18",
+              "value_net_usdt": 1029.349528,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0152512166
+            },
+            {
+              "date": "2024-01-19",
+              "value_net_usdt": 1036.175622,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0152512166
+            },
+            {
+              "date": "2024-01-20",
+              "value_net_usdt": 1036.739223,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0152512166
+            },
+            {
+              "date": "2024-01-21",
+              "value_net_usdt": 1034.977151,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0152512166
+            },
+            {
+              "date": "2024-01-22",
+              "value_net_usdt": 1000.720169,
+              "cash_usdt": 200.0,
+              "btc_quantity": 0.0202669391
+            },
+            {
+              "date": "2024-01-23",
+              "value_net_usdt": 1009.257479,
+              "cash_usdt": 201.867749,
+              "btc_quantity": 0.0202669391
+            },
+            {
+              "date": "2024-01-24",
+              "value_net_usdt": 1013.04738,
+              "cash_usdt": 201.867749,
+              "btc_quantity": 0.0202669391
+            },
+            {
+              "date": "2024-01-25",
+              "value_net_usdt": 1010.542298,
+              "cash_usdt": 201.867749,
+              "btc_quantity": 0.0202669391
+            },
+            {
+              "date": "2024-01-26",
+              "value_net_usdt": 1044.178797,
+              "cash_usdt": 407.275856,
+              "btc_quantity": 0.0152512166
+            },
+            {
+              "date": "2024-01-27",
+              "value_net_usdt": 1048.703443,
+              "cash_usdt": 407.275856,
+              "btc_quantity": 0.0152512166
+            },
+            {
+              "date": "2024-01-28",
+              "value_net_usdt": 1047.957549,
+              "cash_usdt": 510.776062,
+              "btc_quantity": 0.0127997771
+            },
+            {
+              "date": "2024-01-29",
+              "value_net_usdt": 1063.749835,
+              "cash_usdt": 625.162577,
+              "btc_quantity": 0.0101436148
+            },
+            {
+              "date": "2024-01-30",
+              "value_net_usdt": 1060.087404,
+              "cash_usdt": 625.162577,
+              "btc_quantity": 0.0101436148
+            },
+            {
+              "date": "2024-01-31",
+              "value_net_usdt": 1056.886757,
+              "cash_usdt": 510.776062,
+              "btc_quantity": 0.012844782
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        },
+        "CLOSE": {
+          "fill_assumption": "CLOSE",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 1042.76701,
+          "net_return_pct": 4.277,
+          "max_daily_drawdown_pct": -5.508,
+          "theoretical_limit_fills_after_initial": 47,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 24,
+          "total_realized_lot_usdt": 61.99625,
+          "total_unrealized_lot_usdt": -19.22924,
+          "estimated_fee_slippage_cost_proxy_usdt": 8.22658,
+          "at_final_btc_qty": 0.0098670798,
+          "at_final_cash_usdt": 623.25675,
+          "slots_left_with_btc": 4,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2024-01-01",
+              "value_net_usdt": 1017.895279,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0070843156
+            },
+            {
+              "date": "2024-01-02",
+              "value_net_usdt": 1024.701574,
+              "cash_usdt": 811.065091,
+              "btc_quantity": 0.0047602229
+            },
+            {
+              "date": "2024-01-03",
+              "value_net_usdt": 1015.214957,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0120025269
+            },
+            {
+              "date": "2024-01-04",
+              "value_net_usdt": 1027.951158,
+              "cash_usdt": 712.309407,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-05",
+              "value_net_usdt": 1029.653054,
+              "cash_usdt": 714.054127,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-06",
+              "value_net_usdt": 1028.38916,
+              "cash_usdt": 714.054127,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-07",
+              "value_net_usdt": 1028.1082,
+              "cash_usdt": 714.054127,
+              "btc_quantity": 0.0071598616
+            },
+            {
+              "date": "2024-01-08",
+              "value_net_usdt": 1040.495736,
+              "cash_usdt": 1040.495736,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2024-01-09",
+              "value_net_usdt": 1041.229569,
+              "cash_usdt": 930.825351,
+              "btc_quantity": 0.0023979618
+            },
+            {
+              "date": "2024-01-10",
+              "value_net_usdt": 1045.64423,
+              "cash_usdt": 1045.64423,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2024-01-11",
+              "value_net_usdt": 1045.64423,
+              "cash_usdt": 1045.64423,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2024-01-12",
+              "value_net_usdt": 1029.334992,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0123505972
+            },
+            {
+              "date": "2024-01-13",
+              "value_net_usdt": 1030.837254,
+              "cash_usdt": 608.686683,
+              "btc_quantity": 0.0098670798
+            },
+            {
+              "date": "2024-01-14",
+              "value_net_usdt": 1018.135074,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0123926769
+            },
+            {
+              "date": "2024-01-15",
+              "value_net_usdt": 1029.33026,
+              "cash_usdt": 610.498825,
+              "btc_quantity": 0.0098670798
+            },
+            {
+              "date": "2024-01-16",
+              "value_net_usdt": 1037.349011,
+              "cash_usdt": 612.341671,
+              "btc_quantity": 0.0098670798
+            },
+            {
+              "date": "2024-01-17",
+              "value_net_usdt": 1034.737017,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0124789872
+            },
+            {
+              "date": "2024-01-18",
+              "value_net_usdt": 1016.111959,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0149304266
+            },
+            {
+              "date": "2024-01-19",
+              "value_net_usdt": 1022.831862,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0149304266
+            },
+            {
+              "date": "2024-01-20",
+              "value_net_usdt": 1023.383608,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0149304266
+            },
+            {
+              "date": "2024-01-21",
+              "value_net_usdt": 1021.658599,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0149304266
+            },
+            {
+              "date": "2024-01-22",
+              "value_net_usdt": 988.046178,
+              "cash_usdt": 200.0,
+              "btc_quantity": 0.0199461491
+            },
+            {
+              "date": "2024-01-23",
+              "value_net_usdt": 996.477921,
+              "cash_usdt": 201.867749,
+              "btc_quantity": 0.0199461491
+            },
+            {
+              "date": "2024-01-24",
+              "value_net_usdt": 1000.207834,
+              "cash_usdt": 201.867749,
+              "btc_quantity": 0.0199461491
+            },
+            {
+              "date": "2024-01-25",
+              "value_net_usdt": 997.742403,
+              "cash_usdt": 201.867749,
+              "btc_quantity": 0.0199461491
+            },
+            {
+              "date": "2024-01-26",
+              "value_net_usdt": 1030.782352,
+              "cash_usdt": 407.275856,
+              "btc_quantity": 0.0149304266
+            },
+            {
+              "date": "2024-01-27",
+              "value_net_usdt": 1035.211828,
+              "cash_usdt": 407.275856,
+              "btc_quantity": 0.0149304266
+            },
+            {
+              "date": "2024-01-28",
+              "value_net_usdt": 1034.494625,
+              "cash_usdt": 510.776062,
+              "btc_quantity": 0.0124789872
+            },
+            {
+              "date": "2024-01-29",
+              "value_net_usdt": 1049.887257,
+              "cash_usdt": 623.256753,
+              "btc_quantity": 0.0098670798
+            },
+            {
+              "date": "2024-01-30",
+              "value_net_usdt": 1046.324671,
+              "cash_usdt": 623.256753,
+              "btc_quantity": 0.0098670798
+            },
+            {
+              "date": "2024-01-31",
+              "value_net_usdt": 1042.767011,
+              "cash_usdt": 623.256753,
+              "btc_quantity": 0.0098670798
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        }
+      },
+      "baselines": {
+        "HOLD50": {
+          "exposure_pct": 50,
+          "final_net_liquidation_usdt": 1001.99639,
+          "net_return_pct": 0.2,
+          "max_daily_drawdown_pct": -8.262,
+          "net_equity_daily": [
+            {
+              "date": "2024-01-01",
+              "value_net_usdt": 1020.854264
+            },
+            {
+              "date": "2024-01-02",
+              "value_net_usdt": 1029.901045
+            },
+            {
+              "date": "2024-01-03",
+              "value_net_usdt": 1005.123315
+            },
+            {
+              "date": "2024-01-04",
+              "value_net_usdt": 1020.518853
+            },
+            {
+              "date": "2024-01-05",
+              "value_net_usdt": 1020.448234
+            },
+            {
+              "date": "2024-01-06",
+              "value_net_usdt": 1018.36397
+            },
+            {
+              "date": "2024-01-07",
+              "value_net_usdt": 1017.900644
+            },
+            {
+              "date": "2024-01-08",
+              "value_net_usdt": 1053.528711
+            },
+            {
+              "date": "2024-01-09",
+              "value_net_usdt": 1043.613281
+            },
+            {
+              "date": "2024-01-10",
+              "value_net_usdt": 1050.026644
+            },
+            {
+              "date": "2024-01-11",
+              "value_net_usdt": 1046.31496
+            },
+            {
+              "date": "2024-01-12",
+              "value_net_usdt": 1004.386472
+            },
+            {
+              "date": "2024-01-13",
+              "value_net_usdt": 1005.155854
+            },
+            {
+              "date": "2024-01-14",
+              "value_net_usdt": 992.00303
+            },
+            {
+              "date": "2024-01-15",
+              "value_net_usdt": 1001.184093
+            },
+            {
+              "date": "2024-01-16",
+              "value_net_usdt": 1008.574334
+            },
+            {
+              "date": "2024-01-17",
+              "value_net_usdt": 1004.308307
+            },
+            {
+              "date": "2024-01-18",
+              "value_net_usdt": 987.230055
+            },
+            {
+              "date": "2024-01-19",
+              "value_net_usdt": 991.138624
+            },
+            {
+              "date": "2024-01-20",
+              "value_net_usdt": 991.574953
+            },
+            {
+              "date": "2024-01-21",
+              "value_net_usdt": 990.210792
+            },
+            {
+              "date": "2024-01-22",
+              "value_net_usdt": 966.486687
+            },
+            {
+              "date": "2024-01-23",
+              "value_net_usdt": 970.372267
+            },
+            {
+              "date": "2024-01-24",
+              "value_net_usdt": 972.580202
+            },
+            {
+              "date": "2024-01-25",
+              "value_net_usdt": 971.120781
+            },
+            {
+              "date": "2024-01-26",
+              "value_net_usdt": 993.077759
+            },
+            {
+              "date": "2024-01-27",
+              "value_net_usdt": 996.580652
+            },
+            {
+              "date": "2024-01-28",
+              "value_net_usdt": 995.524667
+            },
+            {
+              "date": "2024-01-29",
+              "value_net_usdt": 1010.516652
+            },
+            {
+              "date": "2024-01-30",
+              "value_net_usdt": 1006.253573
+            },
+            {
+              "date": "2024-01-31",
+              "value_net_usdt": 1001.996389
+            }
+          ]
+        },
+        "HOLD100": {
+          "exposure_pct": 100,
+          "final_net_liquidation_usdt": 1003.99278,
+          "net_return_pct": 0.399,
+          "max_daily_drawdown_pct": -15.725,
+          "net_equity_daily": [
+            {
+              "date": "2024-01-01",
+              "value_net_usdt": 1041.708528
+            },
+            {
+              "date": "2024-01-02",
+              "value_net_usdt": 1059.802091
+            },
+            {
+              "date": "2024-01-03",
+              "value_net_usdt": 1010.246629
+            },
+            {
+              "date": "2024-01-04",
+              "value_net_usdt": 1041.037706
+            },
+            {
+              "date": "2024-01-05",
+              "value_net_usdt": 1040.896468
+            },
+            {
+              "date": "2024-01-06",
+              "value_net_usdt": 1036.727941
+            },
+            {
+              "date": "2024-01-07",
+              "value_net_usdt": 1035.801287
+            },
+            {
+              "date": "2024-01-08",
+              "value_net_usdt": 1107.057423
+            },
+            {
+              "date": "2024-01-09",
+              "value_net_usdt": 1087.226561
+            },
+            {
+              "date": "2024-01-10",
+              "value_net_usdt": 1100.053288
+            },
+            {
+              "date": "2024-01-11",
+              "value_net_usdt": 1092.629919
+            },
+            {
+              "date": "2024-01-12",
+              "value_net_usdt": 1008.772943
+            },
+            {
+              "date": "2024-01-13",
+              "value_net_usdt": 1010.311707
+            },
+            {
+              "date": "2024-01-14",
+              "value_net_usdt": 984.006059
+            },
+            {
+              "date": "2024-01-15",
+              "value_net_usdt": 1002.368186
+            },
+            {
+              "date": "2024-01-16",
+              "value_net_usdt": 1017.148667
+            },
+            {
+              "date": "2024-01-17",
+              "value_net_usdt": 1008.616615
+            },
+            {
+              "date": "2024-01-18",
+              "value_net_usdt": 974.460111
+            },
+            {
+              "date": "2024-01-19",
+              "value_net_usdt": 982.277249
+            },
+            {
+              "date": "2024-01-20",
+              "value_net_usdt": 983.149906
+            },
+            {
+              "date": "2024-01-21",
+              "value_net_usdt": 980.421583
+            },
+            {
+              "date": "2024-01-22",
+              "value_net_usdt": 932.973375
+            },
+            {
+              "date": "2024-01-23",
+              "value_net_usdt": 940.744534
+            },
+            {
+              "date": "2024-01-24",
+              "value_net_usdt": 945.160404
+            },
+            {
+              "date": "2024-01-25",
+              "value_net_usdt": 942.241563
+            },
+            {
+              "date": "2024-01-26",
+              "value_net_usdt": 986.155518
+            },
+            {
+              "date": "2024-01-27",
+              "value_net_usdt": 993.161304
+            },
+            {
+              "date": "2024-01-28",
+              "value_net_usdt": 991.049335
+            },
+            {
+              "date": "2024-01-29",
+              "value_net_usdt": 1021.033303
+            },
+            {
+              "date": "2024-01-30",
+              "value_net_usdt": 1012.507146
+            },
+            {
+              "date": "2024-01-31",
+              "value_net_usdt": 1003.992778
+            }
+          ]
+        }
+      }
+    },
+    "2025-01": {
+      "source": {
+        "zip_sha256": "8d028b2f91aad57d6b693d44449c93f9c4b7044f55f298c8a3ac40ab676dafac",
+        "minute_count": 44640,
+        "timestamp_unit": "us",
+        "first_open_utc": "2025-01-01T00:00:00+00:00",
+        "last_open_utc": "2025-01-31T23:59:00+00:00",
+        "release_tag": "crypto-spot-bulk-2025-01-1m",
+        "release_asset": "BTCUSDT-1m-2025-01.zip",
+        "hour_count": 744,
+        "hourly_sha256": "291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f",
+        "all_hourly_ohlcv_match_native_minute": true,
+        "max_absolute_price_difference": 0.0,
+        "max_absolute_base_or_quote_volume_difference": 5.960464477539062e-07
+      },
+      "grid": {
+        "start_price": 93576.0,
+        "lower": 84218.4,
+        "upper": 102933.6,
+        "levels": 10,
+        "step_price": 1871.52
+      },
+      "minute_band_coverage": {
+        "close_below_pct": 0.0,
+        "close_inside_pct": 67.305,
+        "close_above_pct": 32.695
+      },
+      "multi_level_minutes": 0,
+      "multi_level_hours": 6,
+      "simulations": {
+        "TOUCH": {
+          "fill_assumption": "TOUCH",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 1056.27286,
+          "net_return_pct": 5.627,
+          "max_daily_drawdown_pct": -2.68,
+          "theoretical_limit_fills_after_initial": 37,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 21,
+          "total_realized_lot_usdt": 56.27286,
+          "total_unrealized_lot_usdt": 0,
+          "estimated_fee_slippage_cost_proxy_usdt": 6.72771,
+          "at_final_btc_qty": 0.0,
+          "at_final_cash_usdt": 1056.27286,
+          "slots_left_with_btc": 0,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2025-01-01",
+              "value_net_usdt": 1003.913105,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0053352395
+            },
+            {
+              "date": "2025-01-02",
+              "value_net_usdt": 1015.379434,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-03",
+              "value_net_usdt": 1019.181133,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-04",
+              "value_net_usdt": 1019.329188,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-05",
+              "value_net_usdt": 1019.786616,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-06",
+              "value_net_usdt": 1027.668171,
+              "cash_usdt": 918.741469,
+              "btc_quantity": 0.0010670479
+            },
+            {
+              "date": "2025-01-07",
+              "value_net_usdt": 1018.587696,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032352802
+            },
+            {
+              "date": "2025-01-08",
+              "value_net_usdt": 1013.043353,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.005405118
+            },
+            {
+              "date": "2025-01-09",
+              "value_net_usdt": 1000.129296,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0064939424
+            },
+            {
+              "date": "2025-01-10",
+              "value_net_usdt": 1013.754751,
+              "cash_usdt": 605.152473,
+              "btc_quantity": 0.0043199905
+            },
+            {
+              "date": "2025-01-11",
+              "value_net_usdt": 1013.210731,
+              "cash_usdt": 605.152473,
+              "btc_quantity": 0.0043199905
+            },
+            {
+              "date": "2025-01-12",
+              "value_net_usdt": 1012.973789,
+              "cash_usdt": 605.152473,
+              "btc_quantity": 0.0043199905
+            },
+            {
+              "date": "2025-01-13",
+              "value_net_usdt": 1017.22574,
+              "cash_usdt": 505.277646,
+              "btc_quantity": 0.005423504
+            },
+            {
+              "date": "2025-01-14",
+              "value_net_usdt": 1028.694951,
+              "cash_usdt": 610.447328,
+              "btc_quantity": 0.0043379453
+            },
+            {
+              "date": "2025-01-15",
+              "value_net_usdt": 1040.831428,
+              "cash_usdt": 824.988679,
+              "btc_quantity": 0.0021509711
+            },
+            {
+              "date": "2025-01-16",
+              "value_net_usdt": 1039.73597,
+              "cash_usdt": 824.988679,
+              "btc_quantity": 0.0021509711
+            },
+            {
+              "date": "2025-01-17",
+              "value_net_usdt": 1044.038331,
+              "cash_usdt": 1044.038331,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-18",
+              "value_net_usdt": 1044.038331,
+              "cash_usdt": 1044.038331,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-19",
+              "value_net_usdt": 1044.001272,
+              "cash_usdt": 934.367946,
+              "btc_quantity": 0.0010835514
+            },
+            {
+              "date": "2025-01-20",
+              "value_net_usdt": 1047.457005,
+              "cash_usdt": 1047.457005,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-21",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-22",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-23",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-24",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-25",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-26",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-27",
+              "value_net_usdt": 1053.505401,
+              "cash_usdt": 937.854944,
+              "btc_quantity": 0.0011346094
+            },
+            {
+              "date": "2025-01-28",
+              "value_net_usdt": 1054.434384,
+              "cash_usdt": 937.854944,
+              "btc_quantity": 0.0011521578
+            },
+            {
+              "date": "2025-01-29",
+              "value_net_usdt": 1056.272863,
+              "cash_usdt": 1056.272863,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-30",
+              "value_net_usdt": 1056.272863,
+              "cash_usdt": 1056.272863,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-31",
+              "value_net_usdt": 1056.272863,
+              "cash_usdt": 1056.272863,
+              "btc_quantity": 0.0
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        },
+        "CLOSE": {
+          "fill_assumption": "CLOSE",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 1056.27286,
+          "net_return_pct": 5.627,
+          "max_daily_drawdown_pct": -2.68,
+          "theoretical_limit_fills_after_initial": 37,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 21,
+          "total_realized_lot_usdt": 56.27286,
+          "total_unrealized_lot_usdt": 0,
+          "estimated_fee_slippage_cost_proxy_usdt": 6.72771,
+          "at_final_btc_qty": 0.0,
+          "at_final_cash_usdt": 1056.27286,
+          "slots_left_with_btc": 0,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2025-01-01",
+              "value_net_usdt": 1003.913105,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0053352395
+            },
+            {
+              "date": "2025-01-02",
+              "value_net_usdt": 1015.379434,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-03",
+              "value_net_usdt": 1019.181133,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-04",
+              "value_net_usdt": 1019.329188,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-05",
+              "value_net_usdt": 1019.786616,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032011437
+            },
+            {
+              "date": "2025-01-06",
+              "value_net_usdt": 1027.668171,
+              "cash_usdt": 918.741469,
+              "btc_quantity": 0.0010670479
+            },
+            {
+              "date": "2025-01-07",
+              "value_net_usdt": 1018.587696,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0032352802
+            },
+            {
+              "date": "2025-01-08",
+              "value_net_usdt": 1013.043353,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.005405118
+            },
+            {
+              "date": "2025-01-09",
+              "value_net_usdt": 1000.129296,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0064939424
+            },
+            {
+              "date": "2025-01-10",
+              "value_net_usdt": 1013.754751,
+              "cash_usdt": 605.152473,
+              "btc_quantity": 0.0043199905
+            },
+            {
+              "date": "2025-01-11",
+              "value_net_usdt": 1013.210731,
+              "cash_usdt": 605.152473,
+              "btc_quantity": 0.0043199905
+            },
+            {
+              "date": "2025-01-12",
+              "value_net_usdt": 1012.973789,
+              "cash_usdt": 605.152473,
+              "btc_quantity": 0.0043199905
+            },
+            {
+              "date": "2025-01-13",
+              "value_net_usdt": 1017.22574,
+              "cash_usdt": 505.277646,
+              "btc_quantity": 0.005423504
+            },
+            {
+              "date": "2025-01-14",
+              "value_net_usdt": 1028.694951,
+              "cash_usdt": 610.447328,
+              "btc_quantity": 0.0043379453
+            },
+            {
+              "date": "2025-01-15",
+              "value_net_usdt": 1040.831428,
+              "cash_usdt": 824.988679,
+              "btc_quantity": 0.0021509711
+            },
+            {
+              "date": "2025-01-16",
+              "value_net_usdt": 1039.73597,
+              "cash_usdt": 824.988679,
+              "btc_quantity": 0.0021509711
+            },
+            {
+              "date": "2025-01-17",
+              "value_net_usdt": 1044.038331,
+              "cash_usdt": 1044.038331,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-18",
+              "value_net_usdt": 1044.038331,
+              "cash_usdt": 1044.038331,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-19",
+              "value_net_usdt": 1044.001272,
+              "cash_usdt": 934.367946,
+              "btc_quantity": 0.0010835514
+            },
+            {
+              "date": "2025-01-20",
+              "value_net_usdt": 1047.457005,
+              "cash_usdt": 1047.457005,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-21",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-22",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-23",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-24",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-25",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-26",
+              "value_net_usdt": 1049.2061,
+              "cash_usdt": 1049.2061,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-27",
+              "value_net_usdt": 1053.505401,
+              "cash_usdt": 937.854944,
+              "btc_quantity": 0.0011346094
+            },
+            {
+              "date": "2025-01-28",
+              "value_net_usdt": 1054.434384,
+              "cash_usdt": 937.854944,
+              "btc_quantity": 0.0011521578
+            },
+            {
+              "date": "2025-01-29",
+              "value_net_usdt": 1056.272863,
+              "cash_usdt": 1056.272863,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-30",
+              "value_net_usdt": 1056.272863,
+              "cash_usdt": 1056.272863,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2025-01-31",
+              "value_net_usdt": 1056.272863,
+              "cash_usdt": 1056.272863,
+              "btc_quantity": 0.0
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        }
+      },
+      "baselines": {
+        "HOLD50": {
+          "exposure_pct": 50,
+          "final_net_liquidation_usdt": 1045.66678,
+          "net_return_pct": 4.567,
+          "max_daily_drawdown_pct": -4.938,
+          "net_equity_daily": [
+            {
+              "date": "2025-01-01",
+              "value_net_usdt": 1003.913105
+            },
+            {
+              "date": "2025-01-02",
+              "value_net_usdt": 1016.661189
+            },
+            {
+              "date": "2025-01-03",
+              "value_net_usdt": 1022.997354
+            },
+            {
+              "date": "2025-01-04",
+              "value_net_usdt": 1023.244112
+            },
+            {
+              "date": "2025-01-05",
+              "value_net_usdt": 1024.006493
+            },
+            {
+              "date": "2025-01-06",
+              "value_net_usdt": 1044.633511
+            },
+            {
+              "date": "2025-01-07",
+              "value_net_usdt": 1016.500413
+            },
+            {
+              "date": "2025-01-08",
+              "value_net_usdt": 1006.410622
+            },
+            {
+              "date": "2025-01-09",
+              "value_net_usdt": 993.049266
+            },
+            {
+              "date": "2025-01-10",
+              "value_net_usdt": 1004.62866
+            },
+            {
+              "date": "2025-01-11",
+              "value_net_usdt": 1003.956789
+            },
+            {
+              "date": "2025-01-12",
+              "value_net_usdt": 1003.664163
+            },
+            {
+              "date": "2025-01-13",
+              "value_net_usdt": 1003.616431
+            },
+            {
+              "date": "2025-01-14",
+              "value_net_usdt": 1014.402813
+            },
+            {
+              "date": "2025-01-15",
+              "value_net_usdt": 1035.373437
+            },
+            {
+              "date": "2025-01-16",
+              "value_net_usdt": 1032.656278
+            },
+            {
+              "date": "2025-01-17",
+              "value_net_usdt": 1054.445646
+            },
+            {
+              "date": "2025-01-18",
+              "value_net_usdt": 1056.996062
+            },
+            {
+              "date": "2025-01-19",
+              "value_net_usdt": 1039.817527
+            },
+            {
+              "date": "2025-01-20",
+              "value_net_usdt": 1044.763549
+            },
+            {
+              "date": "2025-01-21",
+              "value_net_usdt": 1065.453534
+            },
+            {
+              "date": "2025-01-22",
+              "value_net_usdt": 1052.470199
+            },
+            {
+              "date": "2025-01-23",
+              "value_net_usdt": 1053.555252
+            },
+            {
+              "date": "2025-01-24",
+              "value_net_usdt": 1058.670254
+            },
+            {
+              "date": "2025-01-25",
+              "value_net_usdt": 1058.011541
+            },
+            {
+              "date": "2025-01-26",
+              "value_net_usdt": 1046.681302
+            },
+            {
+              "date": "2025-01-27",
+              "value_net_usdt": 1043.819668
+            },
+            {
+              "date": "2025-01-28",
+              "value_net_usdt": 1039.838569
+            },
+            {
+              "date": "2025-01-29",
+              "value_net_usdt": 1052.611797
+            },
+            {
+              "date": "2025-01-30",
+              "value_net_usdt": 1057.884166
+            },
+            {
+              "date": "2025-01-31",
+              "value_net_usdt": 1045.666782
+            }
+          ]
+        },
+        "HOLD100": {
+          "exposure_pct": 100,
+          "final_net_liquidation_usdt": 1091.33356,
+          "net_return_pct": 9.133,
+          "max_daily_drawdown_pct": -9.471,
+          "net_equity_daily": [
+            {
+              "date": "2025-01-01",
+              "value_net_usdt": 1007.826211
+            },
+            {
+              "date": "2025-01-02",
+              "value_net_usdt": 1033.322378
+            },
+            {
+              "date": "2025-01-03",
+              "value_net_usdt": 1045.994709
+            },
+            {
+              "date": "2025-01-04",
+              "value_net_usdt": 1046.488224
+            },
+            {
+              "date": "2025-01-05",
+              "value_net_usdt": 1048.012986
+            },
+            {
+              "date": "2025-01-06",
+              "value_net_usdt": 1089.267021
+            },
+            {
+              "date": "2025-01-07",
+              "value_net_usdt": 1033.000826
+            },
+            {
+              "date": "2025-01-08",
+              "value_net_usdt": 1012.821243
+            },
+            {
+              "date": "2025-01-09",
+              "value_net_usdt": 986.098532
+            },
+            {
+              "date": "2025-01-10",
+              "value_net_usdt": 1009.25732
+            },
+            {
+              "date": "2025-01-11",
+              "value_net_usdt": 1007.913577
+            },
+            {
+              "date": "2025-01-12",
+              "value_net_usdt": 1007.328327
+            },
+            {
+              "date": "2025-01-13",
+              "value_net_usdt": 1007.232863
+            },
+            {
+              "date": "2025-01-14",
+              "value_net_usdt": 1028.805625
+            },
+            {
+              "date": "2025-01-15",
+              "value_net_usdt": 1070.746874
+            },
+            {
+              "date": "2025-01-16",
+              "value_net_usdt": 1065.312557
+            },
+            {
+              "date": "2025-01-17",
+              "value_net_usdt": 1108.891293
+            },
+            {
+              "date": "2025-01-18",
+              "value_net_usdt": 1113.992124
+            },
+            {
+              "date": "2025-01-19",
+              "value_net_usdt": 1079.635053
+            },
+            {
+              "date": "2025-01-20",
+              "value_net_usdt": 1089.527097
+            },
+            {
+              "date": "2025-01-21",
+              "value_net_usdt": 1130.907068
+            },
+            {
+              "date": "2025-01-22",
+              "value_net_usdt": 1104.940399
+            },
+            {
+              "date": "2025-01-23",
+              "value_net_usdt": 1107.110503
+            },
+            {
+              "date": "2025-01-24",
+              "value_net_usdt": 1117.340507
+            },
+            {
+              "date": "2025-01-25",
+              "value_net_usdt": 1116.023081
+            },
+            {
+              "date": "2025-01-26",
+              "value_net_usdt": 1093.362603
+            },
+            {
+              "date": "2025-01-27",
+              "value_net_usdt": 1087.639337
+            },
+            {
+              "date": "2025-01-28",
+              "value_net_usdt": 1079.677138
+            },
+            {
+              "date": "2025-01-29",
+              "value_net_usdt": 1105.223595
+            },
+            {
+              "date": "2025-01-30",
+              "value_net_usdt": 1115.768332
+            },
+            {
+              "date": "2025-01-31",
+              "value_net_usdt": 1091.333564
+            }
+          ]
+        }
+      }
+    },
+    "2026-01": {
+      "source": {
+        "zip_sha256": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+        "minute_count": 44640,
+        "timestamp_unit": "us",
+        "first_open_utc": "2026-01-01T00:00:00+00:00",
+        "last_open_utc": "2026-01-31T23:59:00+00:00",
+        "release_tag": "crypto-spot-bulk-2026-01-1m",
+        "release_asset": "BTCUSDT-1m-2026-01.zip",
+        "hour_count": 744,
+        "hourly_sha256": "8ff403f0a093a21f1154d3d530cd2706864ee83f9e83d52c4aa5ed4a1469eeb6",
+        "all_hourly_ohlcv_match_native_minute": true,
+        "max_absolute_price_difference": 0.0,
+        "max_absolute_base_or_quote_volume_difference": 3.5762786865234375e-07
+      },
+      "grid": {
+        "start_price": 87648.21,
+        "lower": 78883.389,
+        "upper": 96413.031,
+        "levels": 10,
+        "step_price": 1752.9642
+      },
+      "minute_band_coverage": {
+        "close_below_pct": 0.791,
+        "close_inside_pct": 96.36,
+        "close_above_pct": 2.849
+      },
+      "multi_level_minutes": 0,
+      "multi_level_hours": 4,
+      "simulations": {
+        "TOUCH": {
+          "fill_assumption": "TOUCH",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 944.15889,
+          "net_return_pct": -5.584,
+          "max_daily_drawdown_pct": -8.86,
+          "theoretical_limit_fills_after_initial": 31,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 13,
+          "total_realized_lot_usdt": 42.27854,
+          "total_unrealized_lot_usdt": -98.11965,
+          "estimated_fee_slippage_cost_proxy_usdt": 5.63606,
+          "at_final_btc_qty": 0.0120086829,
+          "at_final_cash_usdt": 0.0,
+          "slots_left_with_btc": 10,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2026-01-01",
+              "value_net_usdt": 1005.274629,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0056960704
+            },
+            {
+              "date": "2026-01-02",
+              "value_net_usdt": 1011.174297,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0045568563
+            },
+            {
+              "date": "2026-01-03",
+              "value_net_usdt": 1014.053915,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0045568563
+            },
+            {
+              "date": "2026-01-04",
+              "value_net_usdt": 1017.729525,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0034176422
+            },
+            {
+              "date": "2026-01-05",
+              "value_net_usdt": 1025.507436,
+              "cash_usdt": 918.741469,
+              "btc_quantity": 0.0011392141
+            },
+            {
+              "date": "2026-01-06",
+              "value_net_usdt": 1026.029297,
+              "cash_usdt": 811.065091,
+              "btc_quantity": 0.0022964447
+            },
+            {
+              "date": "2026-01-07",
+              "value_net_usdt": 1020.489306,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-08",
+              "value_net_usdt": 1021.294519,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-09",
+              "value_net_usdt": 1019.71247,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-10",
+              "value_net_usdt": 1019.241418,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-11",
+              "value_net_usdt": 1020.99674,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-12",
+              "value_net_usdt": 1021.971229,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-13",
+              "value_net_usdt": 1033.54064,
+              "cash_usdt": 1033.54064,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2026-01-14",
+              "value_net_usdt": 1035.23686,
+              "cash_usdt": 1035.23686,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2026-01-15",
+              "value_net_usdt": 1035.23686,
+              "cash_usdt": 1035.23686,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2026-01-16",
+              "value_net_usdt": 1035.948112,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.001174726
+            },
+            {
+              "date": "2026-01-17",
+              "value_net_usdt": 1035.475208,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.001174726
+            },
+            {
+              "date": "2026-01-18",
+              "value_net_usdt": 1033.745519,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.001174726
+            },
+            {
+              "date": "2026-01-19",
+              "value_net_usdt": 1031.87129,
+              "cash_usdt": 814.490988,
+              "btc_quantity": 0.0023502581
+            },
+            {
+              "date": "2026-01-20",
+              "value_net_usdt": 1017.022646,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047038677
+            },
+            {
+              "date": "2026-01-21",
+              "value_net_usdt": 1023.569668,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.0047038677
+            },
+            {
+              "date": "2026-01-22",
+              "value_net_usdt": 1024.062552,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.0047038677
+            },
+            {
+              "date": "2026-01-23",
+              "value_net_usdt": 1025.996561,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.004723354
+            },
+            {
+              "date": "2026-01-24",
+              "value_net_usdt": 1024.228337,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.004723354
+            },
+            {
+              "date": "2026-01-25",
+              "value_net_usdt": 1010.718145,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0059014999
+            },
+            {
+              "date": "2026-01-26",
+              "value_net_usdt": 1020.59847,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0059014999
+            },
+            {
+              "date": "2026-01-27",
+              "value_net_usdt": 1026.0969,
+              "cash_usdt": 605.169682,
+              "btc_quantity": 0.004723354
+            },
+            {
+              "date": "2026-01-28",
+              "value_net_usdt": 1026.332666,
+              "cash_usdt": 605.169682,
+              "btc_quantity": 0.004723354
+            },
+            {
+              "date": "2026-01-29",
+              "value_net_usdt": 999.058354,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0082706065
+            },
+            {
+              "date": "2026-01-30",
+              "value_net_usdt": 997.662013,
+              "cash_usdt": 301.821634,
+              "btc_quantity": 0.0082706065
+            },
+            {
+              "date": "2026-01-31",
+              "value_net_usdt": 944.15889,
+              "cash_usdt": 0.0,
+              "btc_quantity": 0.0120086829
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        },
+        "CLOSE": {
+          "fill_assumption": "CLOSE",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 942.75215,
+          "net_return_pct": -5.725,
+          "max_daily_drawdown_pct": -8.846,
+          "theoretical_limit_fills_after_initial": 29,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 12,
+          "total_realized_lot_usdt": 40.58232,
+          "total_unrealized_lot_usdt": -97.83017,
+          "estimated_fee_slippage_cost_proxy_usdt": 5.3021,
+          "at_final_btc_qty": 0.0119907907,
+          "at_final_cash_usdt": 0.0,
+          "slots_left_with_btc": 10,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2026-01-01",
+              "value_net_usdt": 1005.274629,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0056960704
+            },
+            {
+              "date": "2026-01-02",
+              "value_net_usdt": 1011.174297,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0045568563
+            },
+            {
+              "date": "2026-01-03",
+              "value_net_usdt": 1014.053915,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0045568563
+            },
+            {
+              "date": "2026-01-04",
+              "value_net_usdt": 1017.729525,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0034176422
+            },
+            {
+              "date": "2026-01-05",
+              "value_net_usdt": 1025.507436,
+              "cash_usdt": 918.741469,
+              "btc_quantity": 0.0011392141
+            },
+            {
+              "date": "2026-01-06",
+              "value_net_usdt": 1026.029297,
+              "cash_usdt": 811.065091,
+              "btc_quantity": 0.0022964447
+            },
+            {
+              "date": "2026-01-07",
+              "value_net_usdt": 1020.489306,
+              "cash_usdt": 705.382721,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-08",
+              "value_net_usdt": 1021.294519,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-09",
+              "value_net_usdt": 1019.71247,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-10",
+              "value_net_usdt": 1019.241418,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-11",
+              "value_net_usdt": 1020.99674,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-12",
+              "value_net_usdt": 1021.971229,
+              "cash_usdt": 707.099031,
+              "btc_quantity": 0.0034540874
+            },
+            {
+              "date": "2026-01-13",
+              "value_net_usdt": 1032.404236,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.0011392141
+            },
+            {
+              "date": "2026-01-14",
+              "value_net_usdt": 1033.54064,
+              "cash_usdt": 1033.54064,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2026-01-15",
+              "value_net_usdt": 1033.54064,
+              "cash_usdt": 1033.54064,
+              "btc_quantity": 0.0
+            },
+            {
+              "date": "2026-01-16",
+              "value_net_usdt": 1034.241059,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.0011568338
+            },
+            {
+              "date": "2026-01-17",
+              "value_net_usdt": 1033.775358,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.0011568338
+            },
+            {
+              "date": "2026-01-18",
+              "value_net_usdt": 1032.072014,
+              "cash_usdt": 923.870255,
+              "btc_quantity": 0.0011568338
+            },
+            {
+              "date": "2026-01-19",
+              "value_net_usdt": 1030.216403,
+              "cash_usdt": 814.490988,
+              "btc_quantity": 0.0023323659
+            },
+            {
+              "date": "2026-01-20",
+              "value_net_usdt": 1015.442853,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0046859755
+            },
+            {
+              "date": "2026-01-21",
+              "value_net_usdt": 1021.971526,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.0046859755
+            },
+            {
+              "date": "2026-01-22",
+              "value_net_usdt": 1022.462535,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.0046859755
+            },
+            {
+              "date": "2026-01-23",
+              "value_net_usdt": 1024.395819,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.0047054618
+            },
+            {
+              "date": "2026-01-24",
+              "value_net_usdt": 1022.634293,
+              "cash_usdt": 603.417422,
+              "btc_quantity": 0.0047054618
+            },
+            {
+              "date": "2026-01-25",
+              "value_net_usdt": 1009.169747,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0058836077
+            },
+            {
+              "date": "2026-01-26",
+              "value_net_usdt": 1019.020117,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0058836077
+            },
+            {
+              "date": "2026-01-27",
+              "value_net_usdt": 1024.502416,
+              "cash_usdt": 605.169682,
+              "btc_quantity": 0.0047054618
+            },
+            {
+              "date": "2026-01-28",
+              "value_net_usdt": 1024.737289,
+              "cash_usdt": 605.169682,
+              "btc_quantity": 0.0047054618
+            },
+            {
+              "date": "2026-01-29",
+              "value_net_usdt": 997.546047,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0082527143
+            },
+            {
+              "date": "2026-01-30",
+              "value_net_usdt": 996.156668,
+              "cash_usdt": 301.821634,
+              "btc_quantity": 0.0082527143
+            },
+            {
+              "date": "2026-01-31",
+              "value_net_usdt": 942.752152,
+              "cash_usdt": 0.0,
+              "btc_quantity": 0.0119907907
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        }
+      },
+      "baselines": {
+        "HOLD50": {
+          "exposure_pct": 50,
+          "final_net_liquidation_usdt": 947.84224,
+          "net_return_pct": -5.216,
+          "max_daily_drawdown_pct": -9.851,
+          "net_equity_daily": [
+            {
+              "date": "2026-01-01",
+              "value_net_usdt": 1005.274629
+            },
+            {
+              "date": "2026-01-02",
+              "value_net_usdt": 1011.849925
+            },
+            {
+              "date": "2026-01-03",
+              "value_net_usdt": 1015.449448
+            },
+            {
+              "date": "2026-01-04",
+              "value_net_usdt": 1020.578007
+            },
+            {
+              "date": "2026-01-05",
+              "value_net_usdt": 1033.829836
+            },
+            {
+              "date": "2026-01-06",
+              "value_net_usdt": 1033.194312
+            },
+            {
+              "date": "2026-01-07",
+              "value_net_usdt": 1019.636323
+            },
+            {
+              "date": "2026-01-08",
+              "value_net_usdt": 1018.133848
+            },
+            {
+              "date": "2026-01-09",
+              "value_net_usdt": 1015.524922
+            },
+            {
+              "date": "2026-01-10",
+              "value_net_usdt": 1014.748119
+            },
+            {
+              "date": "2026-01-11",
+              "value_net_usdt": 1017.642787
+            },
+            {
+              "date": "2026-01-12",
+              "value_net_usdt": 1019.249798
+            },
+            {
+              "date": "2026-01-13",
+              "value_net_usdt": 1042.669906
+            },
+            {
+              "date": "2026-01-14",
+              "value_net_usdt": 1051.416074
+            },
+            {
+              "date": "2026-01-15",
+              "value_net_usdt": 1043.755086
+            },
+            {
+              "date": "2026-01-16",
+              "value_net_usdt": 1043.448756
+            },
+            {
+              "date": "2026-01-17",
+              "value_net_usdt": 1041.155715
+            },
+            {
+              "date": "2026-01-18",
+              "value_net_usdt": 1032.768714
+            },
+            {
+              "date": "2026-01-19",
+              "value_net_usdt": 1026.841512
+            },
+            {
+              "date": "2026-01-20",
+              "value_net_usdt": 1002.934893
+            },
+            {
+              "date": "2026-01-21",
+              "value_net_usdt": 1008.776384
+            },
+            {
+              "date": "2026-01-22",
+              "value_net_usdt": 1009.373233
+            },
+            {
+              "date": "2026-01-23",
+              "value_net_usdt": 1009.60409
+            },
+            {
+              "date": "2026-01-24",
+              "value_net_usdt": 1007.471722
+            },
+            {
+              "date": "2026-01-25",
+              "value_net_usdt": 992.940199
+            },
+            {
+              "date": "2026-01-26",
+              "value_net_usdt": 1002.476592
+            },
+            {
+              "date": "2026-01-27",
+              "value_net_usdt": 1007.611976
+            },
+            {
+              "date": "2026-01-28",
+              "value_net_usdt": 1007.896296
+            },
+            {
+              "date": "2026-01-29",
+              "value_net_usdt": 981.450252
+            },
+            {
+              "date": "2026-01-30",
+              "value_net_usdt": 979.233993
+            },
+            {
+              "date": "2026-01-31",
+              "value_net_usdt": 947.842244
+            }
+          ]
+        },
+        "HOLD100": {
+          "exposure_pct": 100,
+          "final_net_liquidation_usdt": 895.68449,
+          "net_return_pct": -10.432,
+          "max_daily_drawdown_pct": -18.783,
+          "net_equity_daily": [
+            {
+              "date": "2026-01-01",
+              "value_net_usdt": 1010.549258
+            },
+            {
+              "date": "2026-01-02",
+              "value_net_usdt": 1023.69985
+            },
+            {
+              "date": "2026-01-03",
+              "value_net_usdt": 1030.898896
+            },
+            {
+              "date": "2026-01-04",
+              "value_net_usdt": 1041.156014
+            },
+            {
+              "date": "2026-01-05",
+              "value_net_usdt": 1067.659672
+            },
+            {
+              "date": "2026-01-06",
+              "value_net_usdt": 1066.388623
+            },
+            {
+              "date": "2026-01-07",
+              "value_net_usdt": 1039.272646
+            },
+            {
+              "date": "2026-01-08",
+              "value_net_usdt": 1036.267696
+            },
+            {
+              "date": "2026-01-09",
+              "value_net_usdt": 1031.049843
+            },
+            {
+              "date": "2026-01-10",
+              "value_net_usdt": 1029.496238
+            },
+            {
+              "date": "2026-01-11",
+              "value_net_usdt": 1035.285574
+            },
+            {
+              "date": "2026-01-12",
+              "value_net_usdt": 1038.499597
+            },
+            {
+              "date": "2026-01-13",
+              "value_net_usdt": 1085.339812
+            },
+            {
+              "date": "2026-01-14",
+              "value_net_usdt": 1102.832149
+            },
+            {
+              "date": "2026-01-15",
+              "value_net_usdt": 1087.510173
+            },
+            {
+              "date": "2026-01-16",
+              "value_net_usdt": 1086.897512
+            },
+            {
+              "date": "2026-01-17",
+              "value_net_usdt": 1082.31143
+            },
+            {
+              "date": "2026-01-18",
+              "value_net_usdt": 1065.537428
+            },
+            {
+              "date": "2026-01-19",
+              "value_net_usdt": 1053.683024
+            },
+            {
+              "date": "2026-01-20",
+              "value_net_usdt": 1005.869787
+            },
+            {
+              "date": "2026-01-21",
+              "value_net_usdt": 1017.552768
+            },
+            {
+              "date": "2026-01-22",
+              "value_net_usdt": 1018.746467
+            },
+            {
+              "date": "2026-01-23",
+              "value_net_usdt": 1019.20818
+            },
+            {
+              "date": "2026-01-24",
+              "value_net_usdt": 1014.943443
+            },
+            {
+              "date": "2026-01-25",
+              "value_net_usdt": 985.880397
+            },
+            {
+              "date": "2026-01-26",
+              "value_net_usdt": 1004.953185
+            },
+            {
+              "date": "2026-01-27",
+              "value_net_usdt": 1015.223952
+            },
+            {
+              "date": "2026-01-28",
+              "value_net_usdt": 1015.792592
+            },
+            {
+              "date": "2026-01-29",
+              "value_net_usdt": 962.900504
+            },
+            {
+              "date": "2026-01-30",
+              "value_net_usdt": 958.467985
+            },
+            {
+              "date": "2026-01-31",
+              "value_net_usdt": 895.684489
+            }
+          ]
+        }
+      }
+    },
+    "2026-10": {
+      "source": {
+        "zip_sha256": "17168f260306752e39177a6c038bb8952f52bf08ff20e36d8da6068732621f1c",
+        "minute_count": 44640,
+        "timestamp_unit": "us",
+        "first_open_utc": "2026-10-01T00:00:00+00:00",
+        "last_open_utc": "2026-10-31T23:59:00+00:00",
+        "release_tag": "crypto-spot-bulk-2026-10-1m",
+        "release_asset": "BTCUSDT-1m-2026-10.zip",
+        "hour_count": 744,
+        "hourly_sha256": "8ff403f0a093a21f1154d3d530cd2706864ee83f9e83d52c4aa5ed4a1469eeb6",
+        "all_hourly_ohlcv_match_native_minute": true,
+        "max_absolute_price_difference": 0.0,
+        "max_absolute_base_or_quote_volume_difference": 2.980232238769531e-07
+      },
+      "grid": {
+        "start_price": 83623.59,
+        "lower": 75261.231,
+        "upper": 91985.949,
+        "levels": 10,
+        "step_price": 1672.4718
+      },
+      "minute_band_coverage": {
+        "close_below_pct": 0.0,
+        "close_inside_pct": 100.0,
+        "close_above_pct": 0.0
+      },
+      "multi_level_minutes": 0,
+      "multi_level_hours": 2,
+      "simulations": {
+        "TOUCH": {
+          "fill_assumption": "TOUCH",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 967.15138,
+          "net_return_pct": -3.285,
+          "max_daily_drawdown_pct": -5.049,
+          "theoretical_limit_fills_after_initial": 22,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 9,
+          "total_realized_lot_usdt": 17.84924,
+          "total_unrealized_lot_usdt": -50.69786,
+          "estimated_fee_slippage_cost_proxy_usdt": 4.13382,
+          "at_final_btc_qty": 0.0111940063,
+          "at_final_cash_usdt": 100.0,
+          "slots_left_with_btc": 9,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2026-10-01",
+              "value_net_usdt": 1005.99183,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0059702098
+            },
+            {
+              "date": "2026-10-02",
+              "value_net_usdt": 1006.4292,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047959323
+            },
+            {
+              "date": "2026-10-03",
+              "value_net_usdt": 1007.557188,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047959323
+            },
+            {
+              "date": "2026-10-04",
+              "value_net_usdt": 1016.064099,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047959323
+            },
+            {
+              "date": "2026-10-05",
+              "value_net_usdt": 1014.13028,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0048160239
+            },
+            {
+              "date": "2026-10-06",
+              "value_net_usdt": 1013.087058,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0048160239
+            },
+            {
+              "date": "2026-10-07",
+              "value_net_usdt": 1001.701848,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-08",
+              "value_net_usdt": 991.725461,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072487074
+            },
+            {
+              "date": "2026-10-09",
+              "value_net_usdt": 998.10272,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072487074
+            },
+            {
+              "date": "2026-10-10",
+              "value_net_usdt": 1000.656301,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072487074
+            },
+            {
+              "date": "2026-10-11",
+              "value_net_usdt": 1006.154351,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-12",
+              "value_net_usdt": 994.144753,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072698474
+            },
+            {
+              "date": "2026-10-13",
+              "value_net_usdt": 1004.281946,
+              "cash_usdt": 503.500206,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-14",
+              "value_net_usdt": 994.67941,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-15",
+              "value_net_usdt": 1000.562425,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-16",
+              "value_net_usdt": 995.973648,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-17",
+              "value_net_usdt": 995.066508,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-18",
+              "value_net_usdt": 999.61648,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-19",
+              "value_net_usdt": 998.323477,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-20",
+              "value_net_usdt": 1006.257316,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-21",
+              "value_net_usdt": 1013.421336,
+              "cash_usdt": 507.073427,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-22",
+              "value_net_usdt": 996.299552,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0073132342
+            },
+            {
+              "date": "2026-10-23",
+              "value_net_usdt": 994.64442,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0073132342
+            },
+            {
+              "date": "2026-10-24",
+              "value_net_usdt": 992.909916,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-25",
+              "value_net_usdt": 986.621673,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-26",
+              "value_net_usdt": 986.591435,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-27",
+              "value_net_usdt": 993.095033,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-28",
+              "value_net_usdt": 996.810482,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-29",
+              "value_net_usdt": 968.773138,
+              "cash_usdt": 200.0,
+              "btc_quantity": 0.0098718937
+            },
+            {
+              "date": "2026-10-30",
+              "value_net_usdt": 964.767835,
+              "cash_usdt": 100.0,
+              "btc_quantity": 0.0111940063
+            },
+            {
+              "date": "2026-10-31",
+              "value_net_usdt": 967.151377,
+              "cash_usdt": 100.0,
+              "btc_quantity": 0.0111940063
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        },
+        "CLOSE": {
+          "fill_assumption": "CLOSE",
+          "capital_initial_usdt": 1000.0,
+          "final_net_liquidation_usdt": 965.40835,
+          "net_return_pct": -3.459,
+          "max_daily_drawdown_pct": -5.22,
+          "theoretical_limit_fills_after_initial": 20,
+          "theoretical_initial_btc_buys": 5,
+          "completed_buy_sell_cycles": 8,
+          "total_realized_lot_usdt": 16.04021,
+          "total_unrealized_lot_usdt": -50.63186,
+          "estimated_fee_slippage_cost_proxy_usdt": 3.82319,
+          "at_final_btc_qty": 0.0111715057,
+          "at_final_cash_usdt": 100.0,
+          "slots_left_with_btc": 9,
+          "ambiguous_fills_same_minute": 0,
+          "net_equity_daily": [
+            {
+              "date": "2026-10-01",
+              "value_net_usdt": 1005.99183,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0059702098
+            },
+            {
+              "date": "2026-10-02",
+              "value_net_usdt": 1006.4292,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047959323
+            },
+            {
+              "date": "2026-10-03",
+              "value_net_usdt": 1007.557188,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047959323
+            },
+            {
+              "date": "2026-10-04",
+              "value_net_usdt": 1016.064099,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0047959323
+            },
+            {
+              "date": "2026-10-05",
+              "value_net_usdt": 1014.13028,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0048160239
+            },
+            {
+              "date": "2026-10-06",
+              "value_net_usdt": 1013.087058,
+              "cash_usdt": 601.694357,
+              "btc_quantity": 0.0048160239
+            },
+            {
+              "date": "2026-10-07",
+              "value_net_usdt": 1001.701848,
+              "cash_usdt": 500.0,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-08",
+              "value_net_usdt": 991.725461,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072487074
+            },
+            {
+              "date": "2026-10-09",
+              "value_net_usdt": 998.10272,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072487074
+            },
+            {
+              "date": "2026-10-10",
+              "value_net_usdt": 1000.656301,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072487074
+            },
+            {
+              "date": "2026-10-11",
+              "value_net_usdt": 1006.154351,
+              "cash_usdt": 501.735051,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-12",
+              "value_net_usdt": 994.144753,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072698474
+            },
+            {
+              "date": "2026-10-13",
+              "value_net_usdt": 1004.281946,
+              "cash_usdt": 503.500206,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-14",
+              "value_net_usdt": 994.67941,
+              "cash_usdt": 400.0,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-15",
+              "value_net_usdt": 1000.562425,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-16",
+              "value_net_usdt": 995.973648,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-17",
+              "value_net_usdt": 995.066508,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-18",
+              "value_net_usdt": 999.61648,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-19",
+              "value_net_usdt": 998.323477,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-20",
+              "value_net_usdt": 1006.257316,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0072913542
+            },
+            {
+              "date": "2026-10-21",
+              "value_net_usdt": 1013.421336,
+              "cash_usdt": 507.073427,
+              "btc_quantity": 0.0060302972
+            },
+            {
+              "date": "2026-10-22",
+              "value_net_usdt": 996.299552,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0073132342
+            },
+            {
+              "date": "2026-10-23",
+              "value_net_usdt": 994.64442,
+              "cash_usdt": 401.77744,
+              "btc_quantity": 0.0073132342
+            },
+            {
+              "date": "2026-10-24",
+              "value_net_usdt": 992.909916,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-25",
+              "value_net_usdt": 986.621673,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-26",
+              "value_net_usdt": 986.591435,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-27",
+              "value_net_usdt": 993.095033,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-28",
+              "value_net_usdt": 996.810482,
+              "cash_usdt": 300.0,
+              "btc_quantity": 0.0085791356
+            },
+            {
+              "date": "2026-10-29",
+              "value_net_usdt": 967.020902,
+              "cash_usdt": 200.0,
+              "btc_quantity": 0.009849393
+            },
+            {
+              "date": "2026-10-30",
+              "value_net_usdt": 963.029598,
+              "cash_usdt": 100.0,
+              "btc_quantity": 0.0111715057
+            },
+            {
+              "date": "2026-10-31",
+              "value_net_usdt": 965.40835,
+              "cash_usdt": 100.0,
+              "btc_quantity": 0.0111715057
+            }
+          ],
+          "fills_are_assumed_not_verified": true
+        }
+      },
+      "baselines": {
+        "HOLD50": {
+          "exposure_pct": 50,
+          "final_net_liquidation_usdt": 962.4864,
+          "net_return_pct": -3.751,
+          "max_daily_drawdown_pct": -5.376,
+          "net_equity_daily": [
+            {
+              "date": "2026-10-01",
+              "value_net_usdt": 1005.99183
+            },
+            {
+              "date": "2026-10-02",
+              "value_net_usdt": 1003.833617
+            },
+            {
+              "date": "2026-10-03",
+              "value_net_usdt": 1005.237791
+            },
+            {
+              "date": "2026-10-04",
+              "value_net_usdt": 1015.827607
+            },
+            {
+              "date": "2026-10-05",
+              "value_net_usdt": 1011.278393
+            },
+            {
+              "date": "2026-10-06",
+              "value_net_usdt": 1009.985158
+            },
+            {
+              "date": "2026-10-07",
+              "value_net_usdt": 996.702761
+            },
+            {
+              "date": "2026-10-08",
+              "value_net_usdt": 987.359324
+            },
+            {
+              "date": "2026-10-09",
+              "value_net_usdt": 992.611788
+            },
+            {
+              "date": "2026-10-10",
+              "value_net_usdt": 994.714979
+            },
+            {
+              "date": "2026-10-11",
+              "value_net_usdt": 999.393136
+            },
+            {
+              "date": "2026-10-12",
+              "value_net_usdt": 987.928922
+            },
+            {
+              "date": "2026-10-13",
+              "value_net_usdt": 995.791821
+            },
+            {
+              "date": "2026-10-14",
+              "value_net_usdt": 986.927491
+            },
+            {
+              "date": "2026-10-15",
+              "value_net_usdt": 990.289163
+            },
+            {
+              "date": "2026-10-16",
+              "value_net_usdt": 986.531842
+            },
+            {
+              "date": "2026-10-17",
+              "value_net_usdt": 985.789069
+            },
+            {
+              "date": "2026-10-18",
+              "value_net_usdt": 989.514617
+            },
+            {
+              "date": "2026-10-19",
+              "value_net_usdt": 988.455897
+            },
+            {
+              "date": "2026-10-20",
+              "value_net_usdt": 994.952178
+            },
+            {
+              "date": "2026-10-21",
+              "value_net_usdt": 1001.302526
+            },
+            {
+              "date": "2026-10-22",
+              "value_net_usdt": 985.342273
+            },
+            {
+              "date": "2026-10-23",
+              "value_net_usdt": 983.991094
+            },
+            {
+              "date": "2026-10-24",
+              "value_net_usdt": 982.195146
+            },
+            {
+              "date": "2026-10-25",
+              "value_net_usdt": 977.819166
+            },
+            {
+              "date": "2026-10-26",
+              "value_net_usdt": 977.798123
+            },
+            {
+              "date": "2026-10-27",
+              "value_net_usdt": 982.323969
+            },
+            {
+              "date": "2026-10-28",
+              "value_net_usdt": 984.909545
+            },
+            {
+              "date": "2026-10-29",
+              "value_net_usdt": 964.929735
+            },
+            {
+              "date": "2026-10-30",
+              "value_net_usdt": 961.215157
+            },
+            {
+              "date": "2026-10-31",
+              "value_net_usdt": 962.486395
+            }
+          ]
+        },
+        "HOLD100": {
+          "exposure_pct": 100,
+          "final_net_liquidation_usdt": 924.97279,
+          "net_return_pct": -7.503,
+          "max_daily_drawdown_pct": -10.587,
+          "net_equity_daily": [
+            {
+              "date": "2026-10-01",
+              "value_net_usdt": 1011.983661
+            },
+            {
+              "date": "2026-10-02",
+              "value_net_usdt": 1007.667234
+            },
+            {
+              "date": "2026-10-03",
+              "value_net_usdt": 1010.475582
+            },
+            {
+              "date": "2026-10-04",
+              "value_net_usdt": 1031.655214
+            },
+            {
+              "date": "2026-10-05",
+              "value_net_usdt": 1022.556785
+            },
+            {
+              "date": "2026-10-06",
+              "value_net_usdt": 1019.970315
+            },
+            {
+              "date": "2026-10-07",
+              "value_net_usdt": 993.405521
+            },
+            {
+              "date": "2026-10-08",
+              "value_net_usdt": 974.718648
+            },
+            {
+              "date": "2026-10-09",
+              "value_net_usdt": 985.223576
+            },
+            {
+              "date": "2026-10-10",
+              "value_net_usdt": 989.429959
+            },
+            {
+              "date": "2026-10-11",
+              "value_net_usdt": 998.786271
+            },
+            {
+              "date": "2026-10-12",
+              "value_net_usdt": 975.857845
+            },
+            {
+              "date": "2026-10-13",
+              "value_net_usdt": 991.583642
+            },
+            {
+              "date": "2026-10-14",
+              "value_net_usdt": 973.854981
+            },
+            {
+              "date": "2026-10-15",
+              "value_net_usdt": 980.578326
+            },
+            {
+              "date": "2026-10-16",
+              "value_net_usdt": 973.063684
+            },
+            {
+              "date": "2026-10-17",
+              "value_net_usdt": 971.578139
+            },
+            {
+              "date": "2026-10-18",
+              "value_net_usdt": 979.029234
+            },
+            {
+              "date": "2026-10-19",
+              "value_net_usdt": 976.911795
+            },
+            {
+              "date": "2026-10-20",
+              "value_net_usdt": 989.904355
+            },
+            {
+              "date": "2026-10-21",
+              "value_net_usdt": 1002.605053
+            },
+            {
+              "date": "2026-10-22",
+              "value_net_usdt": 970.684546
+            },
+            {
+              "date": "2026-10-23",
+              "value_net_usdt": 967.982189
+            },
+            {
+              "date": "2026-10-24",
+              "value_net_usdt": 964.390293
+            },
+            {
+              "date": "2026-10-25",
+              "value_net_usdt": 955.638332
+            },
+            {
+              "date": "2026-10-26",
+              "value_net_usdt": 955.596246
+            },
+            {
+              "date": "2026-10-27",
+              "value_net_usdt": 964.647938
+            },
+            {
+              "date": "2026-10-28",
+              "value_net_usdt": 969.819091
+            },
+            {
+              "date": "2026-10-29",
+              "value_net_usdt": 929.859471
+            },
+            {
+              "date": "2026-10-30",
+              "value_net_usdt": 922.430313
+            },
+            {
+              "date": "2026-10-31",
+              "value_net_usdt": 924.972789
+            }
+          ]
+        }
+      }
+    }
+  }
+}
