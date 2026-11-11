@@ -1,0 +1,52 @@
+name: Seven Heaven - Donchian 55 daily capital protection replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_2026_11_11.py'
+      - '.github/workflows/seven-heaven-donchian55-daily-capital-protection-replay.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-donchian55-capital-replay-main
+  cancel-in-progress: false
+
+jobs:
+  verified-daily-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify source SHA and replay exact historical transactions
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_2026_11_11.py
+      - name: Retain generated evidence as downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-donchian55-daily-capital-protection-replay
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_EVIDENCE_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_EVIDENCE_2026_11_11.json
+      - name: Publish verified evidence into shared research directory
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_EVIDENCE_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_DAILY_CAPITAL_PROTECTION_REPLAY_EVIDENCE_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Evidence already matches shared repository"
+          else
+            git commit -m "Publish verified Donchian 55 daily capital protection evidence"
+            git push origin HEAD:main
+          fi
