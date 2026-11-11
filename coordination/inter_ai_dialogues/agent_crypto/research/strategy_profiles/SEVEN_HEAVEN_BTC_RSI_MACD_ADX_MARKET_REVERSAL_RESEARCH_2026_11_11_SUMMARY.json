@@ -1,0 +1,214 @@
+{
+  "schema": "seven.heaven.btc.reversal.rsi-macd-adx-public-summary.v1",
+  "research_date": "2026-11-11",
+  "source": "16 supplied SHA256-verified Binance BTCUSDT 1m archives; 698400 1m bars; Jan-Mar 2024, Jan-Mar 2025, Jan-Oct 2026",
+  "sample_start": "February 1 UTC each period; January is 31-day warmup",
+  "samples": [
+    "2024-02 through 2024-03",
+    "2025-02 through 2025-03",
+    "2026-02 through 2026-10"
+  ],
+  "capital_usdt": 1000,
+  "fee_each_side": 0.001,
+  "slippage_each_side": 0.0005,
+  "trade_timing": "signals after completed UTC daily close, hypothetical trade at next UTC day's open",
+  "strategy_returns_pct": [
+    {
+      "method": "BUY_HOLD",
+      "pct": [
+        66.9,
+        -19.65,
+        -1.77
+      ]
+    },
+    {
+      "method": "EMA10_30",
+      "pct": [
+        45.86,
+        -5.78,
+        3.24
+      ]
+    },
+    {
+      "method": "SUPERTREND_ATR14_X3",
+      "pct": [
+        31.02,
+        -25.93,
+        15.8
+      ]
+    },
+    {
+      "method": "RSI14_50",
+      "pct": [
+        42.92,
+        -19.37,
+        7.77
+      ]
+    },
+    {
+      "method": "MACD_12_26_9",
+      "pct": [
+        36.33,
+        0,
+        -4.45
+      ]
+    },
+    {
+      "method": "ADX14_DI_20",
+      "pct": [
+        25.81,
+        -0.97,
+        -1.12
+      ]
+    },
+    {
+      "method": "TWO_OF_THREE",
+      "pct": [
+        41.6,
+        0,
+        8.12
+      ]
+    }
+  ],
+  "stress_double_costs_returns_pct": [
+    {
+      "method": "BUY_HOLD",
+      "pct": [
+        66.4,
+        -19.89,
+        -2.06
+      ]
+    },
+    {
+      "method": "EMA10_30",
+      "pct": [
+        44.99,
+        -6.34,
+        -0.42
+      ]
+    },
+    {
+      "method": "SUPERTREND_ATR14_X3",
+      "pct": [
+        30.62,
+        -26.37,
+        15.11
+      ]
+    },
+    {
+      "method": "RSI14_50",
+      "pct": [
+        41.21,
+        -20.57,
+        3.02
+      ]
+    },
+    {
+      "method": "MACD_12_26_9",
+      "pct": [
+        35.52,
+        0,
+        -7
+      ]
+    },
+    {
+      "method": "ADX14_DI_20",
+      "pct": [
+        25.06,
+        -1.27,
+        -2.88
+      ]
+    },
+    {
+      "method": "TWO_OF_THREE",
+      "pct": [
+        40.75,
+        0,
+        5.24
+      ]
+    }
+  ],
+  "drawdown_episodes": [
+    {
+      "year": "2024",
+      "date_utc": "2024-03-16",
+      "reference_peak_date_utc": "2024-03-13",
+      "drawdown_at_event_pct": -10.636,
+      "label_14d": "RECOVERED",
+      "change_14d_vs_event_pct": 6.557,
+      "ema_riskoff": false,
+      "macd_riskoff": true,
+      "rsi_riskoff": false,
+      "adx_riskoff": false
+    },
+    {
+      "year": "2025",
+      "date_utc": "2025-02-24",
+      "reference_peak_date_utc": "2025-01-30",
+      "drawdown_at_event_pct": -12.576,
+      "label_14d": "PERSISTENT",
+      "change_14d_vs_event_pct": -14.152,
+      "ema_riskoff": true,
+      "macd_riskoff": true,
+      "rsi_riskoff": true,
+      "adx_riskoff": true
+    },
+    {
+      "year": "2026",
+      "date_utc": "2026-02-01",
+      "reference_peak_date_utc": "2026-01-14",
+      "drawdown_at_event_pct": -20.612,
+      "label_14d": "PERSISTENT",
+      "change_14d_vs_event_pct": -10.57,
+      "ema_riskoff": true,
+      "macd_riskoff": true,
+      "rsi_riskoff": true,
+      "adx_riskoff": true
+    },
+    {
+      "year": "2026",
+      "date_utc": "2026-03-27",
+      "reference_peak_date_utc": "2026-03-16",
+      "drawdown_at_event_pct": -11.321,
+      "label_14d": "RECOVERED",
+      "change_14d_vs_event_pct": 9.872,
+      "ema_riskoff": true,
+      "macd_riskoff": true,
+      "rsi_riskoff": true,
+      "adx_riskoff": true
+    },
+    {
+      "year": "2026",
+      "date_utc": "2026-05-28",
+      "reference_peak_date_utc": "2026-05-10",
+      "drawdown_at_event_pct": -10.452,
+      "label_14d": "PERSISTENT",
+      "change_14d_vs_event_pct": -13.572,
+      "ema_riskoff": true,
+      "macd_riskoff": true,
+      "rsi_riskoff": true,
+      "adx_riskoff": true
+    },
+    {
+      "year": "2026",
+      "date_utc": "2026-10-30",
+      "reference_peak_date_utc": "2026-10-04",
+      "drawdown_at_event_pct": -10.587,
+      "label_14d": "CENSORED",
+      "change_14d_vs_event_pct": null,
+      "ema_riskoff": true,
+      "macd_riskoff": true,
+      "rsi_riskoff": true,
+      "adx_riskoff": true
+    }
+  ],
+  "source_of_truth": "Canonical full study report and published daily equity CSV",
+  "full_simulation_proof_json_published": false,
+  "full_script_published": false,
+  "limitations": [
+    "retrospective, nonoptimized thresholds but not prospective validation",
+    "signals causal, retrospective persistence labels use future days for evaluation only",
+    "no live executable order fills or OKX BTCUSDC validation",
+    "NO TRADE is 0 return not an investment gain"
+  ]
+}
