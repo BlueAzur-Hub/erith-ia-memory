@@ -1,0 +1,74 @@
+name: Seven Heaven - BTC ETH USDT capital rebalancing and VWAP source audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py'
+      - '.github/workflows/seven-heaven-btc-eth-cash-rebalancing-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-btc-eth-cash-rebalancing
+  cancel-in-progress: false
+
+jobs:
+  research-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify six BTC ETH market archives and compare passive monthly and quarterly portfolios
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py
+      - name: Test research contracts before archiving
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11')
+          d=json.loads(b.with_suffix('.json').read_text(encoding='utf-8'))
+          assert d['read_only'] and d['orders_enabled'] is False
+          assert d['hourly_bars_per_asset']==24840 and d['daily_bars_per_asset']==1035
+          assert set(d['scenarios'])=={'passive','monthly','quarterly','btc_full','eth_full','cash_full'}
+          assert len(d['asset_lineage'])==2
+          for k,v in d['asset_lineage'].items():
+              assert len(v['shards'])==3 and v['hours']==24840
+          for k,v in d['scenarios'].items():
+              assert len(v['daily_equity'])==1035
+              assert v['max_daily_drawdown_pct']<=0
+              assert v['net_return_pct']>-100
+              assert len(v['daily_equity'])==len({x['date'] for x in v['daily_equity']})
+          assert len(b.with_suffix('.md').read_text(encoding='utf-8'))>2000
+          print('SEVEN_REBALANCING_AND_VOLUME_LINEAGE_CONTRACT_VALIDATED')
+          PY
+      - name: Preserve independent research artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-eth-rebalance-vwap-source-audit
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.json
+      - name: Publish verified results into shared GitHub research
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Shared research already archived"
+          else
+            git commit -m "Archive BTC ETH capital rebalancing research and VWAP data validation"
+            git push origin HEAD:main
+          fi
