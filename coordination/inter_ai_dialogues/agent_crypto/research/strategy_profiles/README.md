@@ -14,6 +14,12 @@ L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue p
 - Sources prioritaires : archive Binance BTC/USDT du Coffre (multicycle), série OKX BTC/USDC validée (447 jours), archives officielles Binance Data Vision et Kraken pour les prochains recoupements. Les anciens ZIP OKX minute 2023–2024 avec `confirm=0` restent en quarantaine.
 - **Aucun signal ni ordre réel.** Les stratégies personnelles Swing / Buy & Hold ne sont pas modifiées par les simulations.
 
+## Étude transversale : DCA, EMA rapides, MACD, Bollinger et SuperTrend
+
+- [Audit de résilience des **10 stratégies pédagogiques** sur 2022, 2023, 2024 et 2025](./SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.md) : performances, drawdowns, nombre d'opérations, écarts face à Buy & Hold, y compris les méthodes perdantes.
+- [Résultats structurés](./SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.json) et [script de reproduction](./SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.py).
+- **Limite :** réanalyse de simulations déjà archivées avec capital réinitialisé chaque année. Ce n'est **pas** un nouveau backtest continu ni une validation prospective ; ne pas fusionner avec les douze variantes du second catalogue.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
