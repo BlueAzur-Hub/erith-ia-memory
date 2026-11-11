@@ -47,6 +47,13 @@ L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue p
 - **Résultat négatif conservé :** les croisements VWAP non filtrés déclenchent de nombreux faux signaux et frais ; l'étude ne démontre pas qu'une stratégie VWAP soit rentable. Le VWAP du graphique Administrator est un **cumul HLC3×volume sur les bougies chargées**, **non** un reset quotidien. Le test de fenêtre 300h est un proxy et **non** l'équivalent de l'interface OKX 15m.
 - Les profils existants **Tendance, Volatilité, Niveaux, Tous, Aucun** ne changent pas. Aucune mutation des indicateurs ni du Trader.
 
+## D11 — Spot Grid : risque de sortie de fourchette et faisabilité des exécutions
+
+- [**Rapport Spot Grid — 54 configurations, BTC/ETH, 2024–octobre 2026**](./SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.md) : durée dans une grille fixe, temps sous les bornes, palier touché vs ordre exécuté, calcul conditionnel d'un seul lot.
+- [**Preuves JSON, empreintes et 54 cas**](./SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.json) · [**programme Python reproductible**](./SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.py).
+- Les six archives horaires Binance Spot ont été vérifiées. **Aucun bénéfice de bot n'est affirmé**, car les OHLC horaires ne révèlent ni l'ordre des traversées des niveaux ni les remplissages réels. Le résultat scientifique est un **audit de faisabilité**, pas un backtest de rentabilité.
+- Les cinq profils de l'Administrator et les positions Swing / Buy & Hold personnelles restent inchangés.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
