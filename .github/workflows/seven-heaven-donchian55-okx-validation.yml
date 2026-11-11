@@ -1,0 +1,68 @@
+name: Seven Heaven - Independent OKX Donchian 55 validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.py'
+      - '.github/workflows/seven-heaven-donchian55-okx-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-don55-okx-independent-main
+  cancel-in-progress: false
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Replay frozen Donchian rules on verified Binance and confirmed OKX daily prices
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          base=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11')
+          evidence=json.loads(base.with_suffix('.json').read_text(encoding='utf-8'))
+          assert evidence['research_only'] and evidence['orders_enabled'] is False
+          assert evidence['verification']['canonical_100pct_matches'] and evidence['verification']['canonical_25pct_matches']
+          assert evidence['verification']['okx_confirmed_contiguous']
+          assert evidence['sources']['okx_meta']['instrument']=='BTC-USDC'
+          assert evidence['sources']['okx_meta']['bar']=='1Dutc'
+          assert evidence['sources']['okx_meta']['closed_candles']>=440
+          assert evidence['signal_overlap']['days']==183
+          assert len(evidence['windows'])==4
+          assert len(base.with_suffix('.md').read_text(encoding='utf-8'))>1100
+          print('INDEPENDENT_OKX_DON55_RESEARCH_ASSERTIONS_PASSED')
+          PY
+      - name: Preserve complete independent evidence as an Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-donchian55-independent-okx-validation
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.json
+      - name: Commit read-only research results in shared project folder
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Already verified and published"
+          else
+            git commit -m "Archive independent OKX Donchian 55 capital protection validation"
+            git push origin HEAD:main
+          fi
