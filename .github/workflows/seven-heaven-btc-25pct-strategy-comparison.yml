@@ -1,0 +1,72 @@
+name: Seven Heaven - 25 percent capital strategy comparison
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.py'
+      - '.github/workflows/seven-heaven-btc-25pct-strategy-comparison.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-25pct-strategy-comparison-main
+  cancel-in-progress: false
+
+jobs:
+  historical-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify and compare all 12 archived Bitcoin strategies
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,csv
+          folder=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles')
+          base=folder/'SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11'
+          x=json.loads(base.with_suffix('.json').read_text())
+          assert x['research_only'] and x['orders_enabled'] is False
+          assert x['source']['rows']==3075 and x['model']['days']==2830
+          assert len(x['methods'])==12 and len({r['key'] for r in x['methods']})==12
+          assert len([r for r in x['methods'] if r['key']=='DON55'])==1
+          assert len(base.with_suffix('.md').read_text())>1000
+          with base.with_suffix('.csv').open(newline='',encoding='utf-8') as f:
+              reader=csv.reader(f)
+              columns=next(reader)
+              assert len(columns)==13
+              assert sum(1 for _ in reader)==2830
+          print('SEVEN_25PCT_STRATEGIES_CI_CONTRACT_PASSED')
+          PY
+      - name: Keep independent GitHub Actions artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-strategies-25pct-comparison
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.json
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.csv
+      - name: Publish verified research in shared GitHub folder
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.json \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.csv
+          if git diff --cached --quiet; then
+            echo "Research evidence up to date"
+          else
+            git commit -m "Publish verified 25 percent allocation Bitcoin strategy comparisons"
+            git push origin HEAD:main
+          fi
