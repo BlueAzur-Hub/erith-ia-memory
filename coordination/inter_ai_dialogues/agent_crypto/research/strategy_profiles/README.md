@@ -54,6 +54,16 @@ L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue p
 - Les six archives horaires Binance Spot ont été vérifiées. **Aucun bénéfice de bot n'est affirmé**, car les OHLC horaires ne révèlent ni l'ordre des traversées des niveaux ni les remplissages réels. Le résultat scientifique est un **audit de faisabilité**, pas un backtest de rentabilité.
 - Les cinq profils de l'Administrator et les positions Swing / Buy & Hold personnelles restent inchangés.
 
+## D11 — Exploitation des ZIP Binance natifs à la minute
+
+**Étude réalisée le 11 novembre 2026 — quatre mois BTC/USDT en données natives 1 minute, sources déjà conservées en GitHub Releases :** 2024-01, 2025-01, 2026-01 et 2026-10. Les quatre SHA-256 natifs et la réconciliation 1m→1h ont été vérifiés sans reproduire les gros ZIP dans le dépôt.
+
+- [**Rapport Spot Grid minute — deux hypothèses de remplissage et valeur totale du capital**](./SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.md) : comparaison à Buy & Hold 50 % / 100 %, frais et glissement fictifs, positions ouvertes et liquidités disponibles.
+- [**Preuves JSON : 178 560 minutes contrôlées, P&L réalisé / latent, 4 × 2 trajectoires de simulation**](./SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.json) · [**script Python reproductible**](./SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11.py).
+- **Distinction fondamentale :** la présence d'un prix limite dans les OHLC d'une minute **n'est pas un ordre réellement rempli**. Les deux scénarios *TOUCH* et *CLOSE* sont des hypothèses d'exécution, pas des performances certifiées ni une fourchette probabiliste.
+- **Cas janvier 2026 :** malgré environ +42,28 USDT de lots clôturés dans le mode TOUCH, l'inventaire BTC restant présentait environ −98,12 USDT de perte latente ; le portefeuille finit à −5,58 %. Le fait de réaliser des gains sur des cycles ne garantit pas que l'ensemble du bot soit bénéficiaire.
+- **Ne pas fusionner les mois** : chaque mois reprend 1 000 USDT fictifs et redéfinit la grille ; l'étude annuelle précédente fige les niveaux pour une année entière. Les cinq profils du graphique Administrator ne sont pas concernés.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
