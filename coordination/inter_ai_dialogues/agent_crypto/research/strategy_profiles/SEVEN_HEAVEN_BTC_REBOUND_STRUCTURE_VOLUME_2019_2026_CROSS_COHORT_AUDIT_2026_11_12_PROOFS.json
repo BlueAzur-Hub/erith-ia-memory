@@ -1,0 +1,1256 @@
+{
+  "schema": "seven-heaven.btc-rebound-structure-volume-cross-cohort.v1",
+  "date_utc": "2026-11-12",
+  "protocol_commit": "a66a5ba37717eafd2d88e0f3fae90f69dc369667",
+  "source_files": [
+    {
+      "path": "SEVEN_HEAVEN_BTC_REBOUND_2019_2021_DAILY_HOLDOUT_AUDIT_2026_11_11_EVENTS.csv",
+      "git_blob_sha": "99e5c0e65f9c4484e9942b3d48cf4b0b28627c58",
+      "cohort": "2019-2021"
+    },
+    {
+      "path": "SEVEN_HEAVEN_BTC_REBOUND_STRUCTURE_VOLUME_EXPANDED_EVENTS_2026_11_11_EVENTS.csv",
+      "git_blob_sha": "a977664026c4c62d7654f53bf672cec49114f165",
+      "cohort": "2022-2026-fragments"
+    }
+  ],
+  "assumptions": {
+    "pair": "Binance Spot BTC/USDT",
+    "trigger": "-2.5% from last 30 closed days",
+    "minimum_spacing_days": 11,
+    "confirmation": "3 rising UTC daily closes",
+    "additional_filters": [
+      "higher daily lows",
+      "relative base BTC volume >= previous 20-day mean",
+      "EMA10>EMA30 and close>EMA30"
+    ],
+    "evaluation": "Hypothetical next daily open J+3 to J+10 close",
+    "fee_side": 0.001,
+    "slippage_side": 0.0005,
+    "stress_costs_multiplier": 2,
+    "independent_events_not_compoundable": true
+  },
+  "caveats": [
+    "No new out-of-sample validation, all constituent periods previously explored",
+    "2019-2021 daily reconciled; native 1m absent 5881 source minutes",
+    "2022-2026 years represent fragments of the year; stratified contrasts limited by small sample",
+    "No inference of causation or trading edge; event returns marked, not actual fills",
+    "No multiple-comparison correction; descriptive comparisons only"
+  ],
+  "statistics": {
+    "n_candidates": 119,
+    "n_evaluable": 113,
+    "n_censored": 6,
+    "group": {
+      "ALL": {
+        "n": 113,
+        "wins": 56,
+        "win_pct": 49.55752,
+        "mean_pct": 0.08879,
+        "median_pct": -0.00178,
+        "stress_mean_pct": -0.21133,
+        "wilson95_pct": [
+          40.50617,
+          58.63797
+        ]
+      },
+      "C3": {
+        "n": 28,
+        "wins": 16,
+        "win_pct": 57.14286,
+        "mean_pct": 2.41422,
+        "median_pct": 0.6462,
+        "stress_mean_pct": 2.10713,
+        "wilson95_pct": [
+          39.07048,
+          73.4917
+        ]
+      },
+      "C3_LOW3": {
+        "n": 17,
+        "wins": 10,
+        "win_pct": 58.82353,
+        "mean_pct": 3.66198,
+        "median_pct": 0.62331,
+        "stress_mean_pct": 3.35115,
+        "wilson95_pct": [
+          36.00507,
+          78.38921
+        ]
+      },
+      "C3_VOL": {
+        "n": 15,
+        "wins": 7,
+        "win_pct": 46.66667,
+        "mean_pct": 0.48513,
+        "median_pct": -0.6716,
+        "stress_mean_pct": 0.18383,
+        "wilson95_pct": [
+          24.80923,
+          69.88337
+        ]
+      },
+      "C3_EMA": {
+        "n": 19,
+        "wins": 12,
+        "win_pct": 63.15789,
+        "mean_pct": 5.17238,
+        "median_pct": 4.16447,
+        "stress_mean_pct": 4.85703,
+        "wilson95_pct": [
+          41.03916,
+          80.85073
+        ]
+      },
+      "C3_ALL": {
+        "n": 7,
+        "wins": 4,
+        "win_pct": 57.14286,
+        "mean_pct": 3.86007,
+        "median_pct": 0.37393,
+        "stress_mean_pct": 3.54865,
+        "wilson95_pct": [
+          25.04542,
+          84.17831
+        ]
+      }
+    },
+    "features": {
+      "low3": {
+        "yes": {
+          "n": 17,
+          "wins": 10,
+          "win_pct": 58.82353,
+          "mean_pct": 3.66198,
+          "median_pct": 0.62331,
+          "stress_mean_pct": 3.35115,
+          "wilson95_pct": [
+            36.00507,
+            78.38921
+          ]
+        },
+        "no": {
+          "n": 11,
+          "wins": 6,
+          "win_pct": 54.54545,
+          "mean_pct": 0.48587,
+          "median_pct": 0.66909,
+          "stress_mean_pct": 0.18456,
+          "wilson95_pct": [
+            28.00878,
+            78.72904
+          ]
+        },
+        "pooled_difference_pp": 3.17611,
+        "within_year_comparable": [
+          {
+            "year": 2019,
+            "yes": 3,
+            "no": 1,
+            "diff_pp": 7.63391,
+            "weight": 4
+          },
+          {
+            "year": 2021,
+            "yes": 3,
+            "no": 6,
+            "diff_pp": 12.89913,
+            "weight": 9
+          },
+          {
+            "year": 2022,
+            "yes": 1,
+            "no": 1,
+            "diff_pp": -22.28916,
+            "weight": 2
+          },
+          {
+            "year": 2024,
+            "yes": 1,
+            "no": 1,
+            "diff_pp": -21.05672,
+            "weight": 2
+          },
+          {
+            "year": 2026,
+            "yes": 4,
+            "no": 1,
+            "diff_pp": 2.43227,
+            "weight": 5
+          }
+        ],
+        "within_year_weighted_difference_pp": 3.27715,
+        "leave_one_year_out": {
+          "2019": {
+            "yes": 14,
+            "no": 10,
+            "diff_pp": 2.04073
+          },
+          "2020": {
+            "yes": 12,
+            "no": 11,
+            "diff_pp": 3.34306
+          },
+          "2021": {
+            "yes": 14,
+            "no": 5,
+            "diff_pp": -0.75262
+          },
+          "2022": {
+            "yes": 16,
+            "no": 10,
+            "diff_pp": 4.47333
+          },
+          "2023": {
+            "yes": 17,
+            "no": 10,
+            "diff_pp": 3.19443
+          },
+          "2024": {
+            "yes": 16,
+            "no": 10,
+            "diff_pp": 5.29587
+          },
+          "2025": {
+            "yes": 17,
+            "no": 11,
+            "diff_pp": 3.17611
+          },
+          "2026": {
+            "yes": 13,
+            "no": 10,
+            "diff_pp": 3.15926
+          }
+        }
+      },
+      "vol": {
+        "yes": {
+          "n": 15,
+          "wins": 7,
+          "win_pct": 46.66667,
+          "mean_pct": 0.48513,
+          "median_pct": -0.6716,
+          "stress_mean_pct": 0.18383,
+          "wilson95_pct": [
+            24.80923,
+            69.88337
+          ]
+        },
+        "no": {
+          "n": 13,
+          "wins": 9,
+          "win_pct": 69.23077,
+          "mean_pct": 4.64009,
+          "median_pct": 1.66899,
+          "stress_mean_pct": 4.32632,
+          "wilson95_pct": [
+            42.36889,
+            87.3195
+          ]
+        },
+        "pooled_difference_pp": -4.15495,
+        "within_year_comparable": [
+          {
+            "year": 2019,
+            "yes": 1,
+            "no": 3,
+            "diff_pp": -12.66461,
+            "weight": 4
+          },
+          {
+            "year": 2020,
+            "yes": 4,
+            "no": 1,
+            "diff_pp": 3.2975,
+            "weight": 5
+          },
+          {
+            "year": 2021,
+            "yes": 5,
+            "no": 4,
+            "diff_pp": -8.33711,
+            "weight": 9
+          },
+          {
+            "year": 2022,
+            "yes": 1,
+            "no": 1,
+            "diff_pp": -22.28916,
+            "weight": 2
+          },
+          {
+            "year": 2026,
+            "yes": 2,
+            "no": 3,
+            "diff_pp": 6.24512,
+            "weight": 5
+          }
+        ],
+        "within_year_weighted_difference_pp": -4.90231,
+        "leave_one_year_out": {
+          "2019": {
+            "yes": 14,
+            "no": 10,
+            "diff_pp": -2.10403
+          },
+          "2020": {
+            "yes": 11,
+            "no": 12,
+            "diff_pp": -5.73902
+          },
+          "2021": {
+            "yes": 10,
+            "no": 9,
+            "diff_pp": -2.22528
+          },
+          "2022": {
+            "yes": 14,
+            "no": 12,
+            "diff_pp": -3.00256
+          },
+          "2023": {
+            "yes": 15,
+            "no": 12,
+            "diff_pp": -4.48587
+          },
+          "2024": {
+            "yes": 13,
+            "no": 13,
+            "diff_pp": -5.01822
+          },
+          "2025": {
+            "yes": 15,
+            "no": 13,
+            "diff_pp": -4.15495
+          },
+          "2026": {
+            "yes": 13,
+            "no": 10,
+            "diff_pp": -6.26991
+          }
+        }
+      },
+      "ema": {
+        "yes": {
+          "n": 19,
+          "wins": 12,
+          "win_pct": 63.15789,
+          "mean_pct": 5.17238,
+          "median_pct": 4.16447,
+          "stress_mean_pct": 4.85703,
+          "wilson95_pct": [
+            41.03916,
+            80.85073
+          ]
+        },
+        "no": {
+          "n": 9,
+          "wins": 4,
+          "win_pct": 44.44444,
+          "mean_pct": -3.40858,
+          "median_pct": -0.6716,
+          "stress_mean_pct": -3.69821,
+          "wilson95_pct": [
+            18.87754,
+            73.33527
+          ]
+        },
+        "pooled_difference_pp": 8.58096,
+        "within_year_comparable": [
+          {
+            "year": 2019,
+            "yes": 1,
+            "no": 3,
+            "diff_pp": 21.15831,
+            "weight": 4
+          },
+          {
+            "year": 2021,
+            "yes": 8,
+            "no": 1,
+            "diff_pp": 6.45119,
+            "weight": 9
+          },
+          {
+            "year": 2026,
+            "yes": 3,
+            "no": 2,
+            "diff_pp": 5.19352,
+            "weight": 5
+          }
+        ],
+        "within_year_weighted_difference_pp": 9.37009,
+        "leave_one_year_out": {
+          "2019": {
+            "yes": 18,
+            "no": 6,
+            "diff_pp": 10.50732
+          },
+          "2020": {
+            "yes": 14,
+            "no": 9,
+            "diff_pp": 9.26349
+          },
+          "2021": {
+            "yes": 11,
+            "no": 8,
+            "diff_pp": 9.77588
+          },
+          "2022": {
+            "yes": 19,
+            "no": 7,
+            "diff_pp": 4.26676
+          },
+          "2023": {
+            "yes": 19,
+            "no": 8,
+            "diff_pp": 9.09067
+          },
+          "2024": {
+            "yes": 17,
+            "no": 9,
+            "diff_pp": 8.47226
+          },
+          "2025": {
+            "yes": 19,
+            "no": 9,
+            "diff_pp": 8.58096
+          },
+          "2026": {
+            "yes": 16,
+            "no": 7,
+            "diff_pp": 9.59986
+          }
+        }
+      }
+    },
+    "years": {
+      "2019": {
+        "cohort": "2019-2021",
+        "candidates": 25,
+        "censored": 1,
+        "evaluable": 24,
+        "confirmed": 4,
+        "group": {
+          "ALL": {
+            "n": 24,
+            "wins": 14,
+            "win_pct": 58.33333,
+            "mean_pct": 0.53368,
+            "median_pct": 1.55871,
+            "stress_mean_pct": 0.23223,
+            "wilson95_pct": [
+              38.83434,
+              75.53265
+            ]
+          },
+          "C3": {
+            "n": 4,
+            "wins": 3,
+            "win_pct": 75,
+            "mean_pct": 7.78746,
+            "median_pct": 4.60233,
+            "stress_mean_pct": 7.46426,
+            "wilson95_pct": [
+              30.06361,
+              95.44139
+            ]
+          },
+          "C3_LOW3": {
+            "n": 3,
+            "wins": 2,
+            "win_pct": 66.66667,
+            "mean_pct": 9.69594,
+            "median_pct": 7.14262,
+            "stress_mean_pct": 9.36702,
+            "wilson95_pct": [
+              20.7655,
+              93.85097
+            ]
+          },
+          "C3_VOL": {
+            "n": 1,
+            "wins": 0,
+            "win_pct": 0,
+            "mean_pct": -1.71099,
+            "median_pct": -1.71099,
+            "stress_mean_pct": -2.00571,
+            "wilson95_pct": [
+              0,
+              79.34567
+            ]
+          },
+          "C3_EMA": {
+            "n": 1,
+            "wins": 1,
+            "win_pct": 100,
+            "mean_pct": 23.6562,
+            "median_pct": 23.6562,
+            "stress_mean_pct": 23.28541,
+            "wilson95_pct": [
+              20.65433,
+              100
+            ]
+          },
+          "C3_ALL": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          }
+        },
+        "feature_count": {
+          "low3": 3,
+          "vol": 1,
+          "ema": 1
+        },
+        "c1_wins_rejected": 8,
+        "c1_losses_rejected": 12
+      },
+      "2020": {
+        "cohort": "2019-2021",
+        "candidates": 24,
+        "censored": 1,
+        "evaluable": 23,
+        "confirmed": 5,
+        "group": {
+          "ALL": {
+            "n": 23,
+            "wins": 12,
+            "win_pct": 52.17391,
+            "mean_pct": 2.17679,
+            "median_pct": 0.10767,
+            "stress_mean_pct": 1.87041,
+            "wilson95_pct": [
+              32.96243,
+              70.76313
+            ]
+          },
+          "C3": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": 3.2613,
+            "median_pct": 0.62331,
+            "stress_mean_pct": 2.95167,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          },
+          "C3_LOW3": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": 3.2613,
+            "median_pct": 0.62331,
+            "stress_mean_pct": 2.95167,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          },
+          "C3_VOL": {
+            "n": 4,
+            "wins": 2,
+            "win_pct": 50,
+            "mean_pct": 3.9208,
+            "median_pct": 2.62145,
+            "stress_mean_pct": 3.60919,
+            "wilson95_pct": [
+              15.00357,
+              84.99643
+            ]
+          },
+          "C3_EMA": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": 3.2613,
+            "median_pct": 0.62331,
+            "stress_mean_pct": 2.95167,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          },
+          "C3_ALL": {
+            "n": 4,
+            "wins": 2,
+            "win_pct": 50,
+            "mean_pct": 3.9208,
+            "median_pct": 2.62145,
+            "stress_mean_pct": 3.60919,
+            "wilson95_pct": [
+              15.00357,
+              84.99643
+            ]
+          }
+        },
+        "feature_count": {
+          "low3": 5,
+          "vol": 4,
+          "ema": 5
+        },
+        "c1_wins_rejected": 8,
+        "c1_losses_rejected": 10
+      },
+      "2021": {
+        "cohort": "2019-2021",
+        "candidates": 27,
+        "censored": 1,
+        "evaluable": 26,
+        "confirmed": 9,
+        "group": {
+          "ALL": {
+            "n": 26,
+            "wins": 11,
+            "win_pct": 42.30769,
+            "mean_pct": -1.22904,
+            "median_pct": -1.22195,
+            "stress_mean_pct": -1.5252,
+            "wilson95_pct": [
+              25.54419,
+              61.0517
+            ]
+          },
+          "C3": {
+            "n": 9,
+            "wins": 5,
+            "win_pct": 55.55556,
+            "mean_pct": 2.9136,
+            "median_pct": 0.37393,
+            "stress_mean_pct": 2.60501,
+            "wilson95_pct": [
+              26.66473,
+              81.12246
+            ]
+          },
+          "C3_LOW3": {
+            "n": 3,
+            "wins": 3,
+            "win_pct": 100,
+            "mean_pct": 11.51302,
+            "median_pct": 7.03743,
+            "stress_mean_pct": 11.17865,
+            "wilson95_pct": [
+              43.84939,
+              100
+            ]
+          },
+          "C3_VOL": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": -0.79178,
+            "median_pct": 0.37393,
+            "stress_mean_pct": -1.08926,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          },
+          "C3_EMA": {
+            "n": 8,
+            "wins": 5,
+            "win_pct": 62.5,
+            "mean_pct": 3.6304,
+            "median_pct": 2.72274,
+            "stress_mean_pct": 3.31966,
+            "wilson95_pct": [
+              30.57379,
+              86.31582
+            ]
+          },
+          "C3_ALL": {
+            "n": 1,
+            "wins": 1,
+            "win_pct": 100,
+            "mean_pct": 0.37393,
+            "median_pct": 0.37393,
+            "stress_mean_pct": 0.07296,
+            "wilson95_pct": [
+              20.65433,
+              100
+            ]
+          }
+        },
+        "feature_count": {
+          "low3": 3,
+          "vol": 5,
+          "ema": 8
+        },
+        "c1_wins_rejected": 4,
+        "c1_losses_rejected": 13
+      },
+      "2022": {
+        "cohort": "2022-2026-fragments",
+        "candidates": 5,
+        "censored": 0,
+        "evaluable": 5,
+        "confirmed": 2,
+        "group": {
+          "ALL": {
+            "n": 5,
+            "wins": 2,
+            "win_pct": 40,
+            "mean_pct": -10.80488,
+            "median_pct": -7.3637,
+            "stress_mean_pct": -11.07233,
+            "wilson95_pct": [
+              11.76182,
+              76.92801
+            ]
+          },
+          "C3": {
+            "n": 2,
+            "wins": 0,
+            "win_pct": 0,
+            "mean_pct": -18.50828,
+            "median_pct": -18.50828,
+            "stress_mean_pct": -18.75264,
+            "wilson95_pct": [
+              0,
+              65.7628
+            ]
+          },
+          "C3_LOW3": {
+            "n": 1,
+            "wins": 0,
+            "win_pct": 0,
+            "mean_pct": -29.65286,
+            "median_pct": -29.65286,
+            "stress_mean_pct": -29.8638,
+            "wilson95_pct": [
+              0,
+              79.34567
+            ]
+          },
+          "C3_VOL": {
+            "n": 1,
+            "wins": 0,
+            "win_pct": 0,
+            "mean_pct": -29.65286,
+            "median_pct": -29.65286,
+            "stress_mean_pct": -29.8638,
+            "wilson95_pct": [
+              0,
+              79.34567
+            ]
+          },
+          "C3_EMA": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_ALL": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          }
+        },
+        "feature_count": {
+          "low3": 1,
+          "vol": 1,
+          "ema": 0
+        },
+        "c1_wins_rejected": 0,
+        "c1_losses_rejected": 3
+      },
+      "2023": {
+        "cohort": "2022-2026-fragments",
+        "candidates": 5,
+        "censored": 0,
+        "evaluable": 5,
+        "confirmed": 1,
+        "group": {
+          "ALL": {
+            "n": 5,
+            "wins": 2,
+            "win_pct": 40,
+            "mean_pct": 0.70426,
+            "median_pct": -0.87764,
+            "stress_mean_pct": 0.40229,
+            "wilson95_pct": [
+              11.76182,
+              76.92801
+            ]
+          },
+          "C3": {
+            "n": 1,
+            "wins": 1,
+            "win_pct": 100,
+            "mean_pct": 0.66909,
+            "median_pct": 0.66909,
+            "stress_mean_pct": 0.36723,
+            "wilson95_pct": [
+              20.65433,
+              100
+            ]
+          },
+          "C3_LOW3": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_VOL": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_EMA": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_ALL": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          }
+        },
+        "feature_count": {
+          "low3": 0,
+          "vol": 0,
+          "ema": 0
+        },
+        "c1_wins_rejected": 1,
+        "c1_losses_rejected": 3
+      },
+      "2024": {
+        "cohort": "2022-2026-fragments",
+        "candidates": 5,
+        "censored": 1,
+        "evaluable": 4,
+        "confirmed": 2,
+        "group": {
+          "ALL": {
+            "n": 4,
+            "wins": 3,
+            "win_pct": 75,
+            "mean_pct": 8.99459,
+            "median_pct": 11.89279,
+            "stress_mean_pct": 8.66777,
+            "wilson95_pct": [
+              30.06361,
+              95.44139
+            ]
+          },
+          "C3": {
+            "n": 2,
+            "wins": 1,
+            "win_pct": 50,
+            "mean_pct": 6.09639,
+            "median_pct": 6.09639,
+            "stress_mean_pct": 5.77826,
+            "wilson95_pct": [
+              9.45287,
+              90.54713
+            ]
+          },
+          "C3_LOW3": {
+            "n": 1,
+            "wins": 0,
+            "win_pct": 0,
+            "mean_pct": -4.43197,
+            "median_pct": -4.43197,
+            "stress_mean_pct": -4.71853,
+            "wilson95_pct": [
+              0,
+              79.34567
+            ]
+          },
+          "C3_VOL": {
+            "n": 2,
+            "wins": 1,
+            "win_pct": 50,
+            "mean_pct": 6.09639,
+            "median_pct": 6.09639,
+            "stress_mean_pct": 5.77826,
+            "wilson95_pct": [
+              9.45287,
+              90.54713
+            ]
+          },
+          "C3_EMA": {
+            "n": 2,
+            "wins": 1,
+            "win_pct": 50,
+            "mean_pct": 6.09639,
+            "median_pct": 6.09639,
+            "stress_mean_pct": 5.77826,
+            "wilson95_pct": [
+              9.45287,
+              90.54713
+            ]
+          },
+          "C3_ALL": {
+            "n": 1,
+            "wins": 0,
+            "win_pct": 0,
+            "mean_pct": -4.43197,
+            "median_pct": -4.43197,
+            "stress_mean_pct": -4.71853,
+            "wilson95_pct": [
+              0,
+              79.34567
+            ]
+          }
+        },
+        "feature_count": {
+          "low3": 1,
+          "vol": 2,
+          "ema": 2
+        },
+        "c1_wins_rejected": 2,
+        "c1_losses_rejected": 0
+      },
+      "2025": {
+        "cohort": "2022-2026-fragments",
+        "candidates": 5,
+        "censored": 1,
+        "evaluable": 4,
+        "confirmed": 0,
+        "group": {
+          "ALL": {
+            "n": 4,
+            "wins": 1,
+            "win_pct": 25,
+            "mean_pct": -2.11473,
+            "median_pct": -2.66956,
+            "stress_mean_pct": -2.40824,
+            "wilson95_pct": [
+              4.55861,
+              69.93639
+            ]
+          },
+          "C3": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_LOW3": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_VOL": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_EMA": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          },
+          "C3_ALL": {
+            "n": 0,
+            "wins": 0,
+            "win_pct": null,
+            "mean_pct": null,
+            "median_pct": null,
+            "stress_mean_pct": null,
+            "wilson95_pct": null
+          }
+        },
+        "feature_count": {
+          "low3": 0,
+          "vol": 0,
+          "ema": 0
+        },
+        "c1_wins_rejected": 1,
+        "c1_losses_rejected": 3
+      },
+      "2026": {
+        "cohort": "2022-2026-fragments",
+        "candidates": 23,
+        "censored": 1,
+        "evaluable": 22,
+        "confirmed": 5,
+        "group": {
+          "ALL": {
+            "n": 22,
+            "wins": 11,
+            "win_pct": 50,
+            "mean_pct": 0.09533,
+            "median_pct": -0.13732,
+            "stress_mean_pct": -0.20481,
+            "wilson95_pct": [
+              30.7218,
+              69.2782
+            ]
+          },
+          "C3": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": 3.6148,
+            "median_pct": 1.66899,
+            "stress_mean_pct": 3.30411,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          },
+          "C3_LOW3": {
+            "n": 4,
+            "wins": 2,
+            "win_pct": 50,
+            "mean_pct": 4.10126,
+            "median_pct": 1.74644,
+            "stress_mean_pct": 3.78911,
+            "wilson95_pct": [
+              15.00357,
+              84.99643
+            ]
+          },
+          "C3_VOL": {
+            "n": 2,
+            "wins": 1,
+            "win_pct": 50,
+            "mean_pct": 7.36188,
+            "median_pct": 7.36188,
+            "stress_mean_pct": 7.03996,
+            "wilson95_pct": [
+              9.45287,
+              90.54713
+            ]
+          },
+          "C3_EMA": {
+            "n": 3,
+            "wins": 2,
+            "win_pct": 66.66667,
+            "mean_pct": 5.69221,
+            "median_pct": 4.16447,
+            "stress_mean_pct": 5.37529,
+            "wilson95_pct": [
+              20.7655,
+              93.85097
+            ]
+          },
+          "C3_ALL": {
+            "n": 1,
+            "wins": 1,
+            "win_pct": 100,
+            "mean_pct": 15.39535,
+            "median_pct": 15.39535,
+            "stress_mean_pct": 15.04934,
+            "wilson95_pct": [
+              20.65433,
+              100
+            ]
+          }
+        },
+        "feature_count": {
+          "low3": 4,
+          "vol": 2,
+          "ema": 3
+        },
+        "c1_wins_rejected": 5,
+        "c1_losses_rejected": 12
+      }
+    },
+    "cohorts": {
+      "2019-2021": {
+        "candidates": 76,
+        "evaluable": 73,
+        "groups": {
+          "ALL": {
+            "n": 73,
+            "wins": 37,
+            "win_pct": 50.68493,
+            "mean_pct": 0.42356,
+            "median_pct": 0.10767,
+            "stress_mean_pct": 0.12244,
+            "wilson95_pct": [
+              39.47204,
+              61.82933
+            ]
+          },
+          "C3": {
+            "n": 18,
+            "wins": 11,
+            "win_pct": 61.11111,
+            "mean_pct": 4.09327,
+            "median_pct": 1.34267,
+            "stress_mean_pct": 3.78114,
+            "wilson95_pct": [
+              38.61867,
+              79.69501
+            ]
+          },
+          "C3_LOW3": {
+            "n": 11,
+            "wins": 8,
+            "win_pct": 72.72727,
+            "mean_pct": 7.26667,
+            "median_pct": 7.03743,
+            "stress_mean_pct": 6.94503,
+            "wilson95_pct": [
+              43.43497,
+              90.25412
+            ]
+          },
+          "C3_VOL": {
+            "n": 10,
+            "wins": 5,
+            "win_pct": 50,
+            "mean_pct": 1.00133,
+            "median_pct": -0.66853,
+            "stress_mean_pct": 0.69848,
+            "wilson95_pct": [
+              23.65896,
+              76.34104
+            ]
+          },
+          "C3_EMA": {
+            "n": 14,
+            "wins": 9,
+            "win_pct": 64.28571,
+            "mean_pct": 4.92899,
+            "median_pct": 2.84743,
+            "stress_mean_pct": 4.61436,
+            "wilson95_pct": [
+              38.764,
+              83.65551
+            ]
+          },
+          "C3_ALL": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": 3.21143,
+            "median_pct": 0.37393,
+            "stress_mean_pct": 2.90195,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          }
+        }
+      },
+      "2022-2026-fragments": {
+        "candidates": 43,
+        "evaluable": 40,
+        "groups": {
+          "ALL": {
+            "n": 40,
+            "wins": 19,
+            "win_pct": 47.5,
+            "mean_pct": -0.52216,
+            "median_pct": -0.38148,
+            "stress_mean_pct": -0.82044,
+            "wilson95_pct": [
+              32.93523,
+              62.50289
+            ]
+          },
+          "C3": {
+            "n": 10,
+            "wins": 5,
+            "win_pct": 50,
+            "mean_pct": -0.60807,
+            "median_pct": -0.00126,
+            "stress_mean_pct": -0.9061,
+            "wilson95_pct": [
+              23.65896,
+              76.34104
+            ]
+          },
+          "C3_LOW3": {
+            "n": 6,
+            "wins": 2,
+            "win_pct": 33.33333,
+            "mean_pct": -2.94663,
+            "median_pct": -1.57739,
+            "stress_mean_pct": -3.23765,
+            "wilson95_pct": [
+              9.67693,
+              70.00117
+            ]
+          },
+          "C3_VOL": {
+            "n": 5,
+            "wins": 2,
+            "win_pct": 40,
+            "mean_pct": -0.54727,
+            "median_pct": -0.6716,
+            "stress_mean_pct": -0.84547,
+            "wilson95_pct": [
+              11.76182,
+              76.92801
+            ]
+          },
+          "C3_EMA": {
+            "n": 5,
+            "wins": 3,
+            "win_pct": 60,
+            "mean_pct": 5.85388,
+            "median_pct": 4.16447,
+            "stress_mean_pct": 5.53648,
+            "wilson95_pct": [
+              23.07199,
+              88.23818
+            ]
+          },
+          "C3_ALL": {
+            "n": 2,
+            "wins": 1,
+            "win_pct": 50,
+            "mean_pct": 5.48169,
+            "median_pct": 5.48169,
+            "stress_mean_pct": 5.16541,
+            "wilson95_pct": [
+              9.45287,
+              90.54713
+            ]
+          }
+        }
+      }
+    }
+  }
+}
