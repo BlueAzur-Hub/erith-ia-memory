@@ -1,0 +1,768 @@
+{
+  "schema": "seven-heaven.btc-three-day-structure-volume-event-audit.v1",
+  "study_date": "2026-11-11",
+  "paper_only": true,
+  "orders_sent": 0,
+  "previously_explored_windows": true,
+  "protocol_file": "SEVEN_HEAVEN_BTC_THREE_DAILY_CANDLES_REBOUND_STRUCTURE_VOLUME_AUDIT_2026_11_11_PROTOCOL.md",
+  "protocol_github_commit": "42c4be6b605ae82cd16f512fc7019ea54599bc6e",
+  "script_sha256": "d48974d24c2b88ce681338a7498ffdf450fe799686368f1702d45d8f863215ca",
+  "upstream_22_month_sha_registry": "SEVEN_HEAVEN_BTC_SIGNAL_DURABILITY_DELAY_COST_AUDIT_2026_11_11_PROOFS.json",
+  "source_months": [
+    {
+      "month": "2022-04",
+      "sha256": "6e840c81076ac25e6acdbfe4aaeb7aa8b1895a70d8111a3c2908c5134072f097",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2103010,
+      "base_volume_btc": 1267644.42492
+    },
+    {
+      "month": "2022-05",
+      "sha256": "154311f08aa264e233b0c7b472aa490c8cfd1b6083ba86cf6c18134e50536b89",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2216492,
+      "base_volume_btc": 2387839.656344
+    },
+    {
+      "month": "2022-06",
+      "sha256": "0ced8899e9c3b2c098e1c5fc4993250bac22d8684d2d38404310351f35e32c0c",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2158139,
+      "base_volume_btc": 2816058.473226
+    },
+    {
+      "month": "2023-04",
+      "sha256": "c71baedea84f9fc1a0ad297b383505b1cb84c0a7fc111caa149aa6fb2defa5da",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2064504,
+      "base_volume_btc": 1626745.5585
+    },
+    {
+      "month": "2023-05",
+      "sha256": "c83bd079dc67b9e542d07fe9491f8b1bf513185d6d7cc4ce17710f21c8d0037b",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2111728,
+      "base_volume_btc": 1302000.49221
+    },
+    {
+      "month": "2023-06",
+      "sha256": "d8cf5d1817fa1d8cba8eaf4d189614cf05b15d7233e9e29a0156d2dee2cfaad1",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2043702,
+      "base_volume_btc": 1387207.48275
+    },
+    {
+      "month": "2024-01",
+      "sha256": "40b78258091a468f8756843f207f5913eafc1d6e756c40a78711320d93fa5e75",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2169570,
+      "base_volume_btc": 1403408.84978
+    },
+    {
+      "month": "2024-02",
+      "sha256": "431132e0db8b9fe6e5c93c8e9ba3ae37dbcfa0edcdd57618b1b78ac18d14be79",
+      "minute_count": 41760,
+      "daily_count": 29,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2013843,
+      "base_volume_btc": 1206112.69545
+    },
+    {
+      "month": "2024-03",
+      "sha256": "a9af86295eae839f1d072643c67eed7fcc47bb1d82c12ef312d041eec9511e7b",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "ms",
+      "zip_bytes": 2221094,
+      "base_volume_btc": 1706807.381342
+    },
+    {
+      "month": "2025-01",
+      "sha256": "8d028b2f91aad57d6b693d44449c93f9c4b7044f55f298c8a3ac40ab676dafac",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2222830,
+      "base_volume_btc": 864534.738322
+    },
+    {
+      "month": "2025-02",
+      "sha256": "26b3795072983a66bdbe8327e0d5e71069bdd5ca831d4da3850ba68ef7a991ef",
+      "minute_count": 40320,
+      "daily_count": 28,
+      "timestamp_unit": "us",
+      "zip_bytes": 1993970,
+      "base_volume_btc": 810850.1813
+    },
+    {
+      "month": "2025-03",
+      "sha256": "e333601b6c721434f3cdd6670ffde2371bef7946572864c49ba6431a690ab1ca",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2215591,
+      "base_volume_btc": 845293.53101
+    },
+    {
+      "month": "2026-01",
+      "sha256": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2127988,
+      "base_volume_btc": 491752.73296
+    },
+    {
+      "month": "2026-02",
+      "sha256": "cee2e913ed07e02834e2387c65ca430fe3576f620588bad8a02229238f385407",
+      "minute_count": 40320,
+      "daily_count": 28,
+      "timestamp_unit": "us",
+      "zip_bytes": 2021779,
+      "base_volume_btc": 837887.67719
+    },
+    {
+      "month": "2026-03",
+      "sha256": "a2c1e689d39aa7877e218f436f15162e9a4436778a377d32e9d9b81b081381cd",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2213444,
+      "base_volume_btc": 705639.88404
+    },
+    {
+      "month": "2026-04",
+      "sha256": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "us",
+      "zip_bytes": 2088776,
+      "base_volume_btc": 473256.46982
+    },
+    {
+      "month": "2026-05",
+      "sha256": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2120776,
+      "base_volume_btc": 425331.03039
+    },
+    {
+      "month": "2026-06",
+      "sha256": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "us",
+      "zip_bytes": 2092027,
+      "base_volume_btc": 632661.43583
+    },
+    {
+      "month": "2026-07",
+      "sha256": "3ef15c84353da48e1c7c5fd99b9751cb036bf8986ed47f7cd1be63359c0d4f6b",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2112275,
+      "base_volume_btc": 496528.30804
+    },
+    {
+      "month": "2026-08",
+      "sha256": "acab442e02745177063031d402929703ae983715010064b40cf811c4beb843d4",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2084946,
+      "base_volume_btc": 472053.26866
+    },
+    {
+      "month": "2026-09",
+      "sha256": "7a021fb5981cfdb1a56457d68fa81360ab27350c981ddfe63112b2322df44b56",
+      "minute_count": 43200,
+      "daily_count": 30,
+      "timestamp_unit": "us",
+      "zip_bytes": 2054117,
+      "base_volume_btc": 469465.12983
+    },
+    {
+      "month": "2026-10",
+      "sha256": "17168f260306752e39177a6c038bb8952f52bf08ff20e36d8da6068732621f1c",
+      "minute_count": 44640,
+      "daily_count": 31,
+      "timestamp_unit": "us",
+      "zip_bytes": 2111822,
+      "base_volume_btc": 446577.31252
+    }
+  ],
+  "minute_candles_verified": 960480,
+  "daily_bars_verified": 667,
+  "periods": {
+    "2022": {
+      "daily_count": 91,
+      "up": {
+        "n_candidates": 3,
+        "n_scored": 3,
+        "n_right_censored": 0,
+        "c1_mean_episode_pct": -9.9463,
+        "c1_median_episode_pct": -5.1228,
+        "c1_positive_events": 0,
+        "c3_confirmed": 0,
+        "c3_rejected": 3,
+        "mean_confirmed_entry_price_delay_pct": null,
+        "median_confirmed_entry_price_delay_pct": null,
+        "rejected_would_have_been_profitable_c1": 0,
+        "rejected_would_have_lost_c1": 3,
+        "observed_j3_to_j10_outcomes": {
+          "RISE_GE3": {
+            "n": 1,
+            "rate_pct": 33.33,
+            "wilson95_pct": [
+              6.15,
+              79.23
+            ]
+          },
+          "FALL_LE_MINUS3": {
+            "n": 1,
+            "rate_pct": 33.33,
+            "wilson95_pct": [
+              6.15,
+              79.23
+            ]
+          },
+          "RANGE_ABS_LT3": {
+            "n": 1,
+            "rate_pct": 33.33,
+            "wilson95_pct": [
+              6.15,
+              79.23
+            ]
+          }
+        },
+        "standalone_policies": {
+          "C3": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_STRUCTURE": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_VOLUME": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_FULL": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          }
+        }
+      },
+      "down": {
+        "n_candidates": 3,
+        "n_scored": 2,
+        "n_right_censored": 1,
+        "confirmed_c3": 1,
+        "mean_j3_to_j10_pct": -7.9878,
+        "j3_to_j10_outcome_counts": {
+          "RISE_GE3": 0,
+          "FALL_LE_MINUS3": 2,
+          "RANGE_ABS_LT3": 0
+        }
+      }
+    },
+    "2023": {
+      "daily_count": 91,
+      "up": {
+        "n_candidates": 3,
+        "n_scored": 3,
+        "n_right_censored": 0,
+        "c1_mean_episode_pct": 3.281,
+        "c1_median_episode_pct": 2.1159,
+        "c1_positive_events": 2,
+        "c3_confirmed": 1,
+        "c3_rejected": 2,
+        "mean_confirmed_entry_price_delay_pct": 1.4372,
+        "median_confirmed_entry_price_delay_pct": 1.4372,
+        "rejected_would_have_been_profitable_c1": 1,
+        "rejected_would_have_lost_c1": 1,
+        "observed_j3_to_j10_outcomes": {
+          "RISE_GE3": {
+            "n": 1,
+            "rate_pct": 33.33,
+            "wilson95_pct": [
+              6.15,
+              79.23
+            ]
+          },
+          "FALL_LE_MINUS3": {
+            "n": 1,
+            "rate_pct": 33.33,
+            "wilson95_pct": [
+              6.15,
+              79.23
+            ]
+          },
+          "RANGE_ABS_LT3": {
+            "n": 1,
+            "rate_pct": 33.33,
+            "wilson95_pct": [
+              6.15,
+              79.23
+            ]
+          }
+        },
+        "standalone_policies": {
+          "C3": {
+            "trades_hypothetical": 1,
+            "skipped": 2,
+            "mean_standalone_episode_pct": 0.223,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 1,
+            "mean_stress2x_standalone_episode_pct": 0.1224
+          },
+          "C3_STRUCTURE": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_VOLUME": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_FULL": {
+            "trades_hypothetical": 0,
+            "skipped": 3,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          }
+        }
+      },
+      "down": {
+        "n_candidates": 3,
+        "n_scored": 2,
+        "n_right_censored": 1,
+        "confirmed_c3": 1,
+        "mean_j3_to_j10_pct": -4.8521,
+        "j3_to_j10_outcome_counts": {
+          "RISE_GE3": 0,
+          "FALL_LE_MINUS3": 1,
+          "RANGE_ABS_LT3": 1
+        }
+      }
+    },
+    "2024": {
+      "daily_count": 91,
+      "up": {
+        "n_candidates": 2,
+        "n_scored": 2,
+        "n_right_censored": 0,
+        "c1_mean_episode_pct": 5.1533,
+        "c1_median_episode_pct": 5.1533,
+        "c1_positive_events": 1,
+        "c3_confirmed": 1,
+        "c3_rejected": 1,
+        "mean_confirmed_entry_price_delay_pct": 3.1028,
+        "median_confirmed_entry_price_delay_pct": 3.1028,
+        "rejected_would_have_been_profitable_c1": 1,
+        "rejected_would_have_lost_c1": 0,
+        "observed_j3_to_j10_outcomes": {
+          "RISE_GE3": {
+            "n": 1,
+            "rate_pct": 50.0,
+            "wilson95_pct": [
+              9.45,
+              90.55
+            ]
+          },
+          "FALL_LE_MINUS3": {
+            "n": 1,
+            "rate_pct": 50.0,
+            "wilson95_pct": [
+              9.45,
+              90.55
+            ]
+          },
+          "RANGE_ABS_LT3": {
+            "n": 0,
+            "rate_pct": 0.0,
+            "wilson95_pct": [
+              0.0,
+              65.76
+            ]
+          }
+        },
+        "standalone_policies": {
+          "C3": {
+            "trades_hypothetical": 1,
+            "skipped": 1,
+            "mean_standalone_episode_pct": -2.216,
+            "median_standalone_episode_pct": -2.216,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": -2.3593
+          },
+          "C3_STRUCTURE": {
+            "trades_hypothetical": 1,
+            "skipped": 1,
+            "mean_standalone_episode_pct": -2.216,
+            "median_standalone_episode_pct": -2.216,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": -2.3593
+          },
+          "C3_VOLUME": {
+            "trades_hypothetical": 1,
+            "skipped": 1,
+            "mean_standalone_episode_pct": -2.216,
+            "median_standalone_episode_pct": -2.216,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": -2.3593
+          },
+          "C3_FULL": {
+            "trades_hypothetical": 1,
+            "skipped": 1,
+            "mean_standalone_episode_pct": -2.216,
+            "median_standalone_episode_pct": -2.216,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": -2.3593
+          }
+        }
+      },
+      "down": {
+        "n_candidates": 3,
+        "n_scored": 3,
+        "n_right_censored": 0,
+        "confirmed_c3": 0,
+        "mean_j3_to_j10_pct": 11.6993,
+        "j3_to_j10_outcome_counts": {
+          "RISE_GE3": 2,
+          "FALL_LE_MINUS3": 0,
+          "RANGE_ABS_LT3": 1
+        }
+      }
+    },
+    "2025": {
+      "daily_count": 90,
+      "up": {
+        "n_candidates": 3,
+        "n_scored": 2,
+        "n_right_censored": 1,
+        "c1_mean_episode_pct": -4.9607,
+        "c1_median_episode_pct": -4.9607,
+        "c1_positive_events": 0,
+        "c3_confirmed": 0,
+        "c3_rejected": 2,
+        "mean_confirmed_entry_price_delay_pct": null,
+        "median_confirmed_entry_price_delay_pct": null,
+        "rejected_would_have_been_profitable_c1": 0,
+        "rejected_would_have_lost_c1": 2,
+        "observed_j3_to_j10_outcomes": {
+          "RISE_GE3": {
+            "n": 0,
+            "rate_pct": 0.0,
+            "wilson95_pct": [
+              0.0,
+              65.76
+            ]
+          },
+          "FALL_LE_MINUS3": {
+            "n": 1,
+            "rate_pct": 50.0,
+            "wilson95_pct": [
+              9.45,
+              90.55
+            ]
+          },
+          "RANGE_ABS_LT3": {
+            "n": 1,
+            "rate_pct": 50.0,
+            "wilson95_pct": [
+              9.45,
+              90.55
+            ]
+          }
+        },
+        "standalone_policies": {
+          "C3": {
+            "trades_hypothetical": 0,
+            "skipped": 2,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_STRUCTURE": {
+            "trades_hypothetical": 0,
+            "skipped": 2,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_VOLUME": {
+            "trades_hypothetical": 0,
+            "skipped": 2,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_FULL": {
+            "trades_hypothetical": 0,
+            "skipped": 2,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          }
+        }
+      },
+      "down": {
+        "n_candidates": 3,
+        "n_scored": 2,
+        "n_right_censored": 1,
+        "confirmed_c3": 1,
+        "mean_j3_to_j10_pct": -5.3751,
+        "j3_to_j10_outcome_counts": {
+          "RISE_GE3": 0,
+          "FALL_LE_MINUS3": 1,
+          "RANGE_ABS_LT3": 1
+        }
+      }
+    },
+    "2026": {
+      "daily_count": 304,
+      "up": {
+        "n_candidates": 11,
+        "n_scored": 10,
+        "n_right_censored": 1,
+        "c1_mean_episode_pct": -1.441,
+        "c1_median_episode_pct": -0.9662,
+        "c1_positive_events": 2,
+        "c3_confirmed": 2,
+        "c3_rejected": 8,
+        "mean_confirmed_entry_price_delay_pct": 1.5406,
+        "median_confirmed_entry_price_delay_pct": 1.5406,
+        "rejected_would_have_been_profitable_c1": 2,
+        "rejected_would_have_lost_c1": 6,
+        "observed_j3_to_j10_outcomes": {
+          "RISE_GE3": {
+            "n": 2,
+            "rate_pct": 20.0,
+            "wilson95_pct": [
+              5.67,
+              50.98
+            ]
+          },
+          "FALL_LE_MINUS3": {
+            "n": 1,
+            "rate_pct": 10.0,
+            "wilson95_pct": [
+              1.79,
+              40.42
+            ]
+          },
+          "RANGE_ABS_LT3": {
+            "n": 7,
+            "rate_pct": 70.0,
+            "wilson95_pct": [
+              39.68,
+              89.22
+            ]
+          }
+        },
+        "standalone_policies": {
+          "C3": {
+            "trades_hypothetical": 2,
+            "skipped": 8,
+            "mean_standalone_episode_pct": -0.4843,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": -0.5429
+          },
+          "C3_STRUCTURE": {
+            "trades_hypothetical": 2,
+            "skipped": 8,
+            "mean_standalone_episode_pct": -0.4843,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": -0.5429
+          },
+          "C3_VOLUME": {
+            "trades_hypothetical": 0,
+            "skipped": 10,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          },
+          "C3_FULL": {
+            "trades_hypothetical": 0,
+            "skipped": 10,
+            "mean_standalone_episode_pct": 0,
+            "median_standalone_episode_pct": 0.0,
+            "positive_nonzero_events": 0,
+            "mean_stress2x_standalone_episode_pct": 0
+          }
+        }
+      },
+      "down": {
+        "n_candidates": 11,
+        "n_scored": 11,
+        "n_right_censored": 0,
+        "confirmed_c3": 3,
+        "mean_j3_to_j10_pct": 0.0206,
+        "j3_to_j10_outcome_counts": {
+          "RISE_GE3": 1,
+          "FALL_LE_MINUS3": 2,
+          "RANGE_ABS_LT3": 8
+        }
+      }
+    }
+  },
+  "aggregate_up": {
+    "n_candidates": 22,
+    "n_scored": 20,
+    "n_right_censored": 2,
+    "c1_mean_episode_pct": -1.701,
+    "c1_median_episode_pct": -1.2519,
+    "c1_positive_events": 5,
+    "c3_confirmed": 4,
+    "c3_rejected": 16,
+    "mean_confirmed_entry_price_delay_pct": 1.9053,
+    "median_confirmed_entry_price_delay_pct": 1.5709,
+    "rejected_would_have_been_profitable_c1": 4,
+    "rejected_would_have_lost_c1": 12,
+    "observed_j3_to_j10_outcomes": {
+      "RISE_GE3": {
+        "n": 5,
+        "rate_pct": 25.0,
+        "wilson95_pct": [
+          11.19,
+          46.87
+        ]
+      },
+      "FALL_LE_MINUS3": {
+        "n": 5,
+        "rate_pct": 25.0,
+        "wilson95_pct": [
+          11.19,
+          46.87
+        ]
+      },
+      "RANGE_ABS_LT3": {
+        "n": 10,
+        "rate_pct": 50.0,
+        "wilson95_pct": [
+          29.93,
+          70.07
+        ]
+      }
+    },
+    "standalone_policies": {
+      "C3": {
+        "trades_hypothetical": 4,
+        "skipped": 16,
+        "mean_standalone_episode_pct": -0.4303,
+        "median_standalone_episode_pct": 0.0,
+        "positive_nonzero_events": 1,
+        "mean_stress2x_standalone_episode_pct": -0.489
+      },
+      "C3_STRUCTURE": {
+        "trades_hypothetical": 3,
+        "skipped": 17,
+        "mean_standalone_episode_pct": -0.4638,
+        "median_standalone_episode_pct": 0.0,
+        "positive_nonzero_events": 0,
+        "mean_stress2x_standalone_episode_pct": -0.5074
+      },
+      "C3_VOLUME": {
+        "trades_hypothetical": 1,
+        "skipped": 19,
+        "mean_standalone_episode_pct": -0.2216,
+        "median_standalone_episode_pct": 0.0,
+        "positive_nonzero_events": 0,
+        "mean_stress2x_standalone_episode_pct": -0.2359
+      },
+      "C3_FULL": {
+        "trades_hypothetical": 1,
+        "skipped": 19,
+        "mean_standalone_episode_pct": -0.2216,
+        "median_standalone_episode_pct": 0.0,
+        "positive_nonzero_events": 0,
+        "mean_stress2x_standalone_episode_pct": -0.2359
+      }
+    }
+  },
+  "aggregate_down": {
+    "n_candidates": 23,
+    "n_scored": 20,
+    "c3_confirmed": 6,
+    "future_outcome_counts": {
+      "RISE_GE3": 3,
+      "FALL_LE_MINUS3": 6,
+      "RANGE_ABS_LT3": 11
+    }
+  },
+  "causal_and_ledger_assertions": 224,
+  "settings": {
+    "max_lookback_days": 30,
+    "lookback_peak_drawdown_pct": 5,
+    "one_event_per_22_days": true,
+    "confirmation": "3 strictly increasing daily UTC closes",
+    "rising_lows": "3 strictly increasing daily UTC lows",
+    "volume": "day J+2 BTC base volume >= preceding 20 complete days average",
+    "trend": "EMA10>EMA30 and close>EMA30 after day J+2",
+    "comparison": "C1 buy at J+1 open, C3 buy at J+3 open if confirmed, common hypothetical sale J+10 close",
+    "fee_side": 0.001,
+    "slip_side": 0.0005,
+    "stress_cost_factor": 2,
+    "ex_post_outcome_threshold_pct": 3
+  },
+  "warnings": [
+    "All source windows have been studied before; NO out-of-sample or independent validation",
+    "Event selection uses chronological 21-day cooldown and can undercount clustered signals",
+    "Episode returns are isolated and MUST NOT be summed or treated as a continuous portfolio",
+    "C3 buys later than C1, so common liquidation horizon implies different holding durations",
+    "Binance Spot BTCUSDT is not OKX BTCUSDC and hypothetical open/close fills are not executable order proofs",
+    "Visual infographic scenario percentages 40/35/25 are not calibrated; outcome rates here are retrospective only",
+    "The current 15min screenshot cannot itself establish any daily 3-close signal"
+  ]
+}
