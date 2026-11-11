@@ -107,3 +107,13 @@ Les chiffres du Coffre sont issus de **BTC/USDT Binance Spot**, 1j, **1 000 USDT
 - Pour de futures écritures GitHub, suivre le garde-fou de mémoire privée **GITHUB WRITE GUARD** : modifications explicitement demandées, nécessaires, bornées, vérifiables.
 
 **Point d'arrêt documentaire :** les sept fiches sont réunies ; la comparaison pédagogique est publiée.
+
+## Études continues partagées — Spot Grid et filtres de marché, 11 novembre 2026
+
+Les rapports suivants ont été réalisés avec des archives **Binance Spot BTC/USDT 1m** du Coffre, vérifiées par SHA-256. Ils sont **rétrospectifs, PAPER uniquement**, sans ordre ni modification des profils Administrator, Operator ou Trader.
+
+- **[Spot Grid 2026, janvier–octobre continus](./SEVEN_HEAVEN_SPOT_GRID_CONTINUOUS_BTC_2026_JAN_OCT_REPORT.md)** — 304 jours, 437 760 bougies, capital conservé, grille fixe et recentrage mensuel. [Preuves JSON](./SEVEN_HEAVEN_SPOT_GRID_CONTINUOUS_BTC_2026_JAN_OCT_PROOFS.json) · [Courbe CSV](./SEVEN_HEAVEN_SPOT_GRID_CONTINUOUS_BTC_2026_JAN_OCT_EQUITY_DAILY.csv).
+- **[Spot Grid 2024 et 2025, deux trimestres continus](./SEVEN_HEAVEN_SPOT_GRID_BTC_2024_2025_Q1_CONTINUOUS_REPLAY_2026_11_11_REPORT.md)** — 181 journées, 260 640 bougies, comparaisons ±5/10/20/30 %, Buy & Hold, coûts doublés. [Courbes CSV](./SEVEN_HEAVEN_SPOT_GRID_BTC_2024_2025_Q1_CONTINUOUS_REPLAY_2026_11_11_EQUITY_DAILY.csv).
+- **[EMA, SuperTrend et volatilité : sélection mensuelle Grid / Hold](./SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11_REPORT.md)** — trois périodes disjointes, 698 400 minutes, indicateurs calculés à la clôture précédente ; signal non prédictif et dépendant de la fenêtre. [Journal des décisions](./SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11_MONTHLY_DECISIONS.csv).
+
+**Limite méthodologique :** les niveaux touchés dans des bougies OHLC ne prouvent pas l'exécution d'ordres limites ; les ajustements de grille restent théoriques. La recherche ne constitue ni une validation prospective ni un conseil financier.
