@@ -1,0 +1,410 @@
+{
+  "schema": "seven-heaven.eth-ema-cross-asset-2022-2026.v1",
+  "date": "2026-11-12",
+  "protocol_commit": "46bf35f4392ad69088e45bd66843efcf929226b8",
+  "sources": [
+    {
+      "file": "ethereum-2022-span12-eeb3dbbe089f0d7d409918be1568fd4bc58ee6c11725f358cac7e65c408d40e0.json.gz",
+      "sha256_verified": "eeb3dbbe089f0d7d409918be1568fd4bc58ee6c11725f358cac7e65c408d40e0",
+      "hours": 8760,
+      "source_months": 12
+    },
+    {
+      "file": "ethereum-2023-span13-fec387cb9835e9679094b40dd1430b7ba75492b59b7a9e483a8bce8d0a982294.json.gz",
+      "sha256_verified": "fec387cb9835e9679094b40dd1430b7ba75492b59b7a9e483a8bce8d0a982294",
+      "hours": 6600,
+      "source_months": 9
+    },
+    {
+      "file": "ethereum-2024-span13-12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e.json.gz",
+      "sha256_verified": "12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e",
+      "hours": 8784,
+      "source_months": 12
+    },
+    {
+      "file": "ethereum-2025-span13-a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6.json.gz",
+      "sha256_verified": "a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6",
+      "hours": 8760,
+      "source_months": 12
+    },
+    {
+      "file": "ethereum-2026-span13-a9d1e5f3fb13b6a55fb0a28195f8eaee62f924a0245e0029ffb1de42d054ed64.json.gz",
+      "sha256_verified": "a9d1e5f3fb13b6a55fb0a28195f8eaee62f924a0245e0029ffb1de42d054ed64",
+      "hours": 7296,
+      "source_months": 10
+    }
+  ],
+  "rules": {
+    "asset": "ETHUSDT Spot Binance",
+    "resolution": "1d UTC aggregated from verified hourly shards",
+    "fee_side": 0.001,
+    "slip_side": 0.0005,
+    "stress_multiplier": 2,
+    "signal": "EMA10(t)>EMA30(t) AND close(t)>EMA30(t)",
+    "action": "next UTC day opening t+1",
+    "portfolios": [
+      "EMA",
+      "HOLD100",
+      "HOLD50",
+      "CASH"
+    ]
+  },
+  "integrity": {
+    "hourly_shards": 5,
+    "total_hours": 40200,
+    "days_2022": 365,
+    "days_2023_apr_2026_oct": 1310,
+    "all_hourly_contiguous_within_selected_segments": true,
+    "daily_24_hour_complete": true,
+    "causality_prefix_checks": 14
+  },
+  "periods": {
+    "2024": {
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "days": 366,
+      "EMA_cost1": {
+        "capital_final_usdt": 909.877553,
+        "return_pct": -9.012245,
+        "max_drawdown_pct": -53.819542,
+        "trade_count": 28,
+        "eth_exposure_pct": 44.262295,
+        "longest_cash_streak_days": 61,
+        "days": 366
+      },
+      "EMA_cost2": {
+        "capital_final_usdt": 872.417383,
+        "return_pct": -12.758262,
+        "max_drawdown_pct": -55.050948,
+        "trade_count": 28,
+        "eth_exposure_pct": 44.262295,
+        "longest_cash_streak_days": 61,
+        "days": 366
+      },
+      "HOLD100_cost1": {
+        "capital_final_usdt": 1458.355794,
+        "return_pct": 45.835579,
+        "max_drawdown_pct": -45.256101,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 366
+      },
+      "HOLD100_cost2": {
+        "capital_final_usdt": 1453.982913,
+        "return_pct": 45.398291,
+        "max_drawdown_pct": -45.256101,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 366
+      },
+      "HOLD50_cost1": {
+        "capital_final_usdt": 1229.177897,
+        "return_pct": 22.91779,
+        "max_drawdown_pct": -28.953519,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 366
+      },
+      "HOLD50_cost2": {
+        "capital_final_usdt": 1226.991456,
+        "return_pct": 22.699146,
+        "max_drawdown_pct": -28.922185,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 366
+      },
+      "CASH_cost1": {
+        "capital_final_usdt": 1000,
+        "return_pct": 0,
+        "max_drawdown_pct": 0,
+        "trade_count": 0,
+        "eth_exposure_pct": 0,
+        "longest_cash_streak_days": 366,
+        "days": 366
+      }
+    },
+    "2025": {
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "days": 365,
+      "EMA_cost1": {
+        "capital_final_usdt": 1937.246443,
+        "return_pct": 93.724644,
+        "max_drawdown_pct": -16.556925,
+        "trade_count": 14,
+        "eth_exposure_pct": 37.260274,
+        "longest_cash_streak_days": 112,
+        "days": 365
+      },
+      "EMA_cost2": {
+        "capital_final_usdt": 1896.94855,
+        "return_pct": 89.694855,
+        "max_drawdown_pct": -17.056583,
+        "trade_count": 14,
+        "eth_exposure_pct": 37.260274,
+        "longest_cash_streak_days": 112,
+        "days": 365
+      },
+      "HOLD100_cost1": {
+        "capital_final_usdt": 887.636535,
+        "return_pct": -11.236346,
+        "max_drawdown_pct": -60.042577,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 365
+      },
+      "HOLD100_cost2": {
+        "capital_final_usdt": 884.974956,
+        "return_pct": -11.502504,
+        "max_drawdown_pct": -60.042577,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 365
+      },
+      "HOLD50_cost1": {
+        "capital_final_usdt": 943.818268,
+        "return_pct": -5.618173,
+        "max_drawdown_pct": -31.470613,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 365
+      },
+      "HOLD50_cost2": {
+        "capital_final_usdt": 942.487478,
+        "return_pct": -5.751252,
+        "max_drawdown_pct": -31.425638,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 365
+      },
+      "CASH_cost1": {
+        "capital_final_usdt": 1000,
+        "return_pct": 0,
+        "max_drawdown_pct": 0,
+        "trade_count": 0,
+        "eth_exposure_pct": 0,
+        "longest_cash_streak_days": 365,
+        "days": 365
+      }
+    },
+    "2022_FEB_DEC": {
+      "start": "2022-02-01",
+      "end": "2022-12-31",
+      "days": 334,
+      "EMA_cost1": {
+        "capital_final_usdt": 530.833535,
+        "return_pct": -46.916647,
+        "max_drawdown_pct": -48.276367,
+        "trade_count": 16,
+        "eth_exposure_pct": 23.353293,
+        "longest_cash_streak_days": 98,
+        "days": 334
+      },
+      "EMA_cost2": {
+        "capital_final_usdt": 518.232735,
+        "return_pct": -48.176727,
+        "max_drawdown_pct": -48.893956,
+        "trade_count": 16,
+        "eth_exposure_pct": 23.353293,
+        "longest_cash_streak_days": 98,
+        "days": 334
+      },
+      "HOLD100_cost1": {
+        "capital_final_usdt": 443.830452,
+        "return_pct": -55.616955,
+        "max_drawdown_pct": -71.744593,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 334
+      },
+      "HOLD100_cost2": {
+        "capital_final_usdt": 442.499626,
+        "return_pct": -55.750037,
+        "max_drawdown_pct": -71.744593,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 334
+      },
+      "HOLD50_cost1": {
+        "capital_final_usdt": 721.915226,
+        "return_pct": -27.808477,
+        "max_drawdown_pct": -40.643562,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 334
+      },
+      "HOLD50_cost2": {
+        "capital_final_usdt": 721.249813,
+        "return_pct": -27.875019,
+        "max_drawdown_pct": -40.590642,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 334
+      },
+      "CASH_cost1": {
+        "capital_final_usdt": 1000,
+        "return_pct": 0,
+        "max_drawdown_pct": 0,
+        "trade_count": 0,
+        "eth_exposure_pct": 0,
+        "longest_cash_streak_days": 334,
+        "days": 334
+      }
+    },
+    "2026_JAN_OCT": {
+      "start": "2026-01-01",
+      "end": "2026-10-31",
+      "days": 304,
+      "EMA_cost1": {
+        "capital_final_usdt": 1085.110347,
+        "return_pct": 8.511035,
+        "max_drawdown_pct": -27.971945,
+        "trade_count": 14,
+        "eth_exposure_pct": 47.697368,
+        "longest_cash_streak_days": 59,
+        "days": 304
+      },
+      "EMA_cost2": {
+        "capital_final_usdt": 1062.538278,
+        "return_pct": 6.253828,
+        "max_drawdown_pct": -28.902741,
+        "trade_count": 14,
+        "eth_exposure_pct": 47.697368,
+        "longest_cash_streak_days": 59,
+        "days": 304
+      },
+      "HOLD100_cost1": {
+        "capital_final_usdt": 756.785257,
+        "return_pct": -24.321474,
+        "max_drawdown_pct": -53.26744,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 304
+      },
+      "HOLD100_cost2": {
+        "capital_final_usdt": 754.516036,
+        "return_pct": -24.548396,
+        "max_drawdown_pct": -53.26744,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 304
+      },
+      "HOLD50_cost1": {
+        "capital_final_usdt": 878.392629,
+        "return_pct": -12.160737,
+        "max_drawdown_pct": -28.207397,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 304
+      },
+      "HOLD50_cost2": {
+        "capital_final_usdt": 877.258018,
+        "return_pct": -12.274198,
+        "max_drawdown_pct": -28.167542,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 304
+      },
+      "CASH_cost1": {
+        "capital_final_usdt": 1000,
+        "return_pct": 0,
+        "max_drawdown_pct": 0,
+        "trade_count": 0,
+        "eth_exposure_pct": 0,
+        "longest_cash_streak_days": 304,
+        "days": 304
+      }
+    },
+    "2024_2026_CONTINUOUS": {
+      "start": "2024-01-01",
+      "end": "2026-10-31",
+      "days": 1035,
+      "EMA_cost1": {
+        "capital_final_usdt": 1912.677407,
+        "return_pct": 91.267741,
+        "max_drawdown_pct": -53.819542,
+        "trade_count": 56,
+        "eth_exposure_pct": 42.801932,
+        "longest_cash_streak_days": 112,
+        "days": 1035
+      },
+      "EMA_cost2": {
+        "capital_final_usdt": 1758.427417,
+        "return_pct": 75.842742,
+        "max_drawdown_pct": -55.050948,
+        "trade_count": 56,
+        "eth_exposure_pct": 42.801932,
+        "longest_cash_streak_days": 112,
+        "days": 1035
+      },
+      "HOLD100_cost1": {
+        "capital_final_usdt": 985.551723,
+        "return_pct": -1.444828,
+        "max_drawdown_pct": -67.55345,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 1035
+      },
+      "HOLD100_cost2": {
+        "capital_final_usdt": 982.596545,
+        "return_pct": -1.740345,
+        "max_drawdown_pct": -67.55345,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 1035
+      },
+      "HOLD50_cost1": {
+        "capital_final_usdt": 992.775861,
+        "return_pct": -0.722414,
+        "max_drawdown_pct": -45.840788,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 1035
+      },
+      "HOLD50_cost2": {
+        "capital_final_usdt": 991.298273,
+        "return_pct": -0.870173,
+        "max_drawdown_pct": -45.796518,
+        "trade_count": 1,
+        "eth_exposure_pct": 100,
+        "longest_cash_streak_days": 0,
+        "days": 1035
+      },
+      "CASH_cost1": {
+        "capital_final_usdt": 1000,
+        "return_pct": 0,
+        "max_drawdown_pct": 0,
+        "trade_count": 0,
+        "eth_exposure_pct": 0,
+        "longest_cash_streak_days": 1035,
+        "days": 1035
+      }
+    }
+  },
+  "limits": [
+    "2018-2021 ETH shards discontinuous; no artificial annual fill",
+    "One hour OHLC is derived from Binance native 1m, not exchange fills",
+    "Historical only; no forecast or advice",
+    "BTC historical portfolio periods differ, direct percentage comparisons require date alignment",
+    "USDT is a counterparty exposure not modeled"
+  ]
+}
