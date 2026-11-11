@@ -1,0 +1,72 @@
+name: Seven Heaven - All twelve BTC strategies independent OKX Binance test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.py'
+      - '.github/workflows/seven-heaven-all-twelve-btc-strategies-okx.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-all-twelve-btc-strategies-okx-main
+  cancel-in-progress: false
+
+jobs:
+  comparative-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Compile and verify twelve frozen strategies on preverified OKX and Binance
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          folder=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles')
+          base=folder/'SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11'
+          output=json.loads(base.with_suffix('.json').read_text(encoding='utf-8'))
+          assert output['research_only'] and not output['orders_enabled']
+          assert len(output['windows'])==4
+          assert output['sources']['okx_confirmed_utc_daily_candles']==447
+          assert output['sources']['binance_warmup_daily_bars']==406
+          assert output['baseline_verification'].startswith('ALL 14')
+          for w in output['windows']:
+              assert len(w['methods'])==12 and len({r['key'] for r in w['methods']})==12
+              for r in w['methods']:
+                  assert r['trades']==r['wins']+r['losses']
+                  assert -100<=r['drawdown25_pct']<=0
+                  assert r['result25_pct']>-100
+          assert len(base.with_suffix('.md').read_text(encoding='utf-8'))>2200
+          print('TWELVE_BTC_STRATEGIES_OKX_CROSSVENUE_RESEARCH_PASSED')
+          PY
+      - name: Archive independent evidence as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-all-twelve-strategies-okx-binance
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.json
+      - name: Publish verified study in common GitHub research folder
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Research already up to date"
+          else
+            git commit -m "Archive twelve BTC strategy crossvenue comparative evidence"
+            git push origin HEAD:main
+          fi
