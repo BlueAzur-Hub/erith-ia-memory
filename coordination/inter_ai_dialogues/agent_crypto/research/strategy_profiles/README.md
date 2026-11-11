@@ -127,3 +127,14 @@ Les rapports suivants ont été réalisés avec des archives **Binance Spot BTC/
 - **[Script Python reproductible](./SEVEN_HEAVEN_BTC_REVERSAL_LATENCY_EMA_SUPERTREND_VOLATILITY_2026_11_11.py)** · dépendances source [**moteur EMA/SuperTrend précédent**](./SEVEN_HEAVEN_EMA_SUPERTREND_VOLATILITY_GRID_HOLD_REGIME_STUDY_2026_11_11.py) et [**parseur / moteur Spot Grid trimestriel**](./SEVEN_HEAVEN_SPOT_GRID_BTC_2024_2025_Q1_CONTINUOUS_REPLAY_2026_11_11.py) désormais publiées dans ce répertoire.
 
 **Statut :** recherche rétrospective et explicative, non test prospectif et non conseil d'investissement. Les stratégies ont des performances variables selon la fenêtre ; les sorties sont fictives au cours d'ouverture, et le seuil de drawdown est une règle de test, pas un signal validé sur OKX. **Aucun ordre, aucune modification des interfaces ou du Bridge.**
+
+## RSI, MACD et ADX — repli ou retournement BTC, 11 novembre 2026
+
+Nouvelle recherche exploratoire sur **16 archives Binance Spot BTCUSDT 1 minute** fournies par l'utilisateur (2024 T1, 2025 T1 et 2026 janvier–octobre), toutes vérifiées SHA-256 et sans lacune interne : **698 400 bougies**. Après un chauffage de 31 jours en janvier, les portefeuilles PAPER commencent au 1er février de chaque période. Chaque signal provient d'une journée UTC clôturée et ne déclenche une opération fictive qu'à l'ouverture suivante.
+
+- [**Rapport : RSI14, MACD12/26/9, ADX14 avec +DI/−DI, comparaison EMA/SuperTrend**](./SEVEN_HEAVEN_BTC_RSI_MACD_ADX_MARKET_REVERSAL_RESEARCH_2026_11_11_REPORT.md) — rendements, pertes maximales, fréquence des transactions et frais doublés sur trois périodes distinctes.
+- [**Synthèse JSON lisible par les IA**](./SEVEN_HEAVEN_BTC_RSI_MACD_ADX_MARKET_REVERSAL_RESEARCH_2026_11_11_SUMMARY.json) — 7 méthodes, 3 fenêtres et 6 épisodes de baisse, dont un censuré ; le fichier contient les résultats résumés, **pas** toutes les opérations individuelles.
+- [**Épisodes de baisse observés (CSV)**](./SEVEN_HEAVEN_BTC_RSI_MACD_ADX_MARKET_REVERSAL_RESEARCH_2026_11_11_DRAWDOWN_EVENTS.csv) · [**Courbes de capital quotidien (CSV)**](./SEVEN_HEAVEN_BTC_RSI_MACD_ADX_MARKET_REVERSAL_RESEARCH_2026_11_11_EQUITY_DAILY.csv).
+- Le script source Python et le JSON détaillé de simulation ont été générés dans la session de recherche ; leur dépôt GitHub n'est **pas encore** attesté ici. Ne pas annoncer leur publication.
+
+**Règle de discernement :** les étiquettes « PERSISTENT / RECOVERED / CENSORED » servent à juger a posteriori les baisses ; les 14 jours futurs ne sont jamais employés pour générer les signaux. Il n'existe aucun modèle prospectif validé, aucun ordre réel ni modification Administrator, Operator, Trader ou Bridge R31.
