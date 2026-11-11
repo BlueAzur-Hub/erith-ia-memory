@@ -1,0 +1,95 @@
+name: Seven Heaven - Hourly VWAP BTC ETH continuous research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.py'
+      - '.github/workflows/seven-heaven-vwap-btc-eth-study.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-vwap-study-publication
+  cancel-in-progress: false
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Audit BTC ETH archive continuity and backtest frozen VWAP variants
+        run: |
+          set -euo pipefail
+          python3 -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.py
+          python3 coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.py
+      - name: Verify full results, risk and source contracts
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11')
+          d=json.loads(b.with_suffix('.json').read_text(encoding='utf-8'))
+          assert d['research_only'] is True and d['orders_enabled'] is False
+          assert d['hourly_bars_per_asset']==24840
+          assert len(d['asset_source_shards'])==2 and all(len(x['shards'])==3 for x in d['asset_source_shards'].values())
+          assert d['chart_cumulative_loaded_history_not_daily_reset']
+          assert d['research_rolling300_is_not_exact_runtime_indicator']
+          assert len(d['windows'])==8
+          required={'WINDOW300','SESSION_UTC','QUOTE24','FILTER24','EMA5_13','HOLD','CASH'}
+          for w in d['windows']:
+              assert set(w['methods'])==required
+              for k,v in w['methods'].items():
+                  a=v['quarter25'];f=v['full100']
+                  assert a['buys']==a['sells'] and a['buys']==f['buys']
+                  assert a['max_daily_dd_pct']<=0
+                  assert a['net_pct']>-100
+                  assert a['wins']+a['losses']==a['sells']
+                  assert a['days']==f['days']
+                  if w['period']=='continuous':
+                      assert len(a['daily_equity'])==1004
+                      assert len({x[0] for x in a['daily_equity']})==1004
+                  assert v['double_cost_return25_pct']>-100
+          assert len(b.with_suffix('.md').read_text(encoding='utf-8'))>3500
+          print('SEVEN_VWAP_CROSSASSET_RESEARCH_CONTRACT_PASSED')
+          PY
+      - name: Retain complete VWAP study artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-vwap-btc-eth-research
+          retention-days: 60
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.md
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.json
+      - name: Publish verified evidence to common research directory safely
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.md \
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.json
+          if git diff --cached --quiet; then
+            echo "Study already archived"
+          else
+            git commit -m "Archive verified BTC ETH hourly VWAP research and trade evidence"
+            for attempt in 1 2 3 4 5 6; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "VWAP study preserved on shared main"
+                break
+              fi
+              if [ "$attempt" = 6 ]; then
+                echo "Concurrent changes prevented safe publication"
+                exit 1
+              fi
+              sleep 2
+            done
+          fi
