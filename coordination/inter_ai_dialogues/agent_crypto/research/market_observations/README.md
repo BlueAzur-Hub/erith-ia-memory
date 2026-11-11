@@ -4,6 +4,11 @@
 
 Ce dossier du répertoire partagé capitalise les résultats des études **08** et **08B**, à la suite des [sept fiches pédagogiques et de leur comparaison](../strategy_profiles/README.md). Il ne modifie pas l'Administrator, l'Operator, le Trader, les modules Atlas ni les sources de prix.
 
+## Observation BTC du 11 novembre 2026
+
+- [**BTC — informations recoupées et scénarios conditionnels à 3 jours, 3 semaines et 3 mois**](./SEVEN_HEAVEN_BTC_MARKET_WATCH_3_DAYS_3_WEEKS_3_MONTHS_2026_11_11.md) : capture utilisateur, inflation USA, sorties ETF, liquidations, niveaux techniques et limites de toute prévision.
+- [**Synthèse des dix stratégies DCA / EMA / MACD / RSI / Bollinger / SuperTrend et autres**](../strategy_profiles/SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.md) : réanalyse historique du Coffre 2022–2025, distincte de l'observation actuelle.
+
 ## Lire les recherches
 
 1. [**08 — Régimes observables et qualité des historiques**](./SEVEN_HEAVEN_AGENT_CRYPTO_RESEARCH_08_MARKET_REGIMES_DATA_QUALITY_AND_FORWARD_OBSERVATION_2026_11_07.md) : classification BTC/USDT 1j **sans regarder le futur** ; 1 377 journées étudiées (2022–2025) ; 68 observations de variation à 20 jours non chevauchantes ; hypothèses, limites, provenance.
