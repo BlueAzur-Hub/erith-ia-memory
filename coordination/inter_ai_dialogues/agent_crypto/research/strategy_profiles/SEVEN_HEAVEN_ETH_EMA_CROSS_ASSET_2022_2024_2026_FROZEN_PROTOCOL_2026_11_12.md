@@ -38,3 +38,7 @@ Lecture du schéma selon le fichier (non présumer les noms des colonnes avant l
 2022 correspond à un marché baissier important ; 2024–2026 inclut hausse, baisse et consolidation. Ce sont des historiques de périodes connues, **une validation inter-actifs exploratoire, pas un essai prospectif ni une preuve de rentabilité future**. Ne pas prétendre que les shards ETH reconstituent toutes les minutes du marché. USDT présente un risque de contrepartie non simulé.
 
 Livraison obligatoire sous `coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/` : code Python autonome, preuve JSON, CSV capital et transactions, rapport de résultats, mise à jour de l'index et de la passation inter-IA. Aucun changement des interfaces Administrator, Operator, Trader ni Bridge.
+
+## Erratum arithmétique après simulation (règles inchangées)
+
+Le texte initial indiquait par erreur **333 jours** pour la période « 1er février–31 décembre 2022 ». Le bon compte civil, confirmé après vérification, est **334 journées** (2022 compte 365 jours, janvier en compte 31). **Les dates de début et de fin, la règle EMA, les hypothèses et les données n'ont pas été modifiées.** Cette note est ajoutée après publication du protocole pour préserver la transparence et la trace Git ; les résultats utilisent bien 334 journées.
