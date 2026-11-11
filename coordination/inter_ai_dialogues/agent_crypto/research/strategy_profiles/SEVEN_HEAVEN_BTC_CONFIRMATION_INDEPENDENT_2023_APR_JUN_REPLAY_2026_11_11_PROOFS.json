@@ -1,0 +1,530 @@
+{
+  "schema": "seven-heaven.btc-heldout-2023-q2-confirmation.v1",
+  "research_date_utc": "2026-11-11",
+  "freeze_protocol": "SEVEN_HEAVEN_BTC_CONFIRMATION_INDEPENDENT_2023_APR_JUN_FROZEN_PROTOCOL_2026_11_11.md",
+  "protocol_published_before_archive_receipt": true,
+  "source": "Binance Spot BTCUSDT 1m, original releases SHA checked",
+  "archive_months": [
+    {
+      "month": "2023-04",
+      "zip_name": "BTCUSDT-1m-2023-04.zip",
+      "sha256_verified": "c71baedea84f9fc1a0ad297b383505b1cb84c0a7fc111caa149aa6fb2defa5da",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "ms",
+      "first_open_price_usdt": 28465.36,
+      "last_close_price_usdt": 29233.21,
+      "base_volume_btc": 1626745.5585,
+      "zip_size_bytes": 2064504
+    },
+    {
+      "month": "2023-05",
+      "zip_name": "BTCUSDT-1m-2023-05.zip",
+      "sha256_verified": "c83bd079dc67b9e542d07fe9491f8b1bf513185d6d7cc4ce17710f21c8d0037b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms",
+      "first_open_price_usdt": 29233.2,
+      "last_close_price_usdt": 27210.35,
+      "base_volume_btc": 1302000.49221,
+      "zip_size_bytes": 2111728
+    },
+    {
+      "month": "2023-06",
+      "zip_name": "BTCUSDT-1m-2023-06.zip",
+      "sha256_verified": "d8cf5d1817fa1d8cba8eaf4d189614cf05b15d7233e9e29a0156d2dee2cfaad1",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "ms",
+      "first_open_price_usdt": 27210.36,
+      "last_close_price_usdt": 30472.0,
+      "base_volume_btc": 1387207.48275,
+      "zip_size_bytes": 2043702
+    }
+  ],
+  "verified_minutes": 131040,
+  "validated_days": 91,
+  "warmup_days": 30,
+  "portfolio_days": 61,
+  "first_portfolio_day": "2023-05-01",
+  "last_portfolio_day": "2023-06-30",
+  "capital_usdt": 1000.0,
+  "fees_per_side": 0.001,
+  "slippage_per_side": 0.0005,
+  "stress_costs_multiplier": 2,
+  "unit": "USDT",
+  "no_real_orders": true,
+  "indicator_families": [
+    "EMA",
+    "SUPERTREND",
+    "CONSENSUS"
+  ],
+  "confirmations": [
+    1,
+    2,
+    3
+  ],
+  "trades": "hypothetical: signal as of completed day D UTC, trade at D+1 opening",
+  "comparison": "Buy & Hold 100% BTC",
+  "script_sha256": "c7597c1d2ea51547c08f2b15d3c9881687a789d900b5f117d62afff44bdce84c",
+  "causal_prefix_checks": 128,
+  "ledger_equity_crosschecked_for_all_policies": true,
+  "results": {
+    "EMA_C1": {
+      "final_net_usdt": 946.860487,
+      "return_pct": -5.314,
+      "daily_max_drawdown_pct": -7.1382,
+      "costs_x2_return_pct": -6.1631,
+      "operations": 5,
+      "buys": 3,
+      "sells": 2,
+      "cash_days": 47,
+      "cash_share_pct": 77.05,
+      "initial_cash_days": 0,
+      "post_sale_cash_days": 47,
+      "whipsaws_7d": 1,
+      "short_cash_windows_with_price_rise": 1,
+      "closed_cash_windows_with_btc_price_rise": 2,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 1,
+        "NEUTRAL": 1,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0311197964
+    },
+    "EMA_C2": {
+      "final_net_usdt": 950.847235,
+      "return_pct": -4.9153,
+      "daily_max_drawdown_pct": -6.467,
+      "costs_x2_return_pct": -5.768,
+      "operations": 5,
+      "buys": 3,
+      "sells": 2,
+      "cash_days": 47,
+      "cash_share_pct": 77.05,
+      "initial_cash_days": 0,
+      "post_sale_cash_days": 47,
+      "whipsaws_7d": 1,
+      "short_cash_windows_with_price_rise": 1,
+      "closed_cash_windows_with_btc_price_rise": 2,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 1,
+        "NEUTRAL": 1,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0312508261
+    },
+    "EMA_C3": {
+      "final_net_usdt": 924.20416,
+      "return_pct": -7.5796,
+      "daily_max_drawdown_pct": -8.7764,
+      "costs_x2_return_pct": -8.133,
+      "operations": 3,
+      "buys": 2,
+      "sells": 1,
+      "cash_days": 50,
+      "cash_share_pct": 81.97,
+      "initial_cash_days": 5,
+      "post_sale_cash_days": 45,
+      "whipsaws_7d": 0,
+      "short_cash_windows_with_price_rise": 0,
+      "closed_cash_windows_with_btc_price_rise": 1,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 0,
+        "NEUTRAL": 1,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0303751669
+    },
+    "SUPERTREND_C1": {
+      "final_net_usdt": 1073.219252,
+      "return_pct": 7.3219,
+      "daily_max_drawdown_pct": -2.0038,
+      "costs_x2_return_pct": 7.0001,
+      "operations": 1,
+      "buys": 1,
+      "sells": 0,
+      "cash_days": 51,
+      "cash_share_pct": 83.61,
+      "initial_cash_days": 51,
+      "post_sale_cash_days": 0,
+      "whipsaws_7d": 0,
+      "short_cash_windows_with_price_rise": 0,
+      "closed_cash_windows_with_btc_price_rise": 0,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 0,
+        "NEUTRAL": 0,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0352727409
+    },
+    "SUPERTREND_C2": {
+      "final_net_usdt": 1012.895979,
+      "return_pct": 1.2896,
+      "daily_max_drawdown_pct": -2.0038,
+      "costs_x2_return_pct": 0.9859,
+      "operations": 1,
+      "buys": 1,
+      "sells": 0,
+      "cash_days": 52,
+      "cash_share_pct": 85.25,
+      "initial_cash_days": 52,
+      "post_sale_cash_days": 0,
+      "whipsaws_7d": 0,
+      "short_cash_windows_with_price_rise": 0,
+      "closed_cash_windows_with_btc_price_rise": 0,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 0,
+        "NEUTRAL": 0,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0332901384
+    },
+    "SUPERTREND_C3": {
+      "final_net_usdt": 1016.589323,
+      "return_pct": 1.6589,
+      "daily_max_drawdown_pct": -2.0038,
+      "costs_x2_return_pct": 1.3541,
+      "operations": 1,
+      "buys": 1,
+      "sells": 0,
+      "cash_days": 53,
+      "cash_share_pct": 86.89,
+      "initial_cash_days": 53,
+      "post_sale_cash_days": 0,
+      "whipsaws_7d": 0,
+      "short_cash_windows_with_price_rise": 0,
+      "closed_cash_windows_with_btc_price_rise": 0,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 0,
+        "NEUTRAL": 0,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0334115249
+    },
+    "CONSENSUS_C1": {
+      "final_net_usdt": 953.033203,
+      "return_pct": -4.6967,
+      "daily_max_drawdown_pct": -6.5328,
+      "costs_x2_return_pct": -5.5514,
+      "operations": 5,
+      "buys": 3,
+      "sells": 2,
+      "cash_days": 48,
+      "cash_share_pct": 78.69,
+      "initial_cash_days": 0,
+      "post_sale_cash_days": 48,
+      "whipsaws_7d": 1,
+      "short_cash_windows_with_price_rise": 1,
+      "closed_cash_windows_with_btc_price_rise": 2,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 1,
+        "NEUTRAL": 1,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0313226707
+    },
+    "CONSENSUS_C2": {
+      "final_net_usdt": 929.338319,
+      "return_pct": -7.0662,
+      "daily_max_drawdown_pct": -8.5828,
+      "costs_x2_return_pct": -7.8997,
+      "operations": 5,
+      "buys": 3,
+      "sells": 2,
+      "cash_days": 48,
+      "cash_share_pct": 78.69,
+      "initial_cash_days": 0,
+      "post_sale_cash_days": 48,
+      "whipsaws_7d": 1,
+      "short_cash_windows_with_price_rise": 1,
+      "closed_cash_windows_with_btc_price_rise": 2,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 1,
+        "NEUTRAL": 1,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0305439077
+    },
+    "CONSENSUS_C3": {
+      "final_net_usdt": 945.265483,
+      "return_pct": -5.4735,
+      "daily_max_drawdown_pct": -6.6975,
+      "costs_x2_return_pct": -6.0395,
+      "operations": 3,
+      "buys": 2,
+      "sells": 1,
+      "cash_days": 51,
+      "cash_share_pct": 83.61,
+      "initial_cash_days": 6,
+      "post_sale_cash_days": 45,
+      "whipsaws_7d": 0,
+      "short_cash_windows_with_price_rise": 0,
+      "closed_cash_windows_with_btc_price_rise": 1,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 0,
+        "NEUTRAL": 1,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0310673745
+    },
+    "HOLD_BTC": {
+      "final_net_usdt": 1039.252993,
+      "return_pct": 3.9253,
+      "daily_max_drawdown_pct": -14.8345,
+      "costs_x2_return_pct": 3.6137,
+      "operations": 1,
+      "buys": 1,
+      "sells": 0,
+      "cash_days": 0,
+      "cash_share_pct": 0.0,
+      "initial_cash_days": 0,
+      "post_sale_cash_days": 0,
+      "whipsaws_7d": 0,
+      "short_cash_windows_with_price_rise": 0,
+      "closed_cash_windows_with_btc_price_rise": 0,
+      "closed_cash_windows_with_btc_price_decline": 0,
+      "sale_7d_tags": {
+        "BTC_UP_GE_3PCT": 0,
+        "BTC_DOWN_LE_MINUS_3PCT": 0,
+        "NEUTRAL": 0,
+        "CENSORED": 0
+      },
+      "final_cash_usdt": 0.0,
+      "final_btc_qty": 0.0341563958
+    }
+  },
+  "trade_ledgers": {
+    "EMA_C1": [
+      {
+        "date_utc": "2023-05-01",
+        "signal_date_utc": "2023-04-30",
+        "side": "BUY",
+        "open_usdt": 29233.2
+      },
+      {
+        "date_utc": "2023-05-02",
+        "signal_date_utc": "2023-05-01",
+        "side": "SELL",
+        "open_usdt": 28068.26
+      },
+      {
+        "date_utc": "2023-05-04",
+        "signal_date_utc": "2023-05-03",
+        "side": "BUY",
+        "open_usdt": 29026.16
+      },
+      {
+        "date_utc": "2023-05-08",
+        "signal_date_utc": "2023-05-07",
+        "side": "SELL",
+        "open_usdt": 28430.09
+      },
+      {
+        "date_utc": "2023-06-22",
+        "signal_date_utc": "2023-06-21",
+        "side": "BUY",
+        "open_usdt": 29993.89
+      }
+    ],
+    "EMA_C2": [
+      {
+        "date_utc": "2023-05-01",
+        "signal_date_utc": "2023-04-30",
+        "side": "BUY",
+        "open_usdt": 29233.2
+      },
+      {
+        "date_utc": "2023-05-03",
+        "signal_date_utc": "2023-05-02",
+        "side": "SELL",
+        "open_usdt": 28669.85
+      },
+      {
+        "date_utc": "2023-05-05",
+        "signal_date_utc": "2023-05-04",
+        "side": "BUY",
+        "open_usdt": 28838.16
+      },
+      {
+        "date_utc": "2023-05-09",
+        "signal_date_utc": "2023-05-08",
+        "side": "SELL",
+        "open_usdt": 27668.8
+      },
+      {
+        "date_utc": "2023-06-23",
+        "signal_date_utc": "2023-06-22",
+        "side": "BUY",
+        "open_usdt": 29884.92
+      }
+    ],
+    "EMA_C3": [
+      {
+        "date_utc": "2023-05-06",
+        "signal_date_utc": "2023-05-05",
+        "side": "BUY",
+        "open_usdt": 29505.6
+      },
+      {
+        "date_utc": "2023-05-10",
+        "signal_date_utc": "2023-05-09",
+        "side": "SELL",
+        "open_usdt": 27628.28
+      },
+      {
+        "date_utc": "2023-06-24",
+        "signal_date_utc": "2023-06-23",
+        "side": "BUY",
+        "open_usdt": 30688.51
+      }
+    ],
+    "SUPERTREND_C1": [
+      {
+        "date_utc": "2023-06-21",
+        "signal_date_utc": "2023-06-20",
+        "side": "BUY",
+        "open_usdt": 28308.0
+      }
+    ],
+    "SUPERTREND_C2": [
+      {
+        "date_utc": "2023-06-22",
+        "signal_date_utc": "2023-06-21",
+        "side": "BUY",
+        "open_usdt": 29993.89
+      }
+    ],
+    "SUPERTREND_C3": [
+      {
+        "date_utc": "2023-06-23",
+        "signal_date_utc": "2023-06-22",
+        "side": "BUY",
+        "open_usdt": 29884.92
+      }
+    ],
+    "CONSENSUS_C1": [
+      {
+        "date_utc": "2023-05-01",
+        "signal_date_utc": "2023-04-30",
+        "side": "BUY",
+        "open_usdt": 29233.2
+      },
+      {
+        "date_utc": "2023-05-02",
+        "signal_date_utc": "2023-05-01",
+        "side": "SELL",
+        "open_usdt": 28068.26
+      },
+      {
+        "date_utc": "2023-05-05",
+        "signal_date_utc": "2023-05-04",
+        "side": "BUY",
+        "open_usdt": 28838.16
+      },
+      {
+        "date_utc": "2023-05-08",
+        "signal_date_utc": "2023-05-07",
+        "side": "SELL",
+        "open_usdt": 28430.09
+      },
+      {
+        "date_utc": "2023-06-22",
+        "signal_date_utc": "2023-06-21",
+        "side": "BUY",
+        "open_usdt": 29993.89
+      }
+    ],
+    "CONSENSUS_C2": [
+      {
+        "date_utc": "2023-05-01",
+        "signal_date_utc": "2023-04-30",
+        "side": "BUY",
+        "open_usdt": 29233.2
+      },
+      {
+        "date_utc": "2023-05-03",
+        "signal_date_utc": "2023-05-02",
+        "side": "SELL",
+        "open_usdt": 28669.85
+      },
+      {
+        "date_utc": "2023-05-06",
+        "signal_date_utc": "2023-05-05",
+        "side": "BUY",
+        "open_usdt": 29505.6
+      },
+      {
+        "date_utc": "2023-05-09",
+        "signal_date_utc": "2023-05-08",
+        "side": "SELL",
+        "open_usdt": 27668.8
+      },
+      {
+        "date_utc": "2023-06-23",
+        "signal_date_utc": "2023-06-22",
+        "side": "BUY",
+        "open_usdt": 29884.92
+      }
+    ],
+    "CONSENSUS_C3": [
+      {
+        "date_utc": "2023-05-07",
+        "signal_date_utc": "2023-05-06",
+        "side": "BUY",
+        "open_usdt": 28848.19
+      },
+      {
+        "date_utc": "2023-05-10",
+        "signal_date_utc": "2023-05-09",
+        "side": "SELL",
+        "open_usdt": 27628.28
+      },
+      {
+        "date_utc": "2023-06-24",
+        "signal_date_utc": "2023-06-23",
+        "side": "BUY",
+        "open_usdt": 30688.51
+      }
+    ],
+    "HOLD_BTC": [
+      {
+        "date_utc": "2023-05-01",
+        "signal_date_utc": "2023-04-30",
+        "side": "BUY",
+        "open_usdt": 29233.2
+      }
+    ]
+  },
+  "limitations": [
+    "Only 61 trading days: not a statistically decisive general validation",
+    "Binance BTCUSDT, not OKX BTCUSDC",
+    "Assumed next-open fills, no live order book, taxes, exchange minimums or downtime",
+    "Hindsight labels do not enter trading signals",
+    "No data or thresholds retuned based on 2023 outcomes"
+  ]
+}
