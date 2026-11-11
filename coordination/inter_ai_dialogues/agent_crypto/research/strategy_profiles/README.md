@@ -208,3 +208,14 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - **Conclusion méthodologique :** cet échantillon baissier supplémentaire n'est **pas discriminant** entre les quatre règles d'entrée/sortie ; il montre seulement que les états baissiers n'ont pas initié d'entrée. Ce n'est ni une validation prospective, ni une stratégie prouvée, ni une preuve d'exécution réelle.
 
 **Statut documentaire : PUBLIE ET VERIFIE.** Les ZIP originaux restent dans GitHub Releases, pas dans le dépôt Git principal. Administrator, Operator, Trader et Bridge inchangés.
+
+## Diagnostic événementiel : durabilité des signaux et coût du délai C3 (22 ZIP)
+
+**Étude publiée le 11 novembre 2026 ; analytique et rétrospective uniquement.** Après les tests asymétriques E1/S1 et E3/S1, cette étude examine les changements d'état bruts des indicateurs dans les cinq fenêtres déjà exploitées, sans nouvelle optimisation ni nouvel ordre simulé.
+
+- [Rapport — durabilité des signaux](./SEVEN_HEAVEN_BTC_SIGNAL_DURABILITY_DELAY_COST_AUDIT_2026_11_11_REPORT.md) · [Code reproductible Python](./SEVEN_HEAVEN_BTC_SIGNAL_DURABILITY_DELAY_COST_AUDIT_2026_11_11.py) · [Preuves SHA-256 et synthèse JSON](./SEVEN_HEAVEN_BTC_SIGNAL_DURABILITY_DELAY_COST_AUDIT_2026_11_11_PROOFS.json) · [Journal événementiel CSV](./SEVEN_HEAVEN_BTC_SIGNAL_DURABILITY_DELAY_COST_AUDIT_2026_11_11_TRANSITION_EVENTS.csv).
+- **22 archives BTC/USDT minute, 960 480 bougies natives vérifiées**, cinq périodes 2022–2026, **126 contrôles de causalité**.
+- Parmi 69 changements d'état bruts : EMA **13/34** épisodes de moins de 3 jours, consensus **5/25**, SuperTrend **0/10**. Une transition brute n'est pas forcément une transaction.
+- Parmi les événements encore admissibles après trois jours, le déplacement de cours médian associé au délai C3 est **défavorable de +1,447 %** pour l'EMA (17/21 cas défavorables), **+1,307 %** pour le consensus (14/20 cas défavorables) ; SuperTrend **−2,189 %** (9 cas, 4 défavorables). Les variations locales ne sont **pas** un rendement de portefeuille.
+- Parmi les 13 épisodes EMA de moins de 3 jours, **1** est suivi d'un mouvement BTC favorable au signal d'au moins 3 % à J+7, **4** défavorables et **8** neutres ; classification uniquement *ex post*.
+- **Interprétation :** C3 filtre des bascules courtes mais retarde aussi des mouvements durables ; aucune supériorité générale démontrée, aucune modification du Trader ou Bridge.
