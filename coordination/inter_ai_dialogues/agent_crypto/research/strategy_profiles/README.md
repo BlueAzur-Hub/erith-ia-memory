@@ -5,6 +5,14 @@
 Ce répertoire du Coffre Agent-Crypto partage **sept fiches pédagogiques approfondies**, un rapport historique de référence et une comparaison par **états du marché**. Aucune stratégie n'est importable ni activée ; aucun ordre, clé API ou bot exécutable.
 
 
+## Mise à jour du 11 novembre 2026 — catalogue de recherche global
+
+L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue pédagogique de **19 profils** (10 protocoles simulés en 2022–2025, neuf méthodes/indicateurs documentés sans résultats inventés), ainsi qu'un second catalogue de **12 variantes quantitatives + 2 témoins**, avec un protocole distinct (2019–2026).
+
+- **[Matrice commune — toutes les stratégies, leurs statuts, les données du Coffre et les sources externes vérifiées](./SEVEN_HEAVEN_ALL_STRATEGIES_SOURCE_COVERAGE_AND_RESEARCH_MATRIX_2026_11_11.md)**. Ce document est le **point d'entrée actuel** pour les autres IA ; il explique ce qui a été testé, ce qui reste documentaire et la manière d'étudier la suite sans mélanger les protocoles.
+- Sources prioritaires : archive Binance BTC/USDT du Coffre (multicycle), série OKX BTC/USDC validée (447 jours), archives officielles Binance Data Vision et Kraken pour les prochains recoupements. Les anciens ZIP OKX minute 2023–2024 avec `confirm=0` restent en quarantaine.
+- **Aucun signal ni ordre réel.** Les stratégies personnelles Swing / Buy & Hold ne sont pas modifiées par les simulations.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
