@@ -194,3 +194,12 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - **Distinction essentielle :** ces principes sont libres d'accès mais ne spécifient pas une stratégie calculable de bout en bout ; aucun backtest reproductible ni rendement audité n'a été établi à partir de la page consultée. Les affirmations de « risque nul » et les pourcentages 90 % / 8 sur 10 ne sont pas étayés sur cette page.
 - **Consigne inter-IA :** ne pas assimiler les anciens replays EMA/MACD/volumes du Coffre à une validation des 4 Rois. Toute implémentation doit être appelée **variante publique Seven**, avec règles figées, preuves et témoins, jamais reproduction certifiée des auteurs. Aucun achat de contenu payant ni ordre réel.
 
+## Extension BTC 2019–2021 : rebonds, creux ascendants, volume et EMA — 11 novembre 2026
+
+Étude PAPER **nouvelle couverture chronologique** sur la source quotidienne BTC/USDT réconciliée du Coffre. [Protocole préenregistré](./SEVEN_HEAVEN_BTC_REBOUND_2019_2021_DAILY_OUT_OF_SAMPLE_PROTOCOL_2026_11_11.md), commit `2bd4c0d`, publié avant les résultats ; **2019–2020 descriptif, 2021 année de contrôle non ajustée**.
+
+- [**Rapport de résultats 2019–2021**](./SEVEN_HEAVEN_BTC_REBOUND_2019_2021_DAILY_HOLDOUT_AUDIT_2026_11_11_REPORT.md) · [script Python autonome](./SEVEN_HEAVEN_BTC_REBOUND_2019_2021_DAILY_HOLDOUT_AUDIT_2026_11_11.py) · [preuves JSON](./SEVEN_HEAVEN_BTC_REBOUND_2019_2021_DAILY_HOLDOUT_AUDIT_2026_11_11_PROOFS.json) · [76 événements CSV](./SEVEN_HEAVEN_BTC_REBOUND_2019_2021_DAILY_HOLDOUT_AUDIT_2026_11_11_EVENTS.csv).
+- **Source SHA vérifiée** : `public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_native_daily_reconciliation/bitcoin-Max.json.gz` ; 3 075 journées 1d complètes 2018–2026, dont 1 096 journées auditées 2019–2021. Série réconciliée : **5 881 minutes historiques restent manquantes**, aucune prétention à l'intégrité minute.
+- **Bilan : 76 candidats, 73 évaluables (3 censurés), 18 C3 confirmés dont 11 résultats nets positifs.** 2021 : 27 candidats, 26 évaluables, 9 C3, 5 positifs ; décalage médian de l'entrée retardée **+9,08 %**. Creux ascendants 3 positifs/3 événements, volume fort 3/5 : trop peu de cas pour établir une valeur prédictive. 173 contrôles de cohérence/causalité.
+- **Usage inter-IA** : ne pas cumuler les rendements isolés comme un portefeuille ; ne pas présenter les fréquences comme des probabilités ; aucun signal automatique. Les paramètres 2021 ne doivent pas être optimisés a posteriori. Ne pas confondre Binance BTC/USDT et OKX BTC/USDC.
+
