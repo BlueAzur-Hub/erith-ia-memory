@@ -14,19 +14,19 @@
 
 ## Résultats comparés
 
-| Source | Fenêtre | Opérations | Rendement net Donchian 25 % | Baisse maximale quotidienne | Acheter et conserver 25 % | Donchian 25 % coûts doublés |
-|---|---|---:|---:|---:|---:|---:|
-| OKX | overlap (183 jours) | 3 | +0.811 % | -2.916 % | +5.580 % | +0.583 % |
-| OKX | recent (41 jours) | 0 | +0.000 % | 0.000 % | -3.010 % | +0.000 % |
-| OKX | combined (224 jours) | 3 | -0.261 % | -3.919 % | +1.974 % | -0.485 % |
-| BINANCE | overlap (183 jours) | 3 | +0.843 % | -2.894 % | +5.524 % | +0.615 % |
+| Source | Fenêtre | Opérations | Rendement Donchian 25 % | Baisse maximale Donchian | Rendement Buy & Hold 25 % | Baisse maximale Buy & Hold 25 % | Donchian, coûts doublés |
+|---|---|---:|---:|---:|---:|---:|---:|
+| OKX | overlap (183 jours) | 3 | +0.811 % | -2.916 % | +5.580 % | -8.230 % | +0.583 % |
+| OKX | recent (41 jours) | 0 | +0.000 % | 0.000 % | -3.010 % | -3.785 % | +0.000 % |
+| OKX | combined (224 jours) | 3 | -0.261 % | -3.919 % | +1.974 % | -8.230 % | -0.485 % |
+| BINANCE | overlap (183 jours) | 3 | +0.843 % | -2.894 % | +5.524 % | -8.198 % | +0.615 % |
 
 ## Concordance des signaux Binance / OKX
 
 - 183 jours en commun ; 0 divergences de signaux de cassure journalière.
 - Dates précises des divergences et données OKX conservées dans le JSON partagé.
 
-## Limites
+## Point de méthode : aucune assimilation du test récent au portefeuille continu
 
 - Ces résultats ne sont pas une validation prospective aveugle.
 - Peu de transactions sur une fenêtre courte ne prouvent aucune fiabilité future.
