@@ -18,7 +18,7 @@ import zipfile
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parent
-ROOT=HERE.parents[5]
+ROOT=HERE.parents[4]
 SOURCE=ROOT/"public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards"
 STEM="SEVEN_HEAVEN_SPOT_GRID_NATIVE_MINUTE_BTC_INVENTORY_REPLAY_2026_11_11"
 MONTHS=("2024-01","2025-01","2026-01","2026-10")
