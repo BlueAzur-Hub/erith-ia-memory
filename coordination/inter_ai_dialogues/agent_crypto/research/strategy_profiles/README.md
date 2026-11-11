@@ -20,6 +20,13 @@ L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue p
 - [Résultats structurés](./SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.json) et [script de reproduction](./SEVEN_HEAVEN_BTC_TEN_STRATEGY_2022_2025_RESILIENCE_AUDIT_2026_11_11.py).
 - **Limite :** réanalyse de simulations déjà archivées avec capital réinitialisé chaque année. Ce n'est **pas** un nouveau backtest continu ni une validation prospective ; ne pas fusionner avec les douze variantes du second catalogue.
 
+## Backtest continu 2019–2026 — dix méthodes pédagogiques
+
+- **[Backtest continu des dix méthodes du guide P01–P10 (2019–septembre 2026)](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.md)** : capital fictif non réinitialisé, allocation 100 % et 25 %, frais / glissement simulés, drawdowns, durées sous sommet, DCA à budget fixe, résultats défavorables conservés.
+- [**Données des simulations et journal des positions**](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.json) · [**courbes quotidiennes CSV**](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.csv) · [**script de reproduction**](./SEVEN_HEAVEN_TEN_STRATEGIES_CONTINUOUS_BTC_BINANCE_OKX_BACKTEST_2026_11_11.py).
+- **Contrôle indépendant** : 183 jours appariés Binance BTC/USDT – OKX BTC/USDC, plus OKX continu sur 224 jours. Sur cette fenêtre OKX, DCA sur 12 mois n'a pas encore investi toutes ses mensualités : **ne pas le comparer à un DCA entièrement déployé**.
+- **Différence méthodologique** : les règles pédagogiques du 7 novembre sont réimplémentées explicitement dans le nouveau moteur (notamment convention illustrative SuperTrend), sans prétendre reproduire à l'identique l'ancien simulateur annuel. La comparaison doit être lue comme **une nouvelle expérience exploratoire**, pas une performance prouvée.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
