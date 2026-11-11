@@ -1,0 +1,1615 @@
+{
+  "schema": "seven-heaven.btc-confirmation-delay-and-false-exits-audit.v1",
+  "generated_utc": "2026-11-11T20:42:47.100869+00:00",
+  "source": "Binance Spot BTCUSDT original 1m ZIP, user-provided and SHA-256 validated",
+  "verified_months": [
+    {
+      "month": "2024-01",
+      "sha256_verified": "40b78258091a468f8756843f207f5913eafc1d6e756c40a78711320d93fa5e75",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms"
+    },
+    {
+      "month": "2024-02",
+      "sha256_verified": "431132e0db8b9fe6e5c93c8e9ba3ae37dbcfa0edcdd57618b1b78ac18d14be79",
+      "minute_candles_verified": 41760,
+      "timestamp_unit": "ms"
+    },
+    {
+      "month": "2024-03",
+      "sha256_verified": "a9af86295eae839f1d072643c67eed7fcc47bb1d82c12ef312d041eec9511e7b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "ms"
+    },
+    {
+      "month": "2025-01",
+      "sha256_verified": "8d028b2f91aad57d6b693d44449c93f9c4b7044f55f298c8a3ac40ab676dafac",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2025-02",
+      "sha256_verified": "26b3795072983a66bdbe8327e0d5e71069bdd5ca831d4da3850ba68ef7a991ef",
+      "minute_candles_verified": 40320,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2025-03",
+      "sha256_verified": "e333601b6c721434f3cdd6670ffde2371bef7946572864c49ba6431a690ab1ca",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-01",
+      "sha256_verified": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-02",
+      "sha256_verified": "cee2e913ed07e02834e2387c65ca430fe3576f620588bad8a02229238f385407",
+      "minute_candles_verified": 40320,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-03",
+      "sha256_verified": "a2c1e689d39aa7877e218f436f15162e9a4436778a377d32e9d9b81b081381cd",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-04",
+      "sha256_verified": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-05",
+      "sha256_verified": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-06",
+      "sha256_verified": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-07",
+      "sha256_verified": "3ef15c84353da48e1c7c5fd99b9751cb036bf8986ed47f7cd1be63359c0d4f6b",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-08",
+      "sha256_verified": "acab442e02745177063031d402929703ae983715010064b40cf811c4beb843d4",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-09",
+      "sha256_verified": "7a021fb5981cfdb1a56457d68fa81360ab27350c981ddfe63112b2322df44b56",
+      "minute_candles_verified": 43200,
+      "timestamp_unit": "us"
+    },
+    {
+      "month": "2026-10",
+      "sha256_verified": "17168f260306752e39177a6c038bb8952f52bf08ff20e36d8da6068732621f1c",
+      "minute_candles_verified": 44640,
+      "timestamp_unit": "us"
+    }
+  ],
+  "minutes_verified": 698400,
+  "script_sha256": "1dd5a859ec4876fcda249dc746571d8fd846119b20b59df43686bbabadd7c9e4",
+  "initial_capital_usdt": 1000.0,
+  "fee_side": 0.001,
+  "slippage_side": 0.0005,
+  "stress_factor": 2,
+  "early_data_use": "January of each independent period for daily indicator warm-up only",
+  "trades": "Hypothetical next UTC day open, triggered by prior completed UTC daily candle",
+  "compared_confirmations": [
+    1,
+    2,
+    3
+  ],
+  "families": [
+    "EMA",
+    "SUPERTREND",
+    "CONSENSUS"
+  ],
+  "sale_7d_label": "Ex-post BTC change from SELL open to close of seventh subsequent UTC trading day; >=+3% missed rebound, <=-3% avoided drop, otherwise neutral; label not used for trading",
+  "warnings": [
+    "Already explored periods; no genuine new out-of-sample test",
+    "One price series Binance BTCUSDT only, not OKX BTCUSDC",
+    "Estimated fees/slippage and fills, no order book",
+    "Gross BTC changes in cash windows are not additive P&L",
+    "Censored windows/events excluded from right-edge directional counts",
+    "Any apparent best configuration is ex-post and must not be promoted as robust or prospective"
+  ],
+  "prefix_causality_checks": 279,
+  "by_year": {
+    "2024": {
+      "day_count": 91,
+      "paper_trading_days": 60,
+      "period_begin": "2024-02-01",
+      "period_end": "2024-03-31",
+      "causal_prefix_assertions": 90,
+      "strategies": {
+        "EMA_C1": {
+          "return_net_pct": 45.8597,
+          "final_equity_usdt": 1458.597098,
+          "max_daily_drawdown_pct": -20.5297,
+          "operations": 3,
+          "cash_days": 8,
+          "cash_share_pct": 13.33,
+          "post_sale_cash_days": 1,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 44.9863,
+          "position_exposure_days": 52,
+          "initial_preentry_cash_days": 7,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-08",
+              "signal_date_utc": "2024-02-07",
+              "side": "BUY",
+              "open_usdt": 44349.6
+            },
+            {
+              "date_utc": "2024-03-20",
+              "signal_date_utc": "2024-03-19",
+              "side": "SELL",
+              "open_usdt": 61937.41
+            },
+            {
+              "date_utc": "2024-03-21",
+              "signal_date_utc": "2024-03-20",
+              "side": "BUY",
+              "open_usdt": 67840.51
+            }
+          ]
+        },
+        "EMA_C2": {
+          "return_net_pct": 56.9188,
+          "final_equity_usdt": 1569.187944,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 1,
+          "cash_days": 8,
+          "cash_share_pct": 13.33,
+          "post_sale_cash_days": 0,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 56.4483,
+          "position_exposure_days": 52,
+          "initial_preentry_cash_days": 8,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-09",
+              "signal_date_utc": "2024-02-08",
+              "side": "BUY",
+              "open_usdt": 45288.66
+            }
+          ]
+        },
+        "EMA_C3": {
+          "return_net_pct": 50.7792,
+          "final_equity_usdt": 1507.791802,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 1,
+          "cash_days": 9,
+          "cash_share_pct": 15.0,
+          "post_sale_cash_days": 0,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 50.3271,
+          "position_exposure_days": 51,
+          "initial_preentry_cash_days": 9,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-10",
+              "signal_date_utc": "2024-02-09",
+              "side": "BUY",
+              "open_usdt": 47132.78
+            }
+          ]
+        },
+        "SUPERTREND_C1": {
+          "return_net_pct": 31.0167,
+          "final_equity_usdt": 1310.16703,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 2,
+          "cash_days": 21,
+          "cash_share_pct": 35.0,
+          "post_sale_cash_days": 12,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 30.6238,
+          "position_exposure_days": 39,
+          "initial_preentry_cash_days": 9,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-10",
+              "signal_date_utc": "2024-02-09",
+              "side": "BUY",
+              "open_usdt": 47132.78
+            },
+            {
+              "date_utc": "2024-03-20",
+              "signal_date_utc": "2024-03-19",
+              "side": "SELL",
+              "open_usdt": 61937.41
+            }
+          ]
+        },
+        "SUPERTREND_C2": {
+          "return_net_pct": 41.6454,
+          "final_equity_usdt": 1416.454366,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 2,
+          "cash_days": 21,
+          "cash_share_pct": 35.0,
+          "post_sale_cash_days": 11,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 41.2207,
+          "position_exposure_days": 39,
+          "initial_preentry_cash_days": 10,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-11",
+              "signal_date_utc": "2024-02-10",
+              "side": "BUY",
+              "open_usdt": 47751.08
+            },
+            {
+              "date_utc": "2024-03-21",
+              "signal_date_utc": "2024-03-20",
+              "side": "SELL",
+              "open_usdt": 67840.51
+            }
+          ]
+        },
+        "SUPERTREND_C3": {
+          "return_net_pct": 35.2071,
+          "final_equity_usdt": 1352.070502,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 2,
+          "cash_days": 21,
+          "cash_share_pct": 35.0,
+          "post_sale_cash_days": 10,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 34.8016,
+          "position_exposure_days": 39,
+          "initial_preentry_cash_days": 11,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-12",
+              "signal_date_utc": "2024-02-11",
+              "side": "BUY",
+              "open_usdt": 48300.0
+            },
+            {
+              "date_utc": "2024-03-22",
+              "signal_date_utc": "2024-03-21",
+              "side": "SELL",
+              "open_usdt": 65501.28
+            }
+          ]
+        },
+        "CONSENSUS_C1": {
+          "return_net_pct": 41.6027,
+          "final_equity_usdt": 1416.027061,
+          "max_daily_drawdown_pct": -15.9881,
+          "operations": 3,
+          "cash_days": 13,
+          "cash_share_pct": 21.67,
+          "post_sale_cash_days": 6,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 40.7548,
+          "position_exposure_days": 47,
+          "initial_preentry_cash_days": 7,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-08",
+              "signal_date_utc": "2024-02-07",
+              "side": "BUY",
+              "open_usdt": 44349.6
+            },
+            {
+              "date_utc": "2024-03-20",
+              "signal_date_utc": "2024-03-19",
+              "side": "SELL",
+              "open_usdt": 61937.41
+            },
+            {
+              "date_utc": "2024-03-26",
+              "signal_date_utc": "2024-03-25",
+              "side": "BUY",
+              "open_usdt": 69880.0
+            }
+          ]
+        },
+        "CONSENSUS_C2": {
+          "return_net_pct": 51.6482,
+          "final_equity_usdt": 1516.481889,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 3,
+          "cash_days": 14,
+          "cash_share_pct": 23.33,
+          "post_sale_cash_days": 6,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 50.7401,
+          "position_exposure_days": 46,
+          "initial_preentry_cash_days": 8,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-09",
+              "signal_date_utc": "2024-02-08",
+              "side": "BUY",
+              "open_usdt": 45288.66
+            },
+            {
+              "date_utc": "2024-03-21",
+              "signal_date_utc": "2024-03-20",
+              "side": "SELL",
+              "open_usdt": 67840.51
+            },
+            {
+              "date_utc": "2024-03-27",
+              "signal_date_utc": "2024-03-26",
+              "side": "BUY",
+              "open_usdt": 69987.99
+            }
+          ]
+        },
+        "CONSENSUS_C3": {
+          "return_net_pct": 41.7394,
+          "final_equity_usdt": 1417.394066,
+          "max_daily_drawdown_pct": -15.2383,
+          "operations": 3,
+          "cash_days": 15,
+          "cash_share_pct": 25.0,
+          "post_sale_cash_days": 6,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 40.8907,
+          "position_exposure_days": 45,
+          "initial_preentry_cash_days": 9,
+          "trade_ledger": [
+            {
+              "date_utc": "2024-02-10",
+              "signal_date_utc": "2024-02-09",
+              "side": "BUY",
+              "open_usdt": 47132.78
+            },
+            {
+              "date_utc": "2024-03-22",
+              "signal_date_utc": "2024-03-21",
+              "side": "SELL",
+              "open_usdt": 65501.28
+            },
+            {
+              "date_utc": "2024-03-28",
+              "signal_date_utc": "2024-03-27",
+              "side": "BUY",
+              "open_usdt": 69469.99
+            }
+          ]
+        }
+      }
+    },
+    "2025": {
+      "day_count": 90,
+      "paper_trading_days": 59,
+      "period_begin": "2025-02-01",
+      "period_end": "2025-03-31",
+      "causal_prefix_assertions": 81,
+      "strategies": {
+        "EMA_C1": {
+          "return_net_pct": -5.7756,
+          "final_equity_usdt": 942.244132,
+          "max_daily_drawdown_pct": -5.7756,
+          "operations": 4,
+          "cash_days": 57,
+          "cash_share_pct": 96.61,
+          "post_sale_cash_days": 57,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 1,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -6.3398,
+          "position_exposure_days": 2,
+          "initial_preentry_cash_days": 0,
+          "trade_ledger": [
+            {
+              "date_utc": "2025-02-01",
+              "signal_date_utc": "2025-01-31",
+              "side": "BUY",
+              "open_usdt": 102429.56
+            },
+            {
+              "date_utc": "2025-02-02",
+              "signal_date_utc": "2025-02-01",
+              "side": "SELL",
+              "open_usdt": 100635.66
+            },
+            {
+              "date_utc": "2025-02-04",
+              "signal_date_utc": "2025-02-03",
+              "side": "BUY",
+              "open_usdt": 101328.51
+            },
+            {
+              "date_utc": "2025-02-05",
+              "signal_date_utc": "2025-02-04",
+              "side": "SELL",
+              "open_usdt": 97763.14
+            }
+          ]
+        },
+        "EMA_C2": {
+          "return_net_pct": -4.9026,
+          "final_equity_usdt": 950.97382,
+          "max_daily_drawdown_pct": -4.9026,
+          "operations": 2,
+          "cash_days": 57,
+          "cash_share_pct": 96.61,
+          "post_sale_cash_days": 57,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 1,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -5.1878,
+          "position_exposure_days": 2,
+          "initial_preentry_cash_days": 0,
+          "trade_ledger": [
+            {
+              "date_utc": "2025-02-01",
+              "signal_date_utc": "2025-01-31",
+              "side": "BUY",
+              "open_usdt": 102429.56
+            },
+            {
+              "date_utc": "2025-02-03",
+              "signal_date_utc": "2025-02-02",
+              "side": "SELL",
+              "open_usdt": 97700.59
+            }
+          ]
+        },
+        "EMA_C3": {
+          "return_net_pct": -6.0183,
+          "final_equity_usdt": 939.816833,
+          "max_daily_drawdown_pct": -6.0183,
+          "operations": 2,
+          "cash_days": 53,
+          "cash_share_pct": 89.83,
+          "post_sale_cash_days": 53,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 1,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -6.3001,
+          "position_exposure_days": 6,
+          "initial_preentry_cash_days": 0,
+          "trade_ledger": [
+            {
+              "date_utc": "2025-02-01",
+              "signal_date_utc": "2025-01-31",
+              "side": "BUY",
+              "open_usdt": 102429.56
+            },
+            {
+              "date_utc": "2025-02-07",
+              "signal_date_utc": "2025-02-06",
+              "side": "SELL",
+              "open_usdt": 96554.35
+            }
+          ]
+        },
+        "SUPERTREND_C1": {
+          "return_net_pct": -25.9259,
+          "final_equity_usdt": 740.740818,
+          "max_daily_drawdown_pct": -25.9259,
+          "operations": 4,
+          "cash_days": 27,
+          "cash_share_pct": 45.76,
+          "post_sale_cash_days": 27,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -26.3695,
+          "position_exposure_days": 32,
+          "initial_preentry_cash_days": 0,
+          "trade_ledger": [
+            {
+              "date_utc": "2025-02-01",
+              "signal_date_utc": "2025-01-31",
+              "side": "BUY",
+              "open_usdt": 102429.56
+            },
+            {
+              "date_utc": "2025-02-25",
+              "signal_date_utc": "2025-02-24",
+              "side": "SELL",
+              "open_usdt": 91552.88
+            },
+            {
+              "date_utc": "2025-03-03",
+              "signal_date_utc": "2025-03-02",
+              "side": "BUY",
+              "open_usdt": 94269.99
+            },
+            {
+              "date_utc": "2025-03-11",
+              "signal_date_utc": "2025-03-10",
+              "side": "SELL",
+              "open_usdt": 78595.86
+            }
+          ]
+        },
+        "SUPERTREND_C2": {
+          "return_net_pct": -17.2231,
+          "final_equity_usdt": 827.768914,
+          "max_daily_drawdown_pct": -21.5521,
+          "operations": 4,
+          "cash_days": 26,
+          "cash_share_pct": 44.07,
+          "post_sale_cash_days": 26,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 1,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -17.7188,
+          "position_exposure_days": 33,
+          "initial_preentry_cash_days": 0,
+          "trade_ledger": [
+            {
+              "date_utc": "2025-02-01",
+              "signal_date_utc": "2025-01-31",
+              "side": "BUY",
+              "open_usdt": 102429.56
+            },
+            {
+              "date_utc": "2025-02-26",
+              "signal_date_utc": "2025-02-25",
+              "side": "SELL",
+              "open_usdt": 88680.39
+            },
+            {
+              "date_utc": "2025-03-04",
+              "signal_date_utc": "2025-03-03",
+              "side": "BUY",
+              "open_usdt": 86221.16
+            },
+            {
+              "date_utc": "2025-03-12",
+              "signal_date_utc": "2025-03-11",
+              "side": "SELL",
+              "open_usdt": 82932.99
+            }
+          ]
+        },
+        "SUPERTREND_C3": {
+          "return_net_pct": -21.6144,
+          "final_equity_usdt": 783.855725,
+          "max_daily_drawdown_pct": -26.377,
+          "operations": 4,
+          "cash_days": 25,
+          "cash_share_pct": 42.37,
+          "post_sale_cash_days": 25,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 1,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 1,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -22.0838,
+          "position_exposure_days": 34,
+          "initial_preentry_cash_days": 0,
+          "trade_ledger": [
+            {
+              "date_utc": "2025-02-01",
+              "signal_date_utc": "2025-01-31",
+              "side": "BUY",
+              "open_usdt": 102429.56
+            },
+            {
+              "date_utc": "2025-02-27",
+              "signal_date_utc": "2025-02-26",
+              "side": "SELL",
+              "open_usdt": 84250.09
+            },
+            {
+              "date_utc": "2025-03-05",
+              "signal_date_utc": "2025-03-04",
+              "side": "BUY",
+              "open_usdt": 87281.98
+            },
+            {
+              "date_utc": "2025-03-13",
+              "signal_date_utc": "2025-03-12",
+              "side": "SELL",
+              "open_usdt": 83680.12
+            }
+          ]
+        },
+        "CONSENSUS_C1": {
+          "return_net_pct": 0.0,
+          "final_equity_usdt": 1000.0,
+          "max_daily_drawdown_pct": 0.0,
+          "operations": 0,
+          "cash_days": 59,
+          "cash_share_pct": 100.0,
+          "post_sale_cash_days": 0,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 0.0,
+          "position_exposure_days": 0,
+          "initial_preentry_cash_days": 59,
+          "trade_ledger": []
+        },
+        "CONSENSUS_C2": {
+          "return_net_pct": 0.0,
+          "final_equity_usdt": 1000.0,
+          "max_daily_drawdown_pct": 0.0,
+          "operations": 0,
+          "cash_days": 59,
+          "cash_share_pct": 100.0,
+          "post_sale_cash_days": 0,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 0.0,
+          "position_exposure_days": 0,
+          "initial_preentry_cash_days": 59,
+          "trade_ledger": []
+        },
+        "CONSENSUS_C3": {
+          "return_net_pct": 0.0,
+          "final_equity_usdt": 1000.0,
+          "max_daily_drawdown_pct": 0.0,
+          "operations": 0,
+          "cash_days": 59,
+          "cash_share_pct": 100.0,
+          "post_sale_cash_days": 0,
+          "post_sale_cash_windows_closed": 0,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 0,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 0.0,
+          "position_exposure_days": 0,
+          "initial_preentry_cash_days": 59,
+          "trade_ledger": []
+        }
+      }
+    },
+    "2026": {
+      "day_count": 304,
+      "paper_trading_days": 273,
+      "period_begin": "2026-02-01",
+      "period_end": "2026-10-31",
+      "causal_prefix_assertions": 108,
+      "strategies": {
+        "EMA_C1": {
+          "return_net_pct": 3.2382,
+          "final_equity_usdt": 1032.382233,
+          "max_daily_drawdown_pct": -11.7554,
+          "operations": 24,
+          "cash_days": 163,
+          "cash_share_pct": 59.71,
+          "post_sale_cash_days": 120,
+          "post_sale_cash_windows_closed": 11,
+          "whipsaws_cash_7d": 8,
+          "cash_windows_with_btc_rise": 10,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 2,
+            "BTC_FELL_LE_MINUS_3PCT": 2,
+            "NEUTRAL_ABS_LT_3PCT": 8,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -0.4158,
+          "position_exposure_days": 110,
+          "initial_preentry_cash_days": 43,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-16",
+              "signal_date_utc": "2026-03-15",
+              "side": "BUY",
+              "open_usdt": 72815.25
+            },
+            {
+              "date_utc": "2026-03-20",
+              "signal_date_utc": "2026-03-19",
+              "side": "SELL",
+              "open_usdt": 69930.01
+            },
+            {
+              "date_utc": "2026-03-26",
+              "signal_date_utc": "2026-03-25",
+              "side": "BUY",
+              "open_usdt": 71336.53
+            },
+            {
+              "date_utc": "2026-03-27",
+              "signal_date_utc": "2026-03-26",
+              "side": "SELL",
+              "open_usdt": 68820.31
+            },
+            {
+              "date_utc": "2026-04-10",
+              "signal_date_utc": "2026-04-09",
+              "side": "BUY",
+              "open_usdt": 71787.98
+            },
+            {
+              "date_utc": "2026-05-17",
+              "signal_date_utc": "2026-05-16",
+              "side": "SELL",
+              "open_usdt": 78148.05
+            },
+            {
+              "date_utc": "2026-07-18",
+              "signal_date_utc": "2026-07-17",
+              "side": "BUY",
+              "open_usdt": 63931.67
+            },
+            {
+              "date_utc": "2026-07-25",
+              "signal_date_utc": "2026-07-24",
+              "side": "SELL",
+              "open_usdt": 64140.0
+            },
+            {
+              "date_utc": "2026-07-26",
+              "signal_date_utc": "2026-07-25",
+              "side": "BUY",
+              "open_usdt": 64375.01
+            },
+            {
+              "date_utc": "2026-07-28",
+              "signal_date_utc": "2026-07-27",
+              "side": "SELL",
+              "open_usdt": 63755.86
+            },
+            {
+              "date_utc": "2026-07-31",
+              "signal_date_utc": "2026-07-30",
+              "side": "BUY",
+              "open_usdt": 64780.03
+            },
+            {
+              "date_utc": "2026-08-01",
+              "signal_date_utc": "2026-07-31",
+              "side": "SELL",
+              "open_usdt": 62887.88
+            },
+            {
+              "date_utc": "2026-08-08",
+              "signal_date_utc": "2026-08-07",
+              "side": "BUY",
+              "open_usdt": 64923.2
+            },
+            {
+              "date_utc": "2026-08-11",
+              "signal_date_utc": "2026-08-10",
+              "side": "SELL",
+              "open_usdt": 63970.01
+            },
+            {
+              "date_utc": "2026-08-20",
+              "signal_date_utc": "2026-08-19",
+              "side": "BUY",
+              "open_usdt": 69334.78
+            },
+            {
+              "date_utc": "2026-09-16",
+              "signal_date_utc": "2026-09-15",
+              "side": "SELL",
+              "open_usdt": 75644.48
+            },
+            {
+              "date_utc": "2026-09-17",
+              "signal_date_utc": "2026-09-16",
+              "side": "BUY",
+              "open_usdt": 76206.0
+            },
+            {
+              "date_utc": "2026-10-09",
+              "signal_date_utc": "2026-10-08",
+              "side": "SELL",
+              "open_usdt": 81754.46
+            },
+            {
+              "date_utc": "2026-10-10",
+              "signal_date_utc": "2026-10-09",
+              "side": "BUY",
+              "open_usdt": 82635.56
+            },
+            {
+              "date_utc": "2026-10-13",
+              "signal_date_utc": "2026-10-12",
+              "side": "SELL",
+              "open_usdt": 81850.01
+            },
+            {
+              "date_utc": "2026-10-14",
+              "signal_date_utc": "2026-10-13",
+              "side": "BUY",
+              "open_usdt": 83169.01
+            },
+            {
+              "date_utc": "2026-10-15",
+              "signal_date_utc": "2026-10-14",
+              "side": "SELL",
+              "open_usdt": 81682.02
+            },
+            {
+              "date_utc": "2026-10-21",
+              "signal_date_utc": "2026-10-20",
+              "side": "BUY",
+              "open_usdt": 83028.14
+            },
+            {
+              "date_utc": "2026-10-23",
+              "signal_date_utc": "2026-10-22",
+              "side": "SELL",
+              "open_usdt": 81416.09
+            }
+          ]
+        },
+        "EMA_C2": {
+          "return_net_pct": 3.0307,
+          "final_equity_usdt": 1030.306828,
+          "max_daily_drawdown_pct": -9.609,
+          "operations": 12,
+          "cash_days": 161,
+          "cash_share_pct": 58.97,
+          "post_sale_cash_days": 117,
+          "post_sale_cash_windows_closed": 5,
+          "whipsaws_cash_7d": 1,
+          "cash_windows_with_btc_rise": 4,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 2,
+            "NEUTRAL_ABS_LT_3PCT": 3,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 1.1909,
+          "position_exposure_days": 112,
+          "initial_preentry_cash_days": 44,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-17",
+              "signal_date_utc": "2026-03-16",
+              "side": "BUY",
+              "open_usdt": 74884.67
+            },
+            {
+              "date_utc": "2026-03-21",
+              "signal_date_utc": "2026-03-20",
+              "side": "SELL",
+              "open_usdt": 70510.73
+            },
+            {
+              "date_utc": "2026-04-11",
+              "signal_date_utc": "2026-04-10",
+              "side": "BUY",
+              "open_usdt": 72962.71
+            },
+            {
+              "date_utc": "2026-05-18",
+              "signal_date_utc": "2026-05-17",
+              "side": "SELL",
+              "open_usdt": 77457.67
+            },
+            {
+              "date_utc": "2026-07-19",
+              "signal_date_utc": "2026-07-18",
+              "side": "BUY",
+              "open_usdt": 64834.21
+            },
+            {
+              "date_utc": "2026-07-29",
+              "signal_date_utc": "2026-07-28",
+              "side": "SELL",
+              "open_usdt": 63915.0
+            },
+            {
+              "date_utc": "2026-08-09",
+              "signal_date_utc": "2026-08-08",
+              "side": "BUY",
+              "open_usdt": 64962.6
+            },
+            {
+              "date_utc": "2026-08-12",
+              "signal_date_utc": "2026-08-11",
+              "side": "SELL",
+              "open_usdt": 63600.01
+            },
+            {
+              "date_utc": "2026-08-21",
+              "signal_date_utc": "2026-08-20",
+              "side": "BUY",
+              "open_usdt": 73027.02
+            },
+            {
+              "date_utc": "2026-10-16",
+              "signal_date_utc": "2026-10-15",
+              "side": "SELL",
+              "open_usdt": 82245.93
+            },
+            {
+              "date_utc": "2026-10-22",
+              "signal_date_utc": "2026-10-21",
+              "side": "BUY",
+              "open_usdt": 84093.42
+            },
+            {
+              "date_utc": "2026-10-24",
+              "signal_date_utc": "2026-10-23",
+              "side": "SELL",
+              "open_usdt": 81189.44
+            }
+          ]
+        },
+        "EMA_C3": {
+          "return_net_pct": -2.447,
+          "final_equity_usdt": 975.52979,
+          "max_daily_drawdown_pct": -13.3297,
+          "operations": 10,
+          "cash_days": 163,
+          "cash_share_pct": 59.71,
+          "post_sale_cash_days": 118,
+          "post_sale_cash_windows_closed": 4,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 3,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 3,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -3.9008,
+          "position_exposure_days": 110,
+          "initial_preentry_cash_days": 45,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-18",
+              "signal_date_utc": "2026-03-17",
+              "side": "BUY",
+              "open_usdt": 73909.37
+            },
+            {
+              "date_utc": "2026-03-22",
+              "signal_date_utc": "2026-03-21",
+              "side": "SELL",
+              "open_usdt": 68918.12
+            },
+            {
+              "date_utc": "2026-04-12",
+              "signal_date_utc": "2026-04-11",
+              "side": "BUY",
+              "open_usdt": 73043.16
+            },
+            {
+              "date_utc": "2026-05-19",
+              "signal_date_utc": "2026-05-18",
+              "side": "SELL",
+              "open_usdt": 77001.88
+            },
+            {
+              "date_utc": "2026-07-20",
+              "signal_date_utc": "2026-07-19",
+              "side": "BUY",
+              "open_usdt": 64722.55
+            },
+            {
+              "date_utc": "2026-07-30",
+              "signal_date_utc": "2026-07-29",
+              "side": "SELL",
+              "open_usdt": 63984.29
+            },
+            {
+              "date_utc": "2026-08-10",
+              "signal_date_utc": "2026-08-09",
+              "side": "BUY",
+              "open_usdt": 64901.59
+            },
+            {
+              "date_utc": "2026-08-13",
+              "signal_date_utc": "2026-08-12",
+              "side": "SELL",
+              "open_usdt": 63479.99
+            },
+            {
+              "date_utc": "2026-08-22",
+              "signal_date_utc": "2026-08-21",
+              "side": "BUY",
+              "open_usdt": 78338.03
+            },
+            {
+              "date_utc": "2026-10-17",
+              "signal_date_utc": "2026-10-16",
+              "side": "SELL",
+              "open_usdt": 81615.91
+            }
+          ]
+        },
+        "SUPERTREND_C1": {
+          "return_net_pct": 15.8037,
+          "final_equity_usdt": 1158.036835,
+          "max_daily_drawdown_pct": -14.775,
+          "operations": 4,
+          "cash_days": 101,
+          "cash_share_pct": 37.0,
+          "post_sale_cash_days": 57,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 1
+          },
+          "stress_2x_return_pct": 15.1102,
+          "position_exposure_days": 172,
+          "initial_preentry_cash_days": 44,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-17",
+              "signal_date_utc": "2026-03-16",
+              "side": "BUY",
+              "open_usdt": 74884.67
+            },
+            {
+              "date_utc": "2026-05-28",
+              "signal_date_utc": "2026-05-27",
+              "side": "SELL",
+              "open_usdt": 74449.31
+            },
+            {
+              "date_utc": "2026-07-22",
+              "signal_date_utc": "2026-07-21",
+              "side": "BUY",
+              "open_usdt": 66556.15
+            },
+            {
+              "date_utc": "2026-10-30",
+              "signal_date_utc": "2026-10-29",
+              "side": "SELL",
+              "open_usdt": 77991.89
+            }
+          ]
+        },
+        "SUPERTREND_C2": {
+          "return_net_pct": 15.8628,
+          "final_equity_usdt": 1158.627854,
+          "max_daily_drawdown_pct": -15.1642,
+          "operations": 4,
+          "cash_days": 101,
+          "cash_share_pct": 37.0,
+          "post_sale_cash_days": 56,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 1
+          },
+          "stress_2x_return_pct": 15.169,
+          "position_exposure_days": 172,
+          "initial_preentry_cash_days": 45,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-18",
+              "signal_date_utc": "2026-03-17",
+              "side": "BUY",
+              "open_usdt": 73909.37
+            },
+            {
+              "date_utc": "2026-05-29",
+              "signal_date_utc": "2026-05-28",
+              "side": "SELL",
+              "open_usdt": 73617.52
+            },
+            {
+              "date_utc": "2026-07-23",
+              "signal_date_utc": "2026-07-22",
+              "side": "BUY",
+              "open_usdt": 66114.5
+            },
+            {
+              "date_utc": "2026-10-31",
+              "signal_date_utc": "2026-10-30",
+              "side": "SELL",
+              "open_usdt": 77368.76
+            }
+          ]
+        },
+        "SUPERTREND_C3": {
+          "return_net_pct": 22.1439,
+          "final_equity_usdt": 1221.439496,
+          "max_daily_drawdown_pct": -14.0242,
+          "operations": 3,
+          "cash_days": 101,
+          "cash_share_pct": 37.0,
+          "post_sale_cash_days": 55,
+          "post_sale_cash_windows_closed": 1,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 0,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 0,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 0,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 21.4126,
+          "position_exposure_days": 172,
+          "initial_preentry_cash_days": 46,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-19",
+              "signal_date_utc": "2026-03-18",
+              "side": "BUY",
+              "open_usdt": 71246.55
+            },
+            {
+              "date_utc": "2026-05-30",
+              "signal_date_utc": "2026-05-29",
+              "side": "SELL",
+              "open_usdt": 73460.78
+            },
+            {
+              "date_utc": "2026-07-24",
+              "signal_date_utc": "2026-07-23",
+              "side": "BUY",
+              "open_usdt": 65098.98
+            }
+          ]
+        },
+        "CONSENSUS_C1": {
+          "return_net_pct": 8.1231,
+          "final_equity_usdt": 1081.231429,
+          "max_daily_drawdown_pct": -14.3688,
+          "operations": 18,
+          "cash_days": 164,
+          "cash_share_pct": 60.07,
+          "post_sale_cash_days": 121,
+          "post_sale_cash_windows_closed": 8,
+          "whipsaws_cash_7d": 4,
+          "cash_windows_with_btc_rise": 7,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 0,
+            "NEUTRAL_ABS_LT_3PCT": 8,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 5.24,
+          "position_exposure_days": 109,
+          "initial_preentry_cash_days": 43,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-16",
+              "signal_date_utc": "2026-03-15",
+              "side": "BUY",
+              "open_usdt": 72815.25
+            },
+            {
+              "date_utc": "2026-03-23",
+              "signal_date_utc": "2026-03-22",
+              "side": "SELL",
+              "open_usdt": 67859.0
+            },
+            {
+              "date_utc": "2026-03-26",
+              "signal_date_utc": "2026-03-25",
+              "side": "BUY",
+              "open_usdt": 71336.53
+            },
+            {
+              "date_utc": "2026-03-27",
+              "signal_date_utc": "2026-03-26",
+              "side": "SELL",
+              "open_usdt": 68820.31
+            },
+            {
+              "date_utc": "2026-04-10",
+              "signal_date_utc": "2026-04-09",
+              "side": "BUY",
+              "open_usdt": 71787.98
+            },
+            {
+              "date_utc": "2026-05-17",
+              "signal_date_utc": "2026-05-16",
+              "side": "SELL",
+              "open_usdt": 78148.05
+            },
+            {
+              "date_utc": "2026-07-18",
+              "signal_date_utc": "2026-07-17",
+              "side": "BUY",
+              "open_usdt": 63931.67
+            },
+            {
+              "date_utc": "2026-07-25",
+              "signal_date_utc": "2026-07-24",
+              "side": "SELL",
+              "open_usdt": 64140.0
+            },
+            {
+              "date_utc": "2026-07-26",
+              "signal_date_utc": "2026-07-25",
+              "side": "BUY",
+              "open_usdt": 64375.01
+            },
+            {
+              "date_utc": "2026-07-28",
+              "signal_date_utc": "2026-07-27",
+              "side": "SELL",
+              "open_usdt": 63755.86
+            },
+            {
+              "date_utc": "2026-08-08",
+              "signal_date_utc": "2026-08-07",
+              "side": "BUY",
+              "open_usdt": 64923.2
+            },
+            {
+              "date_utc": "2026-08-11",
+              "signal_date_utc": "2026-08-10",
+              "side": "SELL",
+              "open_usdt": 63970.01
+            },
+            {
+              "date_utc": "2026-08-20",
+              "signal_date_utc": "2026-08-19",
+              "side": "BUY",
+              "open_usdt": 69334.78
+            },
+            {
+              "date_utc": "2026-09-16",
+              "signal_date_utc": "2026-09-15",
+              "side": "SELL",
+              "open_usdt": 75644.48
+            },
+            {
+              "date_utc": "2026-09-17",
+              "signal_date_utc": "2026-09-16",
+              "side": "BUY",
+              "open_usdt": 76206.0
+            },
+            {
+              "date_utc": "2026-10-09",
+              "signal_date_utc": "2026-10-08",
+              "side": "SELL",
+              "open_usdt": 81754.46
+            },
+            {
+              "date_utc": "2026-10-10",
+              "signal_date_utc": "2026-10-09",
+              "side": "BUY",
+              "open_usdt": 82635.56
+            },
+            {
+              "date_utc": "2026-10-13",
+              "signal_date_utc": "2026-10-12",
+              "side": "SELL",
+              "open_usdt": 81850.01
+            }
+          ]
+        },
+        "CONSENSUS_C2": {
+          "return_net_pct": 8.8454,
+          "final_equity_usdt": 1088.453833,
+          "max_daily_drawdown_pct": -9.6535,
+          "operations": 10,
+          "cash_days": 162,
+          "cash_share_pct": 59.34,
+          "post_sale_cash_days": 118,
+          "post_sale_cash_windows_closed": 4,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 3,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 3,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": 7.2233,
+          "position_exposure_days": 111,
+          "initial_preentry_cash_days": 44,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-17",
+              "signal_date_utc": "2026-03-16",
+              "side": "BUY",
+              "open_usdt": 74884.67
+            },
+            {
+              "date_utc": "2026-03-24",
+              "signal_date_utc": "2026-03-23",
+              "side": "SELL",
+              "open_usdt": 70906.45
+            },
+            {
+              "date_utc": "2026-04-11",
+              "signal_date_utc": "2026-04-10",
+              "side": "BUY",
+              "open_usdt": 72962.71
+            },
+            {
+              "date_utc": "2026-05-18",
+              "signal_date_utc": "2026-05-17",
+              "side": "SELL",
+              "open_usdt": 77457.67
+            },
+            {
+              "date_utc": "2026-07-19",
+              "signal_date_utc": "2026-07-18",
+              "side": "BUY",
+              "open_usdt": 64834.21
+            },
+            {
+              "date_utc": "2026-07-29",
+              "signal_date_utc": "2026-07-28",
+              "side": "SELL",
+              "open_usdt": 63915.0
+            },
+            {
+              "date_utc": "2026-08-09",
+              "signal_date_utc": "2026-08-08",
+              "side": "BUY",
+              "open_usdt": 64962.6
+            },
+            {
+              "date_utc": "2026-08-12",
+              "signal_date_utc": "2026-08-11",
+              "side": "SELL",
+              "open_usdt": 63600.01
+            },
+            {
+              "date_utc": "2026-08-21",
+              "signal_date_utc": "2026-08-20",
+              "side": "BUY",
+              "open_usdt": 73027.02
+            },
+            {
+              "date_utc": "2026-10-14",
+              "signal_date_utc": "2026-10-13",
+              "side": "SELL",
+              "open_usdt": 83169.01
+            }
+          ]
+        },
+        "CONSENSUS_C3": {
+          "return_net_pct": -0.0467,
+          "final_equity_usdt": 999.53329,
+          "max_daily_drawdown_pct": -13.3297,
+          "operations": 10,
+          "cash_days": 162,
+          "cash_share_pct": 59.34,
+          "post_sale_cash_days": 117,
+          "post_sale_cash_windows_closed": 4,
+          "whipsaws_cash_7d": 0,
+          "cash_windows_with_btc_rise": 3,
+          "cash_windows_with_btc_decline": 1,
+          "sale_event_7d_evaluation": {
+            "BTC_ROSE_GE_3PCT": 1,
+            "BTC_FELL_LE_MINUS_3PCT": 1,
+            "NEUTRAL_ABS_LT_3PCT": 3,
+            "RIGHT_CENSORED": 0
+          },
+          "stress_2x_return_pct": -1.5363,
+          "position_exposure_days": 111,
+          "initial_preentry_cash_days": 45,
+          "trade_ledger": [
+            {
+              "date_utc": "2026-03-18",
+              "signal_date_utc": "2026-03-17",
+              "side": "BUY",
+              "open_usdt": 73909.37
+            },
+            {
+              "date_utc": "2026-03-25",
+              "signal_date_utc": "2026-03-24",
+              "side": "SELL",
+              "open_usdt": 70556.74
+            },
+            {
+              "date_utc": "2026-04-12",
+              "signal_date_utc": "2026-04-11",
+              "side": "BUY",
+              "open_usdt": 73043.16
+            },
+            {
+              "date_utc": "2026-05-19",
+              "signal_date_utc": "2026-05-18",
+              "side": "SELL",
+              "open_usdt": 77001.88
+            },
+            {
+              "date_utc": "2026-07-20",
+              "signal_date_utc": "2026-07-19",
+              "side": "BUY",
+              "open_usdt": 64722.55
+            },
+            {
+              "date_utc": "2026-07-30",
+              "signal_date_utc": "2026-07-29",
+              "side": "SELL",
+              "open_usdt": 63984.29
+            },
+            {
+              "date_utc": "2026-08-10",
+              "signal_date_utc": "2026-08-09",
+              "side": "BUY",
+              "open_usdt": 64901.59
+            },
+            {
+              "date_utc": "2026-08-13",
+              "signal_date_utc": "2026-08-12",
+              "side": "SELL",
+              "open_usdt": 63479.99
+            },
+            {
+              "date_utc": "2026-08-22",
+              "signal_date_utc": "2026-08-21",
+              "side": "BUY",
+              "open_usdt": 78338.03
+            },
+            {
+              "date_utc": "2026-10-15",
+              "signal_date_utc": "2026-10-14",
+              "side": "SELL",
+              "open_usdt": 81682.02
+            }
+          ]
+        }
+      }
+    }
+  }
+}
