@@ -1,0 +1,602 @@
+{
+  "schema": "seven.heaven.crypto.spot-grid-ten-month-continuous.v1",
+  "period_utc": "2026-01-01T00:00:00Z to 2026-10-31T23:59:00Z",
+  "source": "Binance Spot BTCUSDT native 1m, archived GitHub release ZIP",
+  "registry": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards/index.json",
+  "verified_archive_months": [
+    {
+      "month": "2026-01",
+      "file": "BTCUSDT-1m-2026-01.zip",
+      "sha256": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+      "expected_candles": 44640,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-01-1m/BTCUSDT-1m-2026-01.zip",
+      "bytes": 2127988
+    },
+    {
+      "month": "2026-02",
+      "file": "BTCUSDT-1m-2026-02.zip",
+      "sha256": "cee2e913ed07e02834e2387c65ca430fe3576f620588bad8a02229238f385407",
+      "expected_candles": 40320,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-02-1m/BTCUSDT-1m-2026-02.zip",
+      "bytes": 2021779
+    },
+    {
+      "month": "2026-03",
+      "file": "BTCUSDT-1m-2026-03.zip",
+      "sha256": "a2c1e689d39aa7877e218f436f15162e9a4436778a377d32e9d9b81b081381cd",
+      "expected_candles": 44640,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-03-1m/BTCUSDT-1m-2026-03.zip",
+      "bytes": 2213444
+    },
+    {
+      "month": "2026-04",
+      "file": "BTCUSDT-1m-2026-04.zip",
+      "sha256": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+      "expected_candles": 43200,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-04-1m/BTCUSDT-1m-2026-04.zip",
+      "bytes": 2088776
+    },
+    {
+      "month": "2026-05",
+      "file": "BTCUSDT-1m-2026-05.zip",
+      "sha256": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+      "expected_candles": 44640,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-05-1m/BTCUSDT-1m-2026-05.zip",
+      "bytes": 2120776
+    },
+    {
+      "month": "2026-06",
+      "file": "BTCUSDT-1m-2026-06.zip",
+      "sha256": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+      "expected_candles": 43200,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-06-1m/BTCUSDT-1m-2026-06.zip",
+      "bytes": 2092027
+    },
+    {
+      "month": "2026-07",
+      "file": "BTCUSDT-1m-2026-07.zip",
+      "sha256": "3ef15c84353da48e1c7c5fd99b9751cb036bf8986ed47f7cd1be63359c0d4f6b",
+      "expected_candles": 44640,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-07-1m/BTCUSDT-1m-2026-07.zip",
+      "bytes": 2112275
+    },
+    {
+      "month": "2026-08",
+      "file": "BTCUSDT-1m-2026-08.zip",
+      "sha256": "acab442e02745177063031d402929703ae983715010064b40cf811c4beb843d4",
+      "expected_candles": 44640,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-08-1m/BTCUSDT-1m-2026-08.zip",
+      "bytes": 2084946
+    },
+    {
+      "month": "2026-09",
+      "file": "BTCUSDT-1m-2026-09.zip",
+      "sha256": "7a021fb5981cfdb1a56457d68fa81360ab27350c981ddfe63112b2322df44b56",
+      "expected_candles": 43200,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-09-1m/BTCUSDT-1m-2026-09.zip",
+      "bytes": 2054117
+    },
+    {
+      "month": "2026-10",
+      "file": "BTCUSDT-1m-2026-10.zip",
+      "sha256": "17168f260306752e39177a6c038bb8952f52bf08ff20e36d8da6068732621f1c",
+      "expected_candles": 44640,
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-10-1m/BTCUSDT-1m-2026-10.zip",
+      "bytes": 2111822
+    }
+  ],
+  "minutes_verified": 437760,
+  "days_verified": 304,
+  "aggregate_base_volume_btc": 5451153.24928,
+  "assumptions": {
+    "initial_capital_usdt": 1000.0,
+    "initial_btc_allocation_pct": 50,
+    "grid_levels": 10,
+    "grid_range_pct_around_initial_center": 10,
+    "reference_fees_per_side": 0.001,
+    "reference_slippage_per_side": 0.0005,
+    "stress_fees_per_side": 0.002,
+    "stress_slippage_per_side": 0.001,
+    "touch_model": "legacy candle low/high threshold: optimistic gap fills possible",
+    "close_model": "legacy close cross, hypothetical fill at threshold, not proof of execution",
+    "monthly_reset": "January initialization + nine first-minute month resets; sell all BTC and rebuy 50% at observed monthly open; no lookahead",
+    "daily_mark": "cash + BTC * close * hypothetical selling factor",
+    "no_leverage": true,
+    "no_orders": true
+  },
+  "warning": "Retrospective PAPER only. Prices touching limits do not prove executable fills; maker queue, spreads, latency, tick size, actual OKX costs and taxes not modeled.",
+  "results": [
+    {
+      "strategy": "GRID_FIXED_TOUCH",
+      "equity": 963.533304,
+      "return_pct": -3.6467,
+      "max_drawdown_daily_pct": -31.6038,
+      "hypothetical_buys": 36,
+      "hypothetical_sells": 31,
+      "hypothetical_completed_cycles": 31,
+      "hypothetical_closed_cycle_pnl_usdt": 77.085195,
+      "hypothetical_reset_liquidation_pnl_usdt": 0.0,
+      "grid_resets_after_initial": 0,
+      "end_cash_usdt": 0.0,
+      "end_btc_qty": 0.012438195,
+      "ambiguous_intraminute_events": 0,
+      "minutes_low_below_lower_bound": 304038,
+      "minutes_high_above_upper_bound": 1312,
+      "minutes_touching_multiple_levels": 0,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "GRID_MONTHLY_RESET_TOUCH",
+      "equity": 816.587604,
+      "return_pct": -18.3412,
+      "max_drawdown_daily_pct": -27.8217,
+      "hypothetical_buys": 119,
+      "hypothetical_sells": 117,
+      "hypothetical_completed_cycles": 117,
+      "hypothetical_closed_cycle_pnl_usdt": 286.123107,
+      "hypothetical_reset_liquidation_pnl_usdt": -426.73016,
+      "grid_resets_after_initial": 9,
+      "end_cash_usdt": 84.432243,
+      "end_btc_qty": 0.0094513507,
+      "ambiguous_intraminute_events": 1,
+      "minutes_low_below_lower_bound": 72001,
+      "minutes_high_above_upper_bound": 55218,
+      "minutes_touching_multiple_levels": 1,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        },
+        {
+          "date": "2026-02-01",
+          "open": 78741.1,
+          "capital_after_liquidation": 944.15901,
+          "lower": 70866.99,
+          "upper": 86615.21
+        },
+        {
+          "date": "2026-03-01",
+          "open": 66973.26,
+          "capital_after_liquidation": 832.664028,
+          "lower": 60275.934,
+          "upper": 73670.586
+        },
+        {
+          "date": "2026-04-01",
+          "open": 68284.49,
+          "capital_after_liquidation": 879.907485,
+          "lower": 61456.041,
+          "upper": 75112.939
+        },
+        {
+          "date": "2026-05-01",
+          "open": 76346.58,
+          "capital_after_liquidation": 917.028543,
+          "lower": 68711.922,
+          "upper": 83981.238
+        },
+        {
+          "date": "2026-06-01",
+          "open": 73674.39,
+          "capital_after_liquidation": 912.928976,
+          "lower": 66306.951,
+          "upper": 81041.829
+        },
+        {
+          "date": "2026-07-01",
+          "open": 58624.71,
+          "capital_after_liquidation": 747.729751,
+          "lower": 52762.239,
+          "upper": 64487.181
+        },
+        {
+          "date": "2026-08-01",
+          "open": 62887.88,
+          "capital_after_liquidation": 781.174652,
+          "lower": 56599.092,
+          "upper": 69176.668
+        },
+        {
+          "date": "2026-09-01",
+          "open": 78581.3,
+          "capital_after_liquidation": 807.381069,
+          "lower": 70723.17,
+          "upper": 86439.43
+        },
+        {
+          "date": "2026-10-01",
+          "open": 83623.59,
+          "capital_after_liquidation": 844.322433,
+          "lower": 75261.231,
+          "upper": 91985.949
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "GRID_FIXED_CLOSE",
+      "equity": 962.147272,
+      "return_pct": -3.7853,
+      "max_drawdown_daily_pct": -31.5922,
+      "hypothetical_buys": 35,
+      "hypothetical_sells": 30,
+      "hypothetical_completed_cycles": 30,
+      "hypothetical_closed_cycle_pnl_usdt": 75.388976,
+      "hypothetical_reset_liquidation_pnl_usdt": 0.0,
+      "grid_resets_after_initial": 0,
+      "end_cash_usdt": 0.0,
+      "end_btc_qty": 0.0124203028,
+      "ambiguous_intraminute_events": 0,
+      "minutes_low_below_lower_bound": 304038,
+      "minutes_high_above_upper_bound": 1312,
+      "minutes_touching_multiple_levels": 0,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "GRID_MONTHLY_RESET_CLOSE",
+      "equity": 805.767763,
+      "return_pct": -19.4232,
+      "max_drawdown_daily_pct": -28.1699,
+      "hypothetical_buys": 111,
+      "hypothetical_sells": 109,
+      "hypothetical_completed_cycles": 109,
+      "hypothetical_closed_cycle_pnl_usdt": 272.876842,
+      "hypothetical_reset_liquidation_pnl_usdt": -424.84974,
+      "grid_resets_after_initial": 9,
+      "end_cash_usdt": 83.463931,
+      "end_btc_qty": 0.0093241779,
+      "ambiguous_intraminute_events": 0,
+      "minutes_low_below_lower_bound": 72001,
+      "minutes_high_above_upper_bound": 55218,
+      "minutes_touching_multiple_levels": 1,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        },
+        {
+          "date": "2026-02-01",
+          "open": 78741.1,
+          "capital_after_liquidation": 942.752271,
+          "lower": 70866.99,
+          "upper": 86615.21
+        },
+        {
+          "date": "2026-03-01",
+          "open": 66973.26,
+          "capital_after_liquidation": 831.423409,
+          "lower": 60275.934,
+          "upper": 73670.586
+        },
+        {
+          "date": "2026-04-01",
+          "open": 68284.49,
+          "capital_after_liquidation": 877.051163,
+          "lower": 61456.041,
+          "upper": 75112.939
+        },
+        {
+          "date": "2026-05-01",
+          "open": 76346.58,
+          "capital_after_liquidation": 912.517674,
+          "lower": 68711.922,
+          "upper": 83981.238
+        },
+        {
+          "date": "2026-06-01",
+          "open": 73674.39,
+          "capital_after_liquidation": 907.027862,
+          "lower": 66306.951,
+          "upper": 81041.829
+        },
+        {
+          "date": "2026-07-01",
+          "open": 58624.71,
+          "capital_after_liquidation": 742.896474,
+          "lower": 52762.239,
+          "upper": 64487.181
+        },
+        {
+          "date": "2026-08-01",
+          "open": 62887.88,
+          "capital_after_liquidation": 774.777786,
+          "lower": 56599.092,
+          "upper": 69176.668
+        },
+        {
+          "date": "2026-09-01",
+          "open": 78581.3,
+          "capital_after_liquidation": 799.455411,
+          "lower": 70723.17,
+          "upper": 86439.43
+        },
+        {
+          "date": "2026-10-01",
+          "open": 83623.59,
+          "capital_after_liquidation": 834.639314,
+          "lower": 75261.231,
+          "upper": 91985.949
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "HOLD_50",
+      "equity": 941.25,
+      "return_pct": -5.875,
+      "max_drawdown_daily_pct": -20.7326,
+      "end_cash_usdt": 500.0,
+      "end_btc_qty": 0.0056960704
+    },
+    {
+      "strategy": "HOLD_100",
+      "equity": 882.5,
+      "return_pct": -11.75,
+      "max_drawdown_daily_pct": -39.5321,
+      "end_cash_usdt": 0.0,
+      "end_btc_qty": 0.0113921408
+    },
+    {
+      "strategy": "GRID_COSTS_X2_FIXED_TOUCH",
+      "equity": 951.441392,
+      "return_pct": -4.8559,
+      "max_drawdown_daily_pct": -31.9446,
+      "hypothetical_buys": 36,
+      "hypothetical_sells": 31,
+      "hypothetical_completed_cycles": 31,
+      "hypothetical_closed_cycle_pnl_usdt": 67.00373,
+      "hypothetical_reset_liquidation_pnl_usdt": 0.0,
+      "grid_resets_after_initial": 0,
+      "end_cash_usdt": 0.0,
+      "end_btc_qty": 0.0123005613,
+      "ambiguous_intraminute_events": 0,
+      "minutes_low_below_lower_bound": 304038,
+      "minutes_high_above_upper_bound": 1312,
+      "minutes_touching_multiple_levels": 0,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "GRID_COSTS_X2_MONTHLY_RESET_TOUCH",
+      "equity": 775.196676,
+      "return_pct": -22.4803,
+      "max_drawdown_daily_pct": -29.991,
+      "hypothetical_buys": 119,
+      "hypothetical_sells": 117,
+      "hypothetical_completed_cycles": 117,
+      "hypothetical_closed_cycle_pnl_usdt": 247.853704,
+      "hypothetical_reset_liquidation_pnl_usdt": -429.836335,
+      "grid_resets_after_initial": 9,
+      "end_cash_usdt": 80.589425,
+      "end_btc_qty": 0.0089801212,
+      "ambiguous_intraminute_events": 1,
+      "minutes_low_below_lower_bound": 72001,
+      "minutes_high_above_upper_bound": 55218,
+      "minutes_touching_multiple_levels": 1,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        },
+        {
+          "date": "2026-02-01",
+          "open": 78741.1,
+          "capital_after_liquidation": 937.698942,
+          "lower": 70866.99,
+          "upper": 86615.21
+        },
+        {
+          "date": "2026-03-01",
+          "open": 66973.26,
+          "capital_after_liquidation": 823.467652,
+          "lower": 60275.934,
+          "upper": 73670.586
+        },
+        {
+          "date": "2026-04-01",
+          "open": 68284.49,
+          "capital_after_liquidation": 861.229638,
+          "lower": 61456.041,
+          "upper": 75112.939
+        },
+        {
+          "date": "2026-05-01",
+          "open": 76346.58,
+          "capital_after_liquidation": 893.911018,
+          "lower": 68711.922,
+          "upper": 83981.238
+        },
+        {
+          "date": "2026-06-01",
+          "open": 73674.39,
+          "capital_after_liquidation": 885.376697,
+          "lower": 66306.951,
+          "upper": 81041.829
+        },
+        {
+          "date": "2026-07-01",
+          "open": 58624.71,
+          "capital_after_liquidation": 722.988797,
+          "lower": 52762.239,
+          "upper": 64487.181
+        },
+        {
+          "date": "2026-08-01",
+          "open": 62887.88,
+          "capital_after_liquidation": 751.403164,
+          "lower": 56599.092,
+          "upper": 69176.668
+        },
+        {
+          "date": "2026-09-01",
+          "open": 78581.3,
+          "capital_after_liquidation": 774.689448,
+          "lower": 70723.17,
+          "upper": 86439.43
+        },
+        {
+          "date": "2026-10-01",
+          "open": 83623.59,
+          "capital_after_liquidation": 805.89425,
+          "lower": 75261.231,
+          "upper": 91985.949
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "GRID_COSTS_X2_FIXED_CLOSE",
+      "equity": 950.334893,
+      "return_pct": -4.9665,
+      "max_drawdown_daily_pct": -31.9357,
+      "hypothetical_buys": 35,
+      "hypothetical_sells": 30,
+      "hypothetical_completed_cycles": 30,
+      "hypothetical_closed_cycle_pnl_usdt": 65.645528,
+      "hypothetical_reset_liquidation_pnl_usdt": 0.0,
+      "grid_resets_after_initial": 0,
+      "end_cash_usdt": 0.0,
+      "end_btc_qty": 0.0122862561,
+      "ambiguous_intraminute_events": 0,
+      "minutes_low_below_lower_bound": 304038,
+      "minutes_high_above_upper_bound": 1312,
+      "minutes_touching_multiple_levels": 0,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        }
+      ],
+      "hypothetical_fills_only": true
+    },
+    {
+      "strategy": "GRID_COSTS_X2_MONTHLY_RESET_CLOSE",
+      "equity": 766.879044,
+      "return_pct": -23.3121,
+      "max_drawdown_daily_pct": -30.265,
+      "hypothetical_buys": 111,
+      "hypothetical_sells": 109,
+      "hypothetical_completed_cycles": 109,
+      "hypothetical_closed_cycle_pnl_usdt": 237.575252,
+      "hypothetical_reset_liquidation_pnl_usdt": -428.318641,
+      "grid_resets_after_initial": 9,
+      "end_cash_usdt": 79.843847,
+      "end_btc_qty": 0.0088822271,
+      "ambiguous_intraminute_events": 0,
+      "minutes_low_below_lower_bound": 72001,
+      "minutes_high_above_upper_bound": 55218,
+      "minutes_touching_multiple_levels": 1,
+      "reset_log": [
+        {
+          "date": "2026-01-01",
+          "open": 87648.21,
+          "capital_after_liquidation": 1000.0,
+          "lower": 78883.389,
+          "upper": 96413.031
+        },
+        {
+          "date": "2026-02-01",
+          "open": 78741.1,
+          "capital_after_liquidation": 936.575912,
+          "lower": 70866.99,
+          "upper": 86615.21
+        },
+        {
+          "date": "2026-03-01",
+          "open": 66973.26,
+          "capital_after_liquidation": 822.48143,
+          "lower": 60275.934,
+          "upper": 73670.586
+        },
+        {
+          "date": "2026-04-01",
+          "open": 68284.49,
+          "capital_after_liquidation": 858.953311,
+          "lower": 61456.041,
+          "upper": 75112.939
+        },
+        {
+          "date": "2026-05-01",
+          "open": 76346.58,
+          "capital_after_liquidation": 890.352515,
+          "lower": 68711.922,
+          "upper": 83981.238
+        },
+        {
+          "date": "2026-06-01",
+          "open": 73674.39,
+          "capital_after_liquidation": 880.747714,
+          "lower": 66306.951,
+          "upper": 81041.829
+        },
+        {
+          "date": "2026-07-01",
+          "open": 58624.71,
+          "capital_after_liquidation": 719.208821,
+          "lower": 52762.239,
+          "upper": 64487.181
+        },
+        {
+          "date": "2026-08-01",
+          "open": 62887.88,
+          "capital_after_liquidation": 746.448785,
+          "lower": 56599.092,
+          "upper": 69176.668
+        },
+        {
+          "date": "2026-09-01",
+          "open": 78581.3,
+          "capital_after_liquidation": 768.567703,
+          "lower": 70723.17,
+          "upper": 86439.43
+        },
+        {
+          "date": "2026-10-01",
+          "open": 83623.59,
+          "capital_after_liquidation": 798.438466,
+          "lower": 75261.231,
+          "upper": 91985.949
+        }
+      ],
+      "hypothetical_fills_only": true
+    }
+  ]
+}
