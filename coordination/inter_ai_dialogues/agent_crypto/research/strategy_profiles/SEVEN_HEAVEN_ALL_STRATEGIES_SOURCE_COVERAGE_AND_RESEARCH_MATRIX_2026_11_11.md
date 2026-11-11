@@ -53,7 +53,7 @@ Les résultats favorables et défavorables restent dans le Coffre. Aucun classem
 | D15 | TWAP | Exécution, **non backtestée** | Transactions et liquidité intrajournalière, taille/temps d'exécution |
 | D16 | Iceberg | Exécution, **non backtestée** | Carnets/ordres et files d'attente, remplissages et impact |
 | D17 | Scalping | Documentée, **non backtestée** | Transactions minute/seconde, spread, carnet, latence et frais réels |
-| D18 | VWAP | **Source historique de VWAP de session qualifiée** via volumes BTC/ETH horaires, **stratégie non testée** | Fixer règle d'entrée/sortie, horizon et ancrage ; valider indépendamment |
+| D18 | VWAP | **Quatre règles testées en continu** sur BTC/ETH Binance Spot 1h (2024–octobre 2026), coûts et EMA témoin vérifiés ; pertes documentées | Confirmer les conventions avec l'UI 15m, vérifier prospectivement et, si possible, sur autre exchange |
 | D19 | SAR parabolique | **Backtest historique continu réalisé** : SAR classique, lent et rapide, spot long/flat, Binance BTC/USDT et OKX BTC/USDC | Vérifier la convention SAR face au graphique Administrator ; observation prospective sans réajustement |
 
 Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swing et le risque. Les guides ne sont ni sept simulations distinctes, ni des profils à charger automatiquement dans Trader.
@@ -81,6 +81,20 @@ Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swi
 - [Programme Python de reproduction](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py)
 
 **Aucun résultat n'est un rendement garanti** et le statut documentaire des autres profils est conservé. Les performances du panier BTC/ETH sont indépendantes du portefeuille BTC personnel.
+
+## D18 — VWAP : étude de signaux terminée sur BTC et ETH
+
+Le 11 novembre 2026, les **six archives Binance Spot BTCUSDT/ETHUSDT** (2024, 2025, janvier–octobre 2026) ont été réutilisées après contrôle SHA-256 et continuité : **24 840 heures par actif**, dont février 2024–octobre 2026 testées après préchauffage.
+
+Les **quatre règles déclarées avant les résultats** sont VWAP 300 heures glissantes HLC3 × volume, VWAP de séance UTC HLC3, VWAP quote/base 24 heures, et VWAP quote/base 24 heures filtré par EMA24/72, seuil 0,5 % et confirmation deux heures. Témoins : EMA5/13 horaire, Buy & Hold, liquidités. Allocation 100 % et 25 % des liquidités, frais/glissement, stress de frais doublés, bilan par année sans confondre avec la trajectoire continue. Toutes les pertes historiques sont conservées.
+
+**Conclusion du contrôle :** les croisements VWAP bruts ont déclenché beaucoup de transactions et donné des résultats défavorables ; un VWAP de fenêtre n'est **pas** une stratégie autonome éprouvée. La fonction réelle de l'Administrator est un **cumul HLC3×volume sur les bougies chargées**, et non un VWAP session UTC. Notre variante glissante 300×1h est un **proxy expérimental**, pas une reproduction du graphique OKX 15m.
+
+- [Rapport comparatif D18 — VWAP, stratégies et limites](./SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.md)
+- [Données structurées : transactions, drawdowns, coûts et sources](./SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.json)
+- [Script reproductible Python](./SEVEN_HEAVEN_BTC_ETH_VWAP_STRATEGIES_CONTINUOUS_BACKTEST_2026_11_11.py)
+
+**Portée :** Binance BTC/ETH seulement, pas validation indépendante OKX, aucune garantie prospective ; les profils graphiques existants ne sont pas modifiés.
 
 ## D19 — SAR parabolique : backtest continu désormais vérifié
 
