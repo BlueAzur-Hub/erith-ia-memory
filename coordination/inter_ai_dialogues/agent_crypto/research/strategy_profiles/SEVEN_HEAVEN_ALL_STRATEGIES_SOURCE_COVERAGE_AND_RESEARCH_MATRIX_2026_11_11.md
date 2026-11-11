@@ -54,7 +54,7 @@ Les résultats favorables et défavorables restent dans le Coffre. Aucun classem
 | D16 | Iceberg | Exécution, **non backtestée** | Carnets/ordres et files d'attente, remplissages et impact |
 | D17 | Scalping | Documentée, **non backtestée** | Transactions minute/seconde, spread, carnet, latence et frais réels |
 | D18 | VWAP | **Source historique de VWAP de session qualifiée** via volumes BTC/ETH horaires, **stratégie non testée** | Fixer règle d'entrée/sortie, horizon et ancrage ; valider indépendamment |
-| D19 | SAR parabolique | Indicateur/repère, **pas de règle autonome évaluée** | Choix explicite des règles d'entrée/sortie ; données journalières possibles selon protocole |
+| D19 | SAR parabolique | **Backtest historique continu réalisé** : SAR classique, lent et rapide, spot long/flat, Binance BTC/USDT et OKX BTC/USDC | Vérifier la convention SAR face au graphique Administrator ; observation prospective sans réajustement |
 
 Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swing et le risque. Les guides ne sont ni sept simulations distinctes, ni des profils à charger automatiquement dans Trader.
 
@@ -81,6 +81,16 @@ Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swi
 - [Programme Python de reproduction](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py)
 
 **Aucun résultat n'est un rendement garanti** et le statut documentaire des autres profils est conservé. Les performances du panier BTC/ETH sont indépendantes du portefeuille BTC personnel.
+
+## D19 — SAR parabolique : backtest continu désormais vérifié
+
+**Contrôle terminé le 11 novembre 2026.** Trois sensibilités **déclarées avant le test**, SAR standard 0,02/0,02/0,20, lent 0,01/0,01/0,10 et rapide 0,04/0,04/0,20, ont été testées sans vente à découvert sur Binance BTC/USDT Spot (2 830 jours 2019–sept. 2026), puis sur les 183 jours appariés Binance/OKX et les 224 jours continus OKX BTC/USDC.
+
+L'étude **réutilise le moteur continu P01–P10** pour assurer l'égalité des frais, du capital, des dates et du témoin Buy & Hold (contrôle bit-à-bit des mesures essentielles). SAR est calculé à la clôture sur OHLC quotidien ; une opération ne peut être simulée qu'à l'ouverture suivante, **jamais au prix SAR supposé exécuté**. Les résultats des trois sensibilités, y compris les nombreux faux signaux et les stress de frais, sont conservés. **Aucune prétention de correspondance exacte au graphique Administrator en 1h.** Aucune validation prospective.
+
+- [Rapport D19 — SAR, paramètres et comparaisons](./SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.md)
+- [Résultats structurés, journaux d'achats et pertes, dates de retournement](./SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.json)
+- [Script reproductible avec tests des invariants de calcul](./SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.py)
 
 ## Nouveau backtest continu P01–P10 : statut du 11 novembre
 
