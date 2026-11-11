@@ -1,0 +1,846 @@
+{
+  "schema": "seven.crypto.twelve-strategies.okx-binance-matched.v1",
+  "study_date": "2026-11-11",
+  "research_only": true,
+  "orders_enabled": false,
+  "baseline_verification": "ALL 14 canonical strategies and all 12 canonical 25pct scenarios matched",
+  "sources": {
+    "okx_confirmed_utc_daily_candles": 447,
+    "okx_pair": "BTC-USDC",
+    "binance_warmup_daily_bars": 406,
+    "binance_pair": "BTCUSDT",
+    "binance_original_sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+    "different_quote_currencies": true
+  },
+  "assumptions": {
+    "starting_capital": 1000,
+    "allocation_fraction": 0.25,
+    "fees_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "no_leverage": true,
+    "warmup_from_utc": "2025-08-21",
+    "already_known_past_not_blind_prospective": true
+  },
+  "windows": [
+    {
+      "venue": "OKX",
+      "period": "overlap",
+      "start_utc": "2026-04-01",
+      "end_utc": "2026-09-30",
+      "days": 183,
+      "source_sha256": "e8991f11780492d3371fedd495fd18bccfbabfdfdb8599c65ca3a9eb51980168",
+      "cash_return_pct": 0.0,
+      "buy_hold25_return_pct": 5.58,
+      "buy_hold100_return_pct": 22.318,
+      "methods": [
+        {
+          "key": "EMA20_50",
+          "label": "Tendance EMA20 > EMA50",
+          "result25_pct": 3.019,
+          "drawdown25_pct": -2.866,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1,
+          "exposed_calendar_days_pct": 47.54,
+          "double_cost_return25_pct": 2.858,
+          "result100_pct": 11.872,
+          "drawdown100_pct": -10.715,
+          "annual_returns25_pct": {
+            "2026": 3.019
+          }
+        },
+        {
+          "key": "EMA50_200",
+          "label": "Tendance EMA50 > EMA200",
+          "result25_pct": 0.638,
+          "drawdown25_pct": -0.951,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 6.01,
+          "double_cost_return25_pct": 0.561,
+          "result100_pct": 2.551,
+          "drawdown100_pct": -3.635,
+          "annual_returns25_pct": {
+            "2026": 0.638
+          }
+        },
+        {
+          "key": "PRICE_EMA200",
+          "label": "Clôture au-dessus de EMA200",
+          "result25_pct": 3.523,
+          "drawdown25_pct": -1.891,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 22.4,
+          "double_cost_return25_pct": 3.438,
+          "result100_pct": 14.094,
+          "drawdown100_pct": -7.004,
+          "annual_returns25_pct": {
+            "2026": 3.523
+          }
+        },
+        {
+          "key": "MOM90",
+          "label": "Momentum positif 90 jours",
+          "result25_pct": -2.777,
+          "drawdown25_pct": -5.709,
+          "trades": 3,
+          "wins": 1,
+          "losses": 2,
+          "exposed_calendar_days_pct": 38.25,
+          "double_cost_return25_pct": -2.989,
+          "result100_pct": -11.867,
+          "drawdown100_pct": -21.937,
+          "annual_returns25_pct": {
+            "2026": -2.777
+          }
+        },
+        {
+          "key": "MOM180",
+          "label": "Momentum positif 180 jours",
+          "result25_pct": 5.208,
+          "drawdown25_pct": -1.964,
+          "trades": 2,
+          "wins": 2,
+          "losses": 0,
+          "exposed_calendar_days_pct": 23.5,
+          "double_cost_return25_pct": 5.038,
+          "result100_pct": 20.918,
+          "drawdown100_pct": -7.004,
+          "annual_returns25_pct": {
+            "2026": 5.208
+          }
+        },
+        {
+          "key": "DON20",
+          "label": "Cassure 20 j, sortie 10 j",
+          "result25_pct": 4.83,
+          "drawdown25_pct": -2.412,
+          "trades": 3,
+          "wins": 2,
+          "losses": 1,
+          "exposed_calendar_days_pct": 55.74,
+          "double_cost_return25_pct": 4.583,
+          "result100_pct": 19.27,
+          "drawdown100_pct": -8.649,
+          "annual_returns25_pct": {
+            "2026": 4.83
+          }
+        },
+        {
+          "key": "DON55",
+          "label": "Cassure 55 j, sortie 20 j",
+          "result25_pct": 0.811,
+          "drawdown25_pct": -2.916,
+          "trades": 3,
+          "wins": 1,
+          "losses": 2,
+          "exposed_calendar_days_pct": 36.07,
+          "double_cost_return25_pct": 0.583,
+          "result100_pct": 2.939,
+          "drawdown100_pct": -10.618,
+          "annual_returns25_pct": {
+            "2026": 0.811
+          }
+        },
+        {
+          "key": "DON20_TREND",
+          "label": "Cassure 20 j avec filtre EMA50/200",
+          "result25_pct": -0.946,
+          "drawdown25_pct": -0.976,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 4.92,
+          "double_cost_return25_pct": -1.018,
+          "result100_pct": -3.782,
+          "drawdown100_pct": -3.904,
+          "annual_returns25_pct": {
+            "2026": -0.946
+          }
+        },
+        {
+          "key": "PULLBACK_FILTERED",
+          "label": "Repli EMA10 avec filtre EMA50/200",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "REBOUND_FILTERED",
+          "label": "Rebond RSI35 au-dessus de EMA200",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "REBOUND_UNFILTERED",
+          "label": "Rebond RSI35 sans filtre EMA200 (ablation)",
+          "result25_pct": -0.144,
+          "drawdown25_pct": -1.761,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1,
+          "exposed_calendar_days_pct": 6.56,
+          "double_cost_return25_pct": -0.293,
+          "result100_pct": -0.709,
+          "drawdown100_pct": -6.908,
+          "annual_returns25_pct": {
+            "2026": -0.144
+          }
+        },
+        {
+          "key": "MEANREV_Z2",
+          "label": "Retour à la moyenne, écart-type 2 sur 20 j",
+          "result25_pct": -3.423,
+          "drawdown25_pct": -6.265,
+          "trades": 6,
+          "wins": 2,
+          "losses": 4,
+          "exposed_calendar_days_pct": 15.85,
+          "double_cost_return25_pct": -3.812,
+          "result100_pct": -13.635,
+          "drawdown100_pct": -23.229,
+          "annual_returns25_pct": {
+            "2026": -3.423
+          }
+        }
+      ]
+    },
+    {
+      "venue": "OKX",
+      "period": "recent",
+      "start_utc": "2026-10-01",
+      "end_utc": "2026-11-10",
+      "days": 41,
+      "source_sha256": "e8991f11780492d3371fedd495fd18bccfbabfdfdb8599c65ca3a9eb51980168",
+      "cash_return_pct": 0.0,
+      "buy_hold25_return_pct": -3.01,
+      "buy_hold100_return_pct": -12.04,
+      "methods": [
+        {
+          "key": "EMA20_50",
+          "label": "Tendance EMA20 > EMA50",
+          "result25_pct": -2.465,
+          "drawdown25_pct": -2.868,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 78.05,
+          "double_cost_return25_pct": -2.533,
+          "result100_pct": -9.86,
+          "drawdown100_pct": -11.332,
+          "annual_returns25_pct": {
+            "2026": -2.465
+          }
+        },
+        {
+          "key": "EMA50_200",
+          "label": "Tendance EMA50 > EMA200",
+          "result25_pct": -3.344,
+          "drawdown25_pct": -3.742,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 97.56,
+          "double_cost_return25_pct": -3.409,
+          "result100_pct": -13.375,
+          "drawdown100_pct": -14.785,
+          "annual_returns25_pct": {
+            "2026": -3.344
+          }
+        },
+        {
+          "key": "PRICE_EMA200",
+          "label": "Clôture au-dessus de EMA200",
+          "result25_pct": -2.971,
+          "drawdown25_pct": -3.371,
+          "trades": 2,
+          "wins": 0,
+          "losses": 2,
+          "exposed_calendar_days_pct": 82.93,
+          "double_cost_return25_pct": -3.11,
+          "result100_pct": -11.73,
+          "drawdown100_pct": -13.17,
+          "annual_returns25_pct": {
+            "2026": -2.971
+          }
+        },
+        {
+          "key": "MOM90",
+          "label": "Momentum positif 90 jours",
+          "result25_pct": -3.344,
+          "drawdown25_pct": -3.742,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 97.56,
+          "double_cost_return25_pct": -3.409,
+          "result100_pct": -13.375,
+          "drawdown100_pct": -14.785,
+          "annual_returns25_pct": {
+            "2026": -3.344
+          }
+        },
+        {
+          "key": "MOM180",
+          "label": "Momentum positif 180 jours",
+          "result25_pct": -3.551,
+          "drawdown25_pct": -3.949,
+          "trades": 2,
+          "wins": 0,
+          "losses": 2,
+          "exposed_calendar_days_pct": 70.73,
+          "double_cost_return25_pct": -3.687,
+          "result100_pct": -13.831,
+          "drawdown100_pct": -15.237,
+          "annual_returns25_pct": {
+            "2026": -3.551
+          }
+        },
+        {
+          "key": "DON20",
+          "label": "Cassure 20 j, sortie 10 j",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "DON55",
+          "label": "Cassure 55 j, sortie 20 j",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "DON20_TREND",
+          "label": "Cassure 20 j avec filtre EMA50/200",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "PULLBACK_FILTERED",
+          "label": "Repli EMA10 avec filtre EMA50/200",
+          "result25_pct": -3.742,
+          "drawdown25_pct": -3.743,
+          "trades": 4,
+          "wins": 0,
+          "losses": 4,
+          "exposed_calendar_days_pct": 12.2,
+          "double_cost_return25_pct": -4.022,
+          "result100_pct": -14.37,
+          "drawdown100_pct": -14.372,
+          "annual_returns25_pct": {
+            "2026": -3.742
+          }
+        },
+        {
+          "key": "REBOUND_FILTERED",
+          "label": "Rebond RSI35 au-dessus de EMA200",
+          "result25_pct": 0.886,
+          "drawdown25_pct": -0.5,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 9.76,
+          "double_cost_return25_pct": 0.808,
+          "result100_pct": 3.544,
+          "drawdown100_pct": -1.989,
+          "annual_returns25_pct": {
+            "2026": 0.886
+          }
+        },
+        {
+          "key": "REBOUND_UNFILTERED",
+          "label": "Rebond RSI35 sans filtre EMA200 (ablation)",
+          "result25_pct": 0.886,
+          "drawdown25_pct": -0.5,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 9.76,
+          "double_cost_return25_pct": 0.808,
+          "result100_pct": 3.544,
+          "drawdown100_pct": -1.989,
+          "annual_returns25_pct": {
+            "2026": 0.886
+          }
+        },
+        {
+          "key": "MEANREV_Z2",
+          "label": "Retour à la moyenne, écart-type 2 sur 20 j",
+          "result25_pct": 0.753,
+          "drawdown25_pct": -0.498,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 14.63,
+          "double_cost_return25_pct": 0.675,
+          "result100_pct": 3.011,
+          "drawdown100_pct": -1.989,
+          "annual_returns25_pct": {
+            "2026": 0.753
+          }
+        }
+      ]
+    },
+    {
+      "venue": "OKX",
+      "period": "combined",
+      "start_utc": "2026-04-01",
+      "end_utc": "2026-11-10",
+      "days": 224,
+      "source_sha256": "e8991f11780492d3371fedd495fd18bccfbabfdfdb8599c65ca3a9eb51980168",
+      "cash_return_pct": 0.0,
+      "buy_hold25_return_pct": 1.974,
+      "buy_hold100_return_pct": 7.897,
+      "methods": [
+        {
+          "key": "EMA20_50",
+          "label": "Tendance EMA20 > EMA50",
+          "result25_pct": 0.689,
+          "drawdown25_pct": -3.234,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1,
+          "exposed_calendar_days_pct": 53.57,
+          "double_cost_return25_pct": 0.536,
+          "result100_pct": 2.686,
+          "drawdown100_pct": -11.439,
+          "annual_returns25_pct": {
+            "2026": 0.689
+          }
+        },
+        {
+          "key": "EMA50_200",
+          "label": "Tendance EMA50 > EMA200",
+          "result25_pct": -2.385,
+          "drawdown25_pct": -3.895,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 23.21,
+          "double_cost_return25_pct": -2.453,
+          "result100_pct": -9.539,
+          "drawdown100_pct": -14.889,
+          "annual_returns25_pct": {
+            "2026": -2.385
+          }
+        },
+        {
+          "key": "PRICE_EMA200",
+          "label": "Clôture au-dessus de EMA200",
+          "result25_pct": 0.657,
+          "drawdown25_pct": -3.736,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1,
+          "exposed_calendar_days_pct": 33.93,
+          "double_cost_return25_pct": 0.504,
+          "result100_pct": 2.553,
+          "drawdown100_pct": -13.276,
+          "annual_returns25_pct": {
+            "2026": 0.657
+          }
+        },
+        {
+          "key": "MOM90",
+          "label": "Momentum positif 90 jours",
+          "result25_pct": -5.778,
+          "drawdown25_pct": -6.275,
+          "trades": 3,
+          "wins": 0,
+          "losses": 3,
+          "exposed_calendar_days_pct": 49.55,
+          "double_cost_return25_pct": -5.977,
+          "result100_pct": -22.258,
+          "drawdown100_pct": -23.865,
+          "annual_returns25_pct": {
+            "2026": -5.778
+          }
+        },
+        {
+          "key": "MOM180",
+          "label": "Momentum positif 180 jours",
+          "result25_pct": 1.65,
+          "drawdown25_pct": -4.379,
+          "trades": 3,
+          "wins": 2,
+          "losses": 1,
+          "exposed_calendar_days_pct": 32.59,
+          "double_cost_return25_pct": 1.418,
+          "result100_pct": 6.099,
+          "drawdown100_pct": -15.34,
+          "annual_returns25_pct": {
+            "2026": 1.65
+          }
+        },
+        {
+          "key": "DON20",
+          "label": "Cassure 20 j, sortie 10 j",
+          "result25_pct": 4.258,
+          "drawdown25_pct": -2.914,
+          "trades": 3,
+          "wins": 2,
+          "losses": 1,
+          "exposed_calendar_days_pct": 49.11,
+          "double_cost_return25_pct": 4.014,
+          "result100_pct": 16.593,
+          "drawdown100_pct": -10.586,
+          "annual_returns25_pct": {
+            "2026": 4.258
+          }
+        },
+        {
+          "key": "DON55",
+          "label": "Cassure 55 j, sortie 20 j",
+          "result25_pct": -0.261,
+          "drawdown25_pct": -3.919,
+          "trades": 3,
+          "wins": 1,
+          "losses": 2,
+          "exposed_calendar_days_pct": 35.71,
+          "double_cost_return25_pct": -0.485,
+          "result100_pct": -1.569,
+          "drawdown100_pct": -14.424,
+          "annual_returns25_pct": {
+            "2026": -0.261
+          }
+        },
+        {
+          "key": "DON20_TREND",
+          "label": "Cassure 20 j avec filtre EMA50/200",
+          "result25_pct": -1.485,
+          "drawdown25_pct": -1.485,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 7.59,
+          "double_cost_return25_pct": -1.556,
+          "result100_pct": -5.942,
+          "drawdown100_pct": -5.942,
+          "annual_returns25_pct": {
+            "2026": -1.485
+          }
+        },
+        {
+          "key": "PULLBACK_FILTERED",
+          "label": "Repli EMA10 avec filtre EMA50/200",
+          "result25_pct": -3.742,
+          "drawdown25_pct": -3.743,
+          "trades": 4,
+          "wins": 0,
+          "losses": 4,
+          "exposed_calendar_days_pct": 2.23,
+          "double_cost_return25_pct": -4.022,
+          "result100_pct": -14.37,
+          "drawdown100_pct": -14.372,
+          "annual_returns25_pct": {
+            "2026": -3.742
+          }
+        },
+        {
+          "key": "REBOUND_FILTERED",
+          "label": "Rebond RSI35 au-dessus de EMA200",
+          "result25_pct": 0.886,
+          "drawdown25_pct": -0.5,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 1.79,
+          "double_cost_return25_pct": 0.808,
+          "result100_pct": 3.544,
+          "drawdown100_pct": -1.989,
+          "annual_returns25_pct": {
+            "2026": 0.886
+          }
+        },
+        {
+          "key": "REBOUND_UNFILTERED",
+          "label": "Rebond RSI35 sans filtre EMA200 (ablation)",
+          "result25_pct": 0.741,
+          "drawdown25_pct": -1.761,
+          "trades": 3,
+          "wins": 2,
+          "losses": 1,
+          "exposed_calendar_days_pct": 7.14,
+          "double_cost_return25_pct": 0.513,
+          "result100_pct": 2.811,
+          "drawdown100_pct": -6.908,
+          "annual_returns25_pct": {
+            "2026": 0.741
+          }
+        },
+        {
+          "key": "MEANREV_Z2",
+          "label": "Retour à la moyenne, écart-type 2 sur 20 j",
+          "result25_pct": -2.696,
+          "drawdown25_pct": -6.265,
+          "trades": 7,
+          "wins": 3,
+          "losses": 4,
+          "exposed_calendar_days_pct": 15.62,
+          "double_cost_return25_pct": -3.163,
+          "result100_pct": -11.035,
+          "drawdown100_pct": -23.229,
+          "annual_returns25_pct": {
+            "2026": -2.696
+          }
+        }
+      ]
+    },
+    {
+      "venue": "BINANCE",
+      "period": "overlap",
+      "start_utc": "2026-04-01",
+      "end_utc": "2026-09-30",
+      "days": 183,
+      "source_sha256": "90d3f5d958d5da29e7bd2a1dd3908f223b45ec8f7b83e516fb8239bb4a4a62a3",
+      "cash_return_pct": 0.0,
+      "buy_hold25_return_pct": 5.524,
+      "buy_hold100_return_pct": 22.097,
+      "methods": [
+        {
+          "key": "EMA20_50",
+          "label": "Tendance EMA20 > EMA50",
+          "result25_pct": 3.073,
+          "drawdown25_pct": -2.847,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1,
+          "exposed_calendar_days_pct": 47.54,
+          "double_cost_return25_pct": 2.911,
+          "result100_pct": 12.097,
+          "drawdown100_pct": -10.643,
+          "annual_returns25_pct": {
+            "2026": 3.073
+          }
+        },
+        {
+          "key": "EMA50_200",
+          "label": "Tendance EMA50 > EMA200",
+          "result25_pct": 0.653,
+          "drawdown25_pct": -0.942,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 6.01,
+          "double_cost_return25_pct": 0.576,
+          "result100_pct": 2.613,
+          "drawdown100_pct": -3.602,
+          "annual_returns25_pct": {
+            "2026": 0.653
+          }
+        },
+        {
+          "key": "PRICE_EMA200",
+          "label": "Clôture au-dessus de EMA200",
+          "result25_pct": 3.542,
+          "drawdown25_pct": -1.869,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0,
+          "exposed_calendar_days_pct": 22.4,
+          "double_cost_return25_pct": 3.456,
+          "result100_pct": 14.167,
+          "drawdown100_pct": -6.922,
+          "annual_returns25_pct": {
+            "2026": 3.542
+          }
+        },
+        {
+          "key": "MOM90",
+          "label": "Momentum positif 90 jours",
+          "result25_pct": -2.733,
+          "drawdown25_pct": -5.678,
+          "trades": 3,
+          "wins": 1,
+          "losses": 2,
+          "exposed_calendar_days_pct": 38.25,
+          "double_cost_return25_pct": -2.945,
+          "result100_pct": -11.696,
+          "drawdown100_pct": -21.82,
+          "annual_returns25_pct": {
+            "2026": -2.733
+          }
+        },
+        {
+          "key": "MOM180",
+          "label": "Momentum positif 180 jours",
+          "result25_pct": 5.211,
+          "drawdown25_pct": -1.941,
+          "trades": 2,
+          "wins": 2,
+          "losses": 0,
+          "exposed_calendar_days_pct": 23.5,
+          "double_cost_return25_pct": 5.042,
+          "result100_pct": 20.932,
+          "drawdown100_pct": -6.922,
+          "annual_returns25_pct": {
+            "2026": 5.211
+          }
+        },
+        {
+          "key": "DON20",
+          "label": "Cassure 20 j, sortie 10 j",
+          "result25_pct": 4.85,
+          "drawdown25_pct": -2.4,
+          "trades": 3,
+          "wins": 2,
+          "losses": 1,
+          "exposed_calendar_days_pct": 55.74,
+          "double_cost_return25_pct": 4.604,
+          "result100_pct": 19.37,
+          "drawdown100_pct": -8.611,
+          "annual_returns25_pct": {
+            "2026": 4.85
+          }
+        },
+        {
+          "key": "DON55",
+          "label": "Cassure 55 j, sortie 20 j",
+          "result25_pct": 0.843,
+          "drawdown25_pct": -2.894,
+          "trades": 3,
+          "wins": 1,
+          "losses": 2,
+          "exposed_calendar_days_pct": 36.07,
+          "double_cost_return25_pct": 0.615,
+          "result100_pct": 3.073,
+          "drawdown100_pct": -10.544,
+          "annual_returns25_pct": {
+            "2026": 0.843
+          }
+        },
+        {
+          "key": "DON20_TREND",
+          "label": "Cassure 20 j avec filtre EMA50/200",
+          "result25_pct": -0.937,
+          "drawdown25_pct": -0.973,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1,
+          "exposed_calendar_days_pct": 4.92,
+          "double_cost_return25_pct": -1.009,
+          "result100_pct": -3.749,
+          "drawdown100_pct": -3.891,
+          "annual_returns25_pct": {
+            "2026": -0.937
+          }
+        },
+        {
+          "key": "PULLBACK_FILTERED",
+          "label": "Repli EMA10 avec filtre EMA50/200",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "REBOUND_FILTERED",
+          "label": "Rebond RSI35 au-dessus de EMA200",
+          "result25_pct": 0.0,
+          "drawdown25_pct": 0.0,
+          "trades": 0,
+          "wins": 0,
+          "losses": 0,
+          "exposed_calendar_days_pct": 0.0,
+          "double_cost_return25_pct": 0.0,
+          "result100_pct": 0.0,
+          "drawdown100_pct": 0.0,
+          "annual_returns25_pct": {
+            "2026": 0.0
+          }
+        },
+        {
+          "key": "REBOUND_UNFILTERED",
+          "label": "Rebond RSI35 sans filtre EMA200 (ablation)",
+          "result25_pct": -0.157,
+          "drawdown25_pct": -1.77,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1,
+          "exposed_calendar_days_pct": 6.56,
+          "double_cost_return25_pct": -0.306,
+          "result100_pct": -0.76,
+          "drawdown100_pct": -6.946,
+          "annual_returns25_pct": {
+            "2026": -0.157
+          }
+        },
+        {
+          "key": "MEANREV_Z2",
+          "label": "Retour à la moyenne, écart-type 2 sur 20 j",
+          "result25_pct": -3.458,
+          "drawdown25_pct": -6.292,
+          "trades": 6,
+          "wins": 2,
+          "losses": 4,
+          "exposed_calendar_days_pct": 15.85,
+          "double_cost_return25_pct": -3.847,
+          "result100_pct": -13.769,
+          "drawdown100_pct": -23.325,
+          "annual_returns25_pct": {
+            "2026": -3.458
+          }
+        }
+      ]
+    }
+  ]
+}
