@@ -108,7 +108,7 @@ def indicators(rows):
 def run(rows,dates,entry,exit_,key,a_date,z_date,weight,fee,slip,include_equity):
     assert weight in (.25,1.) and key in METHODS
     index={d:i for i,d in enumerate(dates)}
-    a=index[a_date];z=index[z_date]+23
+    a=index[a_date]*24;z=index[z_date]*24+23
     assert a>=300 and z>1000 and z<len(rows)
     cash=CAPITAL;qty=0.;spent=0.;entered_at=None;pending=None
     entries=exits=exposed=0;ledger=[];daily=[]
