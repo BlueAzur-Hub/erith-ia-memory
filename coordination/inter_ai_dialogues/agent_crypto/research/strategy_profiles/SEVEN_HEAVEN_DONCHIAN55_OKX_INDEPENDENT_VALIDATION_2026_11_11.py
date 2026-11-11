@@ -126,6 +126,18 @@ def passive(bars,start,end,weight):
     final=1000*(1-weight)+qty*d[end]["c"]*(1-.001)*(1-.0005)
     return round(100*(final/1000-1),3)
 
+def passive_drawdown(bars,start,end,weight,fee=.001,slip=.0005):
+    dates={b["date"]:i for i,b in enumerate(bars)}
+    a,z=dates[start],dates[end]
+    retained=1000*(1-weight)
+    btc=1000*weight*(1-fee)/(bars[a]["o"]*(1+slip))
+    peak=1000.;worst=0.
+    for i in range(a,z+1):
+        equity=retained+btc*bars[i]["c"]*(1-fee)*(1-slip)
+        peak=max(peak,equity)
+        worst=min(worst,100*(equity/peak-1))
+    return round(worst,3)
+
 def main():
     all_bn,bn,okx,meta=load()
     original=json.loads(BASELINE.read_text(encoding="utf-8"))
@@ -150,7 +162,8 @@ def main():
                 model25=simulate(bars,start,end,.25),
                 model100=simulate(bars,start,end,1.),
                 stress25=simulate(bars,start,end,.25,.002,.001),
-                passive25_pct=passive(bars,start,end,.25)))
+                passive25_pct=passive(bars,start,end,.25),
+                passive25_max_dd_pct=passive_drawdown(bars,start,end,.25)))
     bindex={x["date"]:i for i,x in enumerate(bn)}
     oindex={x["date"]:i for i,x in enumerate(okx)}
     _,bh,_=signals(bn);_,oh,_=signals(okx)
@@ -185,16 +198,16 @@ def main():
         "",
         "## Résultats comparés",
         "",
-        "| Source | Fenêtre | Opérations | Rendement net Donchian 25 % | Baisse maximale quotidienne | Acheter et conserver 25 % | Donchian 25 % coûts doublés |",
-        "|---|---|---:|---:|---:|---:|---:|",
+        "| Source | Fenêtre | Opérations | Rendement Donchian 25 % | Baisse maximale Donchian | Rendement Buy & Hold 25 % | Baisse maximale Buy & Hold 25 % | Donchian, coûts doublés |",
+        "|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for w in windows:
         r=w["model25"]
-        report.append(f"| {w['venue']} | {w['period']} ({r['days']} jours) | {r['trades']} | {r['net_pct']:+.3f} % | {r['max_dd_pct']:.3f} % | {w['passive25_pct']:+.3f} % | {w['stress25']['net_pct']:+.3f} % |")
+        report.append(f"| {w['venue']} | {w['period']} ({r['days']} jours) | {r['trades']} | {r['net_pct']:+.3f} % | {r['max_dd_pct']:.3f} % | {w['passive25_pct']:+.3f} % | {w['passive25_max_dd_pct']:.3f} % | {w['stress25']['net_pct']:+.3f} % |")
     report+=["", "## Concordance des signaux Binance / OKX",
              "",f"- {len(matched)} jours en commun ; {len(mismatch)} divergences de signaux de cassure journalière.",
              "- Dates précises des divergences et données OKX conservées dans le JSON partagé.",
-             "", "## Limites",
+             "", "## Point de méthode : aucune assimilation du test récent au portefeuille continu",
              "", "- Ces résultats ne sont pas une validation prospective aveugle.",
              "- Peu de transactions sur une fenêtre courte ne prouvent aucune fiabilité future.",
              "- Les stops simulés sur bougies quotidiennes ne garantissent aucune exécution réelle.",
