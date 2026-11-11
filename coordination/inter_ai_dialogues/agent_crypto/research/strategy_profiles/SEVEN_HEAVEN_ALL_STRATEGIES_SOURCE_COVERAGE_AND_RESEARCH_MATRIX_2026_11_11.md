@@ -21,22 +21,24 @@ Les résultats favorables et défavorables restent dans le Coffre. Aucun classem
 
 **Pourquoi ce n'est pas 10 + 12 = 22 stratégies indépendantes :** plusieurs familles se recoupent (moyennes mobiles, cassures, RSI, Buy & Hold), mais les paramètres et l'horizon expérimental diffèrent. Un comptage par noms masquerait le recouvrement ; une fusion des rendements serait scientifiquement trompeuse.
 
+**Mise à jour après vérification (11 novembre) :** les **douze** méthodes quantitatives ont désormais été rejouées sur les 183 jours appariés Binance/OKX et les 224 jours continus OKX, à allocation fictive de 25 %, avec stress des coûts et contrôles de cohérence. [Rapport transversal des douze stratégies](./SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.md) — [données structurées complètes](./SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.json). **La validation n'est pas prospective.** Les neuf profils D11–D19 conservent leur statut documentaire.
+
 ### Catalogue quantitatif : état précis des douze variantes
 
 | Code canonique | Famille | Binance 2019–2026 | Allocation 25 % testée | OKX BTC/USDC déjà contrôlé pour cette variante |
 |---|---|---|---|---|
-| EMA20_50 | Tendance | Oui | Oui | Oui, fenêtre 2026 indépendante (étude séparée) |
-| EMA50_200 | Tendance | Oui | Oui | Oui, fenêtre 2026 indépendante (étude séparée) |
-| PRICE_EMA200 | Tendance | Oui | Oui | Non dans le comparatif indépendant actuel |
-| MOM90 | Momentum | Oui | Oui | Non |
-| MOM180 | Momentum | Oui | Oui | Oui, fenêtre 2026 indépendante (étude séparée) |
-| DON20 | Cassures | Oui | Oui | Non |
-| DON55 | Cassures | Oui | Oui | Oui, 183 jours communs + fenêtre continue de 224 jours |
-| DON20_TREND | Cassures filtrées | Oui | Oui | Non pour cette règle exacte |
-| PULLBACK_FILTERED | Repli / swing | Oui | Oui | Comparaison Swing séparée, ne pas confondre les règles sans audit |
-| REBOUND_FILTERED | RSI / rebond | Oui | Oui | Comparaison Swing séparée, ne pas confondre les règles sans audit |
-| REBOUND_UNFILTERED | RSI / rebond sans filtre | Oui | Oui | Non |
-| MEANREV_Z2 | Retour à la moyenne | Oui | Oui | Non |
+| EMA20_50 | Tendance | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| EMA50_200 | Tendance | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| PRICE_EMA200 | Tendance | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| MOM90 | Momentum | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| MOM180 | Momentum | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| DON20 | Cassures | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| DON55 | Cassures | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| DON20_TREND | Cassures filtrées | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| PULLBACK_FILTERED | Repli / swing | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| REBOUND_FILTERED | RSI / rebond | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| REBOUND_UNFILTERED | RSI / rebond sans filtre | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
+| MEANREV_Z2 | Retour à la moyenne | Oui | Oui | Oui — 183 j OKX/Binance appariés ; 224 j OKX continus |
 
 **Témoins :** CASH et BUY_HOLD existent au catalogue canonique et doivent figurer à chaque comparaison pertinente. À ce jour, le replay indépendant OKX exhaustif des 12 règles **n'a pas été publié**. Ne jamais remplacer un « Non » par une extrapolation depuis une famille voisine.
 
@@ -101,6 +103,7 @@ Pour chaque méthode, imposer un dossier comportant :
 - [Étude des 12 variantes à allocation 25 %, résultats et limites](./SEVEN_HEAVEN_BTC_25PCT_CAPITAL_STRATEGY_COMPARISON_2026_11_11.md)
 - [Validation EMA sur OKX, source indépendante](./SEVEN_HEAVEN_EMA2050_OKX_CROSSVENUE_VALIDATED_RESULTS_2026_11_10.json)
 - [Validation Donchian 55 sur OKX, 447 journées validées](./SEVEN_HEAVEN_DONCHIAN55_OKX_INDEPENDENT_VALIDATION_2026_11_11.md)
+- [Contrôle des **12** stratégies sur OKX et Binance, dates appariées et stress coûts](./SEVEN_HEAVEN_TWELVE_STRATEGIES_INDEPENDENT_OKX_BINANCE_STRESS_2026_11_11.md)
 - [Contrôle OKX multicycle : résultats non inventés, couverture insuffisante](./SEVEN_HEAVEN_OKX_BTC_USDC_MULTICYCLE_DONCHIAN55_2026_11_11.md)
 - [Réparation des archives minute OKX, source limitée mais exploitable](./SEVEN_HEAVEN_OKX_BTC_USDC_ARCHIVE_NORMALIZATION_REPAIR_REPORT_2026_11_10.md)
 
