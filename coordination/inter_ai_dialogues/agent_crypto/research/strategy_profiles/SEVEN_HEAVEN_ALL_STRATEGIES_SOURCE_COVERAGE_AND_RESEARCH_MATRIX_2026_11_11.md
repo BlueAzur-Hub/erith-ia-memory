@@ -46,7 +46,7 @@ Les résultats favorables et défavorables restent dans le Coffre. Aucun classem
 
 | Profil | Méthode | Statut de preuve du Coffre | Données supplémentaires nécessaires pour étude crédible |
 |---|---|---|---|
-| D11 | Spot Grid | Documentée, **non backtestée** | Bougies fines, chronologie des niveaux, exécutions et ordres limites |
+| D11 | Spot Grid | **54 configurations auditées** sur BTC/ETH Binance 2024–oct. 2026 : durée en fourchette et ambiguïtés des bougies ; **P&L du bot non backtesté** | Archives minute / transactions, chronologie des franchissements, ordres limites effectivement remplis, inventaire total |
 | D12 | Spot DCA Martingale | Documentée, **non backtestée** | Séquence intrajournalière, budgets/plafonds, liquidité, risque de ruine |
 | D13 | Rééquilibrage BTC/ETH/liquidités | **Backtest historique réalisé**, Binance Spot USDT 2024–octobre 2026 | Vérification prospective / autre plateforme, autres pondérations déclarées avant test |
 | D14 | Arbitrage entre marchés | Documentée, **non backtestée** | Carnets simultanés sur plusieurs places, latence, coûts et transferts |
@@ -81,6 +81,18 @@ Les **sept guides approfondis** 01–07 couvrent ces familles, la discipline Swi
 - [Programme Python de reproduction](./SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11.py)
 
 **Aucun résultat n'est un rendement garanti** et le statut documentaire des autres profils est conservé. Les performances du panier BTC/ETH sont indépendantes du portefeuille BTC personnel.
+
+## D11 — Spot Grid : audit de faisabilité sur les archives horaires vérifié
+
+**11 novembre 2026.** Les six fichiers Binance Spot BTCUSDT/ETHUSDT ont été contrôlés (SHA-256 et 24 840 heures continues par actif). Pour chaque actif, une grille arithmétique construite sur le cours d'ouverture du 1er janvier de 2024, 2025 et 2026 a été étudiée sur neuf configurations **définies avant les résultats** : bandes fixes de ±5, ±10 et ±20 %, avec 5, 10 ou 20 intervalles. Total **54 contrôles**.
+
+Ce travail mesure la proportion d'heures à l'intérieur / au-dessus / au-dessous de la grille, les longues sorties de fourchette, les paliers théoriquement touchés et les bougies englobant plusieurs paliers. Il **ne calcule pas de résultat de bot**, parce que les OHLC horaires ne prouvent ni l'ordre intrahoraire des passages ni un remplissage d'ordre. La limite est explicite, non un manque à combler par des données inventées.
+
+- [Rapport : conditions où une grille fixe devient inadaptée](./SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.md)
+- [Preuves : toutes les 54 configurations, continuité et empreintes](./SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.json)
+- [Script reproductible](./SEVEN_HEAVEN_SPOT_GRID_BTC_ETH_HOURLY_FEASIBILITY_2026_11_11.py)
+
+**Suite recevable :** archives natives minute, reconstruire les passages et les deux sens possibles lorsqu'il manque l'ordre des événements, documenter frais, tailles minimales et inventaire BTC + liquidités, puis comparer la valeur totale avec Buy & Hold sur les mêmes dates. À ce stade, **D11 reste non backtestée en rentabilité**.
 
 ## D18 — VWAP : étude de signaux terminée sur BTC et ETH
 
