@@ -76,5 +76,17 @@ jobs:
             echo "Shared reports already match"
           else
             git commit -m "Archive independent Parabolic SAR BTC research across Binance and OKX"
-            git push origin HEAD:main
+            for attempt in 1 2 3 4 5 6; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "Shared SAR files safely published"
+                break
+              fi
+              if [ "$attempt" = 6 ]; then
+                echo "Remote branch updated by concurrent jobs too frequently"
+                exit 1
+              fi
+              sleep 2
+            done
           fi
