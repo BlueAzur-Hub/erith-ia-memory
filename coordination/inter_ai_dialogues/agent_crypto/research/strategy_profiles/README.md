@@ -34,6 +34,12 @@ L'étude **ne se limite pas à Donchian 55** : le Coffre contient un catalogue p
 - Contrôle D18 : volumes de base et de cotation présents dans les deux séries, 24 840 heures par actif ; leur ratio permet une **référence VWAP de session**, **pas encore une stratégie d'entrée/sortie évaluée**.
 - **Limites :** USDT supposé stable, capital fictif, aucune prévision, rééquilibrages mensuels ou trimestriels testés sur Binance uniquement, pondérations choisies comme expérience et non optimisées.
 
+## D19 — SAR parabolique : étude historique vérifiée
+
+- [**SAR classique, lent et rapide : backtest Bitcoin 2019–2026 et contrôle indépendant OKX**](./SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.md). Trois sensibilités annoncées avant le test, portefeuilles à 25 % / 100 % de liquidités, frais simulés, drawdowns, achats, stress coûts doublés.
+- [**Preuves JSON : flips, transactions, comparatif avec Buy & Hold**](./SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.json) · [**script de calcul reproductible**](./SEVEN_HEAVEN_PARABOLIC_SAR_BTC_CONTINUOUS_BINANCE_OKX_RESEARCH_2026_11_11.py).
+- Le SAR quotidien est évalué **après clôture** et une transaction hypothétique ne survient qu'à **l'ouverture suivante**. La convention de démarrage et de retournement est documentée et ne prouve pas l'égalité avec l'indicateur SAR 1h de l'Administrator. Le SAR lent s'est montré performant sur certaines fenêtres passées, **sans preuve prospective**.
+
 ## Atlas illustré — page HTML autonome
 
 - [Ouvrir l’Atlas Seven Heaven des stratégies crypto (HTML avec 5 slides intégrées)](https://blueazur-hub.github.io/erith-ia-memory/assets/strategy_library/seven-heaven-crypto-strategy-atlas.html) — sept fiches, états de marché, résultats 2022–2025, courbes comparatives et calculateur de risque strictement pédagogique. Aucune connexion réseau requise une fois le fichier enregistré ; aucune opération de marché.
