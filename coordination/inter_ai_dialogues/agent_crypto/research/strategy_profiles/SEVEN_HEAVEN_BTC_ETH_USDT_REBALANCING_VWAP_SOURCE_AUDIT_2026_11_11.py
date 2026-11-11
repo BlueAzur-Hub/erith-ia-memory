@@ -7,7 +7,7 @@ import json
 import math
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[4]
+ROOT=Path(__file__).resolve().parents[5]
 HERE=Path(__file__).resolve().parent
 SOURCE=ROOT/"public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards"
 STEM="SEVEN_HEAVEN_BTC_ETH_USDT_REBALANCING_VWAP_SOURCE_AUDIT_2026_11_11"
