@@ -205,7 +205,7 @@ def main():
         scenarios=scenarios,
         verification=dict(original_don55_224_daily_rows_identical=True,
                           original_25pct_buyhold_net_and_dd_identical=True,
-                          224_days_in_each_scenario=True),
+                          daily_days_224_in_each_scenario=True),
     )
     (HERE/(STEM+".json")).write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     (HERE/(STEM+".md")).write_text(make_report(data),encoding="utf-8")
