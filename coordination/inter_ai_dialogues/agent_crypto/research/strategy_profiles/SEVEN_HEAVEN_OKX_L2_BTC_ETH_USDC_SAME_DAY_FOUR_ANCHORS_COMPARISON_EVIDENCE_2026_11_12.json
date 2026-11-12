@@ -1,0 +1,574 @@
+{
+  "schema": "seven-heaven.okx-btc-eth-same-day-4-anchor-book-comparison.v1",
+  "research_date": "2026-11-12",
+  "study_day_utc": "2026-10-15",
+  "status": "COMPARISON_COMPLETED_TWO_COMPLETE_STREAMED_ARCHIVES",
+  "read_only": true,
+  "orders_enabled": false,
+  "protocol_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_CROSS_ASSET_COMPARISON_FROZEN_PROTOCOL_2026_11_12.md",
+  "sources": {
+    "BTC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_full_day_four_anchors_2026_11_12_evidence/SEVEN_HEAVEN_OKX_BTC_L2_FULL_DAY_FOUR_ANCHORS_PROOFS.json",
+      "git_blob_sha1": "a80617f03e2c00856c2e8ccb2ec2c7eb26fcbf40",
+      "archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "member_sha256": "a8a3231d34d03a0d261ac9952f1ba2a953a4d31986e04c8bbbbdc61c06264963",
+      "compressed_bytes": 56920312,
+      "uncompressed_bytes": 457277836
+    },
+    "ETH": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_eth_usdc_full_day_four_anchors_2026_11_12_evidence/SEVEN_HEAVEN_OKX_ETH_L2_FULL_DAY_FOUR_ANCHORS_PROOFS.json",
+      "git_blob_sha1": "621c7edd2367d1cc9acb3bb13d6c11838df0fb86",
+      "archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+      "member_sha256": "a47f70abc79c28bdb52831e0dfdce32e1bf48ca962c3d2f5e8bc9e233a430d5d",
+      "compressed_bytes": 98150849,
+      "uncompressed_bytes": 776655177
+    }
+  },
+  "methods": {
+    "anchors_utc": [
+      "00:00",
+      "06:00",
+      "12:00",
+      "18:00"
+    ],
+    "notional_usdc": [
+      10,
+      100,
+      1000,
+      10000,
+      100000
+    ],
+    "sides": [
+      "buy",
+      "sell"
+    ],
+    "point_in_time_price_cost_only": true,
+    "includes_fees": false,
+    "each_archive_sha256_and_gzip_crc_passed": true,
+    "prefix_twenty_hashes_match_passed": true,
+    "both_archives_no_seq_validation": true
+  },
+  "comparative_spreads": [
+    {
+      "hour_utc": "00:00",
+      "anchor_utc": "2026-10-15T00:00:00+00:00",
+      "btc_sample_utc": "2026-10-15T00:00:00.005000+00:00",
+      "eth_sample_utc": "2026-10-15T00:00:00.001000+00:00",
+      "btc_offset_ms": 5,
+      "eth_offset_ms": 1,
+      "btc_best_bid": "81588",
+      "btc_best_ask": "81588.1",
+      "eth_best_bid": "2419.07",
+      "eth_best_ask": "2419.08",
+      "btc_spread_bps": 0.0122567,
+      "eth_spread_bps": 0.04133811,
+      "spread_diff_eth_minus_btc_bps": 0.02908141,
+      "eth_to_btc_spread_ratio": 3.372695
+    },
+    {
+      "hour_utc": "06:00",
+      "anchor_utc": "2026-10-15T06:00:00+00:00",
+      "btc_sample_utc": "2026-10-15T06:00:00.003000+00:00",
+      "eth_sample_utc": "2026-10-15T06:00:00.004000+00:00",
+      "btc_offset_ms": 3,
+      "eth_offset_ms": 4,
+      "btc_best_bid": "80508.1",
+      "btc_best_ask": "80508.2",
+      "eth_best_bid": "2347.02",
+      "eth_best_ask": "2347.03",
+      "btc_spread_bps": 0.0124211,
+      "eth_spread_bps": 0.04260713,
+      "spread_diff_eth_minus_btc_bps": 0.03018603,
+      "eth_to_btc_spread_ratio": 3.430222
+    },
+    {
+      "hour_utc": "12:00",
+      "anchor_utc": "2026-10-15T12:00:00+00:00",
+      "btc_sample_utc": "2026-10-15T12:00:00.009000+00:00",
+      "eth_sample_utc": "2026-10-15T12:00:00.008000+00:00",
+      "btc_offset_ms": 9,
+      "eth_offset_ms": 8,
+      "btc_best_bid": "80898.2",
+      "btc_best_ask": "80898.3",
+      "eth_best_bid": "2360.99",
+      "eth_best_ask": "2361",
+      "btc_spread_bps": 0.01236121,
+      "eth_spread_bps": 0.04235502,
+      "spread_diff_eth_minus_btc_bps": 0.02999381,
+      "eth_to_btc_spread_ratio": 3.426446
+    },
+    {
+      "hour_utc": "18:00",
+      "anchor_utc": "2026-10-15T18:00:00+00:00",
+      "btc_sample_utc": "2026-10-15T18:00:00.008000+00:00",
+      "eth_sample_utc": "2026-10-15T18:00:00.006000+00:00",
+      "btc_offset_ms": 8,
+      "eth_offset_ms": 6,
+      "btc_best_bid": "82355.9",
+      "btc_best_ask": "82356",
+      "eth_best_bid": "2444.02",
+      "eth_best_ask": "2444.03",
+      "btc_spread_bps": 0.01214241,
+      "eth_spread_bps": 0.04091611,
+      "spread_diff_eth_minus_btc_bps": 0.0287737,
+      "eth_to_btc_spread_ratio": 3.369686
+    }
+  ],
+  "cost_comparison": [
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 10,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 10,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 100,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 100,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 1000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 1000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 10000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.823558,
+      "eth_price_cost_bps": 0.849621,
+      "diff_eth_minus_btc_bps": 0.026063,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 5
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 10000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 0.020669,
+      "diff_eth_minus_btc_bps": 0.014541,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 100000,
+      "side": "buy",
+      "btc_price_cost_bps": 1.6653,
+      "eth_price_cost_bps": 4.274536,
+      "diff_eth_minus_btc_bps": 2.609236,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 32
+    },
+    {
+      "hour_utc": "00:00",
+      "notional_usdc": 100000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006128,
+      "eth_price_cost_bps": 3.525876,
+      "diff_eth_minus_btc_bps": 3.519748,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 23
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 10,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006211,
+      "eth_price_cost_bps": 0.021304,
+      "diff_eth_minus_btc_bps": 0.015093,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 10,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006211,
+      "eth_price_cost_bps": 0.021304,
+      "diff_eth_minus_btc_bps": 0.015093,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 100,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006211,
+      "eth_price_cost_bps": 0.021304,
+      "diff_eth_minus_btc_bps": 0.015093,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 100,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006211,
+      "eth_price_cost_bps": 0.021304,
+      "diff_eth_minus_btc_bps": 0.015093,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 1000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006211,
+      "eth_price_cost_bps": 0.855252,
+      "diff_eth_minus_btc_bps": 0.849041,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 2
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 1000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006211,
+      "eth_price_cost_bps": 0.71553,
+      "diff_eth_minus_btc_bps": 0.709319,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 3
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 10000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.481569,
+      "eth_price_cost_bps": 1.487617,
+      "diff_eth_minus_btc_bps": 1.006048,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 4
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 10000,
+      "side": "sell",
+      "btc_price_cost_bps": 1.188557,
+      "eth_price_cost_bps": 1.007399,
+      "diff_eth_minus_btc_bps": -0.181158,
+      "btc_levels_consumed": 5,
+      "eth_levels_consumed": 4
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 100000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.813917,
+      "eth_price_cost_bps": 3.840668,
+      "diff_eth_minus_btc_bps": 3.026751,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 27
+    },
+    {
+      "hour_utc": "06:00",
+      "notional_usdc": 100000,
+      "side": "sell",
+      "btc_price_cost_bps": 1.828092,
+      "eth_price_cost_bps": 3.221909,
+      "diff_eth_minus_btc_bps": 1.393817,
+      "btc_levels_consumed": 9,
+      "eth_levels_consumed": 29
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 10,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006181,
+      "eth_price_cost_bps": 0.021178,
+      "diff_eth_minus_btc_bps": 0.014997,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 10,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006181,
+      "eth_price_cost_bps": 0.021178,
+      "diff_eth_minus_btc_bps": 0.014997,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 100,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006181,
+      "eth_price_cost_bps": 0.021178,
+      "diff_eth_minus_btc_bps": 0.014997,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 100,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006181,
+      "eth_price_cost_bps": 0.021178,
+      "diff_eth_minus_btc_bps": 0.014997,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 1000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.026487,
+      "eth_price_cost_bps": 0.021178,
+      "diff_eth_minus_btc_bps": -0.005309,
+      "btc_levels_consumed": 2,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 1000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006181,
+      "eth_price_cost_bps": 0.058833,
+      "diff_eth_minus_btc_bps": 0.052652,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 2
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 10000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.466708,
+      "eth_price_cost_bps": 0.942328,
+      "diff_eth_minus_btc_bps": 0.47562,
+      "btc_levels_consumed": 6,
+      "eth_levels_consumed": 2
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 10000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.157388,
+      "eth_price_cost_bps": 0.063063,
+      "diff_eth_minus_btc_bps": -0.094325,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 2
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 100000,
+      "side": "buy",
+      "btc_price_cost_bps": 1.588897,
+      "eth_price_cost_bps": 3.933518,
+      "diff_eth_minus_btc_bps": 2.344621,
+      "btc_levels_consumed": 13,
+      "eth_levels_consumed": 25
+    },
+    {
+      "hour_utc": "12:00",
+      "notional_usdc": 100000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.388429,
+      "eth_price_cost_bps": 4.030083,
+      "diff_eth_minus_btc_bps": 3.641654,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 36
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 10,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006071,
+      "eth_price_cost_bps": 0.020458,
+      "diff_eth_minus_btc_bps": 0.014387,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 10,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006071,
+      "eth_price_cost_bps": 0.020458,
+      "diff_eth_minus_btc_bps": 0.014387,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 100,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006071,
+      "eth_price_cost_bps": 0.020458,
+      "diff_eth_minus_btc_bps": 0.014387,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 100,
+      "side": "sell",
+      "btc_price_cost_bps": 0.006071,
+      "eth_price_cost_bps": 0.020458,
+      "diff_eth_minus_btc_bps": 0.014387,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 1000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006071,
+      "eth_price_cost_bps": 0.129106,
+      "diff_eth_minus_btc_bps": 0.123035,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 2
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 1000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.025892,
+      "eth_price_cost_bps": 0.020458,
+      "diff_eth_minus_btc_bps": -0.005434,
+      "btc_levels_consumed": 2,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 10000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.006071,
+      "eth_price_cost_bps": 1.016973,
+      "diff_eth_minus_btc_bps": 1.010902,
+      "btc_levels_consumed": 1,
+      "eth_levels_consumed": 6
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 10000,
+      "side": "sell",
+      "btc_price_cost_bps": 0.826542,
+      "eth_price_cost_bps": 0.020458,
+      "diff_eth_minus_btc_bps": -0.806084,
+      "btc_levels_consumed": 6,
+      "eth_levels_consumed": 1
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 100000,
+      "side": "buy",
+      "btc_price_cost_bps": 0.567519,
+      "eth_price_cost_bps": 3.317729,
+      "diff_eth_minus_btc_bps": 2.75021,
+      "btc_levels_consumed": 4,
+      "eth_levels_consumed": 24
+    },
+    {
+      "hour_utc": "18:00",
+      "notional_usdc": 100000,
+      "side": "sell",
+      "btc_price_cost_bps": 1.038869,
+      "eth_price_cost_bps": 3.141212,
+      "diff_eth_minus_btc_bps": 2.102343,
+      "btc_levels_consumed": 6,
+      "eth_levels_consumed": 24
+    }
+  ],
+  "summary": {
+    "by_asset": {
+      "BTC": {
+        "spread_4_anchors_mean_bps": 0.01229535,
+        "median_bps": 0.01230895,
+        "minimum_bps": 0.01214241,
+        "maximum_bps": 0.0124211,
+        "events": 2346486,
+        "snapshots": 96,
+        "updates": 2346390,
+        "updates_without_sequencing": 2346390,
+        "global_logical_continuity_proven": false
+      },
+      "ETH": {
+        "spread_4_anchors_mean_bps": 0.04180409,
+        "median_bps": 0.04184657,
+        "minimum_bps": 0.04091611,
+        "maximum_bps": 0.04260713,
+        "events": 3172868,
+        "snapshots": 96,
+        "updates": 3172772,
+        "updates_without_sequencing": 3172772,
+        "global_logical_continuity_proven": false
+      }
+    },
+    "costs_means_for_four_anchors_only": {
+      "1000": {
+        "buy": {
+          "btc_4_anchor_mean_bps": 0.011224,
+          "eth_4_anchor_mean_bps": 0.256551
+        },
+        "sell": {
+          "btc_4_anchor_mean_bps": 0.011103,
+          "eth_4_anchor_mean_bps": 0.203873
+        }
+      },
+      "100000": {
+        "buy": {
+          "btc_4_anchor_mean_bps": 1.158908,
+          "eth_4_anchor_mean_bps": 3.841613
+        },
+        "sell": {
+          "btc_4_anchor_mean_bps": 0.81538,
+          "eth_4_anchor_mean_bps": 3.47977
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Exactly four preselected instants on one historical day; cannot infer a daily mean or long-term distributions.",
+    "The sampled books differ by a few milliseconds; not atomic synchronized captures.",
+    "Source event streams do not include sequence counters; gap-free logical continuity cannot be proven.",
+    "Price VWAP assumes static visible depth and no queue, latency, fees or real execution.",
+    "No historical Bitstamp EMA transactions can be priced using this separate OKX book study."
+  ]
+}
