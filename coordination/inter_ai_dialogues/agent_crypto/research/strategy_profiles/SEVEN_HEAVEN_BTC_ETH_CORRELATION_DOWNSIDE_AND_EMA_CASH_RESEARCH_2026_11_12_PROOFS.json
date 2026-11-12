@@ -1,0 +1,125 @@
+{
+  "schema": "seven-heaven.btc-eth-correlation-downside-ema-cash.v1",
+  "study_date_utc": "2026-11-12",
+  "status": "retrospective_paper_read_only",
+  "source": {
+    "repository": "BlueAzur-Hub/erith-ia-memory",
+    "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_EQUITY_DAILY.csv",
+    "git_blob_sha1": "c8ed2a206ea616ea87eeb83e31f7138d5b131588",
+    "utc_start": "2024-01-01",
+    "utc_end": "2026-10-31",
+    "rows": 1035,
+    "return_pairs": 1034,
+    "market": "Binance Spot BTC/USDT and ETH/USDT; derived from historical buy-and-hold sleeve equity"
+  },
+  "controls": {
+    "date_count": 1035,
+    "unique_date_count": 1035,
+    "max_reconciliation_deviation_usdt": 5e-7
+  },
+  "metrics": {
+    "2024": {
+      "return_pairs": 365,
+      "pearson_correlation": 0.794697,
+      "both_down_days": 138,
+      "btc_down_days": 174,
+      "eth_down_days": 175,
+      "eth_down_when_btc_down_percent": 79.31,
+      "daily_volatility_percent": {
+        "btc_hold": 2.769,
+        "eth_hold": 3.391,
+        "mixed_hold": 2.883,
+        "mixed_ema": 1.929
+      }
+    },
+    "2025": {
+      "return_pairs": 365,
+      "pearson_correlation": 0.815578,
+      "both_down_days": 143,
+      "btc_down_days": 182,
+      "eth_down_days": 183,
+      "eth_down_when_btc_down_percent": 78.571,
+      "daily_volatility_percent": {
+        "btc_hold": 2.179,
+        "eth_hold": 3.918,
+        "mixed_hold": 2.642,
+        "mixed_ema": 1.49
+      }
+    },
+    "2026": {
+      "return_pairs": 304,
+      "pearson_correlation": 0.911919,
+      "both_down_days": 136,
+      "btc_down_days": 156,
+      "eth_down_days": 149,
+      "eth_down_when_btc_down_percent": 87.179,
+      "daily_volatility_percent": {
+        "btc_hold": 2.325,
+        "eth_hold": 3.153,
+        "mixed_hold": 2.564,
+        "mixed_ema": 1.497
+      }
+    },
+    "all": {
+      "return_pairs": 1034,
+      "pearson_correlation": 0.819929,
+      "both_down_days": 417,
+      "btc_down_days": 512,
+      "eth_down_days": 507,
+      "eth_down_when_btc_down_percent": 81.445,
+      "daily_volatility_percent": {
+        "btc_hold": 2.447,
+        "eth_hold": 3.522,
+        "mixed_hold": 2.709,
+        "mixed_ema": 1.661
+      }
+    }
+  },
+  "exposure_days": {
+    "both_cash": 473,
+    "both_exposed": 367,
+    "btc_only": 119,
+    "eth_only": 76
+  },
+  "max_drawdown": {
+    "btc_hold": {
+      "drawdown_percent": -52.972,
+      "trough_utc": "2026-06-30"
+    },
+    "eth_hold": {
+      "drawdown_percent": -67.553,
+      "trough_utc": "2026-06-25"
+    },
+    "dual_hold": {
+      "drawdown_percent": -58.5,
+      "trough_utc": "2026-06-30"
+    },
+    "btc_ema": {
+      "drawdown_percent": -34.208,
+      "trough_utc": "2024-10-10"
+    },
+    "eth_ema": {
+      "drawdown_percent": -53.82,
+      "trough_utc": "2024-10-31"
+    },
+    "dual_ema": {
+      "drawdown_percent": -41.919,
+      "trough_utc": "2024-10-10"
+    }
+  },
+  "worst_btc_5_percent_days": {
+    "threshold_btc_percent": -3.641,
+    "days": 52,
+    "eth_negative_days": 51,
+    "average_eth_percent": -6.65,
+    "average_hold_mixed_percent": -5.753,
+    "average_ema_mixed_percent": -1.922
+  },
+  "limits": [
+    "Retrospective historical study, previously investigated dates",
+    "No rebalancing; two fixed initial 50/50 sleeves",
+    "Volatility measured as population standard deviation of daily returns; unannualized",
+    "Source CSV and Git blob verified; raw Binance archives were not redownloaded during this study",
+    "No prospective validation, no real execution, no exchange API orders"
+  ]
+}
