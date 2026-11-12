@@ -8,7 +8,7 @@
       "repository": "SeedFlora/idx-daily-data",
       "path": "data/ETH-USD.csv",
       "git_blob_sha1": "f92d8c4fce1ea30f16b0195d0ea5f05b9e4fe185",
-      "format": "Yahoo-style ETH-USD daily OHLCV, venue unspecified",
+      "format": "Yahoo Finance ETH-USD daily OHLCV, committed by a third-party GitHub mirror; single-exchange origin not verified",
       "rows_in_full_file": 462,
       "full_file_start": "2025-06-28",
       "full_file_end": "2026-11-11",
@@ -28,7 +28,9 @@
           "next": "2026-10-30",
           "missing_days": 24
         }
-      ]
+      ],
+      "methodology_readme": "https://github.com/SeedFlora/idx-daily-data/blob/main/README.md",
+      "methodology_readme_git_blob_sha1": "d339a081a50da8b931b8f75b48697e3a99d0aca5"
     },
     "binance_reference": {
       "repository": "BlueAzur-Hub/erith-ia-memory",
@@ -179,7 +181,7 @@
   ],
   "limits": [
     "Missing days in source after 2026-07-31, not a full 2024-2026 alternative series",
-    "Source provenance is Yahoo-style third-party, not a verified single-exchange ETH/USD feed",
+    "Source is third-party mirror of Yahoo Finance ETH-USD, not a verified exchange-native ETH/USD feed",
     "Original Binance indicators warmed from April 2023, alternate series warmed for 90 days",
     "Strong signal agreement is not profitable performance: EMA loses on this period",
     "No full matching-calendar Binance P&L recalculation performed or implied",
