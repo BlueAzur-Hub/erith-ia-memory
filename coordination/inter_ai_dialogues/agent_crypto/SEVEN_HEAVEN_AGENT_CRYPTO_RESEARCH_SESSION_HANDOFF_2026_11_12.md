@@ -21,7 +21,7 @@ https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_
 Chemin exact : `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_OKX_BTC_ETH_SPOT_USDC_SPREAD_DEPTH_AND_TRADING_FEE_STUDY_2026_11_12.md`  
 Commit de publication : `92640f607f4e5a3e8694c4c1e8adb8f690246501`
 
-Le document de 135 lignes a été copié intégralement depuis le fichier Markdown généré pendant la session. Il comporte les sources, hypothèses tarifaires, tableaux de coût, limites et prochaine direction.
+Le document initial comptait 135 lignes. Sa **version actuelle a été corrigée en place** après récupération des taux du 06 et 09 novembre déjà présents dans le Notion : elle conserve les CSV sources et rectifie les scénarios de frais et leurs conclusions.
 
 ## 3. Résultats recalculés sur les fichiers GitHub existants
 
@@ -46,39 +46,45 @@ Moyenne du coût de carnet achat + vente, exprimée en points de base, **spread 
 
 Une taille de 1 000 USDC implique une moyenne de 1,34 niveau de carnet par côté en BTC et 1,57 en ETH. À 100 000 USDC, 12,68 niveaux en BTC et 20,85 en ETH. Ces observations sont historiques, figées et non exécutées.
 
-## 4. Frais — attention au périmètre
+## 4. Frais — correction après lecture du vrai référentiel du projet
 
-Le rapport conserve deux **hypothèses de frais de compte EEE Spot standard sans dérivés**, selon les barèmes annoncés autour du 25 septembre 2026 : taker/taker de 70 bp aller-retour avant le changement et 40 bp après. **Ces taux sont des hypothèses de compte, pas des frais personnels vérifiés.** Ne pas les appliquer automatiquement à un compte EEE, VIP, X-Perps ou à une paire particulière sans contrôle.
+**Priorité canonique :** [AETHER · AGENT-INTERFACE, fiche `OKX MEMORY CORE → 01 · Trading Fees`](https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099). Les taux **Spot maker = 0,0800 %**, **Spot taker = 0,1000 %**, niveau « Utilisateur régulier », étaient **déjà consignés le 6 novembre 2026 et confirmés le 9 novembre**. La capture du 12 novembre est une troisième confirmation, **pas une première découverte**. La fiche canonique contient la consigne **« NE PAS REDÉMANDER »**.
 
-En scénario indicatif à 0,20 % taker par côté et à montant constant fictif de 1 000 USDC, les moyennes des trois journées impliquent :
-- BTC : environ **4,0275 USDC** de frais et friction de carnet cumulés.
-- ETH : environ **4,1106 USDC**.
+**Incident documenté :** la première version de ce handoff et du rapport a traité un **barème EEE générique** (0,20 % taker par côté) comme scénario « récent » applicable au compte, en dépit des données existantes. Une fiche Notion supplémentaire et une nouvelle demande de capture ont été produites inutilement. **La méthode et les chiffres ont été corrigés** ; la source de vérité pour les frais personnels n'est pas cette fiche secondaire, mais `OKX MEMORY CORE`.
 
-Il s'agit de la somme de deux coûts au **même instantané historique**, et non d'un véritable aller-retour entre deux dates : aucune variation de prix, aucun ordre rempli, aucune latence ni priorité de file simulée. Ne pas extrapoler une rentabilité de stratégie.
+**Hypothèses de simulation cohérentes avec les taux affichés du compte au 12 novembre 2026 :**
 
-### Mise à jour — frais Spot du compte effectivement relevés le 12 novembre 2026
+- **Taker/taker : 10 + 10 = 20 bp** (0,20 % sur deux côtés fictifs, avant spread + profondeur).
+- **Maker/maker : 8 + 8 = 16 bp**, **sans garantie de remplissage**. Ne pas greffer ce taux aux tests qui consomment le carnet en taker.
+- **Maker/taker : 8 + 10 = 18 bp**, si les deux types d'ordres correspondent au modèle.
 
-**Source ultérieure et plus spécifique que les hypothèses génériques ci-dessus :** capture de la page OKX authentifiée `Actifs > Frais`, fournie par l'opérateur. Niveau affiché : `Utilisateur régulier`. **Spot maker = 0,0800 %, Spot taker = 0,1000 %** ; cette observation remplace **pour les nouveaux scénarios PAPER à frais courants du compte** l'hypothèse générique de 0,20 % taker par côté. Elle ne réécrit pas les coûts historiques des journées d'août, septembre et octobre 2026.
+À montant fictif de **1 000 USDC par côté**, sur la **moyenne des 288 snapshots historiques**, commissions et coût du carnet **déjà compris avec le spread** :
 
-- [Source de vérité partagée sur GitHub — taux Spot observés, sans soldes ni capture](./SEVEN_HEAVEN_OKX_OBSERVED_SPOT_FEE_REFERENCE_2026_11_12.md).
-- [Fiche Notion — taux complets Spot/Futures/Options de la capture](https://app.notion.com/p/4167754fe084817dbcb5e007a399e595).
-- Le barème applicable à **BTC-USDC ou ETH-USDC** reste conditionné à la classification effective de la paire dans OKX ; ne pas affirmer une commission d'ordre exécuté sans vérifier la paire et les détails.
-- **Priorité de reprise :** ne plus demander les taux Spot à l'opérateur à chaque fil ; consulter ces références et demander une actualisation seulement lorsque cela est nécessaire.
+- **BTC : 2,0275 USDC** = 2,0000 de commissions hypothétiques + 0,0275 d'écart de carnet.
+- **ETH : 2,1106 USDC** = 2,0000 de commissions hypothétiques + 0,1106 d'écart de carnet.
+
+**Les coûts 4,0275 USDC BTC / 4,1106 USDC ETH de la première version sont invalidés comme estimation au tarif actuellement affiché par le compte.** Les hypothèses génériques 70/40 bp des annonces EEE peuvent être conservées uniquement comme **scénarios alternatifs explicitement non personnels**, sans prouver le barème historique de ce compte.
+
+**Date et paire :** ces taux sont observés les 06/09/12 novembre, sans preuve de leur date initiale d'application. L'écran montre des catégories de paires ; le tarif effectivement prélevé sur BTC-USDC ou ETH-USDC à une autre date ne se déduit pas de la capture.
+
+Sources secondaires de continuité :
+- [Rapport scientifique corrigé — conserver les calculs et les limites](./SEVEN_HEAVEN_OKX_BTC_ETH_SPOT_USDC_SPREAD_DEPTH_AND_TRADING_FEE_STUDY_2026_11_12.md).
+- [Renvoi GitHub vers la mémoire canonique des frais](./SEVEN_HEAVEN_OKX_OBSERVED_SPOT_FEE_REFERENCE_2026_11_12.md).
 
 ## 5. Intégrité et limites
 
 - Trois **journées isolées**, jamais trois mois continus.
 - Historique OKX **Spot USDC** distinct des backtests EMA **Bitstamp/USD** ; ne pas transférer ces coûts sans validation adaptée.
 - Reconstitution des états historiques avec contrôles SHA/CRC, mais exhaustivité amont des événements non garantie.
-- Les tarifs réels, restrictions EEE et frais du compte doivent encore être contrôlés ; aucune connexion à un compte privé pour cette étude.
+- Le **niveau du compte et les taux Spot affichés** sont vérifiés par les captures des 06, 09 et 12 novembre ; restent inconnus : la catégorie tarifaire de chaque paire et les commissions réellement prélevées lors d'ordres particuliers.
 - Ni Administrator, ni Operator, ni Trader, ni Bridge R31, ni ordres PAPER intégrés n'ont été modifiés par cette session.
-- La page Notion a été **consultée**, pas mise à jour.
+- Le **Notion canonique a été mis à jour** avec la troisième confirmation du 12 novembre. La fiche secondaire créée inutilement est désormais identifiée comme une confirmation datée, et ne doit pas être présentée comme référence de premier rang.
 - Cette transmission décrit les documents de **cette session** ; elle ne prétend pas reproduire les dizaines de milliers de pages d'archives précédentes.
 
 ## 6. Seule prochaine direction scientifique
 
-**Contrôler les tarifs effectifs OKX Spot applicables à un compte et une paire, puis comparer des stratégies PAPER sous plusieurs barèmes explicites et constants**, afin d'évaluer si les performances survivent aux coûts sans contamination des données Bitstamp/USD.
+**Vérifier uniquement les exceptions de tarification par paire lorsque nécessaire, puis comparer des stratégies PAPER avec le barème Spot déjà connu (maker 0,08 %, taker 0,10 %) et des analyses de sensibilité distinctes.** Ne pas recommencer la recherche des taux personnels, ne pas appliquer ceux de novembre rétroactivement, ne pas mélanger les coûts OKX/USDC et Bitstamp/USD.
 
 Aucun nouveau collecteur, ordre ou modification du programme central n'est nécessaire pour poursuivre la recherche documentaire.
 
-**Règle opérationnelle pour la prochaine IA :** lire ce handoff puis le rapport complet ; vérifier le GitHub main avant de refaire une étude ; distinguer faits, modèles, hypothèses et actions ; publier les nouveaux documents de recherche dans ce répertoire partagé si demandé, et s'arrêter dès que la preuve est suffisante.
+**Règle opérationnelle pour la prochaine IA :** relire en premier `OKX MEMORY CORE → 01 · Trading Fees` dans Notion, puis ce handoff, le rapport et l'état GitHub main ; **ne jamais redemander les taux déjà consignés**. Séparer faits, modèles, hypothèses et actions ; réutiliser les preuves, ne pas créer de fiches en double, livrer les correctifs demandés puis s'arrêter.
