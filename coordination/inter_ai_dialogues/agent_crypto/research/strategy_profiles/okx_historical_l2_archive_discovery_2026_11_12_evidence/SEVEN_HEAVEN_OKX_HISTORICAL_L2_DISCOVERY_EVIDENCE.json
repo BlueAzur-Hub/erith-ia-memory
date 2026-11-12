@@ -1,0 +1,184 @@
+{
+  "schema": "seven-heaven.okx-historical-l2-archive-discovery.v1",
+  "status": "links_listed",
+  "generated_at_utc": "2026-11-12T16:05:56.096Z",
+  "read_only": true,
+  "orders_enabled": false,
+  "archive_downloads_performed": false,
+  "l2_market_depth_analysed": false,
+  "query": {
+    "module": "4",
+    "instType": "SPOT",
+    "dateAggrType": "daily",
+    "begin": "1792022400000",
+    "end": "1792108799000",
+    "day": "2026-10-15",
+    "instIdList": [
+      "BTC-USDC",
+      "ETH-USDC"
+    ]
+  },
+  "results": [
+    {
+      "pair": "BTC-USDC",
+      "status": "archive_link_listed",
+      "attempts": [],
+      "response": {
+        "http_status": 200,
+        "url_without_auth": "https://www.okx.com/api/v5/public/market-data-history?module=4&instType=SPOT&dateAggrType=daily&begin=1792022400000&end=1792108799000&instIdList=BTC-USDC",
+        "requested_at_utc": "2026-11-12T16:05:55.651Z",
+        "received_at_utc": "2026-11-12T16:05:55.891Z",
+        "raw_file": "okx_btc_usdc_historical_l2_metadata_raw.json",
+        "raw_sha256": "a79abc35b2b2ee2e8f12a772b501c5f725630aa9a7d8c028c4231b216dd86b7f",
+        "response_bytes": 508
+      },
+      "summary": {
+        "api_code": "0",
+        "api_msg": "",
+        "data_type": "list",
+        "data_entries": 1,
+        "data_keys_first_entry": [
+          "dateAggrType",
+          "details",
+          "totalSizeMB",
+          "ts"
+        ],
+        "metadata_examples": [
+          {
+            "key": "[0].dateAggrType",
+            "value": "daily"
+          },
+          {
+            "key": "[0].details[0].dateRangeEnd",
+            "value": "1792022400000"
+          },
+          {
+            "key": "[0].details[0].dateRangeStart",
+            "value": "1792022400000"
+          },
+          {
+            "key": "[0].details[0].groupDetails[0].dateTs",
+            "value": "1792022400000"
+          },
+          {
+            "key": "[0].details[0].groupDetails[0].filename",
+            "value": "BTC-USDC-L2orderbook-400lv-2026-10-15.tar.gz"
+          },
+          {
+            "key": "[0].details[0].groupDetails[0].sizeMB",
+            "value": "54.28"
+          },
+          {
+            "key": "[0].details[0].groupSizeMB",
+            "value": "54.28"
+          },
+          {
+            "key": "[0].details[0].instId",
+            "value": "BTC-USDC"
+          },
+          {
+            "key": "[0].details[0].instType",
+            "value": "SPOT"
+          },
+          {
+            "key": "[0].totalSizeMB",
+            "value": "54.28"
+          }
+        ],
+        "archive_links_without_query": [
+          {
+            "key": "[0].details[0].groupDetails[0].url",
+            "public_path": "https://static.okx.com/cdn/okx/match/orderbook/pro/L2/400lv/daily/20261015/BTC-USDC-L2orderbook-400lv-2026-10-15.tar.gz"
+          }
+        ],
+        "archive_link_count_within_inspected_records": 1,
+        "archive_available_confirmed": true,
+        "interpretation": "API discovery only: listing entries do not certify an actual downloaded L2 archive"
+      }
+    },
+    {
+      "pair": "ETH-USDC",
+      "status": "archive_link_listed",
+      "attempts": [],
+      "response": {
+        "http_status": 200,
+        "url_without_auth": "https://www.okx.com/api/v5/public/market-data-history?module=4&instType=SPOT&dateAggrType=daily&begin=1792022400000&end=1792108799000&instIdList=ETH-USDC",
+        "requested_at_utc": "2026-11-12T16:05:55.891Z",
+        "received_at_utc": "2026-11-12T16:05:56.096Z",
+        "raw_file": "okx_eth_usdc_historical_l2_metadata_raw.json",
+        "raw_sha256": "9b29a1b012f3efd9a10ae58f5875ab68c0e8ec2cbefe065074c654afeb59c063",
+        "response_bytes": 505
+      },
+      "summary": {
+        "api_code": "0",
+        "api_msg": "",
+        "data_type": "list",
+        "data_entries": 1,
+        "data_keys_first_entry": [
+          "dateAggrType",
+          "details",
+          "totalSizeMB",
+          "ts"
+        ],
+        "metadata_examples": [
+          {
+            "key": "[0].dateAggrType",
+            "value": "daily"
+          },
+          {
+            "key": "[0].details[0].dateRangeEnd",
+            "value": "1792022400000"
+          },
+          {
+            "key": "[0].details[0].dateRangeStart",
+            "value": "1792022400000"
+          },
+          {
+            "key": "[0].details[0].groupDetails[0].dateTs",
+            "value": "1792022400000"
+          },
+          {
+            "key": "[0].details[0].groupDetails[0].filename",
+            "value": "ETH-USDC-L2orderbook-400lv-2026-10-15.tar.gz"
+          },
+          {
+            "key": "[0].details[0].groupDetails[0].sizeMB",
+            "value": "93.6"
+          },
+          {
+            "key": "[0].details[0].groupSizeMB",
+            "value": "93.6"
+          },
+          {
+            "key": "[0].details[0].instId",
+            "value": "ETH-USDC"
+          },
+          {
+            "key": "[0].details[0].instType",
+            "value": "SPOT"
+          },
+          {
+            "key": "[0].totalSizeMB",
+            "value": "93.6"
+          }
+        ],
+        "archive_links_without_query": [
+          {
+            "key": "[0].details[0].groupDetails[0].url",
+            "public_path": "https://static.okx.com/cdn/okx/match/orderbook/pro/L2/400lv/daily/20261015/ETH-USDC-L2orderbook-400lv-2026-10-15.tar.gz"
+          }
+        ],
+        "archive_link_count_within_inspected_records": 1,
+        "archive_available_confirmed": true,
+        "interpretation": "API discovery only: listing entries do not certify an actual downloaded L2 archive"
+      }
+    }
+  ],
+  "limits": [
+    "Only metadata; no ZIP or tick-level L2 data downloaded.",
+    "An archive endpoint may list temporary links; actual file accessibility unverified.",
+    "The venue advertises archives since March 2023, not each Spot USDC pair.",
+    "Two intraday books are not representative time-series data.",
+    "No prospective strategy validation or execution cost history obtained."
+  ]
+}
