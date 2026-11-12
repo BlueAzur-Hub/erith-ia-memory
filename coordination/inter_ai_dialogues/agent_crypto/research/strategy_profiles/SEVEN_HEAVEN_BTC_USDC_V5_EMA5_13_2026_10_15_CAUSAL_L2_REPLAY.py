@@ -204,7 +204,7 @@ def build(repo_root,fetch=None):
       'scope':{'day_utc':'2026-10-15','pair':'BTC-USDC','bar':'15m','ema_fast':5,'ema_slow':13,
                'historical_candles':CANDLES,'notional_reference_usdc':NOTIONAL,
                'maker_fee_pct_observed':.08,'taker_fee_pct_observed':FEE_PCT,'v5_slippage_pct':V5_SLIP_PCT},
-      'ohlc':ohlc,'l2':archive,'v4_ema_cross_events':events,
+      'ohlc':ohlc,'frozen_ohlc_300':candles,'l2':archive,'v4_ema_cross_events':events,
       'events_all_300_bars':len(events),'executions_on_target_day':len(matched),
       'long_only':meta,'eligibility_counts':counts,'age_gate_counts':age,
       'strictly_prior_boundary_books':len(by_cutoff),
