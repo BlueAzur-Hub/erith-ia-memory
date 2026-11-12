@@ -336,3 +336,31 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Direction suivante :** définir un protocole de validation *walk-forward* sur dates nouvelles, sans optimiser les EMA à partir des données 2024–2026 ; explorer la sensibilité aux coûts réalistes avant d'envisager une utilisation. Aucune modification Administrator, Trader, Operator ou Bridge.
 
+
+## Étude des coûts — BTC/ETH EMA10/30 50/50, robustesse fictive vérifiée (12 novembre 2026)
+
+**Étude de stress coûts FINIE, vérifiée, publiée dans le Coffre partagé.** Les EMA10/30, leurs décisions à l'ouverture du lendemain et les **122 opérations fictives** restent **rigoureusement inchangées**. Deux archives natives Bitstamp Spot BTC/USD et ETH/USD (1 310 jours chacune), simulation 2024-01-01→2026-10-31 (1 035 jours) et deux poches de 500 USD sans rebalancement. Le [protocole a été committé AVANT les nouvelles grilles](./SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_FROZEN_PROTOCOL_2026_11_12.md), commit `a1fe8f5880be265f2bbb66d947f1f221ad31e69f`.
+
+- [**Rapport scientifique complet, 8 facteurs de coût, risques, limites**](./SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_RESEARCH_REPORT_2026_11_12.md).
+- [**Preuves JSON du premier calcul sur archives SHA-pinnées**](./SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_EVIDENCE_2026_11_12.json).
+- [**Programme Python indépendant, relisant les CSV et rapprochant chaque résultat**](./SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_REPLAY_2026_11_12.py).
+- [**Preuves JSON de reproduction Python confirmée**](./transaction_cost_stress_evidence/SEVEN_HEAVEN_BTC_ETH_50_50_COST_STRESS_PYTHON_VERIFICATION.json) ; [**grille CSV de tous les facteurs**](./transaction_cost_stress_evidence/SEVEN_HEAVEN_BTC_ETH_50_50_COST_STRESS_GRID.csv).
+- [**GitHub Actions : SUCCESS, recalcul Python des 8 scénarios, contrôle SHA et signaux invariants**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43245735625).
+
+**Sensibilité au coût fictif par côté** (frais + glissement) :
+
+| Coût / côté | EMA BTC/ETH 50/50 | Buy & Hold 50/50 |
+|---|---:|---:|
+| 0,15 % (référence) | **+77,67 %** | +40,53 % |
+| 0,30 % | +62,24 % | +40,11 % |
+| 0,45 % | +48,16 % | +39,69 % |
+| 0,60 % | +35,31 % | +39,27 % |
+| 0,90 % | +12,87 % | +38,43 % |
+| 1,20 % | **−5,83 %** | +37,60 % |
+
+**Seuils historiques purement descriptifs** : l'avantage EMA face au Hold disparaît autour de **0,550629 % de coût fictif par côté**, EMA tombe à rendement final nul vers **1,100460 % de coût fictif par côté**. Ce ne sont **pas** des tarifs applicables d'exchange et aucune reconstitution réelle du carnet à la date des ouvertures n'a été faite. Le modèle comporte 122 opérations EMA contre 2 achats de poche Buy & Hold. Le drawdown historique EMA avec frais de base reste **−42,15 %**, pouvant dépasser −55 % au facteur 10.
+
+**Méthode et limite** : seule une **sensibilité conditionnelle** des résultats historiques a été validée par reproduction Python ; **aucune performance future démontrée**, aucun spread historique effectivement observé, pas de mesure des coûts d'un compte OKX/Bitstamp, pas de trading réel. La fenêtre 2024–2026 est déjà connue. Les données immuables et les scripts ont été vérifiés ; ne pas chercher de meilleurs EMA après lecture de ces résultats.
+
+**Prochaine étude utile** : préenregistrer un échantillon **postérieur au 12 novembre 2026**, conserver EMA10/30 et les deux poches, documenter en parallèle les spread/depth à l'instant du trade simulé ; ne pas publier un chiffre de résultat jusqu'à avoir de vraies bougies nouvelles et un horizon assez long. Aucun changement Administrator / Trader / Operator / Bridge.
+
