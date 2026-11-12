@@ -1,0 +1,118 @@
+name: Seven Heaven ETH V5 EMA15m Aug Sep Oct Preopen L2 Causal Replay
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-eth-v5-ema15m-aug-sep-oct-preopen-l2-causal-replay.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_2026_08_09_10_COMPARATIVE_CAUSAL_L2_REPLAY.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-eth-v5-ema15m-aug-sep-oct-one-time
+  cancel-in-progress: false
+jobs:
+  frozen-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - { day: '2026-08-15', slug: '2026_08_15', events: 277791, sha: '9da303d949bce4f25248f7d3f6b7e34e2be6ed426b4945a395c3097d7932bfca' }
+          - { day: '2026-09-15', slug: '2026_09_15', events: 1717498, sha: '694464feb71a39dccff0188087079f3d200b50e51efc4a4120b454e4a9213924' }
+          - { day: '2026-10-15', slug: '2026_10_15', events: 3172868, sha: '048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546' }
+    env:
+      DAY_UTC: ${{ matrix.day }}
+      DAY_SLUG: ${{ matrix.slug }}
+      EXPECTED_EVENTS: ${{ matrix.events }}
+      EXPECTED_L2_SHA: ${{ matrix.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+            public/agent_crypto_erith_ia/administrator/js
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm source syntax and isolated synthetic gates
+        run: |
+          set -euo pipefail
+          file='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_2026_08_09_10_COMPARATIVE_CAUSAL_L2_REPLAY.py'
+          python -m py_compile "$file"
+          python "$file" --selftest --day "$DAY_UTC"
+      - name: Reproduce pinned ETH-USDC 300 confirmed OHLC and full L2 pre-open quotes
+        id: reproduce
+        run: |
+          set +e
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_2026_08_09_10_COMPARATIVE_CAUSAL_L2_REPLAY.py --repo-root . --day "$DAY_UTC"
+          rc=$?
+          echo "script_exit=$rc" >> "$GITHUB_OUTPUT"
+          echo "REPLAY_EXIT_STATUS=$rc"
+          exit 0
+      - name: Verify proof and reproduce V5 JavaScript closed trade timestamps independently
+        id: verify
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs');
+          const path='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_'+process.env.DAY_SLUG+'_CAUSAL_L2_PROOFS.json';
+          const proof=JSON.parse(fs.readFileSync(path,'utf8'));
+          if(proof.status!=='REPRODUCED_HISTORICAL_PREOPEN_BOOK_ESTIMATES_NOT_ACTUAL_EXECUTION'){
+            throw Error('Study incomplete, not validated: '+String(proof.error||proof.status));
+          }
+          if(proof.scope.pair!=='ETH-USDC'||proof.scope.day_utc!==process.env.DAY_UTC||proof.frozen_ohlc_300.length!==300)throw Error('Wrong frozen study identity');
+          if(proof.l2.archive_sha256!==process.env.EXPECTED_L2_SHA)throw Error('Wrong archive SHA');
+          if(proof.l2.events!==Number(process.env.EXPECTED_EVENTS)||proof.l2.snapshots!==96||proof.l2.reference_anchors_verified!==(day==='2026-10-15'?4:96))throw Error('Original archive replay invariant failed');
+          if(proof.l2.global_l2_sequence_verified!==false||!proof.l2.gzip_crc_checked)throw Error('Source limits misreported');
+          const rows=proof.frozen_ohlc_300;
+          for(let i=1;i<rows.length;i++)if(rows[i].t-rows[i-1].t!==900000)throw Error('Gap in 300 candles');
+          require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-paper-backtest-v5.js');
+          const api=globalThis.ErithMarketPaperBacktestV5;
+          if(!api||!api.read_only||api.real_order!==false)throw Error('V5 module unavailable/not readonly');
+          const snapshot={mode:'candles',source:'OKX',loadedInstrument:'ETH-USDC',loadedBar:'15m',loading:false,error:null,archivePeriod:null,emaPeriods:[5,13,20],rows};
+          const cross={instrument:'ETH-USDC',bar:'15m',archiveSupported:true,fastPeriod:5,slowPeriod:13,
+            events:proof.v4_ema_cross_events.map(({index,t,price,direction})=>({index,t,price,direction}))};
+          const result=api.simulate(snapshot,cross,{initialCapital:1000,feePercent:0.1,slippagePercent:0.05},Date.parse('2026-11-13T00:00:00Z'));
+          if(!result.ok||result.read_only!==true||result.orders!==0)throw Error('V5 native replay failed: '+result.code);
+          const fromNative=[];
+          for(const trade of result.closedTrades){
+            fromNative.push({side:'buy',at:trade.entryAt},{side:'sell',at:trade.exitAt});
+          }
+          if(result.openPosition)fromNative.push({side:'buy',at:result.openPosition.entryAt});
+          const start=Date.parse(process.env.DAY_UTC+'T00:00:00Z'),end=start+86400000;
+          const ref=fromNative.filter(x=>x.at>=start&&x.at<end).sort((a,b)=>a.at-b.at||a.side.localeCompare(b.side));
+          const actual=proof.execution_estimates.map(x=>({side:x.side,at:Date.parse(x.next_open_utc)})).sort((a,b)=>a.at-b.at||a.side.localeCompare(b.side));
+          if(JSON.stringify(ref)!==JSON.stringify(actual))throw Error('Native V5 and independent EMA cross execution timeline diverged '+JSON.stringify({ref,actual}));
+          for(const x of proof.execution_estimates){
+            if(x.last_l2_utc && !(Date.parse(x.last_l2_utc)<Date.parse(x.next_open_utc)))throw Error('Future book usage detected');
+            if(x.status.startsWith('PRE_OPEN')&&!x.age_gate)throw Error('Pair without a pre-open age gate');
+          }
+          console.log('PASS native V5 long-only execution times, 300 native OKX OHLC, strict PRE-open L2 timing. Trades =',actual.length);
+          NODE
+      - name: Preserve public-only compact proof artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-eth-v5-preopen-l2-${{ matrix.slug }}
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_${{ matrix.slug }}_CAUSAL_L2_PROOFS.json
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit compact proof to shared research Coffre
+        if: always()
+        run: |
+          set -euo pipefail
+          proof='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_${{ matrix.slug }}_CAUSAL_L2_PROOFS.json'
+          if [ ! -f "$proof" ]; then echo 'No proof produced; no fabricated result'; exit 0; fi
+          git add -- "$proof"
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'NOOP'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: publish pinned ETH EMA15m Aug Sep pre-open L2 proof'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
