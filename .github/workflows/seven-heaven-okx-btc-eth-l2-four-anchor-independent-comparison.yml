@@ -1,0 +1,85 @@
+name: Seven Heaven OKX BTC ETH L2 Four Anchor Verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-btc-eth-l2-four-anchor-independent-comparison.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_INDEPENDENT_COMPARISON_VERIFICATION_2026_11_12.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-btc-eth-l2-independent-comparison-once
+  cancel-in-progress: false
+
+jobs:
+  verify-pinned-cross-asset-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Synthetic unit checks and compile
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_INDEPENDENT_COMPARISON_VERIFICATION_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Recompute all four spreads and forty paired side costs independently
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_INDEPENDENT_COMPARISON_VERIFICATION_2026_11_12.py --repo-root .
+      - name: Verify full provenance and expected CSV evidence
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,csv,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence')
+          d=json.loads((root/'SEVEN_HEAVEN_OKX_L2_BTC_ETH_CROSS_ASSET_INDEPENDENT_PROOFS.json').read_text(encoding='utf8'))
+          assert d['schema']=='seven-heaven.okx-btc-eth-four-anchor-independent-recalculation.v1'
+          assert d['status']=='VERIFIED_FIXED_UTC_ANCHOR_BTC_ETH_40_CROSS_ASSET_VALUES'
+          assert d['read_only'] and not d['orders_enabled'] and not d['source_logical_sequence_continuity_proven']
+          assert d['verified_spread_pairs']==4 and d['verified_book_cost_pairs']==40
+          assert d['all_source_hashes_match']
+          raw=(root/'SEVEN_HEAVEN_OKX_L2_BTC_ETH_FOUR_HOUR_PAIRED_COSTS.csv').read_bytes()
+          assert b'\r' not in raw
+          rows=list(csv.DictReader(raw.decode('utf8').splitlines()))
+          assert len(rows)==40
+          assert {r['hour_utc'] for r in rows}=={'00:00','06:00','12:00','18:00'}
+          assert {r['notional_usdc'] for r in rows}=={'10','100','1000','10000','100000'}
+          assert {r['side'] for r in rows}=={'buy','sell'}
+          print('PASS: BTC+ETH immutable source SHA, 4 spread pairs, 40 book-cost pairs, independent Python reproduction')
+          PY
+      - name: Keep compact comparison reproducibility proofs
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-eth-l2-four-anchor-independent-audit
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish only validated comparison evidence to shared inter-AI Coffre
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: identical evidence archived'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive independently recomputed BTC ETH L2 four-anchor comparisons'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
