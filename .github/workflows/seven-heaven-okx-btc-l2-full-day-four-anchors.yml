@@ -1,0 +1,87 @@
+name: Seven Heaven OKX BTC L2 Full Day Four Anchors
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-btc-l2-full-day-four-anchors.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_2026_11_12.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-btc-l2-full-day-once
+  cancel-in-progress: false
+
+jobs:
+  scan-full-btc-day-read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax and synthetic streaming orderbook checks
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Stream full official BTC L2 tar.gz without storing full archive
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_2026_11_12.py --repo-root .
+      - name: Verify full byte SHA and exactly four anchor snapshots or explicit failure
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,csv
+          base=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_full_day_four_anchors_2026_11_12_evidence')
+          doc=json.loads((base/'SEVEN_HEAVEN_OKX_BTC_L2_FULL_DAY_FOUR_ANCHORS_PROOFS.json').read_text(encoding='utf8'))
+          assert doc['read_only'] is True and doc['orders_enabled'] is False
+          assert doc['status'] in ('full_archive_replayed_four_anchors','failed_quality_or_access_check')
+          rows=list(csv.DictReader((base/'SEVEN_HEAVEN_OKX_BTC_L2_FULL_DAY_FOUR_ANCHORS_COSTS.csv').open(encoding='utf8')))
+          if doc['status']=='full_archive_replayed_four_anchors':
+              d=doc['result']
+              m=d['market']
+              assert d['gzip_read_to_eof_crc_checked'] and len(d['archive_sha256'])==64
+              assert len(d['member_sha256'])==64
+              assert d['member_uncompressed_bytes']==457277836
+              assert m['first_20_event_hashes_match_prior_proof']
+              assert len(m['anchors'])==4 and len(rows)==40
+              assert m['global_logical_continuity_proven'] is False
+              assert all(0<=r['offset_ms_after_anchor']<=60000 for r in m['anchors'])
+              print('PASS: full L2 gzip CRC + SHA, entire member streamed, 4 UTC anchors, 40 depth scenarios')
+          else:
+              assert doc['no_results_invented'] and not rows
+              print('INCOMPLETE: source or quality check failed; no historical prices invented:',doc.get('error'))
+          assert (base/'SEVEN_HEAVEN_OKX_BTC_L2_FULL_DAY_FOUR_ANCHORS_REPORT.md').exists()
+          PY
+      - name: Retain compact audit as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-l2-full-day-four-anchors
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_full_day_four_anchors_2026_11_12_evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Commit only compact results into inter-AI Coffre
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_full_day_four_anchors_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: same compact result'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: publish streamed full-day BTC L2 SHA and fixed anchor metrics'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
