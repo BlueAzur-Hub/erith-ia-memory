@@ -1,0 +1,89 @@
+name: Seven Heaven BTC ETH Native Bitstamp 50-50 Research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-btc-eth-native-bitstamp-dual-research.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_50_50_NATIVE_BITSTAMP_VS_BINANCE_REPLAY_2026_11_12.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/test_seven_heaven_btc_eth_native_bitstamp_dual_replay.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-native-bitstamp-btc-eth-dual-once
+  cancel-in-progress: false
+
+jobs:
+  replay-native-bitstamp-btc-eth-dual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline fixed-policy regression tests
+        run: |
+          set -euo pipefail
+          root='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles'
+          python -m py_compile "$root/SEVEN_HEAVEN_BTC_ETH_50_50_NATIVE_BITSTAMP_VS_BINANCE_REPLAY_2026_11_12.py"
+          python "$root/SEVEN_HEAVEN_BTC_ETH_50_50_NATIVE_BITSTAMP_VS_BINANCE_REPLAY_2026_11_12.py" --selftest
+          python -m unittest -v "$root/test_seven_heaven_btc_eth_native_bitstamp_dual_replay.py"
+      - name: Download official public Bitstamp BTC USD and replay two native assets
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_50_50_NATIVE_BITSTAMP_VS_BINANCE_REPLAY_2026_11_12.py --repo-root .
+      - name: Enforce complete dates, original SHA pins and no actual orders
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv,hashlib,json,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/native_bitstamp_btc_eth_2024_2026_evidence')
+          proof=json.loads((root/'bitstamp_btc_eth_50_50_proofs.json').read_text(encoding='utf-8'))
+          assert proof['no_orders'] is True and proof['status']=='NATIVE_BITSTAMP_BTC_ETH_PAPER_REPLAY_EXECUTED'
+          assert proof['coverage']['days_per_asset']==1310 and proof['coverage']['test_days']==1035
+          assert proof['coverage']['daily_returns']==1034
+          assert proof['sources']['bitstamp_eth']['sha256']=='881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49'
+          assert proof['sources']['binance_reference']['git_blob_sha1']=='c8ed2a206ea616ea87eeb83e31f7138d5b131588'
+          for name,sha,n in [
+              ('bitstamp_btcusd_daily_2023_2026.csv',proof['source_integrity']['bitstamp_btc_sha256'],1310),
+              ('bitstamp_btc_eth_50_50_daily_equity_2024_2026.csv',proof['source_integrity']['combined_daily_equity_sha256'],1035)]:
+              b=(root/name).read_bytes()
+              assert hashlib.sha256(b).hexdigest()==sha
+              assert b'\r' not in b
+              assert len(list(csv.DictReader(b.decode('utf-8').splitlines())))==n
+          assert (root/'SEVEN_HEAVEN_BTC_ETH_NATIVE_BITSTAMP_50_50_COMPARATIVE_REPORT.md').exists()
+          for k in ('btc_exposure_disagreement_dates','eth_exposure_disagreement_dates','joint_position_agreement_days'):
+              assert k in proof['cross_source']
+          exposure=proof['bitstamp']['dual_ema']
+          assert sum(exposure[k] for k in ('days_both_cash','days_both_exposed','days_btc_only','days_eth_only'))==1035
+          print('PASS: 1310 official BTC candles; 1310 pinned ETH candles; 1035 paper days; no trade execution')
+          PY
+      - name: Preserve signed-by-workflow research ZIP for reproducibility
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-native-bitstamp-btc-eth-dual-2024-2026
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/native_bitstamp_btc_eth_2024_2026_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish research files ONLY to shared inter-AI GitHub folder
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/native_bitstamp_btc_eth_2024_2026_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: existing validated native research files are identical'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive native Bitstamp BTC ETH 50-50 comparison evidence'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
