@@ -1,6 +1,10 @@
 # Seven Heaven — ETH : passage du miroir Yahoo aux bougies natives Bitstamp
 
-**12 novembre 2026** · État documentaire **contrôlé**, pas une annonce de performances natives non réalisées.
+**12 novembre 2026** · **Validation native obtenue et publiée** après correction de l'export CSV. L'état ci-dessous contient le journal de préparation et le bilan final.
+
+## Bilan définitif après le correctif GitHub Actions
+
+Le dossier complet est dans [l'audit Bitstamp vs Binance](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_VS_BINANCE_EMA10_30_COMPARATIVE_AUDIT_2026_11_12.md) : **1 310 jours natifs**, **1 035 jours PAPER**, Bitstamp **+89,55 %** EMA et **−54,10 %** de drawdown, **1 034/1 035 positions** concordantes avec Binance, **54 opérations fictives**. [Run GitHub Actions #3 réussi](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43234052193). Le correctif porte **uniquement sur les fins de ligne CSV** ; aucun paramètre EMA modifié.
 
 ## Pourquoi une nouvelle étape ?
 
@@ -17,7 +21,7 @@ L'étude précédente a constaté une concordance EMA **309/309 journées** entr
 ## Livraison dans le répertoire inter-IA
 
 1. [**Protocole gelé avant toute récupération réelle**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_DAILY_EMA10_30_2024_2026_FROZEN_PROTOCOL_2026_11_12.md), commit `75a7c15`.
-2. [**Collecteur et simulateur Python natif, en lecture seule**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py), Git blob SHA-1 `b627fba0e2d9cbabdb3be68e56124754bfb5c960`.
+2. [**Collecteur et simulateur Python natif, en lecture seule**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py) — correctif LF publié, commit `24de90d`.
 3. [**Tests hors ligne de pagination, trou dans l'historique et OHLC invalide**](./test_seven_heaven_eth_bitstamp_native_replay.py) : **3 tests passés localement**, plus `--selftest` et simulation synthétique sur 1 310 journées complètes.
 4. [**Workflow GitHub Actions de collecte isolée**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-eth-bitstamp-native-research.yml).
 
@@ -35,14 +39,14 @@ La sortie attendue est le CSV des **1 310 journées quotidiennes UTC contrôlée
 - [x] Compilation Python et auto-tests élémentaires réussis en local.
 - [x] **Trois tests hors ligne** réussis, y compris pagination fictive de 1 310 jours et rejet des trous.
 - [x] Workflow créé et mis à jour pour exiger ces tests avant collecte.
-- [ ] **Aucun CSV natif Bitstamp 1 310 jours publié et vérifié au dernier contrôle.**
-- [ ] Aucune exécution réelle de bout en bout de l'API Bitstamp certifiée dans cette session ; pas de chiffre EMA Bitstamp ETH à annoncer.
-- [ ] Aucun rapport de corrélation / rendement de cette nouvelle série natif ETH validé.
+- [x] **CSV Bitstamp natif de 1 310 jours publié et contrôlé**, du 2023-04-01 au 2026-10-31 ; SHA-256 `881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49`.
+- [x] **Exécution native API et replay de bout en bout réussis dans GitHub Actions #3** ; Bitstamp EMA +89,55 % (PAPER), comparaison Binance +91,27 %, même calendrier.
+- [x] **Preuves JSON, CSV et rapport publiés**, corrélation des rendements 0,999923, une seule différence de position le 2025-06-19.
 
-L'API publique ne pouvait pas être interrogée directement depuis cet environnement ; **un workflow présent dans le dépôt n'est pas une preuve de son exécution réussie**. Pour débloquer une suite future : lire d'abord le dossier `native_bitstamp_eth_2024_2026_evidence/`, s'il existe, comparer la preuve à l'archive de référence et au protocole ; si absent, contrôler l'état Actions du workflow, puis expliquer toute erreur éventuelle. **Ne jamais produire de résultats de substitution en utilisant les anciens CSV Binance ou Yahoo comme une nouvelle source native Bitstamp.**
+L'API n'était pas accessible directement depuis l'environnement local initial, mais **GitHub Actions a téléchargé les cours officiels Bitstamp et exécuté le replay**. Voir [run #3 réussi](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43234052193), [preuve JSON](./native_bitstamp_eth_2024_2026_evidence/eth_ema_bitstamp_native_proofs.json) et [audit comparatif complet](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_VS_BINANCE_EMA10_30_COMPARATIVE_AUDIT_2026_11_12.md). Le run #2 avait échoué **uniquement à la publication** à cause de CSV CRLF ; les calculs et contrôles étaient déjà passés. **Aucune nouvelle affirmation de rentabilité prospective :** ce sont les mêmes dates historiques.
 
 ## Méthode et sécurité
 
 Les EMA demeurent `EMA10 > EMA30` ET `close > EMA30`, initialisées depuis 2023-04-01 ; entrée/sortie au prochain open après clôture UTC, capital fictif 1 000 USD pour Bitstamp, frais 0,10 % + glissement 0,05 % par côté, coûts ×2. Période d'essai **2024-01-01→2026-10-31**, dates communes Binance et Bitstamp seulement après contrôle des 1 035 journées.
 
-**Aucune transaction, aucun Bridge, aucun changement Administrator/Trader/Operator.** Cette tentative élève la qualité de la provenance **si** les données et les replays natifs sont effectivement obtenus ; elle ne les a pas déjà confirmés.
+**Aucune transaction, aucun Bridge, aucun changement Administrator/Trader/Operator.** Les données Bitstamp natives et le replay 2024–2026 ont été **obtenus, contrôlés et publiés**. Les performances restent rétrospectives et fictives.
