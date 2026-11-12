@@ -65,8 +65,8 @@ class NativeReplayTests(unittest.TestCase):
             doc = mod.export(rows, [], bench, out)
             raw_prices = (out/'bitstamp_ethusd_daily_2023_2026.csv').read_bytes()
             raw_disagree = (out/'eth_ema_binance_bitstamp_disagreements.csv').read_bytes()
-            self.assertNotIn(b'\\r', raw_prices)
-            self.assertNotIn(b'\\r', raw_disagree)
+            self.assertNotIn(bytes((13,)), raw_prices)
+            self.assertNotIn(bytes((13,)), raw_disagree)
             self.assertEqual(hashlib.sha256(raw_prices).hexdigest(), doc['source_sha256'])
             self.assertEqual(len(raw_prices.splitlines()), 1311)
 
