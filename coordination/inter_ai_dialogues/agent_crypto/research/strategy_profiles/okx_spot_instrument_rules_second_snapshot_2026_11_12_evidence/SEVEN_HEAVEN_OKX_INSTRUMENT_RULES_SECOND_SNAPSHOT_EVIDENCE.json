@@ -1,0 +1,524 @@
+{
+  "schema": "seven-heaven.okx-spot-instrument-rules-second-book-snapshot.v1",
+  "research_date": "2026-11-12",
+  "status": "complete",
+  "read_only": true,
+  "order_execution": false,
+  "protocol": "SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_AND_SECOND_SNAPSHOT_PROTOCOL_2026_11_12.md",
+  "original_observation_git_sha1": "2d7ff439b9699f14b07c5eed5588664aa6503b77",
+  "book_math_engine_git_sha1": "a690583ffe9d1a1780e1ee1f52d9a1cb6ad7c0ae",
+  "comparisons": [
+    {
+      "pair": "BTC-USDC",
+      "first_timestamp_utc": "2026-11-12T15:27:25.507Z",
+      "second_timestamp_utc": "2026-11-12T15:38:34.007Z",
+      "first_spread_bps": 0.014006,
+      "second_spread_bps": 0.014022,
+      "change_in_spread_bps": 1.6e-05,
+      "meaning": "two observations only, not a volatility model"
+    },
+    {
+      "pair": "ETH-USDC",
+      "first_timestamp_utc": "2026-11-12T15:27:25.657Z",
+      "second_timestamp_utc": "2026-11-12T15:38:34.307Z",
+      "first_spread_bps": 0.049925,
+      "second_spread_bps": 0.751354,
+      "change_in_spread_bps": 0.701429,
+      "meaning": "two observations only, not a volatility model"
+    }
+  ],
+  "pair_results": [
+    {
+      "pair": "BTC-USDC",
+      "status": "complete",
+      "instrument_retrieval": {
+        "url": "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=BTC-USDC",
+        "file": "okx_btc_usdc_instrument_raw.json",
+        "received_at_utc": "2026-11-12T15:38:33.892Z",
+        "sha256": "27910dec44fc92fd9b48e13dc0bbcb42d2a704a81e61ba3e98cddf81fc56618f"
+      },
+      "instrument": {
+        "instId": "BTC-USDC",
+        "instType": "SPOT",
+        "baseCcy": "BTC",
+        "quoteCcy": "USDC",
+        "state": "live",
+        "minSz": "0.00001",
+        "lotSz": "1E-8",
+        "tickSz": "0.1",
+        "maxLmtSz": "9999999999",
+        "maxMktSz": "1000000",
+        "maxLmtAmt": "20000000",
+        "maxMktAmt": "1000000",
+        "listTime": "1755763200000",
+        "contTdSwTime": ""
+      },
+      "book_retrieval": {
+        "url": "https://www.okx.com/api/v5/market/books?instId=BTC-USDC&sz=400",
+        "file": "okx_btc_usdc_book_raw.json",
+        "received_at_utc": "2026-11-12T15:38:34.072Z",
+        "sha256": "4e2e152e3e7df791ff7cdd1c27ea8a52a98f13756b34f3eee036784c048b7685"
+      },
+      "book_analysis": {
+        "pair": "BTC-USDC",
+        "quote_currency": "USDC",
+        "base_currency": "BTC",
+        "received_at_utc": "2026-11-12T15:38:34.072Z",
+        "exchange_ts_utc": "2026-11-12T15:38:34.007Z",
+        "exchange_ts_unix_ms": 1794497914007,
+        "source_age_milliseconds": 65.1,
+        "ask_levels_available": 400,
+        "bid_levels_available": 400,
+        "best_ask": "71316.9",
+        "best_bid": "71316.8",
+        "mid": "71316.85",
+        "spread_bps": 0.014022,
+        "half_spread_bps": 0.007011,
+        "amounts": [
+          {
+            "notional_usdc": "10",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.00014021921872655709936915373494921960994",
+              "vwap": "71316.899999999999999999999999999999999",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.007011,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.007011,
+                "illustrative_taker_0_35_pct": 35.007011
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.00014021931703377252360416928117268219222",
+              "vwap": "71316.800000000000000000000000000000000",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.007011,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.007011,
+                "illustrative_taker_0_35_pct": 35.007011
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "100",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.0014021921872655709936915373494921960994",
+              "vwap": "71316.899999999999999999999999999999999",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.007011,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.007011,
+                "illustrative_taker_0_35_pct": 35.007011
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.0014021931703377252360416928117268219222",
+              "vwap": "71316.800000000000000000000000000000000",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.007011,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.007011,
+                "illustrative_taker_0_35_pct": 35.007011
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "1000",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.014021921872655709936915373494921960994",
+              "vwap": "71316.899999999999999999999999999999999",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.007011,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.007011,
+                "illustrative_taker_0_35_pct": 35.007011
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.014021931703377252360416928117268219222",
+              "vwap": "71316.800000000000000000000000000000000",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.007011,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.007011,
+                "illustrative_taker_0_35_pct": 35.007011
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "10000",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.14020562776962320254703133740174204158",
+              "vwap": "71323.813166981796619056866419510034872",
+              "book_levels_consumed": 7,
+              "mid_to_vwap_bps": 0.976371,
+              "beyond_half_spread_bps": 0.96936,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.976371,
+                "illustrative_taker_0_35_pct": 35.976371
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.14021931703377252360416928117268219222",
+              "vwap": "71314.378953593077450000000000000000000",
+              "book_levels_consumed": 3,
+              "mid_to_vwap_bps": 0.346488,
+              "beyond_half_spread_bps": 0.339477,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.346488,
+                "illustrative_taker_0_35_pct": 35.346488
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "100000",
+            "buy": {
+              "status": "complete",
+              "base_qty": "1.4015185786687532486091399574370908154",
+              "vwap": "71351.176874862424173195948485230467911",
+              "book_levels_consumed": 32,
+              "mid_to_vwap_bps": 4.813291,
+              "beyond_half_spread_bps": 4.80628,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 14.813291,
+                "illustrative_taker_0_35_pct": 39.813291
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "1.4021931703377252360416928117268219222",
+              "vwap": "71307.612049308130854000000000000000000",
+              "book_levels_consumed": 13,
+              "mid_to_vwap_bps": 1.295339,
+              "beyond_half_spread_bps": 1.288328,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 11.295339,
+                "illustrative_taker_0_35_pct": 36.295339
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          }
+        ],
+        "caveat": "Frozen public visible orderbook, not executed orders or future liquidity."
+      },
+      "limit_size_examples": [
+        {
+          "budget_usdc": "10",
+          "best_ask_usdc": "71316.9",
+          "theoretical_base_quantity_at_best_ask": "0.00014021",
+          "theoretical_quote_used_usdc": "9.999342549",
+          "unspent_budget_usdc": "0.000657451",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        },
+        {
+          "budget_usdc": "20",
+          "best_ask_usdc": "71316.9",
+          "theoretical_base_quantity_at_best_ask": "0.00028043",
+          "theoretical_quote_used_usdc": "19.999398267",
+          "unspent_budget_usdc": "0.000601733",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        },
+        {
+          "budget_usdc": "100",
+          "best_ask_usdc": "71316.9",
+          "theoretical_base_quantity_at_best_ask": "0.00140219",
+          "theoretical_quote_used_usdc": "99.999844011",
+          "unspent_budget_usdc": "0.000155989",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        },
+        {
+          "budget_usdc": "1000",
+          "best_ask_usdc": "71316.9",
+          "theoretical_base_quantity_at_best_ask": "0.01402192",
+          "theoretical_quote_used_usdc": "999.999866448",
+          "unspent_budget_usdc": "0.000133552",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        }
+      ]
+    },
+    {
+      "pair": "ETH-USDC",
+      "status": "complete",
+      "instrument_retrieval": {
+        "url": "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=ETH-USDC",
+        "file": "okx_eth_usdc_instrument_raw.json",
+        "received_at_utc": "2026-11-12T15:38:34.214Z",
+        "sha256": "593d43c3dc6bbb6c1e8689fe36d1834d09eeff338b567fa550d8f3550f41235b"
+      },
+      "instrument": {
+        "instId": "ETH-USDC",
+        "instType": "SPOT",
+        "baseCcy": "ETH",
+        "quoteCcy": "USDC",
+        "state": "live",
+        "minSz": "0.001",
+        "lotSz": "0.000001",
+        "tickSz": "0.01",
+        "maxLmtSz": "999999999999",
+        "maxMktSz": "1000000",
+        "maxLmtAmt": "20000000",
+        "maxMktAmt": "180000",
+        "listTime": "1755763200000",
+        "contTdSwTime": ""
+      },
+      "book_retrieval": {
+        "url": "https://www.okx.com/api/v5/market/books?instId=ETH-USDC&sz=400",
+        "file": "okx_eth_usdc_book_raw.json",
+        "received_at_utc": "2026-11-12T15:38:34.367Z",
+        "sha256": "796edba37cc2b3e408f51ca5e48961ae9d41a31479b91b22d60cd7d5cfc90eb2"
+      },
+      "book_analysis": {
+        "pair": "ETH-USDC",
+        "quote_currency": "USDC",
+        "base_currency": "ETH",
+        "received_at_utc": "2026-11-12T15:38:34.367Z",
+        "exchange_ts_utc": "2026-11-12T15:38:34.307Z",
+        "exchange_ts_unix_ms": 1794497914307,
+        "source_age_milliseconds": 60.7,
+        "ask_levels_available": 400,
+        "bid_levels_available": 400,
+        "best_ask": "1996.47",
+        "best_bid": "1996.32",
+        "mid": "1996.395",
+        "spread_bps": 0.751354,
+        "half_spread_bps": 0.375677,
+        "amounts": [
+          {
+            "notional_usdc": "10",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.0050088406036654695537623906194433174553",
+              "vwap": "1996.4700000000000000000000000000000000",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.375677,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.375677,
+                "illustrative_taker_0_35_pct": 35.375677
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.0050090287743657943443056108635816058445",
+              "vwap": "1996.3200000000000000000000000000000000",
+              "book_levels_consumed": 1,
+              "mid_to_vwap_bps": 0.375677,
+              "beyond_half_spread_bps": -0.0,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.375677,
+                "illustrative_taker_0_35_pct": 35.375677
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "100",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.050088284108610611623399065359706284529",
+              "vwap": "1996.4748599325471875216581482575985033",
+              "book_levels_consumed": 2,
+              "mid_to_vwap_bps": 0.400021,
+              "beyond_half_spread_bps": 0.024344,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.400021,
+                "illustrative_taker_0_35_pct": 35.400021
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.050090287743657943443056108635816058445",
+              "vwap": "1996.3006183080000000000000000000000000",
+              "book_levels_consumed": 2,
+              "mid_to_vwap_bps": 0.472761,
+              "beyond_half_spread_bps": 0.097083,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.472761,
+                "illustrative_taker_0_35_pct": 35.472761
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "1000",
+            "buy": {
+              "status": "complete",
+              "base_qty": "0.50086394885279401379351794810151307980",
+              "vwap": "1996.5501655498550088908104137513165827",
+              "book_levels_consumed": 3,
+              "mid_to_vwap_bps": 0.777229,
+              "beyond_half_spread_bps": 0.401552,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.777229,
+                "illustrative_taker_0_35_pct": 35.777229
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "0.50090287743657943443056108635816058445",
+              "vwap": "1996.2100618308000000000000000000000000",
+              "book_levels_consumed": 2,
+              "mid_to_vwap_bps": 0.926361,
+              "beyond_half_spread_bps": 0.550683,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 10.926361,
+                "illustrative_taker_0_35_pct": 35.926361
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "10000",
+            "buy": {
+              "status": "complete",
+              "base_qty": "5.0082183984995918449110822870707485514",
+              "vwap": "1996.7180350992464752088345921184177124",
+              "book_levels_consumed": 7,
+              "mid_to_vwap_bps": 1.618092,
+              "beyond_half_spread_bps": 1.242415,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 11.618092,
+                "illustrative_taker_0_35_pct": 36.618092
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "5.0090287743657943443056108635816058445",
+              "vwap": "1996.1168560115901500000000000000000000",
+              "book_levels_consumed": 7,
+              "mid_to_vwap_bps": 1.393231,
+              "beyond_half_spread_bps": 1.017554,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 11.393231,
+                "illustrative_taker_0_35_pct": 36.393231
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          },
+          {
+            "notional_usdc": "100000",
+            "buy": {
+              "status": "complete",
+              "base_qty": "50.042759178072744355265919699347319813",
+              "vwap": "1998.2910943051485393999699899863923785",
+              "book_levels_consumed": 54,
+              "mid_to_vwap_bps": 9.497591,
+              "beyond_half_spread_bps": 9.121914,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 19.497591,
+                "illustrative_taker_0_35_pct": 44.497591
+              },
+              "comparison_to_old_model_15bp_per_side": "higher"
+            },
+            "sell": {
+              "status": "complete",
+              "base_qty": "50.090287743657943443056108635816058445",
+              "vwap": "1995.5500334020520440000000000000000000",
+              "book_levels_consumed": 25,
+              "mid_to_vwap_bps": 4.232462,
+              "beyond_half_spread_bps": 3.856785,
+              "illustrative_all_in_one_side_bps": {
+                "illustrative_taker_0_10_pct": 14.232462,
+                "illustrative_taker_0_35_pct": 39.232462
+              },
+              "comparison_to_old_model_15bp_per_side": "lower_or_equal"
+            }
+          }
+        ],
+        "caveat": "Frozen public visible orderbook, not executed orders or future liquidity."
+      },
+      "limit_size_examples": [
+        {
+          "budget_usdc": "10",
+          "best_ask_usdc": "1996.47",
+          "theoretical_base_quantity_at_best_ask": "0.005008",
+          "theoretical_quote_used_usdc": "9.99832176",
+          "unspent_budget_usdc": "0.00167824",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        },
+        {
+          "budget_usdc": "20",
+          "best_ask_usdc": "1996.47",
+          "theoretical_base_quantity_at_best_ask": "0.010017",
+          "theoretical_quote_used_usdc": "19.99863999",
+          "unspent_budget_usdc": "0.00136001",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        },
+        {
+          "budget_usdc": "100",
+          "best_ask_usdc": "1996.47",
+          "theoretical_base_quantity_at_best_ask": "0.050088",
+          "theoretical_quote_used_usdc": "99.99918936",
+          "unspent_budget_usdc": "0.00081064",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        },
+        {
+          "budget_usdc": "1000",
+          "best_ask_usdc": "1996.47",
+          "theoretical_base_quantity_at_best_ask": "0.500884",
+          "theoretical_quote_used_usdc": "999.99987948",
+          "unspent_budget_usdc": "0.00012052",
+          "base_quantity_at_least_minSz": true,
+          "best_ask_is_tick_grid_aligned": true,
+          "not_an_executable_order": true,
+          "caveat": "Limit-size illustration only, excludes fees, notional thresholds, balance/region rules and liquidity changes"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "A limit-size illustration is not validated order execution.",
+    "Only public instruments metadata: account/region restrictions and precise fee schedule remain unverified.",
+    "Market-order sz can be in quote or base currency depending on tgtCcy.",
+    "Prices at a book snapshot are not guaranteed fill prices.",
+    "Two snapshots at different times do not establish an hourly pattern, historical slippage, or future returns.",
+    "The existing EMA backtest is not recalculated using these two instantaneous observations."
+  ]
+}
