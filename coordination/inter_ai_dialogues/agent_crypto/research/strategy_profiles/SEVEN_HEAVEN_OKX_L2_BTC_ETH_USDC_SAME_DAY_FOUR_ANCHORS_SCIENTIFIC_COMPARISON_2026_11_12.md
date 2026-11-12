@@ -101,3 +101,16 @@ Sur ces quatre horaires et ce montant, les deux côtés du carnet ETH étaient d
 **L'étape de reconstruction d'une journée entière pour BTC et ETH est accomplie.** Pour tester les variations de coût sous différentes conditions de marché, la suite pertinente est un **échantillonnage multi-jours préenregistré**, incluant des journées contrastées selon des critères définis AVANT lecture des résultats L2, en maintenant les mêmes horaires et les mêmes notions d'achat/vente. Pour une distribution intrajournalière, il faudra en plus davantage de points **au sein de chaque jour**, choisis selon une grille fixe.
 
 Ne pas réoptimiser EMA10/30, ne pas lancer de suivi automatique et ne pas exécuter d'ordres. Les archives volumineuses restent sur le CDN officiel OKX ; seuls preuves compactes, programmes et rapports sont conservés dans GitHub.
+
+
+## 7. Reproduction indépendante des comparaisons — validation confirmée
+
+Après publication du premier rapport, un **second programme Python standard-library, hors réseau,** a relu les deux preuves de journées complètes en vérifiant leurs Git blob SHA-1, les SHA-256 annoncés des archives, les contrôles gzip/CRC déjà effectués et les 20 premiers événements. Il a **recalculé et rapproché chaque chiffre** des données publiées : **4 couples de spreads** et **40 couples de coûts de profondeur**, avec les mêmes horaires et les mêmes notionnels.
+
+- [**Programme Python de reproduction indépendante**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_INDEPENDENT_COMPARISON_VERIFICATION_2026_11_12.py).
+- [**Preuve JSON réexécutée et contrôlée**](./okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_BTC_ETH_CROSS_ASSET_INDEPENDENT_PROOFS.json), Git blob `66f2f6956a1012826bd85523be45a8e85ee5a417`.
+- [**CSV indépendant des 40 côtés comparés, publié après contrôles SHA**](./okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_BTC_ETH_FOUR_HOUR_PAIRED_COSTS.csv), Git blob `0c6b773445a70a5d131b4b24bbcb19b3dc465721`.
+- [**GitHub Actions : SUCCESS, recalcul Python et publication**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43262407421).
+
+Statut : **VERIFIED_FIXED_UTC_ANCHOR_BTC_ETH_40_CROSS_ASSET_VALUES**. Cette reproduction confirme le calcul sur les preuves GitHub ; elle **ne résout pas** la limite des compteurs de séquence manquants dans les archives OKX, ni l'absence de vraie exécution d'ordre.
+
