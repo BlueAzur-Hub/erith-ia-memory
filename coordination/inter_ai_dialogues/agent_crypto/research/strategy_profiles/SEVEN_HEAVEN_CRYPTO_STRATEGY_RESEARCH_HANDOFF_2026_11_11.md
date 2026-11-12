@@ -439,3 +439,24 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Décision scientifique :** archives authentiquement **référencées et partiellement lisibles**, mais **aucun coût historique calculé**. Avant l'étude des distributions, contrôler au moins un événement JSON complet et la logique des mises à jour ; ensuite réaliser une lecture en flux avec horodatages fixés à l'avance et sortie compactée. Les 1,23 Go décompressés ne doivent pas être dupliqués dans le dépôt. Les paires USDC portent un `listTime` au 21 août 2025, donc aucune validation de 2023–2024 ne doit leur être attribuée. Aucun compte ni ordre, aucune tâche récurrente.
 
+
+## OKX BTC-USDC L2 — JOURNÉE COMPLÈTE 15 OCTOBRE 2026, 2 346 486 événements (rejeu vérifié le 12 novembre)
+
+**CHANTIER TECHNIQUE BTC L2 COMPLET : données archivées reconstituées en flux, preuves publiées, aucune transaction.** Après le contrôle initial de 20 JSON, l'archive officielle `BTC-USDC-L2orderbook-400lv-2026-10-15.tar.gz` a été lue jusqu'au bout sur [GitHub Actions SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43258907031), en limitant le travail au seul jour du **15 octobre 2026**. **2 346 486 événements**, dont **96 snapshots** et **2 346 390 deltas** ; **4 946 749 suppressions de niveaux**, première heure UTC `00:00:00.005` et dernière `23:59:59.935`. Aucun fichier décompressé géant enregistré dans GitHub.
+
+- [**Rapport scientifique détaillé, 4 horaires fixes, coûts de carnet et limites**](./SEVEN_HEAVEN_OKX_L2_BTC_USDC_FULL_DAY_2026_10_15_STREAMING_RECONSTRUCTION_SCIENTIFIC_AUDIT.md).
+- [**Protocole figé avant lecture intégrale du BTC**](./SEVEN_HEAVEN_OKX_L2_BTC_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_FROZEN_PROTOCOL_2026_11_12.md), commit `14b8009d344a2866571e056369eec33e9d8ba27e`.
+- [**Programme streaming Python**](./SEVEN_HEAVEN_OKX_L2_BTC_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_2026_11_12.py).
+- [**Preuves JSON : archive complète, membres, SHA et 4 heures**](./okx_l2_btc_usdc_full_day_four_anchors_2026_11_12_evidence/SEVEN_HEAVEN_OKX_BTC_L2_FULL_DAY_FOUR_ANCHORS_PROOFS.json), Git blob `a80617f03e2c00856c2e8ccb2ec2c7eb26fcbf40`.
+- [**CSV des 40 côtés de carnet analysés : 4 heures × 5 montants × achat/vente**](./okx_l2_btc_usdc_full_day_four_anchors_2026_11_12_evidence/SEVEN_HEAVEN_OKX_BTC_L2_FULL_DAY_FOUR_ANCHORS_COSTS.csv).
+- [**Audit préalable des 20 événements JSON**](./SEVEN_HEAVEN_OKX_L2_BTC_FIRST_TWENTY_EVENTS_LOCAL_RECONSTRUCTION_AUDIT_2026_11_12.md) et [**preuves 20/20**](./okx_l2_btc_usdc_complete_event_prefix_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_BTC_COMPLETE_EVENT_PREFIX_PROOFS.json), [run GitHub Actions SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43257608393).
+
+**Intégrité BYTE :** archive complète **56 920 312 octets compressés**, SHA-256 `3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44`; membre `.data` **457 277 836 octets**, SHA-256 `a8a3231d34d03a0d261ac9952f1ba2a953a4d31986e04c8bbbbdc61c06264963`. **gzip footer/CRC validé**, 20 premières lignes identiques SHA au contrôle précédent.
+
+**Relevés de spread BTC/USDC (bp, premier état à/après l'horaire fixe) :**
+00 h **0,01225670**, 06 h **0,01242110**, 12 h **0,01236121**, 18 h **0,01214241**. Friction de prix moyenne vs mid en achat/vendre pour **100 000 USDC** : 00 h **1,6653/0,0061 bp**, 06 h **0,8139/1,8281 bp**, 12 h **1,5889/0,3884 bp**, 18 h **0,5675/1,0389 bp**, **hors frais** et sans exécution réelle.
+
+**Limite de validité INCONTOURNABLE :** malgré l'intégrité SHA et gzip de l'archive, **0 chaîne seqId/prevSeqId certifiable pour 2 346 390 mises à jour**. On ne prouve donc PAS qu'aucune mise à jour a été perdue AVANT l'archivage. Quatre heures choisies à l'avance ne suffisent pas pour une distribution de spread 24 h, encore moins sur 2024–2026. Aucun lien avec les ordres EMA historiques et aucune modification du Trader, Bridge, Operator ou Administrator.
+
+**Étape suivante** : préenregistrer et appliquer la **même reconstruction en flux à ETH-USDC du 15 octobre 2026**, archive officielle annoncée 93,60 Mo compressés et 776 655 177 octets décompressés, après vérification ETH des premiers JSON complets. Garder le même jeu d'ancres 00/06/12/18, mêmes notionnels et mêmes contrôles SHA/CRC ; aucun fichier géant dans le Coffre. Ensuite seulement étudier plusieurs journées et non extrapoler à partir de quatre horaires.
+
