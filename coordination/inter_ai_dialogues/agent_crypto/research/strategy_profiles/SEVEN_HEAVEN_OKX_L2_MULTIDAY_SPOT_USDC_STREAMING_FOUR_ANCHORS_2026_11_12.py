@@ -24,6 +24,7 @@ from urllib.parse import urlencode
 ROOT=Path("coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles")
 OUT=ROOT/"okx_l2_calendar_multiday_2026_11_12_evidence"
 PAIR_ALLOWED=("BTC-USDC","ETH-USDC")
+ACTIVE_PAIR="BTC-USDC"
 DATES_ALLOWED=("2026-08-15","2026-09-15")
 URL=""
 MEMBER=""
@@ -244,7 +245,7 @@ class FullDayReplay:
         if not line:
             raise ValueError("Unexpected blank record")
         obj=json.loads(line)
-        if not isinstance(obj,dict) or obj.get("instId")!="BTC-USDC":
+        if not isinstance(obj,dict) or obj.get("instId")!=ACTIVE_PAIR:
             raise ValueError("Wrong instrument or JSON format")
         act=obj.get("action")
         if act not in ("snapshot","update"):
@@ -449,7 +450,7 @@ def selftest():
     print("PASS: streamed hash/gzip, deterministic anchors and L2 deletion handling")
 
 def main():
-    global URL, MEMBER, START, END, ANCHOR_MS
+    global URL, MEMBER, START, END, ANCHOR_MS, ACTIVE_PAIR
     ap=argparse.ArgumentParser()
     ap.add_argument("--repo-root",type=Path,default=Path("."))
     ap.add_argument("--output",type=Path)
@@ -462,6 +463,7 @@ def main():
         return
     if not args.day or not args.pair:
         ap.error("--day and --pair required for archive reads")
+    ACTIVE_PAIR=args.pair
     START=int(datetime.strptime(args.day,"%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp()*1000)
     END=START+86400000
     ANCHOR_MS=tuple(START+h*3600000 for h in ANCHOR_HOURS)
