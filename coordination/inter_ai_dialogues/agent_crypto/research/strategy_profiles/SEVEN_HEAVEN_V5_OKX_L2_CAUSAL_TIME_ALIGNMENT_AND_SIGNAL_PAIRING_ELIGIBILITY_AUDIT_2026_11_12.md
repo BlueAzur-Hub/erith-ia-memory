@@ -93,3 +93,12 @@ Si la source OHLC ou la chronologie requise n'est pas disponible, arrêter au st
 - **Règle de mémoire :** consigner ce résultat dans `OKX MEMORY CORE → 05 PAPER / Backtest V5` et dans la passation inter-IA GitHub déjà existante ; ne pas ouvrir une énième fiche Notion.
 
 **Actions effectivement faites :** lecture du code V5 et des CSV publiés, comptage des décalages, preuve JSON et rapport. **Actions non faites :** rejeu complet des neuf millions d'événements pendant cette session, récupération OHLC natif pour ces dates, test Firefox, modification de l'Administrator/Trader/Bridge, ordre réel.
+
+
+## Mise à jour documentaire du 13 novembre 2026 — ne pas refaire cette étape
+
+Ce rapport décrivait **l'état de couverture des fichiers de snapshots à ou après T**, pas le résultat d'un rejeu ciblé pré-ouverture. **Depuis sa publication, la reconstruction ciblée des états strictement antérieurs à T et la validation des timestamps du V5 JavaScript ont été réalisées et vérifiées sur BTC-USDC les 15 août, 15 septembre et 15 octobre 2026.**
+
+**Source de reprise actuelle :** [comparaison scientifique des trois journées BTC](./SEVEN_HEAVEN_BTC_USDC_EMA5_13_AUGUST_SEPTEMBER_OCTOBER_PREOPEN_L2_SCIENTIFIC_COMPARISON_2026_11_13.md) ; [preuves consolidées](./SEVEN_HEAVEN_BTC_USDC_EMA5_13_THREE_DAYS_PREOPEN_L2_EXECUTION_COMPARATIVE_PROOFS_2026_11_13.json).
+
+Les anciens constats de 571/576 snapshots `T+ms` demeurent **corrects pour le CSV de snapshots**, mais ils ne constituent plus une impossibilité de construire des carnets `T−ms` en rejouant les archives L2. **25/25 opérations fictives BTC** ont désormais été appariées à un état L2 horodaté avant T. Les incertitudes de disponibilité réseau, de latence, de frais historiques, de continuité amont L2 et de remplissage réel restent ouvertes. Le **prochain** périmètre de recherche est ETH-USDC, **pas** le rejeu des mêmes dates BTC.
