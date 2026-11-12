@@ -195,13 +195,13 @@ def export(rows,log,ref,output):
             'Fixed costs and theoretical next-day open fills; no real orders',
             'Public API OHLC data is not cryptographically signed by Bitstamp']}
     csvbuf=io.StringIO()
-    writer=csv.DictWriter(csvbuf,fieldnames=['date','open','high','low','close','volume'])
+    writer=csv.DictWriter(csvbuf,fieldnames=['date','open','high','low','close','volume'],lineterminator='\n')
     writer.writeheader();writer.writerows([{k:r[k] for k in writer.fieldnames} for r in rows])
     source_bytes=csvbuf.getvalue().encode('utf-8')
     summary['source_sha256']=sha256(source_bytes)
     (output/'bitstamp_ethusd_daily_2023_2026.csv').write_bytes(source_bytes)
     with (output/'eth_ema_binance_bitstamp_disagreements.csv').open('w',newline='',encoding='utf-8') as f:
-        w=csv.DictWriter(f,fieldnames=['date','bitstamp_exposed','binance_exposed'])
+        w=csv.DictWriter(f,fieldnames=['date','bitstamp_exposed','binance_exposed'],lineterminator='\n')
         w.writeheader();w.writerows(disagreements)
     (output/'eth_ema_bitstamp_native_proofs.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     report=['# Seven Heaven — Native Bitstamp ETH/USD replay','',
