@@ -1,0 +1,195 @@
+{
+  "schema": "seven-heaven.okx-v5-causal-time-alignment-pairing-eligibility.v1",
+  "study_date": "2026-11-12",
+  "status": "TIME_GRID_VERIFIED_STRICT_PRE_EXECUTION_PAIRING_NOT_PROVEN",
+  "basis": "Post-hoc eligibility audit of preexisting archived CSVs; not a future-data optimized trading backtest.",
+  "no_orders": true,
+  "program_code_changed": false,
+  "dates_utc": [
+    "2026-08-15",
+    "2026-09-15",
+    "2026-10-15"
+  ],
+  "instruments": [
+    "BTC-USDC",
+    "ETH-USDC"
+  ],
+  "sources": {
+    "quarter_hour_spread_csv": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_PAIRED_SPREADS_288_ROWS_2026_11_12.csv",
+      "blob_sha1": "1cd617b6229e23e6d1ef7b1b62d4ee6a691ab659",
+      "rows": 288
+    },
+    "minute_spread_csv": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_PAIRED_MINUTE_SPREADS_4320_ROWS_2026_11_12.csv",
+      "blob_sha1": "0c06f32548ff6fa240a8b7040d8f9c0dc23da05c",
+      "rows": 4320
+    },
+    "V5_code": {
+      "path": "public/agent_crypto_erith_ia/administrator/js/market-microscope-paper-backtest-v5.js",
+      "blob_sha1": "069162a40c4a65651ff1cd9ac98a837d64f41e9a"
+    },
+    "canonical_notion": "https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099"
+  },
+  "metric_definitions": {
+    "minute_spread_only": "first archived valid book at or after UTC minute; spread only; lacks 400-level execution depth",
+    "quarter_hour_depth": "first archived valid book at or after UTC quarter-hour; full-depth prices and notional simulations available in separate historical cost CSV",
+    "strictly_before_bar_open": "timestamp_ms < bar_open_timestamp_ms (strict causal screen, sufficient only for timestamp ordering, not for transport availability)",
+    "equal_ms_ordering_unknown": "same Unix millisecond does not prove whether snapshot precedes order",
+    "strictly_after_bar_open": "timestamp_ms > bar_open_timestamp_ms (cannot represent book strictly known before exact bar open)"
+  },
+  "grid": {
+    "5m": {
+      "potential_openings_per_asset_for_three_days": 864,
+      "matched_grid_quarter_hour_depth": {
+        "observation_type": "quarter_hour_full_orderbook_cost_snapshot",
+        "records_per_asset": 288,
+        "records_all_assets": 576,
+        "strictly_after_bar_open": 571,
+        "equal_ms_ordering_unknown": 5,
+        "strictly_before_bar_open": 0,
+        "min_delay_ms": 0,
+        "max_delay_ms": 9
+      },
+      "matched_grid_minute_spread_only": {
+        "observation_type": "minute_spread_no_orderbook_depth",
+        "records_per_asset": 864,
+        "records_all_assets": 1728,
+        "strictly_after_bar_open": 1721,
+        "equal_ms_ordering_unknown": 7,
+        "strictly_before_bar_open": 0,
+        "min_delay_ms": 0,
+        "max_delay_ms": 16182
+      },
+      "true_v5_ema_signal_matches": "not_proven_signal_list_absent",
+      "qualified_pre_execution_orderbooks": 0
+    },
+    "15m": {
+      "potential_openings_per_asset_for_three_days": 288,
+      "matched_grid_quarter_hour_depth": {
+        "observation_type": "quarter_hour_full_orderbook_cost_snapshot",
+        "records_per_asset": 288,
+        "records_all_assets": 576,
+        "strictly_after_bar_open": 571,
+        "equal_ms_ordering_unknown": 5,
+        "strictly_before_bar_open": 0,
+        "min_delay_ms": 0,
+        "max_delay_ms": 9
+      },
+      "matched_grid_minute_spread_only": {
+        "observation_type": "minute_spread_no_orderbook_depth",
+        "records_per_asset": 288,
+        "records_all_assets": 576,
+        "strictly_after_bar_open": 571,
+        "equal_ms_ordering_unknown": 5,
+        "strictly_before_bar_open": 0,
+        "min_delay_ms": 0,
+        "max_delay_ms": 9
+      },
+      "true_v5_ema_signal_matches": "not_proven_signal_list_absent",
+      "qualified_pre_execution_orderbooks": 0
+    },
+    "240m": {
+      "potential_openings_per_asset_for_three_days": 18,
+      "matched_grid_quarter_hour_depth": {
+        "observation_type": "quarter_hour_full_orderbook_cost_snapshot",
+        "records_per_asset": 18,
+        "records_all_assets": 36,
+        "strictly_after_bar_open": 36,
+        "equal_ms_ordering_unknown": 0,
+        "strictly_before_bar_open": 0,
+        "min_delay_ms": 1,
+        "max_delay_ms": 9
+      },
+      "matched_grid_minute_spread_only": {
+        "observation_type": "minute_spread_no_orderbook_depth",
+        "records_per_asset": 18,
+        "records_all_assets": 36,
+        "strictly_after_bar_open": 36,
+        "equal_ms_ordering_unknown": 0,
+        "strictly_before_bar_open": 0,
+        "min_delay_ms": 1,
+        "max_delay_ms": 9
+      },
+      "true_v5_ema_signal_matches": "not_proven_signal_list_absent",
+      "qualified_pre_execution_orderbooks": 0
+    }
+  },
+  "quarter_hour_zero_delay_cases": [
+    {
+      "day": "2026-08-15",
+      "slot": "11:45",
+      "instrument": "ETH-USDC"
+    },
+    {
+      "day": "2026-09-15",
+      "slot": "01:15",
+      "instrument": "BTC-USDC"
+    },
+    {
+      "day": "2026-09-15",
+      "slot": "01:30",
+      "instrument": "BTC-USDC"
+    },
+    {
+      "day": "2026-09-15",
+      "slot": "04:15",
+      "instrument": "BTC-USDC"
+    },
+    {
+      "day": "2026-09-15",
+      "slot": "19:15",
+      "instrument": "ETH-USDC"
+    }
+  ],
+  "per_day_counts": [
+    {
+      "date": "2026-08-15",
+      "btc": {
+        "post": 96,
+        "zero": 0
+      },
+      "eth": {
+        "post": 95,
+        "zero": 1
+      }
+    },
+    {
+      "date": "2026-09-15",
+      "btc": {
+        "post": 93,
+        "zero": 3
+      },
+      "eth": {
+        "post": 95,
+        "zero": 1
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "btc": {
+        "post": 96,
+        "zero": 0
+      },
+      "eth": {
+        "post": 96,
+        "zero": 0
+      }
+    }
+  ],
+  "genuine_trade_pairing": {
+    "status": "not_computed",
+    "why": [
+      "Canonical Notion V5 notes summarize number of signals/trades but do not provide the exact per-trade entryAt/exitAt timestamps.",
+      "Historical quarter-hour snapshot CSVs intentionally sample at or after the grid anchor, never strictly before.",
+      "OHLC next-bar opens and V5 signals for the three L2 dates have not been independently joined and frozen.",
+      "Some 5-minute openings lack quarter-hour full-depth snapshots; minute CSV contains spreads only."
+    ],
+    "required_next_inputs": [
+      "V5 EMA-cross event index + signal timestamp + next bar open timestamp from same OKX/USDC OHLC source",
+      "last reconstructed L2 book timestamp strictly before modeled order submission; pre-boundary state if trade time is exactly bar open",
+      "same instrument, quote currency, side, notional, book levels; predeclared maximum acceptable book age",
+      "first transaction timestamp or defined order latency if comparing OHLC next.open with real execution timing"
+    ]
+  }
+}
