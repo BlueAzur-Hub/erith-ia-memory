@@ -410,3 +410,16 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Statut/discipline** : publication et contrôle terminés, **pas de permission de compte**, aucun ordre réel et aucun changement Administrator/Trader/Operator/Bridge. Étape de recherche envisageable : planifier sur papier des captures **horodatées à différents régimes**, sans surveillance activée avant demande explicite, et récupérer les frais exacts du compte uniquement si un accès légitime et pertinent est disponible.
 
+
+## Recherche des archives historiques L2 OKX : disponibilité ciblée BTC-USDC et ETH-USDC (12 novembre 2026)
+
+**Nouvelle direction scientifique, sans ordre ni surveillance continue.** Les deux premiers relevés du carnet OKX Spot du 12 novembre 2026 ne suffisent pas à caractériser les conditions de marché. Une ressource plus structurante a été identifiée : [OKX Historical market data](https://www.okx.com/historical-data) annonce des archives de carnets **L2** depuis mars 2023 ; la [documentation OKX API V5](https://www.okx.com/docs-v5/en/) inclut un endpoint public `GET /api/v5/public/market-data-history` avec **module 4 (400 niveaux)**. **Attention :** la couverture globale OKX depuis 2023 ne garantit pas les paires BTC-USDC / ETH-USDC avant leur date `listTime` du **21 août 2025, 08:00 UTC** mesurée dans les métadonnées OKX archivées.
+
+- [**Protocole préenregistré AVANT la requête historique**](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_BTC_ETH_USDC_ARCHIVE_DISCOVERY_PROTOCOL_2026_11_12.md), commit `2fe7063fb8aaa64900659844a6cdb17e98011dd9`.
+- [**Programme Python standard-library : deux requêtes publiques pour le 15 octobre 2026, pas de téléchargement L2**](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_ARCHIVE_METADATA_DISCOVERY_2026_11_12.py).
+- [**Workflow GitHub Actions ponctuel sans `schedule`**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-okx-historical-l2-archive-discovery.yml), run initial [#1](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43254623603).
+
+**État à la rédaction :** l'existence de l'endpoint et des catégories de données est documentée officiellement, mais **la disponibilité réelle de ZIP historiques BTC-USDC et ETH-USDC le 15 octobre 2026 n'est PAS encore confirmée**. L'action doit publier les preuves éventuelles dans `okx_historical_l2_archive_discovery_2026_11_12_evidence/` (réponses JSON SHA-256, dates de réception, état, liens publics sans query tokens). **Une URL de ZIP listée n'est pas un fichier téléchargé et validé.** N'annoncer aucune distribution temporelle de spread tant qu'un échantillon L2 réel n'a pas été extrait et contrôlé.
+
+**Règle de suite :** si une archive est accessible, figer à l'avance la méthode de sélection des timestamps, les règles de reconstruction du carnet et les rejets de profondeur insuffisante, puis seulement calculer les quantiles de coûts. Ne pas optimiser EMA10/30, ne pas confondre OKX/USDC avec l'historique Bitstamp/USD. Aucun changement Administrator / Operator / Trader / Bridge.
+
