@@ -19,7 +19,7 @@ L'étude précédente a constaté une concordance EMA **309/309 journées** entr
 1. [**Protocole gelé avant toute récupération réelle**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_DAILY_EMA10_30_2024_2026_FROZEN_PROTOCOL_2026_11_12.md), commit `75a7c15`.
 2. [**Collecteur et simulateur Python natif, en lecture seule**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py), Git blob SHA-1 `b627fba0e2d9cbabdb3be68e56124754bfb5c960`.
 3. [**Tests hors ligne de pagination, trou dans l'historique et OHLC invalide**](./test_seven_heaven_eth_bitstamp_native_replay.py) : **3 tests passés localement**, plus `--selftest` et simulation synthétique sur 1 310 journées complètes.
-4. [**Workflow de collecte isolée**](../../../../.github/workflows/seven-heaven-eth-bitstamp-native-research.yml) (le lien relatif du workflow doit être remplacé par son URL GitHub absolue dans la navigation ; cf. ci-dessous).
+4. [**Workflow GitHub Actions de collecte isolée**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-eth-bitstamp-native-research.yml).
 
 Workflow : https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-eth-bitstamp-native-research.yml
 
