@@ -274,7 +274,7 @@ def produce(results,old,out):
 def selftest():
     meta={"minSz":"0.0001","lotSz":"0.0001","tickSz":"0.01"}
     q=estimate_limit_size("10","2000",meta)
-    assert q["theoretical_base_quantity_at_best_ask"]=="0.0050"
+    assert Decimal(q["theoretical_base_quantity_at_best_ask"])==Decimal("0.0050")
     assert q["base_quantity_at_least_minSz"]
     assert q["best_ask_is_tick_grid_aligned"]
     q=estimate_limit_size("0.01","2000",meta)
