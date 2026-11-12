@@ -1,0 +1,518 @@
+{
+  "schema": "seven-heaven.btc-eth-ema-equal-dates-fixed-sleeves.v1",
+  "date_utc": "2026-11-12",
+  "protocol_commit": "63164145e0fcd8e99c05574af975d3ff972017cc",
+  "sources": [
+    {
+      "asset": "bitcoin",
+      "year": 2023,
+      "file": "bitcoin-2023-span13-9f39e2c7d2ed54f8ac6a4744f2353151121d2da231433d875087896f1a5d00fb.json.gz",
+      "sha256_verified": "9f39e2c7d2ed54f8ac6a4744f2353151121d2da231433d875087896f1a5d00fb",
+      "hours": 6600
+    },
+    {
+      "asset": "bitcoin",
+      "year": 2024,
+      "file": "bitcoin-2024-span13-5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5.json.gz",
+      "sha256_verified": "5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5",
+      "hours": 8784
+    },
+    {
+      "asset": "bitcoin",
+      "year": 2025,
+      "file": "bitcoin-2025-span13-291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f.json.gz",
+      "sha256_verified": "291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f",
+      "hours": 8760
+    },
+    {
+      "asset": "bitcoin",
+      "year": 2026,
+      "file": "bitcoin-2026-span13-8ff403f0a093a21f1154d3d530cd2706864ee83f9e83d52c4aa5ed4a1469eeb6.json.gz",
+      "sha256_verified": "8ff403f0a093a21f1154d3d530cd2706864ee83f9e83d52c4aa5ed4a1469eeb6",
+      "hours": 7296
+    },
+    {
+      "asset": "ethereum",
+      "year": 2023,
+      "file": "ethereum-2023-span13-fec387cb9835e9679094b40dd1430b7ba75492b59b7a9e483a8bce8d0a982294.json.gz",
+      "sha256_verified": "fec387cb9835e9679094b40dd1430b7ba75492b59b7a9e483a8bce8d0a982294",
+      "hours": 6600
+    },
+    {
+      "asset": "ethereum",
+      "year": 2024,
+      "file": "ethereum-2024-span13-12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e.json.gz",
+      "sha256_verified": "12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e",
+      "hours": 8784
+    },
+    {
+      "asset": "ethereum",
+      "year": 2025,
+      "file": "ethereum-2025-span13-a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6.json.gz",
+      "sha256_verified": "a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6",
+      "hours": 8760
+    },
+    {
+      "asset": "ethereum",
+      "year": 2026,
+      "file": "ethereum-2026-span13-a9d1e5f3fb13b6a55fb0a28195f8eaee62f924a0245e0029ffb1de42d054ed64.json.gz",
+      "sha256_verified": "a9d1e5f3fb13b6a55fb0a28195f8eaee62f924a0245e0029ffb1de42d054ed64",
+      "hours": 7296
+    }
+  ],
+  "assumptions": {
+    "instrument": "Binance Spot BTCUSDT and ETHUSDT",
+    "signal": "EMA10>EMA30 and close>EMA30, previous UTC daily close",
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "stress": 2,
+    "weights": "two independent 500 USDT sleeves, never rebalanced, unexposed sleeve in cash",
+    "fictitious_daily_open_execution": true
+  },
+  "checks": {
+    "source_shards": 8,
+    "source_hours_total": 62880,
+    "days_per_asset": 1310,
+    "warmup_days": 275,
+    "comparable_days": 1035,
+    "ema_prefix_checks": 18,
+    "daily_combined_equity_assertions": 4140,
+    "ethereum_prior_study_reproduced": true
+  },
+  "periods": {
+    "2024": {
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "days": 366,
+      "cost1": {
+        "BTC_EMA": {
+          "final_usdt": 1644.049257,
+          "return_pct": 64.404926,
+          "max_drawdown_pct": -34.207807,
+          "trades": 24,
+          "exposure_pct": 58.743169
+        },
+        "ETH_EMA": {
+          "final_usdt": 909.877553,
+          "return_pct": -9.012245,
+          "max_drawdown_pct": -53.819542,
+          "trades": 28,
+          "exposure_pct": 44.262295
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 2206.426213,
+          "return_pct": 120.642621,
+          "max_drawdown_pct": -26.151375,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 1458.355794,
+          "return_pct": 45.835579,
+          "max_drawdown_pct": -45.256101,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1276.963405,
+          "return_pct": 27.69634,
+          "max_drawdown_pct": -41.919148,
+          "trades": 52,
+          "both_cash_days": 140,
+          "both_cash_pct": 38.251366,
+          "longest_both_cash_streak_days": 35
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 1832.391003,
+          "return_pct": 83.2391,
+          "max_drawdown_pct": -35.415783,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      },
+      "cost2": {
+        "BTC_EMA": {
+          "final_usdt": 1585.858965,
+          "return_pct": 58.585897,
+          "max_drawdown_pct": -35.817129,
+          "trades": 24,
+          "exposure_pct": 58.743169
+        },
+        "ETH_EMA": {
+          "final_usdt": 872.417383,
+          "return_pct": -12.758262,
+          "max_drawdown_pct": -55.050948,
+          "trades": 28,
+          "exposure_pct": 44.262295
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 2199.810243,
+          "return_pct": 119.981024,
+          "max_drawdown_pct": -26.151375,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 1453.982913,
+          "return_pct": 45.398291,
+          "max_drawdown_pct": -45.256101,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1229.138174,
+          "return_pct": 22.913817,
+          "max_drawdown_pct": -43.227358,
+          "trades": 52,
+          "both_cash_days": 140,
+          "both_cash_pct": 38.251366,
+          "longest_both_cash_streak_days": 35
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 1826.896578,
+          "return_pct": 82.689658,
+          "max_drawdown_pct": -35.415783,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      }
+    },
+    "2025": {
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "days": 365,
+      "cost1": {
+        "BTC_EMA": {
+          "final_usdt": 1048.367982,
+          "return_pct": 4.836798,
+          "max_drawdown_pct": -14.497274,
+          "trades": 18,
+          "exposure_pct": 40
+        },
+        "ETH_EMA": {
+          "final_usdt": 1937.246443,
+          "return_pct": 93.724644,
+          "max_drawdown_pct": -16.556925,
+          "trades": 14,
+          "exposure_pct": 37.260274
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 933.846092,
+          "return_pct": -6.615391,
+          "max_drawdown_pct": -32.022515,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 887.636535,
+          "return_pct": -11.236346,
+          "max_drawdown_pct": -60.042577,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1492.807213,
+          "return_pct": 49.280721,
+          "max_drawdown_pct": -14.546037,
+          "trades": 32,
+          "both_cash_days": 188,
+          "both_cash_pct": 51.506849,
+          "longest_both_cash_streak_days": 82
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 910.741314,
+          "return_pct": -8.925869,
+          "max_drawdown_pct": -42.791037,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      },
+      "cost2": {
+        "BTC_EMA": {
+          "final_usdt": 1020.413161,
+          "return_pct": 2.041316,
+          "max_drawdown_pct": -15.26411,
+          "trades": 18,
+          "exposure_pct": 40
+        },
+        "ETH_EMA": {
+          "final_usdt": 1896.94855,
+          "return_pct": 89.694855,
+          "max_drawdown_pct": -17.056583,
+          "trades": 14,
+          "exposure_pct": 37.260274
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 931.045954,
+          "return_pct": -6.895405,
+          "max_drawdown_pct": -32.022515,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 884.974956,
+          "return_pct": -11.502504,
+          "max_drawdown_pct": -60.042577,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1458.680855,
+          "return_pct": 45.868086,
+          "max_drawdown_pct": -15.059905,
+          "trades": 32,
+          "both_cash_days": 188,
+          "both_cash_pct": 51.506849,
+          "longest_both_cash_streak_days": 82
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 908.010455,
+          "return_pct": -9.198954,
+          "max_drawdown_pct": -42.791037,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      }
+    },
+    "2026_JAN_OCT": {
+      "start": "2026-01-01",
+      "end": "2026-10-31",
+      "days": 304,
+      "cost1": {
+        "BTC_EMA": {
+          "final_usdt": 969.719499,
+          "return_pct": -3.02805,
+          "max_drawdown_pct": -17.474603,
+          "trades": 26,
+          "exposure_pct": 41.118421
+        },
+        "ETH_EMA": {
+          "final_usdt": 1085.110347,
+          "return_pct": 8.511035,
+          "max_drawdown_pct": -27.971945,
+          "trades": 14,
+          "exposure_pct": 47.697368
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 882.5,
+          "return_pct": -11.75,
+          "max_drawdown_pct": -39.532095,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 756.785257,
+          "return_pct": -24.321474,
+          "max_drawdown_pct": -53.26744,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1027.414923,
+          "return_pct": 2.741492,
+          "max_drawdown_pct": -22.780444,
+          "trades": 40,
+          "both_cash_days": 145,
+          "both_cash_pct": 47.697368,
+          "longest_both_cash_streak_days": 55
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 819.642629,
+          "return_pct": -18.035737,
+          "max_drawdown_pct": -46.407129,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      },
+      "cost2": {
+        "BTC_EMA": {
+          "final_usdt": 932.59198,
+          "return_pct": -6.740802,
+          "max_drawdown_pct": -18.214737,
+          "trades": 26,
+          "exposure_pct": 41.118421
+        },
+        "ETH_EMA": {
+          "final_usdt": 1062.538278,
+          "return_pct": 6.253828,
+          "max_drawdown_pct": -28.902741,
+          "trades": 14,
+          "exposure_pct": 47.697368
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 879.853823,
+          "return_pct": -12.014618,
+          "max_drawdown_pct": -39.532095,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 754.516036,
+          "return_pct": -24.548396,
+          "max_drawdown_pct": -53.26744,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 997.565129,
+          "return_pct": -0.243487,
+          "max_drawdown_pct": -23.472992,
+          "trades": 40,
+          "both_cash_days": 145,
+          "both_cash_pct": 47.697368,
+          "longest_both_cash_streak_days": 55
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 817.184929,
+          "return_pct": -18.281507,
+          "max_drawdown_pct": -46.407129,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      }
+    },
+    "2024_2026_CONTINUOUS": {
+      "start": "2024-01-01",
+      "end": "2026-10-31",
+      "days": 1035,
+      "cost1": {
+        "BTC_EMA": {
+          "final_usdt": 1671.37808,
+          "return_pct": 67.137808,
+          "max_drawdown_pct": -34.207807,
+          "trades": 68,
+          "exposure_pct": 46.956522
+        },
+        "ETH_EMA": {
+          "final_usdt": 1912.677407,
+          "return_pct": 91.267741,
+          "max_drawdown_pct": -53.819542,
+          "trades": 56,
+          "exposure_pct": 42.801932
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 1829.30455,
+          "return_pct": 82.930455,
+          "max_drawdown_pct": -52.971766,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 985.551723,
+          "return_pct": -1.444828,
+          "max_drawdown_pct": -67.55345,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1792.027743,
+          "return_pct": 79.202774,
+          "max_drawdown_pct": -41.919148,
+          "trades": 124,
+          "both_cash_days": 473,
+          "both_cash_pct": 45.700483,
+          "longest_both_cash_streak_days": 86
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 1407.428137,
+          "return_pct": 40.742814,
+          "max_drawdown_pct": -58.499587,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      },
+      "cost2": {
+        "BTC_EMA": {
+          "final_usdt": 1509.149588,
+          "return_pct": 50.914959,
+          "max_drawdown_pct": -35.817129,
+          "trades": 68,
+          "exposure_pct": 46.956522
+        },
+        "ETH_EMA": {
+          "final_usdt": 1758.427417,
+          "return_pct": 75.842742,
+          "max_drawdown_pct": -55.050948,
+          "trades": 56,
+          "exposure_pct": 42.801932
+        },
+        "BTC_HOLD100": {
+          "final_usdt": 1823.819379,
+          "return_pct": 82.381938,
+          "max_drawdown_pct": -52.971766,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "ETH_HOLD100": {
+          "final_usdt": 982.596545,
+          "return_pct": -1.740345,
+          "max_drawdown_pct": -67.55345,
+          "trades": 1,
+          "exposure_pct": 100
+        },
+        "DUAL_EMA_50_50": {
+          "final_usdt": 1633.788503,
+          "return_pct": 63.37885,
+          "max_drawdown_pct": -43.227358,
+          "trades": 124,
+          "both_cash_days": 473,
+          "both_cash_pct": 45.700483,
+          "longest_both_cash_streak_days": 86
+        },
+        "DUAL_HOLD_50_50": {
+          "final_usdt": 1403.207962,
+          "return_pct": 40.320796,
+          "max_drawdown_pct": -58.499587,
+          "trades": 2
+        },
+        "CASH_100": {
+          "final_usdt": 1000,
+          "return_pct": 0,
+          "max_drawdown_pct": 0,
+          "trades": 0
+        }
+      }
+    }
+  },
+  "limits": [
+    "exploratory cross-asset check, not an independent unused-sample validation",
+    "trading at next UTC open assumed, no queue/depth/slippage realized",
+    "USDT credit risk not modeled",
+    "no cash interest and no optimized rebalancing"
+  ]
+}
