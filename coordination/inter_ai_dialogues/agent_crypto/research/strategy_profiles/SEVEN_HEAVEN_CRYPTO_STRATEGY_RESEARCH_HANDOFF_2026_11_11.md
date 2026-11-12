@@ -425,3 +425,17 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Étape suivante engagée :** [protocole de sonde de format limitée à 2 Mo compressés par instrument](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_ARCHIVE_BOUNDED_FORMAT_PROBE_PROTOCOL_2026_11_12.md), [script Python read-only](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_BOUNDED_FORMAT_PROBE_2026_11_12.py) et [workflow GitHub Actions ponctuel](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-okx-historical-l2-bounded-format-probe.yml). Ne pas annoncer de résultats de format avant publication des preuves.
 
+
+## Archives officielles OKX L2 — FORMAT CONSTATÉ et bornes documentées (12 novembre 2026)
+
+**L'étude de découverte ET la sonde de format ont réussi et été publiées**, sans téléchargement complet ni exécution de marché.
+
+- [**Rapport scientifique consolidé (source, disponibilité, format, bornes et limites)**](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_BTC_ETH_USDC_DISCOVERY_AND_FORMAT_AUDIT_2026_11_12.md).
+- [**Preuves officielles de liens historiques API, `module=4` 400 niveaux**](./okx_historical_l2_archive_discovery_2026_11_12_evidence/SEVEN_HEAVEN_OKX_HISTORICAL_L2_DISCOVERY_EVIDENCE.json), [workflow GitHub Actions : SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43254623603).
+- [**Preuves d'inspection bornée du format, 10 240 octets compressés réellement lus par paire**](./okx_historical_l2_format_probe_2026_11_12_evidence/SEVEN_HEAVEN_OKX_HISTORICAL_L2_ARCHIVE_FORMAT_EVIDENCE.json), [workflow GitHub Actions : SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43255641337).
+- [**Sonde Python avec borne 2 Mo compressés maximum et 16 Ko de premier membre**](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_BOUNDED_FORMAT_PROBE_2026_11_12.py) ; [protocole borné préenregistré](./SEVEN_HEAVEN_OKX_HISTORICAL_L2_ARCHIVE_BOUNDED_FORMAT_PROBE_PROTOCOL_2026_11_12.md).
+
+**Archive sur journée UTC du 15 octobre 2026 :** API OKX liste BTC-USDC `54,28 Mo` compressés et ETH-USDC `93,60 Mo` compressés. Les deux URL CDN ont accepté **HTTP 206 Partial Content** ; chaque archive contient au moins un membre `.data` de **457 277 836 octets** (BTC) ou **776 655 177 octets** (ETH) décompressés. Le début du premier enregistrement ressemble à JSON avec `instId`, `action:"snapshot"`, `ts`, `asks`. L'échantillon de **16 384 octets** s'arrête **avant la fin du premier enregistrement** : `bids`, séquences, delta/suppressions, reconstruction complète et statistiques de spread historique restent **non étudiés/non validés**. Les SHA des preuves sont **ceux des préfixes lus**, PAS ceux des archives entières.
+
+**Décision scientifique :** archives authentiquement **référencées et partiellement lisibles**, mais **aucun coût historique calculé**. Avant l'étude des distributions, contrôler au moins un événement JSON complet et la logique des mises à jour ; ensuite réaliser une lecture en flux avec horodatages fixés à l'avance et sortie compactée. Les 1,23 Go décompressés ne doivent pas être dupliqués dans le dépôt. Les paires USDC portent un `listTime` au 21 août 2025, donc aucune validation de 2023–2024 ne doit leur être attribuée. Aucun compte ni ordre, aucune tâche récurrente.
+
