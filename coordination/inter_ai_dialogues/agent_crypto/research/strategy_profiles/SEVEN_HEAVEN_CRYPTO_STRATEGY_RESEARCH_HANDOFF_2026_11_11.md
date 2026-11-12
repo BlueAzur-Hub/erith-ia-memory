@@ -479,3 +479,41 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 Les 4 ancres ETH (00/06/12/18) et 5 montants 10/100/1000/10000/100000 USDC doivent rester rigoureusement identiques à BTC ; comparaison éventuelle **uniquement** après publication ETH full-day validée. **Aucun ordre réel, aucune modification Trader, Bridge, Administrator, Operator, aucune veille récurrente.**
 
+
+## BTC/ETH L2 OKX 15 octobre 2026 — DEUX JOURNÉES COMPLÈTES ET COMPARAISON INDÉPENDANTE VALIDÉES (12 novembre)
+
+**CHANTIER COMPLET, SOURCE VÉRIFIÉE, RAPPORTS/PROGRAMMES/PREUVES PUBLIÉS SUR `main`.** Il s'agit d'**UNE journée de marché, 15 octobre 2026, et DEUX actifs Spot USDC**, pas d'un backtest multi-jours ni d'une estimation de coûts d'exécution réels. Les deux archives officielles `.tar.gz` ont été analysées en flux sans committer de gros fichiers.
+
+### Ethereum : journée intégrale désormais traitée
+
+- [**Rapport scientifique ETH : 3 172 868 événements**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_FULL_DAY_2026_10_15_STREAMING_RECONSTRUCTION_SCIENTIFIC_AUDIT.md).
+- [**Protocole ETH 00/06/12/18 UTC fixé avant lecture intégrale**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_FROZEN_PROTOCOL_2026_11_12.md), commit `a24df8ebc60573d1a0a5f119ecf64ace8debcf13`.
+- [**Code de lecture intégrale ETH en flux**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_2026_11_12.py).
+- [**ETH preuves JSON (SHA complets, 4 relevés, 40 estimations)**](./okx_l2_eth_usdc_full_day_four_anchors_2026_11_12_evidence/SEVEN_HEAVEN_OKX_ETH_L2_FULL_DAY_FOUR_ANCHORS_PROOFS.json), Git blob `621c7edd2367d1cc9acb3bb13d6c11838df0fb86`, et [**CSV des 40 estimations**](./okx_l2_eth_usdc_full_day_four_anchors_2026_11_12_evidence/SEVEN_HEAVEN_OKX_ETH_L2_FULL_DAY_FOUR_ANCHORS_COSTS.csv).
+- [**GitHub Actions : ETH full-day SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43260608990).
+
+**ETH** : archive **98 150 849 octets**, SHA-256 `048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546` ; membre `.data` **776 655 177 octets**, SHA-256 `a47f70abc79c28bdb52831e0dfdce32e1bf48ca962c3d2f5e8bc9e233a430d5d`, gzip footer/CRC OK ; **3 172 868 événements**, **96 snapshots**, **3 172 772 updates**, **9 874 583 suppressions de niveau**, 20 premiers événements SHA conformes au préflight. **0 liens seqId/prevSeqId** : continuité logique globale **NON prouvée**.
+
+### Comparaison BTC/ETH en USD Coin (USDC), mêmes quatre horaires
+
+- [**Rapport scientifique comparatif : 4 spreads et 40 coûts de carnet BTC/ETH**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_SAME_DAY_FOUR_ANCHORS_SCIENTIFIC_COMPARISON_2026_11_12.md).
+- [**Protocole préenregistré de la comparaison avant résultat full-day ETH**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_CROSS_ASSET_COMPARISON_FROZEN_PROTOCOL_2026_11_12.md), commit `5253e6d34b11c7ab9651a8ebb1a4e8a34dc7c039`.
+- [**Preuves JSON appariées, deux sources verrouillées par Git blobs**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_SAME_DAY_FOUR_ANCHORS_COMPARISON_EVIDENCE_2026_11_12.json), Git blob `5c2795b7e39d21db557bd209db54ee6c0f23d44a`.
+- [**Programme Python INDÉPENDANT de reproduction, hors réseau**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_INDEPENDENT_COMPARISON_VERIFICATION_2026_11_12.py) ; [**preuve indépendante SUCCESS, 4 couples de spreads + 40 couples de coûts contrôlés**](./okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_BTC_ETH_CROSS_ASSET_INDEPENDENT_PROOFS.json), Git blob `66f2f6956a1012826bd85523be45a8e85ee5a417`.
+- [**CSV indépendant des 40 observations appariées**](./okx_l2_btc_eth_four_anchor_comparison_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_BTC_ETH_FOUR_HOUR_PAIRED_COSTS.csv), [**GitHub Actions Python independent checker : SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43262407421).
+
+**Spreads (bp), sur quatre points uniquement :**
+
+| Heure UTC | BTC-USDC | ETH-USDC |
+|---|---:|---:|
+| 00 h | 0,01225670 | 0,04133811 |
+| 06 h | 0,01242110 | 0,04260713 |
+| 12 h | 0,01236121 | 0,04235502 |
+| 18 h | 0,01214241 | 0,04091611 |
+
+**Constats limités :** sur ces quatre points, ETH a un spread relatif **3,37–3,43 fois celui de BTC**. Au notionnel théorique **100 000 USDC en achat**, la moyenne **des quatre points seulement** est **1,158908 bp côté BTC** contre **3,841613 bp côté ETH**, hors frais. Côté vente, **0,815380 bp BTC** contre **3,479770 bp ETH**. Les 40 coûts croisés ont été reproduits indépendamment. Ce n'est **pas** une mesure du spread quotidien moyen, pas une moyenne de marché et pas une règle de comportement futur.
+
+**Discipline scientifique obligatoire :** ces données OKX L2 n'ont pas de chaîne de séquence validable : SHA/CRC vérifient l'intégrité des octets **reçus**, pas une hypothétique exhaustivité des événements originels. Les deux carnets n'ont pas été capturés atomiquement mais à quelques millisecondes des mêmes cibles ; aucun fill réel, frais du compte, latence, priorité d'exécution ni régime de marché échantillonné. Aucun rapprochement abusif avec les coûts des 122 trades EMA fictifs Bitstamp/USD.
+
+**Direction future** : préenregistrer une grille de plusieurs dates et horaires sélectionnés sans regarder le résultat L2 (dates post-listing USDC 21 août 2025), puis évaluer des **distributions multi-jours** des coûts théoriques et le risque de profondeur. Cette étape n'est pas déjà accomplie. Aucune nouvelle veille ni automatisation, aucun ordre, aucun changement Administrator / Operator / Trader / Bridge.
+
