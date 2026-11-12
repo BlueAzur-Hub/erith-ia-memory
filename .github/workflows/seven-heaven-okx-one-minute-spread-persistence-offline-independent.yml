@@ -1,0 +1,74 @@
+name: Seven Heaven OKX One Minute Spread Persistence Offline Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-one-minute-spread-persistence-offline-independent.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_INDEPENDENT_EVIDENCE_AUDIT_2026_11_12.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-okx-oct15-minute-spread-offline-audit
+  cancel-in-progress: false
+jobs:
+  verify-pinned-market-evidence-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Python code and synthetic negative, hash, timestamp checks
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_INDEPENDENT_EVIDENCE_AUDIT_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Independently verify 1440 paired minutes and threshold-duration conservation
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_INDEPENDENT_EVIDENCE_AUDIT_2026_11_12.py --repo-root .
+      - name: Require source hashes and exact scope declarations
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_one_minute_event_time_independent_validation_2026_11_12_evidence/SEVEN_HEAVEN_OKX_MINUTE_SPREAD_PERSISTENCE_OFFLINE_INDEPENDENT_PROOFS.json')
+          j=json.loads(p.read_text(encoding='utf8'))
+          assert j['status']=='PINNED_TWO_ARCHIVES_2880_MINUTES_AND_FOUR_EVENT_TIME_THRESHOLD_AGGREGATES_VERIFIED'
+          assert j['read_only'] and not j['orders_enabled'] and not j['source_global_sequence_proven']
+          assert j['minutes_per_pair_verified']==1440 and j['historical_quarter_hours_per_pair_verified']==96
+          assert j['paired_minute_rows_verified']==1440
+          assert j['time_coverage_and_episode_conservation_checks_passed']
+          assert len(j['source_blobs_verified'])==4
+          assert j['minutes_eth_spread_wider']+j['minutes_btc_spread_wider']==1440
+          assert j['event_thresholds_bp_checked']==['0.1','0.5','1.0','2.0']
+          print('PASS: pinned sources, 2x1440 minutes, time-held threshold aggregates, 96 historic anchors')
+          PY
+      - name: Keep concise offline verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-minute-spread-persistence-offline-proof
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_one_minute_event_time_independent_validation_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish independent proof to shared inter-AI research Coffre
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_one_minute_event_time_independent_validation_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'NOOP: already published'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive independent pinned minute-spread and duration audit'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
