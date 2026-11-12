@@ -1,0 +1,37 @@
+{
+  "schema": "seven-heaven.okx-btc-eth-four-anchor-independent-recalculation.v1",
+  "date_utc": "2026-11-12",
+  "status": "VERIFIED_FIXED_UTC_ANCHOR_BTC_ETH_40_CROSS_ASSET_VALUES",
+  "read_only": true,
+  "orders_enabled": false,
+  "source_git_blob_sha1": {
+    "BTC": "a80617f03e2c00856c2e8ccb2ec2c7eb26fcbf40",
+    "ETH": "621c7edd2367d1cc9acb3bb13d6c11838df0fb86",
+    "COMPARE": "5c2795b7e39d21db557bd209db54ee6c0f23d44a"
+  },
+  "all_source_hashes_match": true,
+  "gzip_crc_sources_previously_verified": true,
+  "source_logical_sequence_continuity_proven": false,
+  "verified_spread_pairs": 4,
+  "verified_book_cost_pairs": 40,
+  "summary": {
+    "BTC": {
+      "spread_mean_4_points_bps": 0.01229535,
+      "spread_median_4_points_bps": 0.01230895,
+      "complete_archive_events": 2346486,
+      "archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44"
+    },
+    "ETH": {
+      "spread_mean_4_points_bps": 0.04180409,
+      "spread_median_4_points_bps": 0.04184657,
+      "complete_archive_events": 3172868,
+      "archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546"
+    }
+  },
+  "limits": [
+    "Only four preregistered instants within one historical day.",
+    "No guarantee of no lost source deltas absent sequence counters.",
+    "No real trading, no fee rate or actual fill evidence.",
+    "These OKX USDC books cannot price historical Bitstamp USD trades."
+  ]
+}
