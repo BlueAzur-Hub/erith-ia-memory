@@ -56,6 +56,15 @@ En scénario indicatif à 0,20 % taker par côté et à montant constant fictif 
 
 Il s'agit de la somme de deux coûts au **même instantané historique**, et non d'un véritable aller-retour entre deux dates : aucune variation de prix, aucun ordre rempli, aucune latence ni priorité de file simulée. Ne pas extrapoler une rentabilité de stratégie.
 
+### Mise à jour — frais Spot du compte effectivement relevés le 12 novembre 2026
+
+**Source ultérieure et plus spécifique que les hypothèses génériques ci-dessus :** capture de la page OKX authentifiée `Actifs > Frais`, fournie par l'opérateur. Niveau affiché : `Utilisateur régulier`. **Spot maker = 0,0800 %, Spot taker = 0,1000 %** ; cette observation remplace **pour les nouveaux scénarios PAPER à frais courants du compte** l'hypothèse générique de 0,20 % taker par côté. Elle ne réécrit pas les coûts historiques des journées d'août, septembre et octobre 2026.
+
+- [Source de vérité partagée sur GitHub — taux Spot observés, sans soldes ni capture](./SEVEN_HEAVEN_OKX_OBSERVED_SPOT_FEE_REFERENCE_2026_11_12.md).
+- [Fiche Notion — taux complets Spot/Futures/Options de la capture](https://app.notion.com/p/4167754fe084817dbcb5e007a399e595).
+- Le barème applicable à **BTC-USDC ou ETH-USDC** reste conditionné à la classification effective de la paire dans OKX ; ne pas affirmer une commission d'ordre exécuté sans vérifier la paire et les détails.
+- **Priorité de reprise :** ne plus demander les taux Spot à l'opérateur à chaque fil ; consulter ces références et demander une actualisation seulement lorsque cela est nécessaire.
+
 ## 5. Intégrité et limites
 
 - Trois **journées isolées**, jamais trois mois continus.
