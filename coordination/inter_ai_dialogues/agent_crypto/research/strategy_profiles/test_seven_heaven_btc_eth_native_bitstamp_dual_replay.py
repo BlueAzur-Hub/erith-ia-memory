@@ -41,7 +41,7 @@ class ReplayChecks(unittest.TestCase):
             return io.BytesIO(json.dumps({"data":{"pair":"BTC/USD","ohlc":chosen}}).encode())
         with patch("urllib.request.urlopen",side_effect=fake):
             rows,receipts=mod.collect_btc_native(eng)
-        self.assertEqual(count,[1000,1000])
+        self.assertEqual(count,[1000,310])
         self.assertEqual(len(rows),1310)
         self.assertEqual(len(receipts),2)
         self.assertEqual(rows[0]["date"],"2023-04-01")
