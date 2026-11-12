@@ -2,6 +2,8 @@
 import io
 import importlib.util
 import json
+import tempfile
+import hashlib
 import pathlib
 import unittest
 from datetime import datetime, timedelta, timezone
@@ -50,6 +52,24 @@ class NativeReplayTests(unittest.TestCase):
         self.assertEqual(len(ema['curve']),1035)
         self.assertEqual(len(hold['curve']),1035)
         self.assertEqual(hold['trades'],1)
+
+    def test_export_csv_uses_lf_only(self):
+        rows = [mod.parse_row(x) for x in synthetic_candles()]
+        mod.add_ema(rows)
+        signals = mod.paper(rows, 'EMA')['curve']
+        bench = [{'date': r['date'], 'eth_exposed': r['exposed'],
+                  'eth_hold': rows[i + 275]['close']}
+                 for i, r in enumerate(signals)]
+        with tempfile.TemporaryDirectory() as scratch:
+            out = pathlib.Path(scratch)
+            doc = mod.export(rows, [], bench, out)
+            raw_prices = (out/'bitstamp_ethusd_daily_2023_2026.csv').read_bytes()
+            raw_disagree = (out/'eth_ema_binance_bitstamp_disagreements.csv').read_bytes()
+            self.assertNotIn(b'\\r', raw_prices)
+            self.assertNotIn(b'\\r', raw_disagree)
+            self.assertEqual(hashlib.sha256(raw_prices).hexdigest(), doc['source_sha256'])
+            self.assertEqual(len(raw_prices.splitlines()), 1311)
+
 
     def test_gap_is_rejected(self):
         rows = [mod.parse_row(x) for x in synthetic_candles()]
