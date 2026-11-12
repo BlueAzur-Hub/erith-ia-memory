@@ -730,6 +730,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-12",
+      "date_utc": "2026-11-12",
+      "first_seen_at_utc": "2026-11-12T07:30:14.484Z",
+      "source_times_utc": [
+        "2026-11-12T07:07:32.118Z",
+        "2026-11-12T07:07:19.254Z"
+      ],
+      "universe_eligible": 385,
+      "policy_matches": 5,
+      "selected": [
+        {
+          "coin_id": "midnight-3",
+          "symbol": "NIGHT",
+          "source_at_utc": "2026-11-12T07:07:32.118Z",
+          "rank": 83,
+          "price_usd": 0.046307337000103546
+        },
+        {
+          "coin_id": "zero-gravity",
+          "symbol": "0G",
+          "source_at_utc": "2026-11-12T07:07:19.254Z",
+          "rank": 269,
+          "price_usd": 0.15596761399703016
+        },
+        {
+          "coin_id": "kite-2",
+          "symbol": "KITE",
+          "source_at_utc": "2026-11-12T07:07:32.118Z",
+          "rank": 131,
+          "price_usd": 0.1286982779186762
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1705,6 +1740,27 @@
       "sha256": "eb5de67d58f59b26f60caf188b1cba8942d7399469a2e3f6b1e4a8e395cfceaf",
       "recorded_at_utc": "2026-11-11T16:27:22.065Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-10",
+      "file": "observations/2026-11-12T073014484Z--2026-11-10.json",
+      "sha256": "2a17b077bbfae40815a52be5a08d57b2607ae64d758814bdd8bb8e384f1c8915",
+      "recorded_at_utc": "2026-11-12T07:30:14.484Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-11",
+      "file": "observations/2026-11-12T073014484Z--2026-11-11.json",
+      "sha256": "9d4515b8b7630aed8b9dd79eaa1374ae9afee60c9c0f5ebc9a1aee8e59ec34fc",
+      "recorded_at_utc": "2026-11-12T07:30:14.484Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-12",
+      "file": "observations/2026-11-12T073014484Z--2026-11-12.json",
+      "sha256": "2a6066b1054ba7995e68483f0dccb996eca5e09904ba0c6763addf7cd87f407c",
+      "recorded_at_utc": "2026-11-12T07:30:14.484Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
