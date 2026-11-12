@@ -70,7 +70,7 @@ def portfolio(btc,eth,engine,method:str,factor:float):
         raise ValueError("Out-of-protocol method or factor")
     left=engine.paper(btc,method,factor)
     right=engine.paper(eth,method,factor)
-    if len(left["curve"])!=len(right["curve"])!=1035:
+    if len(left["curve"]) != 1035 or len(right["curve"]) != 1035:
         raise ValueError("Unexpected replay row count")
     max_equity=1000.0
     mdd=0.0
