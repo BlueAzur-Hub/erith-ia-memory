@@ -374,3 +374,22 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 - Utiliser bougies Bitstamp BTC/USD et ETH/USD journalières UTC nouvellement clôturées, archive horodatée avec SHA, contrôle rigoureux des jours absents. Comparer avec Buy & Hold 50/50, BTC seul, cash et à titre descriptif avec les historiques 2024–octobre 2026, mais **sans refaire d'optimisation sur l'échantillon futur**.
 - **Jalon à ne pas travestir :** le protocole est publié, **la validation temporelle nouvelle n'est pas encore accomplie**. Le premier jour à évaluer n'est pas arrivé à la date de publication. Aucune action d'achat/vente, aucun Bridge, aucun changement Administrator/Trader/Operator.
 
+
+## OKX Spot BTC/USDC + ETH/USDC — premiers coûts de carnet réellement observés (12 novembre 2026)
+
+**ÉTUDE PONCTUELLE PUBLIÉE ET VERIFIÉE.** L'étape après le stress-test de coûts fictifs BTC/ETH EMA est un relevé public **OKX Spot BTC/USDC et ETH/USDC** avec carnet `GET /api/v5/market/books?instId=...&sz=400`. Ces cours/carnets ne sont **pas** ceux des opérations historiques Bitstamp 2024–2026 : aucune substitution de prix n'a été faite. Aucun compte, aucune clé, aucun ordre réel.
+
+- [**Rapport scientifique complet — spread, profondeur, effets de tailles, frais illustratifs et limites**](./SEVEN_HEAVEN_OKX_BTC_ETH_USDC_LIVE_BOOK_COST_SCIENTIFIC_AUDIT_2026_11_12.md).
+- [**Protocole prépublié avant la capture**](./SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_ORDERBOOK_COST_OBSERVATION_PROTOCOL_2026_11_12.md) (commit `43bfe417`).
+- [**Code Python : collecte ponctuelle, simulation de VWAP par niveaux, contrôles de fraîcheur et refus profondeur insuffisante**](./SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_ORDERBOOK_ONE_SHOT_2026_11_12.py).
+- [**Tests unitaires hors ligne**](./test_seven_heaven_okx_spot_usdc_orderbook_cost.py).
+- [**Preuves JSON, timestamps, sources brutes SHA-256**](./okx_spot_usdc_orderbook_2026_11_12_evidence/SEVEN_HEAVEN_OKX_SPOT_USDC_ORDERBOOK_COST_EVIDENCE.json).
+- [**CSV des 20 scénarios fixes achat/vente, montants 10, 100, 1 000, 10 000, 100 000 USDC**](./okx_spot_usdc_orderbook_2026_11_12_evidence/SEVEN_HEAVEN_OKX_SPOT_USDC_COST_BY_NOTIONAL.csv).
+- [**Workflow GitHub Actions : SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43247779001) ; 5 tests hors ligne, API OKX publique, publication des mesures et empreintes.
+
+**Faits de la capture à 2026-11-12 15:27:25 UTC :** carnet BTC/USDC meilleur bid 71 400,00 USDC, ask 71 400,10, spread **0,014006 bp** ; ETH/USDC bid 2 002,99, ask 2 003,00, spread **0,049925 bp**. Un seul livre par paire, 400 niveaux par côté, réponses OKX âgées d'environ **55 ms** à réception. Le coût de prix fictif à 1 000 USDC de notionnel est **BTC achat 0,007 bp / vente 1,051 bp** et **ETH achat 0,025 bp / vente 0,434 bp**. À 100 000 USDC, l'achat ETH traverse **64 niveaux** et atteint **12,047 bp**, contre **2,592 bp** à la vente (16 niveaux). Les 5 montants restaient couverts par la profondeur visible **à cet instant seulement**.
+
+**Frais :** la documentation [OKX Europe](https://www.okx.com/en-eu/help/what-are-the-new-trading-fees-for-eea-users) présente des barèmes variables selon les caractéristiques du compte. Le rapport additionne seulement les scénarios **taker hypothétiques 0,10 % et 0,35 % par côté** au coût de prix observé. Il ne connaît **pas les frais de l'utilisateur**. Les anciens coûts historiques EMA de **15 bp/côté**, ainsi que le seuil diagnostique EMA/HOLD de **55,063 bp/côté**, ne peuvent pas être transposés directement à ce snapshot OKX USDC.
+
+**Statut scientifique :** succès technique et mesure instantanée réelle, **aucune distribution temporelle de spreads, aucun coût réellement exécuté et aucune validation de rentabilité EMA**. Rien n'a été modifié dans Administrator, Operator, Trader ou Bridge. **Direction suivante :** si l'on veut étudier les conditions d'exécution, constituer un échantillonnage répété (horodaté, conservé et audité) et vérifier minSz/lotSz/tickSz et le barème de frais adapté au compte, sans déployer de trading automatique.
+
