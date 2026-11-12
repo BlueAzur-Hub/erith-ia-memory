@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/seven-heaven-eth-bitstamp-native-research.yml'
       - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/test_seven_heaven_eth_bitstamp_native_replay.py'
   workflow_dispatch:
 
 permissions:
@@ -32,6 +33,7 @@ jobs:
           SCRIPT='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py'
           python -m py_compile "$SCRIPT"
           python "$SCRIPT" --selftest
+          python -m unittest -v coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/test_seven_heaven_eth_bitstamp_native_replay.py
       - name: Download native Bitstamp public ETH USD candles and replay fixed EMA
         run: |
           set -euo pipefail
