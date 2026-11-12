@@ -364,3 +364,13 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Prochaine étude utile** : préenregistrer un échantillon **postérieur au 12 novembre 2026**, conserver EMA10/30 et les deux poches, documenter en parallèle les spread/depth à l'instant du trade simulé ; ne pas publier un chiffre de résultat jusqu'à avoir de vraies bougies nouvelles et un horizon assez long. Aucun changement Administrator / Trader / Operator / Bridge.
 
+
+## Validation prospective préenregistrée — début 14 novembre 2026 (statut PAS ENCORE ÉVALUÉ)
+
+**Source canonique :** [protocole PAPER figé avant nouvelles bougies](./SEVEN_HEAVEN_BTC_ETH_50_50_PROSPECTIVE_PAPER_VALIDATION_FROZEN_PROTOCOL_2026_11_12.md), commit `3b8db414148bf1d4750b521c964ff2e636b48fb0`.
+
+- Évaluation **du 14 novembre 2026 au 13 décembre 2026 (30 jours)**, puis au **11 février 2027 (90 jours)** et au **13 novembre 2027 (365 jours)** ; ces périodes sont **futures à la date de préenregistrement**. **Aucun résultat, aucune exécution ni surveillance automatique** encore établis.
+- Même EMA 10/30, même initialisation à partir d'avril 2023, même décision en clôture t pour l'ouverture t+1, mêmes poches BTC et ETH 50/50 initialement 500 USD chacune, même groupe de coûts fictifs : référence 0,15 % / côté, facteurs 2, 3, 4 ; aucun réajustement après lecture.
+- Utiliser bougies Bitstamp BTC/USD et ETH/USD journalières UTC nouvellement clôturées, archive horodatée avec SHA, contrôle rigoureux des jours absents. Comparer avec Buy & Hold 50/50, BTC seul, cash et à titre descriptif avec les historiques 2024–octobre 2026, mais **sans refaire d'optimisation sur l'échantillon futur**.
+- **Jalon à ne pas travestir :** le protocole est publié, **la validation temporelle nouvelle n'est pas encore accomplie**. Le premier jour à évaluer n'est pas arrivé à la date de publication. Aucune action d'achat/vente, aucun Bridge, aucun changement Administrator/Trader/Operator.
+
