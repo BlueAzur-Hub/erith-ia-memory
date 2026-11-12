@@ -1,0 +1,35 @@
+{
+  "schema": "seven-heaven.okx-l2-aug-sep-oct-96-quarters-independent.v1",
+  "status": "SIX_ARCHIVES_576_STATES_288_SPREADS_2880_COST_PAIRS_INDEPENDENTLY_REPRODUCED",
+  "read_only": true,
+  "orders_enabled": false,
+  "source_blobs_verified": {
+    "2026-08-15|BTC-USDC": "ae4d975242a113f8ab81a28bca334b8d62973ce8",
+    "2026-08-15|ETH-USDC": "afd81ec52fbbc03c51a946a0dea5ce93f9732275",
+    "2026-09-15|BTC-USDC": "1d173cd27be2ac971326850e1d81dfe5ad4a0857",
+    "2026-09-15|ETH-USDC": "eb882de160670bc8f7099645af86a07ab3a31dd6",
+    "2026-10-15|BTC-USDC": "ca8f55de07bee5ef73663bd1613d6b56a655e4a4",
+    "2026-10-15|ETH-USDC": "b3be3c7fea85042b770c5f1bb6cdc0d8749cf530"
+  },
+  "derived_output_blobs_verified": {
+    "proof": "22f8306b9e1ef0fe19198dbb7573537c61aec75d",
+    "spreads": "1cd617b6229e23e6d1ef7b1b62d4ee6a691ab659",
+    "costs": "4cc4d6e6cfda04da29a36ea23fb490ccd03e9238"
+  },
+  "verified_source_archives": 6,
+  "verified_book_states": 576,
+  "verified_spread_pairs": 288,
+  "verified_cost_pairs": 2880,
+  "verified_complete_archive_events": 9628137,
+  "eth_spread_gt_btc": 276,
+  "btc_spread_gt_eth": 12,
+  "equal_spread": 0,
+  "all_source_sha_crc_claims_checked": true,
+  "upstream_source_sequence_completeness_proven": false,
+  "limits": [
+    "Only 96 predetermined instants on 3 past dates, not continuous time average.",
+    "Gzip CRC and SHA certify the files read, not upstream missing market messages.",
+    "Historical quotes do not demonstrate real fills, fees or EMA profitability.",
+    "Snapshot pair timestamps may differ by milliseconds; no atomic synchronization."
+  ]
+}
