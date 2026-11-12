@@ -1,0 +1,190 @@
+{
+  "schema": "seven-heaven.eth-usd-second-provider-ema-contiguous.v1",
+  "status": "REPLAY_COMPLETED_IN_JS_AND_PUBLISHED_PYTHON_NOT_INDEPENDENTLY_EXECUTED",
+  "study_date": "2026-11-12",
+  "protocol_commit": "f8b1bfbc5564a73cf8a8c2b947ec55096896c5dc",
+  "sources": {
+    "secondary": {
+      "repository": "SeedFlora/idx-daily-data",
+      "path": "data/ETH-USD.csv",
+      "git_blob_sha1": "f92d8c4fce1ea30f16b0195d0ea5f05b9e4fe185",
+      "format": "Yahoo-style ETH-USD daily OHLCV, venue unspecified",
+      "rows_in_full_file": 462,
+      "full_file_start": "2025-06-28",
+      "full_file_end": "2026-11-11",
+      "missing_intervals": [
+        {
+          "previous": "2026-07-31",
+          "next": "2026-08-14",
+          "missing_days": 13
+        },
+        {
+          "previous": "2026-09-14",
+          "next": "2026-09-18",
+          "missing_days": 3
+        },
+        {
+          "previous": "2026-10-05",
+          "next": "2026-10-30",
+          "missing_days": 24
+        }
+      ]
+    },
+    "binance_reference": {
+      "repository": "BlueAzur-Hub/erith-ia-memory",
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_EQUITY_DAILY.csv",
+      "git_blob_sha1": "c8ed2a206ea616ea87eeb83e31f7138d5b131588",
+      "market": "Binance Spot ETH/USDT, preexisting daily portfolio/equity snapshot"
+    }
+  },
+  "coverage": {
+    "contiguous_source_start": "2025-06-28",
+    "warmup_days": 90,
+    "warmup_end": "2025-09-25",
+    "replay_start": "2025-09-26",
+    "replay_end": "2026-07-31",
+    "contiguous_price_days": 399,
+    "replay_days": 309,
+    "daily_return_pairs": 308
+  },
+  "rules": {
+    "ema_fast": 10,
+    "ema_slow": 30,
+    "entry": "ema10>ema30 AND close>ema30",
+    "decision": "previous daily close",
+    "theoretical_fill": "next daily open",
+    "initial_capital": 1000,
+    "currency": "USD for alternate provider; Binance benchmark USDT",
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "costs_stress_factor": 2
+  },
+  "checks": {
+    "git_blob_sha_verified": true,
+    "source_missing_days_not_imputed": true,
+    "original_full_file_gaps": 3,
+    "ohlc_valid": true,
+    "continuity_within_test_and_warmup": true,
+    "binance_same_dates_count": 309,
+    "ema_prefix_causal_checks": 309,
+    "maximum_prefix_check_error": 0,
+    "simulation_fictive_only": true
+  },
+  "secondary_results": {
+    "EMA_10_30": {
+      "capital_final_usd": 782.293524,
+      "rendement_net_percent": -21.770648,
+      "drawdown_max_percent": -28.963088,
+      "operations_fictives": 13,
+      "jours_exposes": 83
+    },
+    "EMA_10_30_DOUBLE_COST": {
+      "capital_final_usd": 766.02054,
+      "rendement_net_percent": -23.397946,
+      "drawdown_max_percent": -30.12632,
+      "operations_fictives": 13,
+      "jours_exposes": 83
+    },
+    "BUY_AND_HOLD": {
+      "capital_final_usd": 482.710386,
+      "rendement_net_percent": -51.728961,
+      "drawdown_max_percent": -66.619178,
+      "operations_fictives": 1,
+      "jours_exposes": 309
+    },
+    "BUY_AND_HOLD_DOUBLE_COST": {
+      "capital_final_usd": 481.262979,
+      "rendement_net_percent": -51.873702,
+      "drawdown_max_percent": -66.619178,
+      "operations_fictives": 1,
+      "jours_exposes": 309
+    }
+  },
+  "binance_signal_comparison": {
+    "sample_days": 309,
+    "agreement_days": 309,
+    "agreement_percent": 100,
+    "disagreements": [],
+    "daily_return_pearson": 0.999665342,
+    "return_pairs": 308,
+    "reference_is_prior_published_full_period_strategy": true,
+    "different_indicator_warmups": true
+  },
+  "ema_fictitious_trade_ledger": [
+    {
+      "date": "2025-10-05",
+      "side": "BUY",
+      "opening_price_usd": 4489.053223
+    },
+    {
+      "date": "2025-10-10",
+      "side": "SELL",
+      "opening_price_usd": 4369.06543
+    },
+    {
+      "date": "2026-01-05",
+      "side": "BUY",
+      "opening_price_usd": 3141.486328
+    },
+    {
+      "date": "2026-01-21",
+      "side": "SELL",
+      "opening_price_usd": 2935.88208
+    },
+    {
+      "date": "2026-03-17",
+      "side": "BUY",
+      "opening_price_usd": 2351.134766
+    },
+    {
+      "date": "2026-03-22",
+      "side": "SELL",
+      "opening_price_usd": 2077.201172
+    },
+    {
+      "date": "2026-03-24",
+      "side": "BUY",
+      "opening_price_usd": 2152.114502
+    },
+    {
+      "date": "2026-03-27",
+      "side": "SELL",
+      "opening_price_usd": 2059.44873
+    },
+    {
+      "date": "2026-04-08",
+      "side": "BUY",
+      "opening_price_usd": 2242.276611
+    },
+    {
+      "date": "2026-04-30",
+      "side": "SELL",
+      "opening_price_usd": 2253.484375
+    },
+    {
+      "date": "2026-05-02",
+      "side": "BUY",
+      "opening_price_usd": 2295.044434
+    },
+    {
+      "date": "2026-05-13",
+      "side": "SELL",
+      "opening_price_usd": 2274.591797
+    },
+    {
+      "date": "2026-07-11",
+      "side": "BUY",
+      "opening_price_usd": 1795.819336
+    }
+  ],
+  "limits": [
+    "Missing days in source after 2026-07-31, not a full 2024-2026 alternative series",
+    "Source provenance is Yahoo-style third-party, not a verified single-exchange ETH/USD feed",
+    "Original Binance indicators warmed from April 2023, alternate series warmed for 90 days",
+    "Strong signal agreement is not profitable performance: EMA loses on this period",
+    "No full matching-calendar Binance P&L recalculation performed or implied",
+    "Simulation uses hypothetical fills at next-day open and fee/slippage assumptions",
+    "Script Python published for independent reproduction, no executed Python hash/proof comparison in this session",
+    "No live orders, no changes to trader/bridge"
+  ]
+}
