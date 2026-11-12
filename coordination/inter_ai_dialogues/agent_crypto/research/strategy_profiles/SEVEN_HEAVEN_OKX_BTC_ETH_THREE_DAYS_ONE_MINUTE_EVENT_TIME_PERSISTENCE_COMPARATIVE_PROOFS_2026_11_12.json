@@ -1,0 +1,721 @@
+{
+  "schema": "seven-heaven.okx-btc-eth-three-day-minute-eventheld-spread-persistence.v1",
+  "as_of": "2026-11-12",
+  "status": "SIX_PINNED_FULL_ARCHIVES_8640_MINUTE_STATES_AND_EVENT_TIME_PERSISTENCE",
+  "read_only": true,
+  "orders_enabled": false,
+  "dates_utc": [
+    "2026-08-15",
+    "2026-09-15",
+    "2026-10-15"
+  ],
+  "instruments": [
+    "BTC-USDC",
+    "ETH-USDC"
+  ],
+  "thresholds_bp": [
+    "0.1",
+    "0.5",
+    "1.0",
+    "2.0"
+  ],
+  "protocol_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_ONE_MINUTE_SPREAD_PERSISTENCE_FROZEN_PROTOCOL_2026_11_12.md",
+  "source_proofs": {
+    "2026-08-15|BTC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/2026-08-15/btc_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "git_blob_sha1": "ba18e34c39292e0f7a00d6224107321845a143b3",
+      "archive_sha256": "a8af512dabf96c6e5c8af37a0e19eb11ebce88ed232308cba9a63a37053fc130",
+      "member_sha256": "c7836a3f16229b1b211230ef4b40f46a3e25067196dee9193df0642c734e0050",
+      "events": 301816,
+      "covered_ms": 86396511,
+      "minute_rows": 1440,
+      "quarter_reference_checks": 96,
+      "upstream_sequence_proven": false
+    },
+    "2026-08-15|ETH": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/2026-08-15/eth_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "git_blob_sha1": "c3e0cbc1a63a80d0b34a3da6f00a642bc96265cf",
+      "archive_sha256": "9da303d949bce4f25248f7d3f6b7e34e2be6ed426b4945a395c3097d7932bfca",
+      "member_sha256": "403a2c22a53730a15a3deb826fd1df1a90e13c1486f60c5b0d84a69ffed5b870",
+      "events": 277791,
+      "covered_ms": 86399775,
+      "minute_rows": 1440,
+      "quarter_reference_checks": 96,
+      "upstream_sequence_proven": false
+    },
+    "2026-09-15|BTC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/2026-09-15/btc_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "git_blob_sha1": "331cc91e748dcdefb4d8c95a2843ac5b1b17528f",
+      "archive_sha256": "53ab528063479e83dbd833be63615d09cee209897d39021403a88fd6f2d31460",
+      "member_sha256": "4a1b0c645c7c672c94f3a8e58c885def6441d34b9d8e7f6006f5d05f0e8e66ac",
+      "events": 1811678,
+      "covered_ms": 86399986,
+      "minute_rows": 1440,
+      "quarter_reference_checks": 96,
+      "upstream_sequence_proven": false
+    },
+    "2026-09-15|ETH": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/2026-09-15/eth_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "git_blob_sha1": "9752fe05062f43e88ddcda34c215eba680f424af",
+      "archive_sha256": "694464feb71a39dccff0188087079f3d200b50e51efc4a4120b454e4a9213924",
+      "member_sha256": "5e558436c384f8e8d6d9e21d29f3b322501072e642dfa276ce95d082bb4b6178",
+      "events": 1717498,
+      "covered_ms": 86399939,
+      "minute_rows": 1440,
+      "quarter_reference_checks": 96,
+      "upstream_sequence_proven": false
+    },
+    "2026-10-15|BTC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/btc_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "git_blob_sha1": "ce90a9d8e84bb257eafe994d1d31a4ffae51f0b9",
+      "archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "member_sha256": "a8a3231d34d03a0d261ac9952f1ba2a953a4d31986e04c8bbbbdc61c06264963",
+      "events": 2346486,
+      "covered_ms": 86399930,
+      "minute_rows": 1440,
+      "quarter_reference_checks": 96,
+      "upstream_sequence_proven": false
+    },
+    "2026-10-15|ETH": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/eth_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "git_blob_sha1": "589778261ecd2ce419c6df2f0fba3e44e195439d",
+      "archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+      "member_sha256": "a47f70abc79c28bdb52831e0dfdce32e1bf48ca962c3d2f5e8bc9e233a430d5d",
+      "events": 3172868,
+      "covered_ms": 86399965,
+      "minute_rows": 1440,
+      "quarter_reference_checks": 96,
+      "upstream_sequence_proven": false
+    }
+  },
+  "checks": {
+    "all_six_archives_fully_read_and_crc_sha_accepted": true,
+    "all_sources_96_quarter_reference_points_passed": true,
+    "all_1440_minute_rows_per_pair_day_passed": true,
+    "all_event_duration_conservation_checks_passed": true,
+    "original_source_sequence_chain_proven": false
+  },
+  "counts": {
+    "archives": 6,
+    "archive_json_events": 9628137,
+    "instrument_day_pairs": 6,
+    "minute_states": 8640,
+    "paired_minute_rows": 4320,
+    "paired_spread_competition": {
+      "eth_greater": 4089,
+      "btc_greater": 231,
+      "equal": 0
+    }
+  },
+  "per_day": {
+    "2026-08-15": {
+      "BTC": {
+        "events": 301816,
+        "snapshot_count": 96,
+        "minute_states": 1440,
+        "minute_spread_mean_bp": 0.10000512,
+        "minute_spread_median_bp": 0.01587875,
+        "minute_spread_p90_bp": 0.34940685,
+        "minute_spread_max_bp": 1.22208353,
+        "minute_spread_max_at_utc": "16:16",
+        "event_time_covered_ms": 86396511,
+        "event_time_spread_weighted_mean_bp": 0.09501680439872943,
+        "thresholds_bp": {
+          "0.1": {
+            "minute_count_above": 384,
+            "minute_fraction_above": 0.26666666666666666,
+            "integrated_time_ms_above": 21796675,
+            "integrated_time_fraction_above": 0.25228651883870634,
+            "positive_duration_episodes": 6276,
+            "episodes_ge_1s": 2271,
+            "episodes_ge_10s": 587,
+            "episodes_ge_60s": 31,
+            "longest_continuous_episode_ms": 360830,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T17:48:08.274000+00:00",
+              "end_utc": "2026-08-15T17:54:09.104000+00:00",
+              "duration_ms": 360830,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "0.5": {
+            "minute_count_above": 53,
+            "minute_fraction_above": 0.03680555555555556,
+            "integrated_time_ms_above": 3164343,
+            "integrated_time_fraction_above": 0.036625819299577964,
+            "positive_duration_episodes": 3956,
+            "episodes_ge_1s": 545,
+            "episodes_ge_10s": 60,
+            "episodes_ge_60s": 2,
+            "longest_continuous_episode_ms": 73260,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T14:36:49.072000+00:00",
+              "end_utc": "2026-08-15T14:38:02.332000+00:00",
+              "duration_ms": 73260,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "1.0": {
+            "minute_count_above": 1,
+            "minute_fraction_above": 0.0006944444444444445,
+            "integrated_time_ms_above": 56040,
+            "integrated_time_fraction_above": 0.0006486373043466998,
+            "positive_duration_episodes": 844,
+            "episodes_ge_1s": 2,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 1040,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T08:36:49.863000+00:00",
+              "end_utc": "2026-08-15T08:36:50.903000+00:00",
+              "duration_ms": 1040,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "2.0": {
+            "minute_count_above": 0,
+            "minute_fraction_above": 0,
+            "integrated_time_ms_above": 200,
+            "integrated_time_fraction_above": 0.0000023149082953129903,
+            "positive_duration_episodes": 19,
+            "episodes_ge_1s": 0,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 20,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T01:13:48.901000+00:00",
+              "end_utc": "2026-08-15T01:13:48.921000+00:00",
+              "duration_ms": 20,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          }
+        }
+      },
+      "ETH": {
+        "events": 277791,
+        "snapshot_count": 96,
+        "minute_states": 1440,
+        "minute_spread_mean_bp": 0.90546409,
+        "minute_spread_median_bp": 1.00969573,
+        "minute_spread_p90_bp": 1.48814427,
+        "minute_spread_max_bp": 3.1934258,
+        "minute_spread_max_at_utc": "08:34",
+        "event_time_covered_ms": 86399775,
+        "event_time_spread_weighted_mean_bp": 0.9006069028994581,
+        "thresholds_bp": {
+          "0.1": {
+            "minute_count_above": 1232,
+            "minute_fraction_above": 0.8555555555555555,
+            "integrated_time_ms_above": 74351973,
+            "integrated_time_fraction_above": 0.8605574840906703,
+            "positive_duration_episodes": 1485,
+            "episodes_ge_1s": 632,
+            "episodes_ge_10s": 398,
+            "episodes_ge_60s": 202,
+            "longest_continuous_episode_ms": 2158792,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T11:02:02.857000+00:00",
+              "end_utc": "2026-08-15T11:38:01.649000+00:00",
+              "duration_ms": 2158792,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": true
+          },
+          "0.5": {
+            "minute_count_above": 1099,
+            "minute_fraction_above": 0.7631944444444444,
+            "integrated_time_ms_above": 66475235,
+            "integrated_time_fraction_above": 0.7693912976046523,
+            "positive_duration_episodes": 2257,
+            "episodes_ge_1s": 991,
+            "episodes_ge_10s": 577,
+            "episodes_ge_60s": 259,
+            "longest_continuous_episode_ms": 1122590,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T16:41:09.563000+00:00",
+              "end_utc": "2026-08-15T16:59:52.153000+00:00",
+              "duration_ms": 1122590,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": true
+          },
+          "1.0": {
+            "minute_count_above": 761,
+            "minute_fraction_above": 0.5284722222222222,
+            "integrated_time_ms_above": 44757446,
+            "integrated_time_fraction_above": 0.518027344399913,
+            "positive_duration_episodes": 4883,
+            "episodes_ge_1s": 1781,
+            "episodes_ge_10s": 809,
+            "episodes_ge_60s": 186,
+            "longest_continuous_episode_ms": 466590,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T21:30:42.344000+00:00",
+              "end_utc": "2026-08-15T21:38:28.934000+00:00",
+              "duration_ms": 466590,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "2.0": {
+            "minute_count_above": 6,
+            "minute_fraction_above": 0.004166666666666667,
+            "integrated_time_ms_above": 126590,
+            "integrated_time_fraction_above": 0.0014651658525731115,
+            "positive_duration_episodes": 1157,
+            "episodes_ge_1s": 13,
+            "episodes_ge_10s": 1,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 12930,
+            "longest_episode_details": {
+              "start_utc": "2026-08-15T11:59:05.322000+00:00",
+              "end_utc": "2026-08-15T11:59:18.252000+00:00",
+              "duration_ms": 12930,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          }
+        }
+      }
+    },
+    "2026-09-15": {
+      "BTC": {
+        "events": 1811678,
+        "snapshot_count": 96,
+        "minute_states": 1440,
+        "minute_spread_mean_bp": 0.37679211,
+        "minute_spread_median_bp": 0.09746819,
+        "minute_spread_p90_bp": 1.21808499,
+        "minute_spread_max_bp": 4.71851053,
+        "minute_spread_max_at_utc": "18:43",
+        "event_time_covered_ms": 86399986,
+        "event_time_spread_weighted_mean_bp": 0.39343530882757954,
+        "thresholds_bp": {
+          "0.1": {
+            "minute_count_above": 720,
+            "minute_fraction_above": 0.5,
+            "integrated_time_ms_above": 42939370,
+            "integrated_time_fraction_above": 0.49698352960381265,
+            "positive_duration_episodes": 37087,
+            "episodes_ge_1s": 8980,
+            "episodes_ge_10s": 669,
+            "episodes_ge_60s": 4,
+            "longest_continuous_episode_ms": 112680,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T00:37:57.259000+00:00",
+              "end_utc": "2026-09-15T00:39:49.939000+00:00",
+              "duration_ms": 112680,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "0.5": {
+            "minute_count_above": 378,
+            "minute_fraction_above": 0.2625,
+            "integrated_time_ms_above": 23766329,
+            "integrated_time_fraction_above": 0.2750732968868768,
+            "positive_duration_episodes": 56171,
+            "episodes_ge_1s": 4952,
+            "episodes_ge_10s": 195,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 50760,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T00:38:11.669000+00:00",
+              "end_utc": "2026-09-15T00:39:02.429000+00:00",
+              "duration_ms": 50760,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "1.0": {
+            "minute_count_above": 168,
+            "minute_fraction_above": 0.11666666666666667,
+            "integrated_time_ms_above": 10759010,
+            "integrated_time_fraction_above": 0.12452559888146278,
+            "positive_duration_episodes": 71619,
+            "episodes_ge_1s": 854,
+            "episodes_ge_10s": 34,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 30680,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T15:48:11.778000+00:00",
+              "end_utc": "2026-09-15T15:48:42.458000+00:00",
+              "duration_ms": 30680,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "2.0": {
+            "minute_count_above": 55,
+            "minute_fraction_above": 0.03819444444444445,
+            "integrated_time_ms_above": 3406384,
+            "integrated_time_fraction_above": 0.03942574712917199,
+            "positive_duration_episodes": 39083,
+            "episodes_ge_1s": 189,
+            "episodes_ge_10s": 1,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 10800,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T17:04:50.098000+00:00",
+              "end_utc": "2026-09-15T17:05:00.898000+00:00",
+              "duration_ms": 10800,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          }
+        }
+      },
+      "ETH": {
+        "events": 1717498,
+        "snapshot_count": 96,
+        "minute_states": 1440,
+        "minute_spread_mean_bp": 1.21132831,
+        "minute_spread_median_bp": 1.25223687,
+        "minute_spread_p90_bp": 1.91443185,
+        "minute_spread_max_bp": 6.83588631,
+        "minute_spread_max_at_utc": "18:43",
+        "event_time_covered_ms": 86399939,
+        "event_time_spread_weighted_mean_bp": 1.1939703292785138,
+        "thresholds_bp": {
+          "0.1": {
+            "minute_count_above": 1350,
+            "minute_fraction_above": 0.9375,
+            "integrated_time_ms_above": 80653439,
+            "integrated_time_fraction_above": 0.9334895363757143,
+            "positive_duration_episodes": 11626,
+            "episodes_ge_1s": 5897,
+            "episodes_ge_10s": 1985,
+            "episodes_ge_60s": 211,
+            "longest_continuous_episode_ms": 369700,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T03:21:32.788000+00:00",
+              "end_utc": "2026-09-15T03:27:42.488000+00:00",
+              "duration_ms": 369700,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": true
+          },
+          "0.5": {
+            "minute_count_above": 1281,
+            "minute_fraction_above": 0.8895833333333333,
+            "integrated_time_ms_above": 75899115,
+            "integrated_time_fraction_above": 0.8784625993775297,
+            "positive_duration_episodes": 17075,
+            "episodes_ge_1s": 7551,
+            "episodes_ge_10s": 1939,
+            "episodes_ge_60s": 137,
+            "longest_continuous_episode_ms": 369600,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T03:21:32.788000+00:00",
+              "end_utc": "2026-09-15T03:27:42.388000+00:00",
+              "duration_ms": 369600,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": true
+          },
+          "1.0": {
+            "minute_count_above": 889,
+            "minute_fraction_above": 0.6173611111111111,
+            "integrated_time_ms_above": 52679845,
+            "integrated_time_fraction_above": 0.6097208587149581,
+            "positive_duration_episodes": 56376,
+            "episodes_ge_1s": 12935,
+            "episodes_ge_10s": 507,
+            "episodes_ge_60s": 1,
+            "longest_continuous_episode_ms": 62300,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T03:26:06.808000+00:00",
+              "end_utc": "2026-09-15T03:27:09.108000+00:00",
+              "duration_ms": 62300,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": true
+          },
+          "2.0": {
+            "minute_count_above": 133,
+            "minute_fraction_above": 0.09236111111111112,
+            "integrated_time_ms_above": 7896127,
+            "integrated_time_fraction_above": 0.09139042331962757,
+            "positive_duration_episodes": 60455,
+            "episodes_ge_1s": 780,
+            "episodes_ge_10s": 1,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 10910,
+            "longest_episode_details": {
+              "start_utc": "2026-09-15T03:42:24.828000+00:00",
+              "end_utc": "2026-09-15T03:42:35.738000+00:00",
+              "duration_ms": 10910,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          }
+        }
+      }
+    },
+    "2026-10-15": {
+      "BTC": {
+        "events": 2346486,
+        "snapshot_count": 96,
+        "minute_states": 1440,
+        "minute_spread_mean_bp": 0.03813472,
+        "minute_spread_median_bp": 0.01229084,
+        "minute_spread_p90_bp": 0.0124135,
+        "minute_spread_max_bp": 2.26600396,
+        "minute_spread_max_at_utc": "13:38",
+        "event_time_covered_ms": 86399930,
+        "event_time_spread_weighted_mean_bp": 0.0352768728952588,
+        "thresholds_bp": {
+          "0.1": {
+            "minute_count_above": 60,
+            "minute_fraction_above": 0.041666666666666664,
+            "integrated_time_ms_above": 2717864,
+            "integrated_time_fraction_above": 0.031456784745080235,
+            "positive_duration_episodes": 64350,
+            "episodes_ge_1s": 29,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 6710,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T21:43:53.727000+00:00",
+              "end_utc": "2026-10-15T21:44:00.437000+00:00",
+              "duration_ms": 6710,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "0.5": {
+            "minute_count_above": 26,
+            "minute_fraction_above": 0.018055555555555554,
+            "integrated_time_ms_above": 1618952,
+            "integrated_time_fraction_above": 0.018737885551527646,
+            "positive_duration_episodes": 37205,
+            "episodes_ge_1s": 1,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 1030,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T12:30:43.661000+00:00",
+              "end_utc": "2026-10-15T12:30:44.691000+00:00",
+              "duration_ms": 1030,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "1.0": {
+            "minute_count_above": 11,
+            "minute_fraction_above": 0.007638888888888889,
+            "integrated_time_ms_above": 695735,
+            "integrated_time_fraction_above": 0.008052494949938038,
+            "positive_duration_episodes": 16598,
+            "episodes_ge_1s": 0,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 850,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T04:34:46.352000+00:00",
+              "end_utc": "2026-10-15T04:34:47.202000+00:00",
+              "duration_ms": 850,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "2.0": {
+            "minute_count_above": 1,
+            "minute_fraction_above": 0.0006944444444444445,
+            "integrated_time_ms_above": 62705,
+            "integrated_time_fraction_above": 0.0007257529028090648,
+            "positive_duration_episodes": 1995,
+            "episodes_ge_1s": 0,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 420,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T12:30:11.481000+00:00",
+              "end_utc": "2026-10-15T12:30:11.901000+00:00",
+              "duration_ms": 420,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          }
+        }
+      },
+      "ETH": {
+        "events": 3172868,
+        "snapshot_count": 96,
+        "minute_states": 1440,
+        "minute_spread_mean_bp": 0.30863944,
+        "minute_spread_median_bp": 0.04227552,
+        "minute_spread_p90_bp": 1.15946461,
+        "minute_spread_max_bp": 8.66134777,
+        "minute_spread_max_at_utc": "02:29",
+        "event_time_covered_ms": 86399965,
+        "event_time_spread_weighted_mean_bp": 0.293646714060778,
+        "thresholds_bp": {
+          "0.1": {
+            "minute_count_above": 421,
+            "minute_fraction_above": 0.2923611111111111,
+            "integrated_time_ms_above": 23683788,
+            "integrated_time_fraction_above": 0.27411802770984917,
+            "positive_duration_episodes": 147981,
+            "episodes_ge_1s": 3404,
+            "episodes_ge_10s": 29,
+            "episodes_ge_60s": 3,
+            "longest_continuous_episode_ms": 107530,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T21:47:19.243000+00:00",
+              "end_utc": "2026-10-15T21:49:06.773000+00:00",
+              "duration_ms": 107530,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "0.5": {
+            "minute_count_above": 277,
+            "minute_fraction_above": 0.19236111111111112,
+            "integrated_time_ms_above": 14954123,
+            "integrated_time_fraction_above": 0.17308019742832073,
+            "positive_duration_episodes": 142240,
+            "episodes_ge_1s": 1064,
+            "episodes_ge_10s": 1,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 10740,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T05:38:21.754000+00:00",
+              "end_utc": "2026-10-15T05:38:32.494000+00:00",
+              "duration_ms": 10740,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "1.0": {
+            "minute_count_above": 162,
+            "minute_fraction_above": 0.1125,
+            "integrated_time_ms_above": 9471416,
+            "integrated_time_fraction_above": 0.10962291477780113,
+            "positive_duration_episodes": 113351,
+            "episodes_ge_1s": 234,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 7580,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T05:38:21.864000+00:00",
+              "end_utc": "2026-10-15T05:38:29.444000+00:00",
+              "duration_ms": 7580,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          },
+          "2.0": {
+            "minute_count_above": 37,
+            "minute_fraction_above": 0.025694444444444443,
+            "integrated_time_ms_above": 2406583,
+            "integrated_time_fraction_above": 0.02785398119084886,
+            "positive_duration_episodes": 39653,
+            "episodes_ge_1s": 5,
+            "episodes_ge_10s": 0,
+            "episodes_ge_60s": 0,
+            "longest_continuous_episode_ms": 2320,
+            "longest_episode_details": {
+              "start_utc": "2026-10-15T15:41:29.408000+00:00",
+              "end_utc": "2026-10-15T15:41:31.728000+00:00",
+              "duration_ms": 2320,
+              "right_censored_at_final_event": false
+            },
+            "right_censored_at_last_event": false
+          }
+        }
+      }
+    }
+  },
+  "pooled_three_separate_days_descriptive_only": {
+    "BTC": {
+      "observed_days": 3,
+      "minute_points": 4320,
+      "spread_minute_mean_bp": 0.17164399,
+      "spread_minute_median_bp": 0.01585455,
+      "spread_minute_p90_bp": 0.51339935,
+      "event_time_covered_ms": 259196427,
+      "event_time_weighted_spread_mean_bp": 0.17457742544343594,
+      "thresholds_bp": {
+        "0.1": {
+          "above_ms_sum_three_distinct_days": 67453909,
+          "above_fraction_of_three_observed_day_coverage": 0.26024243382027795,
+          "minute_above_count": 1164,
+          "minute_above_fraction": 0.26944444444444443,
+          "max_episode_ms_across_three_days": 360830
+        },
+        "0.5": {
+          "above_ms_sum_three_distinct_days": 28549624,
+          "above_fraction_of_three_observed_day_coverage": 0.110146672662274,
+          "minute_above_count": 457,
+          "minute_above_fraction": 0.10578703703703704,
+          "max_episode_ms_across_three_days": 73260
+        },
+        "1.0": {
+          "above_ms_sum_three_distinct_days": 11510785,
+          "above_fraction_of_three_observed_day_coverage": 0.044409504919602924,
+          "minute_above_count": 180,
+          "minute_above_fraction": 0.041666666666666664,
+          "max_episode_ms_across_three_days": 30680
+        },
+        "2.0": {
+          "above_ms_sum_three_distinct_days": 3469289,
+          "above_fraction_of_three_observed_day_coverage": 0.013384787129029367,
+          "minute_above_count": 56,
+          "minute_above_fraction": 0.012962962962962963,
+          "max_episode_ms_across_three_days": 10800
+        }
+      }
+    },
+    "ETH": {
+      "observed_days": 3,
+      "minute_points": 4320,
+      "spread_minute_mean_bp": 0.80847728,
+      "spread_minute_median_bp": 0.80680785,
+      "spread_minute_p90_bp": 1.57014502,
+      "event_time_covered_ms": 259199679,
+      "event_time_weighted_spread_mean_bp": 0.7960745322090069,
+      "thresholds_bp": {
+        "0.1": {
+          "above_ms_sum_three_distinct_days": 178689200,
+          "above_fraction_of_three_observed_day_coverage": 0.6893881994352316,
+          "minute_above_count": 3003,
+          "minute_above_fraction": 0.6951388888888889,
+          "max_episode_ms_across_three_days": 2158792
+        },
+        "0.5": {
+          "above_ms_sum_three_distinct_days": 157328473,
+          "above_fraction_of_three_observed_day_coverage": 0.6069778851848038,
+          "minute_above_count": 2657,
+          "minute_above_fraction": 0.6150462962962963,
+          "max_episode_ms_across_three_days": 1122590
+        },
+        "1.0": {
+          "above_ms_sum_three_distinct_days": 106908707,
+          "above_fraction_of_three_observed_day_coverage": 0.41245694212453093,
+          "minute_above_count": 1812,
+          "minute_above_fraction": 0.41944444444444445,
+          "max_episode_ms_across_three_days": 466590
+        },
+        "2.0": {
+          "above_ms_sum_three_distinct_days": 10429300,
+          "above_fraction_of_three_observed_day_coverage": 0.040236546743562904,
+          "minute_above_count": 176,
+          "minute_above_fraction": 0.040740740740740744,
+          "max_episode_ms_across_three_days": 12930
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Only three separated historical calendar dates; pooled duration-weighted fractions are descriptive for exactly these three days, not a market population probability.",
+    "Event-held spread states are assumed constant from each message to the next; upstream data missing before archive cannot be ruled out without seqId chain.",
+    "All sources are full archived bytes verified by SHA and CRC; this does not validate real exchange fills or cost of an executable order.",
+    "No orders, no fees account-specific, no inference about Bitstamp USD EMA performance or real trading strategies.",
+    "Right-censored episode at last source timestamp is measured only up to that timestamp, not projected to midnight."
+  ]
+}
