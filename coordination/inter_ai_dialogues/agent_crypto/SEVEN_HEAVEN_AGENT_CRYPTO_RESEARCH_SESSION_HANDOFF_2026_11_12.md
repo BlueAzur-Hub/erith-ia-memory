@@ -92,10 +92,24 @@ Sources secondaires de continuité :
 - Le **Notion canonique a été mis à jour** avec la troisième confirmation du 12 novembre. La fiche secondaire créée inutilement est désormais identifiée comme une confirmation datée, et ne doit pas être présentée comme référence de premier rang.
 - Cette transmission décrit les documents de **cette session** ; elle ne prétend pas reproduire les dizaines de milliers de pages d'archives précédentes.
 
+### Étude de causalité V5 ↔ L2 — réalisée le 12 novembre 2026
+
+**Rapport :** [V5 L2 Causal Timing and Signal Pairing Eligibility](./research/strategy_profiles/SEVEN_HEAVEN_V5_OKX_L2_CAUSAL_TIME_ALIGNMENT_AND_SIGNAL_PAIRING_ELIGIBILITY_AUDIT_2026_11_12.md). **Preuves numériques :** [JSON de contrôle](./research/strategy_profiles/SEVEN_HEAVEN_V5_OKX_L2_CAUSAL_TIME_ALIGNMENT_AND_SIGNAL_PAIRING_PROOFS_2026_11_12.json).
+
+- **3 journées historiques déjà publiées** (15 août, 15 septembre, 15 octobre 2026), **288 horaires de quart d'heure par actif** (576 états BTC-USDC et ETH-USDC), tous unique et contrôlés.
+- **Causalité au début de la bougie :** **571/576 carnets sont horodatés après le créneau de 1 à 9 ms** ; **5/576** ont le même timestamp à la milliseconde, ordonnancement inconnu ; **0/576** sont strictement antérieurs au créneau. Les anciens CSV sélectionnaient précisément le **premier carnet valide à ou après** le créneau : cette méthode reste pertinente pour mesurer la liquidité, mais elle **ne prouve pas une disponibilité pré-exécution** à l'heure exacte T.
+- **V5 5m** : 864 ouvertures théoriques/actif sur les trois dates, **288** créneaux ayant un carnet complet publié ; les 864 autres? **Correction de lecture : 576 des 864 créneaux n'ont pas** de carnet complet publié. Le fichier minute montre **les spreads** à 864 ouvertures/actif, sans profondeur ; sur les 1728 relevés minute à 5m, **1721** sont après T, **7** égaux ms, **0** avant.
+- **V5 15m** : 288 créneaux par actif et 288 carnets publiés, mais **aucun ne prouve le carnet connu strictement avant T**.
+- **V5 4h** : 18 créneaux par actif, soit 36 états publiés pour les deux actifs, **tous après T**, aucun pré-exécution.
+- **Ne pas confondre horaires possibles et vrais signaux EMA :** les recettes V5 du 06/11 dans Notion documentent les nombres de signaux et de transactions, sans liste `entryAt`/`exitAt` individuelle dans la section inspectée ; **aucun appariement exhaustif aux six archives n'a été effectué**. Un zéro de preuve **n'est pas** une preuve de zéro événement appariable.
+- **Ne pas proclamer de nouvelle performance ni de slippage exécuté** : l'analyse ne comprend aucun OHLC historique natif apparié, aucun `next.open` comparé au carnet avant soumission, aucune latence établie.
+
+**Décision :** garder frais Spot taker observés **0,10 %/côté** et forfait V5 **0,05 %/côté**. Une modification de paramètres sur la base d'états postérieurs à l'ouverture serait prématurée. Rejouer ciblé les archives L2 complètes seulement si nécessaire pour obtenir **le dernier carnet strictement AVANT** le cutoff fixé, et reproduire les signaux V5 sur **mêmes dates / paires / devises / côtés / tailles**.
+
 ## 6. Seule prochaine direction scientifique
 
-**L'audit V5/V6 du glissement est désormais fait et publié, il ne doit pas être recommencé.** Prochaine recherche justifiable : protocoliser une **validation appariée** des signaux V5, de l'ouverture de la bougie suivante et du carnet OKX **à même date, même paire, même devise, même côté et même montant**, uniquement si la couverture des archives existe ; sinon statuer « couverture insuffisante / coût estimé ». Tester ensuite, sans modifier le code, la sensibilité aux paramètres de glissement avec **0,10 % taker/côté** connu ; vérifier les exceptions par paire seulement lorsqu'elles changent la décision. Ne pas mélanger les coûts OKX/USDC et Bitstamp/USD.
+**L'audit de causalité et de couverture V5/L2 est désormais publié et ne doit pas être recommencé.** Prochaine étape scientifique non réalisée : **extraire les carnets avant l'ouverture et les signaux V5 exacts**, puis réaliser uniquement les paires qui satisfont aux critères préalables de même date, instrument OKX/USDC, sens, montant, horodatage et âge maximal de carnet. L'hypothèse de frais taker = **0,10 %/côté** reste la référence canonique, mais ne prouve pas les frais historiques réels. Si les données OHLC / L2 ou la chronologie pré-exécution manquent, conclure **UNPAIRED / COVERAGE_INSUFFICIENT**. Ne pas prétendre qu'un carnet à T+ms était connu à T. Ne pas mélanger les coûts OKX/USDC et Bitstamp/USD.
 
-Aucun nouveau collecteur, ordre ou modification du programme central n'est nécessaire pour poursuivre la recherche documentaire.
+Aucun ordre ni modification du programme central n'est nécessaire. Un **extracteur documentaire ciblé** des derniers carnets avant T pourra être requis pour un véritable test, mais n'a pas été exécuté dans cette session.
 
 **Règle opérationnelle pour la prochaine IA :** relire en premier `OKX MEMORY CORE → 01 · Trading Fees` dans Notion, puis ce handoff, le rapport et l'état GitHub main ; **ne jamais redemander les taux déjà consignés**. Séparer faits, modèles, hypothèses et actions ; réutiliser les preuves, ne pas créer de fiches en double, livrer les correctifs demandés puis s'arrêter.
