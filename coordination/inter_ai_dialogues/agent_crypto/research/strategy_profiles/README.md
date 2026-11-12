@@ -289,3 +289,12 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - **Conclusion :** résultats inter-actifs hétérogènes ; **2024 est un contre-exemple EMA** (EMA négative, Buy & Hold ETH positif). Le portefeuille continu reste exposé à une baisse maximale supérieure à 50 %. Aucun signal à promouvoir dans le Trader.
 
 **Suite :** comparer BTC et ETH sur **les mêmes dates** (BTC source quotidienne s'achève en septembre 2026), puis évaluer une combinaison BTC/ETH à pondérations fixées en amont, toujours PAPER.
+
+## BTC + ETH aux mêmes dates : portefeuilles EMA 50/50 (12 novembre 2026)
+
+- **[Rapport BTC+ETH sur 1 035 jours : EMA 50/50 contre Buy & Hold 50/50](./SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_REPORT.md)** · [protocole figé](./SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_FROZEN_PROTOCOL_2026_11_12.md), commit `63164145e`, publié avant simulation.
+- **[Code Python reproductible](./SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12.py)** · [preuves JSON / huit SHA-256](./SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_PROOFS.json) · [courbes 1 035 jours CSV](./SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_EQUITY_DAILY.csv) · [opérations fictives CSV](./SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_TRADES.csv).
+- **Sources communes** : 8 shards officiels Binance Spot BTCUSDT/ETHUSDT agrégés à partir de 62 880 heures vérifiées (2023 avril–décembre pour initialisation, 2024–octobre 2026 pour portefeuille). Aucun transfert de capital entre les deux poches, pas de rebalancement, pas de levier, transactions fictives à l'ouverture suivant la clôture du signal.
+- **Résultats PAPER** : EMA 50/50 **+79,20 %**, drawdown **−41,92 %**, **124** opérations ; Buy & Hold 50/50 **+40,74 %**, drawdown **−58,50 %**. Sur 2024 isolé, le Buy & Hold est supérieur ; en janvier–octobre 2026, EMA 50/50 **+2,74 % devient −0,24 %** avec coûts doublés.
+- **Lecture critique** : pas un nouvel échantillon inédit, opérations supposées exécutées au prix d'ouverture, coûts et risque USDT non exhaustifs. Script compilé/testé synthétiquement ; reproduction indépendante intégrale sur les huit shards encore à confirmer. Aucun ordre réel ni modification de l'Administrator, du Trader, de l'Operator ou du Bridge.
+
