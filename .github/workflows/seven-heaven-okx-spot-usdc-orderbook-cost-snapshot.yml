@@ -1,0 +1,90 @@
+name: Seven Heaven OKX Spot USDC Orderbook Cost Research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-spot-usdc-orderbook-cost-snapshot.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_ORDERBOOK_ONE_SHOT_2026_11_12.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/test_seven_heaven_okx_spot_usdc_orderbook_cost.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-spot-usdc-book-once
+  cancel-in-progress: false
+
+jobs:
+  public-market-data-read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile, self-test and run five independent offline tests
+        run: |
+          set -euo pipefail
+          root='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles'
+          python -m py_compile "$root/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_ORDERBOOK_ONE_SHOT_2026_11_12.py"
+          python "$root/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_ORDERBOOK_ONE_SHOT_2026_11_12.py" --self-test
+          python -m unittest -v "$root/test_seven_heaven_okx_spot_usdc_orderbook_cost.py"
+      - name: Observe one public OKX BTC USDC book and one ETH USDC book
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_ORDERBOOK_ONE_SHOT_2026_11_12.py
+      - name: Verify snapshot report and no-order safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv,hashlib,json,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_spot_usdc_orderbook_2026_11_12_evidence')
+          data=json.loads((root/'SEVEN_HEAVEN_OKX_SPOT_USDC_ORDERBOOK_COST_EVIDENCE.json').read_text(encoding='utf8'))
+          assert data['schema']=='seven-heaven.okx-usdc-spot-orderbook-point-in-time-costs.v1'
+          assert data['status'] in ('complete','partial','unavailable')
+          assert data['public_api_only'] and not data['order_execution'] and not data['live_trading']
+          assert data['instruments_requested']==['BTC-USDC','ETH-USDC']
+          assert data['notional_usdc']==['10','100','1000','10000','100000']
+          assert len(data['snapshots'])==2
+          assert (root/'SEVEN_HEAVEN_OKX_SPOT_USDC_ORDERBOOK_COST_REPORT.md').exists()
+          bytestream=(root/'SEVEN_HEAVEN_OKX_SPOT_USDC_COST_BY_NOTIONAL.csv').read_bytes()
+          assert b'\r' not in bytestream
+          rows=list(csv.DictReader(bytestream.decode('utf8').splitlines()))
+          assert len(rows)==20
+          for e in data['snapshots']:
+              assert e['pair'] in ('BTC-USDC','ETH-USDC')
+              if e['status']=='complete':
+                  raw=(root/e['raw_data_file']).read_bytes()
+                  assert hashlib.sha256(raw).hexdigest()==e['http_raw_sha256']
+                  assert len(e['analysis']['amounts'])==5
+                  assert e['analysis']['spread_bps']>0
+          print('PASS: public snapshots, immutable source SHA, 20 notional rows; observed status='+data['status'])
+          PY
+      - name: Archive point-in-time public evidence as Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-btc-eth-usdc-book-cost-2026-11-12
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_spot_usdc_orderbook_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish evidence ONLY inside shared inter-AI research directory
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_spot_usdc_orderbook_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: identical evidence already saved'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive one-shot OKX Spot USDC orderbook cost observations'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
