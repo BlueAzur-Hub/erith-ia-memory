@@ -1,0 +1,81 @@
+name: Seven Heaven OKX L2 Three Dates 96 Quarter Hours Independent
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-l2-three-dates-96-quarter-hours-independent.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_INDEPENDENT_REPRODUCTION.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-l2-96-quarter-hours-three-calendar-days-independent
+  cancel-in-progress: false
+jobs:
+  validate-three-date-historical-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run synthetic hash and quantile tests
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_INDEPENDENT_REPRODUCTION.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Verify all six pinned archives and recompute 576 states and 2880 price-cost pairs
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_INDEPENDENT_REPRODUCTION.py --repo-root .
+      - name: Validate scope, source completeness qualifications and output proof
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_three_days_96_quarter_hours_independent_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_THREE_DATES_96_QUARTER_HOUR_INDEPENDENT_PROOFS.json')
+          d=json.loads(p.read_text(encoding='utf8'))
+          assert d['schema']=='seven-heaven.okx-l2-aug-sep-oct-96-quarters-independent.v1'
+          assert d['status']=='SIX_ARCHIVES_576_STATES_288_SPREADS_2880_COST_PAIRS_INDEPENDENTLY_REPRODUCED'
+          assert d['read_only'] and not d['orders_enabled']
+          assert d['verified_source_archives']==6
+          assert d['verified_book_states']==576
+          assert d['verified_spread_pairs']==288
+          assert d['verified_cost_pairs']==2880
+          assert d['verified_complete_archive_events']==9628137
+          assert d['eth_spread_gt_btc']+d['btc_spread_gt_eth']+d['equal_spread']==288
+          assert not d['upstream_source_sequence_completeness_proven']
+          assert len(d['source_blobs_verified'])==6
+          assert len(d['derived_output_blobs_verified'])==3
+          print('PASS: 6 archive SHA pins, 576 states, 288 BTC/ETH paired spreads and 2880 paired hypothetical orderbook costs')
+          PY
+      - name: Retain small independent audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-l2-three-dates-ninety-six-quarters-independent-proof
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_three_days_96_quarter_hours_independent_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Commit validation result into shared inter-AI research Coffre
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_three_days_96_quarter_hours_independent_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: matching proof already present'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive independently reproduced 576 L2 snapshots and 2880 paired costs'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
