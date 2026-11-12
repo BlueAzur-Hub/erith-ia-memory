@@ -652,3 +652,42 @@ Les 4 ancres ETH (00/06/12/18) et 5 montants 10/100/1000/10000/100000 USDC doive
 
 **Piste suivante non encore exécutée :** tester la robustesse des fractions temporelles et des plus longues durées **sur les dates 15 août et 15 septembre**, selon les mêmes seuils, et/ou tester un modèle PAPER de coût complet incluant des frais documentés sur la bonne plateforme, en distinguant spread, VWAP carnet et commissions. Ne pas déclarer ce chantier déjà fait.
 
+
+## OKX L2 BTC/ETH — ÉTUDE MINUTE ET PERSISTANCE DES SPREADS SUR TROIS JOURS ACHEVÉE (12 novembre 2026)
+
+**ÉTUDE ACHEVÉE, SIX ARCHIVES RECONSTRUITES, QUATRE NOUVEAUX REPLAYS SUCCESS, SECOND AUDIT INDÉPENDANT SUCCESS.** Les **15 août, 15 septembre et 15 octobre 2026 UTC**, sur **BTC-USDC et ETH-USDC**, les carnets d'ordres **OKX Spot L2 400 niveaux** ont été intégralement retraités pour **1 440 minutes fixes par actif et par jour**, avec **durées de spread entre chaque événement L2 successif**. Total **9 628 137 événements JSON** issus de **six fichiers complets**, **8 640 états minute**, **4 320 comparaisons BTC/ETH**. Les archives et membres ont SHA-256 complets et gzip CRC vérifiés ; **96/96 références à 15 minutes** concordent exactement par instrument/jour. Aucun ordre, aucune surveillance, aucun changement Trader/Bridge/Administrator/Operator.
+
+- [**RAPPORT SCIENTIFIQUE FINAL : août / septembre / octobre, seuils et durée des épisodes**](./SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_ONE_MINUTE_EVENT_TIME_SPREAD_PERSISTENCE_SCIENTIFIC_AUDIT_2026_11_12.md).
+- [**Protocole gelé avant la nouvelle lecture août/septembre**](./SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_ONE_MINUTE_SPREAD_PERSISTENCE_FROZEN_PROTOCOL_2026_11_12.md), commit `91a0b96c3c5367e7dae48292c58ab80fa7e05d5a`.
+- [**Code streaming minute + épisodes événementiels pour quatre sources août/septembre**](./SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_ONE_MINUTE_EVENT_TIME_SPREAD_PERSISTENCE_REPLAY_2026_11_12.py), commit `cd9373b37c5a33b4567f4d591434e3d56370a328`.
+- [**Preuves JSON et CSV de toutes les quatre nouvelles sources, SHA/CRC et 96 références**](./okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/), [**GitHub Actions quatre replays + publication : SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43276237813).
+- [**Référence déjà validée du 15 octobre, 2 archives et 2 880 minutes**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_AND_EVENT_TIME_SPREAD_PERSISTENCE_SCIENTIFIC_AUDIT_2026_11_12.md).
+- [**Synthèse JSON : 6 Git blobs source épinglés, 8 640 minutes, 4 seuils/actif/jour et statistiques descriptives**](./SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_ONE_MINUTE_EVENT_TIME_PERSISTENCE_COMPARATIVE_PROOFS_2026_11_12.json), Git blob `3790a41c05be23ec001f799cd5e48e3ce28720ec`.
+- [**CSV des 4 320 minutes appariées BTC/ETH**](./SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_PAIRED_MINUTE_SPREADS_4320_ROWS_2026_11_12.csv), Git blob `0c06f32548ff6fa240a8b7040d8f9c0dc23da05c`.
+- [**Second audit Python hors réseau — arithmétique minutes et durées depuis les six preuves sources épinglées**](./SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_MINUTE_EVENT_TIME_PERSISTENCE_INDEPENDENT_REPRODUCTION_2026_11_12.py).
+- [**Preuve du contrôle indépendant**](./okx_l2_three_days_eventtime_persistence_independent_2026_11_12_evidence/SEVEN_HEAVEN_OKX_THREE_DAYS_ONE_MINUTE_EVENTTIME_INDEPENDENT_RECALC_PROOFS.json), Git blob `054608ae8b3eeb78973fe6406fd8bb6e82616d7a`, [**GitHub Actions independent check : SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43277250677).
+- [**Première étude du 15 octobre : protocole des seuils 0,1 / 0,5 / 1 / 2 bp et contrôle SHA**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FROZEN_PROTOCOL_2026_11_12.md).
+
+**Temps reconstitué au-dessus du spread strict >0,1 bp**, BTC / ETH respectivement :
+- **15 août : 25,229 % / 86,056 %** ;
+- **15 septembre : 49,698 % / 93,349 %** ;
+- **15 octobre : 3,146 % / 27,412 %**.
+
+**Plus longue séquence d'états archivés >0,1 bp** :
+- août BTC **360,83 s**, ETH **2 158,792 s** (35 min 58,792 s) ;
+- septembre BTC **112,68 s**, ETH **369,70 s** ;
+- octobre BTC **6,71 s**, ETH **107,53 s**.
+
+**Moyenne de spread pondérée par durée entre événements (bp)** :
+- août BTC **0,095017**, ETH **0,900607** ;
+- septembre BTC **0,393435**, ETH **1,193970** ;
+- octobre BTC **0,035277**, ETH **0,293647**.
+
+**BTC/ETH sur les 4 320 minutes appariées :** ETH spread supérieur **4 089 fois**, BTC **231 fois**, 0 égalité. La comparaison est **approximative temporellement** (timestamp réel de chaque premier événement de la minute), pas une capture atomique.
+
+**Censure :** épisodes encore ouverts au dernier timestamp du 15 août et du 15 septembre pour certains seuils ETH ; reportés comme censurés à droite, **pas** étendus fictivement jusqu'à 24:00.
+
+**Limites scientifiques non négociables :** les fractions de temps et les épisodes s'appuient sur l'hypothèse de spread constant **[ts_i,ts_(i+1))**, à partir des messages archivés. Les fichiers n'exposent pas une chaîne `seqId/prevSeqId` permettant de certifier l'absence d'événements perdus par OKX **avant** archivage. SHA/CRC attestent les octets reçus, pas l'exhaustivité de production. Trois jours isolés ne sont **pas une période continue de trois mois**, ni une preuve prospective ou représentative. Le second audit indépendant vérifie les six preuves originales et le calcul des durées, **il ne redécompresse pas une seconde fois les 9,6 millions d'événements bruts**.
+
+**Étape de recherche suivante, NON réalisée ici :** examiner séparément les coûts théoriques du carnet pour les **petits montants** et les **frais de trading OKX documentés**, puis étudier la variation de la profondeur à la minute (au lieu de simplement le spread), en gardant l'intégrité source et les dates fixes. Ne pas comparer implicitement OKX Spot USDC à un backtest EMA Bitstamp USD, ni annoncer des profits exécutés. **Aucun ordre, aucune veille récurrente, aucune modification de l'Interface.**
+
