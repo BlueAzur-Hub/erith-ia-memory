@@ -258,3 +258,18 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 
 **Contrôle :** CSV canonique Git blob SHA-1 `c8ed2a206ea616ea87eeb83e31f7138d5b131588` vérifié, 1 035 lignes réconciliées, calculs comparés aux séries déjà publiées. Script Python autocontrôlé sur données synthétiques ; reproduction intégrale depuis le CSV sur Python externe encore à effectuer. Huit archives Binance brutes non rechargées pour cette extension. **Aucun nouveau signal de Trader, aucune modification Administrator / Operator / Bridge.**
 
+## Contrôle indépendant de la source BTC : Binance BTC/USDT contre Bitstamp BTC/USD — 12 novembre 2026
+
+**Étude PAPER supplémentaire effectivement calculée et publiée sur MASTER.** La règle EMA10>EMA30 et clôture>EMA30, les 275 jours d'initialisation, les dates 2024-01-01→2026-10-31, l'exécution fictive à l'ouverture suivante et les coûts de 0,10 % + glissement 0,05 % de chaque côté ont été **figés avant le replay Bitstamp**.
+
+- [**Protocole prépublié (commit c81886c)**](./SEVEN_HEAVEN_BTC_EMA10_30_BINANCE_VS_BITSTAMP_SECOND_SOURCE_FIXED_PROTOCOL_2026_11_12.md).
+- [**Rapport complet avec limites et comparaisons**](./SEVEN_HEAVEN_BTC_EMA10_30_BINANCE_VS_BITSTAMP_SECOND_SOURCE_REPORT_2026_11_12.md).
+- [**Programme Python autonome de reproduction à partir de blobs SHA immuables**](./SEVEN_HEAVEN_BTC_EMA10_30_BINANCE_VS_BITSTAMP_SECOND_SOURCE_REPLAY_2026_11_12.py).
+- [**Preuves JSON, contrôles de calendrier et écarts de signaux**](./SEVEN_HEAVEN_BTC_EMA10_30_BINANCE_VS_BITSTAMP_SECOND_SOURCE_EVIDENCE_2026_11_12.json).
+
+**Faits numériques :** sur 1 035 journées, la stratégie BTC EMA donne **+67,14 %** sur Binance (BTC/USDT) contre **+65,78 %** sur Bitstamp (BTC/USD), tous deux avec **68 opérations fictives** et drawdowns **−34,21 % / −34,48 %**. Les états d'exposition concordent sur **1 034/1 035 jours** ; seule divergence **17 juillet 2026**, liée à des EMA Bitstamp presque égales la veille. Corrélation des rendements journaliers **0,999883** ; résultats EMA coûts doublés : Binance **+50,91 %**, Bitstamp **+49,69 %**. **Buy & Hold BTC fait mieux en rendement total** sur les deux places (**+82,93 % / +82,68 %**) mais subit des drawdowns plus sévères (environ −53 %).
+
+**Discipline :** deux prix du même BTC sont très corrélés ; la période est déjà explorée, donc ce contrôle ne valide ni une performance future ni une généralisation à ETH. Les paires de cotation diffèrent USD/USDT ; les copies sont SHA vérifiées, mais le miroir Bitstamp tiers n'est pas signé par Bitstamp ; aucune exécution réelle. Le replay historique est effectivement calculé sur les CSV par le moteur de recherche ; **le script Python publié reste à réexécuter séparément**. **Aucun changement Administrator, Operator, Trader ou Bridge.**
+
+**Suite utile :** récupérer une série ETH/USD quotidienne extérieure à Binance, vérifier ses dates et ses empreintes, puis rejouer *sans aucun nouvel ajustement* le même test sur ETH. Si la seconde source ETH est inaccessible, expliquer cet obstacle sans prétendre disposer d'une validation inter-exchange ETH.
+
