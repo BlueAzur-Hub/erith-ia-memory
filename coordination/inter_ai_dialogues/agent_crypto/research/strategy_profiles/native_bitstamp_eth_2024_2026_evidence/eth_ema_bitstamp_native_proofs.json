@@ -1,0 +1,85 @@
+{
+  "schema": "seven-heaven.bitstamp-eth-usd-daily-ema-native-v1",
+  "instrument": "Bitstamp Spot ETH/USD; Binance Spot ETH/USDT benchmark",
+  "status": "NATIVE_API_REPLAY_EXECUTED",
+  "research_type": "retrospective_paper_only",
+  "orders_enabled": false,
+  "source_api": "https://www.bitstamp.net/api/v2/ohlc/ethusd/",
+  "api_retrieval_log": [
+    {
+      "end_requested_utc": "2026-10-31T23:59:59+00:00",
+      "received_rows": 1000,
+      "first_returned_utc": "2024-02-05",
+      "last_returned_utc": "2026-10-31",
+      "api_response_sha256": "adafd93b4ac1adfbd8fb0d952543a4a3371a3ef49b46c3cb70f64cc9fa0c826b"
+    },
+    {
+      "end_requested_utc": "2024-02-04T23:59:59+00:00",
+      "received_rows": 1000,
+      "first_returned_utc": "2021-05-11",
+      "last_returned_utc": "2024-02-04",
+      "api_response_sha256": "0ca865b7a0aa544be12e380e38b50efadc3f4c544d53eaa10978a59c8aea5280"
+    }
+  ],
+  "warmup_utc": [
+    "2023-04-01",
+    "2023-12-31"
+  ],
+  "simulation_utc": [
+    "2024-01-01",
+    "2026-10-31"
+  ],
+  "daily_source_count": 1310,
+  "test_days": 1035,
+  "source_sha256": "881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49",
+  "benchmark_git_blob_sha1": "c8ed2a206ea616ea87eeb83e31f7138d5b131588",
+  "stats": {
+    "EMA": {
+      "final_usd": 1895.486331,
+      "return_pct": 89.548633,
+      "max_drawdown_pct": -54.100527,
+      "trades": 54,
+      "exposed_days": 442
+    },
+    "EMA_COST_X2": {
+      "final_usd": 1747.863706,
+      "return_pct": 74.786371,
+      "max_drawdown_pct": -55.32444,
+      "trades": 54,
+      "exposed_days": 442
+    },
+    "HOLD": {
+      "final_usd": 983.805358,
+      "return_pct": -1.619464,
+      "max_drawdown_pct": -67.590691,
+      "trades": 1,
+      "exposed_days": 1035
+    },
+    "HOLD_COST_X2": {
+      "final_usd": 980.855416,
+      "return_pct": -1.914458,
+      "max_drawdown_pct": -67.590691,
+      "trades": 1,
+      "exposed_days": 1035
+    }
+  },
+  "comparison": {
+    "daily_signal_agree": 1034,
+    "daily_signal_disagree": 1,
+    "disagreement_dates": [
+      {
+        "date": "2025-06-19",
+        "bitstamp_exposed": 0,
+        "binance_exposed": 1
+      }
+    ],
+    "daily_return_correlation": 0.999923006,
+    "daily_return_pairs": 1034
+  },
+  "limitations": [
+    "Same 2024-2026 period previously investigated, not a new temporal holdout",
+    "Bitstamp ETH/USD versus Binance ETH/USDT; USD and USDT are different quote assets",
+    "Fixed costs and theoretical next-day open fills; no real orders",
+    "Public API OHLC data is not cryptographically signed by Bitstamp"
+  ]
+}
