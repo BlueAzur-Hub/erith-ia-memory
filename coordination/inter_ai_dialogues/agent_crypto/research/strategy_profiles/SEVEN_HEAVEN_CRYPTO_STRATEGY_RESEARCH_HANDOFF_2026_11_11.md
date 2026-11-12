@@ -393,3 +393,20 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Statut scientifique :** succès technique et mesure instantanée réelle, **aucune distribution temporelle de spreads, aucun coût réellement exécuté et aucune validation de rentabilité EMA**. Rien n'a été modifié dans Administrator, Operator, Trader ou Bridge. **Direction suivante :** si l'on veut étudier les conditions d'exécution, constituer un échantillonnage répété (horodaté, conservé et audité) et vérifier minSz/lotSz/tickSz et le barème de frais adapté au compte, sans déployer de trading automatique.
 
+
+## OKX Spot — tailles minimales et deuxième carnet, BTC/USDC et ETH/USDC (12 novembre 2026)
+
+**Étude ponctuelle complète, testée, publiée sur `main`.** Après la première photographie OKX à 15:27:25 UTC, lecture **publique** de `GET /api/v5/public/instruments` et d'un **second** `GET /api/v5/market/books` pour les paires BTC-USDC et ETH-USDC (15:38:34 UTC). **Six tests hors ligne réussis** et [GitHub Actions #2 SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43249814282). La tentative #1 avait échoué à un autotest qui comparait les écritures `0.005` et `0.0050` au lieu de comparer les nombres ; le test a été corrigé **sans modification du calcul ni des sources**.
+
+- [**Rapport scientifique complet : règles SPOT, petit budget et évolution de spread**](./SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_SECOND_SNAPSHOT_AUDIT_2026_11_12.md).
+- [**Protocole figé avant les nouvelles données**](./SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_AND_SECOND_SNAPSHOT_PROTOCOL_2026_11_12.md), commit `d560d6bd`.
+- [**Code Python public GET uniquement**](./SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_SECOND_SNAPSHOT_2026_11_12.py) et [**six tests de sécurité et d'arrondi**](./test_seven_heaven_okx_spot_instrument_rules_second_snapshot.py).
+- [**Preuves JSON, quatre réponses brutes horodatées avec SHA-256**](./okx_spot_instrument_rules_second_snapshot_2026_11_12_evidence/SEVEN_HEAVEN_OKX_INSTRUMENT_RULES_SECOND_SNAPSHOT_EVIDENCE.json).
+- [**CSV des huit exemples de taille 10/20/100/1 000 USDC**](./okx_spot_instrument_rules_second_snapshot_2026_11_12_evidence/SEVEN_HEAVEN_OKX_INSTRUMENT_RULES_LIMIT_SIZE_EXAMPLES.csv).
+
+**Champs officiels SPOT observés** : BTC-USDC `live`, `minSz=0.00001 BTC`, `lotSz=0.00000001 BTC`, `tickSz=0.1 USDC` ; ETH-USDC `live`, `minSz=0.001 ETH`, `lotSz=0.000001 ETH`, `tickSz=0.01 USDC`. Sur les meilleurs asks de la deuxième capture **71 316,90 USDC/BTC** et **1 996,47 USDC/ETH**, les quatre budgets théoriques respectent les critères de minimum et les pas de quantité sur les deux paires, **sans frais et sans vérification des règles personnelles d'ordre**. `minSz` et `lotSz` portent sur l'actif **de base** ; `tickSz` sur le pas du prix. Les ordres au marché peuvent utiliser le paramètre `tgtCcy` ; ne pas convertir cette simulation de taille d'un ordre limite en ordre réel.
+
+**Comparaison des deux instants** : BTC/USDC spread **0,014006 bp → 0,014022 bp** (+0,000016) ; ETH/USDC **0,049925 bp → 0,751354 bp** (+0,701429), environ 11 minutes plus tard. **Deux mesures ponctuelles ne constituent pas** une distribution temporelle de liquidité, ne renseignent pas la volatilité historique du spread et ne valident aucun coût d'exécution réel, ni les frais du compte OKX EEE.
+
+**Statut/discipline** : publication et contrôle terminés, **pas de permission de compte**, aucun ordre réel et aucun changement Administrator/Trader/Operator/Bridge. Étape de recherche envisageable : planifier sur papier des captures **horodatées à différents régimes**, sans surveillance activée avant demande explicite, et récupérer les frais exacts du compte uniquement si un accès légitime et pertinent est disponible.
+
