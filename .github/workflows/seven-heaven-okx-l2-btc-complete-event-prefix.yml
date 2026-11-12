@@ -1,0 +1,85 @@
+name: Seven Heaven OKX BTC L2 Complete Event Prefix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-l2-btc-complete-event-prefix.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_USDC_COMPLETE_EVENT_PREFIX_RECONSTRUCTOR_2026_11_12.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-btc-l2-prefix-once
+  cancel-in-progress: false
+
+jobs:
+  verify-first-complete-btc-l2-events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and test frozen L2 safety semantics
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_USDC_COMPLETE_EVENT_PREFIX_RECONSTRUCTOR_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Read bounded official BTC USDC tar prefix and decode complete JSON events
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_USDC_COMPLETE_EVENT_PREFIX_RECONSTRUCTOR_2026_11_12.py --repo-root .
+      - name: Check evidence and hard compressed/uncompressed byte limits
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_complete_event_prefix_2026_11_12_evidence')
+          j=json.loads((root/'SEVEN_HEAVEN_OKX_L2_BTC_COMPLETE_EVENT_PREFIX_PROOFS.json').read_text(encoding='utf8'))
+          assert j['schema']=='seven-heaven.okx-l2-btc-usdc-bounded-complete-events.v1'
+          assert j['read_only'] and not j['orders_enabled'] and not j['full_archive_downloaded']
+          assert j['max_complete_events']==20
+          assert j['max_compressed_bytes']==2097152
+          assert j['max_decompressed_bytes']==524288
+          result=j['source']
+          assert result['status'] in ('snapshot_only','no_complete_event','invalid_event',
+                     'valid_local_updates_without_sequence_proof',
+                     'valid_local_updates_with_sequence_links','unavailable')
+          if 'bounds' in result:
+              assert result['bounds']['compressed_prefix_bytes_read']<=2097152
+              assert result['bounds']['uncompressed_prefix_bytes_read']<=524288
+              assert result['complete_json_lines_examined']<=20
+              assert result['analysis']['events_count']<=20
+          assert (root/'SEVEN_HEAVEN_OKX_L2_BTC_COMPLETE_EVENT_PREFIX_REPORT.md').exists()
+          print('PASS: limited read-only BTC L2 prefix, complete-event evidence and declared status',result['status'])
+          PY
+      - name: Retain compact reproducibility proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-btc-l2-complete-prefix
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_complete_event_prefix_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Archive compact evidence only in shared inter-AI research
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_usdc_complete_event_prefix_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: same research proof already stored'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive bounded complete OKX BTC L2 event structure and deltas'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
