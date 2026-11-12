@@ -71,6 +71,17 @@ Sources secondaires de continuité :
 - [Rapport scientifique corrigé — conserver les calculs et les limites](./SEVEN_HEAVEN_OKX_BTC_ETH_SPOT_USDC_SPREAD_DEPTH_AND_TRADING_FEE_STUDY_2026_11_12.md).
 - [Renvoi GitHub vers la mémoire canonique des frais](./SEVEN_HEAVEN_OKX_OBSERVED_SPOT_FEE_REFERENCE_2026_11_12.md).
 
+### Audit V5/V6 du glissement — réalisé et publié le 12 novembre 2026
+
+**Audit terminé :** [Seven Heaven — Scientific Audit of V5/V6 Slippage and Order-Book Calibration](./research/strategy_profiles/SEVEN_HEAVEN_OKX_V5_V6_SLIPPAGE_AND_ORDERBOOK_CALIBRATION_SCIENTIFIC_AUDIT_2026_11_12.md).
+
+- **Code actuel relu sur main :** V5, `market-microscope-paper-backtest-v5.js`, paramètres par défaut **0,10 % taker + 0,05 % glissement** par côté, simulation à l'ouverture OHLC suivante ; V6, `market-microscope-orderbook-paper-v6.js`, estimation sur carnet public OKX frais et pairé (au plus 15 s), **0,10 % taker** par défaut. Ce sont **deux référentiels de prix différents**.
+- **Mesure historique conservée :** 3 journées UTC isolées en août/septembre/octobre, 96 carnets par actif/jour, 576 coûts de carnet par actif/ligne de notionnel. Pour un notionnel **1 000 USDC**, coût moyen hors commission **depuis le mid** par côté : **BTC 0,1375 bp**, **ETH 0,5532 bp** ; 0 dépassement de 5 bp dans chacun des 576 côtés par actif. Pour **100 000 USDC** : **10/576 BTC** et **237/576 ETH** dépassent les 5 bp.
+- **Interprétation bornée :** ces coûts de carnet sont **fictifs, à un instant figé**, et **ne mesurent pas** le slippage par rapport à la prochaine ouverture V5, qui peut déjà contenir de l'effet microstructurel. Ne **pas** proposer de remplacer le défaut 0,05 % sur cette seule comparaison.
+- **Décision :** conserver V5/V6 tels quels ; étudier uniquement des scénarios de sensibilité PAPER à frais réels documentés (0,10 % taker/côté) et glissement fixe explicitement hypothétique (0 %, 0,02 %, 0,05 %, 0,10 %). V6 distingue l'écart VWAP vs meilleure offre de l'écart vs mid (ce dernier **inclut** déjà demi-spread + profondeur).
+- **Limite actuelle :** pas de validation de frais d'exécution historiques ni d'appariement des carnets aux signaux et prix d'ouverture suivants ; pas de replay V5/V6, de test Firefox ou de code modifié lors de cette session.
+- **Destination mémoire :** la section canonique **Notion `OKX MEMORY CORE → 05 · PAPER / Backtest V5`** a été mise à jour, sans nouvelle page ni duplication.
+
 ## 5. Intégrité et limites
 
 - Trois **journées isolées**, jamais trois mois continus.
@@ -83,7 +94,7 @@ Sources secondaires de continuité :
 
 ## 6. Seule prochaine direction scientifique
 
-**Vérifier uniquement les exceptions de tarification par paire lorsque nécessaire, puis comparer des stratégies PAPER avec le barème Spot déjà connu (maker 0,08 %, taker 0,10 %) et des analyses de sensibilité distinctes.** Ne pas recommencer la recherche des taux personnels, ne pas appliquer ceux de novembre rétroactivement, ne pas mélanger les coûts OKX/USDC et Bitstamp/USD.
+**L'audit V5/V6 du glissement est désormais fait et publié, il ne doit pas être recommencé.** Prochaine recherche justifiable : protocoliser une **validation appariée** des signaux V5, de l'ouverture de la bougie suivante et du carnet OKX **à même date, même paire, même devise, même côté et même montant**, uniquement si la couverture des archives existe ; sinon statuer « couverture insuffisante / coût estimé ». Tester ensuite, sans modifier le code, la sensibilité aux paramètres de glissement avec **0,10 % taker/côté** connu ; vérifier les exceptions par paire seulement lorsqu'elles changent la décision. Ne pas mélanger les coûts OKX/USDC et Bitstamp/USD.
 
 Aucun nouveau collecteur, ordre ou modification du programme central n'est nécessaire pour poursuivre la recherche documentaire.
 
