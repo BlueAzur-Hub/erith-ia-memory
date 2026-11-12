@@ -1,0 +1,85 @@
+name: Seven Heaven BTC ETH Cost Stress Research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-btc-eth-cost-stress-research.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_REPLAY_2026_11_12.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-btc-eth-cost-stress-once
+  cancel-in-progress: false
+
+jobs:
+  reproduce-pinned-historical-cost-stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run offline synthetic safety checks
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_REPLAY_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Recompute all eight fee and slippage scenarios from pinned native Bitstamp CSVs
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_50_50_EMA_TRANSACTION_COST_STRESS_REPLAY_2026_11_12.py --repo-root .
+      - name: Verify independent reproduction, thresholds and LF-only output
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv,json,pathlib
+          d=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/transaction_cost_stress_evidence')
+          proof=json.loads((d/'SEVEN_HEAVEN_BTC_ETH_50_50_COST_STRESS_PYTHON_VERIFICATION.json').read_text(encoding='utf-8'))
+          assert proof['schema']=='seven-heaven.btc-eth-50-50-cost-stress-python-validation.v1'
+          assert proof['status']=='REPRODUCED_ON_PUBLISHED_PINNED_CSVS'
+          assert proof['orders_enabled'] is False
+          assert proof['full_calendar_days']==1310 and proof['paper_days']==1035
+          assert proof['fixed_ema_trades']==122 and proof['verified_grid_scenarios']==8
+          assert proof['all_replayed_figures_match_previously_published_evidence'] is True
+          assert abs(proof['thresholds']['ema_zero_return']['factor']-7.336403)<0.00001
+          assert abs(proof['thresholds']['ema_equals_buy_and_hold']['factor']-3.670861)<0.00001
+          csvpath=d/'SEVEN_HEAVEN_BTC_ETH_50_50_COST_STRESS_GRID.csv'
+          raw=csvpath.read_bytes()
+          assert b'\r' not in raw
+          rows=list(csv.DictReader(raw.decode('utf-8').splitlines()))
+          assert len(rows)==8 and [int(r['factor']) for r in rows]==[0,1,2,3,4,6,8,10]
+          assert abs(float(rows[1]['ema_return_pct'])-77.665245)<1e-6
+          assert abs(float(rows[2]['ema_return_pct'])-62.238495)<1e-6
+          print('PASS: independent Python stress replay; eight scenarios; cost thresholds; exact historic baseline and source SHA checks')
+          PY
+      - name: Preserve independent reproducibility proof as Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-eth-cost-stress-proof-2026-11-12
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/transaction_cost_stress_evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish only research evidence in shared inter-AI directory
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/transaction_cost_stress_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: byte-identical research evidence already archived'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive independent Python BTC ETH cost stress verification'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
