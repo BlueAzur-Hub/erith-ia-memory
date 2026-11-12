@@ -1,0 +1,45 @@
+{
+  "schema": "seven-heaven.okx-l2-ninety-six-pairs-independent-verification.v1",
+  "status": "NINETY_SIX_SPREAD_PAIRS_AND_NINE_HUNDRED_SIXTY_DEPTH_PAIRS_REPRODUCED",
+  "read_only": true,
+  "orders_enabled": false,
+  "paired_spreads_verified": 96,
+  "paired_cost_sides_verified": 960,
+  "source_snapshot_hours_verified": 192,
+  "source_four_point_reconciliation_verified_for_both": true,
+  "source_logical_sequence_continuity_proven": false,
+  "git_blob_pins": {
+    "BTC": "ca8f55de07bee5ef73663bd1613d6b56a655e4a4",
+    "ETH": "b3be3c7fea85042b770c5f1bb6cdc0d8749cf530",
+    "derived": "59d400de7b9fc6dbe31a17c1e9b313312241fb7a",
+    "spreads": "21a4127c226952e66e536cd627bffd279ed98de7",
+    "costs": "aeb2ae1e2fa26b5fb7cf4afbea9d25f461d3e11d"
+  },
+  "stats": {
+    "BTC": {
+      "source_git_blob_sha1": "ca8f55de07bee5ef73663bd1613d6b56a655e4a4",
+      "whole_archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "snapshots": 96,
+      "spread_mean_96_bps": 0.023063073125,
+      "spread_median_96_bps": 0.012280655,
+      "spread_p90_96_bps": 0.01238434,
+      "source_total_events": 2346486
+    },
+    "ETH": {
+      "source_git_blob_sha1": "b3be3c7fea85042b770c5f1bb6cdc0d8749cf530",
+      "whole_archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+      "snapshots": 96,
+      "spread_mean_96_bps": 0.24586592114583333,
+      "spread_median_96_bps": 0.04224347,
+      "spread_p90_96_bps": 0.6694166100000001,
+      "source_total_events": 3172868
+    }
+  },
+  "eth_spread_exceeds_btc_count": 94,
+  "limitations": [
+    "96 exactly preselected quarter-hours in one day only.",
+    "Cannot certify upstream message continuity without sequence counters.",
+    "Research is static orderbook pricing only; not actual fills or account fees.",
+    "No extrapolation to three-month orderbook distributions or EMA return."
+  ]
+}
