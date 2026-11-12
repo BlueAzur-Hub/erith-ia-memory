@@ -1,0 +1,138 @@
+name: Seven Heaven OKX BTC ETH Aug Sep Minute Eventtime Persistence
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-btc-eth-aug-sep-minute-eventtime-spread-persistence.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_ONE_MINUTE_EVENT_TIME_SPREAD_PERSISTENCE_REPLAY_2026_11_12.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-okx-aug-sep-one-minute-eventtime-once
+  cancel-in-progress: false
+jobs:
+  replay-each-pair-day:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { day: '2026-08-15', pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { day: '2026-08-15', pair: 'ETH-USDC', slug: 'eth_usdc' }
+          - { day: '2026-09-15', pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { day: '2026-09-15', pair: 'ETH-USDC', slug: 'eth_usdc' }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run synthetic event interval and hash tests
+        run: |
+          set -euo pipefail
+          file='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_ONE_MINUTE_EVENT_TIME_SPREAD_PERSISTENCE_REPLAY_2026_11_12.py'
+          python -m py_compile "$file"
+          python "$file" --selftest
+      - name: Stream pinned full L2 market archive and calculate minute plus event-time states
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_ONE_MINUTE_EVENT_TIME_SPREAD_PERSISTENCE_REPLAY_2026_11_12.py --repo-root . --day '${{ matrix.day }}' --pair '${{ matrix.pair }}'
+      - name: Validate full archive provenance and historical 96 states and duration conservation
+        run: |
+          set -euo pipefail
+          DAY='${{ matrix.day }}' PAIR='${{ matrix.pair }}' SLUG='${{ matrix.slug }}' python - <<'PY'
+          import csv,json,os,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence')/os.environ['DAY']/os.environ['SLUG']
+          d=json.loads((root/'SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json').read_text(encoding='utf8'))
+          assert d['pair']==os.environ['PAIR'] and d['day_utc']==os.environ['DAY']
+          assert d['read_only'] and not d['orders_enabled']
+          assert d['status'] in ('full_archive_replayed_one_minute_with_event_time_persistence','failed_quality_or_access_check')
+          minutes=list(csv.DictReader((root/'SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_SPREADS_1440.csv').open(encoding='utf8')))
+          if d['status']=='full_archive_replayed_one_minute_with_event_time_persistence':
+              r=d['result'];m=r['market'];t=m['event_time_persistence']
+              assert d['source_archive_fully_read'] and r['gzip_read_to_eof_crc_checked']
+              assert len(r['archive_sha256'])==64 and len(r['member_sha256'])==64
+              assert m['first_20_event_hashes_match_prior_proof'] and not m['global_logical_continuity_proven']
+              assert len(d['reference_quarter_checks'])==96 and all(q['verified'] for q in d['reference_quarter_checks'])
+              assert m['snapshots']==96 and len(m['snapshot_events'])==96 and len(m['anchors'])==96
+              assert len(m['minute_states'])==1440 and len(minutes)==1440
+              assert all(v['anchor_utc'].startswith(os.environ['DAY']+'T') for v in minutes)
+              assert len({v['anchor_utc'] for v in minutes})==1440
+              assert all(0<=int(v['offset_ms_after_anchor'])<=60000 for v in minutes)
+              assert t['covered_ms']==m['last_ts_ms']-m['first_ts_ms'] and 0<t['covered_ms']<=86400000
+              assert set(t['thresholds_bp'])=={'0.1','0.5','1.0','2.0'}
+              for threshold,q in t['thresholds_bp'].items():
+                  assert q['above_threshold_ms']==q['sum_duration_ms']
+                  assert 0<=q['above_threshold_ms']<=t['covered_ms']
+                  assert q['count']>=q['ge_1s']>=q['ge_10s']>=q['ge_60s']
+                  assert abs(q['fraction_of_covered_time']-q['above_threshold_ms']/t['covered_ms'])<1e-12
+              print('PASS pinned complete archive, 96 quarter hours, 1440 UTC minutes, 4 event-time threshold episode invariants')
+          else:
+              assert d['no_results_invented'] and not d['source_archive_fully_read'] and not minutes
+              print('INCOMPLETE source; no invented figures:',d.get('error'))
+          PY
+      - name: Upload compact proof only
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-aug-sep-minute-${{ matrix.day }}-${{ matrix.slug }}
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+  publish-evidence:
+    needs: replay-each-pair-day
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seven-heaven-aug-sep-minute-*
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence/
+          merge-multiple: true
+      - name: Index all fixed date instrument cells including missing
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence')
+          entries=[]
+          for day in ('2026-08-15','2026-09-15'):
+              for pair in ('BTC-USDC','ETH-USDC'):
+                  f=p/day/pair.lower().replace('-','_')/'SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json'
+                  if f.is_file():
+                      d=json.loads(f.read_text(encoding='utf8'));m=d.get('result',{}).get('market',{})
+                      entries.append({'day':day,'pair':pair,'status':d['status'],
+                                      'events':m.get('total_events'),'minute_rows':len(m.get('minute_states',[])),
+                                      'archive_sha256':d.get('result',{}).get('archive_sha256')})
+                  else:
+                      entries.append({'day':day,'pair':pair,'status':'not_published'})
+          out={'schema':'seven-heaven.okx-aug-sep-minute-eventtime-completion.v1',
+               'dates_utc':['2026-08-15','2026-09-15'],'entries':entries,
+               'full_sources':sum(x['status']=='full_archive_replayed_one_minute_with_event_time_persistence' for x in entries)}
+          (p/'SEVEN_HEAVEN_OKX_AUG_SEP_MINUTE_EVENTTIME_DELIVERY_INDEX.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf8')
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Commit condensed and verified source proofs only
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_one_minute_event_time_spread_persistence_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'NOOP'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive pinned August September minute and event-time spread persistence'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
