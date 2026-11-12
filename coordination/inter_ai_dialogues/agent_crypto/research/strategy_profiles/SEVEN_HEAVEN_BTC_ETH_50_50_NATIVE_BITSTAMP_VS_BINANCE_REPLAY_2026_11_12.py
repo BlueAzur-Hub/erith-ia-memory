@@ -53,6 +53,55 @@ def source_checked(path: Path, blob: str, sha256: str | None = None) -> bytes:
     return raw
 
 
+def collect_btc_native(engine) -> tuple[list[dict],list[dict]]:
+    """Official public BTC/USD daily OHLC, exact UTC dates, no trading endpoints."""
+    from datetime import datetime, timezone
+    from urllib.parse import urlencode
+    from urllib.request import Request, urlopen
+    end=engine.END_INITIAL
+    rows_by_date={}
+    receipts=[]
+    for page_number in range(4):
+        query=urlencode({"step":86400,"limit":1000,"end":end,
+                         "exclude_current_candle":"true"})
+        request=Request(BITSTAMP_BTC_API+"?"+query,
+                        headers={"Accept":"application/json",
+                                 "User-Agent":"Seven-Heaven-Research-BTCETH-PAPER-ReadOnly"})
+        with urlopen(request,timeout=35) as res:
+            raw=res.read(1800000)
+        obj=json.loads(raw)
+        venue_pair=obj.get("data",{}).get("pair","").replace(" ","").upper()
+        if venue_pair not in ("BTC/USD","BTCUSD"):
+            raise ValueError("Bitstamp API returned a market other than BTC/USD")
+        candles=obj["data"]["ohlc"]
+        if not candles or len(candles)>1000:
+            raise ValueError("Invalid native BTC page length")
+        stamps=[int(c["timestamp"]) for c in candles]
+        for candle in candles:
+            row=engine.parse_row(candle)
+            if row["date"] in rows_by_date and rows_by_date[row["date"]]!=row:
+                raise ValueError("Conflicting duplicate BTC daily candle: "+row["date"])
+            rows_by_date[row["date"]]=row
+        low=min(stamps)
+        receipts.append({
+            "end_requested_utc":datetime.fromtimestamp(end,timezone.utc).isoformat(),
+            "received_rows":len(candles),
+            "first_returned_utc":engine.date_for_epoch(low),
+            "last_returned_utc":engine.date_for_epoch(max(stamps)),
+            "api_response_sha256":hashlib.sha256(raw).hexdigest()
+        })
+        if engine.date_for_epoch(low)<="2023-04-01":
+            break
+        end=low-1
+    else:
+        raise ValueError("BTC history not complete before paging safety cap")
+    rows=sorted((r for key,r in rows_by_date.items()
+                 if "2023-04-01"<=key<="2026-10-31"),
+                key=lambda r:r["date"])
+    engine.validate_days(rows)
+    return rows,receipts
+
+
 def parse_native_csv(raw: bytes, eth_engine) -> list[dict]:
     rows = []
     for record in csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))):
@@ -132,10 +181,9 @@ def run(repo_root:Path, result_path:Path) -> dict:
     native=engine_from(repo_root/ENGINE_FILE)
     if native.API_URL != "https://www.bitstamp.net/api/v2/ohlc/ethusd/":
         raise ValueError("Underlying read-only collector source changed unexpectedly")
-    native.API_URL = BITSTAMP_BTC_API
 
     eth_raw = source_checked(repo_root/ETH_SOURCE,ETH_BLOB,ETH_SHA256)
-    btc_rows,btc_requests = native.collect()
+    btc_rows,btc_requests = collect_btc_native(native)
     eth_rows = parse_native_csv(eth_raw,native)
     native.validate_days(btc_rows)
     assert len(btc_rows)==len(eth_rows)==1310
