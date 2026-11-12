@@ -1,0 +1,92 @@
+name: Seven Heaven OKX Spot Rules and Second Snapshot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-spot-instrument-rules-second-snapshot.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_SECOND_SNAPSHOT_2026_11_12.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/test_seven_heaven_okx_spot_instrument_rules_second_snapshot.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-spot-instruments-one-off
+  cancel-in-progress: false
+
+jobs:
+  observe-spot-rules-read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax, source controls and six offline tests
+        run: |
+          set -euo pipefail
+          root='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles'
+          python -m py_compile "$root/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_SECOND_SNAPSHOT_2026_11_12.py"
+          python "$root/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_SECOND_SNAPSHOT_2026_11_12.py" --selftest
+          python -m unittest -v "$root/test_seven_heaven_okx_spot_instrument_rules_second_snapshot.py"
+      - name: Collect public BTC and ETH instrument metadata and second book snapshot
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_SPOT_BTC_ETH_USDC_INSTRUMENT_RULES_SECOND_SNAPSHOT_2026_11_12.py --repo-root .
+      - name: Verify read-only evidence and serialized original SHA
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv,hashlib,json,pathlib
+          r=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_spot_instrument_rules_second_snapshot_2026_11_12_evidence')
+          data=json.loads((r/'SEVEN_HEAVEN_OKX_INSTRUMENT_RULES_SECOND_SNAPSHOT_EVIDENCE.json').read_text(encoding='utf-8'))
+          assert data['schema']=='seven-heaven.okx-spot-instrument-rules-second-book-snapshot.v1'
+          assert data['read_only'] and not data['order_execution']
+          assert data['status'] in ('complete','partial','unavailable')
+          assert len(data['pair_results'])==2
+          assert [x['pair'] for x in data['pair_results']]==['BTC-USDC','ETH-USDC']
+          for entry in data['pair_results']:
+              for label in ('instrument_retrieval','book_retrieval'):
+                  if label in entry:
+                      info=entry[label]
+                      raw=(r/info['file']).read_bytes()
+                      assert hashlib.sha256(raw).hexdigest()==info['sha256']
+              if entry['status']=='complete':
+                  assert entry['instrument']['instType']=='SPOT'
+                  assert entry['instrument']['quoteCcy']=='USDC'
+                  assert len(entry['limit_size_examples'])==4
+                  assert entry['book_analysis']['spread_bps']>=0
+          raw=(r/'SEVEN_HEAVEN_OKX_INSTRUMENT_RULES_LIMIT_SIZE_EXAMPLES.csv').read_bytes()
+          assert b'\r' not in raw
+          assert len(list(csv.DictReader(raw.decode('utf-8').splitlines())))==8
+          assert (r/'SEVEN_HEAVEN_OKX_INSTRUMENT_RULES_SECOND_SNAPSHOT_REPORT.md').exists()
+          print('PASS: public sources SHA, two pair records, eight size examples; status:', data['status'])
+          PY
+      - name: Preserve one-off public research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-spot-rules-second-snapshot
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_spot_instrument_rules_second_snapshot_2026_11_12_evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish ONLY research evidence in the shared inter-AI directory
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_spot_instrument_rules_second_snapshot_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: identical public evidence already archived'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive public OKX Spot instrument constraints and second book snapshot'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
