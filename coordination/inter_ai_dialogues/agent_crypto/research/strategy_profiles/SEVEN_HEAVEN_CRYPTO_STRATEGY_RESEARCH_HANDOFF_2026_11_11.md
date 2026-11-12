@@ -460,3 +460,22 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Étape suivante** : préenregistrer et appliquer la **même reconstruction en flux à ETH-USDC du 15 octobre 2026**, archive officielle annoncée 93,60 Mo compressés et 776 655 177 octets décompressés, après vérification ETH des premiers JSON complets. Garder le même jeu d'ancres 00/06/12/18, mêmes notionnels et mêmes contrôles SHA/CRC ; aucun fichier géant dans le Coffre. Ensuite seulement étudier plusieurs journées et non extrapoler à partir de quatre horaires.
 
+
+## ETH/USDC L2 15 octobre 2026 — préflight 20 événements VALIDÉ, full-day sous contrôle (12 novembre)
+
+**Le même protocole que pour BTC est appliqué à ETH-USDC**, après préenregistrement et vérification du premier préfixe. ETH est un **second actif sur le MÊME JOUR historique**, pas une nouvelle fenêtre de validation des stratégies EMA.
+
+- [**Rapport audité du premier échantillon ETH de 20 événements**](./SEVEN_HEAVEN_OKX_L2_ETH_FIRST_TWENTY_EVENTS_LOCAL_RECONSTRUCTION_AUDIT_2026_11_12.md).
+- [**Protocole de préflight ETH, figé avant lecture des lignes complètes**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_COMPLETE_EVENTS_AND_DELTA_VALIDATION_PROTOCOL_2026_11_12.md), commit `4d73c0cd55c4fb58525a5405af2c108c4864c12a`.
+- [**Preuve JSON ETH 20 lignes complètes, état local, SHA-256 de préfixes**](./okx_l2_eth_usdc_complete_event_prefix_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_ETH_COMPLETE_EVENT_PREFIX_PROOFS.json), Git blob `8edbfef935c47f23d39e09600564497f2c4d309e`, [GitHub Actions SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43260305866).
+- [**Programme du préflight ETH, lecture 2 Mio compressés maximum**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_COMPLETE_EVENT_PREFIX_RECONSTRUCTOR_2026_11_12.py).
+- [**Protocole journée complète ETH fixé AVANT la lecture intégrale**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_FROZEN_PROTOCOL_2026_11_12.md), commit `a24df8ebc60573d1a0a5f119ecf64ace8debcf13`.
+- [**Script streaming ETH complète, avec 20 hashes ETH épinglés**](./SEVEN_HEAVEN_OKX_L2_ETH_USDC_FULL_DAY_STREAMING_FOUR_ANCHORS_2026_11_12.py) ; [workflow intégral ETH #1](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43260608990). **NE PAS conclure à la réussite du full-day avant constat de SUCCESS et relecture des preuves.**
+- [**Protocole de comparaison BTC/ETH 00, 06, 12, 18 UTC préenregistré AVANT résultats ETH complets**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_USDC_FOUR_ANCHORS_CROSS_ASSET_COMPARISON_FROZEN_PROTOCOL_2026_11_12.md), commit `5253e6d34b11c7ab9651a8ebb1a4e8a34dc7c039`.
+
+**Préflight validé ETH-USDC :** première snapshot 400 bids + 400 asks à **00:00:00.001 UTC** du 15 octobre 2026, **19 updates** analysées jusqu'à **00:00:00.191 UTC**. Premier bid **2419.07**, ask **2419.08**, spread **0,04133811 bp** ; au 20e événement bid **2419.5**, ask **2419.85**, spread **1,44647525 bp**. **Pas de seqId/prevSeqId/checksum dans les 20 premiers JSON ; 0 chaîne de continuité vérifiable par compteur.** La lecture complète doit vérifier SHA-256 et CRC de toute l'archive mais ne pourra pas à elle seule prouver qu'aucun delta n'a manqué à la source.
+
+**Fichier ETH annoncé** : `ETH-USDC-L2orderbook-400lv-2026-10-15.tar.gz` environ 93,60 Mo compressés ; `ETH-USDC-L2orderbook-400lv-2026-10-15.data` de **776 655 177 octets décompressés**. Ne pas committer d'archive complète, conserver la source sur OKX et uniquement CSV/JSON/report compacts dans le Coffre.
+
+Les 4 ancres ETH (00/06/12/18) et 5 montants 10/100/1000/10000/100000 USDC doivent rester rigoureusement identiques à BTC ; comparaison éventuelle **uniquement** après publication ETH full-day validée. **Aucun ordre réel, aucune modification Trader, Bridge, Administrator, Operator, aucune veille récurrente.**
+
