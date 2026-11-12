@@ -1,0 +1,428 @@
+{
+  "schema": "seven-heaven.btc-usdc-v5-ema5-13-three-isolated-days-preopen-l2-audit.v1",
+  "research_date_paris": "2026-11-13",
+  "status": "THREE_DAYS_NATIVE_15MIN_EMA_V5_TIMESTAMPS_AND_STRICT_PREOPEN_L2_PROOFS_VERIFIED_NOT_REAL_EXECUTION",
+  "protocol": "Exact same EMA5/13, 300 confirmed OHLC 15m, 1000 USDC reference book size, 0.10% taker/side and V5 0.05% fixed slippage/side; strict L2 source timestamp before each assumed next-bar opening. One-day capital reset PnL is a non-native illustrative comparison only.",
+  "verification_workflows": [
+    {
+      "days_utc": [
+        "2026-08-15",
+        "2026-09-15"
+      ],
+      "status": "success",
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43330003604"
+    },
+    {
+      "days_utc": [
+        "2026-10-15"
+      ],
+      "status": "success",
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43327600503"
+    }
+  ],
+  "source_conditions": {
+    "read_only": true,
+    "real_orders": 0,
+    "account_fee_reference": "Notion OKX MEMORY CORE 01 captures 06 09 12 November 2026; historical August/September/October account fees NOT verified",
+    "upstream_L2_full_seq_link_verified": false,
+    "publication_network_availability_at_T_proven": false,
+    "V5_native_js_trade_timestamps_cross_checked": true,
+    "book_VWAP_hypothetical_fixed_notional_usdc": 1000
+  },
+  "totals": {
+    "study_days": 3,
+    "ohlc_bars_three_separate_300bar_windows": 900,
+    "l2_events": 4459980,
+    "ema_crosses_sum_across_separate_300bar_windows": 66,
+    "target_day_actions": 25,
+    "complete_intraday_cycles": 12,
+    "carry_in_exits_excluded_from_daily_reset": 1,
+    "pre_open_paired_actions": 25,
+    "book_age_le_100ms": 14,
+    "book_age_le_1000ms": 23,
+    "book_age_le_10000ms": 25,
+    "book_age_ms": {
+      "n": 25,
+      "mean": 288.2,
+      "median": 81,
+      "p90": 865.6,
+      "min": 1,
+      "max": 2058
+    },
+    "mid_to_book_vwap_cost_bp": {
+      "n": 25,
+      "mean": 0.1663013,
+      "median": 0.100329,
+      "p90": 0.311852,
+      "min": 0.006086,
+      "max": 1.14401
+    },
+    "abs_book_vwap_vs_ohlc_next_open_bp": {
+      "n": 25,
+      "mean": 0.9461894,
+      "median": 0.77798,
+      "p90": 2.2332258,
+      "min": 0,
+      "max": 5.149755
+    },
+    "count_mid_to_book_cost_gt5bp": 0,
+    "count_adverse_ohlc_vs_book_gt5bp": 1
+  },
+  "days": [
+    {
+      "day_utc": "2026-08-15",
+      "proof_file": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_USDC_V5_EMA5_13_2026_08_15_CAUSAL_L2_PROOFS.json",
+      "proof_blob_sha1": "4eb46ec1352a6487ebcb285de4fe3215ee24cb4b",
+      "ohlc_sha256": "12403bfbda9da0fb066ccc7139ca3f3fbb16befcfc8b50e017e2582882d40815",
+      "l2_archive_sha256": "a8af512dabf96c6e5c8af37a0e19eb11ebce88ed232308cba9a63a37053fc130",
+      "l2_source_events": 301816,
+      "original_source_anchors_verified": 96,
+      "confirmed_15min_ohlc": 300,
+      "ema_crosses_in_300": 21,
+      "target_day_fictitious_actions": 11,
+      "buys": 5,
+      "sells": 6,
+      "carry_in_exit_count": 1,
+      "carry_out_entry_count": 0,
+      "complete_intraday_cycles": 5,
+      "cycles_both_books_age_le_1000_ms": 3,
+      "book_age_ms": {
+        "n": 11,
+        "mean": 570,
+        "median": 301,
+        "p90": 1134,
+        "min": 1,
+        "max": 2058
+      },
+      "book_age_le_100ms": 4,
+      "book_age_le_1000ms": 9,
+      "book_age_le_10000ms": 11,
+      "mid_to_book_vwap_cost_bp": {
+        "n": 11,
+        "mean": 0.1267785,
+        "median": 0.118962,
+        "p90": 0.27017,
+        "min": 0.007938,
+        "max": 0.33964
+      },
+      "abs_book_vwap_vs_ohlc_next_open_bp": {
+        "n": 11,
+        "mean": 0.809696,
+        "median": 0.429087,
+        "p90": 1.222573,
+        "min": 0.015862,
+        "max": 4.103053
+      },
+      "adverse_book_vwap_vs_ohlc_next_open_bp": {
+        "n": 11,
+        "mean": 0.5514991,
+        "median": 0.051015,
+        "p90": 1.12503,
+        "min": -1.222573,
+        "max": 4.103053
+      },
+      "mid_to_book_gt_5bp": 0,
+      "adverse_book_vs_open_gt_5bp": 0,
+      "daily_reset_illustrations": {
+        "v5_fixed_5bp": {
+          "starting_capital_usdc": 1000,
+          "final_capital_usdc": 983.464592,
+          "pnl_usdc": -16.535408,
+          "return_percent": -1.653541,
+          "complete_intraday_cycles": 5,
+          "cycles": [
+            {
+              "entry_utc": "2026-08-15T07:15:00.000Z",
+              "exit_utc": "2026-08-15T08:00:00.000Z",
+              "pnl_usdc": -3.371866
+            },
+            {
+              "entry_utc": "2026-08-15T11:00:00.000Z",
+              "exit_utc": "2026-08-15T11:15:00.000Z",
+              "pnl_usdc": -3.111635
+            },
+            {
+              "entry_utc": "2026-08-15T11:30:00.000Z",
+              "exit_utc": "2026-08-15T12:15:00.000Z",
+              "pnl_usdc": -3.881981
+            },
+            {
+              "entry_utc": "2026-08-15T13:15:00.000Z",
+              "exit_utc": "2026-08-15T18:30:00.000Z",
+              "pnl_usdc": -3.387211
+            },
+            {
+              "entry_utc": "2026-08-15T19:30:00.000Z",
+              "exit_utc": "2026-08-15T23:45:00.000Z",
+              "pnl_usdc": -2.782714
+            }
+          ]
+        },
+        "pre_open_fixed_book_1000usdc": {
+          "starting_capital_usdc": 1000,
+          "final_capital_usdc": 987.871742,
+          "pnl_usdc": -12.128258,
+          "return_percent": -1.212826,
+          "complete_intraday_cycles": 5,
+          "cycles": [
+            {
+              "entry_utc": "2026-08-15T07:15:00.000Z",
+              "exit_utc": "2026-08-15T08:00:00.000Z",
+              "pnl_usdc": -2.896093
+            },
+            {
+              "entry_utc": "2026-08-15T11:00:00.000Z",
+              "exit_utc": "2026-08-15T11:15:00.000Z",
+              "pnl_usdc": -2.216584
+            },
+            {
+              "entry_utc": "2026-08-15T11:30:00.000Z",
+              "exit_utc": "2026-08-15T12:15:00.000Z",
+              "pnl_usdc": -2.817119
+            },
+            {
+              "entry_utc": "2026-08-15T13:15:00.000Z",
+              "exit_utc": "2026-08-15T18:30:00.000Z",
+              "pnl_usdc": -2.403571
+            },
+            {
+              "entry_utc": "2026-08-15T19:30:00.000Z",
+              "exit_utc": "2026-08-15T23:45:00.000Z",
+              "pnl_usdc": -1.794891
+            }
+          ]
+        }
+      }
+    },
+    {
+      "day_utc": "2026-09-15",
+      "proof_file": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_USDC_V5_EMA5_13_2026_09_15_CAUSAL_L2_PROOFS.json",
+      "proof_blob_sha1": "c2551986f5e7f1ca01da9e00f5753af54598c9d4",
+      "ohlc_sha256": "b1cd3805491be8b3c38aeff67712e831d3046578a794ffe114b66b4dbd0ae84a",
+      "l2_archive_sha256": "53ab528063479e83dbd833be63615d09cee209897d39021403a88fd6f2d31460",
+      "l2_source_events": 1811678,
+      "original_source_anchors_verified": 96,
+      "confirmed_15min_ohlc": 300,
+      "ema_crosses_in_300": 13,
+      "target_day_fictitious_actions": 2,
+      "buys": 1,
+      "sells": 1,
+      "carry_in_exit_count": 0,
+      "carry_out_entry_count": 0,
+      "complete_intraday_cycles": 1,
+      "cycles_both_books_age_le_1000_ms": 1,
+      "book_age_ms": {
+        "n": 2,
+        "mean": 55,
+        "median": 55,
+        "p90": 95.8,
+        "min": 4,
+        "max": 106
+      },
+      "book_age_le_100ms": 1,
+      "book_age_le_1000ms": 2,
+      "book_age_le_10000ms": 2,
+      "mid_to_book_vwap_cost_bp": {
+        "n": 2,
+        "mean": 0.627398,
+        "median": 0.627398,
+        "p90": 1.0406876,
+        "min": 0.110786,
+        "max": 1.14401
+      },
+      "abs_book_vwap_vs_ohlc_next_open_bp": {
+        "n": 2,
+        "mean": 3.017976,
+        "median": 3.017976,
+        "p90": 4.7233992,
+        "min": 0.886197,
+        "max": 5.149755
+      },
+      "adverse_book_vwap_vs_ohlc_next_open_bp": {
+        "n": 2,
+        "mean": 2.131779,
+        "median": 2.131779,
+        "p90": 4.5461598,
+        "min": -0.886197,
+        "max": 5.149755
+      },
+      "mid_to_book_gt_5bp": 0,
+      "adverse_book_vs_open_gt_5bp": 1,
+      "daily_reset_illustrations": {
+        "v5_fixed_5bp": {
+          "starting_capital_usdc": 1000,
+          "final_capital_usdc": 984.33736,
+          "pnl_usdc": -15.66264,
+          "return_percent": -1.566264,
+          "complete_intraday_cycles": 1,
+          "cycles": [
+            {
+              "entry_utc": "2026-09-15T17:45:00.000Z",
+              "exit_utc": "2026-09-15T18:45:00.000Z",
+              "pnl_usdc": -15.66264
+            }
+          ]
+        },
+        "pre_open_fixed_book_1000usdc": {
+          "starting_capital_usdc": 1000,
+          "final_capital_usdc": 984.902054,
+          "pnl_usdc": -15.097946,
+          "return_percent": -1.509795,
+          "complete_intraday_cycles": 1,
+          "cycles": [
+            {
+              "entry_utc": "2026-09-15T17:45:00.000Z",
+              "exit_utc": "2026-09-15T18:45:00.000Z",
+              "pnl_usdc": -15.097946
+            }
+          ]
+        }
+      }
+    },
+    {
+      "day_utc": "2026-10-15",
+      "proof_file": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_USDC_V5_EMA5_13_2026_10_15_CAUSAL_L2_PROOFS.json",
+      "proof_blob_sha1": "a103f3a65e9cf5fbe2e22b93d27f51286d37cb0f",
+      "ohlc_sha256": "d84adf7cae0cd11fdf89f0d1def9a6d586854caae4ea18c80e23840f60a4c421",
+      "l2_archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "l2_source_events": 2346486,
+      "original_source_anchors_verified": 4,
+      "confirmed_15min_ohlc": 300,
+      "ema_crosses_in_300": 32,
+      "target_day_fictitious_actions": 12,
+      "buys": 6,
+      "sells": 6,
+      "carry_in_exit_count": 0,
+      "carry_out_entry_count": 0,
+      "complete_intraday_cycles": 6,
+      "cycles_both_books_age_le_1000_ms": 6,
+      "book_age_ms": {
+        "n": 12,
+        "mean": 68.75,
+        "median": 21,
+        "p90": 230.8,
+        "min": 3,
+        "max": 253
+      },
+      "book_age_le_100ms": 9,
+      "book_age_le_1000ms": 12,
+      "book_age_le_10000ms": 12,
+      "mid_to_book_vwap_cost_bp": {
+        "n": 12,
+        "mean": 0.125681,
+        "median": 0.00616,
+        "p90": 0.1986028,
+        "min": 0.006086,
+        "max": 1.011898
+      },
+      "abs_book_vwap_vs_ohlc_next_open_bp": {
+        "n": 12,
+        "mean": 0.7260106,
+        "median": 0.635109,
+        "p90": 1.221425,
+        "min": 0,
+        "max": 2.902325
+      },
+      "adverse_book_vwap_vs_ohlc_next_open_bp": {
+        "n": 12,
+        "mean": -0.0038508,
+        "median": 0,
+        "p90": 0.7802442,
+        "min": -1.229577,
+        "max": 2.902325
+      },
+      "mid_to_book_gt_5bp": 0,
+      "adverse_book_vs_open_gt_5bp": 0,
+      "daily_reset_illustrations": {
+        "v5_fixed_5bp": {
+          "starting_capital_usdc": 1000,
+          "final_capital_usdc": 976.485762,
+          "pnl_usdc": -23.514238,
+          "return_percent": -2.351424,
+          "complete_intraday_cycles": 6,
+          "cycles": [
+            {
+              "entry_utc": "2026-10-15T00:30:00.000Z",
+              "exit_utc": "2026-10-15T00:45:00.000Z",
+              "pnl_usdc": -5.750383
+            },
+            {
+              "entry_utc": "2026-10-15T01:45:00.000Z",
+              "exit_utc": "2026-10-15T02:00:00.000Z",
+              "pnl_usdc": -5.189169
+            },
+            {
+              "entry_utc": "2026-10-15T05:00:00.000Z",
+              "exit_utc": "2026-10-15T05:30:00.000Z",
+              "pnl_usdc": -8.68683
+            },
+            {
+              "entry_utc": "2026-10-15T07:45:00.000Z",
+              "exit_utc": "2026-10-15T10:15:00.000Z",
+              "pnl_usdc": -6.811426
+            },
+            {
+              "entry_utc": "2026-10-15T14:30:00.000Z",
+              "exit_utc": "2026-10-15T21:00:00.000Z",
+              "pnl_usdc": 8.425765
+            },
+            {
+              "entry_utc": "2026-10-15T22:00:00.000Z",
+              "exit_utc": "2026-10-15T23:30:00.000Z",
+              "pnl_usdc": -5.502196
+            }
+          ]
+        },
+        "pre_open_fixed_book_1000usdc": {
+          "starting_capital_usdc": 1000,
+          "final_capital_usdc": 982.366873,
+          "pnl_usdc": -17.633127,
+          "return_percent": -1.763313,
+          "complete_intraday_cycles": 6,
+          "cycles": [
+            {
+              "entry_utc": "2026-10-15T00:30:00.000Z",
+              "exit_utc": "2026-10-15T00:45:00.000Z",
+              "pnl_usdc": -4.838115
+            },
+            {
+              "entry_utc": "2026-10-15T01:45:00.000Z",
+              "exit_utc": "2026-10-15T02:00:00.000Z",
+              "pnl_usdc": -4.535938
+            },
+            {
+              "entry_utc": "2026-10-15T05:00:00.000Z",
+              "exit_utc": "2026-10-15T05:30:00.000Z",
+              "pnl_usdc": -7.718163
+            },
+            {
+              "entry_utc": "2026-10-15T07:45:00.000Z",
+              "exit_utc": "2026-10-15T10:15:00.000Z",
+              "pnl_usdc": -5.620129
+            },
+            {
+              "entry_utc": "2026-10-15T14:30:00.000Z",
+              "exit_utc": "2026-10-15T21:00:00.000Z",
+              "pnl_usdc": 9.429629
+            },
+            {
+              "entry_utc": "2026-10-15T22:00:00.000Z",
+              "exit_utc": "2026-10-15T23:30:00.000Z",
+              "pnl_usdc": -4.350411
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Separate isolated days, not contiguous three-month historical sample",
+    "Sample size 25 event-side costs; one day has only two fictitious operations",
+    "Strict source timestamps do not prove public receipt/availability before an actual order",
+    "The OHLC next.open is a first trade, not a synchronized mid",
+    "Book prices are hypothetical sweeps, not actual fills; fixed 1000 USDC size on all legs",
+    "Account Spot fee observed in November; not evidence of exact historical fees of selected pairs",
+    "Daily-reset PnL excludes pre-day carried positions and is not the original V5 300-candle continuous-capital PnL",
+    "No order execution, no trading permissions, no code changes to Trader/Bridge/Administrator"
+  ]
+}
