@@ -1,20 +1,20 @@
-# Seven Heaven — suivi public BTC : 2026-11-12T08:27:51Z
+# Seven Heaven — suivi public BTC : 2026-11-12T17:40:41Z
 
 **Statut : DEGRADED_OR_UNVERIFIED** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-11T08:27:51Z au 2026-11-12T08:27:51Z.
+Fenêtre UTC : 2026-11-11T17:40:41Z au 2026-11-12T17:40:41Z.
 
 ## Santé et provenance
 
-- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-12T07:00:00Z ; source fraîche : OUI.
-- **Liquidations dérivées** : 189 messages observés dans les archives ; 12 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
-- **Actualités de l'Interface** : 14 événements BTC ; relevé source 2026-11-12T01:02:37.625211+00:00.
+- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-12T16:00:00Z ; source fraîche : OUI.
+- **Liquidations dérivées** : 157 messages observés dans les archives ; 9 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
+- **Actualités de l'Interface** : 9 événements BTC ; relevé source 2026-11-12T08:52:29.378966+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
-| bybit | 79 | 4 |
-| binance | 72 | 4 |
-| okx | 38 | 4 |
+| bybit | 66 | 3 |
+| binance | 58 | 3 |
+| okx | 33 | 3 |
 
 ## Interprétation autorisée
 
@@ -26,23 +26,23 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 
 | UTC | Ouverture (USDC) | Clôture (USDC) | Volume Spot BTC | Messages de liquidations observés | Couverture |
 |---|---:|---:|---:|---:|---|
-| 2026-11-11T20:00:00Z | 74356.2 | 74620 | 25.62679256 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T21:00:00Z | 74618.4 | 74324.6 | 36.55567191 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T22:00:00Z | 74324.6 | 73878.9 | 21.56968302 | 1 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T23:00:00Z | 73879 | 73938.5 | 27.78752321 | 155 | SAMPLED_WITH_GAPS |
-| 2026-11-12T00:00:00Z | 73938.4 | 74014.7 | 21.33715667 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-12T01:00:00Z | 74008.2 | 73648.6 | 24.50623331 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-12T02:00:00Z | 73636 | 73736.6 | 10.33775158 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-12T03:00:00Z | 73732.9 | 73728.3 | 6.52797613 | 0 | SAMPLED_WITH_GAPS |
-| 2026-11-12T04:00:00Z | 73736.9 | 73660.2 | 7.66117258 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-12T05:00:00Z | 73657.4 | 73510.6 | 9.615828 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-12T06:00:00Z | 73516.7 | 73450.5 | 12.83627707 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-12T07:00:00Z | 73452.7 | 73576.8 | 6.07089971 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T08:00:00Z | 73573.4 | 73528.9 | 6.58515637 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T09:00:00Z | 73524.8 | 73419.6 | 19.58705076 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T10:00:00Z | 73423.5 | 73393.9 | 7.91629321 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T11:00:00Z | 73389.3 | 72886.7 | 63.44479842 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T12:00:00Z | 72876.3 | 72846.6 | 43.35582906 | 1 | SAMPLED_WITH_GAPS |
+| 2026-11-12T13:00:00Z | 72841.1 | 72444.4 | 127.09437554 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T14:00:00Z | 72440.7 | 71579 | 235.63106283 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T15:00:00Z | 71579 | 71659.8 | 121.6213126 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-12T16:00:00Z | 71636.3 | 71701.2 | 62.9748488 | 0 | NO_DOCUMENTED_OBSERVATION |
 
 ## Étude de stratégie — structure EMA 5/13/34 (observation, pas backtest)
 
-- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-09T09:00:00Z au 2026-11-12T07:00:00Z.
-- Dernière clôture : 73576.8 USDC/BTC ; EMA 5 : 73595.77 ; EMA 13 : 73759.86 ; EMA 34 : 73911.54 USDC.
+- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-09T18:00:00Z au 2026-11-12T16:00:00Z.
+- Dernière clôture : 71701.2 USDC/BTC ; EMA 5 : 72030.87 ; EMA 13 : 72686.39 ; EMA 34 : 73339.03 USDC.
 - Structure horaire observée : **ALIGNEMENT_BAISSIER_HORAIRE**.
 - **Stratégie Swing Trading NON validée** : cet échantillon horaire ne démontre ni rentabilité, ni règles de sortie, ni tenue sur plusieurs jours. Aucun conseil d'achat ou de vente.
 
