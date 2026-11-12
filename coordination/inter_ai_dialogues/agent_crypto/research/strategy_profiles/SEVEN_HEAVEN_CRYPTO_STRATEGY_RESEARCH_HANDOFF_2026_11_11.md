@@ -291,15 +291,19 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 
 **Prochaine direction utile :** une source ETH/USD native de plateforme, OHLCV quotidienne sans trous sur avril 2023–octobre 2026, à empreintes figées, puis refaire le replay sur les 1 035 jours sans modifier les EMA. À défaut, ne pas élargir la conclusion aux journées manquantes.
 
-## Source ETH/USD native Bitstamp — protocole et collecteur 2024–2026, état en attente (12 novembre 2026)
+## ETH/USD Bitstamp natif — REPLAY 2024–2026 PUBLIÉ ET VALIDÉ (12 novembre 2026)
 
-**Nouvelle direction : dépasser la couverture limitée du miroir Yahoo ETH/USD (309 jours) et obtenir une vraie source OHLC native d'exchange.** La [documentation Bitstamp](https://www.bitstamp.net/api/) précise l'endpoint public `/api/v2/ohlc/ethusd/`, `step=86400`, pagination maximum 1 000 bougies par appel. Kraken publie également des archives OHLCVT natives avec SHA-256 mais plus volumineuses. Pour ce chantier, Bitstamp a été retenu afin de tester ETH/USD en face de Binance ETH/USDT.
+**La dette scientifique de collecte native ETH/USD est soldée pour le calendrier 2024–octobre 2026.** GitHub Actions [run #3 : SUCCESS](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43234052193) a téléchargé les bougies officielles **Bitstamp Spot ETH/USD** sur **1 310 journées UTC continues** (2023-04-01→2026-10-31), dont 275 jours de chauffe et **1 035 jours PAPER** (2024-01-01→2026-10-31). Les CSV, JSON et le rapport généré sont bien présents sur `main`. La première exécution avait réussi les calculs mais échoué au `git diff --check` à cause des fins de ligne CSV **CRLF** ; le générateur a été corrigé en **LF** seulement, sans retoucher les EMA ni les coûts.
 
-- [**Statut précis et passation pour les futures IA**](./SEVEN_HEAVEN_ETH_NATIVE_BITSTAMP_SOURCE_RETRIEVAL_AND_REPLAY_STATUS_2026_11_12.md).
-- [**Protocole prépublié, fixe : EMA10>EMA30 ET close>EMA30, 1 035 jours 2024–oct. 2026**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_DAILY_EMA10_30_2024_2026_FROZEN_PROTOCOL_2026_11_12.md) — commit `75a7c15`.
-- [**Programme Python collecteur API + replay PAPER, Git blob épinglé**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py).
-- [**Tests hors ligne**](./test_seven_heaven_eth_bitstamp_native_replay.py) — 3 tests réussis localement, pagination 1 310 jours synthétiques, lacune rejetée, OHLC invalide rejeté.
-- [**Workflow GitHub Actions sans planification récurrente**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-eth-bitstamp-native-research.yml). Il doit publier ses preuves seulement dans `native_bitstamp_eth_2024_2026_evidence/` en cas de succès.
+- [**Audit scientifique comparatif Bitstamp/Binance, conclusions et limites**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_VS_BINANCE_EMA10_30_COMPARATIVE_AUDIT_2026_11_12.md).
+- [**CSV natif Bitstamp 1 310 journées**](./native_bitstamp_eth_2024_2026_evidence/bitstamp_ethusd_daily_2023_2026.csv), SHA-256 `881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49`.
+- [**Preuves JSON officielles de notre replay et collectes**](./native_bitstamp_eth_2024_2026_evidence/eth_ema_bitstamp_native_proofs.json).
+- [**Rapport machine généré**](./native_bitstamp_eth_2024_2026_evidence/SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_2024_2026_REPLAY_REPORT.md).
+- [**CSV des désaccords, un seul jour : 2025-06-19**](./native_bitstamp_eth_2024_2026_evidence/eth_ema_binance_bitstamp_disagreements.csv).
+- [**Protocole figé avant la collecte**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_DAILY_EMA10_30_2024_2026_FROZEN_PROTOCOL_2026_11_12.md), commit `75a7c15` ; [**programme Python de reproduction**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py), [**tests de sécurité**](./test_seven_heaven_eth_bitstamp_native_replay.py) et [**workflow Github Actions**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-eth-bitstamp-native-research.yml).
 
-**Statut à ne pas exagérer :** au dernier contrôle, aucun CSV natif Bitstamp complet ni rapport de replay réellement exécuté n'était disponible dans le dossier de preuves. API inaccessible depuis l'environnement local ; **présence du workflow != exécution validée**. Aucune performance nouvelle ETH/Bitstamp annoncée. Vérifier la publication bot puis les SHA et le calendrier avant toute conclusion. Aucun ordre, aucun changement de l'Interface, du Trader ou du Bridge.
+**Bilan historique PAPER 2024–oct. 2026 (mêmes paramètres EMA10/30) :**
+Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et **442 journées exposées**. Binance **EMA +91,27 %**, perte maximale **−53,82 %**, **56 opérations** et **443 journées exposées**. Concordance des états ETH/cash **1 034/1 035 jours (99,90 %)** ; corrélation des 1 034 rendements quotidiens **0,999923**. Coûts ×2 : **+74,79 % / +75,84 %**. Buy & Hold Bitstamp **−1,62 %**, Binance **−1,44 %**.
+
+**Limites à préserver :** mêmes années déjà étudiées ; aucune validation prospective hors-échantillon, risque de baisse importante toujours présent, USD ≠ USDT, frais et exécution fictifs. Distinguer clairement les performances des données natives Bitstamp du contrôle Yahoo 309 jours (fenêtre différente). **Aucun ordre réel ni modification Administrator, Trader, Operator ou Bridge.** Prochain travail : analyses de risque du portefeuille BTC/ETH sur les mêmes dates, puis validation prospective ou période réellement inédite.
 
