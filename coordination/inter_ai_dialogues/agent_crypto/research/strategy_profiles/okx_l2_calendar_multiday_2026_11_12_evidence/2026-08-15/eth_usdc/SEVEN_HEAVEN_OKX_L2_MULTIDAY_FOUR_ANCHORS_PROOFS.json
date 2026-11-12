@@ -1,0 +1,436 @@
+{
+  "status": "full_archive_replayed_four_anchors",
+  "at_utc": "2026-11-12T16:57:42.865Z",
+  "completed_at_utc": "2026-11-12T16:57:49.964Z",
+  "read_only": true,
+  "orders_enabled": false,
+  "source_archive_fully_read": true,
+  "sequence_continuity_proven": false,
+  "pair": "ETH-USDC",
+  "day_utc": "2026-08-15",
+  "metadata": {
+    "metadata_api_sha256": "9ba223585b27706a85096d32c0231827021a66ad789431262c9309f27cc5c76c",
+    "metadata_received_at_utc": "2026-11-12T16:57:43.050Z",
+    "metadata_bytes": 505,
+    "metadata_url": "https://www.okx.com/api/v5/public/market-data-history?module=4&instType=SPOT&instIdList=ETH-USDC&dateAggrType=daily&begin=1786752000000&end=1786752000000",
+    "cdn_url": "https://static.okx.com/cdn/okx/match/orderbook/pro/L2/400lv/daily/20260815/ETH-USDC-L2orderbook-400lv-2026-08-15.tar.gz",
+    "file_name": "ETH-USDC-L2orderbook-400lv-2026-08-15.tar.gz",
+    "advertised_sizeMB": "5.75"
+  },
+  "result": {
+    "source_url": "https://static.okx.com/cdn/okx/match/orderbook/pro/L2/400lv/daily/20260815/ETH-USDC-L2orderbook-400lv-2026-08-15.tar.gz",
+    "http_status": 200,
+    "http_content_length": "6029897",
+    "archive_downloaded_compressed_bytes": 6029897,
+    "archive_sha256": "9da303d949bce4f25248f7d3f6b7e34e2be6ed426b4945a395c3097d7932bfca",
+    "member_uncompressed_bytes": 59989509,
+    "member_declared_bytes": 59989509,
+    "member_sha256": "403a2c22a53730a15a3deb826fd1df1a90e13c1486f60c5b0d84a69ffed5b870",
+    "gzip_read_to_eof_crc_checked": true,
+    "only_compact_outputs_saved": true,
+    "market": {
+      "total_events": 277791,
+      "snapshots": 96,
+      "updates": 277695,
+      "level_removals": 696190,
+      "sequence_links_checked": 0,
+      "updates_without_sequence_verification": 277695,
+      "global_logical_continuity_proven": false,
+      "maximum_gap_between_events_ms": 26000,
+      "first_ts_ms": 1786752000009,
+      "last_ts_ms": 1786838399784,
+      "first_twenty_sha256_recorded": true,
+      "first_twenty_event_sha256": [
+        "6fe24844e7dba017f5f23333c0915d7fb4325411eabc0616577c841efd1c6a90",
+        "9169d0fdef69e6596ed250d48f15b32f4934fe26b0155ac76f6ab6da03ab6b8f",
+        "dcae4c203fd61d367a4a69e6d1e08f318d7a601432a146418cbd570085dbbfb6",
+        "93fa4355cbd223e8d5f34289abc6bcb48eb4017b4d3a7a56395dcb3e2bf339c1",
+        "b6d7eeb1a9c3dc3ae0d369be9901f204c5d46a17576fe4f97a93753549563734",
+        "4c4489a0b17ff17b1018520565b439bdb8862ba312014aa8766149c782e6fdb9",
+        "48e980205eaba847f17491bb64cd6c4badddb793dd66ec12665435849849097a",
+        "e03966b72663fdd71b10632598f504075b4c5c3b6d0a98e62d77c0b066db86b5",
+        "ebfbe7310b7914541825cfd1b9e6fb326b2c5b11e20a4606d027dfa38a20611f",
+        "ca18a6ea016be83197dd53283b1b9a0b8c81532fefdf0c6e94e49d5871df061a",
+        "d488ae7601b8776cc07a7bd9f1e14804990f53b0ab6c3342f3ac91796e5f473f",
+        "02d7a4ea7da628444d79568454ac364f6cd0bbf432752df0ee42df142d1e802c",
+        "c1a42f7a52bd402be1b1fca9d648f4e4b847222d296215489e00c6b7261ed1d1",
+        "72e88111488aee40c8853b74cf41210712ecd1a60177f6e6e921eee2823e4b5e",
+        "8ed4133141c76e25029d547ec7ac0467f7d2fa28c0eb079a856d610e3b0d70fb",
+        "0cf05ff6a864b82296bc3ef1cce35094207d54b36821a826458efbb34ebd5f17",
+        "826d353665265e729c1c69279508ed1164ca53e4f2fa4689247712ba9aa2ff3c",
+        "4c0b1a7ef5dd249073b6d7a7da8c6b2b5ae2a6dc36f5ccc345ee4b91742efa32",
+        "1edb7f058c320888393c5862be35084d90397ed28948196c997aef47d5489691",
+        "9b390ccb48111ca019f3a0da03f8eca0255a698f0944fd9ff9dd11ef40f2b1e7"
+      ],
+      "prior_prefix_sha_comparison_performed": false,
+      "anchors": [
+        {
+          "anchor_utc": "2026-08-15T00:00:00+00:00",
+          "sample_utc": "2026-08-15T00:00:00.009000+00:00",
+          "offset_ms_after_anchor": 9,
+          "best_bid": "1880.36",
+          "best_ask": "1880.64",
+          "spread_bps": 1.4889657,
+          "asks_active": 400,
+          "bids_active": 400,
+          "asks_used_for_depth": 400,
+          "bids_used_for_depth": 400,
+          "notionals": [
+            {
+              "usdc": 10,
+              "buy": {
+                "status": "complete",
+                "vwap": "1880.640000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.744483
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1880.360000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.744483
+              }
+            },
+            {
+              "usdc": 100,
+              "buy": {
+                "status": "complete",
+                "vwap": "1880.640000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.744483
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1880.360000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.744483
+              }
+            },
+            {
+              "usdc": 1000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1880.644999252108288688933879",
+                "levels": 2,
+                "mid_to_vwap_bps": 0.771068
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1880.360000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.744483
+              }
+            },
+            {
+              "usdc": 10000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1880.658498886218162880967327",
+                "levels": 3,
+                "mid_to_vwap_bps": 0.842855
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1880.354704446426500000000000",
+                "levels": 3,
+                "mid_to_vwap_bps": 0.772643
+              }
+            },
+            {
+              "usdc": 100000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1881.217585904296635086900876",
+                "levels": 23,
+                "mid_to_vwap_bps": 3.815931
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1879.821134983412800000000000",
+                "levels": 13,
+                "mid_to_vwap_bps": 3.610024
+              }
+            }
+          ],
+          "after_event_number": 1
+        },
+        {
+          "anchor_utc": "2026-08-15T06:00:00+00:00",
+          "sample_utc": "2026-08-15T06:00:00.005000+00:00",
+          "offset_ms_after_anchor": 5,
+          "best_bid": "1879.07",
+          "best_ask": "1879.3",
+          "spread_bps": 1.22393484,
+          "asks_active": 400,
+          "bids_active": 400,
+          "asks_used_for_depth": 400,
+          "bids_used_for_depth": 400,
+          "notionals": [
+            {
+              "usdc": 10,
+              "buy": {
+                "status": "complete",
+                "vwap": "1879.300000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.611967
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1879.070000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.611967
+              }
+            },
+            {
+              "usdc": 100,
+              "buy": {
+                "status": "complete",
+                "vwap": "1879.300000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.611967
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1879.070000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.611967
+              }
+            },
+            {
+              "usdc": 1000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1879.300000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.611967
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1879.040006224740800000000000",
+                "levels": 2,
+                "mid_to_vwap_bps": 0.771578
+              }
+            },
+            {
+              "usdc": 10000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1879.317998516862274269620905",
+                "levels": 3,
+                "mid_to_vwap_bps": 0.707746
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1878.938883614948640000000000",
+                "levels": 4,
+                "mid_to_vwap_bps": 1.309697
+              }
+            },
+            {
+              "usdc": 100000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1879.895470611752158814067810",
+                "levels": 16,
+                "mid_to_vwap_bps": 3.780738
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1878.300693435413383500000000",
+                "levels": 13,
+                "mid_to_vwap_bps": 4.705798
+              }
+            }
+          ],
+          "after_event_number": 74144
+        },
+        {
+          "anchor_utc": "2026-08-15T12:00:00+00:00",
+          "sample_utc": "2026-08-15T12:00:00.002000+00:00",
+          "offset_ms_after_anchor": 2,
+          "best_bid": "1877.49",
+          "best_ask": "1877.8",
+          "spread_bps": 1.65100432,
+          "asks_active": 400,
+          "bids_active": 400,
+          "asks_used_for_depth": 400,
+          "bids_used_for_depth": 400,
+          "notionals": [
+            {
+              "usdc": 10,
+              "buy": {
+                "status": "complete",
+                "vwap": "1877.800000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.825502
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1877.490000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.825502
+              }
+            },
+            {
+              "usdc": 100,
+              "buy": {
+                "status": "complete",
+                "vwap": "1877.800000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.825502
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1877.490000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.825502
+              }
+            },
+            {
+              "usdc": 1000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1877.815999951469543377637479",
+                "levels": 2,
+                "mid_to_vwap_bps": 0.910715
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1877.490000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.825502
+              }
+            },
+            {
+              "usdc": 10000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1877.837798807636125249099347",
+                "levels": 3,
+                "mid_to_vwap_bps": 1.026812
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1877.447322936134725000000000",
+                "levels": 3,
+                "mid_to_vwap_bps": 1.052793
+              }
+            },
+            {
+              "usdc": 100000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1878.420453953786240696287140",
+                "levels": 11,
+                "mid_to_vwap_bps": 4.129928
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1877.047032919335216000000000",
+                "levels": 12,
+                "mid_to_vwap_bps": 3.184665
+              }
+            }
+          ],
+          "after_event_number": 145925
+        },
+        {
+          "anchor_utc": "2026-08-15T18:00:00+00:00",
+          "sample_utc": "2026-08-15T18:00:00.001000+00:00",
+          "offset_ms_after_anchor": 1,
+          "best_bid": "1882.53",
+          "best_ask": "1882.7",
+          "spread_bps": 0.90299929,
+          "asks_active": 400,
+          "bids_active": 400,
+          "asks_used_for_depth": 400,
+          "bids_used_for_depth": 400,
+          "notionals": [
+            {
+              "usdc": 10,
+              "buy": {
+                "status": "complete",
+                "vwap": "1882.700000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.4515
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1882.530000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.4515
+              }
+            },
+            {
+              "usdc": 100,
+              "buy": {
+                "status": "complete",
+                "vwap": "1882.700000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.4515
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1882.530000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.4515
+              }
+            },
+            {
+              "usdc": 1000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1882.700000000000000000000000",
+                "levels": 1,
+                "mid_to_vwap_bps": 0.4515
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1882.522000109002150000000000",
+                "levels": 2,
+                "mid_to_vwap_bps": 0.493993
+              }
+            },
+            {
+              "usdc": 10000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1882.862911895886519712168284",
+                "levels": 6,
+                "mid_to_vwap_bps": 1.316849
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1882.505739153634605000000000",
+                "levels": 5,
+                "mid_to_vwap_bps": 0.580367
+              }
+            },
+            {
+              "usdc": 100000,
+              "buy": {
+                "status": "complete",
+                "vwap": "1883.294530122256239786983497",
+                "levels": 15,
+                "mid_to_vwap_bps": 3.609501
+              },
+              "sell": {
+                "status": "complete",
+                "vwap": "1881.994487000680762500000000",
+                "levels": 16,
+                "mid_to_vwap_bps": 3.296016
+              }
+            }
+          ],
+          "after_event_number": 216502
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Gzip CRC and byte SHA verify the copy, not upstream logical sequence completeness.",
+    "Four fixed snapshots on one historical day are not representative of a multi-year market.",
+    "No simulated fills occurred; orderbook depth is not guaranteed executable.",
+    "No account trading fees; quote asset USDC not equal USD/USDT."
+  ]
+}
