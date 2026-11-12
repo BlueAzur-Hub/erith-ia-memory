@@ -1,0 +1,58 @@
+{
+  "schema": "seven-heaven.okx-l2-calendar-three-day-independent-verification.v1",
+  "status": "SIX_SOURCE_BLOBS_24_SPREADS_240_COSTS_AND_ALL_PUBLISHED_AGGREGATES_REPRODUCED",
+  "read_only": true,
+  "orders_enabled": false,
+  "six_archive_sources": {
+    "2026-08-15_BTC-USDC": {
+      "source_blob_sha1": "7e78002061c8ecf01ef178e0ee90920480b665ce",
+      "complete_archive_sha256": "a8af512dabf96c6e5c8af37a0e19eb11ebce88ed232308cba9a63a37053fc130",
+      "member_sha256": "c7836a3f16229b1b211230ef4b40f46a3e25067196dee9193df0642c734e0050",
+      "events": 301816,
+      "global_sequence_continuity_proven": false
+    },
+    "2026-08-15_ETH-USDC": {
+      "source_blob_sha1": "65bd1adfbd7a4a1098b7392cfcc49f6b2059bbc8",
+      "complete_archive_sha256": "9da303d949bce4f25248f7d3f6b7e34e2be6ed426b4945a395c3097d7932bfca",
+      "member_sha256": "403a2c22a53730a15a3deb826fd1df1a90e13c1486f60c5b0d84a69ffed5b870",
+      "events": 277791,
+      "global_sequence_continuity_proven": false
+    },
+    "2026-09-15_BTC-USDC": {
+      "source_blob_sha1": "214d213c6085e44636c4e34f2b46596cd4c73fea",
+      "complete_archive_sha256": "53ab528063479e83dbd833be63615d09cee209897d39021403a88fd6f2d31460",
+      "member_sha256": "4a1b0c645c7c672c94f3a8e58c885def6441d34b9d8e7f6006f5d05f0e8e66ac",
+      "events": 1811678,
+      "global_sequence_continuity_proven": false
+    },
+    "2026-09-15_ETH-USDC": {
+      "source_blob_sha1": "37f18a89b92b36e418775b4fd1e4fe19c90d7486",
+      "complete_archive_sha256": "694464feb71a39dccff0188087079f3d200b50e51efc4a4120b454e4a9213924",
+      "member_sha256": "5e558436c384f8e8d6d9e21d29f3b322501072e642dfa276ce95d082bb4b6178",
+      "events": 1717498,
+      "global_sequence_continuity_proven": false
+    },
+    "2026-10-15_BTC-USDC": {
+      "source_blob_sha1": "a80617f03e2c00856c2e8ccb2ec2c7eb26fcbf40",
+      "complete_archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "member_sha256": "a8a3231d34d03a0d261ac9952f1ba2a953a4d31986e04c8bbbbdc61c06264963",
+      "events": 2346486,
+      "global_sequence_continuity_proven": false
+    },
+    "2026-10-15_ETH-USDC": {
+      "source_blob_sha1": "621c7edd2367d1cc9acb3bb13d6c11838df0fb86",
+      "complete_archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+      "member_sha256": "a47f70abc79c28bdb52831e0dfdce32e1bf48ca962c3d2f5e8bc9e233a430d5d",
+      "events": 3172868,
+      "global_sequence_continuity_proven": false
+    }
+  },
+  "published_aggregate_git_blob_sha1": "511a6b2ca4932e6183d239dcaf159c375c76c34c",
+  "spread_csv_git_blob_sha1": "ab0b7ce0a9bc08457fb0655ec5ca72dda34504e6",
+  "book_cost_csv_git_blob_sha1": "d434d7cb6c8f0aea7c8374f2fda891643b2566f6",
+  "verified_sources": 6,
+  "verified_spread_points": 24,
+  "verified_book_cost_points": 240,
+  "source_logical_sequence_continuity_proven": false,
+  "caveat": "Three dates and four instants per day are descriptive only; no fee or execution history validated."
+}
