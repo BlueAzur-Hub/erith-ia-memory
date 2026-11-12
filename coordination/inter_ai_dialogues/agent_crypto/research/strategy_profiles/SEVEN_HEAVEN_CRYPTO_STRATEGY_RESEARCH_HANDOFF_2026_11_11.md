@@ -225,3 +225,15 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - **Reproductibilité** : calcul effectif effectué via décompression et vérification SHA en JavaScript ; le script Python miroir a passé la compilation et des tests synthétiques, mais son exécution intégrale sur l'archive gzip canonique dans ce conteneur reste **non vérifiée** (accès binaire bloqué). Aucune affirmation de double validation indépendante du calcul.
 - **Priorité suivante** : nouvel actif ETH ou période réellement inédite, règles EMA inchangées, et contrôle des périodes en liquidités ; aucun déploiement Trader/Administrator/Operator/Bridge.
 
+## Ethereum : transfert de la politique EMA 10/30 sur 2022 et 2024–2026 (12 novembre 2026)
+
+**Statut : recherche ETH/USDT Spot Binance, rétrospective PAPER, sans ordre.** Les mêmes critères EMA10>EMA30 et clôture>EMA30 utilisés dans l'étude BTC ont été transférés sur ETH sans optimiser les paramètres ; capital 1 000 USDT, coûts 0,10 % frais + 0,05 % glissement de chaque côté.
+
+- **[Protocole figé avant calcul](./SEVEN_HEAVEN_ETH_EMA_CROSS_ASSET_2022_2024_2026_FROZEN_PROTOCOL_2026_11_12.md)** — première publication `46bf35f`, puis erratum de comptage 2022 (334 jours, pas 333 ; dates inchangées).
+- **[Rapport avec limites et risque](./SEVEN_HEAVEN_ETH_EMA_CROSS_ASSET_2022_2024_2026_REPLAY_2026_11_12_REPORT.md)** — EMA **−46,92 % en 2022**, **−9,01 % en 2024**, **+93,72 % en 2025**, **+8,51 % janvier–octobre 2026**. Portefeuille **2024–octobre 2026 continu : +91,27 %, baisse maximale −53,82 %**. Les périodes ont des capitalisations de départ distinctes, sauf la ligne continue.
+- **[Preuves structurées et empreintes des cinq shards gzip](./SEVEN_HEAVEN_ETH_EMA_CROSS_ASSET_2022_2024_2026_REPLAY_2026_11_12_PROOFS.json)** — **40 200 bougies 1h vérifiées SHA-256**, 1 675 journées complètes UTC réparties entre 2022 et avril 2023–octobre 2026. ETH 2018–2021 reste fragmentaire : aucune continuité inventée.
+- **[Script Python autonome reproductible](./SEVEN_HEAVEN_ETH_EMA_CROSS_ASSET_2022_2024_2026_REPLAY_2026_11_12.py)** · [**Courbes quotidiennes CSV**](./SEVEN_HEAVEN_ETH_EMA_CROSS_ASSET_2022_2024_2026_REPLAY_2026_11_12_EQUITY_DAILY.csv) · [**Transactions fictives CSV**](./SEVEN_HEAVEN_ETH_EMA_CROSS_ASSET_2022_2024_2026_REPLAY_2026_11_12_TRADES.csv).
+- **Reproductibilité :** script compilé et testé sur série synthétique ; le calcul historique principal a été exécuté par le moteur de l'étude et archivé, mais la réexécution complète du script Python à partir des cinq gzip reste **à confirmer**. L'option `--check-proofs` sert à confronter ses résultats au JSON publié ; ne pas affirmer ce contrôle achevé sans le lancer.
+- **Conclusion :** résultats inter-actifs hétérogènes ; **2024 est un contre-exemple EMA** (EMA négative, Buy & Hold ETH positif). Le portefeuille continu reste exposé à une baisse maximale supérieure à 50 %. Aucun signal à promouvoir dans le Trader.
+
+**Suite :** comparer BTC et ETH sur **les mêmes dates** (BTC source quotidienne s'achève en septembre 2026), puis évaluer une combinaison BTC/ETH à pondérations fixées en amont, toujours PAPER.
