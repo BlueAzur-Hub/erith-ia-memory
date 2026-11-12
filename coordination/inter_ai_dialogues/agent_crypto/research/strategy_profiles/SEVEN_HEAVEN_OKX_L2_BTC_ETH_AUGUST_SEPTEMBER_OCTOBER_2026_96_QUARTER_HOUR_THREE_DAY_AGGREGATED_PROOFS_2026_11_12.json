@@ -1,0 +1,281 @@
+{
+  "schema": "seven-heaven.okx-spot-btc-eth-96-quarter-hours-three-calendar-dates.v1",
+  "report_date": "2026-11-12",
+  "status": "SIX_FULL_ARCHIVES_576_STATES_288_PAIRED_SPREADS_2880_PAIRED_COSTS",
+  "read_only": true,
+  "orders_enabled": false,
+  "dates_utc": [
+    "2026-08-15",
+    "2026-09-15",
+    "2026-10-15"
+  ],
+  "instruments": [
+    "BTC-USDC",
+    "ETH-USDC"
+  ],
+  "sampling_times": "96 fixed UTC quarter-hours from 00:00 through 23:45 for each day",
+  "price_cost_notionals_usdc": [
+    10,
+    100,
+    1000,
+    10000,
+    100000
+  ],
+  "sides": [
+    "buy",
+    "sell"
+  ],
+  "preregistered_protocol": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_2026_NINETY_SIX_QUARTER_HOURS_FROZEN_PROTOCOL_2026_11_12.md",
+  "sources": {
+    "2026-08-15|BTC-USDC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/2026-08-15/btc_usdc/SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json",
+      "git_blob_sha1": "ae4d975242a113f8ab81a28bca334b8d62973ce8",
+      "archive_sha256": "a8af512dabf96c6e5c8af37a0e19eb11ebce88ed232308cba9a63a37053fc130",
+      "member_sha256": "c7836a3f16229b1b211230ef4b40f46a3e25067196dee9193df0642c734e0050",
+      "archive_bytes": 5874484,
+      "member_bytes": 57596807,
+      "events": 301816,
+      "snapshots": 96,
+      "updates": 301720,
+      "global_logical_sequence_proven": false
+    },
+    "2026-08-15|ETH-USDC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/2026-08-15/eth_usdc/SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json",
+      "git_blob_sha1": "afd81ec52fbbc03c51a946a0dea5ce93f9732275",
+      "archive_sha256": "9da303d949bce4f25248f7d3f6b7e34e2be6ed426b4945a395c3097d7932bfca",
+      "member_sha256": "403a2c22a53730a15a3deb826fd1df1a90e13c1486f60c5b0d84a69ffed5b870",
+      "archive_bytes": 6029897,
+      "member_bytes": 59989509,
+      "events": 277791,
+      "snapshots": 96,
+      "updates": 277695,
+      "global_logical_sequence_proven": false
+    },
+    "2026-09-15|BTC-USDC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/2026-09-15/btc_usdc/SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json",
+      "git_blob_sha1": "1d173cd27be2ac971326850e1d81dfe5ad4a0857",
+      "archive_sha256": "53ab528063479e83dbd833be63615d09cee209897d39021403a88fd6f2d31460",
+      "member_sha256": "4a1b0c645c7c672c94f3a8e58c885def6441d34b9d8e7f6006f5d05f0e8e66ac",
+      "archive_bytes": 62266870,
+      "member_bytes": 491977909,
+      "events": 1811678,
+      "snapshots": 96,
+      "updates": 1811582,
+      "global_logical_sequence_proven": false
+    },
+    "2026-09-15|ETH-USDC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/2026-09-15/eth_usdc/SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json",
+      "git_blob_sha1": "eb882de160670bc8f7099645af86a07ab3a31dd6",
+      "archive_sha256": "694464feb71a39dccff0188087079f3d200b50e51efc4a4120b454e4a9213924",
+      "member_sha256": "5e558436c384f8e8d6d9e21d29f3b322501072e642dfa276ce95d082bb4b6178",
+      "archive_bytes": 53571838,
+      "member_bytes": 408853414,
+      "events": 1717498,
+      "snapshots": 96,
+      "updates": 1717402,
+      "global_logical_sequence_proven": false
+    },
+    "2026-10-15|BTC-USDC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_96_quarter_hour_2026_10_15_evidence/btc_usdc/SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json",
+      "git_blob_sha1": "ca8f55de07bee5ef73663bd1613d6b56a655e4a4",
+      "archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "member_sha256": "a8a3231d34d03a0d261ac9952f1ba2a953a4d31986e04c8bbbbdc61c06264963",
+      "archive_bytes": 56920312,
+      "member_bytes": 457277836,
+      "events": 2346486,
+      "snapshots": 96,
+      "updates": 2346390,
+      "global_logical_sequence_proven": false
+    },
+    "2026-10-15|ETH-USDC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_96_quarter_hour_2026_10_15_evidence/eth_usdc/SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json",
+      "git_blob_sha1": "b3be3c7fea85042b770c5f1bb6cdc0d8749cf530",
+      "archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+      "member_sha256": "a47f70abc79c28bdb52831e0dfdce32e1bf48ca962c3d2f5e8bc9e233a430d5d",
+      "archive_bytes": 98150849,
+      "member_bytes": 776655177,
+      "events": 3172868,
+      "snapshots": 96,
+      "updates": 3172772,
+      "global_logical_sequence_proven": false
+    }
+  },
+  "quality": {
+    "six_complete_archive_sha_crc_verified_by_workflows": true,
+    "all_four_historical_reference_anchors_verified_for_each_archive": true,
+    "first_twenty_original_event_hashes_match": true,
+    "ninety_six_snapshots_per_source": true,
+    "source_logical_sequence_proven": false,
+    "source_snapshot_pairing_non_atomic": true
+  },
+  "counts": {
+    "archives": 6,
+    "full_archive_events": 9628137,
+    "book_states": 576,
+    "paired_spread_points": 288,
+    "paired_book_cost_rows": 2880,
+    "individual_cost_points": 5760,
+    "comparisons": {
+      "btc_spread_gt_eth": 12,
+      "eth_spread_gt_btc": 276,
+      "equal_spread": 0,
+      "all_5_costs_complete": 2880,
+      "depth_incomplete": 0
+    }
+  },
+  "per_day": {
+    "2026-08-15": {
+      "BTC-USDC": {
+        "n": 96,
+        "mean_bp": 0.1083018,
+        "median_bp": 0.01587957,
+        "p10_bp": 0.01585615,
+        "p90_bp": 0.36516205,
+        "min_bp": 0.01584805,
+        "max_bp": 0.87280321,
+        "max_at_utc": "05:45",
+        "above_0_1_bp": 30,
+        "above_0_5_bp": 4
+      },
+      "ETH-USDC": {
+        "n": 96,
+        "mean_bp": 0.8545032,
+        "median_bp": 0.90300168,
+        "p10_bp": 0.05316618,
+        "p90_bp": 1.48865703,
+        "min_bp": 0.05307616,
+        "max_bp": 1.70332361,
+        "max_at_utc": "11:45",
+        "above_0_1_bp": 81,
+        "above_0_5_bp": 73
+      }
+    },
+    "2026-09-15": {
+      "BTC-USDC": {
+        "n": 96,
+        "mean_bp": 0.32299073,
+        "median_bp": 0.05242462,
+        "p10_bp": 0.01292789,
+        "p90_bp": 0.71780643,
+        "min_bp": 0.01279999,
+        "max_bp": 3.57758248,
+        "max_at_utc": "18:30",
+        "above_0_1_bp": 47,
+        "above_0_5_bp": 21
+      },
+      "ETH-USDC": {
+        "n": 96,
+        "mean_bp": 1.25056395,
+        "median_bp": 1.3274843,
+        "p10_bp": 0.56946279,
+        "p90_bp": 2.10683628,
+        "min_bp": 0.04015911,
+        "max_bp": 2.76584599,
+        "max_at_utc": "18:45",
+        "above_0_1_bp": 91,
+        "above_0_5_bp": 88
+      }
+    },
+    "2026-10-15": {
+      "BTC-USDC": {
+        "n": 96,
+        "mean_bp": 0.02306307,
+        "median_bp": 0.01228065,
+        "p10_bp": 0.01214368,
+        "p90_bp": 0.01238434,
+        "min_bp": 0.01213223,
+        "max_bp": 0.88789153,
+        "max_at_utc": "15:15",
+        "above_0_1_bp": 2,
+        "above_0_5_bp": 1
+      },
+      "ETH-USDC": {
+        "n": 96,
+        "mean_bp": 0.24586592,
+        "median_bp": 0.04224347,
+        "p10_bp": 0.04080051,
+        "p90_bp": 0.66941661,
+        "min_bp": 0.04063298,
+        "max_bp": 2.6038054,
+        "max_at_utc": "02:30",
+        "above_0_1_bp": 21,
+        "above_0_5_bp": 13
+      }
+    }
+  },
+  "descriptive_across_three_days": {
+    "BTC-USDC": {
+      "count": 288,
+      "mean_288_bp": 0.15145187,
+      "median_288_bp": 0.0158549,
+      "p10_288_bp": 0.01218505,
+      "p90_288_bp": 0.46691299,
+      "min_bp": 0.01213223,
+      "max_bp": 3.57758248,
+      "above_0_1_bp": 79,
+      "above_0_5_bp": 26,
+      "per_day": [
+        {
+          "date": "2026-08-15",
+          "mean": 0.1083018
+        },
+        {
+          "date": "2026-09-15",
+          "mean": 0.32299073
+        },
+        {
+          "date": "2026-10-15",
+          "mean": 0.02306307
+        }
+      ],
+      "1000_buy_cost_mean_288_bp": 0.137466,
+      "1000_buy_cost_p90_288_bp": 0.371655,
+      "1000_sell_cost_mean_288_bp": 0.137572,
+      "1000_sell_cost_p90_288_bp": 0.376449,
+      "100000_buy_cost_mean_288_bp": 1.849004,
+      "100000_buy_cost_p90_288_bp": 3.261758,
+      "100000_sell_cost_mean_288_bp": 1.63803,
+      "100000_sell_cost_p90_288_bp": 3.028711
+    },
+    "ETH-USDC": {
+      "count": 288,
+      "mean_288_bp": 0.78364436,
+      "median_288_bp": 0.79556264,
+      "p10_288_bp": 0.04120542,
+      "p90_288_bp": 1.55406319,
+      "min_bp": 0.04015911,
+      "max_bp": 2.76584599,
+      "above_0_1_bp": 193,
+      "above_0_5_bp": 174,
+      "per_day": [
+        {
+          "date": "2026-08-15",
+          "mean": 0.8545032
+        },
+        {
+          "date": "2026-09-15",
+          "mean": 1.25056395
+        },
+        {
+          "date": "2026-10-15",
+          "mean": 0.24586592
+        }
+      ],
+      "1000_buy_cost_mean_288_bp": 0.564372,
+      "1000_buy_cost_p90_288_bp": 1.105339,
+      "1000_sell_cost_mean_288_bp": 0.541997,
+      "1000_sell_cost_p90_288_bp": 1.01219,
+      "100000_buy_cost_mean_288_bp": 5.04226,
+      "100000_buy_cost_p90_288_bp": 7.909267,
+      "100000_sell_cost_mean_288_bp": 5.085002,
+      "100000_sell_cost_p90_288_bp": 7.456919
+    }
+  },
+  "limits": [
+    "Only three fixed historical dates, one per month; 96 states per day are NOT continuous time-average prices.",
+    "The snapshots are milliseconds apart across instruments and not atomic; no guaranteed fills or account-specific fees.",
+    "No seqId / prevSeqId proving gap-free upstream source; gzip CRC/SHA verify received files only.",
+    "Costs estimate static displayed depth, excluding latency, cancellations and queue position.",
+    "No inference about EMA strategy net performance or live OKX trading from these snapshots."
+  ]
+}
