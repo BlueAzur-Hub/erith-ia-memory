@@ -610,3 +610,45 @@ Les 4 ancres ETH (00/06/12/18) et 5 montants 10/100/1000/10000/100000 USDC doive
 
 **Nouvelle direction scientifique proposée (PAS encore réalisée) :** étudier la **persistance temporelle des élargissements** sur une grille d'une minute ou d'une autre durée préenregistrée, en commençant sur une seule journée/paire, en vérifiant la cohérence des spreads reconstruits et les contraintes de volumes ; ou choisir de nouvelles journées calendaires à l'avance. Ne pas prétendre déjà disposer des quantiles de toutes les secondes ni des coûts de trading réels.
 
+
+## OKX BTC/ETH L2 — 15 OCTOBRE 2026 : 1 440 MINUTES + DURÉES DES ÉLARGISSEMENTS VALIDÉES (12 novembre)
+
+**ÉTUDE ACHEVÉE, REJEUX BTC ET ETH COMPLETS RÉUSSIS, PREUVES ET RAPPORT PUBLIÉS SUR MAIN.** Cette phase répond à la question de la **persistance** des spreads : notre étude précédente s'arrêtait à 96 snapshots/jour ; nous avons maintenant **1 440 minutes/actif** et la **durée supposée des états du carnet entre événements successifs** sur les archives du **15 octobre 2026**. **5 519 354 événements L2** intégralement relus (2 346 486 BTC, 3 172 868 ETH), toutes les archives et membres vérifiés par SHA-256 complets et gzip footer/CRC, **96/96 anciennes ancres exactement concordantes** pour les deux actifs. Les gros fichiers décompressés n'ont pas été déposés sur GitHub.
+
+- [**Rapport scientifique : spread minute, persistance des épisodes, maxima et limites**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_AND_EVENT_TIME_SPREAD_PERSISTENCE_SCIENTIFIC_AUDIT_2026_11_12.md).
+- [**Protocole gelé avant nouveau replay (1 minute + seuils 0,1 / 0,5 / 1 / 2 bp)**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FROZEN_PROTOCOL_2026_11_12.md), commit `67c8532cff103c9cc5cb439d7a7bb87a5d642f4e`.
+- [**Code Python streaming : minutes, durées événement à événement, épisodes supérieurs aux seuils**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FULL_ARCHIVE_STREAMED_REPLAY_2026_11_12.py).
+- [**Preuve BTC intégrale (SHA, 1440 minutes, 96 historiques, 4 seuils, épisode max)**](./okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/btc_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json), Git blob `ce90a9d8e84bb257eafe994d1d31a4ffae51f0b9`.
+- [**Preuve ETH intégrale (mêmes contrôles)**](./okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/eth_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json), Git blob `589778261ecd2ce419c6df2f0fba3e44e195439d`.
+- [**Synthèse numérique appariée : fractions minute, fractions temporelles, épisodes**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_AGGREGATED_EVIDENCE_2026_11_12.json), Git blob `f2f27d004500454010fa9a5226d1cd97bf08702a`.
+- [**CSV de comparaison des 1 440 minutes BTC/ETH**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_PAIRED_SPREADS_1440_ROWS_2026_11_12.csv).
+- [**GitHub Actions : 2 archives entières, contrôle 1 440 minutes et 96 anciennes ancres — SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43272575944).
+- [**Second audit Python hors réseau, preuves Git blob épinglées, arithmétique minute et conservation des durées**](./SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_INDEPENDENT_EVIDENCE_AUDIT_2026_11_12.py), [**preuve JSON indépendante**](./okx_l2_one_minute_event_time_independent_validation_2026_11_12_evidence/SEVEN_HEAVEN_OKX_MINUTE_SPREAD_PERSISTENCE_OFFLINE_INDEPENDENT_PROOFS.json), Git blob `e3eab77292b0b5a8133aa55d2fc8b725c1abd777`, [**GitHub Actions SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43273786205). Le vérificateur ne relit PAS les millions de JSON bruts une seconde fois ; il confronte les preuves sources et les agrégats publiés. La première exécution échouée suite à un nom de champ `git_blob_sha1` vs `sha` a été corrigée **sans changement des données**, puis SUCCESS.
+
+**Trois moyennes de spreads sur la même journée, en bp :**
+
+| Méthode | BTC/USDC | ETH/USDC |
+|---|---:|---:|
+| 96 snapshots 15 minutes | 0,023063 | 0,245866 |
+| 1440 instants minute | **0,038135** | **0,308639** |
+| Pondérée par la durée supposée des états archivés entre messages | **0,035277** | **0,293647** |
+
+**Limite 96 vs 1 440 :** le maximum sur la grille de 15 min BTC **0,8879 bp (15:15)**, ETH **2,6038 bp (02:30)** ; sur la nouvelle grille minute BTC **2,2660 bp (13:38)**, ETH **8,6613 bp (02:29)**. **Ce n'est pas le maximum de tous les événements**, seulement des points échantillonnés.
+
+**Part temporelle archivistique au-dessus du seuil strict > seuil (durées `[ts_i,ts_{i+1})` sans extrapolation avant/après la première/dernière ligne) :**
+
+| Seuil bp | BTC | ETH |
+|---|---:|---:|
+| > 0,1 | **3,1457 %** | **27,4118 %** |
+| > 0,5 | **1,8738 %** | **17,3080 %** |
+| > 1,0 | **0,8052 %** | **10,9623 %** |
+| > 2,0 | **0,0726 %** | **2,7854 %** |
+
+**Plus longues séquences d'états au-dessus :** BTC / ETH respectivement >0,1 bp **6,71 s / 107,53 s** ; >0,5 bp **1,03 s / 10,74 s** ; >1 bp **0,85 s / 7,58 s** ; >2 bp **0,42 s / 2,32 s**. BTC >0,1 : **64 350 épisodes positifs**, dont **29 >= 1 s**, **0 >= 10 s**. ETH >0,1 : **147 981 épisodes positifs**, dont **3 404 >= 1 s**, **29 >= 10 s** et **3 >= 60 s**. Les micro-épisodes ne sont ni indépendants ni des transactions.
+
+**Comparaison minute BTC/ETH :** ETH présente le spread relatif le plus large sur **1 398/1 440** instants ; BTC sur **42**, 0 égalité. Décalage maximal des deux timestamps d'échantillonnage au même horaire : **1 730 ms**, donc pas de synchronisation atomique.
+
+**Limite scientifique absolue :** les SHA-256 et CRC valident les octets archivés lus, **pas** l'exhaustivité de l'archive originale faute de `seqId/prevSeqId`. Les durées représentent des **états supposés constants entre timestamps des messages archivés**, pas une garantie de persistance réelle du marché. Une journée ancienne ne prouve pas la validité multi-jours ni la rentabilité d'une stratégie. **Aucun ordre, aucun changement Trader/Bridge/Administrator/Operator, aucun monitoring récurrent.** Ne pas appliquer ces coûts/spreads OKX Spot USDC aux stratégies EMA Bitstamp USD/2024–2026.
+
+**Piste suivante non encore exécutée :** tester la robustesse des fractions temporelles et des plus longues durées **sur les dates 15 août et 15 septembre**, selon les mêmes seuils, et/ou tester un modèle PAPER de coût complet incluant des frais documentés sur la bonne plateforme, en distinguant spread, VWAP carnet et commissions. Ne pas déclarer ce chantier déjà fait.
+
