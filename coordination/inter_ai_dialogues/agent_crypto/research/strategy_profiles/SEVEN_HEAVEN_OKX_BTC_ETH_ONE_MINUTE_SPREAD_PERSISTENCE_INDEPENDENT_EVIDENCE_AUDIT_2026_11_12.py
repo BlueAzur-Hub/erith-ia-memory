@@ -98,7 +98,7 @@ def verify(repo):
             raise ValueError("Original 96 quarter-hour anchors not crosschecked")
         if len(m["anchors"])!=96 or len(m["snapshot_events"])!=96 or len(m["minute_states"])!=1440:
             raise ValueError("Original 96 snapshot or minute grid incomplete")
-        if published["sources"][sym]["git_blob_sha1"]!=SOURCE[sym][1]:
+        if published["sources"][sym]["sha"]!=SOURCE[sym][1]:
             raise ValueError("Aggregate references wrong source Git blob")
         if published["sources"][sym]["path"]!=str(SOURCE[sym][0]):
             raise ValueError("Wrong original source path")
