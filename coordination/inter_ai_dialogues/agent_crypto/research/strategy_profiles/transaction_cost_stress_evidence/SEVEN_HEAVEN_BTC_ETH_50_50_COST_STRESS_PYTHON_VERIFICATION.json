@@ -1,0 +1,196 @@
+{
+  "schema": "seven-heaven.btc-eth-50-50-cost-stress-python-validation.v1",
+  "status": "REPRODUCED_ON_PUBLISHED_PINNED_CSVS",
+  "read_only": true,
+  "orders_enabled": false,
+  "input_git_blob_sha1": {
+    "BTC": "e770ca75bcdb4821e0c1e86a0b47e5478e5c8fba",
+    "ETH": "49e8f3e8f89fdc2929d2e37d1cc5e4904813621e",
+    "ORIGINAL": "ab15dc23da2e5b8adc5e72ea0eef893b79b79aeb"
+  },
+  "full_calendar_days": 1310,
+  "warmup_days": 275,
+  "paper_days": 1035,
+  "fixed_ema_trades": 122,
+  "verified_grid_scenarios": 8,
+  "all_replayed_figures_match_previously_published_evidence": true,
+  "scenario_grid": [
+    {
+      "factor": 0,
+      "fee_per_side_pct": 0.0,
+      "slippage_per_side_pct": 0.0,
+      "hypothetical_total_cost_per_side_pct": 0.0,
+      "EMA": {
+        "final_usd": 1945.684553,
+        "return_pct": 94.568455,
+        "max_drawdown_pct": -40.842062,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1409.538747,
+        "return_pct": 40.953875,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": 53.614581
+    },
+    {
+      "factor": 1,
+      "fee_per_side_pct": 0.1,
+      "slippage_per_side_pct": 0.05,
+      "hypothetical_total_cost_per_side_pct": 0.15,
+      "EMA": {
+        "final_usd": 1776.652453,
+        "return_pct": 77.665245,
+        "max_drawdown_pct": -42.15057,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1405.315061,
+        "return_pct": 40.531506,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": 37.133739
+    },
+    {
+      "factor": 2,
+      "fee_per_side_pct": 0.2,
+      "slippage_per_side_pct": 0.1,
+      "hypothetical_total_cost_per_side_pct": 0.3,
+      "EMA": {
+        "final_usd": 1622.384955,
+        "return_pct": 62.238495,
+        "max_drawdown_pct": -43.44803,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1401.101223,
+        "return_pct": 40.110122,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": 22.128373
+    },
+    {
+      "factor": 3,
+      "fee_per_side_pct": 0.3,
+      "slippage_per_side_pct": 0.15,
+      "hypothetical_total_cost_per_side_pct": 0.45,
+      "EMA": {
+        "final_usd": 1481.585389,
+        "return_pct": 48.158539,
+        "max_drawdown_pct": -44.800001,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1396.897213,
+        "return_pct": 39.689721,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": 8.468818
+    },
+    {
+      "factor": 4,
+      "fee_per_side_pct": 0.4,
+      "slippage_per_side_pct": 0.2,
+      "hypothetical_total_cost_per_side_pct": 0.6,
+      "EMA": {
+        "final_usd": 1353.071548,
+        "return_pct": 35.307155,
+        "max_drawdown_pct": -46.12101,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1392.703014,
+        "return_pct": 39.270301,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": -3.963147
+    },
+    {
+      "factor": 6,
+      "fee_per_side_pct": 0.6,
+      "slippage_per_side_pct": 0.3,
+      "hypothetical_total_cost_per_side_pct": 0.9,
+      "EMA": {
+        "final_usd": 1128.684527,
+        "return_pct": 12.868453,
+        "max_drawdown_pct": -48.67284,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1384.343968,
+        "return_pct": 38.434397,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": -25.565944
+    },
+    {
+      "factor": 8,
+      "fee_per_side_pct": 0.8,
+      "slippage_per_side_pct": 0.4,
+      "hypothetical_total_cost_per_side_pct": 1.2,
+      "EMA": {
+        "final_usd": 941.691734,
+        "return_pct": -5.830827,
+        "max_drawdown_pct": -51.108774,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1376.023936,
+        "return_pct": 37.602394,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": -43.43322
+    },
+    {
+      "factor": 10,
+      "fee_per_side_pct": 1.0,
+      "slippage_per_side_pct": 0.5,
+      "hypothetical_total_cost_per_side_pct": 1.5,
+      "EMA": {
+        "final_usd": 785.829945,
+        "return_pct": -21.417005,
+        "max_drawdown_pct": -55.0049,
+        "trades": 122
+      },
+      "BUY_HOLD": {
+        "final_usd": 1367.742767,
+        "return_pct": 36.774277,
+        "max_drawdown_pct": -58.584541,
+        "trades": 2
+      },
+      "EMA_minus_HOLD_percentage_points": -58.191282
+    }
+  ],
+  "thresholds": {
+    "ema_zero_return": {
+      "factor": 7.336403,
+      "fee_per_side_pct": 0.73364,
+      "slippage_per_side_pct": 0.36682,
+      "hypothetical_per_side_total_pct": 1.10046
+    },
+    "ema_equals_buy_and_hold": {
+      "factor": 3.670861,
+      "fee_per_side_pct": 0.367086,
+      "slippage_per_side_pct": 0.183543,
+      "hypothetical_per_side_total_pct": 0.550629
+    }
+  },
+  "year_continuous_ema_return_pct": {
+    "2024": 26.836132,
+    "2025": 36.594956,
+    "2026": 2.547441
+  },
+  "limits": [
+    "Same historical years already studied, not a prospective trial.",
+    "Grid does not represent real historical Bitstamp or OKX fees.",
+    "No orderbook or actual fill evidence.",
+    "No changes to EMA10/EMA30 or chronological decision rules."
+  ]
+}
