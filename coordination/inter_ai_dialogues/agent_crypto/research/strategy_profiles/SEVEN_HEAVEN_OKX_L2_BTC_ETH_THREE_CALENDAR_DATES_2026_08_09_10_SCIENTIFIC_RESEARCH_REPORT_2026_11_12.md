@@ -120,3 +120,20 @@ Pour comprendre **les distributions des spreads**, il ne suffit pas d'ajouter de
 La première étude raisonnable serait de **densifier une seule journée déjà archivée**, avec une méthode et des critères de qualité gelés, avant de déployer une analyse haute fréquence sur plusieurs mois. Ne pas confondre cette direction avec un déploiement d'ordres ou une nouvelle stratégie EMA.
 
 **Aucun ordre réel, aucune surveillance récurrente, aucun changement Administrator/Operator/Trader/Bridge.**
+
+
+## 9. Contrôle de reproduction indépendant — SUCCESS
+
+Un **programme Python distinct du calcul initial en JavaScript**, fonctionnant **hors réseau**, a relu les **six preuves JSON sources** en vérifiant leurs Git blob SHA-1 épinglés, ainsi que les SHA-256 des archives reportés, les statuts d'intégrité gzip et les 4 ancres de chaque fichier. Il a ensuite recomputé et confronté aux trois livrables publiés :
+
+- **24 observations de spread**, toutes exactes ;
+- **240 estimations de coût par côté et notionnel**, toutes rapprochées ;
+- agrégats par jour/actif (moyenne et médiane des 4 spreads, moyennes des coûts 1 000 et 100 000 USDC), puis par actif sur **12 instants**, avec tolérance de présentation numérique ;
+- tous les fichiers et tableaux CSV correctement alignés, sans modification d'horaire ou sélection opportuniste.
+
+**Résultat GitHub Actions : SUCCESS.** [Exécution de reproduction indépendante](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43265463281), [script Python auditable](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_THREE_CALENDAR_DATES_INDEPENDENT_RECALC_2026_11_12.py), [preuve indépendante JSON](./okx_l2_calendar_three_dates_independent_validation_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_THREE_DATES_INDEPENDENT_REPRODUCTION_PROOFS.json) (Git blob `2ccbe2550cc6ff8e0ee2a73efee585aa3551cb76`).
+
+**Statut vérifié** : `SIX_SOURCE_BLOBS_24_SPREADS_240_COSTS_AND_ALL_PUBLISHED_AGGREGATES_REPRODUCED`.
+
+La reproduction confirme **le calcul sur les archives obtenues**, pas une quelconque garantie d'exécution future, de continuité globale du flux en l'absence de séquence, ni d'exhaustivité des carnets fournis initialement par OKX.
+
