@@ -1,0 +1,139 @@
+{
+  "schema": "seven-heaven.btc-ema-source-transfer-bitstamp-v1",
+  "study_date": "2026-11-12",
+  "protocol_commit": "c81886c154f540bb0b5c5be379c8aabc4c6f82b5",
+  "source_bitstamp": {
+    "repository": "daniegitx1/btc-price-history",
+    "file": "data/btc_usd_daily.csv",
+    "git_blob_sha1": "0bd9a80472f46cbf47a678e9f17d6c5a9edab7f5",
+    "source_underlying": "Bitstamp BTC/USD Spot OHLC daily API collected by third party",
+    "source_is_unsigned_mirror": true
+  },
+  "source_binance": {
+    "repository": "BlueAzur-Hub/erith-ia-memory",
+    "file": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_EQUITY_DAILY.csv",
+    "git_blob_sha1": "c8ed2a206ea616ea87eeb83e31f7138d5b131588",
+    "original_replay_proofs_blob_sha1": "43aba5f666df19c9369a58866165c5684b77ecba",
+    "source_underlying": "Binance BTC/USDT Spot 1m aggregated hourly then daily"
+  },
+  "coverage": {
+    "warmup_start_utc": "2023-04-01",
+    "simulation_start_utc": "2024-01-01",
+    "simulation_end_utc": "2026-10-31",
+    "warmup_days": 275,
+    "bitstamp_calendar_days": 1310,
+    "simulation_days": 1035,
+    "return_pairs": 1034
+  },
+  "assumptions": {
+    "signal": "EMA10>EMA30 and close>EMA30",
+    "execution": "next UTC daily opening after prior close",
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "portfolio_start": 1000,
+    "comparison_numeraire": "USD Bitstamp vs USDT Binance; no equivalence or FX conversion assumed",
+    "no_leverage": true
+  },
+  "checks": {
+    "source_sha_pinned": true,
+    "calendar_contiguous": true,
+    "utc_date_unique": true,
+    "ohlc_bounds_valid": true,
+    "all_volume_nonnegative": true,
+    "bitstamp_exposure_vs_binance_days_checked": 1035,
+    "portfolio_ema_trade_count_matches_binance": true
+  },
+  "bitstamp": {
+    "bitstamp_ema": {
+      "final_usd": 1657.818574,
+      "return_pct": 65.781857,
+      "max_drawdown_pct": -34.475555,
+      "trades": 68,
+      "exposed_days": 487
+    },
+    "bitstamp_ema_cost2": {
+      "final_usd": 1496.906204,
+      "return_pct": 49.69062,
+      "max_drawdown_pct": -36.062678,
+      "trades": 68,
+      "exposed_days": 487
+    },
+    "bitstamp_hold": {
+      "final_usd": 1826.824764,
+      "return_pct": 82.682476,
+      "max_drawdown_pct": -53.076959,
+      "trades": 1,
+      "exposed_days": 1035
+    },
+    "bitstamp_hold_cost2": {
+      "final_usd": 1821.347029,
+      "return_pct": 82.134703,
+      "max_drawdown_pct": -53.076959,
+      "trades": 1,
+      "exposed_days": 1035
+    }
+  },
+  "binance_reference": {
+    "ema_cost1": {
+      "final_usdt": 1671.37808,
+      "return_pct": 67.137808,
+      "max_drawdown_pct": -34.207807,
+      "trades": 68,
+      "exposure_pct": 46.956522
+    },
+    "ema_cost2": {
+      "final_usdt": 1509.149588,
+      "return_pct": 50.914959,
+      "max_drawdown_pct": -35.817129,
+      "trades": 68,
+      "exposure_pct": 46.956522
+    },
+    "hold_cost1": {
+      "final_usdt": 1829.30455,
+      "return_pct": 82.930455,
+      "max_drawdown_pct": -52.971766,
+      "trades": 1,
+      "exposure_pct": 100
+    },
+    "hold_cost2": {
+      "final_usdt": 1823.819379,
+      "return_pct": 82.381938,
+      "max_drawdown_pct": -52.971766,
+      "trades": 1,
+      "exposure_pct": 100
+    }
+  },
+  "cross_source": {
+    "ema_return_difference_bitstamp_minus_binance_percentage_points": -1.355951,
+    "ema_drawdown_difference_percentage_points": -0.267748,
+    "exposure_mismatch_days": [
+      "2026-07-17"
+    ],
+    "exposure_agree_days": 1034,
+    "exposure_agreement_pct": 99.9034,
+    "daily_btc_return_pearson": 0.999883245,
+    "daily_absolute_return_difference_median_percentage_points": 0.022074,
+    "daily_absolute_return_difference_p95_percentage_points": 0.082751,
+    "mismatches_by_year": {
+      "2024": 0,
+      "2025": 0,
+      "2026": 1
+    }
+  },
+  "divergent_day_context": {
+    "date": "2026-07-17",
+    "bitstamp_bull_previous_day": "2026-07-16",
+    "bitstamp_previous_ema10": 63620.65705,
+    "bitstamp_previous_ema30": 63619.894232,
+    "bitstamp_exposed": 1,
+    "binance_exposed": 0
+  },
+  "limitations": [
+    "Independent exchange venue but previously investigated time span; not out-of-sample forecast validation",
+    "USD and USDT are different quote units, no exchange-funding or USDT peg risk modeled",
+    "Fixed fills at next UTC open, fee/slippage hypothetical; actual order execution not observed",
+    "Bitstamp price mirror is third-party and versioned by Git blob, not exchange-signed",
+    "No Ethereum second-exchange price replay in this study",
+    "Published Python reproduction script not yet reexecuted in independent Python runtime"
+  ]
+}
