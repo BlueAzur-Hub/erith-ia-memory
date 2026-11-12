@@ -66,7 +66,7 @@ jobs:
           }
           if(proof.scope.pair!=='ETH-USDC'||proof.scope.day_utc!==process.env.DAY_UTC||proof.frozen_ohlc_300.length!==300)throw Error('Wrong frozen study identity');
           if(proof.l2.archive_sha256!==process.env.EXPECTED_L2_SHA)throw Error('Wrong archive SHA');
-          if(proof.l2.events!==Number(process.env.EXPECTED_EVENTS)||proof.l2.snapshots!==96||proof.l2.reference_anchors_verified!==(day==='2026-10-15'?4:96))throw Error('Original archive replay invariant failed');
+          if(proof.l2.events!==Number(process.env.EXPECTED_EVENTS)||proof.l2.snapshots!==96||proof.l2.reference_anchors_verified!==(process.env.DAY_UTC==='2026-10-15'?4:96))throw Error('Original archive replay invariant failed');
           if(proof.l2.global_l2_sequence_verified!==false||!proof.l2.gzip_crc_checked)throw Error('Source limits misreported');
           const rows=proof.frozen_ohlc_300;
           for(let i=1;i<rows.length;i++)if(rows[i].t-rows[i-1].t!==900000)throw Error('Gap in 300 candles');
