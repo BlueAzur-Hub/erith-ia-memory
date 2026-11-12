@@ -517,3 +517,32 @@ Les 4 ancres ETH (00/06/12/18) et 5 montants 10/100/1000/10000/100000 USDC doive
 
 **Direction future** : préenregistrer une grille de plusieurs dates et horaires sélectionnés sans regarder le résultat L2 (dates post-listing USDC 21 août 2025), puis évaluer des **distributions multi-jours** des coûts théoriques et le risque de profondeur. Cette étape n'est pas déjà accomplie. Aucune nouvelle veille ni automatisation, aucun ordre, aucun changement Administrator / Operator / Trader / Bridge.
 
+
+## OKX L2 BTC/ETH : TROIS DATES CALENDAIRES, SIX ARCHIVES, REPRODUCTION INDÉPENDANTE VALIDÉE (12 novembre 2026)
+
+**ÉTUDE MULTI-JOURNÉES ACHEVÉE ET REPRODUCTIBLE.** La règle **15 août, 15 septembre, 15 octobre 2026** a été publiée [dans un protocole avant lecture des nouvelles archives d'août/septembre](./SEVEN_HEAVEN_OKX_BTC_ETH_L2_CALENDAR_MULTIDAY_2026_08_09_10_FROZEN_PROTOCOL_2026_11_12.md), commit `e24f9c5c6e8d583b5ca65255e98ea5db8710158f`. Le 15 octobre était déjà vérifié, les **4 nouveaux couples actifs/jours ont réussi sans archive manquante** dans [GitHub Actions](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43264282755). La règle est **calendaire et descriptive, pas sélection de régimes crypto ni test prospectif hors échantillon temporel**.
+
+- [**Rapport scientifique complet sur les trois dates et les limites**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_THREE_CALENDAR_DATES_2026_08_09_10_SCIENTIFIC_RESEARCH_REPORT_2026_11_12.md).
+- [**Protocole préenregistré d'août, septembre, octobre et quatre heures UTC**](./SEVEN_HEAVEN_OKX_BTC_ETH_L2_CALENDAR_MULTIDAY_2026_08_09_10_FROZEN_PROTOCOL_2026_11_12.md).
+- [**Programme Python de lecture complète en flux après consultation de l'API publique officielle**](./SEVEN_HEAVEN_OKX_L2_MULTIDAY_SPOT_USDC_STREAMING_FOUR_ANCHORS_2026_11_12.py).
+- [**Preuves source des quatre archives supplémentaires : SHA-256 COMPLETS, gzip CRC, nombre d'événements, 4 ancres, 40 côtés**](./okx_l2_calendar_multiday_2026_11_12_evidence/), [**index 4/4**](./okx_l2_calendar_multiday_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_MULTIDAY_DELIVERY_INDEX.json).
+- [**Preuve JSON comparative : 6 blobs sources Git épinglés, 24 spreads, 240 coûts, 12 couples BTC/ETH**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_CALENDAR_THREE_DATES_2026_08_09_10_RESEARCH_PROOFS_2026_11_12.json), blob `511a6b2ca4932e6183d239dcaf159c375c76c34c`.
+- [**CSV des 24 spreads**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_CALENDAR_THREE_DATES_2026_08_09_10_SPREADS_24_ANCHORS_2026_11_12.csv) et [**CSV des 240 prix de carnet théoriques**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_CALENDAR_THREE_DATES_2026_08_09_10_BOOK_COSTS_240_SIDES_2026_11_12.csv).
+- [**Programme Python de vérification indépendante**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_THREE_CALENDAR_DATES_INDEPENDENT_RECALC_2026_11_12.py), [**preuve indépendante JSON : 6 sources, 24 spreads, 240 coûts et agrégats reproduits**](./okx_l2_calendar_three_dates_independent_validation_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_THREE_DATES_INDEPENDENT_REPRODUCTION_PROOFS.json), blob `2ccbe2550cc6ff8e0ee2a73efee585aa3551cb76`, et [**GitHub Actions SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43265463281).
+
+**Sources :** six archives officielles OKX Spot L2 400lv intégralement lues en flux, **9 628 137 événements JSON** au total, 96 snapshots par archive. SHA-256 complets et gzip CRC vérifiés, pas d'extraction géante committée. **La continuité des updates n'est PAS vérifiable par séquence** (`seqId/prevSeqId` absent) ; SHA/CRC prouvent seulement l'intégrité des octets traités.
+
+**Spreads, moyennes des QUATRE instants 00, 06, 12 et 18 UTC par jour (bp, pas moyennes quotidiennes) :**
+
+| Journée UTC | BTC-USDC | ETH-USDC |
+|---|---:|---:|
+| **15 août** | 0,317521 | 1,316726 |
+| **15 septembre** | 0,326848 | 0,840008 |
+| **15 octobre** | 0,012295 | 0,041804 |
+
+**Observation nouvelle :** octobre était particulièrement serré **sur nos quatre points**, donc **ne pas généraliser le rapport BTC/ETH proche de 3,4** découvert sur ce seul jour. Le coût de prix théorique d'un **achat de 100 000 USDC**, moyenné **sur les quatre points par jour**, était pour BTC/ETH : août **0,859 / 3,834 bp**, septembre **2,922 / 8,426 bp**, octobre **1,159 / 3,842 bp** ; aucune transaction ni frais de compte inclus.
+
+**Douze instantanés par actif ne donnent pas une distribution représentative**, et les trois journées antérieures au protocole ne sont pas un vrai test hors-échantillon prospectif. Ne pas réintroduire ces coûts OKX/USDC ponctuels dans le backtest EMA Bitstamp/USD. Aucun ordre, aucun changement Trader/Bridge/Administrator/Operator, aucune surveillance récurrente.
+
+**Prochaine recherche utile :** échantillonner **davantage d'instants dans une journée** selon une grille gelée (les 96 snapshots L2 d'un jour semblent suggérer une fréquence d'environ 15 minutes, à vérifier par les vrais timestamps), avant de tirer des conclusions sur les queues de spread, les heures ou les conditions de liquidité ; ensuite étendre à d'autres jours. Ne pas annoncer des résultats tant qu'ils ne sont pas réellement recalculés et contrôlés.
+
