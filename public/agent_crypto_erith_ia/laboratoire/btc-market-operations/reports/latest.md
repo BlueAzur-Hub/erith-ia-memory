@@ -1,20 +1,20 @@
-# Seven Heaven — suivi public BTC : 2026-11-11T17:57:46Z
+# Seven Heaven — suivi public BTC : 2026-11-12T00:53:27Z
 
 **Statut : OPERATIONAL_PARTIAL_COVERAGE** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-10T17:57:46Z au 2026-11-11T17:57:46Z.
+Fenêtre UTC : 2026-11-11T00:53:27Z au 2026-11-12T00:53:27Z.
 
 ## Santé et provenance
 
-- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-11T16:00:00Z ; source fraîche : OUI.
-- **Liquidations dérivées** : 54 messages observés dans les archives ; 12 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
-- **Actualités de l'Interface** : 5 événements BTC ; relevé source 2026-11-11T09:53:07.774296+00:00.
+- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-11T23:00:00Z ; source fraîche : OUI.
+- **Liquidations dérivées** : 210 messages observés dans les archives ; 12 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
+- **Actualités de l'Interface** : 11 événements BTC ; relevé source 2026-11-11T18:06:44.316094+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
-| bybit | 16 | 4 |
-| binance | 24 | 4 |
-| okx | 14 | 4 |
+| bybit | 82 | 4 |
+| binance | 81 | 4 |
+| okx | 47 | 4 |
 
 ## Interprétation autorisée
 
@@ -26,23 +26,23 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 
 | UTC | Ouverture (USDC) | Clôture (USDC) | Volume Spot BTC | Messages de liquidations observés | Couverture |
 |---|---:|---:|---:|---:|---|
-| 2026-11-11T05:00:00Z | 73665.3 | 73848.7 | 9.91893486 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T06:00:00Z | 73860.8 | 73550.1 | 22.84302577 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T07:00:00Z | 73546.9 | 74021.9 | 19.49047048 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T08:00:00Z | 74019 | 73662.5 | 14.31187565 | 31 | SAMPLED_WITH_GAPS |
-| 2026-11-11T09:00:00Z | 73664.2 | 73733.7 | 13.16433518 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T10:00:00Z | 73733.8 | 73998.9 | 18.771844 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-11T11:00:00Z | 74004.9 | 73943.7 | 9.93141152 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-11T12:00:00Z | 73957 | 73840.3 | 18.81775631 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-11T13:00:00Z | 73840.3 | 73738 | 16.03861129 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-11T14:00:00Z | 73741.7 | 73507.1 | 37.09719502 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-11T15:00:00Z | 73528.1 | 73928.4 | 33.21275943 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-11T16:00:00Z | 73928.1 | 74202.6 | 24.66498543 | 3 | SAMPLED_WITH_GAPS |
+| 2026-11-11T17:00:00Z | 74201 | 74469.2 | 29.94189538 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-11T18:00:00Z | 74460.1 | 74446.1 | 17.21634192 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-11T19:00:00Z | 74436 | 74356.2 | 25.47984861 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-11T20:00:00Z | 74356.2 | 74620 | 25.62679256 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-11T21:00:00Z | 74618.4 | 74324.6 | 36.55567191 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-11T22:00:00Z | 74324.6 | 73878.9 | 21.56968302 | 1 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-11T23:00:00Z | 73879 | 73938.5 | 27.78752321 | 155 | SAMPLED_WITH_GAPS |
 
 ## Étude de stratégie — structure EMA 5/13/34 (observation, pas backtest)
 
-- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-08T18:00:00Z au 2026-11-11T16:00:00Z.
-- Dernière clôture : 74202.6 USDC/BTC ; EMA 5 : 73924.23 ; EMA 13 : 73833.02 ; EMA 34 : 73921.0 USDC.
+- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-09T01:00:00Z au 2026-11-11T23:00:00Z.
+- Dernière clôture : 73938.5 USDC/BTC ; EMA 5 : 74114.24 ; EMA 13 : 74093.0 ; EMA 34 : 74034.84 USDC.
 - Structure horaire observée : **STRUCTURE_HORAIRE_MIXTE**.
 - **Stratégie Swing Trading NON validée** : cet échantillon horaire ne démontre ni rentabilité, ni règles de sortie, ni tenue sur plusieurs jours. Aucun conseil d'achat ou de vente.
 
