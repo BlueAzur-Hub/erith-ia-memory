@@ -70,57 +70,54 @@ Moyenne arithmétique sur **288 horaires appariés** par montant. Toutes les val
 
 Un montant fictif de 100 000 USDC est une **expérience de résistance de profondeur**, non une proposition d'investissement ni une validation d'ordre admissible sur un compte.
 
-## 4. Les commissions OKX : deux barèmes EEE à distinguer
+## 4. Frais : partir du référentiel canonique existant, pas d'un barème générique
 
-Sources officielles consultées le 12 novembre 2026 :
+**CORRECTION DOCUMENTAIRE du 12 novembre 2026.** Au moment de la première publication de ce rapport, la consultation de la mémoire Notion a été insuffisante : la fiche **`OKX MEMORY CORE → 01 · Trading Fees`** du [Notion AETHER · AGENT-INTERFACE](https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099) consignait **déjà** les frais personnels vus sur les captures des **6 et 9 novembre 2026**. Une troisième capture du 12 novembre confirme les mêmes taux. Une demande de capture et une nouvelle fiche Notion étaient donc redondantes.
 
-1. Barème annoncé à compter du **25 septembre 2026, 10 h UTC+2**, pour les comptes **EEE Spot sans produits dérivés** : niveau standard **maker 0,10 % / taker 0,20 %**.  
-   https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea
-2. Barème antérieur EEE Spot standard sans dérivés, en vigueur après les changements d'avril : **maker 0,20 % / taker 0,35 %**.  
-   https://www.okx.com/fr-fr/help/notice-updates-to-okx-eea-trading-fees
-3. L'OKX FAQ indique de consulter **Actifs > Mes frais de trading** pour connaître le tarif **réel de son compte et de chaque paire** :  
-   https://www.okx.com/fr-fr/help/trading-fee-rules-faq
+**Taux Spot affichés dans l'espace connecté — niveau « Utilisateur régulier » :**
 
-Ces tarifs **ne sont pas attestés pour un compte utilisateur précis**. Les comptes possédant un accès X-Perps, certains niveaux VIP, promotions ou marchés spécifiques peuvent avoir d'autres frais.
+| Type | Taux affiché par côté | Équivalent en bp | Scénario à deux côtés |
+|---|---:|---:|---:|
+| **Maker** | **0,0800 %** | 8 bp | 16 bp si maker/maker, sans garantie de remplissage |
+| **Taker** | **0,1000 %** | 10 bp | **20 bp** si taker/taker |
+| Maker puis taker | 0,0800 % puis 0,1000 % | 8 + 10 bp | 18 bp sous hypothèse de remplissage |
 
-Pour une comparaison **taker/taker au même instant** au barème standard Spot sans dérivés :
+**Règle de mémoire impérative :** la fiche `OKX MEMORY CORE → 01 · Trading Fees` est la **source canonique du projet**. Lire cette fiche avant d'effectuer de nouvelles simulations ou de demander une capture. [Renvoi GitHub secondaire daté, sans données privées](./SEVEN_HEAVEN_OKX_OBSERVED_SPOT_FEE_REFERENCE_2026_11_12.md). L'écran de frais affiché n'est pas la preuve du taux exécuté sur une paire donnée et ne donne pas sa date d'entrée en vigueur.
 
-- Au **15 août et au 15 septembre 2026** : 0,35 % × 2 ≈ **70 bp** de commission pour deux côtés.
-- Au **15 octobre 2026** : 0,20 % × 2 ≈ **40 bp** de commission pour deux côtés.
-- Pour un **scénario de frais constant au barème récent**, utiliser 40 bp pour les trois dates afin de ne pas confondre variation des frais et variation de la liquidité.
+**Barèmes EEE génériques, conservés uniquement comme contexte externe :** les annonces officielles des frais Spot standard (sans produits dérivés) évoquent 0,35 % taker avant le 25 septembre 2026 et 0,20 % après cette date. Elles ne démontrent **pas** que le compte étudié a jamais payé l'un de ces taux. **Ne plus les utiliser comme frais personnels** ni leur attribuer une baisse propre à ce compte. Documents externes : [annonce d'ajustement EEE](https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea) et [annonce précédente](https://www.okx.com/fr-fr/help/notice-updates-to-okx-eea-trading-fees).
 
-**Attention :** les simulations du carnet consomment les bids/asks, donc correspondent à un scénario **taker**. Ne pas les convertir mécaniquement en hypothèse maker : un ordre maker attend dans la file et son exécution, son délai et son prix ne sont pas modélisés par ce fichier.
+**Le calcul de consommation du carnet modélise un ordre taker.** Il serait incorrect d'y injecter simplement le taux maker sans modéliser la file d'attente, l'incertitude de remplissage et l'évolution du carnet. Les catégories `Groupe 1` et `Paires sans frais` figurent sur la page OKX : vérifier le traitement de **BTC-USDC** ou **ETH-USDC** avant d'affirmer un tarif d'ordre réel.
 
-## 5. Simulation de frais + carnet pour 1 000 USDC par côté
+## 5. Simulation corrigée : frais Spot observés + carnet historique
 
-*Comparaison descriptive, somme des deux coûts du carnet à un instant et de deux commissions hypothétiques. Le capital, l'actif et les frais effectivement versés en crypto peuvent différer en pratique.*
+**Scénario documentaire homogène** : 0,1000 % par côté, soit **20 bp de commissions taker/taker**, appliqués aux carnets historiques de trois journées. **Ces frais constatés en novembre ne sont pas présumés avoir réellement été en vigueur les 15 août, 15 septembre ou 15 octobre.** Les tableaux ci-dessous représentent une **analyse de sensibilité PAPER à tarif constant**, pas le coût réel des transactions historiques.
 
-| Journée | BTC : carnet | ETH : carnet | Frais taker/taker Spot standard EEE à la date | BTC : total approximatif | ETH : total approximatif |
+Pour 1 000 USDC **par côté**, coût combiné fictif de l'achat et de la vente aux prix moyens du **même carnet figé**, sans évolution temporelle du cours :
+
+| Journée UTC | BTC : coût carnet sans frais | ETH : coût carnet sans frais | Commissions taker/taker supposées | BTC : coût total simulé | ETH : coût total simulé |
 |---|---:|---:|---:|---:|---:|
-| 15 août | 0,19688 bp | 1,15532 bp | 70 bp | **7,0197 USDC** | **7,1155 USDC** |
-| 15 septembre | 0,44037 bp | 1,47154 bp | 70 bp | **7,0440 USDC** | **7,1472 USDC** |
-| 15 octobre | 0,18786 bp | 0,69224 bp | 40 bp | **4,0188 USDC** | **4,0692 USDC** |
+| 15 août | 0,19688 bp | 1,15532 bp | 20 bp | 2,0197 USDC | 2,1155 USDC |
+| 15 septembre | 0,44037 bp | 1,47154 bp | 20 bp | 2,0440 USDC | 2,1472 USDC |
+| 15 octobre | 0,18786 bp | 0,69224 bp | 20 bp | 2,0188 USDC | 2,0692 USDC |
 
-Le changement entre septembre et octobre ne peut pas être attribué uniquement à la profondeur du carnet : **le taux de commission standard hypothétique a lui-même changé**.
+**Moyenne descriptive sur les 288 instants historiques**, avec la même hypothèse fixe de 20 bp :
 
-### Scénario constant avec les frais Spot standards récents : 0,20 % taker par côté
-
-Calcul sur les 288 instants agrégés :
-
-| Notionnel par côté | BTC : frais + carnet, en bp | BTC : coût approximatif | ETH : frais + carnet, en bp | ETH : coût approximatif |
+| Notionnel par côté | BTC : frais + carnet (bp) | BTC : coût estimé | ETH : frais + carnet (bp) | ETH : coût estimé |
 |---:|---:|---:|---:|---:|
-| 100 USDC | 40,169698 | 0,4017 USDC | 40,818375 | 0,4082 USDC |
-| 1 000 USDC | 40,275038 | 4,0275 USDC | 41,106369 | 4,1106 USDC |
+| 100 USDC | 20,169698 | 0,2017 USDC | 20,818375 | 0,2082 USDC |
+| 1 000 USDC | 20,275038 | 2,0275 USDC | 21,106369 | 2,1106 USDC |
 
-**Pour 1 000 USDC en BTC**, la commission hypothétique de deux ordres taker (4 USDC) constitue environ **99,3 %** du total estimé à partir de ces carnets. Pour ETH, c'est environ **97,3 %**. Ce calcul est une **moyenne descriptive** et n'intègre aucune évolution du cours.
+**Ordre fictif de 1 000 USDC :** deux commissions taker représentent environ **2 USDC** au total. Sur la moyenne des carnets, l'impact supplémentaire du spread et de la profondeur atteint **0,0275 USDC pour BTC**, **0,1106 USDC pour ETH**. Soit un coût hypothétique de **2,0275 USDC (BTC)** ou **2,1106 USDC (ETH)**. Les commissions représentent environ **98,64 %** de ce coût BTC et **94,76 %** du coût ETH.
 
-**Seuil indicatif pour un aller-retour spéculatif :** un mouvement brut de prix d'environ **0,403 % (BTC)** ou **0,411 % (ETH)** serait nécessaire pour seulement compenser ce scénario de coûts moyens à notionnel constant. Ces chiffres ne sont **ni des seuils d'achat ni des garanties de seuil de rentabilité réel** : dans la pratique, le prix varie entre l'entrée et la sortie, les deux carnets et les montants sont différents, les commissions peuvent être facturées en actifs différents, et des délais/annulations restent possibles.
+**Mouvement brut indicatif pour couvrir ces coûts :** environ **0,20275 % sur BTC** ou **0,21106 % sur ETH**, uniquement pour cette construction fictive à deux côtés et notionnel constant. Pas de prix cible, de recommandation, de stratégie exécutée ni de véritable point mort : prix d'entrée/sortie, quantités et taxes peuvent différer, et les frais d'un ordre réel peuvent être perçus dans d'autres unités.
+
+**Correction du travail précédent :** les chiffres **4,0275 USDC / 4,1106 USDC** publiés à l'origine correspondaient à **0,20 % taker par côté** (barème générique), non aux **0,10 % taker par côté déjà documentés pour ce compte**. Ils sont invalidés comme « scénario de frais courants du compte ». Les coûts de **carnet sans frais** issus des deux CSV, eux, sont inchangés et vérifiés.
 
 ## 6. Contrôles et limites
 
 - **Vérifié ici :** rapprochement par date et horaire des deux CSV, 2 880 lignes de coûts `complete`, 288 observations de spread, identité `carnet = spread + impact` sans résidu négatif significatif au-delà de l'arrondi.
 - **Vérifié dans le travail antérieur :** six archives historiques, SHA/CRC et workflows de reproduction ; pas de preuve de chaîne amont `seqId/prevSeqId`.
-- **Non vérifié :** le niveau de frais d'un compte réel, les exonérations éventuelles, l'état d'exécution des ordres réels et la continuité logique de chaque update d'OKX avant archivage.
+- **Vérifié dans la mémoire du projet :** le niveau « Utilisateur régulier » et le barème Spot affiché pour ce compte sur les captures des 6, 9 et 12 novembre 2026 (maker 0,08 %, taker 0,10 %). **Non vérifié :** le taux exécuté sur chaque paire et chaque ordre, les exceptions, les remises, les frais historiques réellement payés, et la continuité logique amont des updates OKX.
 - **Échantillon limité :** seulement les 15 août, 15 septembre et 15 octobre 2026, 96 instantanés par jour. Ce ne sont ni 3 mois consécutifs, ni un tarif universel, ni une preuve prospective de rentabilité.
 - **Périmètre devise et plateforme :** OKX Spot **USDC** uniquement. Ne pas transférer ces valeurs directement aux replays EMA historiques sur Bitstamp **USD**, ni mélanger avec EUR sans conversion sourcée.
 - **Aucun double comptage :** le « coût carnet » inclut déjà le spread.
@@ -130,6 +127,6 @@ Calcul sur les 288 instants agrégés :
 
 **Résultat de cette phase :** nous avons séparé quantitativement (1) le spread, (2) la consommation supplémentaire de niveaux de carnet avec la taille et (3) les commissions Spot théoriques. Pour de petits montants, les commissions taker dominent fortement ; pour de très gros ordres, la profondeur devient de plus en plus importante.
 
-**Prochaine étape scientifique utile :** avant d'intégrer des frais dans une stratégie PAPER, vérifier le **barème exact par juridiction, niveau et paire**, puis fixer un coût constant et conservateur pour les différentes périodes historiques, afin de comparer les méthodes sans introduire un changement tarifaire artificiel.
+**Prochaine étape scientifique utile :** pour l'étude PAPER, réutiliser d'abord le **taux Spot déjà consigné dans OKX MEMORY CORE** ; vérifier uniquement les exceptions **par paire** (BTC-USDC / ETH-USDC) et la facturation d'ordres historiques si cela est nécessaire à une comparaison de performance. Mettre en parallèle un scénario constant de 20 bp taker/taker avec une analyse de sensibilité, sans faire passer les barèmes génériques pour les frais personnels et sans confondre OKX/USDC et Bitstamp/USD.
 
-**Point d'arrêt :** aucune modification du Trader ni du Bridge ; aucune publication sur GitHub ou écriture Notion sans instruction de ce type.
+**Point d'arrêt :** aucune modification du Trader ni du Bridge, aucun ordre. Révision du rapport autorisée par la demande de correction du 12 novembre 2026 ; les CSV sources et les études précédentes restent inchangés.
