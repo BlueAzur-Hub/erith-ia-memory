@@ -1,0 +1,135 @@
+name: Seven Heaven OKX BTC ETH One Minute Spread Persistence 2026
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-btc-eth-one-minute-spread-persistence-2026.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FULL_ARCHIVE_STREAMED_REPLAY_2026_11_12.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-okx-one-minute-persistence-2026-oct15
+  cancel-in-progress: false
+jobs:
+  replay-both-pairs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { pair: 'ETH-USDC', slug: 'eth_usdc' }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run synthetic event-time and gzip tests
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FULL_ARCHIVE_STREAMED_REPLAY_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Stream pinned L2 archive and accumulate event-to-event spread durations
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FULL_ARCHIVE_STREAMED_REPLAY_2026_11_12.py --repo-root . --pair '${{ matrix.pair }}'
+      - name: Verify source SHA CRC 1440 minutes 96 prior quarter-hours and duration invariants
+        run: |
+          set -euo pipefail
+          SLUG='${{ matrix.slug }}' PAIR='${{ matrix.pair }}' python - <<'PY'
+          import csv,json,os,pathlib
+          base=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence')/os.environ['SLUG']
+          x=json.loads((base/'SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json').read_text(encoding='utf8'))
+          assert x['pair']==os.environ['PAIR'] and x['read_only'] and not x['orders_enabled']
+          mins=list(csv.DictReader((base/'SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_SPREADS_1440.csv').open(encoding='utf8')))
+          if x['status']=='full_archive_replayed_one_minute_with_event_time_persistence':
+              d=x['result'];m=d['market'];t=m['event_time_persistence']
+              assert d['gzip_read_to_eof_crc_checked']
+              assert len(d['archive_sha256'])==64 and len(d['member_sha256'])==64
+              assert m['first_20_event_hashes_match_prior_proof'] and not m['global_logical_continuity_proven']
+              assert len(x['reference_quarter_checks'])==96 and all(v['verified'] for v in x['reference_quarter_checks'])
+              assert len(m['anchors'])==96 and len(m['snapshot_events'])==96
+              assert len(m['minute_states'])==1440 and len(mins)==1440
+              assert len({z['anchor_utc'] for z in mins})==1440
+              assert all(0<=int(z['offset_ms_after_anchor'])<=60000 for z in mins)
+              assert 0<t['covered_ms']<=86400000
+              assert t['covered_ms']==m['last_ts_ms']-m['first_ts_ms']
+              assert 0<=t['time_weighted_spread_bp']<10000
+              assert set(t['thresholds_bp'])=={'0.1','0.5','1.0','2.0'}
+              for threshold,z in t['thresholds_bp'].items():
+                  assert 0<=z['above_threshold_ms']<=t['covered_ms']
+                  assert z['sum_duration_ms']==z['above_threshold_ms']
+                  assert z['count']>=z['ge_1s']>=z['ge_10s']>=z['ge_60s']
+                  assert abs(z['fraction_of_covered_time']-z['above_threshold_ms']/t['covered_ms'])<1e-12
+              print('PASS: source hashes and CRC, 1440 minutes, 96 historical snapshots, and all threshold-time conservation checks')
+          else:
+              assert x['status']=='failed_quality_or_access_check'
+              assert x['no_results_invented'] and not x['source_archive_fully_read'] and not mins
+              print('INCOMPLETE without fabricated measurements',x.get('error'))
+          PY
+      - name: Preserve compact minute and duration evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-minute-spread-persistence-${{ matrix.slug }}
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/
+          retention-days: 90
+          if-no-files-found: error
+  publish-condensed-proofs:
+    needs: replay-both-pairs
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - name: Assemble BTC and ETH minute evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: seven-heaven-okx-minute-spread-persistence-*
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/
+          merge-multiple: true
+      - name: Create explicit pair success and missing list
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence')
+          out={'schema':'seven-heaven.okx-l2-btc-eth-minute-event-time-delivery.v1','date_utc':'2026-10-15','items':[]}
+          for pair in ('BTC-USDC','ETH-USDC'):
+              p=root/pair.lower().replace('-','_')/'SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json'
+              if p.exists():
+                  d=json.loads(p.read_text(encoding='utf8'))
+                  market=d.get('result',{}).get('market',{})
+                  out['items'].append({'pair':pair,'status':d['status'],'events':market.get('total_events'),
+                         'minute_states':len(market.get('minute_states',[])),
+                         'archive_sha256':d.get('result',{}).get('archive_sha256')})
+              else:
+                  out['items'].append({'pair':pair,'status':'not_published'})
+          out['complete']=sum(i['status']=='full_archive_replayed_one_minute_with_event_time_persistence' for i in out['items'])
+          (root/'SEVEN_HEAVEN_OKX_L2_MINUTE_PERSISTENCE_DELIVERY_INDEX.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf8')
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Commit only validated or explicitly incomplete compact output to shared Coffre
+        run: |
+          set -euo pipefail
+          path='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence'
+          git add -- "$path"
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'NOOP: same evidence already present'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive BTC ETH minute spread persistence and event-time duration proofs'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
