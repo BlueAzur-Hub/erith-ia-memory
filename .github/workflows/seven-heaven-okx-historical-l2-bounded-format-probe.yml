@@ -1,0 +1,79 @@
+name: Seven Heaven OKX Historical L2 Bounded Format Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-historical-l2-bounded-format-probe.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_HISTORICAL_L2_BOUNDED_FORMAT_PROBE_2026_11_12.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-historical-l2-format-once
+  cancel-in-progress: false
+
+jobs:
+  inspect-l2-bounded-prefix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and synthetic safe archive test
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_HISTORICAL_L2_BOUNDED_FORMAT_PROBE_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Read at most 2 MB from each official L2 archive
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_HISTORICAL_L2_BOUNDED_FORMAT_PROBE_2026_11_12.py --repo-root .
+      - name: Verify compact proof and bounded limits
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,json
+          d=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_historical_l2_format_probe_2026_11_12_evidence')
+          x=json.loads((d/'SEVEN_HEAVEN_OKX_HISTORICAL_L2_ARCHIVE_FORMAT_EVIDENCE.json').read_text(encoding='utf8'))
+          assert x['schema']=='seven-heaven.okx-official-l2-bounded-archive-format-probe.v1'
+          assert not x['full_archive_downloaded'] and not x['orders_enabled'] and x['read_only']
+          assert x['max_compressed_read_bytes_per_pair']==2000000
+          assert x['max_uncompressed_sample_bytes']==16384
+          assert [y['pair'] for y in x['records']]==['BTC-USDC','ETH-USDC']
+          for y in x['records']:
+              assert y.get('prefix_bytes_consumed',0)<=2000000
+              assert y.get('sample_bytes',0)<=16384
+          assert (d/'SEVEN_HEAVEN_OKX_HISTORICAL_L2_ARCHIVE_FORMAT_REPORT.md').exists()
+          print('PASS: two read-only fixed pairs and bounded archive byte limits')
+          PY
+      - name: Preserve compact source-format report
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-historical-l2-bounded-format
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_historical_l2_format_probe_2026_11_12_evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish only compact inter-AI research files
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_historical_l2_format_probe_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: compact evidence unchanged'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive bounded OKX historical L2 format inspection'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
