@@ -1,0 +1,81 @@
+name: Seven Heaven OKX L2 96 Quarter Hour Independent Verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-l2-96-quarter-hours-independent-verification.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_96_QUARTER_HOURS_INDEPENDENT_AUDIT_2026_11_12.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-l2-96-hourly-independent-once
+  cancel-in-progress: false
+
+jobs:
+  cross-check-source-and-paired-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and test offline math and SHA guards
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_96_QUARTER_HOURS_INDEPENDENT_AUDIT_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Recompute pinned 192 states and 960 paired costs without network
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_96_QUARTER_HOURS_INDEPENDENT_AUDIT_2026_11_12.py --repo-root .
+      - name: Verify independent proof status and original source pins
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_96_quarter_hour_independent_verification_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_96_SNAPSHOT_PAIR_INDEPENDENT_PROOFS.json')
+          r=json.loads(p.read_text(encoding='utf8'))
+          assert r['schema']=='seven-heaven.okx-l2-ninety-six-pairs-independent-verification.v1'
+          assert r['status']=='NINETY_SIX_SPREAD_PAIRS_AND_NINE_HUNDRED_SIXTY_DEPTH_PAIRS_REPRODUCED'
+          assert r['read_only'] and not r['orders_enabled']
+          assert not r['source_logical_sequence_continuity_proven']
+          assert r['paired_spreads_verified']==96 and r['paired_cost_sides_verified']==960
+          assert r['source_snapshot_hours_verified']==192
+          assert r['source_four_point_reconciliation_verified_for_both']
+          assert len(r['git_blob_pins'])==5
+          print('PASS: 192 snapshots, paired 96 spreads, 960 paired cost sides and pinned original sources')
+          PY
+      - name: Retain compact audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-l2-ninety-six-quarter-hour-independent-audit
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_96_quarter_hour_independent_verification_2026_11_12_evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Commit verified proof to inter-AI Coffre only
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_96_quarter_hour_independent_verification_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: identical proof already published'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive independent 96-quarter-hour BTC ETH spread and depth validation'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
