@@ -1,0 +1,31 @@
+{
+  "schema": "seven-heaven.okx-minute-spread-persistence-independent-validation.v1",
+  "status": "PINNED_TWO_ARCHIVES_2880_MINUTES_AND_FOUR_EVENT_TIME_THRESHOLD_AGGREGATES_VERIFIED",
+  "read_only": true,
+  "orders_enabled": false,
+  "source_blobs_verified": {
+    "BTC": "ce90a9d8e84bb257eafe994d1d31a4ffae51f0b9",
+    "ETH": "589778261ecd2ce419c6df2f0fba3e44e195439d",
+    "AGGREGATE": "f2f27d004500454010fa9a5226d1cd97bf08702a",
+    "MINUTE_CSV": "ae4288015ba2276169079282e8133e6fda7bb674"
+  },
+  "full_archive_sha256_verified_from_source_proofs": {
+    "BTC": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+    "ETH": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546"
+  },
+  "minutes_per_pair_verified": 1440,
+  "historical_quarter_hours_per_pair_verified": 96,
+  "paired_minute_rows_verified": 1440,
+  "event_thresholds_bp_checked": [
+    "0.1",
+    "0.5",
+    "1.0",
+    "2.0"
+  ],
+  "time_coverage_and_episode_conservation_checks_passed": true,
+  "minutes_eth_spread_wider": 1398,
+  "minutes_btc_spread_wider": 42,
+  "source_global_sequence_proven": false,
+  "independence_limit": "Offline verification of pinned source proofs and their aggregate arithmetic. This does not reconstruct every archived market event a second time.",
+  "scope_limit": "Historical event-held L2 states on 2026-10-15, not a market-wide or prospective result."
+}
