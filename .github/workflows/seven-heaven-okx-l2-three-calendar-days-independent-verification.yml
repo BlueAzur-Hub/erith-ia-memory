@@ -1,0 +1,75 @@
+name: Seven Heaven OKX L2 Three Calendar Days Verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-l2-three-calendar-days-independent-verification.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_THREE_CALENDAR_DATES_INDEPENDENT_RECALC_2026_11_12.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-three-days-independent-verification
+  cancel-in-progress: false
+jobs:
+  independently-recompute-from-pinned-source-proofs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and test source integrity guards
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_THREE_CALENDAR_DATES_INDEPENDENT_RECALC_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Recompute all 24 spreads, 240 costs, and daily cross-asset aggregates
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_THREE_CALENDAR_DATES_INDEPENDENT_RECALC_2026_11_12.py --repo-root .
+      - name: Verify complete six-source proof and no trading
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_three_dates_independent_validation_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_THREE_DATES_INDEPENDENT_REPRODUCTION_PROOFS.json')
+          obj=json.loads(p.read_text(encoding='utf8'))
+          assert obj['schema']=='seven-heaven.okx-l2-calendar-three-day-independent-verification.v1'
+          assert obj['status']=='SIX_SOURCE_BLOBS_24_SPREADS_240_COSTS_AND_ALL_PUBLISHED_AGGREGATES_REPRODUCED'
+          assert obj['read_only'] and not obj['orders_enabled']
+          assert not obj['source_logical_sequence_continuity_proven']
+          assert obj['verified_sources']==6 and obj['verified_spread_points']==24 and obj['verified_book_cost_points']==240
+          assert len(obj['six_archive_sources'])==6
+          print('PASS: source Git blob SHA matches, independent 24+240 source rows and all published means/medians')
+          PY
+      - name: Archive compact verification proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-l2-three-calendar-days-independent-check
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_three_dates_independent_validation_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish only verified proof to common inter-AI research directory
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_three_dates_independent_validation_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: same proof already archived'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive independent six-source L2 three-day spread and cost reproduction'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
