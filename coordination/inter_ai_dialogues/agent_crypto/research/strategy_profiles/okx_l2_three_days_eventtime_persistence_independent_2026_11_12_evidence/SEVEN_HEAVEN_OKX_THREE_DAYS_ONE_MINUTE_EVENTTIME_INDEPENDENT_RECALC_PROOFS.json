@@ -1,0 +1,30 @@
+{
+  "schema": "seven-heaven.okx-three-calendar-day-minute-persistence-offline-audit.v1",
+  "status": "SIX_PINNED_L2_SOURCES_8640_MINUTES_4320_PAIRED_AND_FOUR_EVENT_TIME_THRESHOLDS_VALIDATED",
+  "read_only": true,
+  "orders_enabled": false,
+  "verified_source_git_blobs_sha1": {
+    "2026-08-15|BTC": "ba18e34c39292e0f7a00d6224107321845a143b3",
+    "2026-08-15|ETH": "c3e0cbc1a63a80d0b34a3da6f00a642bc96265cf",
+    "2026-09-15|BTC": "331cc91e748dcdefb4d8c95a2843ac5b1b17528f",
+    "2026-09-15|ETH": "9752fe05062f43e88ddcda34c215eba680f424af",
+    "2026-10-15|BTC": "ce90a9d8e84bb257eafe994d1d31a4ffae51f0b9",
+    "2026-10-15|ETH": "589778261ecd2ce419c6df2f0fba3e44e195439d"
+  },
+  "verified_aggregate_git_blob_sha1": "3790a41c05be23ec001f799cd5e48e3ce28720ec",
+  "verified_paired_csv_git_blob_sha1": "0c06f32548ff6fa240a8b7040d8f9c0dc23da05c",
+  "total_archives": 6,
+  "total_original_source_events": 9628137,
+  "minute_states_verified": 8640,
+  "paired_minute_rows_verified": 4320,
+  "quarter_hour_reference_matches_per_archive": 96,
+  "four_threshold_time_conservation_validated_for_all_six": true,
+  "minute_spread_dominance": {
+    "eth_greater": 4089,
+    "btc_greater": 231,
+    "equal": 0
+  },
+  "upstream_L2_sequence_continuity_proven": false,
+  "independence_limit": "Recomputed the archived minute outputs and event-time aggregates independently from six immutable GitHub JSON source proofs; did NOT re-download or independently decode every raw OKX NDJSON event a second time.",
+  "representativity_limit": "Three isolated historical calendar days are not a statistical market sample."
+}
