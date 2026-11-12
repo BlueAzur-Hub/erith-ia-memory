@@ -1,0 +1,225 @@
+{
+  "schema": "seven-heaven.okx-spot-btc-eth-2026-10-15-1440-minute-spread-eventtime.v1",
+  "research_date": "2026-11-12",
+  "market_day_utc": "2026-10-15",
+  "status": "TWO_PINNED_FULL_ARCHIVES_2880_MINUTES_AND_EVENT_TIME_PERSISTENCE_COMPARED",
+  "read_only": true,
+  "orders_enabled": false,
+  "protocol_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_ONE_MINUTE_SPREAD_PERSISTENCE_FROZEN_PROTOCOL_2026_11_12.md",
+  "sources": {
+    "BTC": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/btc_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "sha": "ce90a9d8e84bb257eafe994d1d31a4ffae51f0b9"
+    },
+    "ETH": {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_btc_eth_2026_10_15_minute_spread_persistence_evidence/eth_usdc/SEVEN_HEAVEN_OKX_L2_ONE_MINUTE_PERSISTENCE_SOURCE_PROOFS.json",
+      "sha": "589778261ecd2ce419c6df2f0fba3e44e195439d"
+    }
+  },
+  "summary": {
+    "BTC": {
+      "events": 2346486,
+      "minutes": 1440,
+      "archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+      "member_sha256": "a8a3231d34d03a0d261ac9952f1ba2a953a4d31986e04c8bbbbdc61c06264963",
+      "covered_ms": 86399930,
+      "minute_spread_mean_bp": 0.03813472,
+      "minute_spread_median_bp": 0.01229084,
+      "minute_spread_p90_bp": 0.0124135,
+      "minute_max_bp": 2.26600396,
+      "minute_max_utc": "2026-10-15T13:38:00+00:00",
+      "minute_min_bp": 0.01212024,
+      "event_time_weighted_spread_mean_bp": 0.0352768728952588,
+      "thresholds": {
+        "0.1": {
+          "minute_points_above": 60,
+          "minute_fraction": 0.041666666666666664,
+          "event_time_ms_above": 2717864,
+          "event_time_fraction_above": 0.031456784745080235,
+          "positive_duration_episodes": 64350,
+          "episodes_at_least_1s": 29,
+          "episodes_at_least_10s": 0,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 6710,
+          "longest_interval": {
+            "start_utc": "2026-10-15T21:43:53.727000+00:00",
+            "end_utc": "2026-10-15T21:44:00.437000+00:00",
+            "duration_ms": 6710,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        },
+        "0.5": {
+          "minute_points_above": 26,
+          "minute_fraction": 0.018055555555555554,
+          "event_time_ms_above": 1618952,
+          "event_time_fraction_above": 0.018737885551527646,
+          "positive_duration_episodes": 37205,
+          "episodes_at_least_1s": 1,
+          "episodes_at_least_10s": 0,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 1030,
+          "longest_interval": {
+            "start_utc": "2026-10-15T12:30:43.661000+00:00",
+            "end_utc": "2026-10-15T12:30:44.691000+00:00",
+            "duration_ms": 1030,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        },
+        "1.0": {
+          "minute_points_above": 11,
+          "minute_fraction": 0.007638888888888889,
+          "event_time_ms_above": 695735,
+          "event_time_fraction_above": 0.008052494949938038,
+          "positive_duration_episodes": 16598,
+          "episodes_at_least_1s": 0,
+          "episodes_at_least_10s": 0,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 850,
+          "longest_interval": {
+            "start_utc": "2026-10-15T04:34:46.352000+00:00",
+            "end_utc": "2026-10-15T04:34:47.202000+00:00",
+            "duration_ms": 850,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        },
+        "2.0": {
+          "minute_points_above": 1,
+          "minute_fraction": 0.0006944444444444445,
+          "event_time_ms_above": 62705,
+          "event_time_fraction_above": 0.0007257529028090648,
+          "positive_duration_episodes": 1995,
+          "episodes_at_least_1s": 0,
+          "episodes_at_least_10s": 0,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 420,
+          "longest_interval": {
+            "start_utc": "2026-10-15T12:30:11.481000+00:00",
+            "end_utc": "2026-10-15T12:30:11.901000+00:00",
+            "duration_ms": 420,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        }
+      }
+    },
+    "ETH": {
+      "events": 3172868,
+      "minutes": 1440,
+      "archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+      "member_sha256": "a47f70abc79c28bdb52831e0dfdce32e1bf48ca962c3d2f5e8bc9e233a430d5d",
+      "covered_ms": 86399965,
+      "minute_spread_mean_bp": 0.30863944,
+      "minute_spread_median_bp": 0.04227552,
+      "minute_spread_p90_bp": 1.15946461,
+      "minute_max_bp": 8.66134777,
+      "minute_max_utc": "2026-10-15T02:29:00+00:00",
+      "minute_min_bp": 0.04058895,
+      "event_time_weighted_spread_mean_bp": 0.293646714060778,
+      "thresholds": {
+        "0.1": {
+          "minute_points_above": 421,
+          "minute_fraction": 0.2923611111111111,
+          "event_time_ms_above": 23683788,
+          "event_time_fraction_above": 0.27411802770984917,
+          "positive_duration_episodes": 147981,
+          "episodes_at_least_1s": 3404,
+          "episodes_at_least_10s": 29,
+          "episodes_at_least_60s": 3,
+          "max_continuous_duration_ms": 107530,
+          "longest_interval": {
+            "start_utc": "2026-10-15T21:47:19.243000+00:00",
+            "end_utc": "2026-10-15T21:49:06.773000+00:00",
+            "duration_ms": 107530,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        },
+        "0.5": {
+          "minute_points_above": 277,
+          "minute_fraction": 0.19236111111111112,
+          "event_time_ms_above": 14954123,
+          "event_time_fraction_above": 0.17308019742832073,
+          "positive_duration_episodes": 142240,
+          "episodes_at_least_1s": 1064,
+          "episodes_at_least_10s": 1,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 10740,
+          "longest_interval": {
+            "start_utc": "2026-10-15T05:38:21.754000+00:00",
+            "end_utc": "2026-10-15T05:38:32.494000+00:00",
+            "duration_ms": 10740,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        },
+        "1.0": {
+          "minute_points_above": 162,
+          "minute_fraction": 0.1125,
+          "event_time_ms_above": 9471416,
+          "event_time_fraction_above": 0.10962291477780113,
+          "positive_duration_episodes": 113351,
+          "episodes_at_least_1s": 234,
+          "episodes_at_least_10s": 0,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 7580,
+          "longest_interval": {
+            "start_utc": "2026-10-15T05:38:21.864000+00:00",
+            "end_utc": "2026-10-15T05:38:29.444000+00:00",
+            "duration_ms": 7580,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        },
+        "2.0": {
+          "minute_points_above": 37,
+          "minute_fraction": 0.025694444444444443,
+          "event_time_ms_above": 2406583,
+          "event_time_fraction_above": 0.02785398119084886,
+          "positive_duration_episodes": 39653,
+          "episodes_at_least_1s": 5,
+          "episodes_at_least_10s": 0,
+          "episodes_at_least_60s": 0,
+          "max_continuous_duration_ms": 2320,
+          "longest_interval": {
+            "start_utc": "2026-10-15T15:41:29.408000+00:00",
+            "end_utc": "2026-10-15T15:41:31.728000+00:00",
+            "duration_ms": 2320,
+            "right_censored_at_final_event": false
+          },
+          "episode_right_censored_at_end": false
+        }
+      }
+    }
+  },
+  "paired_minutes": 1440,
+  "minute_spread_comparisons": {
+    "eth_greater": 1398,
+    "btc_greater": 42,
+    "equal": 0,
+    "mean_eth_minus_btc_bp": 0.27050472,
+    "max_time_gap_ms": 1730
+  },
+  "methods": {
+    "event_held_interval": "[ts_i,ts_{i+1}) from original ordered L2 events, no extrapolation outside first/last event",
+    "minute_sampling": "first valid state at or after each fixed minute UTC within 60 s",
+    "spread_bp": "(best_ask-best_bid)/mid*10000",
+    "thresholds_bp": [
+      "0.1",
+      "0.5",
+      "1.0",
+      "2.0"
+    ],
+    "positive_duration_episode_only": true,
+    "source_sequence_proven": false,
+    "initial_96_quarter_hours_matched": true
+  },
+  "limits": [
+    "Reconstructed event-held intervals, not guaranteed actual market dwell times if upstream L2 messages were lost.",
+    "Only one full historical day, not representative of other days or future markets.",
+    "No executable fills, fees, slippage, order placement or automatic monitoring.",
+    "Archive CRC and SHA validate the read copy, not upstream sequence completeness."
+  ]
+}
