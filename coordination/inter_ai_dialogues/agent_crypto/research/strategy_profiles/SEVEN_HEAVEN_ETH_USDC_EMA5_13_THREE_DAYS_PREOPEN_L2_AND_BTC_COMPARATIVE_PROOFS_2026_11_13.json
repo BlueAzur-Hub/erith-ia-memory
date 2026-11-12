@@ -1,0 +1,900 @@
+{
+  "schema": "seven-heaven.eth-usdc-btc-usdc-three-day-causal-v5-native-ema5-13-2026-11-13.v1",
+  "status": "SIX_SOURCE_DAILY_REPLAYS_V5_NATIVE_JS_TIMESTAMPS_CROSSCHECKED_NOT_REAL_EXECUTION",
+  "research_date": "2026-11-13",
+  "fixed_protocol": "3 isolated UTC days; native OKX 15m confirmed OHLC 300 per trial; EMA5/13 next open long-only; L2 source timestamp strictly before T; hypothetical book VWAP notional 1000 USDC each side; 0.10% taker fee and 0.05% V5 fixed slippage per side",
+  "actions_real": 0,
+  "fee_source": "Notion OKX MEMORY CORE → 01 Trading Fees account observations 6,9,12 November; exact historical pair fees not proven",
+  "verification": {
+    "eth_three_days": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43332184629",
+    "btc_aug_sep": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43330003604",
+    "btc_oct": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43327600503"
+  },
+  "results": {
+    "ETH-USDC": {
+      "dates": [
+        {
+          "date": "2026-08-15",
+          "pair": "ETH-USDC",
+          "proof_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_2026_08_15_CAUSAL_L2_PROOFS.json",
+          "proof_sha1": "0808be3f329a2a8c9e0da3755d7756b83242bd36",
+          "ohlc_sha256": "b39e2603f8771560fbb3d92cc24682b0b8be6148ca68e66223cee7b33aa7d52a",
+          "l2_archive_sha256": "9da303d949bce4f25248f7d3f6b7e34e2be6ed426b4945a395c3097d7932bfca",
+          "source_l2_events": 277791,
+          "reference_anchors": 96,
+          "ema_crosses_300_bar_window": 29,
+          "confirmed_candles": 300,
+          "actions": 9,
+          "buys": 4,
+          "sells": 5,
+          "carry_in_exit": 1,
+          "carry_out_entry": 0,
+          "completed_intraday_roundtrips": 4,
+          "cycles_both_age_le_1s": 1,
+          "cycles_both_age_le_10s": 3,
+          "age_ms": {
+            "n": 9,
+            "mean": 2013.666667,
+            "median": 721,
+            "p90": 4454.4,
+            "max": 11888,
+            "min": 26
+          },
+          "age_le_100ms": 1,
+          "age_le_1000ms": 6,
+          "age_le_10000ms": 8,
+          "mid_to_vwap_cost_bp": {
+            "n": 9,
+            "mean": 0.656802,
+            "median": 0.665247,
+            "p90": 0.946147,
+            "max": 1.009484,
+            "min": 0.398475
+          },
+          "abs_book_vwap_vs_ohlc_bp": {
+            "n": 9,
+            "mean": 1.139281,
+            "median": 1.516897,
+            "p90": 1.963974,
+            "max": 2.577465,
+            "min": 0.176748
+          },
+          "adverse_book_vs_ohlc_bp": {
+            "n": 9,
+            "mean": 1.029169,
+            "median": 1.516897,
+            "p90": 1.963974,
+            "max": 2.577465,
+            "min": -0.318757
+          },
+          "adverse_open_diff_gt_5bp": 0,
+          "model_daily_reset_all_closed_cycles": {
+            "v5": {
+              "cycles": 4,
+              "initial_usdc": 1000,
+              "final_usdc": 986.108933,
+              "net_usdc": -13.891067,
+              "return_pct": -1.389107,
+              "detail": [
+                {
+                  "buy_utc": "2026-08-15T11:15:00.000Z",
+                  "sell_utc": "2026-08-15T12:00:00.000Z",
+                  "buy_book_age_ms": 1121,
+                  "sell_book_age_ms": 808,
+                  "pnl_usdc": -3.526157
+                },
+                {
+                  "buy_utc": "2026-08-15T13:00:00.000Z",
+                  "sell_utc": "2026-08-15T18:30:00.000Z",
+                  "buy_book_age_ms": 252,
+                  "sell_book_age_ms": 596,
+                  "pnl_usdc": -3.227825
+                },
+                {
+                  "buy_utc": "2026-08-15T20:00:00.000Z",
+                  "sell_utc": "2026-08-15T20:30:00.000Z",
+                  "buy_book_age_ms": 721,
+                  "sell_book_age_ms": 11888,
+                  "pnl_usdc": -3.64858
+                },
+                {
+                  "buy_utc": "2026-08-15T21:15:00.000Z",
+                  "sell_utc": "2026-08-15T23:30:00.000Z",
+                  "buy_book_age_ms": 26,
+                  "sell_book_age_ms": 2596,
+                  "pnl_usdc": -3.488505
+                }
+              ]
+            },
+            "book": {
+              "cycles": 4,
+              "initial_usdc": 1000,
+              "final_usdc": 989.186766,
+              "net_usdc": -10.813234,
+              "return_pct": -1.081323,
+              "detail": [
+                {
+                  "buy_utc": "2026-08-15T11:15:00.000Z",
+                  "sell_utc": "2026-08-15T12:00:00.000Z",
+                  "buy_book_age_ms": 1121,
+                  "sell_book_age_ms": 808,
+                  "pnl_usdc": -2.861043
+                },
+                {
+                  "buy_utc": "2026-08-15T13:00:00.000Z",
+                  "sell_utc": "2026-08-15T18:30:00.000Z",
+                  "buy_book_age_ms": 252,
+                  "sell_book_age_ms": 596,
+                  "pnl_usdc": -2.645274
+                },
+                {
+                  "buy_utc": "2026-08-15T20:00:00.000Z",
+                  "sell_utc": "2026-08-15T20:30:00.000Z",
+                  "buy_book_age_ms": 721,
+                  "sell_book_age_ms": 11888,
+                  "pnl_usdc": -2.797062
+                },
+                {
+                  "buy_utc": "2026-08-15T21:15:00.000Z",
+                  "sell_utc": "2026-08-15T23:30:00.000Z",
+                  "buy_book_age_ms": 26,
+                  "sell_book_age_ms": 2596,
+                  "pnl_usdc": -2.509855
+                }
+              ]
+            }
+          },
+          "limitation": "The daily-reset book illustration retains any stale book and excludes inherited sells/unclosed buys; refer to age gates and do not call it realized performance."
+        },
+        {
+          "date": "2026-09-15",
+          "pair": "ETH-USDC",
+          "proof_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_2026_09_15_CAUSAL_L2_PROOFS.json",
+          "proof_sha1": "66eb4b07beacab24fe3dfdd8e31b201ba2977eea",
+          "ohlc_sha256": "6ef2eeac98193466d14bc388c50401d5c3419801017f32ba259a8e5d6c59342f",
+          "l2_archive_sha256": "694464feb71a39dccff0188087079f3d200b50e51efc4a4120b454e4a9213924",
+          "source_l2_events": 1717498,
+          "reference_anchors": 96,
+          "ema_crosses_300_bar_window": 20,
+          "confirmed_candles": 300,
+          "actions": 9,
+          "buys": 5,
+          "sells": 4,
+          "carry_in_exit": 0,
+          "carry_out_entry": 1,
+          "completed_intraday_roundtrips": 4,
+          "cycles_both_age_le_1s": 4,
+          "cycles_both_age_le_10s": 4,
+          "age_ms": {
+            "n": 9,
+            "mean": 186,
+            "median": 149,
+            "p90": 430.2,
+            "max": 719,
+            "min": 1
+          },
+          "age_le_100ms": 4,
+          "age_le_1000ms": 9,
+          "age_le_10000ms": 9,
+          "mid_to_vwap_cost_bp": {
+            "n": 9,
+            "mean": 0.819557,
+            "median": 0.704817,
+            "p90": 1.435779,
+            "max": 1.600869,
+            "min": 0.266413
+          },
+          "abs_book_vwap_vs_ohlc_bp": {
+            "n": 9,
+            "mean": 1.987166,
+            "median": 1.352703,
+            "p90": 3.541426,
+            "max": 6.894273,
+            "min": 0.605153
+          },
+          "adverse_book_vs_ohlc_bp": {
+            "n": 9,
+            "mean": 1.808192,
+            "median": 1.352703,
+            "p90": 3.541426,
+            "max": 6.894273,
+            "min": -0.805383
+          },
+          "adverse_open_diff_gt_5bp": 1,
+          "model_daily_reset_all_closed_cycles": {
+            "v5": {
+              "cycles": 4,
+              "initial_usdc": 1000,
+              "final_usdc": 952.575265,
+              "net_usdc": -47.424735,
+              "return_pct": -4.742473,
+              "detail": [
+                {
+                  "buy_utc": "2026-09-15T11:00:00.000Z",
+                  "sell_utc": "2026-09-15T11:45:00.000Z",
+                  "buy_book_age_ms": 358,
+                  "sell_book_age_ms": 28,
+                  "pnl_usdc": -6.327833
+                },
+                {
+                  "buy_utc": "2026-09-15T12:15:00.000Z",
+                  "sell_utc": "2026-09-15T12:30:00.000Z",
+                  "buy_book_age_ms": 719,
+                  "sell_book_age_ms": 229,
+                  "pnl_usdc": -3.400032
+                },
+                {
+                  "buy_utc": "2026-09-15T13:30:00.000Z",
+                  "sell_utc": "2026-09-15T13:45:00.000Z",
+                  "buy_book_age_ms": 149,
+                  "sell_book_age_ms": 9,
+                  "pnl_usdc": -13.600421
+                },
+                {
+                  "buy_utc": "2026-09-15T18:00:00.000Z",
+                  "sell_utc": "2026-09-15T18:45:00.000Z",
+                  "buy_book_age_ms": 8,
+                  "sell_book_age_ms": 1,
+                  "pnl_usdc": -24.096448
+                }
+              ]
+            },
+            "book": {
+              "cycles": 4,
+              "initial_usdc": 1000,
+              "final_usdc": 955.095965,
+              "net_usdc": -44.904035,
+              "return_pct": -4.490403,
+              "detail": [
+                {
+                  "buy_utc": "2026-09-15T11:00:00.000Z",
+                  "sell_utc": "2026-09-15T11:45:00.000Z",
+                  "buy_book_age_ms": 358,
+                  "sell_book_age_ms": 28,
+                  "pnl_usdc": -5.329914
+                },
+                {
+                  "buy_utc": "2026-09-15T12:15:00.000Z",
+                  "sell_utc": "2026-09-15T12:30:00.000Z",
+                  "buy_book_age_ms": 719,
+                  "sell_book_age_ms": 229,
+                  "pnl_usdc": -2.608074
+                },
+                {
+                  "buy_utc": "2026-09-15T13:30:00.000Z",
+                  "sell_utc": "2026-09-15T13:45:00.000Z",
+                  "buy_book_age_ms": 149,
+                  "sell_book_age_ms": 9,
+                  "pnl_usdc": -13.406224
+                },
+                {
+                  "buy_utc": "2026-09-15T18:00:00.000Z",
+                  "sell_utc": "2026-09-15T18:45:00.000Z",
+                  "buy_book_age_ms": 8,
+                  "sell_book_age_ms": 1,
+                  "pnl_usdc": -23.559823
+                }
+              ]
+            }
+          },
+          "limitation": "The daily-reset book illustration retains any stale book and excludes inherited sells/unclosed buys; refer to age gates and do not call it realized performance."
+        },
+        {
+          "date": "2026-10-15",
+          "pair": "ETH-USDC",
+          "proof_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_ETH_USDC_V5_EMA5_13_2026_10_15_CAUSAL_L2_PROOFS.json",
+          "proof_sha1": "efe7fd22cd9e3b842d3cba04e2b72670b2277958",
+          "ohlc_sha256": "3cf98de979248bd125ecc4f28765a003381b7643182aa89ff2c98391ca927c3c",
+          "l2_archive_sha256": "048d039eed1d6a18c166f022e8fe02359308445be682d1405df09b61fbc03546",
+          "source_l2_events": 3172868,
+          "reference_anchors": 4,
+          "ema_crosses_300_bar_window": 22,
+          "confirmed_candles": 300,
+          "actions": 6,
+          "buys": 3,
+          "sells": 3,
+          "carry_in_exit": 0,
+          "carry_out_entry": 0,
+          "completed_intraday_roundtrips": 3,
+          "cycles_both_age_le_1s": 3,
+          "cycles_both_age_le_10s": 3,
+          "age_ms": {
+            "n": 6,
+            "mean": 96.166667,
+            "median": 90,
+            "p90": 194,
+            "max": 223,
+            "min": 4
+          },
+          "age_le_100ms": 3,
+          "age_le_1000ms": 6,
+          "age_le_10000ms": 6,
+          "mid_to_vwap_cost_bp": {
+            "n": 6,
+            "mean": 0.29091,
+            "median": 0.246945,
+            "p90": 0.604911,
+            "max": 0.662365,
+            "min": 0.020693
+          },
+          "abs_book_vwap_vs_ohlc_bp": {
+            "n": 6,
+            "mean": 0.928336,
+            "median": 0.343591,
+            "p90": 2.399667,
+            "max": 2.848838,
+            "min": 0.041386
+          },
+          "adverse_book_vs_ohlc_bp": {
+            "n": 6,
+            "mean": 0.835906,
+            "median": 0.226003,
+            "p90": 2.399667,
+            "max": 2.848838,
+            "min": -0.277291
+          },
+          "adverse_open_diff_gt_5bp": 0,
+          "model_daily_reset_all_closed_cycles": {
+            "v5": {
+              "cycles": 3,
+              "initial_usdc": 1000,
+              "final_usdc": 1014.227103,
+              "net_usdc": 14.227103,
+              "return_pct": 1.42271,
+              "detail": [
+                {
+                  "buy_utc": "2026-10-15T00:15:00.000Z",
+                  "sell_utc": "2026-10-15T01:00:00.000Z",
+                  "buy_book_age_ms": 5,
+                  "sell_book_age_ms": 223,
+                  "pnl_usdc": -5.362426
+                },
+                {
+                  "buy_utc": "2026-10-15T07:45:00.000Z",
+                  "sell_utc": "2026-10-15T10:15:00.000Z",
+                  "buy_book_age_ms": 76,
+                  "sell_book_age_ms": 4,
+                  "pnl_usdc": -7.2768
+                },
+                {
+                  "buy_utc": "2026-10-15T14:30:00.000Z",
+                  "sell_utc": "2026-10-15T23:15:00.000Z",
+                  "buy_book_age_ms": 165,
+                  "sell_book_age_ms": 104,
+                  "pnl_usdc": 26.866329
+                }
+              ]
+            },
+            "book": {
+              "cycles": 3,
+              "initial_usdc": 1000,
+              "final_usdc": 1016.764333,
+              "net_usdc": 16.764333,
+              "return_pct": 1.676433,
+              "detail": [
+                {
+                  "buy_utc": "2026-10-15T00:15:00.000Z",
+                  "sell_utc": "2026-10-15T01:00:00.000Z",
+                  "buy_book_age_ms": 5,
+                  "sell_book_age_ms": 223,
+                  "pnl_usdc": -4.654969
+                },
+                {
+                  "buy_utc": "2026-10-15T07:45:00.000Z",
+                  "sell_utc": "2026-10-15T10:15:00.000Z",
+                  "buy_book_age_ms": 76,
+                  "sell_book_age_ms": 4,
+                  "pnl_usdc": -6.270158
+                },
+                {
+                  "buy_utc": "2026-10-15T14:30:00.000Z",
+                  "sell_utc": "2026-10-15T23:15:00.000Z",
+                  "buy_book_age_ms": 165,
+                  "sell_book_age_ms": 104,
+                  "pnl_usdc": 27.68946
+                }
+              ]
+            }
+          },
+          "limitation": "The daily-reset book illustration retains any stale book and excludes inherited sells/unclosed buys; refer to age gates and do not call it realized performance."
+        }
+      ],
+      "totals": {
+        "days": 3,
+        "events_l2": 5168157,
+        "ohlc_candles_in_separate_300bar_windows": 900,
+        "cross_signals_in_windows_sum": 71,
+        "actions": 24,
+        "preopen_paired": 24,
+        "complete_intraday_cycles": 11,
+        "carry_in_exit": 1,
+        "carry_out_entry": 1,
+        "age_le_100ms": 8,
+        "age_le_1000ms": 21,
+        "age_le_10000ms": 23,
+        "age_gt_10000ms": 1,
+        "book_age_ms": {
+          "n": 24,
+          "mean": 848.916667,
+          "median": 169,
+          "p90": 1027.1,
+          "max": 11888,
+          "min": 1
+        },
+        "mid_to_vwap_cost_bp": {
+          "n": 24,
+          "mean": 0.626362,
+          "median": 0.512738,
+          "p90": 1.270891,
+          "max": 1.600869,
+          "min": 0.020693
+        },
+        "abs_book_vwap_vs_ohlc_bp": {
+          "n": 24,
+          "mean": 1.404502,
+          "median": 1.110167,
+          "p90": 2.665489,
+          "max": 6.894273,
+          "min": 0.041386
+        },
+        "adverse_book_vs_open_gt5bp": 1
+      }
+    },
+    "BTC-USDC": {
+      "dates": [
+        {
+          "date": "2026-08-15",
+          "pair": "BTC-USDC",
+          "proof_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_USDC_V5_EMA5_13_2026_08_15_CAUSAL_L2_PROOFS.json",
+          "proof_sha1": "4eb46ec1352a6487ebcb285de4fe3215ee24cb4b",
+          "ohlc_sha256": "12403bfbda9da0fb066ccc7139ca3f3fbb16befcfc8b50e017e2582882d40815",
+          "l2_archive_sha256": "a8af512dabf96c6e5c8af37a0e19eb11ebce88ed232308cba9a63a37053fc130",
+          "source_l2_events": 301816,
+          "reference_anchors": 96,
+          "ema_crosses_300_bar_window": 21,
+          "confirmed_candles": 300,
+          "actions": 11,
+          "buys": 5,
+          "sells": 6,
+          "carry_in_exit": 1,
+          "carry_out_entry": 0,
+          "completed_intraday_roundtrips": 5,
+          "cycles_both_age_le_1s": 3,
+          "cycles_both_age_le_10s": 5,
+          "age_ms": {
+            "n": 11,
+            "mean": 570,
+            "median": 301,
+            "p90": 1134,
+            "max": 2058,
+            "min": 1
+          },
+          "age_le_100ms": 4,
+          "age_le_1000ms": 9,
+          "age_le_10000ms": 11,
+          "mid_to_vwap_cost_bp": {
+            "n": 11,
+            "mean": 0.126779,
+            "median": 0.118962,
+            "p90": 0.27017,
+            "max": 0.33964,
+            "min": 0.007938
+          },
+          "abs_book_vwap_vs_ohlc_bp": {
+            "n": 11,
+            "mean": 0.809696,
+            "median": 0.429087,
+            "p90": 1.222573,
+            "max": 4.103053,
+            "min": 0.015862
+          },
+          "adverse_book_vs_ohlc_bp": {
+            "n": 11,
+            "mean": 0.551499,
+            "median": 0.051015,
+            "p90": 1.12503,
+            "max": 4.103053,
+            "min": -1.222573
+          },
+          "adverse_open_diff_gt_5bp": 0,
+          "model_daily_reset_all_closed_cycles": {
+            "v5": {
+              "cycles": 5,
+              "initial_usdc": 1000,
+              "final_usdc": 983.464592,
+              "net_usdc": -16.535408,
+              "return_pct": -1.653541,
+              "detail": [
+                {
+                  "buy_utc": "2026-08-15T07:15:00.000Z",
+                  "sell_utc": "2026-08-15T08:00:00.000Z",
+                  "buy_book_age_ms": 81,
+                  "sell_book_age_ms": 61,
+                  "pnl_usdc": -3.371866
+                },
+                {
+                  "buy_utc": "2026-08-15T11:00:00.000Z",
+                  "sell_utc": "2026-08-15T11:15:00.000Z",
+                  "buy_book_age_ms": 77,
+                  "sell_book_age_ms": 984,
+                  "pnl_usdc": -3.111635
+                },
+                {
+                  "buy_utc": "2026-08-15T11:30:00.000Z",
+                  "sell_utc": "2026-08-15T12:15:00.000Z",
+                  "buy_book_age_ms": 1134,
+                  "sell_book_age_ms": 301,
+                  "pnl_usdc": -3.881981
+                },
+                {
+                  "buy_utc": "2026-08-15T13:15:00.000Z",
+                  "sell_utc": "2026-08-15T18:30:00.000Z",
+                  "buy_book_age_ms": 267,
+                  "sell_book_age_ms": 618,
+                  "pnl_usdc": -3.387211
+                },
+                {
+                  "buy_utc": "2026-08-15T19:30:00.000Z",
+                  "sell_utc": "2026-08-15T23:45:00.000Z",
+                  "buy_book_age_ms": 688,
+                  "sell_book_age_ms": 2058,
+                  "pnl_usdc": -2.782714
+                }
+              ]
+            },
+            "book": {
+              "cycles": 5,
+              "initial_usdc": 1000,
+              "final_usdc": 987.871742,
+              "net_usdc": -12.128258,
+              "return_pct": -1.212826,
+              "detail": [
+                {
+                  "buy_utc": "2026-08-15T07:15:00.000Z",
+                  "sell_utc": "2026-08-15T08:00:00.000Z",
+                  "buy_book_age_ms": 81,
+                  "sell_book_age_ms": 61,
+                  "pnl_usdc": -2.896093
+                },
+                {
+                  "buy_utc": "2026-08-15T11:00:00.000Z",
+                  "sell_utc": "2026-08-15T11:15:00.000Z",
+                  "buy_book_age_ms": 77,
+                  "sell_book_age_ms": 984,
+                  "pnl_usdc": -2.216584
+                },
+                {
+                  "buy_utc": "2026-08-15T11:30:00.000Z",
+                  "sell_utc": "2026-08-15T12:15:00.000Z",
+                  "buy_book_age_ms": 1134,
+                  "sell_book_age_ms": 301,
+                  "pnl_usdc": -2.817119
+                },
+                {
+                  "buy_utc": "2026-08-15T13:15:00.000Z",
+                  "sell_utc": "2026-08-15T18:30:00.000Z",
+                  "buy_book_age_ms": 267,
+                  "sell_book_age_ms": 618,
+                  "pnl_usdc": -2.403571
+                },
+                {
+                  "buy_utc": "2026-08-15T19:30:00.000Z",
+                  "sell_utc": "2026-08-15T23:45:00.000Z",
+                  "buy_book_age_ms": 688,
+                  "sell_book_age_ms": 2058,
+                  "pnl_usdc": -1.794891
+                }
+              ]
+            }
+          },
+          "limitation": "The daily-reset book illustration retains any stale book and excludes inherited sells/unclosed buys; refer to age gates and do not call it realized performance."
+        },
+        {
+          "date": "2026-09-15",
+          "pair": "BTC-USDC",
+          "proof_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_USDC_V5_EMA5_13_2026_09_15_CAUSAL_L2_PROOFS.json",
+          "proof_sha1": "c2551986f5e7f1ca01da9e00f5753af54598c9d4",
+          "ohlc_sha256": "b1cd3805491be8b3c38aeff67712e831d3046578a794ffe114b66b4dbd0ae84a",
+          "l2_archive_sha256": "53ab528063479e83dbd833be63615d09cee209897d39021403a88fd6f2d31460",
+          "source_l2_events": 1811678,
+          "reference_anchors": 96,
+          "ema_crosses_300_bar_window": 13,
+          "confirmed_candles": 300,
+          "actions": 2,
+          "buys": 1,
+          "sells": 1,
+          "carry_in_exit": 0,
+          "carry_out_entry": 0,
+          "completed_intraday_roundtrips": 1,
+          "cycles_both_age_le_1s": 1,
+          "cycles_both_age_le_10s": 1,
+          "age_ms": {
+            "n": 2,
+            "mean": 55,
+            "median": 55,
+            "p90": 95.8,
+            "max": 106,
+            "min": 4
+          },
+          "age_le_100ms": 1,
+          "age_le_1000ms": 2,
+          "age_le_10000ms": 2,
+          "mid_to_vwap_cost_bp": {
+            "n": 2,
+            "mean": 0.627398,
+            "median": 0.627398,
+            "p90": 1.040688,
+            "max": 1.14401,
+            "min": 0.110786
+          },
+          "abs_book_vwap_vs_ohlc_bp": {
+            "n": 2,
+            "mean": 3.017976,
+            "median": 3.017976,
+            "p90": 4.723399,
+            "max": 5.149755,
+            "min": 0.886197
+          },
+          "adverse_book_vs_ohlc_bp": {
+            "n": 2,
+            "mean": 2.131779,
+            "median": 2.131779,
+            "p90": 4.54616,
+            "max": 5.149755,
+            "min": -0.886197
+          },
+          "adverse_open_diff_gt_5bp": 1,
+          "model_daily_reset_all_closed_cycles": {
+            "v5": {
+              "cycles": 1,
+              "initial_usdc": 1000,
+              "final_usdc": 984.33736,
+              "net_usdc": -15.66264,
+              "return_pct": -1.566264,
+              "detail": [
+                {
+                  "buy_utc": "2026-09-15T17:45:00.000Z",
+                  "sell_utc": "2026-09-15T18:45:00.000Z",
+                  "buy_book_age_ms": 106,
+                  "sell_book_age_ms": 4,
+                  "pnl_usdc": -15.66264
+                }
+              ]
+            },
+            "book": {
+              "cycles": 1,
+              "initial_usdc": 1000,
+              "final_usdc": 984.902054,
+              "net_usdc": -15.097946,
+              "return_pct": -1.509795,
+              "detail": [
+                {
+                  "buy_utc": "2026-09-15T17:45:00.000Z",
+                  "sell_utc": "2026-09-15T18:45:00.000Z",
+                  "buy_book_age_ms": 106,
+                  "sell_book_age_ms": 4,
+                  "pnl_usdc": -15.097946
+                }
+              ]
+            }
+          },
+          "limitation": "The daily-reset book illustration retains any stale book and excludes inherited sells/unclosed buys; refer to age gates and do not call it realized performance."
+        },
+        {
+          "date": "2026-10-15",
+          "pair": "BTC-USDC",
+          "proof_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_USDC_V5_EMA5_13_2026_10_15_CAUSAL_L2_PROOFS.json",
+          "proof_sha1": "a103f3a65e9cf5fbe2e22b93d27f51286d37cb0f",
+          "ohlc_sha256": "d84adf7cae0cd11fdf89f0d1def9a6d586854caae4ea18c80e23840f60a4c421",
+          "l2_archive_sha256": "3b543b7333a6c71f4a8bf0ddf4e058fa84f61ad58092b3250784acc0964c7b44",
+          "source_l2_events": 2346486,
+          "reference_anchors": 4,
+          "ema_crosses_300_bar_window": 32,
+          "confirmed_candles": 300,
+          "actions": 12,
+          "buys": 6,
+          "sells": 6,
+          "carry_in_exit": 0,
+          "carry_out_entry": 0,
+          "completed_intraday_roundtrips": 6,
+          "cycles_both_age_le_1s": 6,
+          "cycles_both_age_le_10s": 6,
+          "age_ms": {
+            "n": 12,
+            "mean": 68.75,
+            "median": 21,
+            "p90": 230.8,
+            "max": 253,
+            "min": 3
+          },
+          "age_le_100ms": 9,
+          "age_le_1000ms": 12,
+          "age_le_10000ms": 12,
+          "mid_to_vwap_cost_bp": {
+            "n": 12,
+            "mean": 0.125681,
+            "median": 0.00616,
+            "p90": 0.198603,
+            "max": 1.011898,
+            "min": 0.006086
+          },
+          "abs_book_vwap_vs_ohlc_bp": {
+            "n": 12,
+            "mean": 0.726011,
+            "median": 0.635109,
+            "p90": 1.221425,
+            "max": 2.902325,
+            "min": 0
+          },
+          "adverse_book_vs_ohlc_bp": {
+            "n": 12,
+            "mean": -0.003851,
+            "median": 0,
+            "p90": 0.780244,
+            "max": 2.902325,
+            "min": -1.229577
+          },
+          "adverse_open_diff_gt_5bp": 0,
+          "model_daily_reset_all_closed_cycles": {
+            "v5": {
+              "cycles": 6,
+              "initial_usdc": 1000,
+              "final_usdc": 976.485762,
+              "net_usdc": -23.514238,
+              "return_pct": -2.351424,
+              "detail": [
+                {
+                  "buy_utc": "2026-10-15T00:30:00.000Z",
+                  "sell_utc": "2026-10-15T00:45:00.000Z",
+                  "buy_book_age_ms": 49,
+                  "sell_book_age_ms": 9,
+                  "pnl_usdc": -5.750383
+                },
+                {
+                  "buy_utc": "2026-10-15T01:45:00.000Z",
+                  "sell_utc": "2026-10-15T02:00:00.000Z",
+                  "buy_book_age_ms": 23,
+                  "sell_book_age_ms": 253,
+                  "pnl_usdc": -5.189169
+                },
+                {
+                  "buy_utc": "2026-10-15T05:00:00.000Z",
+                  "sell_utc": "2026-10-15T05:30:00.000Z",
+                  "buy_book_age_ms": 18,
+                  "sell_book_age_ms": 17,
+                  "pnl_usdc": -8.68683
+                },
+                {
+                  "buy_utc": "2026-10-15T07:45:00.000Z",
+                  "sell_utc": "2026-10-15T10:15:00.000Z",
+                  "buy_book_age_ms": 19,
+                  "sell_book_age_ms": 3,
+                  "pnl_usdc": -6.811426
+                },
+                {
+                  "buy_utc": "2026-10-15T14:30:00.000Z",
+                  "sell_utc": "2026-10-15T21:00:00.000Z",
+                  "buy_book_age_ms": 4,
+                  "sell_book_age_ms": 82,
+                  "pnl_usdc": 8.425765
+                },
+                {
+                  "buy_utc": "2026-10-15T22:00:00.000Z",
+                  "sell_utc": "2026-10-15T23:30:00.000Z",
+                  "buy_book_age_ms": 103,
+                  "sell_book_age_ms": 245,
+                  "pnl_usdc": -5.502196
+                }
+              ]
+            },
+            "book": {
+              "cycles": 6,
+              "initial_usdc": 1000,
+              "final_usdc": 982.366873,
+              "net_usdc": -17.633127,
+              "return_pct": -1.763313,
+              "detail": [
+                {
+                  "buy_utc": "2026-10-15T00:30:00.000Z",
+                  "sell_utc": "2026-10-15T00:45:00.000Z",
+                  "buy_book_age_ms": 49,
+                  "sell_book_age_ms": 9,
+                  "pnl_usdc": -4.838115
+                },
+                {
+                  "buy_utc": "2026-10-15T01:45:00.000Z",
+                  "sell_utc": "2026-10-15T02:00:00.000Z",
+                  "buy_book_age_ms": 23,
+                  "sell_book_age_ms": 253,
+                  "pnl_usdc": -4.535938
+                },
+                {
+                  "buy_utc": "2026-10-15T05:00:00.000Z",
+                  "sell_utc": "2026-10-15T05:30:00.000Z",
+                  "buy_book_age_ms": 18,
+                  "sell_book_age_ms": 17,
+                  "pnl_usdc": -7.718163
+                },
+                {
+                  "buy_utc": "2026-10-15T07:45:00.000Z",
+                  "sell_utc": "2026-10-15T10:15:00.000Z",
+                  "buy_book_age_ms": 19,
+                  "sell_book_age_ms": 3,
+                  "pnl_usdc": -5.620129
+                },
+                {
+                  "buy_utc": "2026-10-15T14:30:00.000Z",
+                  "sell_utc": "2026-10-15T21:00:00.000Z",
+                  "buy_book_age_ms": 4,
+                  "sell_book_age_ms": 82,
+                  "pnl_usdc": 9.429629
+                },
+                {
+                  "buy_utc": "2026-10-15T22:00:00.000Z",
+                  "sell_utc": "2026-10-15T23:30:00.000Z",
+                  "buy_book_age_ms": 103,
+                  "sell_book_age_ms": 245,
+                  "pnl_usdc": -4.350411
+                }
+              ]
+            }
+          },
+          "limitation": "The daily-reset book illustration retains any stale book and excludes inherited sells/unclosed buys; refer to age gates and do not call it realized performance."
+        }
+      ],
+      "totals": {
+        "days": 3,
+        "events_l2": 4459980,
+        "ohlc_candles_in_separate_300bar_windows": 900,
+        "cross_signals_in_windows_sum": 66,
+        "actions": 25,
+        "preopen_paired": 25,
+        "complete_intraday_cycles": 12,
+        "carry_in_exit": 1,
+        "carry_out_entry": 0,
+        "age_le_100ms": 14,
+        "age_le_1000ms": 23,
+        "age_le_10000ms": 25,
+        "age_gt_10000ms": 0,
+        "book_age_ms": {
+          "n": 25,
+          "mean": 288.2,
+          "median": 81,
+          "p90": 865.6,
+          "max": 2058,
+          "min": 1
+        },
+        "mid_to_vwap_cost_bp": {
+          "n": 25,
+          "mean": 0.166301,
+          "median": 0.100329,
+          "p90": 0.311852,
+          "max": 1.14401,
+          "min": 0.006086
+        },
+        "abs_book_vwap_vs_ohlc_bp": {
+          "n": 25,
+          "mean": 0.946189,
+          "median": 0.77798,
+          "p90": 2.233226,
+          "max": 5.149755,
+          "min": 0
+        },
+        "adverse_book_vs_open_gt5bp": 1
+      }
+    }
+  },
+  "limits": [
+    "Three isolated days, not entire months",
+    "ETH and BTC signals differ in timestamps; pooled averages not synchronous cross-asset pairs",
+    "The timestamp of the last L2 state before T does not prove the state was delivered before submission",
+    "One ETH August side has age 11.888s > fixed 10s gate; quote is timestamp-paired but not 10s-qualified",
+    "The pre-open L2 book may change by the time a real order arrives; hypothetical prices are not fills",
+    "Source complete SHA-256 and CRC do not guarantee upstream seqId/prevSeqId full continuity",
+    "V5 next.open OHLC is an exchange trade price, not guaranteed a contemporary mid",
+    "Fixed 1000 USDC book notional differs from evolving cash in illustrative daily-reset PnL",
+    "One carry-in sell on both assets Aug; one ETH Sep carry-out buy; daily PnL excludes unmatched legs",
+    "No evidence historical fees charged in Aug/Sep/Oct equal November observed account fees",
+    "No live orders, no model-parameter or Trader/Bridge modifications"
+  ]
+}
