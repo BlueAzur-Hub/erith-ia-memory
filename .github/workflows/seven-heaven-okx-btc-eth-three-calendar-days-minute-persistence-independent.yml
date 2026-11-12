@@ -1,0 +1,75 @@
+name: Seven Heaven OKX Three Calendar Days Minute Persistence Independent
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-btc-eth-three-calendar-days-minute-persistence-independent.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_MINUTE_EVENT_TIME_PERSISTENCE_INDEPENDENT_REPRODUCTION_2026_11_12.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-three-calendar-days-minute-persistence-independent-once
+  cancel-in-progress: false
+jobs:
+  independently-check-six-pinned-source-proofs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and test offline Git blob and temporal arithmetic
+        run: |
+          set -euo pipefail
+          file='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_MINUTE_EVENT_TIME_PERSISTENCE_INDEPENDENT_REPRODUCTION_2026_11_12.py'
+          python -m py_compile "$file"
+          python "$file" --selftest
+      - name: Verify six immutable source proofs, 8640 minutes, 4320 UTC pairs and event-time conservation
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_THREE_DAYS_MINUTE_EVENT_TIME_PERSISTENCE_INDEPENDENT_REPRODUCTION_2026_11_12.py --repo-root .
+      - name: Verify published offline independent proof status
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_three_days_eventtime_persistence_independent_2026_11_12_evidence/SEVEN_HEAVEN_OKX_THREE_DAYS_ONE_MINUTE_EVENTTIME_INDEPENDENT_RECALC_PROOFS.json')
+          x=json.loads(p.read_text(encoding='utf8'))
+          assert x['schema']=='seven-heaven.okx-three-calendar-day-minute-persistence-offline-audit.v1'
+          assert x['status']=='SIX_PINNED_L2_SOURCES_8640_MINUTES_4320_PAIRED_AND_FOUR_EVENT_TIME_THRESHOLDS_VALIDATED'
+          assert x['total_archives']==6 and x['total_original_source_events']==9628137
+          assert x['minute_states_verified']==8640 and x['paired_minute_rows_verified']==4320
+          assert len(x['verified_source_git_blobs_sha1'])==6
+          assert x['quarter_hour_reference_matches_per_archive']==96
+          assert x['four_threshold_time_conservation_validated_for_all_six']
+          assert sum(x['minute_spread_dominance'].values())==4320
+          assert x['read_only'] and not x['orders_enabled'] and not x['upstream_L2_sequence_continuity_proven']
+          print('PASS: six pinned original proofs, 8640 fixed UTC minute book states, 4320 paired comparisons and event-time integrity')
+          PY
+      - name: Preserve compact offline audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-three-day-minute-persistence-independent
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_three_days_eventtime_persistence_independent_2026_11_12_evidence/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish verified independent proof in common Coffre
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_three_days_eventtime_persistence_independent_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'NOOP'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: publish independent three-day BTC ETH event-held duration and minute validation'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
