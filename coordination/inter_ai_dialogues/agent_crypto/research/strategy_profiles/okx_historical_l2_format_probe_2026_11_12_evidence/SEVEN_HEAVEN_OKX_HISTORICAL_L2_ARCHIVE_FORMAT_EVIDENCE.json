@@ -1,0 +1,78 @@
+{
+  "schema": "seven-heaven.okx-official-l2-bounded-archive-format-probe.v1",
+  "date": "2026-11-12",
+  "status": "partial_prefix_probe",
+  "max_compressed_read_bytes_per_pair": 2000000,
+  "max_uncompressed_sample_bytes": 16384,
+  "full_archive_downloaded": false,
+  "read_only": true,
+  "orders_enabled": false,
+  "records": [
+    {
+      "status": "first_member_sampled",
+      "prefix_bytes_consumed": 10240,
+      "prefix_sha256": "849b69c50e07c8379f23d4a11e5611bb55e58a8d00f64ff71c05a480a260056c",
+      "sample_is_not_full_file_verification": true,
+      "tar_member_names_first": [
+        {
+          "name": "BTC-USDC-L2orderbook-400lv-2026-10-15.data",
+          "size_uncompressed_bytes": 457277836,
+          "regular_file": true
+        }
+      ],
+      "first_regular_member": "BTC-USDC-L2orderbook-400lv-2026-10-15.data",
+      "member_reported_uncompressed_bytes": 457277836,
+      "sample_bytes": 16384,
+      "sample_prefix_sha256": "9574be5f6857aaad48fe31d7003fb731a44592eb6740ea1e66352aff9e25943a",
+      "first_five_text_lines": [
+        "{\"instId\":\"BTC-USDC\",\"action\":\"snapshot\",\"ts\":\"1792022400005\",\"asks\":[[\"81588.1\",\"0.02451681\",\"1\"],[\"81595.8\",\"0.08825913\",\"1\"],[\"81601\",\"0.0015\",\"1\"],[\"81602.4\",\"1.8\",\"1\"],[\"81602.5\",\"0.12254526\",\"1\"],[\"81604.5\",\"0.0371\",\"1\"],[\"81606.1\",\"0.12255711\",\"1\"],[\"81606.6\",\"0.19607241\",\"1\"],[\"81608.4\",\"0.02450728\",\"1\"],[\"81610.7\",\"0.26959957\",\"1\"],[\"81612"
+      ],
+      "utf8_replacement_in_sample": false,
+      "sampling_incomplete": true,
+      "pair": "BTC-USDC",
+      "url": "https://static.okx.com/cdn/okx/match/orderbook/pro/L2/400lv/daily/20261015/BTC-USDC-L2orderbook-400lv-2026-10-15.tar.gz",
+      "http_status": 206,
+      "http_content_length_reported": "2000000",
+      "requested_at_utc": "2026-11-12T16:11:09.129Z",
+      "completed_at_utc": "2026-11-12T16:11:09.758Z",
+      "range_request_bytes": "0-1999999",
+      "range_header_may_be_ignored": false
+    },
+    {
+      "status": "first_member_sampled",
+      "prefix_bytes_consumed": 10240,
+      "prefix_sha256": "bb73894501a441eaf599f6aefbae07b3d8eb36269f0ce01a8077052d44e2654a",
+      "sample_is_not_full_file_verification": true,
+      "tar_member_names_first": [
+        {
+          "name": "ETH-USDC-L2orderbook-400lv-2026-10-15.data",
+          "size_uncompressed_bytes": 776655177,
+          "regular_file": true
+        }
+      ],
+      "first_regular_member": "ETH-USDC-L2orderbook-400lv-2026-10-15.data",
+      "member_reported_uncompressed_bytes": 776655177,
+      "sample_bytes": 16384,
+      "sample_prefix_sha256": "b1329288826a95bc419a950a04c4fdc2e4efb80f53630b288d90d1364a8d8ff7",
+      "first_five_text_lines": [
+        "{\"instId\":\"ETH-USDC\",\"action\":\"snapshot\",\"ts\":\"1792022400001\",\"asks\":[[\"2419.08\",\"1.080595\",\"2\"],[\"2419.28\",\"0.459267\",\"1\"],[\"2419.34\",\"0.48385\",\"1\"],[\"2419.35\",\"0.03\",\"1\"],[\"2419.37\",\"8\",\"1\"],[\"2419.4\",\"0.992308\",\"1\"],[\"2419.41\",\"0.27\",\"1\"],[\"2419.49\",\"0.459267\",\"1\"],[\"2419.61\",\"2.066739\",\"1\"],[\"2419.66\",\"3.51289\",\"1\"],[\"2419.68\",\"0.459267\",\"1\"],["
+      ],
+      "utf8_replacement_in_sample": false,
+      "sampling_incomplete": true,
+      "pair": "ETH-USDC",
+      "url": "https://static.okx.com/cdn/okx/match/orderbook/pro/L2/400lv/daily/20261015/ETH-USDC-L2orderbook-400lv-2026-10-15.tar.gz",
+      "http_status": 206,
+      "http_content_length_reported": "2000000",
+      "requested_at_utc": "2026-11-12T16:11:09.759Z",
+      "completed_at_utc": "2026-11-12T16:11:10.349Z",
+      "range_request_bytes": "0-1999999",
+      "range_header_may_be_ignored": false
+    }
+  ],
+  "limits": [
+    "First regular tar member only; content may not cover full day.",
+    "A hash of compressed PREFIX is NOT a hash of complete archive.",
+    "No full CSV integrity, complete candle, book reconstruction or statistical spread validation.",
+    "Downloaded bytes were bounded; sources remain external on OKX CDN."
+  ]
+}
