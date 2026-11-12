@@ -1,0 +1,147 @@
+name: Seven Heaven OKX L2 August September 96 Quarter Hours
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-l2-aug-sep-2026-96-quarter-hour-study.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_2026_96_QUARTER_HOUR_STREAMED_REPLAY.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-l2-aug-sep-96-quarters-once
+  cancel-in-progress: false
+
+jobs:
+  audit-one-official-pair-day:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { day: '2026-08-15', pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { day: '2026-08-15', pair: 'ETH-USDC', slug: 'eth_usdc' }
+          - { day: '2026-09-15', pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { day: '2026-09-15', pair: 'ETH-USDC', slug: 'eth_usdc' }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run synthetic bounded book tests
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_2026_96_QUARTER_HOUR_STREAMED_REPLAY.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Re-read exact pinned complete OKX archive without storing source
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_2026_96_QUARTER_HOUR_STREAMED_REPLAY.py --repo-root . --day '${{ matrix.day }}' --pair '${{ matrix.pair }}'
+      - name: Validate original four-hour parity and entire archive CRC/SHA
+        run: |
+          set -euo pipefail
+          DAY='${{ matrix.day }}' PAIR='${{ matrix.pair }}' SLUG='${{ matrix.slug }}' python - <<'PY'
+          import csv,json,os,pathlib
+          p=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence')/os.environ['DAY']/os.environ['SLUG']
+          r=json.loads((p/'SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json').read_text(encoding='utf8'))
+          assert r['read_only'] and not r['orders_enabled']
+          assert r['pair']==os.environ['PAIR'] and r['day_utc']==os.environ['DAY']
+          assert r['status'] in ('full_archive_replayed_ninety_six_states','failed_quality_or_access_check')
+          ss=list(csv.DictReader((p/'SEVEN_HEAVEN_OKX_L2_96_STATES_SPREADS.csv').open(encoding='utf8')))
+          cs=list(csv.DictReader((p/'SEVEN_HEAVEN_OKX_L2_96_STATES_COSTS.csv').open(encoding='utf8')))
+          st=list(csv.DictReader((p/'SEVEN_HEAVEN_OKX_L2_96_REPORTED_SNAPSHOT_TIMES.csv').open(encoding='utf8')))
+          if r['status']=='full_archive_replayed_ninety_six_states':
+              d=r['result'];m=d['market']
+              assert r['source_archive_fully_read']
+              assert d['gzip_read_to_eof_crc_checked']
+              assert len(d['archive_sha256'])==64 and len(d['member_sha256'])==64
+              assert m['first_20_event_hashes_match_prior_proof']
+              assert not m['global_logical_continuity_proven']
+              assert len(r['reference_four_checks'])==4 and all(x['verified'] for x in r['reference_four_checks'])
+              assert len(ss)==96 and len(m['anchors'])==96 and len(cs)==960
+              assert len(st)==m['snapshots']
+              assert len({x['anchor_utc'] for x in ss})==96
+              assert all(x['anchor_utc'][:10]==os.environ['DAY'] for x in ss)
+              assert all(0<=int(x['offset_ms_after_anchor'])<=60000 for x in ss)
+              assert r['summary_96_stable_states']['n']==96
+              print('PASS 96 fixed valid states, full SHA/CRC and old 4-point parity',os.environ['DAY'],os.environ['PAIR'])
+          else:
+              assert r['no_results_invented'] and not r['source_archive_fully_read']
+              assert not ss and not cs
+              print('INCOMPLETE, no false results',os.environ['DAY'],os.environ['PAIR'],r.get('error'))
+          PY
+      - name: Preserve only compact per-pair-date proofs
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-l2-96-${{ matrix.day }}-${{ matrix.slug }}
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/
+          if-no-files-found: error
+          retention-days: 90
+
+  publish-results-to-canonical-research-directory:
+    needs: audit-one-official-pair-day
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - name: Assemble compact files, keeping day/pair paths
+        uses: actions/download-artifact@v4
+        with:
+          pattern: seven-heaven-okx-l2-96-*
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/
+          merge-multiple: true
+      - name: Produce explicit completed and missing result index
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence')
+          entries=[]
+          for day in ('2026-08-15','2026-09-15'):
+              for pair in ('BTC-USDC','ETH-USDC'):
+                  f=root/day/pair.lower().replace('-','_')/'SEVEN_HEAVEN_OKX_L2_96_STATES_SOURCE_PROOFS.json'
+                  if f.exists():
+                      d=json.loads(f.read_text(encoding='utf8'))
+                      entries.append({'day':day,'pair':pair,'status':d['status'],
+                        'n_anchors':len(d.get('result',{}).get('market',{}).get('anchors',[])),
+                        'n_snapshots':d.get('result',{}).get('market',{}).get('snapshots'),
+                        'archive_sha256':d.get('result',{}).get('archive_sha256')})
+                  else:
+                      entries.append({'day':day,'pair':pair,'status':'not_published'})
+          out={'schema':'seven-heaven.okx-l2-96-quarter-hour-aug-sep-completion.v1',
+               'day_utc':['2026-08-15','2026-09-15'],'entries':entries,
+               'completed':sum(x['status']=='full_archive_replayed_ninety_six_states' for x in entries)}
+          (root/'SEVEN_HEAVEN_OKX_L2_AUGUST_SEPTEMBER_96_QUARTER_HOUR_DELIVERY_INDEX.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf8')
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Commit compact proofs, never upload source archive
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no changes'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: publish pinned 96-quarter-hour August September BTC ETH L2 evidence'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
