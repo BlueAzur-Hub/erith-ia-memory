@@ -578,3 +578,35 @@ Les 4 ancres ETH (00/06/12/18) et 5 montants 10/100/1000/10000/100000 USDC doive
 
 **Suite scientifique** : même grille dense de **96 états par actif** sur les **15 août et 15 septembre** déjà préenregistrés, si souhaitée, pour obtenir 3 jours × 2 actifs × 96 snapshots = **576 instants** sans changer de dates ni choisir a posteriori. Distinguer cette extension descriptive d'une validation prospective, d'une distribution de marché complète et des tests EMA. Aucun ordre réel, aucune tâche récurrente, aucune modification Trader/Bridge/Administrator/Operator.
 
+
+## OKX L2 BTC/ETH — SIX ARCHIVES, 576 ÉTATS, GRILLE 15 MIN × TROIS DATES VALIDÉE (12 novembre 2026)
+
+**ÉTUDE PUBLIÉE, VALIDÉE, REPRODUITE PAR UN DEUXIÈME PROGRAMME PYTHON INDÉPENDANT.** Ce bloc remplace les anciennes recommandations de poursuivre l'extension à 96 états sur août/septembre : **cette extension est accomplie**. Les trois dates sont **15 août, 15 septembre et 15 octobre 2026**, les actifs **BTC-USDC/ETH-USDC**, les horaires **00:00 à 23:45 UTC toutes les 15 minutes**. **96 snapshots réelles par fichier** avec décalage **0–9 ms** ; **6 archives entières, 576 états, 288 couples de spread, 2 880 couples de prix de carnet** (5 760 coûts individuels), **9 628 137 événements JSON L2** en total. Échantillon de **3 journées et 96 instants par journée**, PAS une moyenne complète de tous les états du marché.
+
+- [**Rapport scientifique détaillé, six sources, variabilité des spreads et coûts théoriques**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_MULTI_DATE_SCIENTIFIC_REPORT_2026_11_12.md).
+- [**Protocole figé avant nouveau rejeu d'août/septembre**](./SEVEN_HEAVEN_OKX_BTC_ETH_AUGUST_SEPTEMBER_2026_NINETY_SIX_QUARTER_HOURS_FROZEN_PROTOCOL_2026_11_12.md), commit `da2450eea42fe5e351bebe680aa1a2179fdc620e`.
+- [**Programme Python de streaming, 4 archives août/septembre**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_2026_96_QUARTER_HOUR_STREAMED_REPLAY.py), commit `4d96ea321ec5968afe9a176e395b3d7cb6f08817`.
+- [**Preuves JSON/CSV des quatre nouveaux actifs/jours, hashes complets et contrôle des anciens quatre horaires**](./okx_l2_aug_sep_96_quarter_hour_2026_11_12_evidence/), [**GitHub Actions : 4/4 replays et publication SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43269358892).
+- [**Référence du 15 octobre, 96 états BTC + 96 ETH déjà vérifiés**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_2026_10_15_96_QUARTER_HOUR_INTRADAY_SPREAD_AND_DEPTH_SCIENTIFIC_REPORT_2026_11_12.md).
+- [**Preuves agrégées : 6 source Git blobs épinglés, 3 jours × 2 actifs, métriques des 288 points par actif**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_THREE_DAY_AGGREGATED_PROOFS_2026_11_12.json), blob `22f8306b9e1ef0fe19198dbb7573537c61aec75d`.
+- [**CSV : 288 spreads couplés**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_PAIRED_SPREADS_288_ROWS_2026_11_12.csv), [**CSV : 2 880 couples de coûts des carnets**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_PAIRED_DEPTH_COSTS_2880_ROWS_2026_11_12.csv).
+- [**Reproduction Python indépendante — 576 états, 288 spreads, 2 880 coûts et toutes les statistiques recalculés hors réseau**](./SEVEN_HEAVEN_OKX_L2_BTC_ETH_AUGUST_SEPTEMBER_OCTOBER_2026_96_QUARTER_HOUR_INDEPENDENT_REPRODUCTION.py), [**preuve indépendante JSON**](./okx_l2_three_days_96_quarter_hours_independent_2026_11_12_evidence/SEVEN_HEAVEN_OKX_L2_THREE_DATES_96_QUARTER_HOUR_INDEPENDENT_PROOFS.json), blob `8d1667020766683edc8a64fef104d33de3e17d04`, [**GitHub Actions SUCCESS**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43270275600).
+
+**Spreads : moyenne sur exactement 96 snapshots fixes/jour et actif, en bp, jamais une moyenne continue de la journée** :
+
+| Date UTC | BTC-USDC | ETH-USDC |
+|---|---:|---:|
+| **15 août 2026** | 0,108302 | 0,854503 |
+| **15 septembre 2026** | 0,322991 | 1,250564 |
+| **15 octobre 2026** | 0,023063 | 0,245866 |
+
+**Trois dates combinées :** 288 points par actif, moyenne des spreads **BTC 0,151452 bp**, **ETH 0,783644 bp** ; p90 empirique BTC **0,466913 bp**, ETH **1,554063 bp**. ETH présente le spread le plus large sur **276/288** instants appariés ; BTC est plus large sur **12/288** ; pas d'égalité.
+
+**Coût carnet avant frais, moyenne de 288 instants pour un achat fictif de 100 000 USDC :** BTC **1,849004 bp**, ETH **5,042260 bp** ; pour vente équivalente BTC **1,638030 bp**, ETH **5,085002 bp**. Ces coûts sont des VWAP théoriques vs mid sur le carnet visible, **pas** des frais de compte, pas des fills réalisés, ni une estimation de performance EMA.
+
+**Fait méthodologique :** les quatre observations antérieures 00/06/12/18 UTC peuvent **surestimer** (août) ou **sous-estimer** (octobre) la moyenne calculée sur 96 snapshots. Les nouveaux résultats consolident cette différence sans donner pour autant une distribution continue de tous les événements.
+
+**Limites obligatoires :** les SHA-256 complets des sources et CRC gzip sont vérifiés, mais `seqId/prevSeqId` non disponibles → **continuité logique amont des messages NON prouvée**. Trois journées historiques ne suffisent pas à généraliser, et les snapshots des deux actifs ne sont pas atomiquement synchronisées. Aucune transaction et aucun changement Administrator/Operator/Trader/Bridge, aucune surveillance récurrente. Ne pas transférer ces coûts OKX/USDC dans les replays EMA Bitstamp/USD 2024–2026.
+
+**Nouvelle direction scientifique proposée (PAS encore réalisée) :** étudier la **persistance temporelle des élargissements** sur une grille d'une minute ou d'une autre durée préenregistrée, en commençant sur une seule journée/paire, en vérifiant la cohérence des spreads reconstruits et les contraintes de volumes ; ou choisir de nouvelles journées calendaires à l'avance. Ne pas prétendre déjà disposer des quantiles de toutes les secondes ni des coûts de trading réels.
+
