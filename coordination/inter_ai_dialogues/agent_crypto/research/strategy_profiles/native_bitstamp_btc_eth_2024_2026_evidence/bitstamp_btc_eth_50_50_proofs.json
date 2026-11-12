@@ -1,0 +1,205 @@
+{
+  "schema": "seven-heaven.btc-eth-50-50-native-bitstamp-compare-v1",
+  "research_date": "2026-11-12",
+  "status": "NATIVE_BITSTAMP_BTC_ETH_PAPER_REPLAY_EXECUTED",
+  "no_orders": true,
+  "protocol_commit": "a62234ee956601fc9567813a8009928d0a2ade96",
+  "sources": {
+    "bitstamp_btc": {
+      "api": "https://www.bitstamp.net/api/v2/ohlc/btcusd/",
+      "requests": [
+        {
+          "end_requested_utc": "2026-10-31T23:59:59+00:00",
+          "received_rows": 1000,
+          "first_returned_utc": "2024-02-05",
+          "last_returned_utc": "2026-10-31",
+          "api_response_sha256": "2c45f02ecf686cb80397311147d30b67178890cbd8f5098d3dbf3e3cb8a9e4cd"
+        },
+        {
+          "end_requested_utc": "2024-02-04T23:59:59+00:00",
+          "received_rows": 1000,
+          "first_returned_utc": "2021-05-11",
+          "last_returned_utc": "2024-02-04",
+          "api_response_sha256": "79032aa469bc0123cd718ca174a4647de5fa69f5c1717cdaf245f0cb67a7b787"
+        }
+      ],
+      "csv_sha256": "89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb"
+    },
+    "bitstamp_eth": {
+      "relative_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/native_bitstamp_eth_2024_2026_evidence/bitstamp_ethusd_daily_2023_2026.csv",
+      "git_blob_sha1": "49e8f3e8f89fdc2929d2e37d1cc5e4904813621e",
+      "sha256": "881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49"
+    },
+    "binance_reference": {
+      "relative_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_EQUAL_DATE_EMA_DUAL_PORTFOLIO_REPLAY_2026_11_12_EQUITY_DAILY.csv",
+      "git_blob_sha1": "c8ed2a206ea616ea87eeb83e31f7138d5b131588",
+      "proofs_git_blob_sha1": "43aba5f666df19c9369a58866165c5684b77ecba"
+    }
+  },
+  "coverage": {
+    "start_warmup": "2023-04-01",
+    "start_test": "2024-01-01",
+    "end_test": "2026-10-31",
+    "days_per_asset": 1310,
+    "warmup_days": 275,
+    "test_days": 1035,
+    "daily_returns": 1034
+  },
+  "assumptions": {
+    "signal": "EMA10>EMA30 and close>EMA30 at prior UTC close",
+    "execution": "theoretical next UTC daily open",
+    "initial_capital_total": 1000,
+    "weights": "two independent 500 USD sleeves, no rebalancing",
+    "fee_per_side": 0.001,
+    "slippage_per_side": 0.0005,
+    "stress_cost_factor": 2
+  },
+  "bitstamp": {
+    "btc_ema": {
+      "final_usd": 1657.818574,
+      "return_pct": 65.781857,
+      "max_drawdown_pct": -34.475555,
+      "trades": 68,
+      "exposed_days": 487
+    },
+    "eth_ema": {
+      "final_usd": 1895.486331,
+      "return_pct": 89.548633,
+      "max_drawdown_pct": -54.100527,
+      "trades": 54,
+      "exposed_days": 442
+    },
+    "btc_hold": {
+      "final_usd": 1826.824764,
+      "return_pct": 82.682476,
+      "max_drawdown_pct": -53.076959,
+      "trades": 1,
+      "exposed_days": 1035
+    },
+    "eth_hold": {
+      "final_usd": 983.805358,
+      "return_pct": -1.619464,
+      "max_drawdown_pct": -67.590691,
+      "trades": 1,
+      "exposed_days": 1035
+    },
+    "dual_ema": {
+      "final_usd": 1776.652453,
+      "return_pct": 77.665245,
+      "max_drawdown_pct": -42.15057,
+      "trades": 122,
+      "days_both_cash": 474,
+      "days_both_exposed": 368,
+      "days_btc_only": 119,
+      "days_eth_only": 74
+    },
+    "dual_hold": {
+      "final_usd": 1405.315061,
+      "return_pct": 40.531506,
+      "max_drawdown_pct": -58.584541,
+      "trades": 2,
+      "days_both_cash": 0,
+      "days_both_exposed": 1035,
+      "days_btc_only": 0,
+      "days_eth_only": 0
+    },
+    "dual_ema_cost2": {
+      "final_usd": 1622.384955,
+      "return_pct": 62.238495,
+      "max_drawdown_pct": -43.44803,
+      "trades": 122,
+      "days_both_cash": 474,
+      "days_both_exposed": 368,
+      "days_btc_only": 119,
+      "days_eth_only": 74
+    },
+    "dual_hold_cost2": {
+      "final_usd": 1401.101223,
+      "return_pct": 40.110122,
+      "max_drawdown_pct": -58.584541,
+      "trades": 2,
+      "days_both_cash": 0,
+      "days_both_exposed": 1035,
+      "days_btc_only": 0,
+      "days_eth_only": 0
+    }
+  },
+  "binance": {
+    "dual_ema": {
+      "final_usdt": 1792.027743,
+      "return_pct": 79.202774,
+      "max_drawdown_pct": -41.919148,
+      "trades": 124,
+      "both_cash_days": 473,
+      "both_cash_pct": 45.700483,
+      "longest_both_cash_streak_days": 86
+    },
+    "dual_hold": {
+      "final_usdt": 1407.428137,
+      "return_pct": 40.742814,
+      "max_drawdown_pct": -58.499587,
+      "trades": 2
+    },
+    "dual_ema_cost2": {
+      "final_usdt": 1633.788503,
+      "return_pct": 63.37885,
+      "max_drawdown_pct": -43.227358,
+      "trades": 124,
+      "both_cash_days": 473,
+      "both_cash_pct": 45.700483,
+      "longest_both_cash_streak_days": 86
+    },
+    "btc_ema": {
+      "final_usdt": 1671.37808,
+      "return_pct": 67.137808,
+      "max_drawdown_pct": -34.207807,
+      "trades": 68,
+      "exposure_pct": 46.956522
+    },
+    "eth_ema": {
+      "final_usdt": 1912.677407,
+      "return_pct": 91.267741,
+      "max_drawdown_pct": -53.819542,
+      "trades": 56,
+      "exposure_pct": 42.801932
+    }
+  },
+  "cross_source": {
+    "btc_exposure_disagreement_dates": [
+      "2026-07-17"
+    ],
+    "eth_exposure_disagreement_dates": [
+      "2025-06-19"
+    ],
+    "joint_position_agreement_days": 1033,
+    "daily_portfolio_ema_return_correlation": 0.999875,
+    "ema_return_diff_bitstamp_minus_binance_pp": -1.537529
+  },
+  "risk": {
+    "native_btc_eth_daily_pearson": 0.820549,
+    "joint_down_days": 415,
+    "btc_down_days": 513,
+    "eth_down_days": 507,
+    "volatility_daily_pct": {
+      "btc_hold": 2.462222,
+      "eth_hold": 3.531693,
+      "mixed_hold": 2.721755,
+      "mixed_ema": 1.668489
+    }
+  },
+  "limits": [
+    "Same explored 2024-2026 BTC/ETH market regime; not new prospective holdout",
+    "Bitstamp USD vs Binance USDT are different quote assets",
+    "Theoretical next-open executions and synthetic fixed costs",
+    "Bitstamp public API payloads are not exchange-signed",
+    "Historical strategy signal concordance does not guarantee future profit"
+  ],
+  "source_integrity": {
+    "bitstamp_btc_sha256": "89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb",
+    "bitstamp_eth_sha256": "881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49",
+    "combined_daily_equity_sha256": "84f6dffce2ecb1c697680bf293a06faccc1c3a4887a810f76f66f6f7ffa85434",
+    "native_calendar_valid": true,
+    "no_missing_days": true,
+    "sleeves_reconciled": 1035
+  }
+}
