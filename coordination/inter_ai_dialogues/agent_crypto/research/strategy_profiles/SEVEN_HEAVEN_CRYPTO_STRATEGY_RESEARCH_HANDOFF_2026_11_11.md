@@ -246,3 +246,15 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 - **Résultats PAPER** : EMA 50/50 **+79,20 %**, drawdown **−41,92 %**, **124** opérations ; Buy & Hold 50/50 **+40,74 %**, drawdown **−58,50 %**. Sur 2024 isolé, le Buy & Hold est supérieur ; en janvier–octobre 2026, EMA 50/50 **+2,74 % devient −0,24 %** avec coûts doublés.
 - **Lecture critique** : pas un nouvel échantillon inédit, opérations supposées exécutées au prix d'ouverture, coûts et risque USDT non exhaustifs. Script compilé/testé synthétiquement ; reproduction indépendante intégrale sur les huit shards encore à confirmer. Aucun ordre réel ni modification de l'Administrator, du Trader, de l'Operator ou du Bridge.
 
+## Corrélation BTC/ETH, baisses conjointes et rôle des liquidités EMA — 12 novembre 2026
+
+**Étude complémentaire PAPER, publiée dans le Coffre partagé**, fondée sur le CSV quotidien déjà publié du portefeuille BTC/ETH à dates identiques (1 035 valorisations, 1 034 variations journalières). Aucun nouveau paramétrage, aucune opération réelle.
+
+- [**Rapport complet et limites**](./SEVEN_HEAVEN_BTC_ETH_CORRELATION_DOWNSIDE_AND_EMA_CASH_RESEARCH_2026_11_12_REPORT.md)
+- [**Programme Python de reproduction, lecture seule**](./SEVEN_HEAVEN_BTC_ETH_CORRELATION_DOWNSIDE_AND_EMA_CASH_RESEARCH_2026_11_12.py)
+- [**Preuves structurées et statistiques par année**](./SEVEN_HEAVEN_BTC_ETH_CORRELATION_DOWNSIDE_AND_EMA_CASH_RESEARCH_2026_11_12_PROOFS.json)
+
+**Constats vérifiés :** corrélation quotidienne BTC/ETH **0,820** sur 1 034 variations ; **417 jours** de baisse simultanée ; ETH baisse pendant **51 des 52** pires journées BTC. La corrélation 2026 (janv.–oct.) atteint **0,912**. Le Buy & Hold BTC/ETH initial 50/50 non rééquilibré a une baisse maximale de **−58,50 %**, contre **−52,97 %** pour BTC seul ; la diversification n'annule donc pas le risque commun. Le portefeuille EMA 50/50 a passé **473 jours sur 1 035** avec les deux poches en liquidités et affiche une baisse maximale historique de **−41,92 %** ; ne pas attribuer cette protection à la seule diversification.
+
+**Contrôle :** CSV canonique Git blob SHA-1 \`c8ed2a206ea616ea87eeb83e31f7138d5b131588\` vérifié, 1 035 lignes réconciliées, calculs comparés aux séries déjà publiées. Script Python autocontrôlé sur données synthétiques ; reproduction intégrale depuis le CSV sur Python externe encore à effectuer. Huit archives Binance brutes non rechargées pour cette extension. **Aucun nouveau signal de Trader, aucune modification Administrator / Operator / Bridge.**
+
