@@ -291,3 +291,15 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 
 **Prochaine direction utile :** une source ETH/USD native de plateforme, OHLCV quotidienne sans trous sur avril 2023–octobre 2026, à empreintes figées, puis refaire le replay sur les 1 035 jours sans modifier les EMA. À défaut, ne pas élargir la conclusion aux journées manquantes.
 
+## Source ETH/USD native Bitstamp — protocole et collecteur 2024–2026, état en attente (12 novembre 2026)
+
+**Nouvelle direction : dépasser la couverture limitée du miroir Yahoo ETH/USD (309 jours) et obtenir une vraie source OHLC native d'exchange.** La [documentation Bitstamp](https://www.bitstamp.net/api/) précise l'endpoint public `/api/v2/ohlc/ethusd/`, `step=86400`, pagination maximum 1 000 bougies par appel. Kraken publie également des archives OHLCVT natives avec SHA-256 mais plus volumineuses. Pour ce chantier, Bitstamp a été retenu afin de tester ETH/USD en face de Binance ETH/USDT.
+
+- [**Statut précis et passation pour les futures IA**](./SEVEN_HEAVEN_ETH_NATIVE_BITSTAMP_SOURCE_RETRIEVAL_AND_REPLAY_STATUS_2026_11_12.md).
+- [**Protocole prépublié, fixe : EMA10>EMA30 ET close>EMA30, 1 035 jours 2024–oct. 2026**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_DAILY_EMA10_30_2024_2026_FROZEN_PROTOCOL_2026_11_12.md) — commit `75a7c15`.
+- [**Programme Python collecteur API + replay PAPER, Git blob épinglé**](./SEVEN_HEAVEN_ETH_BITSTAMP_NATIVE_REPLAY_2026_11_12.py).
+- [**Tests hors ligne**](./test_seven_heaven_eth_bitstamp_native_replay.py) — 3 tests réussis localement, pagination 1 310 jours synthétiques, lacune rejetée, OHLC invalide rejeté.
+- [**Workflow GitHub Actions sans planification récurrente**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/workflows/seven-heaven-eth-bitstamp-native-research.yml). Il doit publier ses preuves seulement dans `native_bitstamp_eth_2024_2026_evidence/` en cas de succès.
+
+**Statut à ne pas exagérer :** au dernier contrôle, aucun CSV natif Bitstamp complet ni rapport de replay réellement exécuté n'était disponible dans le dossier de preuves. API inaccessible depuis l'environnement local ; **présence du workflow != exécution validée**. Aucune performance nouvelle ETH/Bitstamp annoncée. Vérifier la publication bot puis les SHA et le calendrier avant toute conclusion. Aucun ordre, aucun changement de l'Interface, du Trader ou du Bridge.
+
