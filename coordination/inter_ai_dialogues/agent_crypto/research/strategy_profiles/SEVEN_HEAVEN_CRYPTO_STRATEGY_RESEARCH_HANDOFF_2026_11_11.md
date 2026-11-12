@@ -273,3 +273,21 @@ La confirmation d'un **achat** et celle d'une **vente** sont deux paramètres di
 
 **Suite utile :** récupérer une série ETH/USD quotidienne extérieure à Binance, vérifier ses dates et ses empreintes, puis rejouer *sans aucun nouvel ajustement* le même test sur ETH. Si la seconde source ETH est inaccessible, expliquer cet obstacle sans prétendre disposer d'une validation inter-exchange ETH.
 
+## Ethereum : contrôle EMA sur deuxième fournisseur de données — 12 novembre 2026
+
+**Travail réellement calculé et publié dans le Coffre partagé.** Recherche du transfert EMA10/30 sans retoucher paramètres, après l'étude BTC Binance/Bitstamp. La nouvelle source est **Yahoo Finance ETH-USD**, archivage GitHub tiers [SeedFlora](https://github.com/SeedFlora/idx-daily-data/blob/main/data/ETH-USD.csv), Git blob SHA-1 `f92d8c4fce1ea30f16b0195d0ea5f05b9e4fe185` ; le [README](https://github.com/SeedFlora/idx-daily-data/blob/main/README.md) explique ce processus. **Elle ne prouve pas une seconde plateforme de trading authentifiée.**
+
+- [**Protocole prépublié, fenêtre de test figée avant le calcul**](./SEVEN_HEAVEN_ETH_USD_SECOND_PROVIDER_EMA_CONTIGUOUS_HOLDOUT_FROZEN_PROTOCOL_2026_11_12.md), commit `f8b1bfb`.
+- [**Rapport complet et interprétation critique**](./SEVEN_HEAVEN_ETH_USD_SECOND_PROVIDER_EMA_CONTIGUOUS_RESEARCH_REPORT_2026_11_12.md).
+- [**Code Python autonome et sources immuables SHA**](./SEVEN_HEAVEN_ETH_USD_SECOND_PROVIDER_EMA_CONTIGUOUS_REPLAY_2026_11_12.py).
+- [**Preuves chiffrées, journal d'opérations fictives et lacunes**](./SEVEN_HEAVEN_ETH_USD_SECOND_PROVIDER_EMA_CONTIGUOUS_EVIDENCE_2026_11_12.json).
+- [**CSV explicite des dates de désaccord, 0 ligne**](./SEVEN_HEAVEN_ETH_USD_SECOND_PROVIDER_EMA_CONTIGUOUS_DISAGREEMENT_DAYS_2026_11_12.csv).
+
+**Qualité du fichier :** 462 journées documentées mais trois trous de **13, 3 et 24 jours** en 2026. Refus de fabriquer ou d'interpoler ces 40 journées. **Seul bloc acceptable : 399 jours consécutifs 2025-06-28→2026-07-31**, avec 90 jours de chauffe, puis **309 jours PAPER du 2025-09-26 au 2026-07-31**. Binance garde sa chauffe originale depuis 2023 ; l'écart d'initialisation doit rester visible.
+
+**Résultats de la seconde source, 1 000 USD fictifs :** EMA10/30 **−21,77 %**, drawdown **−28,96 %**, 13 opérations et 83 jours exposés ; avec coûts doublés **−23,40 %**. Buy & Hold ETH **−51,73 %** et drawdown **−66,62 %**. Les **309/309 décisions ETH ou liquidités coïncident** avec le témoin Binance sur les mêmes dates ; corrélation des 308 variations quotidiennes **0,999665**. Cette concordance ne prouve aucune performance gagnante : l'EMA reste perdante, et la source Yahoo peut agréger des prix dont le fournisseur d'exécution n'est pas certifié.
+
+**Preuves et limites :** SHA des deux CSV vérifiés, 309 contrôles de préfixes des EMA, conformité OHLC et calendrier, aucun ordre réel. Calcul effectué sur les deux CSV ; script Python publié pour reproduction, **mais réexécution intégrale indépendante en Python non encore vérifiée**. Étude par fournisseur sur période déjà étudiée, **PAS** validation temporelle indépendante ni analyse Ethereum 2024–2026 complète. Aucun changement Administrator, Operator, Trader ou Bridge.
+
+**Prochaine direction utile :** une source ETH/USD native de plateforme, OHLCV quotidienne sans trous sur avril 2023–octobre 2026, à empreintes figées, puis refaire le replay sur les 1 035 jours sans modifier les EMA. À défaut, ne pas élargir la conclusion aux journées manquantes.
+
