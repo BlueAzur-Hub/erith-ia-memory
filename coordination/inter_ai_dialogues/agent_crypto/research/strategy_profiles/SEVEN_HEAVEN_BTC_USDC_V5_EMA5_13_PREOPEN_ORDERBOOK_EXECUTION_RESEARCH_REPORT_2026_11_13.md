@@ -61,7 +61,9 @@ Les prix fictifs ci-dessous sont calculés depuis les bids/asks du dernier carne
 
 Deux constructions PAPER suivent **les mêmes signaux** avec un **capital initial fictif de 1 000 USDC**, réinvesti au fil des six allers-retours, et les **mêmes frais hypothétiques taker de 0,10 % par côté** :
 
-1. **V5 originel :** achat à `next.open × 1,0005` ; vente à `next.open × 0,9995`, frais de 0,10 % par côté ; c'est le modèle actuel avec glissement fixe de 0,05 %.
+**Convention de cette comparaison JOURNALIÈRE : le capital est remis fictivement à 1 000 USDC au début du 15 octobre.** Ce n'est pas la courbe ni le PnL natifs d'un V5 tournant sans remise à zéro sur les **300 bougies** depuis le 12 octobre : la validation native JavaScript du workflow confirme les **dates et sens des 12 opérations**, et **non** les rendements des deux scénarios remis à zéro pour cette journée.
+
+1. **Formule de prix V5 standard, rejouée sur les 6 cycles du jour (capital réinitialisé pour l'étude) :** achat à `next.open × 1,0005` ; vente à `next.open × 0,9995`, frais de 0,10 % par côté ; c'est le modèle actuel avec glissement fixe de 0,05 %.
 2. **Contrefactuel carnet pré-ouverture :** achat/vente au VWAP du **dernier carnet avant T**, pour un **notionnel de référence fixé à 1 000 USDC**, puis mêmes frais. Le modèle **ne simule pas** la latence de l'ordre envoyé après T, et son notionnel de référence de carnet **n'évolue pas avec le capital** ; il ne saurait être qualifié de véritable exécution V6 ou de nouveau prix réel.
 
 | Scénario | Capital final fictif | PnL net fictif | Rendement sur cette journée |
