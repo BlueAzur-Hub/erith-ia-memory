@@ -307,3 +307,32 @@ Bitstamp **EMA +89,55 %**, perte maximale **−54,10 %**, **54 opérations** et 
 
 **Limites à préserver :** mêmes années déjà étudiées ; aucune validation prospective hors-échantillon, risque de baisse importante toujours présent, USD ≠ USDT, frais et exécution fictifs. Distinguer clairement les performances des données natives Bitstamp du contrôle Yahoo 309 jours (fenêtre différente). **Aucun ordre réel ni modification Administrator, Trader, Operator ou Bridge.** Prochain travail : analyses de risque du portefeuille BTC/ETH sur les mêmes dates, puis validation prospective ou période réellement inédite.
 
+
+## BTC/ETH 50/50 — Reproduction complète sur Bitstamp NATIF et Binance (12 novembre 2026)
+
+**CHANTIER SCIENTIFIQUE TERMINÉ ET PUBLIÉ SUR `main`** : deux poches indépendantes, EMA 10/30 **inchangées**, prix officiels **Bitstamp Spot BTC/USD + ETH/USD** contre archives **Binance Spot BTC/USDT + ETH/USDT** sur les **mêmes 1 035 journées** du 2024-01-01 au 2026-10-31, après **275 jours de chauffe**. Aucune optimisation, aucun ordre et aucun accès à un compte.
+
+- [**Rapport scientifique détaillé : robustesse, baisses communes, volatilité, périodes cash et limites**](./SEVEN_HEAVEN_BTC_ETH_NATIVE_BITSTAMP_50_50_ROBUSTNESS_AND_DOWNSIDE_AUDIT_2026_11_12.md).
+- [**Protocole figé avant l'extraction BTC native**](./SEVEN_HEAVEN_BTC_ETH_50_50_NATIVE_BITSTAMP_VS_BINANCE_FROZEN_PROTOCOL_2026_11_12.md) — commit `a62234ee956601fc9567813a8009928d0a2ade96`.
+- [**Programme Python du replay natif BTC/ETH**](./SEVEN_HEAVEN_BTC_ETH_50_50_NATIVE_BITSTAMP_VS_BINANCE_REPLAY_2026_11_12.py) ; [**cinq tests synthétiques**](./test_seven_heaven_btc_eth_native_bitstamp_dual_replay.py).
+- [**Preuves JSON après exécution**](./native_bitstamp_btc_eth_2024_2026_evidence/bitstamp_btc_eth_50_50_proofs.json) (Git blob `ab15dc23da2e5b8adc5e72ea0eef893b79b79aeb`) ; [**courbes journalières Bitstamp 1 035 jours**](./native_bitstamp_btc_eth_2024_2026_evidence/bitstamp_btc_eth_50_50_daily_equity_2024_2026.csv).
+- [**BTC/USD natif 1 310 jours**](./native_bitstamp_btc_eth_2024_2026_evidence/bitstamp_btcusd_daily_2023_2026.csv), SHA-256 `89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb` ; [**ETH/USD natif antérieur 1 310 jours**](./native_bitstamp_eth_2024_2026_evidence/bitstamp_ethusd_daily_2023_2026.csv), SHA-256 `881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49`.
+- [**Workflow GitHub Actions #2 : succès des cinq tests, de l'API native BTC et de la publication**](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43237341563). Première tentative échouée uniquement par attente trop stricte dans un test de pagination synthétique (1000/1000 au lieu de 1000/310) ; corrigée **sans changer cours, paramètres ni simulations**.
+
+**Comparaison PAPER 2024–octobre 2026 :**
+
+| Mesure | Bitstamp BTC/ETH USD | Binance BTC/ETH USDT |
+|---|---:|---:|
+| EMA 50/50 rendement net | **+77,67 %** | **+79,20 %** |
+| EMA 50/50 baisse maximale | **−42,15 %** | **−41,92 %** |
+| EMA 50/50 coûts doublés | +62,24 % | +63,38 % |
+| Buy & Hold 50/50 rendement net | +40,53 % | +40,74 % |
+| Buy & Hold 50/50 baisse maximale | −58,58 % | −58,50 % |
+| Nombre d'opérations EMA | 122 | 124 |
+
+**Robustesse des signaux :** **1 033/1 035 journées** avec le même couple de positions BTC/ETH ; divergences le **2025-06-19 (ETH)** et le **2026-07-17 (BTC)**. BTC et ETH chutent ensemble **415 journées sur 1 034 variations**, corrélation quotidienne **0,820549**. Parmi ces 415 baisses communes, **201 journées avec les deux poches cash**, **141 avec les deux positions exposées** et 73 avec une seule exposée. Les 1 035 journées Bitstamp comprennent **474 journées en cash sur les deux poches**.
+
+**Interprétation obligatoire :** la moindre volatilité / baisse du portefeuille EMA provient largement de ses passages en cash, **pas seulement du mélange BTC/ETH**. Le 50/50 Buy & Hold est plus volatil que BTC Buy & Hold seul sur ces dates. La baisse maximale EMA 50/50 est plus faible que celle d'ETH EMA seul, mais plus forte que celle de BTC EMA seul. **Même période historique déjà étudiée ≠ validation chronologique inédite ; aucun rendement futur démontré**. USD ≠ USDT, cours d'ouverture et coûts d'exécution fictifs, risques de garde non modélisés.
+
+**Direction suivante :** définir un protocole de validation *walk-forward* sur dates nouvelles, sans optimiser les EMA à partir des données 2024–2026 ; explorer la sensibilité aux coûts réalistes avant d'envisager une utilisation. Aucune modification Administrator, Trader, Operator ou Bridge.
+
