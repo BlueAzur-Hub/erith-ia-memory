@@ -1,0 +1,138 @@
+name: Seven Heaven OKX L2 Calendar August September 2026
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-l2-calendar-aug-sep-2026.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_MULTIDAY_SPOT_USDC_STREAMING_FOUR_ANCHORS_2026_11_12.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seven-heaven-l2-calendar-aug-sep-2026
+  cancel-in-progress: false
+jobs:
+  scan-one-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { day: '2026-08-15', pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { day: '2026-08-15', pair: 'ETH-USDC', slug: 'eth_usdc' }
+          - { day: '2026-09-15', pair: 'BTC-USDC', slug: 'btc_usdc' }
+          - { day: '2026-09-15', pair: 'ETH-USDC', slug: 'eth_usdc' }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and test gzip and orderbook reconstruction
+        run: |
+          set -euo pipefail
+          script='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_MULTIDAY_SPOT_USDC_STREAMING_FOUR_ANCHORS_2026_11_12.py'
+          python -m py_compile "$script"
+          python "$script" --selftest
+      - name: Confirm exact public archive and reconstruct its day in a bounded stream
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_L2_MULTIDAY_SPOT_USDC_STREAMING_FOUR_ANCHORS_2026_11_12.py --repo-root . --day '${{ matrix.day }}' --pair '${{ matrix.pair }}'
+      - name: Check exact provenance and no fabricated observations
+        run: |
+          set -euo pipefail
+          DAY='${{ matrix.day }}' PAIR='${{ matrix.pair }}' SLUG='${{ matrix.slug }}' python - <<'PY'
+          import csv,json,os,pathlib
+          base=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_multiday_2026_11_12_evidence')/os.environ['DAY']/os.environ['SLUG']
+          x=json.loads((base/'SEVEN_HEAVEN_OKX_L2_MULTIDAY_FOUR_ANCHORS_PROOFS.json').read_text(encoding='utf8'))
+          assert x['read_only'] and not x['orders_enabled']
+          assert x['pair']==os.environ['PAIR'] and x['day_utc']==os.environ['DAY']
+          assert x['status'] in ('full_archive_replayed_four_anchors','failed_quality_or_access_check')
+          raw=(base/'SEVEN_HEAVEN_OKX_L2_MULTIDAY_FOUR_ANCHORS_COSTS.csv').read_bytes()
+          assert b'\r' not in raw
+          rows=list(csv.DictReader(raw.decode('utf8').splitlines()))
+          if x['status']=='full_archive_replayed_four_anchors':
+              data=x['result'];m=data['market']
+              assert x['source_archive_fully_read']
+              assert x['metadata']['cdn_url']==data['source_url']
+              assert len(x['metadata']['metadata_api_sha256'])==64
+              assert data['gzip_read_to_eof_crc_checked']
+              assert len(data['archive_sha256'])==64 and len(data['member_sha256'])==64
+              assert data['member_uncompressed_bytes']==data['member_declared_bytes']
+              assert m['first_twenty_sha256_recorded'] and len(m['first_twenty_event_sha256'])==20
+              assert len(m['anchors'])==4 and len(rows)==40
+              assert not m['global_logical_continuity_proven']
+              assert [a['anchor_utc'][11:16] for a in m['anchors']]==['00:00','06:00','12:00','18:00']
+              assert all(a['anchor_utc'][:10]==os.environ['DAY'] and 0<=a['offset_ms_after_anchor']<=60000 for a in m['anchors'])
+              print('PASS: full archive, CRC/SHA, 4 fixed anchors',os.environ['DAY'],os.environ['PAIR'])
+          else:
+              assert x['no_results_invented'] and not x['source_archive_fully_read']
+              assert not rows
+              print('INCOMPLETE no fabricated figures:',os.environ['DAY'],os.environ['PAIR'],x.get('error'))
+          PY
+      - name: Upload compact pair-day research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-l2-day-${{ matrix.day }}-${{ matrix.slug }}
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_multiday_2026_11_12_evidence/
+          if-no-files-found: error
+          retention-days: 90
+
+  publish-all-proofs:
+    needs: scan-one-archive
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles
+          sparse-checkout-cone-mode: true
+      - name: Collect four proof artifacts with day/pair directory structure
+        uses: actions/download-artifact@v4
+        with:
+          pattern: seven-heaven-okx-l2-day-*
+          path: coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_multiday_2026_11_12_evidence/
+          merge-multiple: true
+      - name: Build explicit successful and unavailable source index
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_multiday_2026_11_12_evidence')
+          doc={'schema':'seven-heaven.okx-l2-calendrical-multiday-delivery.v1','study_dates':['2026-08-15','2026-09-15'],'pairs':['BTC-USDC','ETH-USDC'],'results':[]}
+          for day in doc['study_dates']:
+              for pair in doc['pairs']:
+                  file=root/day/pair.lower().replace('-','_')/'SEVEN_HEAVEN_OKX_L2_MULTIDAY_FOUR_ANCHORS_PROOFS.json'
+                  if not file.exists():
+                      doc['results'].append({'day':day,'pair':pair,'status':'not_published'})
+                  else:
+                      x=json.loads(file.read_text(encoding='utf8'))
+                      doc['results'].append({'day':day,'pair':pair,'status':x['status'],'events':x.get('result',{}).get('market',{}).get('total_events'),'archive_sha256':x.get('result',{}).get('archive_sha256')})
+          doc['complete']=sum(v['status']=='full_archive_replayed_four_anchors' for v in doc['results'])
+          doc['missing_or_incomplete']=4-doc['complete']
+          (root/'SEVEN_HEAVEN_OKX_L2_MULTIDAY_DELIVERY_INDEX.json').write_text(json.dumps(doc,indent=2)+'\n',encoding='utf8')
+          print(json.dumps(doc,indent=2))
+          PY
+      - name: Publish compact results only inside shared inter-AI research Coffre
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/okx_l2_calendar_multiday_2026_11_12_evidence'
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: results already published'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive calendar BTC ETH OKX L2 multi-day source proofs and failures'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
