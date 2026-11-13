@@ -20,6 +20,7 @@
   let available=false;
   let binanceAvailable=false;
   let connectedSources=[];
+  let selectedSourceId=BINANCE;
 
   async function api(path, data) {
     const init = data === undefined
@@ -78,8 +79,8 @@
       const field = form.elements.namedItem(name);
       if (field && value !== undefined) field.value = String(value);
     }
-    if(p.source_id && [...$("source-choice").options].some(x=>x.value===p.source_id)){
-      $("source-choice").value=p.source_id; updateSource();
+    if([...$("source-choice").options].some(x=>x.value===(p.source_id||BINANCE))){
+      $("source-choice").value=p.source_id||BINANCE; updateSource();
     }
     const target = p.timeframe || "1m";
     const radio = form.querySelector('input[name="timeframe"][value="'+target+'"]');
@@ -88,6 +89,18 @@
   }
   function updateSource(){
     const id=$("source-choice").value;
+    if(id!==selectedSourceId) {
+      selectedSourceId=id;
+      $("result").hidden=true;
+      $("empty-result").hidden=false;
+      $("comparison-result").hidden=true;
+      $("comparison-empty").hidden=false;
+      $("readout-mode").textContent="SOURCE CHANGÉE · NOUVELLE SIMULATION À LANCER";
+      $("readout-name").textContent="En attente de simulation";
+      $("readout-equity").textContent="—";
+      $("readout-performance").textContent="—";
+      $("readout-summary").textContent="La source vient de changer. Aucun résultat antérieur n'est attribué à ce marché.";
+    }
     const source=id===BINANCE?{
       id:BINANCE,exchange:"Binance Spot",pair:"BTC/USDT",base:"BTC",quote:"USDT",
       available_timeframes:["1m","5m","15m","1h","4h"]
@@ -201,7 +214,11 @@
   }
   function renderRun(record) {
     const report=record.run,r=report.results,timeframe=report.data.timeframe||"1m";
-    const source=record.source||{base:"BTC",quote:"USDT"};
+    const source=record.source||{base:"BTC",quote:"USDT",id:BINANCE};
+    if([...$("source-choice").options].some(o=>o.value===source.id)) {
+      $("source-choice").value=source.id;
+      updateSource();
+    }
     currency=source.quote;
     $("inventory-label").textContent="INVENTAIRE "+source.base;
     $("hold50-label").textContent="BUY & HOLD · 50 % "+source.base;
@@ -234,6 +251,10 @@
   function renderComparison(record) {
     const comparison=record.comparison;
     const source=record.source||{id:BINANCE,pair:"BTC/USDT",exchange:"Binance Spot",quote:"USDT"};
+    if([...$("source-choice").options].some(o=>o.value===source.id)) {
+      $("source-choice").value=source.id;
+      updateSource();
+    }
     currency=source.quote;
     $("comparison-empty").hidden=true;
     $("comparison-result").hidden=false;
