@@ -56,7 +56,9 @@ def options(raw):
     return result
 
 
-def load_bars(path: Path, expected_count=44640):
+def load_bars(path: Path, expected_count=44640, *, interval_seconds=60):
+    if interval_seconds not in (60, 3600):
+        raise LabError("Intervalle de source non autorisé")
     bars = []
     last = None
     with Path(path).open("r", encoding="utf-8", newline="") as fh:
@@ -69,8 +71,8 @@ def load_bars(path: Path, expected_count=44640):
                 o, h, l, c, vol = [float(row[k]) for k in COLS[1:]]
             except (TypeError, ValueError) as exc:
                 raise LabError("CSV : valeurs invalides") from exc
-            if last is not None and ts != last + 60:
-                raise LabError("CSV : minute manquante ou doublonnée")
+            if last is not None and ts != last + interval_seconds:
+                raise LabError("CSV : minute manquante ou doublonnée" if interval_seconds == 60 else "CSV : bougie horaire manquante ou doublonnée")
             if not all(map(math.isfinite, [o, h, l, c, vol])) or min(o, h, l, c) <= 0 or vol < 0:
                 raise LabError("CSV : prix ou volumes invalides")
             if not l <= min(o, c) <= max(o, c) <= h:

@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 2.0.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 3.0.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -30,7 +30,7 @@
     <a href="#laboratory" class="nav-link">◇ <span>Laboratoire</span></a>
     <a href="#comparison" class="nav-link">≋ <span>Comparateur</span></a>
     <a href="#vault" class="nav-link">▤ <span>Coffre local</span></a>
-    <div class="nav-meta"><span class="mini-led"></span> BTC / USDT <span class="meta-divider">·</span> Binance Spot <span class="meta-divider">·</span> Jan 2026</div>
+    <div class="nav-meta" id="nav-source"><span class="mini-led"></span> BTC / USDT <span class="meta-divider">·</span> Binance Spot <span class="meta-divider">·</span> Jan 2026</div>
   </nav>
 
   <main>
@@ -81,9 +81,39 @@
         <button id="import" type="button" class="action-button action-outline"><span aria-hidden="true">↧</span> Charger / vérifier l'archive</button>
         <span id="dataset-state" class="foot-detail">Import uniquement à ta demande · Réseau public autorisé · Aucune clé de compte</span>
       </div>
+      <div class="connected-market-panel">
+        <div class="connected-market-head">
+          <div><div class="overline">V3 / PUBLIC MARKET CONNECTORS</div>
+            <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
+            <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
+          </div>
+          <span class="mini-badge" id="okx-source-badge">COLLECTE À LA DEMANDE</span>
+        </div>
+        <div class="connected-source-grid">
+          <label class="field"><span>Choix de la paire <small>SPOT PUBLIC OKX</small></span>
+            <select id="okx-pair"><option value="BTC-USDC">BTC / USDC</option><option value="ETH-USDC">ETH / USDC</option>
+              <option value="BTC-USDT">BTC / USDT</option><option value="ETH-USDT">ETH / USDT</option></select>
+          </label>
+          <div class="source-collect-actions">
+            <button id="okx-import" class="action-button action-primary" type="button">↧ Collecter 240 bougies 1h OKX</button>
+            <span id="usb-storage" class="storage-hint">Espace disponible sur la clé : calcul en cours…</span>
+          </div>
+        </div>
+        <div class="connected-source-grid active-source-row">
+          <label class="field"><span>Source pour les prochaines simulations <small>CARNET DES HISTORIQUES</small></span>
+            <select id="source-choice"><option value="BINANCE_BTCUSDT_2026_01_1M">Binance BTC/USDT · Janvier 2026 · 44 640 × 1m (V1/V2)</option></select>
+          </label>
+          <div class="source-ledger">
+            <strong id="source-active-title">Binance Spot · BTC/USDT</strong>
+            <span id="source-active-detail">Archive figée · janvier 2026 · bougies 1m authentifiées</span>
+            <span id="source-active-hash">Source historique V2 conservée</span>
+          </div>
+        </div>
+        <p class="source-caution">Les 240 bougies OKX couvrent les dix derniers jours complets alignés à la clôture 4h UTC. Ce n'est pas un flux de carnet temps réel. Résultats fictifs, sans preuve de remplissage historique ni exécution réelle.</p>
+      </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 02</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 03</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -99,14 +129,14 @@
                 <option value="EMA_CROSS">Croisement de moyennes EMA</option>
                 <option value="BOLLINGER">Retour à la moyenne · Bollinger</option>
                 <option value="DCA">Achats programmés · DCA</option>
-                <option value="HOLD_50">Buy & Hold · 50 % Bitcoin</option>
-                <option value="HOLD_100">Buy & Hold · 100 % Bitcoin</option>
-                <option value="CASH">Conserver les USDT</option>
+                <option value="HOLD_50">Buy & Hold · 50 % actif</option>
+                <option value="HOLD_100">Buy & Hold · 100 % actif</option>
+                <option value="CASH">Conserver la devise de cotation</option>
               </select>
             </label>
           </div>
           <div class="form-block">
-            <div class="form-block-label">HORIZON DES BOUGIES <span>sur l'archive minute authentifiée</span></div>
+            <div class="form-block-label">HORIZON DES BOUGIES <span id="available-timeframe-label">sur l'archive minute authentifiée</span></div>
             <div class="timeframe-bar" role="group" aria-label="Échelle temporelle">
               <label><input type="radio" name="timeframe" value="1m" checked><span>1m</span></label>
               <label><input type="radio" name="timeframe" value="5m"><span>5m</span></label>
@@ -117,7 +147,7 @@
             <p class="field-caveat">Une EMA 10/30 sur 4h n'est pas une EMA 10/30 sur 1m : leurs horizons réels changent.</p>
           </div>
           <div class="form-grid">
-            <label class="field"><span>Capital fictif <small>USDT</small></span><input name="capital" type="number" min="100" max="100000" step="100" value="1000"></label>
+            <label class="field"><span>Capital fictif <small id="capital-unit">USDT</small></span><input name="capital" type="number" min="100" max="100000" step="100" value="1000"></label>
             <label class="field"><span>Frais Taker <small>% PAR CÔTÉ</small></span><input name="fee_pct" type="text" inputmode="decimal" value="0,10"></label>
             <label class="field"><span>Glissement <small>% PAR CÔTÉ</small></span><input name="slippage_pct" type="text" inputmode="decimal" value="0,05"></label>
             <div class="fee-reference"><small>FRAIS MAKER OKX OBSERVÉS</small><strong>0,08 %</strong><span>Référence informative · non utilisés pour ces fills fictifs</span></div>
@@ -132,7 +162,7 @@
           </div>
           <div id="dca-fields" class="form-grid dynamic-fields" hidden>
             <label class="field"><span>Intervalle d'achat <small>MINUTES</small></span><input name="dca_every" type="number" min="1" max="100000" value="1440"></label>
-            <label class="field"><span>Montant de chaque achat <small>USDT</small></span><input name="dca_quote" type="number" min="5" max="100000" value="50"></label>
+            <label class="field"><span>Montant de chaque achat <small id="dca-unit">USDT</small></span><input name="dca_quote" type="number" min="5" max="100000" value="50"></label>
           </div>
           <div class="action-stack">
             <button id="run" type="submit" class="action-button action-primary">▶ <span>Lancer la simulation PAPER</span></button>
@@ -169,7 +199,7 @@
             <div class="stat"><small>DRAWDOWN MAX.</small><strong id="drawdown">—</strong></div>
             <div class="stat"><small>FRAIS SIMULÉS</small><strong id="fees">—</strong></div>
             <div class="stat"><small>CASH RESTANT</small><strong id="cash">—</strong></div>
-            <div class="stat"><small>INVENTAIRE BTC</small><strong id="inventory">—</strong></div>
+            <div class="stat"><small id="inventory-label">INVENTAIRE BTC</small><strong id="inventory">—</strong></div>
             <div class="stat"><small>ACHATS / VENTES</small><strong id="counts">—</strong></div>
             <div class="stat"><small>ORDRES REFUSÉS</small><strong id="rejected">—</strong></div>
           </div>
@@ -178,15 +208,15 @@
             <svg id="equity-chart" viewBox="0 0 720 240" role="img" aria-label="Évolution du capital total fictif"></svg>
           </div>
           <div class="benchmarks">
-            <div><span>BUY & HOLD · 50 % BTC</span><strong id="hold50">—</strong></div>
-            <div><span>CONSERVER LES USDT</span><strong id="holdcash">—</strong></div>
+            <div><span id="hold50-label">BUY & HOLD · 50 % BTC</span><strong id="hold50">—</strong></div>
+            <div><span id="holdcash-label">CONSERVER LES USDT</span><strong id="holdcash">—</strong></div>
             <div class="benchmark-highlight"><span>SCÉNARIO SANS FRAIS NI GLISSEMENT <small>THÉORIQUE</small></span><strong id="zero-cost">—</strong></div>
           </div>
           <p class="model-warning">Les écarts avec le scénario sans coûts ne sont pas une simple soustraction de commissions : le capital évolue à chaque transaction.</p>
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th>BTC</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V2 · PRIX HISTORIQUES BINANCE · FILLS À L'OUVERTURE SUIVANTE · NON CERTIFIÉS PAR UN CARNET</div>
+        <div class="result-foot">MOTEUR INTERNE V3 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -195,7 +225,7 @@
         <div><div class="overline">04 / MULTI-STRATEGY EVALUATION</div><h2 id="comparison-title">Matrice de <span class="accent-text">comparaison PAPER</span></h2></div>
         <span id="comparison-badge" class="mini-badge">6 MÉTHODES · MÊME ARCHIVE</span>
       </div>
-      <p class="panel-lead">Les six méthodes partagent le même capital, les mêmes bougies et les mêmes hypothèses de coût. Le classement ne prédit aucun rendement futur.</p>
+      <p class="panel-lead">Les six méthodes partagent exactement la même source et les mêmes hypothèses de capital et de coût. Le classement ne prédit aucun rendement futur.</p>
       <div id="comparison-empty" class="comparison-empty">Clique sur <strong>Comparer les 6 méthodes</strong> dans l'atelier pour remplir ce tableau avec de vrais calculs locaux.</div>
       <div id="comparison-result" hidden>
         <div class="compare-summary">
@@ -225,7 +255,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 2.0.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 3.0.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>

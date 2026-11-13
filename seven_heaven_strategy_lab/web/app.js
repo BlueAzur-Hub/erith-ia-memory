@@ -6,7 +6,9 @@
   const form = $("config");
   const print = (n, digits=2) => Number(n).toLocaleString("fr-FR", {maximumFractionDigits: digits});
   const signed = (n, digits=2) => (Number(n) > 0 ? "+" : "") + print(n, digits);
-  const money = n => print(n, 2) + " USDT";
+  let currency="USDT";
+  const money = n => print(n,2)+" "+currency;
+  const BINANCE="BINANCE_BTCUSDT_2026_01_1M";
   const whenUTC = t => new Date(t * 1000).toISOString().slice(0,16).replace("T"," ");
   const whenLocal = s => new Date(s).toLocaleString("fr-FR", {dateStyle:"short",timeStyle:"short"});
   const kinds = {
@@ -15,7 +17,10 @@
   };
   let profiles = [];
   let busy = false;
-  let available = false;
+  let available=false;
+  let binanceAvailable=false;
+  let connectedSources=[];
+  let selectedSourceId=BINANCE;
 
   async function api(path, data) {
     const init = data === undefined
@@ -36,7 +41,7 @@
   }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","run","compare","save-profile"]) {
+    for (const id of ["import","okx-import","run","compare","save-profile"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare") && !available);
@@ -55,6 +60,7 @@
     const val = key => data.get(key);
     return {
       kind:val("kind"), timeframe:val("timeframe") || "1m",
+      source_id:$("source-choice").value,
       capital:number(val("capital")), fee:number(val("fee_pct")) / 100,
       slippage:number(val("slippage_pct")) / 100,
       ema_fast:number(val("ema_fast")), ema_slow:number(val("ema_slow")),
@@ -73,11 +79,77 @@
       const field = form.elements.namedItem(name);
       if (field && value !== undefined) field.value = String(value);
     }
+    if([...$("source-choice").options].some(x=>x.value===(p.source_id||BINANCE))){
+      $("source-choice").value=p.source_id||BINANCE; updateSource();
+    }
     const target = p.timeframe || "1m";
     const radio = form.querySelector('input[name="timeframe"][value="'+target+'"]');
-    if (radio) radio.checked = true;
+    if (radio && !radio.disabled) radio.checked=true;
     showFields();
   }
+  function updateSource(){
+    const id=$("source-choice").value;
+    if(id!==selectedSourceId) {
+      selectedSourceId=id;
+      $("result").hidden=true;
+      $("empty-result").hidden=false;
+      $("comparison-result").hidden=true;
+      $("comparison-empty").hidden=false;
+      $("readout-mode").textContent="SOURCE CHANGÉE · NOUVELLE SIMULATION À LANCER";
+      $("readout-name").textContent="En attente de simulation";
+      $("readout-equity").textContent="—";
+      $("readout-performance").textContent="—";
+      $("readout-summary").textContent="La source vient de changer. Aucun résultat antérieur n'est attribué à ce marché.";
+    }
+    const source=id===BINANCE?{
+      id:BINANCE,exchange:"Binance Spot",pair:"BTC/USDT",base:"BTC",quote:"USDT",
+      available_timeframes:["1m","5m","15m","1h","4h"]
+    }:connectedSources.find(x=>x.id===id);
+    available=!!source&&(id!==BINANCE||binanceAvailable);
+    if(!source){if(!busy)setBusy(false);return;}
+    currency=source.quote;
+    const supported=new Set(source.available_timeframes);
+    for(const radio of form.querySelectorAll('input[name="timeframe"]')){
+      radio.disabled=!supported.has(radio.value);
+      radio.closest("label").classList.toggle("source-disabled",radio.disabled);
+    }
+    const checked=form.querySelector('input[name="timeframe"]:checked');
+    if(!checked||checked.disabled){
+      const fallback=form.querySelector('input[name="timeframe"]:not(:disabled)');
+      if(fallback)fallback.checked=true;
+    }
+    $("source-active-title").textContent=source.exchange+" · "+source.pair;
+    $("source-active-detail").textContent=id===BINANCE
+      ?"Janvier 2026 · archive V1/V2 intégralement préservée"
+      :"240 bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
+    $("source-active-hash").textContent=id===BINANCE
+      ?"Empreinte de référence du coffre V2"
+      :"SHA-256 "+source.sha256.slice(0,24)+"…";
+    $("available-timeframe-label").textContent=id===BINANCE
+      ?"sur l'archive Binance vérifiée 1m"
+      :"source OKX native 1h : horizons 1h et 4h seulement";
+    $("capital-unit").textContent=source.quote;
+    $("dca-unit").textContent=source.quote;
+    $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+(id===BINANCE?"Jan 2026":"240 bougies closes");
+    $("okx-source-badge").textContent=id===BINANCE?"ARCHIVE V1/V2":"ARCHIVE OKX ACTIVE";
+    if(!busy)setBusy(false);
+  }
+  async function refreshSources(prefer){
+    const d=await api("/api/okx-sources");
+    connectedSources=d.sources;
+    $("usb-storage").textContent="Libre : "+print(d.free_bytes/1e9,2)+" Go · réserve : "+
+      print(d.reserve_bytes/1e9,1)+" Go";
+    $("usb-storage").classList.toggle("storage-low",d.free_bytes<d.reserve_bytes);
+    const select=$("source-choice"), chosen=prefer||select.value||BINANCE;
+    select.replaceChildren(new Option("Binance BTC/USDT · Janvier 2026 · 44 640 × 1m",BINANCE));
+    for(const source of connectedSources) {
+      select.add(new Option(source.exchange+" "+source.pair+" · "+source.rows+
+        " × "+source.bar+" · "+source.close_boundary_utc.slice(0,16),source.id));
+    }
+    select.value=[...select.options].some(x=>x.value===chosen)?chosen:BINANCE;
+    updateSource();
+  }
+
   function showFields() {
     const kind = $("kind").value;
     $("ema-fields").hidden = kind !== "EMA_CROSS";
@@ -142,6 +214,15 @@
   }
   function renderRun(record) {
     const report=record.run,r=report.results,timeframe=report.data.timeframe||"1m";
+    const source=record.source||{base:"BTC",quote:"USDT",id:BINANCE};
+    if([...$("source-choice").options].some(o=>o.value===source.id)) {
+      $("source-choice").value=source.id;
+      updateSource();
+    }
+    currency=source.quote;
+    $("inventory-label").textContent="INVENTAIRE "+source.base;
+    $("hold50-label").textContent="BUY & HOLD · 50 % "+source.base;
+    $("holdcash-label").textContent="CONSERVER LES "+source.quote;
     $("empty-result").hidden=true;
     $("result").hidden=false;
     $("run-id").textContent=(kinds[report.params.kind]||report.params.kind)+" · "+timeframe;
@@ -151,7 +232,7 @@
     $("drawdown").textContent=print(r.max_drawdown_pct)+" %";
     $("fees").textContent=money(r.fees_paid_usdt);
     $("cash").textContent=money(r.cash_final);
-    $("inventory").textContent=print(r.base_inventory_btc,8)+" BTC";
+    $("inventory").textContent=print(r.base_inventory_btc,8)+" "+source.base;
     $("counts").textContent=r.buy_events+" / "+r.sell_events;
     $("rejected").textContent=r.rejected_orders;
     $("chart-timeframe").textContent="BOUGIES "+timeframe+" · "+report.data.rows+" POINTS D'ENTRÉE";
@@ -169,11 +250,17 @@
   }
   function renderComparison(record) {
     const comparison=record.comparison;
+    const source=record.source||{id:BINANCE,pair:"BTC/USDT",exchange:"Binance Spot",quote:"USDT"};
+    if([...$("source-choice").options].some(o=>o.value===source.id)) {
+      $("source-choice").value=source.id;
+      updateSource();
+    }
+    currency=source.quote;
     $("comparison-empty").hidden=true;
     $("comparison-result").hidden=false;
     $("comparison-badge").textContent="6 MODÈLES · "+comparison.timeframe;
     $("compare-context").textContent=
-      "BTC/USDT · JANVIER 2026 · "+comparison.aggregated_candles+" BOUGIES "+comparison.timeframe;
+      source.pair+" · "+source.exchange+" · "+comparison.aggregated_candles+" BOUGIES "+comparison.timeframe;
     const tbody=$("comparison-rows");tbody.replaceChildren();
     for(const row of comparison.rows){
       const tr=el("tr");
@@ -187,7 +274,8 @@
       button.type="button";
       button.addEventListener("click",async()=>{
         if(busy)return;
-        chooseParams({...comparison.params,kind:row.kind,timeframe:comparison.timeframe});
+        chooseParams({...comparison.params,kind:row.kind,timeframe:comparison.timeframe,
+                      source_id:source.id});
         await runCurrent();
         $("results").scrollIntoView({behavior:"smooth",block:"start"});
       });
@@ -197,13 +285,13 @@
   async function refreshDataset() {
     const result=await api("/api/datasets");
     const ok=result.datasets[0]?.available===true;
-    available=ok;
+    binanceAvailable=ok;
     $("dataset-badge").textContent=ok?"ARCHIVE AUTHENTIFIÉE":"SOURCE NON CHARGÉE";
     $("dataset-badge").className="mini-badge"+(ok?"":" gold-badge");
     $("dataset-state").textContent=ok
       ?"44 640 bougies conservées sur ta clé · SHA-256 vérifié · aucun nouveau téléchargement."
       :"Téléchargement de notre archive GitHub sur demande · pas d'accès à un compte.";
-    if (!busy) setBusy(false);
+    updateSource();
     return ok;
   }
   async function refreshProfiles() {
@@ -261,12 +349,12 @@
     let params;
     try {params=requestParams();}catch(e){notice(e.message,"error");return;}
     setBusy(true,"Calcul PAPER…");
-    notice("Rejeu local des bougies, frais et inventaire BTC en cours…");
+    notice("Rejeu historique local du marché sélectionné et de son inventaire…");
     try {
       const d=await api("/api/run",{params});
       renderRun(d.report);
       await refreshHistory();
-      notice("Simulation V2 enregistrée : "+params.timeframe+
+      notice("Simulation V3 enregistrée : "+params.timeframe+
         " · "+(kinds[params.kind]||params.kind)+". Aucun ordre envoyé.","success");
     }catch(e){notice(e.message,"error");}
     finally{setBusy(false);}
@@ -287,6 +375,20 @@
     finally {setBusy(false);}
   }
   $("kind").addEventListener("change",showFields);
+  $("source-choice").addEventListener("change",updateSource);
+  $("okx-import").addEventListener("click",async()=>{
+    if(busy)return;
+    setBusy(true,"Collecte OKX…");
+    const pair=$("okx-pair").value;
+    notice("OKX public : contrôle des règles Spot, bougies clôturées et cache SHA-256…");
+    try {
+      const result=await api("/api/okx-import",{pair});
+      await refreshSources(result.source.id);
+      notice("OKX "+pair+" : 240 bougies 1h fermées et vérifiées sur la clé. "+
+             "Tu peux comparer les stratégies en 1h ou 4h. Aucun ordre réel.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  });
   form.addEventListener("submit",event=>{event.preventDefault();runCurrent();});
   $("compare").addEventListener("click",compareCurrent);
   $("saved-profiles").addEventListener("change",event=>{
@@ -322,9 +424,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
+      if(!health.public_okx_enabled)throw new Error("Le serveur Python V3 n'est pas actif. Relance le lanceur V3.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
-      notice(ok?"Seven Heaven V2 opérationnel · Archive vérifiée · PAPER uniquement.":
-        "Seven Heaven V2 opérationnel. Charge l'archive historique vérifiée pour commencer.","success");
+      await refreshSources();
+      notice(ok?"Seven Heaven V3 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V3 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
