@@ -105,6 +105,77 @@ def load_bars(path: Path, expected_count=44640, *, interval_seconds=60):
     return bars
 
 
+def trade_analytics(trades, *, final_close, exposure_bars, total_bars):
+    """Closed round trips versus marked OPEN inventory, without fabricated fills.
+
+    Each SELL in the current long-only engine liquidates its entire position.
+    BUY batches (including DCA) are accounted using the weighted entry cost,
+    including their real simulated entry fees and fixed slippage in fill prices.
+    No Sharpe or annualization is inferred from a short data window.
+    """
+    opened_qty = opened_cost = 0.0
+    opened_at = None
+    completed = []
+    for fill in trades:
+        qty = float(fill["qty"])
+        price = float(fill["price"])
+        fee = float(fill["fee"])
+        if fill["side"] == "BUY":
+            if opened_qty == 0:
+                opened_at = int(fill["timestamp"])
+            opened_qty += qty
+            opened_cost += qty * price + fee
+        elif fill["side"] == "SELL":
+            if opened_qty <= 0 or qty > opened_qty + 1e-7:
+                raise LabError("Journal PAPER incohérent : vente sans inventaire")
+            # The engine currently sells its entire long position.
+            # Account proportional cost defensively for possible small residuals.
+            fraction = min(1.0, qty / opened_qty)
+            cost = opened_cost * fraction
+            pnl = qty * price - fee - cost
+            duration_hours = (int(fill["timestamp"]) - opened_at) / 3600.0
+            completed.append({
+                "opened_utc": opened_at,
+                "closed_utc": int(fill["timestamp"]),
+                "pnl_net_quote": round(pnl, 5),
+                "duration_hours": round(duration_hours, 3),
+                "return_on_cost_pct": round(100 * pnl / cost, 5) if cost else None,
+            })
+            opened_cost = max(0.0, opened_cost - cost)
+            opened_qty = max(0.0, opened_qty - qty)
+            if opened_qty < 1e-7:
+                opened_qty = opened_cost = 0.0
+                opened_at = None
+    profits = sum(max(0.0, t["pnl_net_quote"]) for t in completed)
+    losses = sum(max(0.0, -t["pnl_net_quote"]) for t in completed)
+    wins = sum(t["pnl_net_quote"] > 1e-7 for t in completed)
+    num = len(completed)
+    factor = round(profits / losses, 4) if losses > 1e-7 else None
+    return {
+        "status": "COMPLETED_ROUND_TRIPS_ONLY_NO_FORCED_LIQUIDATION",
+        "closed_positions": num,
+        "winning_positions": wins,
+        "losing_positions": sum(t["pnl_net_quote"] < -1e-7 for t in completed),
+        "breakeven_positions": sum(abs(t["pnl_net_quote"]) <= 1e-7 for t in completed),
+        "win_rate_pct": round(100 * wins / num, 3) if num else None,
+        "profit_factor": factor,
+        "profit_factor_status": ("NO_CLOSED_POSITIONS" if not num else
+                                 "NO_CLOSED_LOSSES" if losses <= 1e-7 else "AVAILABLE"),
+        "gross_profit_quote": round(profits, 5),
+        "gross_loss_quote": round(losses, 5),
+        "realized_pnl_quote": round(sum(t["pnl_net_quote"] for t in completed), 5),
+        "unrealized_pnl_quote": round(opened_qty * final_close - opened_cost, 5),
+        "unclosed_base_units": round(opened_qty, 8),
+        "time_in_position_pct": round(100 * exposure_bars / total_bars, 3),
+        "mean_closed_position_hours": (round(sum(t["duration_hours"] for t in completed) / num, 3)
+                                       if num else None),
+        "closed_round_trips": completed,
+        "warning": "Closed-trade win rate excludes open inventory; open PnL is marked at last close. "
+                   "Fees included in entry/exit costs and fixed slippage in hypothetical fill prices. "
+                   "No historical order book or execution guarantee.",
+    }
+
+
 def simulate(bars, raw_options):
     p = options(raw_options)
     if len(bars) < 60:
@@ -112,7 +183,7 @@ def simulate(bars, raw_options):
     kind, capital, fee, slip = p["kind"], p["capital"], p["fee"], p["slippage"]
     cash, quantity, paid_fees, turnover, trades = capital, 0.0, 0.0, 0.0, []
     rejected = 0
-    peak, max_dd, points = capital, 0.0, []
+    peak, max_dd, points, exposure_bars = capital, 0.0, [], 0
     ema_fast = ema_slow = previous_diff = None
     custom_fast = custom_slow = custom_prev_diff = position_entry = None
     changes = deque(maxlen=p["rsi_period"])
@@ -242,12 +313,15 @@ def simulate(bars, raw_options):
                 if entry_signal and filter_ok:
                     buy(ts, o, cash)
             custom_prev_diff = diff
+        if quantity > 0:
+            exposure_bars += 1
         equity = cash + quantity * c  # open inventory marked to each close
         if equity > peak:
             peak = equity
         max_dd = min(max_dd, (equity / peak - 1) * 100)
         if i % downsample == 0 or i == len(bars) - 1:
-            points.append({"t": ts, "price": round(c, 4), "equity": round(equity, 4)})
+            points.append({"t": ts, "price": round(c, 4), "equity": round(equity, 4),
+                           "drawdown_pct": round((equity / peak - 1) * 100, 5)})
 
     final = cash + quantity * bars[-1][4]
     # Unrealized inventory and cash are included, no forced end liquidation.
@@ -276,6 +350,8 @@ def simulate(bars, raw_options):
         },
         "series": points,
         "trades": trades,
+        "analytics": trade_analytics(trades, final_close=bars[-1][4],
+                                     exposure_bars=exposure_bars, total_bars=len(bars)),
         "warnings": [
             "Simulation PAPER interne, PAS un backtest Freqtrade ou Hummingbot",
             "Prix historiques Binance, PAS cours ni execution Spot OKX",

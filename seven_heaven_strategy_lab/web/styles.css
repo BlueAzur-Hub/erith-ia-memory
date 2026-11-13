@@ -375,3 +375,62 @@ tbody tr:hover { background: #102f3b; }
   .connected-market-panel {padding:16px;}
   .connected-source-grid {grid-template-columns:1fr;}
 }
+
+
+/* V4.1 · Premium scientific risk console: native styling, no remote assets. */
+.quant-desk {
+  --quant-line: #35667a;
+  margin: 22px 0 18px;
+  padding: 18px;
+  border: 1px solid #3f7283;
+  border-radius: 13px;
+  background:
+    radial-gradient(ellipse 65% 85% at 100% 0%, rgba(69,170,164,.13),transparent 70%),
+    linear-gradient(147deg,rgba(10,36,52,.98),rgba(6,23,37,.99));
+  box-shadow: inset 0 1px 0 rgba(191,249,233,.07), 0 14px 36px rgba(0,0,0,.12);
+}
+.quant-desk-head {
+  display: flex; flex-wrap: wrap; align-items: flex-start;
+  justify-content: space-between; gap: 12px; margin-bottom: 15px;
+}
+.quant-desk-head h3 {
+  font: 700 clamp(19px,1.8vw,24px)/1.2 Georgia,serif;
+  letter-spacing: -.025em; color: #f1dcae; margin: 4px 0 0;
+}
+.quant-desk-head .mini-badge {
+  background: rgba(18,69,74,.65); color: #95e6d7; border-color: #376b70;
+}
+.quant-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+.quant-metric {
+  min-width:0; padding: 12px; border-radius: 9px;
+  background: linear-gradient(155deg,#102d3c,#0a202f);
+  border: 1px solid #284d60; display: flex; flex-direction: column; gap: 4px;
+}
+.quant-metric small {
+  color: #9fbcc9; font-size: 9px; font-weight: 850;
+  letter-spacing: .055em; line-height: 1.45;
+}
+.quant-metric strong { color: #a2efe3; font: 700 clamp(16px,1.7vw,22px)/1.23 "Segoe UI", sans-serif; overflow-wrap:anywhere; }
+.quant-metric span { font-size: 9px; color: #8ea9b8; line-height:1.45; }
+.quant-metric .quant-negative { color: #ffb1bd; }
+.quant-metric .quant-positive { color: #a2efe3; }
+.quant-chart {
+  margin-top: 13px; padding: 14px 10px 2px;
+  border: 1px solid #315b6e; border-radius: 9px;
+  background: linear-gradient(180deg,#051925,#081d2a);
+}
+.quant-chart .chart-top { flex-wrap:wrap; gap:8px; }
+.quant-chart .chart-top span:last-child { color:#e9ca8b; }
+#drawdown-chart { display:block; width:100%; height:auto; max-height:165px; overflow:visible; }
+.quant-limits {
+  margin:12px 0 0; padding-left:12px; border-left:2px solid #bc9a67;
+  font-size:10px; line-height:1.6; color:#a8bfc5;
+}
+@media(max-width:1280px){.quant-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:950px){.quant-metrics{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:620px){
+  .quant-desk{padding:13px;}
+  .quant-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .quant-metric{padding:10px;}
+  .quant-metric strong{font-size:17px;}
+}

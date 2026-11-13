@@ -1,11 +1,11 @@
-name: Seven Heaven Strategy Lab V4 native strategy creator validation
+name: Seven Heaven Strategy Lab V4.1 professional risk desk validation
 
 on:
   push:
     branches:
       - feature/seven-heaven-strategy-lab-local-paper
       - feature/seven-heaven-strategy-lab-v2-observatory-20261113
-      - feature/seven-heaven-native-strategy-creator-v4-20261113
+      - feature/seven-heaven-strategy-lab-v4-1-professional-risk-desk-20261113
       - main
     paths:
       - 'seven_heaven_strategy_lab/**'
@@ -155,11 +155,16 @@ jobs:
               except Exception:
                   time.sleep(.2)
           assert health["live_trading"] is False
-          assert health["version"] == "4.0.0"
+          assert health["version"] == "4.1.0"
           assert health["strategy_creator_enabled"] is True
           assert request("/api/datasets")["datasets"][0]["available"]
           report=request("/api/run",{"params":{"kind":"EMA_CROSS", "fee":0.001}})
           assert report["report"]["run"]["safety"]["orders_real"]==0
+          metrics=report["report"]["run"]["analytics"]
+          assert metrics["closed_positions"]>=0
+          assert metrics["unclosed_base_units"]>=0
+          assert 0<=metrics["time_in_position_pct"]<=100
+          assert all(isinstance(pt["drawdown_pct"],float) for pt in report["report"]["run"]["series"])
           assert report["report"]["run"]["data"]["rows"]==44640
           assert report["report"]["counterfactual"]["status"]=="COUNTERFACTUAL_IDEAL_FILLS_ONLY"
           v2=request("/api/run",{"params":{"kind":"EMA_CROSS","timeframe":"15m","fee":0.001}})
@@ -195,7 +200,7 @@ jobs:
               assert ex.code==404
           print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
           PY
-      - name: Open real premium V3.1 cockpit in Chromium, test interaction and capture desktop/mobile
+      - name: Open real premium V4.1 risk desk in Chromium, test interaction and capture desktop/mobile
         env:
           SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
         run: |
@@ -257,7 +262,7 @@ jobs:
                   with urllib.request.urlopen(url,timeout=3) as f:
                       j=json.loads(f.read())
                   assert j["status"]=="LOCAL_PAPER_ONLY"
-                  assert j["version"]=="4.0.0"
+                  assert j["version"]=="4.1.0"
                   print("PASS: Docker on localhost:8777, live trading disabled")
                   break
               except Exception:
@@ -268,15 +273,15 @@ jobs:
         run: |
           set -euo pipefail
           cd ..
-          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_PYTHON313_WINDOWS_PAPER.zip" \
+          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_PYTHON313_WINDOWS_PAPER.zip" \
             seven_heaven_strategy_lab/src seven_heaven_strategy_lab/web \
             seven_heaven_strategy_lab/README_FR.md \
             seven_heaven_strategy_lab/START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd \
             -x '*/__pycache__/*' '*.pyc'
           cd "$RUNNER_TEMP"
-          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_PYTHON313_WINDOWS_PAPER.zip \
-            > SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_SHA256.txt
-          cat SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_SHA256.txt
+          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_PYTHON313_WINDOWS_PAPER.zip \
+            > SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_SHA256.txt
+          cat SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_SHA256.txt
       - name: Strict-parse every packaged JSON proof before upload
         run: |
           set -euo pipefail
@@ -299,15 +304,15 @@ jobs:
       - name: Upload standalone ZIP, hash and measured historical smoke results
         uses: actions/upload-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_PAPER_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_PAPER_DELIVERY
           path: |
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_PYTHON313_WINDOWS_PAPER.zip
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_SHA256.txt
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_PYTHON313_WINDOWS_PAPER.zip
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_SHA256.txt
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_DESKTOP_COCKPIT.png
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_MOBILE_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_MOBILE_COCKPIT.png
           retention-days: 30
           if-no-files-found: error
 
@@ -396,7 +401,7 @@ jobs:
             }
             $datasets = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/datasets" -TimeoutSec 5
             if ($datasets.datasets.Count -ne 1) { throw "Data API unavailable" }
-            if ($health.version -ne "4.0.0") { throw "V3 Python health not active" }
+            if ($health.version -ne "4.1.0") { throw "V3 Python health not active" }
             $sources = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/okx-sources" -TimeoutSec 5
             if ($null -eq $sources.reserve_bytes -or $health.public_okx_enabled -ne $true) { throw "V3 OKX source API unavailable" }
             if (-not $page.Content.Contains("Matrice de")) { throw "Premium V3 cockpit HTML not served" }
@@ -414,25 +419,25 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_PAPER_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_PAPER_DELIVERY
           path: delivery
       - name: Publish executable prototype without changing MASTER or Operator
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG=seven-heaven-strategy-lab-v4-native-strategy-creator-2026-11-13
+          TAG=seven-heaven-strategy-lab-v4-1-professional-risk-desk-2026-11-13
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" \
-              --title "Seven Heaven Strategy Lab V4 — Native Strategy Creator PAPER cockpit" \
+              --title "Seven Heaven Strategy Lab V4.1 — Professional Risk Desk PAPER cockpit" \
               --notes "Independent V3 public OKX Spot Aether Observatory PAPER laboratory for Windows with existing Python 3.13. Docker Desktop optional. Five timeframes, six comparable methods, zero-cost diagnostics and persistent V1-compatible research. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
               --latest=false
           fi
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --title "Seven Heaven Strategy Lab V4 — Native Strategy Creator · Python 3.13" \
-            --notes "V4 keeps the full V3.1 cockpit plus original no-code strategy composer (EMA, RSI, volume, risk) and seven-way PAPER comparison, plus selectable OKX 10/30/60/90 day historical windows and optional UTC end date, using 240 to 2160 closed hourly candles for BTC/ETH against USDC/USDT, native 1h and 4h simulation, SHA256 provenance, strict gap checks and USB free-space reserve. Public internet is allowed; no trading API. Preserves V1/V2 workspace. Windows: extract over your existing application files WITHOUT deleting workspace, close old Python window, double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd. No Docker or external Python packages required. PAPER only."
+            --title "Seven Heaven Strategy Lab V4.1 — Professional Risk Desk · Python 3.13" \
+            --notes "V4.1 keeps the full V4 creator and adds independent closed-position win rate, profit factor, realized and latent PnL, time-in-position and a drawdown chart without changing hypothetical fills, plus seven-way comparison, plus selectable OKX 10/30/60/90 day historical windows and optional UTC end date, using 240 to 2160 closed hourly candles for BTC/ETH against USDC/USDT, native 1h and 4h simulation, SHA256 provenance, strict gap checks and USB free-space reserve. Public internet is allowed; no trading API. Preserves V1/V2 workspace. Windows: extract over your existing application files WITHOUT deleting workspace, close old Python window, double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd. No Docker or external Python packages required. PAPER only."
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_PYTHON313_WINDOWS_PAPER.zip \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_NATIVE_STRATEGY_CREATOR_SHA256.txt
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_PYTHON313_WINDOWS_PAPER.zip \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_RISK_DESK_SHA256.txt
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets

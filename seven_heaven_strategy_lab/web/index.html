@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.0.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.1.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -83,7 +83,7 @@
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V4 / PUBLIC MARKET CONNECTORS</div>
+          <div><div class="overline">V4.1 / PUBLIC MARKET CONNECTORS</div>
             <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
             <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
           </div>
@@ -126,7 +126,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.1</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -218,7 +218,7 @@
 
       <section id="results" class="panel result-panel" aria-labelledby="result-title">
         <div class="section-heading compact">
-          <div><div class="overline">03 / STRATEGIC ANALYSIS</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
+          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.1 QUANT</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
           <span id="run-id" class="mini-badge">EN ATTENTE</span>
         </div>
         <div id="empty-result" class="empty-result">
@@ -244,6 +244,27 @@
             <div class="chart-top"><span>CAPITAL TOTAL · MARQUÉ AUX PRIX HISTORIQUES</span><span id="chart-timeframe">—</span></div>
             <svg id="equity-chart" viewBox="0 0 720 240" role="img" aria-label="Évolution du capital total fictif"></svg>
           </div>
+          <section class="quant-desk" id="quant-desk" aria-labelledby="quant-desk-title" hidden>
+            <div class="quant-desk-head">
+              <div><div class="overline">AETHER QUANT · PERFORMANCE FORENSICS</div>
+                <h3 id="quant-desk-title">Anatomie du <span class="accent-text">risque</span></h3>
+              </div>
+              <span class="mini-badge">POSITIONS CLÔTURÉES UNIQUEMENT</span>
+            </div>
+            <div class="quant-metrics">
+              <div class="quant-metric"><small>POSITIONS CLÔTURÉES</small><strong id="quant-closed">—</strong><span id="quant-trade-split">Gains et pertes constatés dans la simulation</span></div>
+              <div class="quant-metric"><small>TAUX DE RÉUSSITE</small><strong id="quant-winrate">—</strong><span>Hors inventaire encore ouvert</span></div>
+              <div class="quant-metric"><small>PROFIT FACTOR</small><strong id="quant-profitfactor">—</strong><span>Gains nets / pertes nettes des sorties</span></div>
+              <div class="quant-metric"><small>TEMPS EN POSITION</small><strong id="quant-exposure">—</strong><span>% des bougies avec inventaire</span></div>
+              <div class="quant-metric"><small>RÉSULTAT RÉALISÉ</small><strong id="quant-realized">—</strong><span>Gains/pertes sur positions clôturées</span></div>
+              <div class="quant-metric"><small>RÉSULTAT LATENT</small><strong id="quant-unrealized">—</strong><span>Inventaire ouvert marqué au dernier prix</span></div>
+            </div>
+            <div class="quant-chart">
+              <div class="chart-top"><span>SOUS LA SURFACE · DRAWDOWN DEPUIS LE DERNIER SOMMET</span><span id="quant-cost-drag">—</span></div>
+              <svg id="drawdown-chart" viewBox="0 0 720 148" role="img" aria-label="Drawdown historique du portefeuille PAPER"></svg>
+            </div>
+            <p class="quant-limits" id="quant-limits">Les positions ouvertes ne sont jamais comptées comme gagnées ou perdues avant leur clôture. Les exécutions restent hypothétiques.</p>
+          </section>
           <div class="benchmarks">
             <div><span id="hold50-label">BUY & HOLD · 50 % BTC</span><strong id="hold50">—</strong></div>
             <div><span id="holdcash-label">CONSERVER LES USDT</span><strong id="holdcash">—</strong></div>
@@ -253,7 +274,7 @@
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th>BTC</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V4 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4.1 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -262,8 +283,8 @@
         <div><div class="overline">04 / MULTI-STRATEGY EVALUATION</div><h2 id="comparison-title">Matrice de <span class="accent-text">comparaison PAPER</span></h2></div>
         <span id="comparison-badge" class="mini-badge">6 MÉTHODES · MÊME ARCHIVE</span>
       </div>
-      <p class="panel-lead">Les six méthodes partagent exactement la même source et les mêmes hypothèses de capital et de coût. Le classement ne prédit aucun rendement futur.</p>
-      <div id="comparison-empty" class="comparison-empty">Clique sur <strong>Comparer les 6 méthodes</strong> dans l'atelier pour remplir ce tableau avec de vrais calculs locaux.</div>
+      <p class="panel-lead">Les stratégies comparées partagent la même source, le même capital et les mêmes hypothèses de coût. La septième ligne, facultative, est ta stratégie personnelle. Aucun classement ne prédit les gains futurs.</p>
+      <div id="comparison-empty" class="comparison-empty">Clique sur <strong>Comparer les stratégies</strong> dans l'atelier pour remplir ce tableau avec de vrais calculs locaux.</div>
       <div id="comparison-result" hidden>
         <div class="compare-summary">
           <span id="compare-context">—</span>
@@ -292,7 +313,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.0.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.1.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>
