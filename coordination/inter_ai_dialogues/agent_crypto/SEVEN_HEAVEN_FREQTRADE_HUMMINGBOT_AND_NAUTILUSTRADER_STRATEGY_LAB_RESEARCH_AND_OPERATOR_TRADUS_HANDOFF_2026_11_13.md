@@ -163,3 +163,51 @@ Safe next incremental patch (**not applied in this report**): on the single **�
 **Next single action for a future AI:** build a separate local, no-credential Hummingbot/Python proof-of-concept with one canonical historical dataset and compare exact fill semantics to the already published reference. Preserve every failed or non-comparable result; do not replace the historical report.
 
 References: all URLs and artifact paths in this note are primary sources or precise existing repository paths. No invented profits, live data or exchange eligibility.
+
+
+## 8. Version delivery verification and executable experiment design (13 November 2026)
+
+This addendum answers the implementation question using the actual delivery files, not assumptions about either repo.
+
+### Administrator vs Operator — actual published build files
+
+Checked the following on both repositories' `main`:
+- MASTER `public/agent_crypto_erith_ia/administrator/build.json`: `40.6.719`, Market Core `38.15.11`, application MASTER, not a Yoann owner profile.
+- MASTER `public/agent_crypto_erith_ia/trader/build.json`: `40.6.719`, **execution disabled**, **no real orders**. `trader/trading-desk.html` embeds `../administrator/index.html?surface=trader`.
+- Operator `public/agent_crypto_erith_ia/administrator/build.json`: `40.6.719`, Market Core `38.15.11`, distinct release metadata and runtime differences from MASTER.
+- Operator `public/agent_crypto_erith_ia/trader/build.json`: `40.6.719`, **execution disabled**, **no real orders**. Its `trading-desk.html` embeds `../administrator/index.html?surface=trader&view=intermediate&profile=yohan` (historic internal name; human name Yoann).
+- **Important:** two repositories each contain actual application code. A change to MASTER affects its same-repository Trader through the iframe, **not** the Operator repository automatically. Public strategy experiment artifacts may have one shared owner in MASTER and both frontends can read those artifacts; runtime patches require selectively propagated validated commits.
+- The 2026-11-03 coordination note mentions the older Operator 40.6.640; it is a **dated snapshot**, superseded by the 2026-11-05 Operator release note and current 40.6.719 build manifests. Do not overwrite historical note or cite it as current.
+- 2026-11-05 Operator delivery: PR #18, commit `d4b01c36ce9070b474873da1de865bfd2bdde6c6`, 10 application files, 915051 bytes. Linux Firefox CI 29/29; real Windows Firefox validation and 84-scenario end-to-end parity not certified. The ZIP is an **incremental patch**, not standalone install.
+- Distinguish `SOURCE_COMMITTED`, `ARCHIVE_READY`, `PAGES_DEPLOYED`, `FIREFOX_LOADED`, `FUNCTIONALLY_VALIDATED` (see canonical `AGENT_CRYPTO_DEPLOYMENT_PROTOCOL.md`). No new application release/version is claimed in this report.
+
+### How to run real Hummingbot in isolation — buildable plan with exact code touchpoints
+
+**Pilot source:** use an EXISTING Binance Spot BTCUSDT native 1m archive (e.g. Jan 2026, 44,640 rows), download the archived ZIP from its pinned GitHub Release (as recorded in `SEVEN_HEAVEN_SPOT_GRID_CONTINUOUS_BTC_2026_JAN_OCT_PROOFS.json`) into an isolated sandbox, verify its original registered SHA-256 **before extracting**. Never substitute new Binance/OKX downloads for the frozen period. Check every minute timestamp, duplicates, monotonic UTC, OHLC relationships and volume.
+
+**Runner choice:** manual or PR-triggered isolated GitHub Actions job (runner with `contents:read` and no exchange/API secrets; NOT GitHub Pages, not either user's Windows PC). Pin runner dependencies + Hummingbot commit, cache only verified public datasets, bound disk/time, upload reproducible reports as Actions artifacts. Review upstream license and dependency compatibility. Do not turn on Hummingbot Client's live order mode.
+
+**Critical integration detail found in inspected upstream code:** `hummingbot/strategy_v2/backtesting/backtesting_data_provider.py`'s `BacktestingDataProvider.get_candles_feed` will call `CandlesFactory.get_candle(...).get_historical_candles` if its `candles_feeds` cache is not fully covering `start_time..end_time`. Therefore simply running `scripts/backtest_grid_strike.py` does NOT replay our GitHub ZIP. The pilot must normalize native Binance rows into an in-memory Pandas frame with seconds-based `timestamp`, open/high/low/close/volume and any upstream-required columns; preload the exact expected key `{connector}_{pair}_{interval}` or implement a minimally scoped read-only provider subclass; verify that requests cannot fall through to the network. Trading rules/size increments are independently provided and provenance-stamped; no authenticated connector is created.
+
+**Controller:** start by probing upstream `controllers/generic/grid_strike.py` via the actual Strategy V2 BacktestingEngineBase; compare its output only after showing its position and fill model. Upstream `scripts/backtest_grid_strike.py` calls `fetch_recent_price` with current time and fetches historical candles through its provider: this example is unsuitable **unmodified** for frozen, auditable replay. In particular a Grid Strike with profit-taker executors is not mathematically equivalent to our 50/50 inventory Spot Grid with fixed levels. Produce a `MODEL_MISMATCH` outcome where exact per-lot fills, commissions or inventory cannot be reconciled instead of fabricating agreement.
+
+**Machine outputs for every candidate:** input ZIP SHA256, upstream Git commit and package lock, UTC interval, pair and quote, rule set, initial and final cash, marked inventory and quantities, event-by-event hypothetical fills, partial/missed fills, fees, rejected quantities, daily equity and drawdown, cost sensitivity, comparison with CASH/HOLD-50/HOLD-100, and exact warnings. Normalized JSON report should be published in research only after tests; no secrets.
+
+**Freqtrade separate track:** transform the exact same dated OHLCV into Freqtrade `user_data/data/<exchange>` format (feather or parquet), with documented exchange/pair/timeframe naming and controlled warm-up; run simple EMA/Bollinger/RSI strategies with explicit 1,000 quote initial balance, `--cache none`, `--timerange`, explicit `--fee`, `--timeframe-detail` where appropriate; run lookahead and recursive analysis. Compare against our equivalent directional baseline **on identical dates and costs**, not against an unmodeled Grid. Freqtrade output ZIP carries strategy, backtest metrics and sanitized config.
+
+**Presentation:** GitHub Pages is the **read-only results consumer**. Only after evidence gates pass, add a compact source-linked strategy comparison in MASTER and its Trader; expose the exact same public research JSON to Operator and Yoann TRADUS without duplicating datasets. TRADUS-specific SHADOW/PAPER views stay owned by Yoann's profile and private Bridge; no remote orders.
+
+### One-click FRESH fix — exact minimal change approved conceptually
+
+- Source owner: `administrator/js/market-microscope-paper-spot-realism-comparison.js` in **each repo**, not Trader HTML or Market Core.
+- Root cause: comparator's click handler calls `compareV6(globalThis.AgentCryptoOkxMicrostructure?.snapshot?.(), chart, settings)` **synchronously** against a book captured earlier, whereas `market-microscope-orderbook-paper-v6.js` already provides async `ErithMarketBookPaperV6.openDepthAndEstimate(bookService, market, settings)`, which opens the dock and refreshes a stale public book with a bounded wait.
+- Minimal algorithm: on user click disable duplicate submission, retain V5 result, if book V6 is unavailable/stale/context mismatch invoke the existing V6 `openDepthAndEstimate` with `side:BUY`, matching pair and quoted budget; after `await` re-read both chart and book snapshots and call `compareV6` **immediately**. Re-validate asset/pair and source timestamp after any async wait, refuse if selection changed, keep 15-second freshness gate and all failed-source error states. Show progress/timeout and re-enable button. No polling timer, no secret, no fake freshness, no change to mathematical V5/V6 simulation engines.
+- Add offline regression tests for fresh, stale→refreshed, stale→timeout, pair switched during fetch, and disabled duplicate click. Make candidate commits on MASTER and Operator with the same validated patch; verify every 40.6 build manifest and publish through G1→G5. Do not claim Firefox pass until a Windows screenshot/run proves it.
+- **Current state:** solution described and code paths verified; NOT yet patched, built, deployed or tested. No real order.
+
+### First verifiable stop point
+
+1. **Current turn:** version audit and upstream source-path verification complete; the only **actual executed quantitative controls** remain the previously published offline JSON arithmetic validation, not a new Hummingbot run.
+2. **First engineering gate:** a 44,640-row frozen January 2026 Binance dataset can be loaded into isolated Hummingbot provider without making a market-data network request. Log exactly how many rows and reject missing minutes.
+3. **Second gate:** run one pinned Hummingbot controller with no credentials and publish its raw fill/events report; compare fill semantics to the canonical historical Grid. If model mismatch, the finding is valuable and terminal for that direct parity claim.
+4. **Third gate:** only if gates 1–2 pass, run Freqtrade directional comparators and prepare read-only UI integration. No Operator/Bridge mutation until explicit source parity gates pass.
