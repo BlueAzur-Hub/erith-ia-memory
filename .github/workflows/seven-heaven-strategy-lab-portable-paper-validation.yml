@@ -1,4 +1,4 @@
-name: Seven Heaven Strategy Lab V3 connected OKX Spot validation
+name: Seven Heaven Strategy Lab V3.1 extended historical OKX Spot validation
 
 on:
   push:
@@ -155,7 +155,7 @@ jobs:
               except Exception:
                   time.sleep(.2)
           assert health["live_trading"] is False
-          assert health["version"] == "3.0.0"
+          assert health["version"] == "3.1.0"
           assert request("/api/datasets")["datasets"][0]["available"]
           report=request("/api/run",{"params":{"kind":"EMA_CROSS", "fee":0.001}})
           assert report["report"]["run"]["safety"]["orders_real"]==0
@@ -182,7 +182,7 @@ jobs:
               assert ex.code==404
           print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
           PY
-      - name: Open real premium V3 cockpit in Chromium, test interaction and capture desktop/mobile
+      - name: Open real premium V3.1 cockpit in Chromium, test interaction and capture desktop/mobile
         env:
           SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
         run: |
@@ -240,7 +240,7 @@ jobs:
                   with urllib.request.urlopen(url,timeout=3) as f:
                       j=json.loads(f.read())
                   assert j["status"]=="LOCAL_PAPER_ONLY"
-                  assert j["version"]=="3.0.0"
+                  assert j["version"]=="3.1.0"
                   print("PASS: Docker on localhost:8777, live trading disabled")
                   break
               except Exception:
@@ -251,13 +251,15 @@ jobs:
         run: |
           set -euo pipefail
           cd ..
-          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_SPOT_CONNECTED_OBSERVATORY_PYTHON313_WINDOWS_PAPER.zip" \
-            seven_heaven_strategy_lab -x \
-            '*/__pycache__/*' '*/workspace/*' '*/.gitignore' '*.pyc'
+          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V3_1_EXTENDED_OKX_HISTORY_PYTHON313_WINDOWS_PAPER.zip" \
+            seven_heaven_strategy_lab/src seven_heaven_strategy_lab/web \
+            seven_heaven_strategy_lab/README_FR.md \
+            seven_heaven_strategy_lab/START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd \
+            -x '*/__pycache__/*' '*.pyc'
           cd "$RUNNER_TEMP"
-          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_SPOT_CONNECTED_OBSERVATORY_PYTHON313_WINDOWS_PAPER.zip \
-            > SEVEN_HEAVEN_STRATEGY_LAB_V3_PUBLIC_SPOT_ARCHIVE_SHA256.txt
-          cat SEVEN_HEAVEN_STRATEGY_LAB_V3_PUBLIC_SPOT_ARCHIVE_SHA256.txt
+          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V3_1_EXTENDED_OKX_HISTORY_PYTHON313_WINDOWS_PAPER.zip \
+            > SEVEN_HEAVEN_STRATEGY_LAB_V3_1_PUBLIC_SPOT_ARCHIVE_SHA256.txt
+          cat SEVEN_HEAVEN_STRATEGY_LAB_V3_1_PUBLIC_SPOT_ARCHIVE_SHA256.txt
       - name: Strict-parse every packaged JSON proof before upload
         run: |
           set -euo pipefail
@@ -280,10 +282,10 @@ jobs:
       - name: Upload standalone ZIP, hash and measured historical smoke results
         uses: actions/upload-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V3_CONNECTED_OKX_SPOT_PAPER_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V3_1_EXTENDED_OKX_SPOT_PAPER_DELIVERY
           path: |
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_SPOT_CONNECTED_OBSERVATORY_PYTHON313_WINDOWS_PAPER.zip
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V3_PUBLIC_SPOT_ARCHIVE_SHA256.txt
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V3_1_EXTENDED_OKX_HISTORY_PYTHON313_WINDOWS_PAPER.zip
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V3_1_PUBLIC_SPOT_ARCHIVE_SHA256.txt
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png
@@ -377,7 +379,7 @@ jobs:
             }
             $datasets = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/datasets" -TimeoutSec 5
             if ($datasets.datasets.Count -ne 1) { throw "Data API unavailable" }
-            if ($health.version -ne "3.0.0") { throw "V3 Python health not active" }
+            if ($health.version -ne "3.1.0") { throw "V3 Python health not active" }
             $sources = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/okx-sources" -TimeoutSec 5
             if ($null -eq $sources.reserve_bytes -or $health.public_okx_enabled -ne $true) { throw "V3 OKX source API unavailable" }
             if (-not $page.Content.Contains("Matrice de")) { throw "Premium V3 cockpit HTML not served" }
@@ -395,30 +397,25 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V3_CONNECTED_OKX_SPOT_PAPER_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V3_1_EXTENDED_OKX_SPOT_PAPER_DELIVERY
           path: delivery
       - name: Publish executable prototype without changing MASTER or Operator
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG=seven-heaven-strategy-lab-v3-public-okx-spot-research-2026-11-13
+          TAG=seven-heaven-strategy-lab-v3-1-extended-okx-history-2026-11-13
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" \
-              --title "Seven Heaven Strategy Lab V3 — Aether Observatory premium PAPER cockpit" \
+              --title "Seven Heaven Strategy Lab V3.1 — Aether Observatory premium PAPER cockpit" \
               --notes "Independent V3 public OKX Spot Aether Observatory PAPER laboratory for Windows with existing Python 3.13. Docker Desktop optional. Five timeframes, six comparable methods, zero-cost diagnostics and persistent V1-compatible research. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
               --latest=false
           fi
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --title "Seven Heaven Strategy Lab V3 — Premium Aether Observatory · Python 3.13" \
-            --notes "V3: keeps the full premium V2 cockpit and adds public OKX Spot 240 closed hourly candles for BTC/ETH against USDC/USDT, native 1h and 4h simulation, SHA256 provenance, strict gap checks and USB free-space reserve. Public internet is allowed; no trading API. Preserves V1/V2 workspace. Windows: extract over your existing application files WITHOUT deleting workspace, close old Python window, double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd. No Docker or external Python packages required. PAPER only."
+            --title "Seven Heaven Strategy Lab V3.1 — Premium Aether Observatory · Python 3.13" \
+            --notes "V3.1 keeps the full premium V3 cockpit, plus selectable OKX 10/30/60/90 day historical windows and optional UTC end date, using 240 to 2160 closed hourly candles for BTC/ETH against USDC/USDT, native 1h and 4h simulation, SHA256 provenance, strict gap checks and USB free-space reserve. Public internet is allowed; no trading API. Preserves V1/V2 workspace. Windows: extract over your existing application files WITHOUT deleting workspace, close old Python window, double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd. No Docker or external Python packages required. PAPER only."
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_SPOT_CONNECTED_OBSERVATORY_PYTHON313_WINDOWS_PAPER.zip \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V3_PUBLIC_SPOT_ARCHIVE_SHA256.txt \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_MOBILE_COCKPIT.png
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V3_1_EXTENDED_OKX_HISTORY_PYTHON313_WINDOWS_PAPER.zip \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V3_1_PUBLIC_SPOT_ARCHIVE_SHA256.txt
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets

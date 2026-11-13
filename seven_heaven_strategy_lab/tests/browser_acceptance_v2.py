@@ -24,11 +24,13 @@ def main():
             expect(desktop.locator("#dataset-badge")).to_have_text("ARCHIVE AUTHENTIFIÉE", timeout=15000)
             assert desktop.locator("#comparison-empty").is_visible()
             assert desktop.locator("#okx-pair").is_visible()
+            assert desktop.locator("#okx-history-days option").count()==4
+            assert desktop.locator("#okx-history-date").is_visible()
             assert desktop.locator("#source-choice").is_visible()
             assert desktop.locator("#okx-pair option").count()==4
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
-            assert "3.0.0" in desktop.locator(".masthead").inner_text()
+            assert "3.1.0" in desktop.locator(".masthead").inner_text()
             desktop.locator("#compare").click()
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6

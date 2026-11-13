@@ -121,7 +121,7 @@
     $("source-active-title").textContent=source.exchange+" · "+source.pair;
     $("source-active-detail").textContent=id===BINANCE
       ?"Janvier 2026 · archive V1/V2 intégralement préservée"
-      :"240 bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
+      :source.rows+" bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
     $("source-active-hash").textContent=id===BINANCE
       ?"Empreinte de référence du coffre V2"
       :"SHA-256 "+source.sha256.slice(0,24)+"…";
@@ -130,7 +130,7 @@
       :"source OKX native 1h : horizons 1h et 4h seulement";
     $("capital-unit").textContent=source.quote;
     $("dca-unit").textContent=source.quote;
-    $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+(id===BINANCE?"Jan 2026":"240 bougies closes");
+    $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+(id===BINANCE?"Jan 2026":source.rows+" bougies closes");
     $("okx-source-badge").textContent=id===BINANCE?"ARCHIVE V1/V2":"ARCHIVE OKX ACTIVE";
     if(!busy)setBusy(false);
   }
@@ -380,11 +380,13 @@
     if(busy)return;
     setBusy(true,"Collecte OKX…");
     const pair=$("okx-pair").value;
-    notice("OKX public : contrôle des règles Spot, bougies clôturées et cache SHA-256…");
+    const days=Number($("okx-history-days").value);
+    const endDate=$("okx-history-date").value.trim();
+    notice("OKX public : "+days+" jours, contrôle Spot, bougies clôturées et cache SHA-256…");
     try {
-      const result=await api("/api/okx-import",{pair});
+      const result=await api("/api/okx-import",{pair,days,end_date:endDate||null});
       await refreshSources(result.source.id);
-      notice("OKX "+pair+" : 240 bougies 1h fermées et vérifiées sur la clé. "+
+      notice("OKX "+pair+" : "+result.source.rows+" bougies 1h closes et vérifiées sur la clé. "+
              "Tu peux comparer les stratégies en 1h ou 4h. Aucun ordre réel.","success");
     }catch(e){notice(e.message,"error");}
     finally{setBusy(false);}
@@ -424,11 +426,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(!health.public_okx_enabled)throw new Error("Le serveur Python V3 n'est pas actif. Relance le lanceur V3.");
+      if(!health.public_okx_enabled)throw new Error("Le serveur Python V3.1 n'est pas actif. Relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V3 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V3 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V3.1 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V3.1 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();

@@ -1,6 +1,7 @@
 """V3 public OKX collector: deterministic offline API fixtures and safety tests."""
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit, parse_qs
@@ -22,10 +23,10 @@ NOW = END + 3000
 
 class FakeOKX:
     """Public REST-shaped mock; never contacts an exchange."""
-    def __init__(self, *, missing=None, incomplete=None, corrupt=False):
+    def __init__(self, *, missing=None, incomplete=None, corrupt=False, days=10):
         self.hits = []
         self.candles = []
-        for i in range(COUNT):
+        for i in range(days * 24):
             if i == missing:
                 continue
             t = START + i*3600
@@ -87,6 +88,56 @@ class OKXSourceTests(unittest.TestCase):
             self.assertEqual(aggregate_bars(bars,"4h",source_timeframe="1h")[0][0],START)
             with self.assertRaisesRegex(LabError,"plus fines"):
                 aggregate_bars(bars,"15m",source_timeframe="1h")
+
+    def test_30_and_90_day_closed_history_with_separate_source_identity(self):
+        for days in (30, 90):
+            with self.subTest(days=days), TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                end = START + days * 24 * 3600
+                now = end + 3000
+                end_date = datetime.fromtimestamp(end, timezone.utc).strftime("%Y-%m-%d")
+                fake = FakeOKX(days=days)
+                source = collect(root, "BTC-USDC", transport=fake, now=now,
+                                 days=days, end_date=end_date, min_free_bytes=1)
+                self.assertEqual(source["rows"], days * 24)
+                self.assertEqual(source["days"], days)
+                self.assertTrue(source["id"].endswith("_N" + str(days * 24)))
+                self.assertEqual(source["historical_end_date_utc"], end_date)
+                self.assertTrue(any("after=" in url for url in fake.hits if HISTORY_PATH in url))
+                manifest, bars = read_source(root, source["id"])
+                self.assertEqual(len(bars), days * 24)
+                self.assertEqual(bars[0][0], START)
+                self.assertEqual(bars[-1][0], end - 3600)
+                self.assertEqual(manifest["sha256"], source["sha256"])
+                compared = compare(bars, {"kind": "EMA_CROSS", "timeframe": "4h",
+                                "capital": 1000}, source_timeframe="1h",
+                                source_label="OKX Spot BTC/USDC")
+                self.assertEqual(compared["aggregated_candles"], days * 6)
+                self.assertEqual(compared["safety"]["orders_real"], 0)
+
+    def test_historical_invalid_dates_and_durations_rejected_before_network(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fake = FakeOKX()
+            for invalid in (0, 11, 365, "30", True, None):
+                with self.subTest(days=invalid), self.assertRaises(PublicMarketError):
+                    collect(root, "BTC-USDC", now=NOW, transport=fake,
+                            days=invalid, min_free_bytes=1)
+            for invalid in ("2027-01-01", "2026-1-02", "2026-02-30", "bad", 14):
+                with self.subTest(date=invalid), self.assertRaises(PublicMarketError):
+                    collect(root, "BTC-USDC", now=NOW, transport=fake,
+                            days=10, end_date=invalid, min_free_bytes=1)
+            self.assertFalse(fake.hits)
+
+    def test_legacy_v3_cached_source_remains_readable_with_v31(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            old = collect(root, "ETH-USDC", now=NOW, transport=FakeOKX(), min_free_bytes=1)
+            self.assertEqual(old["rows"], 240)
+            self.assertNotIn("_N", old["id"])
+            original, bars = read_source(root, old["id"])
+            self.assertEqual(original["sha256"], old["sha256"])
+            self.assertEqual(len(bars), 240)
 
     def test_cached_reimport_avoids_network(self):
         with TemporaryDirectory() as tmp:
