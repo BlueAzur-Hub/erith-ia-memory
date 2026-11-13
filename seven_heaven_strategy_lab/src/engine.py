@@ -192,7 +192,8 @@ def simulate(bars, raw_options):
     bb_window = deque(maxlen=p["bb_period"])
     downsample = max(1, len(bars) // 240)
 
-    def buy(ts, open_price, quote):
+    def buy(ts, open_price, quote, *, reason="UNCLASSIFIED", signal_bar_open_utc=None,
+            signal_context=None):
         nonlocal cash, quantity, paid_fees, turnover, rejected, position_entry
         if cash < MIN_HYPOTHETICAL_NOTIONAL or quote < MIN_HYPOTHETICAL_NOTIONAL:
             rejected += 1
@@ -212,9 +213,13 @@ def simulate(bars, raw_options):
         turnover += notional
         trades.append({"timestamp": ts, "side": "BUY", "price": round(price, 5),
                        "qty": round(units, 8), "fee": round(notional * fee, 7),
-                       "cash_after": round(cash, 5)})
+                       "cash_after": round(cash, 5),
+                        "reason_code": reason,
+                        "signal_bar_open_utc": signal_bar_open_utc,
+                        "signal_context": signal_context or {}})
 
-    def sell(ts, open_price):
+    def sell(ts, open_price, *, reason="UNCLASSIFIED", signal_bar_open_utc=None,
+             signal_context=None):
         nonlocal cash, quantity, paid_fees, turnover, rejected, position_entry
         if quantity <= 0:
             return
@@ -229,17 +234,20 @@ def simulate(bars, raw_options):
         turnover += notional
         trades.append({"timestamp": ts, "side": "SELL", "price": round(price, 5),
                        "qty": round(quantity, 8), "fee": round(commission, 7),
-                       "cash_after": round(cash, 5)})
+                       "cash_after": round(cash, 5),
+                        "reason_code": reason,
+                        "signal_bar_open_utc": signal_bar_open_utc,
+                        "signal_context": signal_context or {}})
         quantity = 0.0
         position_entry = None
 
     for i, (ts, o, h, l, c, volume) in enumerate(bars):
         # Signals use previous CLOSED candle only; order is at this candle's OPEN.
         if i == 0 and kind in ("HOLD_50", "HOLD_100"):
-            buy(ts, o, capital * (0.5 if kind == "HOLD_50" else 1.0))
+            buy(ts, o, capital * (0.5 if kind == "HOLD_50" else 1.0), reason="BUY_AND_HOLD_INITIAL_ALLOCATION")
         elif kind == "DCA" and i % p["dca_every"] == 0:
             if cash >= MIN_HYPOTHETICAL_NOTIONAL:
-                buy(ts, o, p["dca_quote"])
+                buy(ts, o, p["dca_quote"], reason="DCA_PERIODIC_ALLOCATION")
         elif i >= 1 and kind in ("EMA_CROSS", "BOLLINGER"):
             prev_close = bars[i - 1][4]
             if kind == "EMA_CROSS":
@@ -252,9 +260,17 @@ def simulate(bars, raw_options):
                     curr_diff = ema_fast - ema_slow
                     if i >= p["ema_slow"]:
                         if previous_diff is not None and previous_diff <= 0 < curr_diff and quantity == 0:
-                            buy(ts, o, cash)
+                            buy(ts, o, cash, reason="EMA_CROSS_UP",
+                                signal_bar_open_utc=bars[i-1][0],
+                                signal_context={"ema_fast":ema_fast,"ema_slow":ema_slow,
+                                                "previous_diff":previous_diff,"current_diff":curr_diff,
+                                                "last_closed_price":prev_close})
                         elif previous_diff is not None and previous_diff >= 0 > curr_diff and quantity > 0:
-                            sell(ts, o)
+                            sell(ts, o,reason="EMA_CROSS_DOWN",
+                                 signal_bar_open_utc=bars[i-1][0],
+                                 signal_context={"ema_fast":ema_fast,"ema_slow":ema_slow,
+                                                 "previous_diff":previous_diff,"current_diff":curr_diff,
+                                                 "last_closed_price":prev_close})
                     previous_diff = curr_diff
             else:
                 bb_window.append(prev_close)
@@ -262,9 +278,17 @@ def simulate(bars, raw_options):
                     mean = sum(bb_window) / len(bb_window)
                     std = math.sqrt(sum((v - mean) ** 2 for v in bb_window) / len(bb_window))
                     if prev_close < mean - p["bb_sigma"] * std and quantity == 0:
-                        buy(ts, o, cash)
+                        buy(ts, o, cash,reason="BOLLINGER_CLOSE_BELOW_LOWER",
+                            signal_bar_open_utc=bars[i-1][0],
+                            signal_context={"last_closed_price":prev_close,"bb_middle":mean,
+                                            "bb_lower":mean-p["bb_sigma"]*std,
+                                            "bb_upper":mean+p["bb_sigma"]*std})
                     elif prev_close > mean + p["bb_sigma"] * std and quantity > 0:
-                        sell(ts, o)
+                        sell(ts, o,reason="BOLLINGER_CLOSE_ABOVE_UPPER",
+                             signal_bar_open_utc=bars[i-1][0],
+                             signal_context={"last_closed_price":prev_close,"bb_middle":mean,
+                                             "bb_lower":mean-p["bb_sigma"]*std,
+                                             "bb_upper":mean+p["bb_sigma"]*std})
         elif i >= 1 and kind == "CUSTOM_RULES":
             # Signals are based exclusively on the last CLOSED candle.
             prev_close, prev_volume = bars[i - 1][4], bars[i - 1][5]
@@ -295,7 +319,17 @@ def simulate(bars, raw_options):
                 target_triggered = (position_entry is not None and p["take_profit_pct"] > 0
                                     and prev_close >= position_entry * (1 + p["take_profit_pct"] / 100))
                 if exit_signal or stop_triggered or target_triggered:
-                    sell(ts, o)
+                    causes=[]
+                    if exit_signal: causes.append("RULE_"+p["exit_rule"])
+                    if stop_triggered: causes.append("STOP_ON_PREVIOUS_CLOSE")
+                    if target_triggered: causes.append("TARGET_ON_PREVIOUS_CLOSE")
+                    sell(ts,o,reason="+".join(causes),
+                         signal_bar_open_utc=bars[i-1][0],
+                         signal_context={"last_closed_price":prev_close,
+                                         "ema_fast":custom_fast,"ema_slow":custom_slow,
+                                         "rsi":rsi,"position_entry":position_entry,
+                                         "stop_loss_pct":p["stop_loss_pct"],
+                                         "take_profit_pct":p["take_profit_pct"]})
             elif ready and quantity == 0:
                 entry_signal = (
                     (p["entry_rule"] == "EMA_CROSS_UP" and custom_prev_diff <= 0 < diff)
@@ -311,7 +345,15 @@ def simulate(bars, raw_options):
                         and prev_volume >= p["volume_multiplier"] * sum(volumes) / len(volumes))
                 )
                 if entry_signal and filter_ok:
-                    buy(ts, o, cash)
+                    buy(ts,o,cash,reason="RULE_"+p["entry_rule"]+"+FILTER_"+p["filter_rule"],
+                        signal_bar_open_utc=bars[i-1][0],
+                        signal_context={"last_closed_price":prev_close,
+                                        "ema_fast":custom_fast,"ema_slow":custom_slow,
+                                        "rsi":rsi,"filter_rule":p["filter_rule"],
+                                        "rsi_entry_max":p["rsi_entry_max"],
+                                        "volume":prev_volume,
+                                        "volume_mean":sum(volumes)/len(volumes),
+                                        "volume_multiplier":p["volume_multiplier"]})
             custom_prev_diff = diff
         if quantity > 0:
             exposure_bars += 1
