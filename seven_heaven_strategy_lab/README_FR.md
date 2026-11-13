@@ -16,7 +16,7 @@ La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan
 
 - L'archive Binance Spot **BTC/USDT de janvier 2026**, ses 44 640 bougies 1m, ses profils et résultats V1/V2 restent inchangés dans `workspace/`.
 - Un nouvel encadré **Observatoire connecté OKX Spot** propose **BTC/USDC, ETH/USDC, BTC/USDT et ETH/USDT**. Ce sont des paires Spot explicites ; ce n'est pas un contrat de dérivés.
-- Un clic sur **Collecter 240 bougies 1h OKX** (libellé historique V3) interroge directement **les deux API publiques officielles** :
+- Un clic sur **Collecter la période OKX** (libellé historique V3) interroge directement **les deux API publiques officielles** :
   - `GET https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=BTC-USDC` (règles courantes, `state`, `tickSz`, `lotSz`, `minSz` ; exemple de paire).
   - `GET https://www.okx.com/api/v5/market/history-candles?instId=BTC-USDC&bar=1H&limit=100`, puis pagination bornée `after` pour récupérer les bougies plus anciennes.
 - Le module conserve **240 à 2 160 bougies de 1 heure strictement clôturées et continues** selon la durée choisie ; la collecte récente se termine à la dernière frontière 4h UTC. Les bougies en formation `confirm=0`, trous/duplicates, réponses non conformes ou marchés suspendus font échouer l'import. **Aucun prix n'est inventé pour compléter un trou.**
@@ -38,7 +38,7 @@ Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes d
 3. Télécharger le **ZIP V3**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
 5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 3.1.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
-6. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter 240 bougies 1h OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
+6. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
 7. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
 ## Provenance, contrôles et limitations
