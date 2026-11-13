@@ -164,7 +164,10 @@
     const kind = $("kind").value;
     $("ema-fields").hidden = kind !== "EMA_CROSS" && kind !== "CUSTOM_RULES";
     $("custom-fields").hidden = kind !== "CUSTOM_RULES";
-    $("compare").querySelector("span").textContent = kind === "CUSTOM_RULES" ? "Comparer ma stratégie aux 6 références" : "Comparer les 6 méthodes sur cet horizon";
+    const cmpButton=$("compare");
+    const cmpLabel=kind === "CUSTOM_RULES" ? "≋ Comparer ma stratégie aux 6 références" : "≋ Comparer les 6 méthodes sur cet horizon";
+    cmpButton.dataset.defaultText=cmpLabel;
+    if(!busy)cmpButton.textContent=cmpLabel;
     $("bb-fields").hidden = kind !== "BOLLINGER";
     $("dca-fields").hidden = kind !== "DCA";
   }
