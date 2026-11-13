@@ -1,7 +1,13 @@
 # SEVEN HEAVEN · Strategy Lab — V4.6 Extended Historical Research · Source and Verification Plan
-**Date:** 2026-11-13 · **State:** research specification only; **V4.6 is NOT built, released, tested or installed**  
+**Date:** 2026-11-13 · **State:** research specification + **isolated V4.6 source-validator prototype in draft PR #767**; complete V4.6 application is **NOT built, released or installed**  
 **Main workspace:** `coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/`  
 **Program baseline:** V4.5.0 user Firefox UI received; release in [central registry](./README.md); [V4.5 evidence](./SEVEN_HEAVEN_STRATEGY_LAB_V4_5_OWNER_FIREFOX_ACCEPTANCE_AND_RESEARCH_HANDOFF_2026_11_13.md).
+
+## Implementation checkpoint — 2026-11-13 (bounded, no USB impact)
+
+The first standalone validator has now been implemented **in a draft branch only**: [PR #767 — Binance monthly 1h verification gate](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/767), head `55f6608774a4e593d6c7dff6e058fb4b7b6ccc85`. The [GitHub Actions run #43493696195](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43493696195) has **completed successfully**, including existing Linux/Chromium and Windows Python 3.13 checks. Its offline fixture unit tests include the new 14-case archive validator suite, also passed locally using the V4.5 engine.
+
+**Scope actually implemented:** `src/binance_monthly_v46.py` (read-only in-memory one-month ZIP/CHECKSUM validator; 2019–2024 timestamps in milliseconds, 2025 in microseconds; OHLCV, full hourly continuity and ZIP safety) plus `tests/test_binance_monthly_v46.py`. **No downloader, no full-year historical import, no user-facing V4.6 UI, no main-branch merge and no public V4.6 release.** No real Binance monthly archive has been downloaded and certified by this pilot yet. The existing V4.5 packaging workflow targets V4.5 release assets on `main`; review that workflow before merging any prototype source changes to avoid altering old release artifacts. `workspace/` remains untouched.
 
 ## 1 · Scientific goal
 

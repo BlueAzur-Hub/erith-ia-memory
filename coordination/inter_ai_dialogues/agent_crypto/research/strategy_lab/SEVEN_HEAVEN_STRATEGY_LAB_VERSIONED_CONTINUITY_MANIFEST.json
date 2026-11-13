@@ -744,7 +744,7 @@
     "last_verified_utc_date": "2026-11-13"
   },
   "v4_6_research_plan": {
-    "status": "PLANNED_NOT_BUILT",
+    "status": "SOURCE_VALIDATOR_PILOT_DRAFT_PR_CI_SUCCESS_NOT_MERGED_NO_REAL_ARCHIVE_VERIFIED",
     "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_6_EXTENDED_HISTORICAL_RESEARCH_SOURCE_PLAN_2026_11_13.md",
     "base_market": "Binance Spot BTC/USDT 1h",
     "planned_windows": [
@@ -752,6 +752,16 @@
       "2024-2025"
     ],
     "separate_okx_market": "OKX Spot BTC/USDC",
-    "owner_workspace_modified": false
+    "owner_workspace_modified": false,
+    "pr": 767,
+    "pr_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/pull/767",
+    "pilot_commit": "55f6608774a4e593d6c7dff6e058fb4b7b6ccc85",
+    "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43493696195",
+    "ci_conclusion": "success",
+    "local_new_tests_passed": 14,
+    "real_monthly_source_verified": false,
+    "main_branch_merged": false,
+    "owner_usb_v46_installed": false,
+    "note": "Pilot module is isolated in a draft PR; current released and owner accepted product remains V4.5.0. Main's existing CI repackages V4.5 on code pushes; review before merging pilot."
   }
 }
