@@ -67,6 +67,9 @@ jobs:
       - name: Import actual Hummingbot backtesting engine and load offline candle cache
         run: |
           set -euo pipefail
+          # Hummingbot runs as a non-root UID inside the container. This temporary
+          # artifact-only directory is writable; the dataset and script stay read-only.
+          chmod 0777 "$RUNNER_TEMP/probe-results"
           docker run --rm \
             --network none \
             --cap-drop ALL \
