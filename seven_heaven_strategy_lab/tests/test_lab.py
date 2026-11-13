@@ -241,7 +241,7 @@ class PaperEngineTests(unittest.TestCase):
             self.assertFalse(dataset_status(Path(td))["available"])
 
     def test_static_files_allowlist(self):
-        self.assertEqual(set(STATIC), {"/", "/index.html", "/app.js", "/styles.css"})
+        self.assertEqual(set(STATIC), {"/", "/index.html", "/app.js", "/microscope.js", "/styles.css"})
         self.assertNotIn("/api/trade", STATIC)
 
 
