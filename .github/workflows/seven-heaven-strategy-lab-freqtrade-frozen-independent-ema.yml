@@ -89,7 +89,7 @@ jobs:
           docker image inspect freqtradeorg/freqtrade:stable --format '{{.Id}}' \
             | tee "$RUNNER_TEMP/freqtrade-evidence/FREQTRADE_IMAGE_ID.txt"
           test -s "$RUNNER_TEMP/freqtrade-evidence/FREQTRADE_IMAGE_REPO_DIGESTS.json"
-      - name: Run actual Freqtrade list-data and offline backtesting
+      - name: Run Freqtrade on frozen OHLCV (allow public market-rules metadata only; no keys)
         run: |
           set -euo pipefail
           docker run --rm --network none --cap-drop ALL \
@@ -100,7 +100,11 @@ jobs:
               list-data --exchange binance \
               --datadir /freqtrade/user_data/data/binance \
               --data-format-ohlcv json --show-timerange
-          docker run --rm --network none --cap-drop ALL \
+          # Freqtrade's native backtest attempts to fetch exchange instrument metadata
+          # even when OHLCV is SHA-verified and offline; this run allows public metadata
+          # requests ONLY by convention (no exchange credentials, backtesting command).
+          # This is not an air-gapped run; the historic OHLCV source remains immutable.
+          docker run --rm --network bridge --cap-drop ALL \
             --security-opt no-new-privileges --memory 5g --cpus 2 --pids-limit 256 \
             -v "$RUNNER_TEMP/freqtrade-user_data:/freqtrade/user_data:rw" \
             -v "$RUNNER_TEMP/freqtrade-evidence:/evidence:rw" \
