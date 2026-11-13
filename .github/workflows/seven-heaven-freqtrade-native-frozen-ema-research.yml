@@ -1,0 +1,206 @@
+name: Seven Heaven native Freqtrade frozen EMA research
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-freqtrade-native-frozen-ema-research.yml'
+  push:
+    branches:
+      - research/seven-heaven-native-freqtrade-ema-frozen-20261113
+    paths:
+      - '.github/workflows/seven-heaven-freqtrade-native-frozen-ema-research.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  native-freqtrade-ema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - name: Fetch immutable Binance January 2026 archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/seven-freqtrade/results
+          cd /tmp/seven-freqtrade
+          curl -fSL --retry 2 --max-time 90 -o BTCUSDT-1m-2026-01.zip \
+            https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-spot-bulk-2026-01-1m/BTCUSDT-1m-2026-01.zip
+          echo 'd28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9  BTCUSDT-1m-2026-01.zip' | sha256sum -c -
+          test "$(stat -c %s BTCUSDT-1m-2026-01.zip)" -eq 2127988
+
+      - name: Convert 44640 verified minute candles to 744 complete hourly candles
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/seven-freqtrade
+          python - <<'PY'
+          import csv, io, json, math, zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('BTCUSDT-1m-2026-01.zip') as z:
+              assert z.namelist()==['BTCUSDT-1m-2026-01.csv']
+              reader=csv.reader(io.TextIOWrapper(z.open(z.namelist()[0]),encoding='utf-8'))
+              candles=[]
+              current=None
+              i=-1
+              for i,row in enumerate(reader):
+                  assert len(row)==12
+                  micros=int(row[0]);assert micros%1000000==0
+                  ts=micros//1000000
+                  assert ts==1767225600+i*60,('GAP',i,ts)
+                  o,h,l,c,v=map(float,row[1:6])
+                  assert all(math.isfinite(x) for x in (o,h,l,c,v))
+                  assert l>0 and l<=o<=h and l<=c<=h and v>=0
+                  if i%60==0:
+                      assert current is None and ts%3600==0
+                      current=[ts*1000,o,h,l,c,0.0]
+                  current[2]=max(current[2],h)
+                  current[3]=min(current[3],l)
+                  current[4]=c
+                  current[5]+=v
+                  if i%60==59:
+                      candles.append(current)
+                      current=None
+          assert i+1==44640 and current is None and len(candles)==744
+          assert candles[0][0]==1767225600000
+          assert all(candles[i][0]-candles[i-1][0]==3600000 for i in range(1,len(candles)))
+          Path('BTC_USDT-1h.json').write_text(json.dumps(candles,separators=(',',':')),encoding='utf-8')
+          print('PASS: all 44640 frozen minutes -> 744 continuous 1H Freqtrade native candles')
+          PY
+
+      - name: Create temporary EMA strategy and PAPER-only config
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/seven-freqtrade
+          cat > SevenHeavenNativeEma.py <<'PY'
+          from pandas import DataFrame
+          from freqtrade.strategy import IStrategy
+
+          class SevenHeavenNativeEma(IStrategy):
+              INTERFACE_VERSION = 3
+              timeframe = '1h'
+              can_short = False
+              startup_candle_count = 30
+              minimal_roi = {'0': 100.0}
+              stoploss = -0.99
+              use_exit_signal = True
+              exit_profit_only = False
+              trailing_stop = False
+              order_types = {'entry':'market','exit':'market','stoploss':'market','stoploss_on_exchange':False}
+
+              def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                  dataframe['ema_fast']=dataframe['close'].ewm(span=10,adjust=False).mean()
+                  dataframe['ema_slow']=dataframe['close'].ewm(span=30,adjust=False).mean()
+                  return dataframe
+
+              def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                  cross=((dataframe['ema_fast']>dataframe['ema_slow']) &
+                         (dataframe['ema_fast'].shift(1)<=dataframe['ema_slow'].shift(1)))
+                  dataframe.loc[cross,'enter_long']=1
+                  return dataframe
+
+              def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                  cross=((dataframe['ema_fast']<dataframe['ema_slow']) &
+                         (dataframe['ema_fast'].shift(1)>=dataframe['ema_slow'].shift(1)))
+                  dataframe.loc[cross,'exit_long']=1
+                  return dataframe
+          PY
+          cat > config.json <<'JSON'
+          {
+            "bot_name":"SevenHeavenResearch",
+            "initial_state":"stopped",
+            "dry_run":true,
+            "dry_run_wallet":1000,
+            "trading_mode":"spot",
+            "stake_currency":"USDT",
+            "stake_amount":"unlimited",
+            "tradable_balance_ratio":0.99,
+            "max_open_trades":1,
+            "dataformat_ohlcv":"json",
+            "exchange":{"name":"binance","key":"","secret":"","pair_whitelist":["BTC/USDT"],"pair_blacklist":[]},
+            "pairlists":[{"method":"StaticPairList"}],
+            "api_server":{"enabled":false},
+            "telegram":{"enabled":false}
+          }
+          JSON
+          python -m py_compile SevenHeavenNativeEma.py
+          python -m json.tool config.json >/dev/null
+
+      - name: Execute native Freqtrade 2026.10 backtesting in CI only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/seven-freqtrade
+          docker pull freqtradeorg/freqtrade:2026.10
+          docker image inspect freqtradeorg/freqtrade:2026.10 --format '{{json .RepoDigests}}' > image_digests.json
+          docker run --rm --user "$(id -u):$(id -g)" \
+            -v "$PWD:/work" -w /work -e HOME=/work \
+            freqtradeorg/freqtrade:2026.10 \
+            backtesting --config /work/config.json \
+            --strategy SevenHeavenNativeEma --strategy-path /work \
+            --datadir /work --timeframe 1h --data-format-ohlcv json \
+            --timerange 20260103-20260201 --dry-run-wallet 1000 \
+            --fee 0.001 --cache none --export trades \
+            --backtest-directory /work/results 2>&1 | tee native_backtest.log
+          test "$(find results -maxdepth 1 -name '*.zip' | wc -l)" -ge 1
+
+      - name: Verify native backtest report and record model differences
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/seven-freqtrade
+          python - <<'PY'
+          import json,zipfile
+          from pathlib import Path
+          files=sorted(Path('results').glob('*.zip'))
+          assert files,'No Freqtrade result archive'
+          with zipfile.ZipFile(files[-1]) as z:
+              reports=[]
+              for name in z.namelist():
+                  if not name.endswith('.json') or name.endswith('.meta.json'):
+                      continue
+                  try:
+                      j=json.loads(z.read(name))
+                      if isinstance(j,dict) and isinstance(j.get('strategy'),dict):
+                          reports.append((name,j))
+                  except (ValueError,UnicodeDecodeError):pass
+              assert reports,z.namelist()
+              report_name,j=reports[0]
+              assert 'SevenHeavenNativeEma' in j['strategy']
+              out=j['strategy']['SevenHeavenNativeEma']
+              assert out.get('total_trades') is not None
+              result={
+                'schema':'seven.heaven.external.freqtrade.native_ema.v1',
+                'status':'PASS_NATIVE_FREQTRADE_BACKTEST',
+                'engine':'Official Freqtrade 2026.10 Docker',
+                'source':'Binance BTC/USDT frozen January 2026 1m aggregated to 1h',
+                'source_archive_sha256':'d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9',
+                'source_minutes':44640,'hourly_candles':744,
+                'mode':'native historical backtesting, no credentials, no real orders',
+                'strategy':'EMA10/30 signal at completed bar',
+                'timerange_utc':'20260103-20260201',
+                'fee_per_side':0.001,'wallet_initial_usdt':1000,
+                'total_trades':out.get('total_trades'),
+                'profit_total_abs':out.get('profit_total_abs'),
+                'profit_total':out.get('profit_total'),
+                'max_drawdown':out.get('max_drawdown'),
+                'result_member':report_name,
+                'warnings':['Not equivalent yet to Seven Heaven internal engine: startup, capital/stake, slippage, stoploss, order fills and warmup must be aligned.', 'No OKX data, historical order book, verified limit fills or live trading.']
+              }
+              Path('NATIVE_FREQTRADE_RESEARCH_PROOF.json').write_text(json.dumps(result,indent=2)+'\n')
+              print(json.dumps(result,indent=2))
+          PY
+
+      - name: Upload proof to CI artifacts only, not USB or repository tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_NATIVE_FREQTRADE_EMA_FROZEN_JAN_2026_RESEARCH
+          path: |
+            /tmp/seven-freqtrade/NATIVE_FREQTRADE_RESEARCH_PROOF.json
+            /tmp/seven-freqtrade/image_digests.json
+            /tmp/seven-freqtrade/native_backtest.log
+          retention-days: 30
+          if-no-files-found: error
