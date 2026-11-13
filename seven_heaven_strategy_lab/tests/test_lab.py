@@ -5,7 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 
-from src.engine import LabError, load_bars, options, simulate
+from src.engine import LabError, load_bars, options, simulate, trade_analytics
 from src.reference_data import SourceError, _convert, dataset_status
 from src.server import STATIC
 
@@ -157,6 +157,68 @@ class PaperEngineTests(unittest.TestCase):
         self.assertEqual(a["safety"]["orders_real"],0)
         self.assertGreaterEqual(a["results"]["cash_final"],0)
         self.assertGreaterEqual(a["results"]["base_inventory_btc"],0)
+
+    def test_closed_positions_are_not_invented_for_buy_and_hold_or_cash(self):
+        rows = bars_constant(120, 100.0)
+        passive = simulate(rows, {"kind": "HOLD_50", "fee": 0, "slippage": 0})
+        a = passive["analytics"]
+        self.assertEqual(a["closed_positions"], 0)
+        self.assertIsNone(a["win_rate_pct"])
+        self.assertIsNone(a["profit_factor"])
+        self.assertEqual(a["profit_factor_status"], "NO_CLOSED_POSITIONS")
+        self.assertEqual(a["unclosed_base_units"], 5)
+        self.assertAlmostEqual(a["unrealized_pnl_quote"], 0, places=5)
+        self.assertEqual(a["time_in_position_pct"], 100)
+        cash = simulate(rows, {"kind": "CASH"})
+        c = cash["analytics"]
+        self.assertEqual(c["closed_positions"], 0)
+        self.assertEqual(c["unclosed_base_units"], 0)
+        self.assertEqual(c["time_in_position_pct"], 0)
+        self.assertTrue(all(p["drawdown_pct"] == 0 for p in cash["series"]))
+
+    def test_round_trip_accounting_includes_both_side_fees_and_open_costs(self):
+        fills = [
+            {"timestamp":100, "side":"BUY","qty":1.0,"price":100.0,"fee":1.0},
+            {"timestamp":200, "side":"BUY","qty":1.0,"price":110.0,"fee":1.0},
+            {"timestamp":3600,"side":"SELL","qty":2.0,"price":120.0,"fee":2.0},
+        ]
+        a = trade_analytics(fills, final_close=120, exposure_bars=3, total_bars=4)
+        self.assertEqual(a["closed_positions"], 1)
+        self.assertEqual(a["win_rate_pct"], 100)
+        self.assertAlmostEqual(a["realized_pnl_quote"], 26)
+        self.assertEqual(a["unrealized_pnl_quote"], 0)
+        self.assertIsNone(a["profit_factor"])
+        self.assertEqual(a["profit_factor_status"], "NO_CLOSED_LOSSES")
+        self.assertEqual(a["time_in_position_pct"], 75)
+
+    def test_profit_factor_win_rate_and_loss_are_realized_only(self):
+        fills = [
+            {"timestamp":0,"side":"BUY","qty":1.0,"price":100.0,"fee":1.0},
+            {"timestamp":3600,"side":"SELL","qty":1.0,"price":120.0,"fee":1.0},
+            {"timestamp":7200,"side":"BUY","qty":1.0,"price":100.0,"fee":1.0},
+            {"timestamp":10800,"side":"SELL","qty":1.0,"price":90.0,"fee":1.0},
+        ]
+        a = trade_analytics(fills, final_close=90, exposure_bars=2,total_bars=4)
+        self.assertEqual(a["closed_positions"], 2)
+        self.assertEqual(a["winning_positions"], 1)
+        self.assertEqual(a["losing_positions"], 1)
+        self.assertEqual(a["win_rate_pct"], 50)
+        self.assertAlmostEqual(a["profit_factor"], 1.5)
+        self.assertAlmostEqual(a["gross_profit_quote"],18)
+        self.assertAlmostEqual(a["gross_loss_quote"],12)
+        self.assertAlmostEqual(a["realized_pnl_quote"],6)
+
+    def test_drawdown_and_pnl_decomposition_without_fill_rewriting(self):
+        rows=bars_waves(900)
+        run=simulate(rows,{"kind":"CUSTOM_RULES","ema_fast":12,"ema_slow":32})
+        out=run["results"];a=run["analytics"]
+        self.assertEqual(a["closed_positions"],out["sell_events"])
+        self.assertAlmostEqual(a["realized_pnl_quote"]+a["unrealized_pnl_quote"],
+                               out["equity_final"]-out["capital_initial"],places=2)
+        self.assertTrue(all(p["drawdown_pct"]<=0 for p in run["series"]))
+        self.assertAlmostEqual(run["series"][0]["drawdown_pct"],0,places=5)
+        self.assertTrue(all(t["side"] in ("BUY","SELL") for t in run["trades"]))
+        self.assertEqual(run["safety"]["orders_real"],0)
 
     def test_csv_gaps_rejected(self):
         with TemporaryDirectory() as td:
