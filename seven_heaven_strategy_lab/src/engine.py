@@ -72,7 +72,7 @@ def load_bars(path: Path, expected_count=44640, *, interval_seconds=60):
             except (TypeError, ValueError) as exc:
                 raise LabError("CSV : valeurs invalides") from exc
             if last is not None and ts != last + interval_seconds:
-                raise LabError("CSV : bougie manquante ou doublonnée")
+                raise LabError("CSV : minute manquante ou doublonnée" if interval_seconds == 60 else "CSV : bougie horaire manquante ou doublonnée")
             if not all(map(math.isfinite, [o, h, l, c, vol])) or min(o, h, l, c) <= 0 or vol < 0:
                 raise LabError("CSV : prix ou volumes invalides")
             if not l <= min(o, c) <= max(o, c) <= h:
