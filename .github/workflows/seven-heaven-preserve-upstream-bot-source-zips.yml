@@ -1,0 +1,75 @@
+name: Seven Heaven preserve exact upstream research bot ZIPs
+
+on:
+  push:
+    branches: [research/archive-source-zips-20261113]
+    paths:
+      - .github/workflows/seven-heaven-preserve-upstream-bot-source-zips.yml
+      - coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_EXTERNAL_BOT_USER_SUPPLIED_ZIP_SOURCE_REGISTRY_2026_11_13.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preserve-source-archives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download current upstream branch archives and verify identity with user supplied ZIPs
+        env:
+          EXPECTED_HB: 6ceef7884b54ac7b3e2f156411249f58f78a079e2f9b6b6717aabc81f4ea6cfd
+          EXPECTED_FT: 6143b75fa418362c5de00388faaaff008900a2f778e77a73b31361423e25a453
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source-zips"
+          cd "$RUNNER_TEMP/source-zips"
+          curl --fail --location --retry 3 --max-time 180 \
+            https://codeload.github.com/hummingbot/hummingbot/zip/refs/heads/master \
+            --output hummingbot-master.zip
+          curl --fail --location --retry 3 --max-time 180 \
+            https://codeload.github.com/freqtrade/freqtrade/zip/refs/heads/develop \
+            --output freqtrade-develop.zip
+          test "$(stat -c %s hummingbot-master.zip)" -eq 3990773
+          test "$(stat -c %s freqtrade-develop.zip)" -eq 20667167
+          printf '%s  %s\n' "$EXPECTED_HB" hummingbot-master.zip "$EXPECTED_FT" freqtrade-develop.zip | sha256sum --check -
+          python - <<'PY'
+          import zipfile
+          for name, prefix, license_text in [
+              ("hummingbot-master.zip","hummingbot-master/","Apache License"),
+              ("freqtrade-develop.zip","freqtrade-develop/","GNU GENERAL PUBLIC LICENSE")
+          ]:
+              with zipfile.ZipFile(name) as archive:
+                  assert archive.testzip() is None
+                  members = archive.namelist()
+                  assert all(n.startswith(prefix) and not n.startswith("/") and ".." not in n.split("/") for n in members)
+                  assert license_text in archive.read(prefix+"LICENSE").decode("utf8","replace")
+                  print("PROVEN_EXACT_UPLOAD_SHA",name,len(members))
+          PY
+      - name: Create source-only GitHub Release and attach exact SHA-matched ZIPs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=seven-heaven-external-bot-source-archives-2026-11-13
+          cat > "$RUNNER_TEMP/source-zips/RELEASE_NOTES.md" <<'EOF'
+          External strategy research source archives for ERITH.IA / Seven Heaven.
+          These two files were fetched from the projects' official public branches
+          and only preserved when their SHA-256 and byte lengths MATCHED the
+          independently received user ZIP uploads exactly.
+          This is THIRD-PARTY source, not ERITH.IA code or a trading service.
+          Hummingbot: Apache-2.0; Freqtrade: GPL-3.0. Original LICENSE files
+          and notices remain inside the untouched ZIPs. No bot is installed here,
+          and no credentials, keys, orders, or trader runtime code are included.
+          Preserve full upstream author attribution and licenses when reusing.
+          EOF
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --target main --title "Seven Heaven — Freqtrade and Hummingbot research source archives" \
+              --notes-file "$RUNNER_TEMP/source-zips/RELEASE_NOTES.md" --latest=false
+          fi
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
+            "$RUNNER_TEMP/source-zips/hummingbot-master.zip" \
+            "$RUNNER_TEMP/source-zips/freqtrade-develop.zip"
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets,name,url
