@@ -1,0 +1,59 @@
+{
+  "schema": "seven.heaven.external_bot.frozen_candles_gate.v1",
+  "status": "PASS_FROZEN_DATASET_GATE",
+  "source": {
+    "exchange": "Binance Spot",
+    "pair": "BTCUSDT",
+    "month_utc": "2026-01",
+    "name": "BTCUSDT-1m-2026-01.zip",
+    "sha256": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+    "bytes": 2127988,
+    "time_unit_in_source": "microseconds",
+    "release": "crypto-spot-bulk-2026-01-1m"
+  },
+  "dataset": {
+    "rows": 44640,
+    "first_timestamp_sec": 1767225600,
+    "last_timestamp_sec": 1769903940,
+    "spacing_seconds": 60,
+    "volume_base_btc": "491752.73296000",
+    "min_low_quote_usdt": "75719.90000000",
+    "max_high_quote_usdt": "97924.49000000"
+  },
+  "hummingbot_adapter_contract": {
+    "feed_key": "binance_BTC-USDT_1m",
+    "columns": [
+      "timestamp",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume"
+    ],
+    "timestamp_unit": "unix_epoch_seconds",
+    "normalized_csv": "BTCUSDT-1m-2026-01_HUMMINGBOT_CANDLES.csv",
+    "sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4",
+    "installed_and_imported": false,
+    "controller_executed": false
+  },
+  "execution": {
+    "orders": 0,
+    "exchange_api_keys_used": false,
+    "fills_observed": false,
+    "strategy_returns_computed": false
+  },
+  "warnings": [
+    "Validated immutable candles only, NOT a Hummingbot backtest",
+    "Binance BTCUSDT data differ from OKX EEA BTCUSDC",
+    "No historical order book or maker queue positions are present",
+    "Provider preload and matching trading rules require separate engine test"
+  ],
+  "provenance": {
+    "github_workflow_run": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43365545548",
+    "job_id": 131688965244,
+    "branch_commit": "da2dc7be412636d79a4bc1195adc3b9c423920ab",
+    "artifact_id": 14009789133,
+    "tests": "3 unittest + exact 44640 minute validation + Pandas dataframe validation",
+    "artifact_retention_days": 14
+  }
+}

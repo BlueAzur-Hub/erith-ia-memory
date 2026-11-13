@@ -1,0 +1,86 @@
+name: Seven Heaven Hummingbot frozen BTC January 2026 data gate
+
+on:
+  push:
+    branches: [research/hummingbot-frozen-btc-jan-2026]
+    paths:
+      - '.github/workflows/seven-heaven-hummingbot-frozen-btc-jan-2026-data-gate.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/*.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-hummingbot-frozen-btc-jan-2026-data-gate.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-immutable-binance-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout historical research gate only
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /coordination/inter_ai_dialogues/agent_crypto/research/external_bots/
+            /.github/workflows/seven-heaven-hummingbot-frozen-btc-jan-2026-data-gate.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline positive and negative source integrity tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s coordination/inter_ai_dialogues/agent_crypto/research/external_bots -p 'test_SEVEN_HEAVEN_HUMMINGBOT_FROZEN_BTC_JAN_2026_DATA_GATE.py'
+      - name: Download the exact public frozen GitHub Release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/seven-frozen-source"
+          gh release download crypto-spot-bulk-2026-01-1m \
+            --repo BlueAzur-Hub/erith-ia-memory \
+            --pattern BTCUSDT-1m-2026-01.zip \
+            --dir "$RUNNER_TEMP/seven-frozen-source"
+          test -s "$RUNNER_TEMP/seven-frozen-source/BTCUSDT-1m-2026-01.zip"
+      - name: Validate all 44640 minutes and normalize Hummingbot candle fields
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_FROZEN_BTC_JAN_2026_DATA_GATE.py \
+            --archive "$RUNNER_TEMP/seven-frozen-source/BTCUSDT-1m-2026-01.zip" \
+            --output-dir "$RUNNER_TEMP/seven-frozen-output"
+      - name: Verify actual Pandas DataFrame contract (NOT a Hummingbot engine run)
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pandas==2.2.3
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import pandas as pd
+          root = Path(os.environ["RUNNER_TEMP"]) / "seven-frozen-output"
+          filename = root / "BTCUSDT-1m-2026-01_HUMMINGBOT_CANDLES.csv"
+          df = pd.read_csv(filename, dtype={"timestamp": "int64"})
+          assert df.shape == (44640, 6), df.shape
+          assert list(df.columns) == ["timestamp","open","high","low","close","volume"]
+          assert (df.timestamp.diff().dropna() == 60).all()
+          assert df.timestamp.is_monotonic_increasing
+          assert df.timestamp.is_unique
+          assert df[["open","high","low","close","volume"]].notna().all().all()
+          cache = {"binance_BTC-USDT_1m": df}
+          assert len(cache["binance_BTC-USDT_1m"]) == 44640
+          print("PASS: 44640 validated candles loaded in offline Pandas cache key binance_BTC-USDT_1m")
+          print("NOTE: actual Hummingbot BacktestingDataProvider/controller NOT imported or executed")
+          PY
+      - name: Upload verified candles and immutable source manifest (PAPER research only)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_HUMMINGBOT_FROZEN_BTCUSDT_JANUARY_2026_VALIDATED_44640_CANDLES
+          path: |
+            ${{ runner.temp }}/seven-frozen-output/BTCUSDT-1m-2026-01_FROZEN_SOURCE_AUDIT.json
+            ${{ runner.temp }}/seven-frozen-output/BTCUSDT-1m-2026-01_HUMMINGBOT_CANDLES.csv
+          retention-days: 14
+          if-no-files-found: error
