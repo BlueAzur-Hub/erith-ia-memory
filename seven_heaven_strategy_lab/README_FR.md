@@ -1,8 +1,24 @@
-# Seven Heaven Strategy Lab — V4.2 Market Microscope + Professional Risk Desk
+# Seven Heaven Strategy Lab — V4.3 Aether Scientific + Market Microscope
 
-**Version 4.2.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
+**Version 4.3.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
 
 Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.2 étend le cockpit premium bleu nuit, or et cyan avec le **graphique historique directement lié à chaque rapport**, sans dépendre des interfaces Administrator ou Trader, sans clés privées ni ordre réel.
+
+## V4.3 — Aether Scientific : robustesse chronologique et hypothèses de coûts
+
+- **Nouvelle fonctionnalité** : bouton **« Éprouver cette stratégie dans le temps »** dans l'Atelier ; résultats dans **Laboratoire de robustesse**. Travaille sur la même archive Binance/OKX dont l'identifiant et le SHA-256 sont validés avant lecture. Toutes les études restent locales, **PAPER uniquement**.
+- **Séparation chronologique stricte** : sur au moins 150 bougies de la résolution de simulation, le code utilise une partie antérieure pour choisir la configuration puis une partie ultérieure pour la tester. Sur 150–299 bougies : un découpage 60 % / 40 %. Dès 300 bougies : deux expériences à entraînement croissant, première vérification sur le troisième quart de l'historique et seconde sur le dernier quart (non superposées).
+- Pour **EMA ou stratégie personnalisée**, comparer au maximum cinq couples EMA (celui de l'utilisateur + 8/21, 10/30, 12/32 et 20/50) sur l'**entraînement uniquement** et retenir le meilleur score `rendement net + 0,35 × drawdown maximal négatif`. Les conditions RSI/volume, stop/objectif et frais restent inchangés. Pour **Bollinger, DCA, Buy & Hold et Cash**, garder les paramètres sélectionnés, sans optimisation EMA inutile.
+- **Vérification ultérieure** : rejouer la stratégie sélectionnée sur des bougies chronologiquement postérieures, sans voir les résultats de test au moment du choix. Comparer avec **Buy & Hold 50 %** et **conservation de la devise de cotation** sur la même fenêtre. Afficher rendement, drawdown, frais, nombre de fills, dates UTC et moyennes des fenêtres, **sans les cumuler fictivement**.
+- **Sensibilité aux coûts** : mêmes bougies et paramètres, mais frais ×2, glissement ×2, puis les deux ×2 ; bornes maximales 1 % et 2 % par côté respectivement, conformes au moteur actuel.
+- **Limites scientifiques affichées** : les paramètres ont pu être ajustés auparavant en voyant ces dates ; ce n'est donc pas automatiquement un test hors échantillon vierge. Les portefeuilles démarrent avec un capital neuf sur chaque fenêtre, sans reprise de positions ; les indicateurs doivent passer leur warm-up normal dans chaque fenêtre. Le second entraînement inclut des observations de la première validation. Les prix d'exécution sont toujours hypothétiques à l'ouverture suivante, sans carnet de liquidité.
+- **Aucune multiplication de fichiers sur la clé** : l'étude V4.3 est calculée **en mémoire et renvoyée à l'écran**, sans créer des journaux JSON supplémentaires. Les anciens résultats, profils, comparaisons et `workspace/` ne changent pas.
+- **Ergonomie corrigée** : dans le tableau « Dernières transactions hypothétiques », l'unité de quantité devient **BTC ou ETH selon la paire**, et non « BTC » pour toutes les opérations. Le reste du moteur V4.2 et le microscope sont conservés intacts.
+- Références de méthode externes (étudiées, **pas** de dépendances installées) :
+  - [QuantConnect — Walk Forward Optimization](https://www.quantconnect.com/docs/v2/writing-algorithms/optimization/walk-forward-optimization)
+  - [Freqtrade — Lookahead Analysis](https://www.freqtrade.io/en/stable/lookahead-analysis/)
+  - [Freqtrade — Recursive Analysis](https://docs.freqtrade.io/en/stable/recursive-analysis/)
+- Ces validations ne promettent aucun rendement, ne reproduisent pas un carnet d'ordres et ne permettent **aucun ordre réel**, aucun compte ni aucune clé d'exchange.
 
 ## V4.2 — Microscope professionnel des bougies historiques
 
@@ -62,15 +78,16 @@ Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en dévelo
 
 Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes des pages passent par ce serveur local, et ce serveur Python peut **sortir vers les API publiques OKX** lors d'un clic. Aucune clé API OKX, compte, portefeuille, mot de passe ni ordre réel ne sont nécessaires. Les résultats ne deviennent jamais de vrais achats/ventes.
 
-## Mise à niveau sur la clé USB depuis la V4.1 déjà validée
+## Mise à niveau sur la clé USB depuis la V4.2 déjà validée
 
 1. Fermer la fenêtre noire `Seven Heaven Strategy Lab` (Ctrl+C), puis garder la clé branchée.
 2. Copier `E:\seven_heaven_strategy_lab\workspace\` vers **une sauvegarde distincte**, avant d'écraser les fichiers du programme.
-3. Télécharger le **ZIP V4.2 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
+3. Télécharger le **ZIP V4.3 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
-5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.2.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
+5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.3.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
 6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER, puis vérifier **Microscope des bougies** : même source, horodatages UTC, overlays EMA/Bollinger, marqueurs PAPER et navigation temporelle ; comparer ensuite **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
-7. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
+7. Cliquer sur **Éprouver cette stratégie dans le temps** ; ouvrir le **Laboratoire de robustesse** en bas, lire entraînement, validation ultérieure et frais/glissement ×2. Avec moins de 150 bougies sur le timeframe choisi, le programme refuse proprement au lieu de produire un faux résultat. Ne touche pas au dossier `workspace/`.
+8. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
 ## Provenance, contrôles et limitations
 
