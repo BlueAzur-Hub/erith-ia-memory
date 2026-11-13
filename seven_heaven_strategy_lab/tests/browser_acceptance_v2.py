@@ -42,6 +42,25 @@ def main():
             desktop.locator("#profile-name").fill("V3 EMA 10-30 Browser Acceptance")
             desktop.locator("#save-profile").click()
             desktop.locator("#saved-profiles option").filter(has_text="V3 EMA 10-30").wait_for(state="attached",timeout=15000)
+            # V3 full-stack acceptance: real public OKX Spot endpoint, immutable
+            # local 240x1H cache, six PAPER comparisons and USDC denomination.
+            desktop.locator("#okx-pair").select_option("BTC-USDC")
+            desktop.locator("#okx-import").click()
+            expect(desktop.locator("#source-active-title")).to_have_text(
+                "OKX Spot · BTC/USDC",timeout=75000)
+            assert desktop.locator("#source-choice").input_value().startswith("OKX_BTC_USDC_1H_")
+            assert desktop.locator('input[name="timeframe"][value="1m"]').is_disabled()
+            assert desktop.locator('input[name="timeframe"][value="1h"]').is_checked()
+            assert desktop.locator("#run").is_enabled()
+            desktop.locator("#compare").click()
+            expect(desktop.locator("#compare-context")).to_contain_text(
+                "BTC/USDC · OKX Spot",timeout=25000)
+            assert desktop.locator("#comparison-rows > tr").count()==6
+            assert "USDC" in desktop.locator("#comparison-rows > tr").first.inner_text()
+            desktop.locator("#comparison-rows > tr").first.locator("button").click()
+            expect(desktop.locator("#equity")).to_contain_text("USDC",timeout=25000)
+            assert desktop.locator("#inventory").inner_text().endswith("BTC")
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png"),full_page=True)
             assert not errors, f"Unexpected JavaScript page exceptions: {errors}"
 
             mobile=browser.new_page(viewport={"width":390,"height":844},device_scale_factor=1)
