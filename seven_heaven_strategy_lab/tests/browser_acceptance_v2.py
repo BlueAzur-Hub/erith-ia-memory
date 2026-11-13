@@ -30,7 +30,7 @@ def main():
             assert desktop.locator("#okx-pair option").count()==4
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
-            assert "4.1.0" in desktop.locator(".masthead").inner_text()
+            assert "4.2.0" in desktop.locator(".masthead").inner_text()
             desktop.locator("#compare").click()
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6
@@ -47,9 +47,19 @@ def main():
             assert desktop.locator("#quant-desk").is_visible()
             assert desktop.locator("#quant-closed").inner_text()!="—"
             assert desktop.locator("#drawdown-chart polyline").count()==1
+            expect(desktop.locator("#micro-context")).to_contain_text("Binance Spot", timeout=25000)
+            assert desktop.locator("#market-microscope").is_visible()
+            assert desktop.locator("#market-candle-chart rect").count()>60
+            assert desktop.locator("#micro-sha").inner_text().startswith("SOURCE SHA-256")
+            desktop.locator("#micro-prev").click()
+            expect(desktop.locator("#micro-range-label")).to_contain_text(" / 44640", timeout=25000)
+            desktop.locator("#micro-sma").check()
+            desktop.locator("#micro-bb").check()
+            desktop.locator("#micro-vwap").check()
+            assert desktop.locator("#market-candle-chart path").count()>=4
             assert desktop.locator("#readout-equity").inner_text().endswith("USDT")
             assert desktop.locator("#history > button").count()>=1
-            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_DESKTOP_COCKPIT.png"),full_page=True)
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_2_MARKET_MICROSCOPE_DESKTOP_COCKPIT.png"),full_page=True)
             desktop.locator("#profile-name").fill("V3 EMA 10-30 Browser Acceptance")
             desktop.locator("#save-profile").click()
             desktop.locator("#saved-profiles option").filter(has_text="V3 EMA 10-30").wait_for(state="attached",timeout=15000)
@@ -70,11 +80,15 @@ def main():
             assert "USDC" in desktop.locator("#comparison-rows > tr").first.inner_text()
             desktop.locator("#comparison-rows > tr").first.locator("button").click()
             expect(desktop.locator("#equity")).to_contain_text("USDC",timeout=25000)
+            expect(desktop.locator("#micro-context")).to_contain_text("OKX Spot",timeout=25000)
+            expect(desktop.locator("#micro-context")).to_contain_text("1h",timeout=25000)
             assert desktop.locator("#inventory").inner_text().endswith("BTC")
-            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_DESKTOP_COCKPIT.png"),full_page=True)
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_2_MARKET_MICROSCOPE_DESKTOP_COCKPIT.png"),full_page=True)
             # V4: compose and execute Yoann's own declarative strategy.
             desktop.locator("#kind").select_option("CUSTOM_RULES")
             assert desktop.locator("#custom-fields").is_visible()
+            assert desktop.locator("#draft-status").is_visible()
+            expect(desktop.locator("#draft-status")).to_contain_text("dernier rapport PAPER")
             desktop.locator('select[name="entry_rule"]').select_option("PRICE_ABOVE_EMA")
             desktop.locator('select[name="filter_rule"]').select_option("VOLUME_ABOVE")
             desktop.locator('input[name="volume_multiplier"]').fill("1")
@@ -84,6 +98,8 @@ def main():
             desktop.locator("#saved-profiles option").filter(has_text="Yoann").wait_for(state="attached",timeout=10000)
             desktop.locator("#run").click()
             expect(desktop.locator("#run-id")).to_contain_text("personnalisée",timeout=30000)
+            assert desktop.locator("#draft-status").is_hidden()
+            expect(desktop.locator("#micro-context")).to_contain_text("OKX Spot",timeout=25000)
             assert desktop.locator("#quant-desk").is_visible()
             assert "USDC" in desktop.locator("#quant-realized").inner_text()
             assert "USDC" in desktop.locator("#quant-unrealized").inner_text()
@@ -99,10 +115,10 @@ def main():
             mobile.goto(BASE,wait_until="domcontentloaded")
             expect(mobile.locator("#dataset-badge")).to_have_text("ARCHIVE AUTHENTIFIÉE", timeout=15000)
             mobile.locator("#laboratory").scroll_into_view_if_needed()
-            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_MOBILE_COCKPIT.png"),full_page=True)
+            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_2_MARKET_MICROSCOPE_MOBILE_COCKPIT.png"),full_page=True)
             width=mobile.evaluate("document.documentElement.scrollWidth")
             assert width<=390, f"Unexpected horizontal body overflow mobile: {width}px"
-            print("PASS: Chromium V4.1 native risk desk + drawdown, six/seven methods, historical OKX, profiles, desktop/mobile and no JS errors")
+            print("PASS: Chromium V4.2 SHA-linked historical candlesticks, paper markers, SMA/EMA/Bollinger/VWAP, pan/zoom, draft guard, seven reference models, Windows OKX and no JS errors")
         finally:
             browser.close()
 
