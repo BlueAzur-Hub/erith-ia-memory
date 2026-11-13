@@ -196,5 +196,5 @@ jobs:
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
             delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip \
             delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
