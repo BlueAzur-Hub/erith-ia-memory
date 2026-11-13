@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V4_5_RELEASE_CI_SUCCESS_USER_FIREFOX_PENDING_V4_4_OWNER_VALIDATED_BTC_USDC_90D_4H",
+  "status": "V4_5_RELEASE_CI_SUCCESS_OWNER_FIREFOX_UI_CONFIRMED_BTC_USDC_720_1H_FILTER_RESEARCH",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -299,7 +299,7 @@
     {
       "stage": "C2+++++",
       "version": "4.5.0",
-      "status": "PUBLISHED_FULL_CI_SUCCESS_OWNER_FIREFOX_PENDING",
+      "status": "PUBLISHED_FULL_CI_SUCCESS_OWNER_FIREFOX_UI_CONFIRMED",
       "release_tag": "seven-heaven-strategy-lab-v4-5-controlled-filter-research-2026-11-13",
       "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-5-controlled-filter-research-2026-11-13",
       "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PYTHON313_WINDOWS_PAPER.zip",
@@ -332,7 +332,13 @@
         "windows_python313_double_click_verified": true,
         "chromium_premium_filter_studio_accepted": true,
         "public_okx_source_smoke_verified": true,
-        "owner_firefox_verified": false
+        "owner_firefox_verified": true,
+        "owner_evidence_type": "screenshot_and_copied_UI_text_only",
+        "owner_evidence_date_local": "2026-11-13",
+        "owner_confirmed_pair": "OKX Spot BTC/USDC",
+        "owner_confirmed_hourly_bars": 720,
+        "owner_report_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_OWNER_FIREFOX_ACCEPTANCE_AND_RESEARCH_HANDOFF_2026_11_13.md",
+        "owner_source_sha_full_verified_independently": false
       }
     },
     {
@@ -351,7 +357,7 @@
   ],
   "engines": {
     "erith_internal": {
-      "status": "V4_5_PUBLISHED_CONTROLLED_FILTER_RESEARCH_PAPER_CI_PASS_OWNER_FIREFOX_PENDING",
+      "status": "V4_5_RELEASE_AND_OWNER_FIREFOX_UI_CONFIRMED_PAPER_ONLY",
       "trade_api": false
     },
     "freqtrade": {
@@ -702,8 +708,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V4.4 validated on owner USB Firefox 2026-11-13 BTC/USDC 2160 OKX hourly candles aggregated to 540 4h, 3 closed losing positions and 6 verified PAPER fills, 10k -> 9148.97 USDC (-8.51%, net -851.03), Aether Forensics and Scientific both present. V4.5 single complete official ZIP published and CI fully green; USER Firefox V4.5 pending. At return: STOP old Python, BACKUP E:\\seven_heaven_strategy_lab\\workspace\\ to separate storage; unpack ONE complete V4.5 ZIP files over existing application directory WITHOUT deleting workspace or nested directory; launch START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd; check BUILD 4.5.0; use already cached BTC/USDC 90 days/4h, select My custom strategy, click 'Comparer 5 variantes de filtres · Aether Research V4.5', read training-only chosen filter and holdout matrices, no new USB JSON. Do not install incremental developer patch scripts.",
-  "next_developer_task": "After V4.5 owner acceptance: compare configurations with Yoann, consider V4.6 risk position sizing and capital management only after accurate requirements; V5 autonomous PAPER bots remain separated and never real trading by default. Maintain own independent code and one complete release per version.",
+  "next_single_owner_check": "V4.5 Firefox UI accepted on 2026-11-13 based on screenshot and copied page text: OKX BTC/USDC 720 closed 1h candles, two chronological filter comparisons (RSI<60: -3.28% vs -3.40% owner; RSI<45: 0% with ZERO fills vs -9.36% owner). This is owner UI evidence only, not independent rehash of USB archive nor blind out-of-sample success. No new ZIP to install or repeated owner test required. Keep E:\\seven_heaven_strategy_lab\\workspace\\ private and backed up on another device.",
+  "next_developer_task": "V4.6 Extended Historical Research is planned (NOT BUILT): verify official Binance public monthly spot BTCUSDT 1h archives for 2019-2021 and 2024-2025 using publisher .CHECKSUM, handle milliseconds pre-2025 vs microseconds from 2025-01, enforce continuity/time alignment/limits and local USB disk reserve without overwriting workspace; run small separate pilot before integration. Do not merge BTC/USDT with OKX BTC/USDC. Explore risk sizing only after historical data quality. Freqtrade/Hummingbot optional and PAPER-only; V5 autonomous bots not built.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -716,11 +722,11 @@
     "V4.1 user Firefox screenshot verified (not full raw workspace and SHA); UI custom-config selection alone does not change prior displayed EMA 4h result until a new PAPER simulation is run.",
     "Microscope EMA/SMA/Bollinger daily OHLCV VWAP overlays are chart analytics only; markers are saved hypothetical next-bar-open executions, not actual fills, signals, live orderbook or verified tick-level VWAP.",
     "Owner V4.2 UI screenshot confirms functionality but not a cryptographic rehash of raw USB data, and not proof of live fill execution.",
-    "V4.3 owner Windows Firefox acceptance pending. Successful GitHub CI is NOT proof of owner USB-run.",
+    "V4.3 owner Windows Firefox UI accepted from screenshot/text; no independent source rehash. CI is distinct from owner acceptance.",
     "V4.3 training-and-later validation is not automatically a blind untouched out-of-sample experiment if owner tuned settings after viewing any historical window. Separate fresh starting cash and indicator warmup per test slice; walk-forward returns are not compounded across independent windows.",
-    "V4.4 owner USB/Firefox acceptance PENDING; GitHub CI Chromium/Windows/OKX passes but is not local owner evidence.",
+    "V4.4 owner Windows Firefox UI confirmed by screenshot/text; complete local USB archive not independently rehashed.",
     "V4.4 MFE/MAE extrema are retrospective candle wick descriptions, not realizable fills and not causally known to an entry strategy; on multi-entry positions these are deliberately unavailable.",
-    "V4.5 CI Chromium/Windows/OKX success is not owner Firefox verification; owner reception pending.",
+    "V4.5 owner Firefox UI confirmed 2026-11-13 by screenshot and text; CI is separately green. No independent USB archive audit, blind holdout certification, real fill, or profitability claim.",
     "V4.5 fixed entry filter experiments on previously viewed public data are not a blind untouched holdout; selecting on a training set, disclosing all candidates and multiple folds does not prove that filters avoid future losses."
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md",
@@ -732,9 +738,20 @@
     "zip_storage_policy": "ONE_IMMUTABLE_COMPLETE_ZIP_PER_RELEASE_IN_GITHUB_RELEASES; NO_COPY_IN_SHARED_REPO_TREE",
     "local_usb_policy": "ONLY_ONE_ACTIVE_RUNTIME_PLUS_PRIVATE_WORKSPACE; DO_NOT_DELETE_OR_OVERWRITE_WORKSPACE",
     "current_published": "4.5.0",
-    "last_user_firefox_accepted": "4.4.0",
+    "last_user_firefox_accepted": "4.5.0",
     "release_assets_sha256_sourced_from": "verified GitHub Releases asset digest",
     "metadata_pointers": "This manifesto documents state; README.md in shared strategy_lab folder is the human navigation entry point; Notion links to README.",
     "last_verified_utc_date": "2026-11-13"
+  },
+  "v4_6_research_plan": {
+    "status": "PLANNED_NOT_BUILT",
+    "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_6_EXTENDED_HISTORICAL_RESEARCH_SOURCE_PLAN_2026_11_13.md",
+    "base_market": "Binance Spot BTC/USDT 1h",
+    "planned_windows": [
+      "2019-2021",
+      "2024-2025"
+    ],
+    "separate_okx_market": "OKX Spot BTC/USDC",
+    "owner_workspace_modified": false
   }
 }
