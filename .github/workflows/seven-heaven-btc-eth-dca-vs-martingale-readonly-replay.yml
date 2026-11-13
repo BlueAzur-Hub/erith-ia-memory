@@ -52,7 +52,7 @@ jobs:
         run: |
           set -euo pipefail
           folder='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_dca_martingale_causal_evidence'
-          git add -- "$folder"
+          git add --sparse -- "$folder"
           git diff --cached --check
           if git diff --cached --quiet; then
             echo 'Proof already committed'
