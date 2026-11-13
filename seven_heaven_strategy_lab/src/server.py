@@ -235,6 +235,15 @@ class Handler(BaseHTTPRequestHandler):
                     comparison = compare(historical, requested, source_timeframe=base_tf,
                                          source_label=source["label"])
                     comparison["params"]["source_id"] = source["id"]
+                    # Human strategy labels must follow the actual underlying and
+                    # quote asset, never label USDC/ETH simulations as BTC/USDT.
+                    for row in comparison["rows"]:
+                        if row["kind"] == "CASH":
+                            row["label"] = "Conservation " + source["quote"]
+                        elif row["kind"] == "HOLD_50":
+                            row["label"] = "Buy & Hold 50 % " + source["base"]
+                        elif row["kind"] == "HOLD_100":
+                            row["label"] = "Buy & Hold 100 % " + source["base"]
                     if base_tf == "1h":
                         comparison["warnings"] = [
                             w.replace("0.10% OKX Taker is a scenario, not historical Binance realized fees",
