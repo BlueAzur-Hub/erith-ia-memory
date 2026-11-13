@@ -1,0 +1,422 @@
+{
+  "schema": "seven-heaven.v5-v6-paper-execution-contract-audit-v1",
+  "status": "OFFLINE_ENGINE_AUDIT_TESTS_PASS_GAPS_DOCUMENTED",
+  "session_date": "2026-11-13",
+  "simulators": "Unmodified public Administrator V5/V6",
+  "source_files": {
+    "v5": {
+      "file": "public/agent_crypto_erith_ia/administrator/js/market-microscope-paper-backtest-v5.js",
+      "git_blob_sha1": "069162a40c4a65651ff1cd9ac98a837d64f41e9a",
+      "bytes": 14504
+    },
+    "v6": {
+      "file": "public/agent_crypto_erith_ia/administrator/js/market-microscope-orderbook-paper-v6.js",
+      "git_blob_sha1": "7ae813cd1268ddd657052cc1e2ca474e8b1aed3b",
+      "bytes": 14037
+    }
+  },
+  "reference_instrument_snapshot": {
+    "BTC-USDC": {
+      "ask": 70904.9,
+      "bid": 70904.8,
+      "minSz": 0.00001,
+      "lotSz": 1e-8,
+      "tickSz": 0.1,
+      "source": "OKX public API snapshot 2026-11-13 01:41:02 UTC"
+    },
+    "ETH-USDC": {
+      "ask": 2009.18,
+      "bid": 2009.17,
+      "minSz": 0.001,
+      "lotSz": 0.000001,
+      "tickSz": 0.01,
+      "source": "OKX public API snapshot 2026-11-13 01:41:02 UTC"
+    }
+  },
+  "external_instrument_evidence": "seven_heaven_okx_public_eligibility_evidence/SEVEN_HEAVEN_OKX_BTC_ETH_USDC_PUBLIC_ELIGIBILITY_2026_11_13_PROOFS.json",
+  "historical_fee_reference": "Notion OKX MEMORY CORE 01 Trading Fees, 6/9/12 Nov screenshot",
+  "limits": [
+    "The artificial prices used in the minSz violation counterexample are NOT observed market prices",
+    "Fixture books have two deep price levels to isolate arithmetic; NOT observed depth",
+    "No account-specific min-notional, fee currency, EEA availability, or executable orders validated",
+    "The absence of lotSz validation is a PAPER fidelity gap; not evidence of erroneous paper fee arithmetic"
+  ],
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "results": [
+      {
+        "label": "BTC-USDC V5 deterministic EMA event fixture",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V5 10 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V6 10 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V5 20 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V6 20 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V5 100 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V6 100 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V5 1000 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V6 1000 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "BTC-USDC V6 accepts below-minSz base quantity in isolated high-price fixture (documented gap)",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V5 deterministic EMA event fixture",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V5 10 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V6 10 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V5 20 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V6 20 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V5 100 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V6 100 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V5 1000 USDC fee and next-open accounting",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V6 1000 USDC bid/ask depth sweep, fee and no order",
+        "status": "PASS"
+      },
+      {
+        "label": "ETH-USDC V6 accepts below-minSz base quantity in isolated high-price fixture (documented gap)",
+        "status": "PASS"
+      },
+      {
+        "label": "V5 capital below 10 USDC is refused at UI-setting level",
+        "status": "PASS"
+      },
+      {
+        "label": "V6 quote budget below 10 USDC is refused at UI-setting level",
+        "status": "PASS"
+      }
+    ]
+  },
+  "counts": {
+    "v5_entries_not_lot_aligned": 8,
+    "v6_buys_not_lot_aligned": 8,
+    "v6_sells_not_lot_aligned": 8,
+    "v6_sell_reference_differs_from_buy_size": 8,
+    "v5_entries_below_minSz": 0,
+    "v6_buys_below_minSz_at_archived_prices": 0,
+    "v6_below_minSz_counterexamples": 2
+  },
+  "v5_fixtures": [
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 10,
+      "entry_base_quantity": 0.0001280206109780252,
+      "lotSz": 1e-8,
+      "minSz": 0.00001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.0001280206109780252,
+      "quantity_after_floor_to_lot": 0.00012802,
+      "entry_price_synthetic": 78034.387695,
+      "closed_pnl_synthetic": -3.65542594246424
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 20,
+      "entry_base_quantity": 0.0002560412219560504,
+      "lotSz": 1e-8,
+      "minSz": 0.00001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.0002560412219560504,
+      "quantity_after_floor_to_lot": 0.00025604,
+      "entry_price_synthetic": 78034.387695,
+      "closed_pnl_synthetic": -7.31085188492848
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 100,
+      "entry_base_quantity": 0.001280206109780252,
+      "lotSz": 1e-8,
+      "minSz": 0.00001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.001280206109780252,
+      "quantity_after_floor_to_lot": 0.0012802,
+      "entry_price_synthetic": 78034.387695,
+      "closed_pnl_synthetic": -36.5542594246424
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 1000,
+      "entry_base_quantity": 0.01280206109780252,
+      "lotSz": 1e-8,
+      "minSz": 0.00001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.01280206109780252,
+      "quantity_after_floor_to_lot": 0.01280206,
+      "entry_price_synthetic": 78034.387695,
+      "closed_pnl_synthetic": -365.5425942464242
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 10,
+      "entry_base_quantity": 0.004517907116005425,
+      "lotSz": 0.000001,
+      "minSz": 0.001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.004517907116005425,
+      "quantity_after_floor_to_lot": 0.004517,
+      "entry_price_synthetic": 2211.2030489999997,
+      "closed_pnl_synthetic": -3.655425942464241
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 20,
+      "entry_base_quantity": 0.00903581423201085,
+      "lotSz": 0.000001,
+      "minSz": 0.001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.00903581423201085,
+      "quantity_after_floor_to_lot": 0.009035,
+      "entry_price_synthetic": 2211.2030489999997,
+      "closed_pnl_synthetic": -7.310851884928482
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 100,
+      "entry_base_quantity": 0.04517907116005425,
+      "lotSz": 0.000001,
+      "minSz": 0.001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.04517907116005425,
+      "quantity_after_floor_to_lot": 0.045179,
+      "entry_price_synthetic": 2211.2030489999997,
+      "closed_pnl_synthetic": -36.5542594246424
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 1000,
+      "entry_base_quantity": 0.45179071160054246,
+      "lotSz": 0.000001,
+      "minSz": 0.001,
+      "above_minSz": true,
+      "aligned_with_lotSz": false,
+      "theoretical_unrounded_base_qty": 0.45179071160054246,
+      "quantity_after_floor_to_lot": 0.45178999999999997,
+      "entry_price_synthetic": 2211.2030489999997,
+      "closed_pnl_synthetic": -365.5425942464242
+    }
+  ],
+  "v6_fixtures": [
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 10,
+      "minSz": 0.00001,
+      "lotSz": 1e-8,
+      "buy_base_quantity": 0.00014089308341186564,
+      "sell_base_quantity_from_mid": 0.00014103407594826022,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 10.000000000000002,
+      "sell_quote_received": 9.989992955347905,
+      "buy_quote_fee": 0.009990009990009992,
+      "sell_quote_fee": 0.009999992948296201,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 20,
+      "minSz": 0.00001,
+      "lotSz": 1e-8,
+      "buy_base_quantity": 0.0002817861668237313,
+      "sell_base_quantity_from_mid": 0.00028206815189652044,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 20.000000000000004,
+      "sell_quote_received": 19.97998591069581,
+      "buy_quote_fee": 0.019980019980019983,
+      "sell_quote_fee": 0.019999985896592402,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 100,
+      "minSz": 0.00001,
+      "lotSz": 1e-8,
+      "buy_base_quantity": 0.0014089308341186564,
+      "sell_base_quantity_from_mid": 0.0014103407594826022,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 100.00000000000001,
+      "sell_quote_received": 99.89992955347905,
+      "buy_quote_fee": 0.09990009990009992,
+      "sell_quote_fee": 0.09999992948296202,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": 1000,
+      "minSz": 0.00001,
+      "lotSz": 1e-8,
+      "buy_base_quantity": 0.014089308341186563,
+      "sell_base_quantity_from_mid": 0.014103407594826022,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 1000.0000000000001,
+      "sell_quote_received": 998.9992955347905,
+      "buy_quote_fee": 0.999000999000999,
+      "sell_quote_fee": 0.9999992948296201,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 10,
+      "minSz": 0.001,
+      "lotSz": 0.000001,
+      "buy_base_quantity": 0.004972182676519769,
+      "sell_base_quantity_from_mid": 0.004977167245262358,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 10.000000000000002,
+      "sell_quote_received": 9.989975139049609,
+      "buy_quote_fee": 0.009990009990009992,
+      "sell_quote_fee": 0.009999975114163773,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 20,
+      "minSz": 0.001,
+      "lotSz": 0.000001,
+      "buy_base_quantity": 0.009944365353039539,
+      "sell_base_quantity_from_mid": 0.009954334490524717,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 20.000000000000004,
+      "sell_quote_received": 19.979950278099217,
+      "buy_quote_fee": 0.019980019980019983,
+      "sell_quote_fee": 0.019999950228327547,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 100,
+      "minSz": 0.001,
+      "lotSz": 0.000001,
+      "buy_base_quantity": 0.0497218267651977,
+      "sell_base_quantity_from_mid": 0.04977167245262359,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 100.00000000000001,
+      "sell_quote_received": 99.89975139049609,
+      "buy_quote_fee": 0.09990009990009992,
+      "sell_quote_fee": 0.09999975114163773,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": 1000,
+      "minSz": 0.001,
+      "lotSz": 0.000001,
+      "buy_base_quantity": 0.49721826765197696,
+      "sell_base_quantity_from_mid": 0.49771672452623583,
+      "buy_above_minSz": true,
+      "buy_lot_aligned": false,
+      "sell_lot_aligned": false,
+      "sell_quantity_is_identical_to_buy_quantity": false,
+      "buy_quote_spent": 1000.0000000000001,
+      "sell_quote_received": 998.9975139049609,
+      "buy_quote_fee": 0.999000999000999,
+      "sell_quote_fee": 0.9999975114163773,
+      "fixture_note": "Synthetic TWO-LEVEL deep book at the archived ask/bid; NOT a live orderbook or fill"
+    }
+  ],
+  "minSz_counterexamples": [
+    {
+      "pair": "BTC-USDC",
+      "synthetic_ask": 2000000,
+      "budget_usdc": 10,
+      "returned_ok": true,
+      "baseQuantity": 0.000004995004995004996,
+      "minSz": 0.00001,
+      "below_minimum": true,
+      "real_market_quote": false
+    },
+    {
+      "pair": "ETH-USDC",
+      "synthetic_ask": 20000,
+      "budget_usdc": 10,
+      "returned_ok": true,
+      "baseQuantity": 0.0004995004995004995,
+      "minSz": 0.001,
+      "below_minimum": true,
+      "real_market_quote": false
+    }
+  ],
+  "decisions": {
+    "runtime_unchanged": true,
+    "order_enabled": false,
+    "historical_fee_math": "PASS on synthetic fixture at 0.10% fee and 0.05% slip per side",
+    "instant_book_fee_math": "PASS on synthetic fixture with 0.10% quote taker fee",
+    "exchange_lot_min_enforcement": "NOT_IMPLEMENTED in either module",
+    "V6_sell_as_order_close": "NOT_PROVEN; SELL quoteBudget is mid-based reference, not original BUY base position",
+    "production_ready": "NO; this is an educational PAPER module with no actual order compliance guarantee"
+  }
+}
