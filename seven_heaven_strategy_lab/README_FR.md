@@ -1,8 +1,18 @@
-# Seven Heaven Strategy Lab — V4 Native Strategy Creator + OKX Observatory
+# Seven Heaven Strategy Lab — V4.1 Professional Risk Desk + Native Strategy Creator
 
-**Version 4.0.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
+**Version 4.1.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
 
 La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan) et ajoute une **vraie source publique OKX Spot**. L'objectif est de commencer à étudier des données plus récentes avec un suivi transparent des dates, instruments, frais, volumes et preuves SHA-256, sans employer d'API privée et sans ordre réel.
+
+## V4.1 — analyse professionnelle intégrée (sans modifier les anciennes stratégies)
+
+- Sous le graphique du portefeuille, le **Desk Aether Quant** présente les positions **entièrement clôturées**, le **taux de réussite des sorties**, le **profit factor**, le **temps en position**, le **résultat réalisé** et le **résultat latent**. Un graphique distinct affiche le **drawdown historique**.
+- Les positions encore ouvertes ne sont **pas** comptées comme gagnantes ou perdantes. Les six stratégies existantes, les stratégies personnelles et leurs prix d'exécution fictifs ne changent pas.
+- Le calcul des résultats réalisés prend en compte les entrées multiples (DCA), leurs frais, les frais de sortie et les prix simulés qui incluent le glissement. Le latent valorise l'inventaire encore détenu à la dernière clôture.
+- Lorsque aucune sortie n'existe, le taux de réussite et le profit factor sont **non calculables**. Un profit factor sans aucune perte clôturée est signalé sans annoncer de score artificiellement infini.
+- Le drawdown maximal est calculé sur **toutes** les bougies historiques, tandis que le graphique est échantillonné pour la lisibilité. L'écart au scénario sans frais ni glissement ne se réduit pas à une soustraction des commissions.
+- Les rapports V1–V4 enregistrés sans ces nouvelles données restent lisibles ; les nouvelles cartes restent masquées pour ces anciens rapports au lieu d'inventer des statistiques.
+- Recherche inspirée des pratiques documentées de TradingView Strategy Tester, Freqtrade lookahead-analysis et NautilusTrader (granularité de données). Nous n'installons aucune de ces dépendances dans le programme.
 
 ## V4 — créateur de stratégies indépendant, sans bot externe obligatoire
 
@@ -40,13 +50,13 @@ La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan
 
 Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes des pages passent par ce serveur local, et ce serveur Python peut **sortir vers les API publiques OKX** lors d'un clic. Aucune clé API OKX, compte, portefeuille, mot de passe ni ordre réel ne sont nécessaires. Les résultats ne deviennent jamais de vrais achats/ventes.
 
-## Mise à niveau sur la clé USB depuis la V3.1 déjà validée
+## Mise à niveau sur la clé USB depuis la V4 déjà validée
 
 1. Fermer la fenêtre noire `Seven Heaven Strategy Lab` (Ctrl+C), puis garder la clé branchée.
 2. Copier `E:\seven_heaven_strategy_lab\workspace\` vers **une sauvegarde distincte**, avant d'écraser les fichiers du programme.
-3. Télécharger le **ZIP V4 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
+3. Télécharger le **ZIP V4.1 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
-5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.0.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
+5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.1.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
 6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER puis comparer **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
 7. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
