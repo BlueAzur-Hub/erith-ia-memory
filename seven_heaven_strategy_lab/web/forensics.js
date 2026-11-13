@@ -147,8 +147,9 @@
       root.append(node("p","forensic-none","Aucune position correspondant à ce filtre."));
       return;
     }
-    for(const [i,p] of selected.entries()){
-      root.append(card(p,last.metrics.all_positions-i,quote,base));
+    for(const p of selected){
+      const sequence=last.metrics.all_positions-records.indexOf(p);
+      root.append(card(p,sequence,quote,base));
     }
   }
   function render(payload){
