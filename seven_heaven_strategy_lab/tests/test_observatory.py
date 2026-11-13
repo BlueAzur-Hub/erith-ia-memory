@@ -84,6 +84,20 @@ class ObservatoryV2Tests(unittest.TestCase):
             self.assertAlmostEqual(row["equity_final"],
                 row["cash_final"]+row["base_inventory_btc"]*rows[-1][4],places=3)
 
+    def test_custom_rules_can_be_compared_to_six_reference_models(self):
+        rows=build_bars(6000)
+        params={"kind":"CUSTOM_RULES","timeframe":"1h","capital":1000,
+                "entry_rule":"PRICE_ABOVE_EMA","filter_rule":"NONE",
+                "exit_rule":"PRICE_BELOW_EMA","stop_loss_pct":3}
+        report=compare(rows,params)
+        self.assertEqual([row["kind"] for row in report["rows"]],
+                         list(ORDER)+["CUSTOM_RULES"])
+        self.assertEqual(report["status"],"SEVEN_MODELS_PAPER_ONLY")
+        self.assertEqual(report["safety"]["orders_real"],0)
+        self.assertEqual(report["rows"][-1]["label"],"Stratégie personnalisée")
+        baseline=compare(rows,{"kind":"EMA_CROSS","timeframe":"1h","capital":1000})
+        self.assertEqual(report["rows"][:6],baseline["rows"])
+
     def test_dca_frequency_is_in_minutes_not_candle_counts(self):
         rows=build_bars(6000)
         report=run_one(rows,{"kind":"DCA","timeframe":"1h","capital":1000,
@@ -132,7 +146,7 @@ class ObservatoryV2Tests(unittest.TestCase):
         src=Path(server.__file__).read_text(encoding="utf-8")
         self.assertIn('"/api/compare"',src)
         self.assertNotIn('"/api/trade",',src)
-        self.assertEqual(server.Handler.server_version,"SevenHeavenStrategyLab/3.0")
+        self.assertEqual(server.Handler.server_version,"SevenHeavenStrategyLab/4.0")
 
 
 if __name__=="__main__":
