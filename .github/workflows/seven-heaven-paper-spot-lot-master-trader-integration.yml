@@ -63,7 +63,7 @@ jobs:
           from pathlib import Path
           root=Path('public/agent_crypto_erith_ia/administrator')
           h=(root/'index.html').read_text()
-          old='<script defer src="./js/market-microscope-orderbook-paper-v6.js?rev=book-depth-paper-v6-20261106"'
+          old='<script defer src="./js/market-microscope-orderbook-paper-v6.js?rev=book-depth-paper-v6-20261106-okx-taker-fee-and-fresh-compare-20261113"'
           a='./js/market-microscope-paper-spot-lot-inventory-adapter.js'
           b='./js/market-microscope-paper-spot-realism-comparison.js'
           assert h.index(old)<h.index(a)<h.index(b)
