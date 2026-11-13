@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>ERITH.IA · Vaulta (A) — identité, historique et incident graphique</title>
+<style>
+:root{font:15px/1.62 system-ui,-apple-system,"Segoe UI",sans-serif;color:#e9f5f9;background:#061523;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#194454,#061725 58%)}main{max-width:1180px;margin:auto;padding:28px 22px 75px}
+a{color:#86e8ee;text-underline-offset:3px}a:focus-visible,summary:focus-visible{outline:2px solid #f8c77c;outline-offset:3px}
+nav{display:flex;gap:17px;flex-wrap:wrap;margin-bottom:30px;font-size:.9rem}.eyebrow{color:#88f1ef;font-weight:750;letter-spacing:.14em;font-size:.77rem;text-transform:uppercase}
+h1{font:500 clamp(2.4rem,5vw,4.35rem)/1.15 Georgia,serif;margin:16px 0 14px}h2{font-size:1.35rem;color:#f0cf89;margin:0 0 17px}.sub{color:#b5d5e3;font-size:1.04rem;max-width:920px}
+.card{background:rgba(8,34,49,.92);border:1px solid #31566b;border-radius:15px;padding:23px;margin:20px 0}.gold{background:rgba(92,72,33,.22);border-color:#9f8450}.notice{border-left:3px solid #f2c478;background:#3a321f88;padding:14px 18px;border-radius:5px}.ok{border-left:3px solid #63d0bd;background:#143f4088;padding:14px 18px;border-radius:5px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metric{border:1px solid #34576b;border-radius:9px;padding:14px;background:#091b2a;min-height:112px}.metric small,.metric span{display:block;color:#aac6d4;font-size:.8rem}.metric strong{display:block;font-size:1.26rem;margin:4px 0;font-variant-numeric:tabular-nums}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.inner{border:1px solid #33566b;padding:14px 18px;border-radius:9px}.inner h3{margin:0 0 8px;color:#e8cd94;font-size:1rem}
+strong{font-weight:750}ul{padding-left:23px}li{margin-bottom:8px}table{width:100%;border-collapse:collapse;min-width:620px;font-size:.9rem}th,td{padding:10px 12px;border-bottom:1px solid #315468;text-align:left;vertical-align:top}th{color:#91e9e6}.scroll{overflow-x:auto}code{font-size:.87rem;color:#c9ede5;overflow-wrap:anywhere}
+details{border:1px solid #345366;border-radius:10px;margin:10px 0;padding:12px 15px}summary{cursor:pointer;color:#f4d28e;font-weight:700}footer{border-top:1px solid #2c4c5e;margin-top:32px;padding-top:18px;font-size:.83rem;color:#9bb8c5}
+@media(max-width:720px){main{padding:20px 13px}.grid,.two{grid-template-columns:1fr}}
+</style></head>
+<body><main>
+<nav><a href="../trader/trading-desk.html">← Trader</a><a href="radar-priority-dossiers.html#vaulta">Atlas des priorités</a><a href="radar-historique.html">Radar historique</a><a href="zcash-case-study.html">ZEC</a><a href="../trader/axis-robotics-case-study.html">AXIS</a></nav>
+<header><span class="eyebrow">ERITH.IA · Seven Heaven · Rapport du 22 octobre 2026 · lecture seule</span>
+<h1>Vaulta · A<br>Identité et graphique</h1>
+<p class="sub">Cas d'école sur une transition de graphique : lorsque l'actif sélectionné change, l'ancien graphique ne doit pas être attribué au nouveau jeton. Dossier constitué à partir des archives GitHub, des captures Firefox du 22 octobre et des documents officiels Vaulta.</p></header>
+<section class="card gold"><h2>Décision Seven : données disponibles, transition à sécuriser</h2>
+<p class="notice"><strong>Incident observé :</strong> à 09:15, le titre indiquait « A · Vaulta », alors que la courbe affichait encore ZEC (environ 1 264 USD). À 09:17, le véritable graphique Vaulta était chargé, aux alentours de 0,094092 USD. Cette différence est une <strong>erreur temporaire d'attribution visuelle</strong>, pas une variation du prix de Vaulta.</p>
+<p class="ok"><strong>État vérifié :</strong> l'identité CoinGecko est `vaulta`, le symbole est <strong>A</strong> ; une série directe USD de <strong>288 points</strong> apparaît correctement après chargement, datée 09:14:40 dans Firefox. Le défaut d'affichage pendant l'attente <strong>n'est pas encore corrigé</strong> : <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/issues/618">issue #618 · transition ZEC → Vaulta</a>.</p>
+<div class="grid">
+<div class="metric"><small>Identité</small><strong>A · Vaulta</strong><span>CoinGecko ID : vaulta</span></div>
+<div class="metric"><small>Snapshot GitHub 08:03 Paris</small><strong>0,09457 USD</strong><span>Rang #206 · archive du 22/10</span></div>
+<div class="metric"><small>Graphique réel de Firefox</small><strong>288 points</strong><span>24 h · CoinGecko USD · 09:14:40 Paris</span></div>
+</div></section>
+<section class="card"><h2>1 · D'où vient le symbole A ?</h2>
+<p>Vaulta est le nouveau nom de l'ancien réseau EOS ; le jeton natif <strong>A</strong> remplace EOS. Le contrat natif du système et du jeton est <code>core.vaulta</code>. <strong>A n'est donc pas un simple surnom de Vaulta</strong> : c'est son véritable symbole sur le réseau.</p>
+<p>Preuve : <a target="_blank" rel="noopener noreferrer" href="https://docs.eosnetwork.com/docs/latest/advanced-topics/upgrading-to-vaulta/">documentation officielle du passage EOS → Vaulta</a>. Ne pas confondre le contrat natif avec un ERC-20 inventé ni avec un instrument Futures.</p></section>
+<section class="card"><h2>2 · Les historiques que nous possédons</h2>
+<div class="scroll"><table><thead><tr><th>Source</th><th>Marché</th><th>Résolution</th><th>Preuve</th></tr></thead><tbody>
+<tr><td>CoinGecko / Firefox</td><td>Vaulta / USD</td><td>Historique 24 h, 288 points</td><td>Chargé dans la deuxième capture ; couverture des autres périodes non vérifiée ici</td></tr>
+<tr><td>Archive publique du Core 250</td><td>`vaulta` · A · prix USD</td><td>Snapshot marché</td><td>22/10/2026 06:03:41 UTC, rang #206</td></tr>
+<tr><td>Inventaire d'archives OKX</td><td>OKX Spot A-USDT</td><td>490 bougies journalières natives, 1D UTC</td><td>Du 29/05/2025 au 30/09/2026 selon inventaire du 12/10 ; aucune lacune dans l'intervalle observé</td></tr>
+</tbody></table></div>
+<p><strong>Limite importante :</strong> la présence des 490 bougies dans le Coffre ne prouve pas que les périodes longues du Trader les utilisent déjà. Elle ne certifie pas non plus l'historique depuis la première cotation, ni une profondeur Spot actuelle sur OKX. Ne pas confondre USD de CoinGecko et USDT d'OKX.</p>
+<p>Source : <a href="../data/historical_archive_prototype/top250_coverage_reconciliation.json">inventaire historique Top 250 (12 octobre)</a>.</p></section>
+<section class="card"><h2>3 · Un second problème découvert dans le Radar Top 1 000</h2>
+<p>Les archives publiques du 22 octobre donnent 250 entrées Core (06:03:41 UTC) et 750 entrées Extended (05:31:54 UTC). Elles totalisent 1 000 rangs distincts, mais seulement <strong>999 IDs d'actifs distincts</strong> : <code>avant-usd</code> est inscrit au rang 250 puis 251 à la frontière. Le décalage temporel des deux captures peut expliquer cette collision.</p>
+<p>Le message « Top 1 000 partiel · identités incohérentes » que tu vois dans le Radar a donc un fondement observable. <strong>On ne doit ni inventer le millième actif, ni supprimer une archive.</strong> Le suivi technique est enregistré dans l'<a href="https://github.com/BlueAzur-Hub/erith-ia-memory/issues/619">issue #619</a>.</p></section>
+<section class="card"><h2>4 · Prochaines vérifications et données à intégrer</h2>
+<div class="two">
+<div class="inner"><h3>Graphique / Interface</h3><ul><li>Masquer la courbe ZEC dès que l'utilisateur sélectionne A.</li><li>Rendre la série Vaulta seulement quand ID, devise et période correspondent.</li><li>Tester passage ZEC → A → ZEC, vue hybride, périodes 24 h / 7 j, F11 et erreur réseau.</li></ul></div>
+<div class="inner"><h3>Historique / Radar</h3><ul><li>Contrôler si les 490 bougies A-USDT sont accessibles en période longue.</li><li>Réconcilier les snapshots Core et Extended d'un cycle commun.</li><li>Compléter les dossiers des autres cibles sans extrapoler les spreads ou les contrats.</li></ul></div>
+</div>
+<details><summary>Pourquoi nous ne prenons pas une décision d'achat</summary><p>Un historique cohérent ne prouve ni liquidité instantanée, ni seuil minimal accessible, ni taxe, ni exécution de revente. Cet audit ne lit aucun compte, n'émet aucun ordre et ne génère aucun P&amp;L fictif.</p></details>
+<p><a href="../data/crypto/research/vaulta-radar-display-audit.json">Lire le rapport machine complet (JSON) ↗</a></p></section>
+<footer>ERITH.IA · Seven Heaven · Dossier de recherche en lecture seule · Sources datées, captures humaines distinctes des archives automatiques · Aucune exécution réelle.</footer>
+</main></body></html>
