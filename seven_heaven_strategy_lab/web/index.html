@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.2.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.3.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -84,7 +84,7 @@
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V4.2 / PUBLIC MARKET CONNECTORS</div>
+          <div><div class="overline">V4.3 / PUBLIC MARKET CONNECTORS</div>
             <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
             <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
           </div>
@@ -127,7 +127,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.2</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.3</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -205,6 +205,7 @@
           <div class="action-stack">
             <button id="run" type="submit" class="action-button action-primary">▶ <span>Lancer la simulation PAPER</span></button>
             <button id="compare" type="button" class="action-button action-secondary">≋ <span>Comparer les 6 méthodes sur cet horizon</span></button>
+            <button id="robustness-run" type="button" class="action-button action-robustness">♜ <span>Éprouver cette stratégie dans le temps · Aether Scientific</span></button>
           </div>
         </form>
         <div class="profile-group">
@@ -219,7 +220,7 @@
 
       <section id="results" class="panel result-panel" aria-labelledby="result-title">
         <div class="section-heading compact">
-          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.2 MARKET</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
+          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.3 MARKET</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
           <span id="run-id" class="mini-badge">EN ATTENTE</span>
         </div>
         <div id="draft-status" class="draft-status" hidden>Réglages modifiés : le résultat à droite correspond toujours au <strong>dernier rapport PAPER</strong>. Lance une nouvelle simulation pour appliquer ces réglages.</div>
@@ -325,9 +326,9 @@
           </div>
           <p class="model-warning">Les écarts avec le scénario sans coûts ne sont pas une simple soustraction de commissions : le capital évolue à chaque transaction.</p>
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
-          <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th>BTC</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
+          <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th id="trades-base-label">ACTIF</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V4.2 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4.3 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -353,9 +354,52 @@
       </div>
     </section>
 
+    <section id="robustness" class="panel scientific-panel" aria-labelledby="scientific-title">
+      <div class="section-heading">
+        <div><div class="overline">05 / AETHER SCIENTIFIC · V4.3 EXPANDING WALK-FORWARD</div>
+          <h2 id="scientific-title">Laboratoire de <span class="accent-text">robustesse</span></h2>
+        </div>
+        <span class="mini-badge scientific-badge">HISTORIQUE VÉRIFIÉ · PAPER ONLY</span>
+      </div>
+      <p class="panel-lead">
+        Les configurations sont évaluées sur les anciennes bougies, puis testées sur des périodes plus récentes.
+        La recherche conserve la source SHA-256, les commissions et les règles de chaque étude.
+        <strong>Aucun fichier supplémentaire n'est créé sur ta clé.</strong>
+      </p>
+      <div id="robustness-empty" class="scientific-empty">
+        <div class="scientific-empty-symbol" aria-hidden="true">⌁</div>
+        <div><strong>Une stratégie n'est pas une seule performance.</strong>
+          <p>Dans l'Atelier, clique sur « Éprouver cette stratégie dans le temps ».
+          Les scénarios EMA comparés sont sélectionnés sur l'historique passé seulement ;
+          chaque fenêtre de vérification commence avec un nouveau capital PAPER.</p>
+        </div>
+      </div>
+      <div id="robustness-result" hidden>
+        <div class="scientific-provenance">
+          <strong id="scientific-source">—</strong>
+          <span id="scientific-hash">SHA-256 —</span>
+        </div>
+        <div class="scientific-metrics">
+          <div><small>FENÊTRES CHRONOLOGIQUES</small><strong id="scientific-folds-count">—</strong><span>Tests ultérieurs indépendants</span></div>
+          <div><small>RENDEMENT MOYEN · VÉRIFICATION</small><strong id="scientific-average">—</strong><span>Moyenne arithmétique, non cumulée</span></div>
+          <div><small>PIRE FENÊTRE · VÉRIFICATION</small><strong id="scientific-worst">—</strong><span>Performance nette avec frais</span></div>
+          <div><small>AVEC FRAIS ET GLISSEMENT ×2</small><strong id="scientific-stressed">—</strong><span>Moyenne des scénarios défavorables</span></div>
+        </div>
+        <div class="scientific-matrix-title">TRAJECTOIRE DES EXPÉRIENCES</div>
+        <div id="scientific-fold-list" class="scientific-fold-list"></div>
+        <div class="scientific-model-notice">
+          <strong>Lecture scientifique :</strong>
+          <span id="scientific-method">Sélection sur le passé, vérification sur l'avenir de la fenêtre choisie.</span>
+          <p>Une période de vérification n'est pas automatiquement « vierge » : les dates ont pu être inspectées avant cette étude.
+          Les portefeuilles et indicateurs redémarrent à chaque fenêtre ; un nouveau capital est attribué sans reporter les positions.
+          Pas de carnet historique ni de remplissage réel garanti. Aucune prédiction, aucun ordre réel.</p>
+        </div>
+      </div>
+    </section>
+
     <section id="vault" class="panel vault-panel" aria-labelledby="vault-title">
       <div class="section-heading">
-        <div><div class="overline">05 / AETHER MEMORY VAULT</div><h2 id="vault-title">Coffre de <span class="accent-text">tes expériences</span></h2></div>
+        <div><div class="overline">06 / AETHER MEMORY VAULT</div><h2 id="vault-title">Coffre de <span class="accent-text">tes expériences</span></h2></div>
         <span class="mini-badge">ENREGISTRÉ SUR TA CLÉ USB</span>
       </div>
       <div class="vault-columns">
@@ -366,7 +410,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.2.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.3.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>
