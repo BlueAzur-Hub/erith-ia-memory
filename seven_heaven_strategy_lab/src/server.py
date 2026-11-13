@@ -13,6 +13,7 @@ from src.engine import LabError, load_bars, options
 from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
 from src.microscope import build_microscope, ALLOWED_WINDOWS
 from src.robustness import study as study_robustness
+from src.forensics import diagnose as diagnose_paper_trades
 from src.okx_public import (
     PublicMarketError, ALLOWED_SPOT, ALLOWED_DAYS, collect as collect_okx, list_sources as okx_sources,
     read_source as read_okx_source,
@@ -95,7 +96,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.3"
+    server_version = "SevenHeavenStrategyLab/4.4"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -141,7 +142,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.3.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.4.0",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
@@ -150,6 +151,7 @@ class Handler(BaseHTTPRequestHandler):
                         "strategy_creator_enabled": True,
                         "market_microscope_enabled": True,
                         "walk_forward_research_enabled": True,
+                        "paper_trade_forensics_enabled": True,
                         "market_microscope_windows": list(ALLOWED_WINDOWS),
                         "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
                         "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
@@ -159,6 +161,33 @@ class Handler(BaseHTTPRequestHandler):
             self._send({"datasets": [dataset_status(WORKSPACE)]})
         elif path == "/api/okx-sources":
             self._send(okx_sources(WORKSPACE))
+        elif path == "/api/trade-forensics":
+            # Postmortem only; exact saved result + same SHA-verified candles.
+            # Replay causes without changing prior JSON or touching exchange APIs.
+            try:
+                query=parse_qs(urlsplit(self.path).query,keep_blank_values=True)
+                if set(query)!={"run_id"} or len(query["run_id"])!=1:
+                    raise LabError("Un identifiant de simulation est requis")
+                run_id=query["run_id"][0]
+                if not re.fullmatch(r"[0-9a-f]{32}",run_id):
+                    raise LabError("Identifiant du rapport non autorisé")
+                file=WORKSPACE/"results"/(run_id+".json")
+                if not file.is_file():
+                    self._send({"error":"Rapport PAPER introuvable"},404)
+                    return
+                record=json.loads(file.read_text(encoding="utf-8"))
+                if record.get("id")!=run_id:
+                    raise LabError("Identifiant du rapport incompatible")
+                source_id=record.get("run",{}).get("data",{}).get("source_id")
+                if not source_id and isinstance(record.get("source"),dict):
+                    source_id=record["source"].get("id")
+                if not source_id:
+                    raise LabError("Ancien rapport sans provenance fiable")
+                source,bars=_resolve_source(source_id)
+                outcome=diagnose_paper_trades(record,bars,source)
+                self._send({"forensics":outcome})
+            except (LabError,SourceError,PublicMarketError,ValueError,TypeError,OSError) as exc:
+                self._send({"error":str(exc)},400)
         elif path == "/api/microscope":
             # Read-only viewport of an existing PAPER report. Never fetches live
             # exchange prices or runs a new simulation to fill chart gaps.
