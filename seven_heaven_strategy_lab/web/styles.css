@@ -672,3 +672,123 @@ tbody tr:hover { background: #102f3b; }
   .scientific-empty{padding:15px;gap:10px;}
   .scientific-empty-symbol{width:37px;height:37px;flex-basis:37px;}
 }
+
+
+/* V4.4 · AETHER FORENSICS — postmortem of SHA-locked PAPER decisions. */
+.forensic-desk {
+  margin:24px 0 16px;padding:19px;border:1px solid #536c73;
+  border-radius:14px;
+  background:radial-gradient(ellipse 85% 85% at 96% 0%,rgba(217,169,103,.13),transparent 72%),
+             linear-gradient(147deg,#0b2636,#081c2d 65%,#0a2635);
+  box-shadow:inset 0 1px 0 rgba(205,239,216,.10),0 16px 32px rgba(0,0,0,.15);
+}
+.forensic-heading{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:10px 16px;margin-bottom:14px;
+}
+.forensic-heading h3{
+  margin:5px 0 0;font:700 clamp(19px,1.95vw,25px)/1.22 Georgia,serif;
+  color:#f3d9a8;letter-spacing:-.02em;
+}
+.forensic-heading p{margin:6px 0 0;font-size:11px;color:#a8c5cd;line-height:1.55;}
+.forensic-heading .mini-badge{background:rgba(39,59,59,.7);border-color:#557d74;color:#b0e5cb;}
+.forensic-provenance{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:6px 12px;padding:12px;
+  background:#0b2b3b;border:1px solid #3b6b73;border-radius:9px;
+}
+.forensic-provenance strong{color:#d1f4e7;font-size:11px;line-height:1.5;}
+.forensic-provenance span{color:#a9c8d1;font-size:10px;overflow-wrap:anywhere;}
+.forensic-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0;}
+.forensic-metrics>div{
+  display:flex;flex-direction:column;min-width:0;gap:6px;
+  border:1px solid #33566b;border-radius:9px;padding:12px;
+  background:linear-gradient(135deg,#0e3341,#102637);
+}
+.forensic-metrics small{font-size:9px;font-weight:850;color:#adc1ca;letter-spacing:.055em;}
+.forensic-metrics strong{font-size:clamp(17px,1.75vw,23px);color:#b1ecdf;font-variant-numeric:tabular-nums;}
+.forensic-metrics span{font-size:9px;color:#98b1c0;line-height:1.45;}
+.forensic-desk .forensic-loss{color:#ffadbc;}
+.forensic-desk .forensic-gain{color:#a6e5c6;}
+.forensic-desk .forensic-neutral{color:#eadcb9;}
+.forensic-toolbar{
+  margin:18px 0 12px;display:flex;flex-wrap:wrap;
+  align-items:center;justify-content:space-between;gap:10px;
+}
+.forensic-toolbar>div{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;}
+.forensic-toolbar .forensic-subheading{font:700 17px Georgia,serif;color:#ead7b1;}
+.forensic-toolbar span{color:#94b7c7;font-size:10px;}
+.forensic-toolbar label{display:flex;align-items:center;gap:8px;color:#aec4ca;font-size:11px;}
+.forensic-toolbar select{
+  color:#d8f3ea;background:#103244;border:1px solid #527785;
+  border-radius:8px;padding:8px 10px;max-width:100%;
+}
+.forensic-list{display:grid;gap:10px;}
+.forensic-position{
+  border:1px solid #365d70;border-radius:10px;
+  background:linear-gradient(115deg,rgba(14,45,60,.95),rgba(9,30,45,.95));
+  overflow:hidden;
+}
+.forensic-position[open]{border-color:#7e7563;box-shadow:inset 3px 0 0 rgba(227,187,121,.38);}
+.forensic-position-summary{
+  display:grid;grid-template-columns:minmax(80px,.55fr) minmax(150px,2.1fr)
+                minmax(102px,.8fr) auto;
+  gap:7px;align-items:center;padding:12px 13px;cursor:pointer;list-style:none;
+}
+.forensic-position-summary::-webkit-details-marker{display:none;}
+.forensic-position-summary:hover{background:rgba(74,156,155,.09);}
+.forensic-position-id{font-size:9px;font-weight:800;letter-spacing:.08em;color:#edcb8e;}
+.forensic-position-date{font-size:10px;color:#c6d7dd;overflow-wrap:anywhere;}
+.forensic-position-summary strong{text-align:right;font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.forensic-toggle{font-size:10px;color:#9dc9c8;text-align:right;}
+.forensic-position[open] .forensic-toggle{color:#f1d49b;}
+.forensic-position-body{padding:14px;border-top:1px solid #355c6b;}
+.forensic-position-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
+.forensic-position-metric{
+  min-width:0;display:flex;flex-direction:column;gap:4px;
+  padding:10px;border:1px solid #284d60;border-radius:7px;background:#0b2434;
+}
+.forensic-position-metric small{color:#9ebbc5;font-size:9px;font-weight:800;line-height:1.4;}
+.forensic-position-metric strong{font-size:15px;color:#c3e8e2;overflow-wrap:anywhere;}
+.forensic-position-metric span{font-size:9px;color:#93adba;line-height:1.5;}
+.forensic-excursions{
+  margin:10px 0;display:flex;flex-wrap:wrap;gap:8px 12px;
+}
+.forensic-excursions>span{
+  padding:8px 11px;border-radius:8px;border:1px solid #3f5c6d;
+  background:#0b2636;font-size:11px;
+}
+.forensic-excursion-positive{color:#98e9c5;}
+.forensic-excursion-negative{color:#ffb4bf;}
+.forensic-excursions-unavailable{
+  color:#d3c7a8;font-size:11px;padding:10px;border:1px dashed #6b5d44;
+  border-radius:8px;margin:10px 0;
+}
+.forensic-cause-box{margin:10px 0 0;padding:12px;border:1px solid #345667;border-radius:8px;background:#091f2f;}
+.forensic-cause-box>small{font-size:10px;color:#efcf95;letter-spacing:.08em;font-weight:850;}
+.forensic-evidence{border-top:1px solid #315266;margin-top:10px;padding-top:11px;}
+.forensic-evidence-head{font-size:11px;color:#a9e7da;}
+.forensic-evidence p{margin:5px 0 0;font-size:11px;color:#d2e2dd;line-height:1.6;}
+.forensic-evidence .forensic-evidence-sub{color:#bed1d9;}
+.forensic-evidence .forensic-evidence-clock,
+.forensic-evidence .forensic-evidence-numbers{color:#9cb6c4;font-size:10px;}
+.forensic-open-note{font-size:11px;color:#dbcdaa;}
+.forensic-none{padding:18px;color:#9cb8c5;border:1px dashed #365565;border-radius:8px;}
+.forensic-warning{
+  margin-top:13px;padding:14px 15px;border:1px solid #856e4d;
+  border-radius:9px;background:rgba(82,61,33,.16);font-size:10px;
+  line-height:1.75;color:#c8c5b7;
+}
+.forensic-warning strong{color:#f4d5a2;}
+@media(max-width:1100px){
+  .forensic-metrics,.forensic-position-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:560px){
+  .forensic-desk{padding:12px;}
+  .forensic-position-summary{grid-template-columns:1fr auto;gap:5px 12px;}
+  .forensic-position-date{grid-column:1;}
+  .forensic-position-summary strong{grid-column:2;grid-row:1;text-align:right;}
+  .forensic-toggle{grid-column:2;grid-row:2;}
+  .forensic-position-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .forensic-toolbar{align-items:flex-start;}
+}

@@ -30,7 +30,7 @@ def main():
             assert desktop.locator("#okx-pair option").count()==4
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
-            assert "4.3.0" in desktop.locator(".masthead").inner_text()
+            assert "4.4.0" in desktop.locator(".masthead").inner_text()
             desktop.locator("#compare").click()
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6
@@ -47,6 +47,11 @@ def main():
             assert desktop.locator("#quant-desk").is_visible()
             assert desktop.locator("#quant-closed").inner_text()!="—"
             assert desktop.locator("#drawdown-chart polyline").count()==1
+            expect(desktop.locator("#forensic-result")).to_be_visible(timeout=35000)
+            expect(desktop.locator("#forensic-source")).to_contain_text("Binance Spot")
+            assert desktop.locator("#forensic-integrity").inner_text().startswith("SHA-256")
+            assert desktop.locator("#forensic-total").inner_text()!="—"
+            assert desktop.locator("#forensic-desk").is_visible()
             expect(desktop.locator("#micro-context")).to_contain_text("Binance Spot", timeout=25000)
             assert desktop.locator("#market-microscope").is_visible()
             assert desktop.locator("#market-candle-chart rect").count()>60
@@ -68,7 +73,7 @@ def main():
             assert "%" in desktop.locator("#scientific-average").inner_text()
             assert "Frais" in desktop.locator(".scientific-fold-foot").first.inner_text() or "Hold" in desktop.locator(".scientific-fold-foot").first.inner_text()
             # Reselect a 1m baseline after independent 1h research; prior reports remain valid.
-            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_3_SCIENTIFIC_DESKTOP_COCKPIT.png"),full_page=True)
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_4_TRADE_FORENSICS_DESKTOP_COCKPIT.png"),full_page=True)
             desktop.locator("#profile-name").fill("V3 EMA 10-30 Browser Acceptance")
             desktop.locator("#save-profile").click()
             desktop.locator("#saved-profiles option").filter(has_text="V3 EMA 10-30").wait_for(state="attached",timeout=15000)
@@ -92,11 +97,18 @@ def main():
             expect(desktop.locator("#micro-context")).to_contain_text("OKX Spot",timeout=25000)
             expect(desktop.locator("#micro-context")).to_contain_text("1h",timeout=25000)
             assert desktop.locator("#inventory").inner_text().endswith("BTC")
+            expect(desktop.locator("#forensic-source")).to_contain_text("BTC/USDC",timeout=35000)
+            assert desktop.locator("#forensic-result").is_visible()
+            assert "USDC" in desktop.locator("#forensic-realized").inner_text()
+            # Autonomous user filter: no network write or extra backtest.
+            desktop.locator("#forensic-filter").select_option("loss")
+            assert "position(s)" in desktop.locator("#forensic-count").inner_text()
+            desktop.locator("#forensic-filter").select_option("all")
             desktop.locator("#robustness-run").click()
             expect(desktop.locator("#robustness-result")).to_be_visible(timeout=35000)
             assert desktop.locator("#scientific-folds-count").inner_text()=="1"
             expect(desktop.locator("#scientific-source")).to_contain_text("BTC/USDC")
-            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_3_SCIENTIFIC_DESKTOP_COCKPIT.png"),full_page=True)
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_4_TRADE_FORENSICS_DESKTOP_COCKPIT.png"),full_page=True)
             # V4: compose and execute Yoann's own declarative strategy.
             desktop.locator("#kind").select_option("CUSTOM_RULES")
             assert desktop.locator("#custom-fields").is_visible()
@@ -118,6 +130,14 @@ def main():
             assert "USDC" in desktop.locator("#quant-realized").inner_text()
             assert "USDC" in desktop.locator("#quant-unrealized").inner_text()
             assert desktop.locator("#drawdown-chart polyline").count()==1
+            expect(desktop.locator("#forensic-result")).to_be_visible(timeout=35000)
+            assert desktop.locator("#forensic-list .forensic-position").count()>0
+            desktop.locator("#forensic-list .forensic-position").first.locator("summary").click()
+            details=desktop.locator("#forensic-list .forensic-position").first
+            assert details.get_attribute("open") is not None
+            assert "PAPER" in details.locator(".forensic-evidence-head").first.inner_text()
+            assert "règle" in details.locator(".forensic-evidence").first.inner_text().lower() or "Règle" in details.locator(".forensic-evidence").first.inner_text()
+            assert "fictif" in desktop.locator(".forensic-warning").inner_text().lower()
             desktop.locator("#robustness-run").click()
             expect(desktop.locator("#robustness-result")).to_be_visible(timeout=35000)
             assert desktop.locator(".scientific-fold").count()==1
@@ -134,10 +154,10 @@ def main():
             mobile.goto(BASE,wait_until="domcontentloaded")
             expect(mobile.locator("#dataset-badge")).to_have_text("ARCHIVE AUTHENTIFIÉE", timeout=15000)
             mobile.locator("#laboratory").scroll_into_view_if_needed()
-            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_3_SCIENTIFIC_MOBILE_COCKPIT.png"),full_page=True)
+            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_4_TRADE_FORENSICS_MOBILE_COCKPIT.png"),full_page=True)
             width=mobile.evaluate("document.documentElement.scrollWidth")
             assert width<=390, f"Unexpected horizontal body overflow mobile: {width}px"
-            print("PASS: Chromium V4.3 scientific time splits, EMA train selection, OKX holdout, friction stress, paper custom UI, 4.2 microscope, no new workspace clutter")
+            print("PASS: Chromium V4.4 verified historical trade forensics, trigger evidence, ETH/BTC units, scientific folds, microscope, PAPER integrity and zero workspace clutter")
         finally:
             browser.close()
 
