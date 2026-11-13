@@ -8,7 +8,7 @@
 
 - **Historical derivation/exploration:** UTC 2024-01-01 through 2026-10-31, already researched extensively.
 - **Later-date diagnostic:** UTC 2026-11-01 through the last fully closed UTC candle at the time of collection. Although later than the earlier backtest window, these November days **already occurred before this document**; they are NOT prospective and must NOT be described as a blind forward test.
-- **Genuinely prospective cohort:** Start with the **first fully closed UTC day whose open is on or after 2026-11-13 00:00:00 UTC**. Earliest such datum is available after 2026-11-14 00:00:00 UTC. No rules, fees, capital allocation or thresholds may be changed based on these outcomes.
+- **Genuinely prospective cohort:** Start with the **first fully closed UTC day whose open is strictly after this protocol's publication**: **2026-11-14 00:00:00 UTC**. Earliest such datum is available after **2026-11-15 00:00:00 UTC**. November 13 is a transition day excluded from the scored prospective series. No rules, fees, capital allocation or thresholds may be changed based on these outcomes.
 
 ## Immutable methods, all calculated from previous UTC daily closes
 
@@ -41,3 +41,7 @@ Capital: nominal **1,000 USD per standalone asset simulation** or two independen
 Reference report (November 13): `SEVEN_HEAVEN_BTC_ETH_DAILY_CASH_OPPORTUNITY_CONFIRMATION_AND_RISK_REPORT_2026_11_13.md`, proof JSON of the same stem, and the read-only JavaScript reproducible replay. Existing native source SHA values: BTC `89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb`, ETH `881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49`.
 
 **Stop:** An unobserved future outcome is not a result. One completed diagnostic + a frozen independent forward-test setup is useful; further retrospective overfitting is not.
+
+## Timing erratum — corrected before any forward-day replay
+
+The original 13-Nov first-day boundary was too early: this protocol was committed **after 2026-11-13 00:00 UTC**, so the first hours of the proposed day were already in the past at freeze. The first strictly forward UTC day is **2026-11-14** (first fully closed on **2026-11-15 at 00:00 UTC**). This corrects temporal eligibility only; **EMA rules, fees, slippage, capital, comparison policies and historical 1–12 November diagnostic are unchanged**. No forward-day test had been run before the correction. November 13 data are used only to warm the EMA signal, never scored as a prospective return.
