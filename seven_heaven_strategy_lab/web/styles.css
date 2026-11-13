@@ -545,3 +545,130 @@ tbody tr:hover { background: #102f3b; }
   .micro-scrub span{margin-left:auto;}
   .micro-candle-readout{font-size:10px;}
 }
+
+
+/* V4.3 AETHER SCIENTIFIC — history-sensitive, visually distinct robustness desk. */
+.action-robustness {
+  border:1px solid #af8251;
+  color:#ffe6b1;
+  background:linear-gradient(110deg,#263343,#26303c 70%,#3d322c);
+  box-shadow:inset 0 1px 0 rgba(255,224,165,.13);
+}
+.action-robustness:hover:not(:disabled){
+  border-color:#e6c790;
+  background:linear-gradient(110deg,#3b3c44,#3d3338 80%);
+}
+.scientific-panel{
+  margin-top:18px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 40% 170px at 92% 0%,rgba(217,159,92,.12),transparent 100%),
+    linear-gradient(151deg,#0b1e2e,#081a2a);
+}
+.scientific-panel .section-heading{position:relative;}
+.scientific-badge{
+  background:rgba(69,56,36,.65);
+  border-color:#8f7953;color:#f0d6a4;
+}
+.scientific-empty{
+  display:flex;align-items:center;gap:18px;margin:18px 0 0;
+  padding:24px 22px;border:1px dashed #3d6174;border-radius:12px;
+  background:rgba(9,31,44,.65);color:#b5cad5;
+}
+.scientific-empty-symbol{
+  width:49px;height:49px;display:grid;place-items:center;
+  border:1px solid #597c83;border-radius:50%;flex:0 0 49px;
+  font:32px Georgia,serif;color:#e5d2a7;
+  background:radial-gradient(circle,rgba(106,204,198,.13),transparent);
+}
+.scientific-empty strong{display:block;font:700 17px Georgia,serif;color:#ead9ba;}
+.scientific-empty p{margin:5px 0 0;font-size:12px;line-height:1.65;}
+.scientific-provenance{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;
+  padding:12px 14px;border:1px solid #426577;
+  border-radius:9px;background:#0d2b3a;
+}
+.scientific-provenance strong{font-size:12px;color:#d5efe8;}
+.scientific-provenance span{font-size:10px;color:#a9c6d0;overflow-wrap:anywhere;}
+.scientific-metrics{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;margin:15px 0 19px;
+}
+.scientific-metrics>div{
+  display:flex;flex-direction:column;min-width:0;gap:5px;
+  padding:14px;background:linear-gradient(145deg,#112e3d,#092032);
+  border:1px solid #35586a;border-radius:11px;
+}
+.scientific-metrics small{
+  color:#a7bfca;font-size:9px;line-height:1.5;
+  font-weight:800;letter-spacing:.05em;
+}
+.scientific-metrics strong{
+  font:750 clamp(19px,2vw,26px)/1.2 "Segoe UI",sans-serif;
+  color:#c0eee4;font-variant-numeric:tabular-nums;
+  overflow-wrap:anywhere;
+}
+.scientific-metrics span{color:#91afbe;font-size:10px;}
+.scientific-metrics .scientific-negative,.scientific-fold .scientific-negative{color:#ffafbd;}
+.scientific-metrics .scientific-positive,.scientific-fold .scientific-positive{color:#a8e8c9;}
+.scientific-matrix-title{
+  margin:2px 0 12px;color:#e8c995;
+  font-weight:850;letter-spacing:.13em;font-size:10px;
+}
+.scientific-fold-list{display:grid;gap:13px;}
+.scientific-fold{
+  padding:14px;border:1px solid #3a5e71;border-radius:12px;
+  background:linear-gradient(125deg,rgba(13,43,58,.94),rgba(8,30,45,.94));
+}
+.scientific-fold-heading{
+  display:flex;flex-wrap:wrap;align-items:center;
+  justify-content:space-between;gap:8px 14px;margin-bottom:12px;
+}
+.scientific-fold-heading>div{display:flex;flex-direction:column;gap:3px;}
+.scientific-fold-heading small{color:#dfc18d;font-weight:850;letter-spacing:.12em;font-size:9px;}
+.scientific-fold-heading strong{font:700 17px Georgia,serif;color:#e6f0ee;}
+.scientific-candidate-count{
+  padding:5px 9px;border:1px solid #5c6661;border-radius:99px;
+  font-size:9px;color:#c7dbd8;background:#182c32;
+}
+.scientific-fold-metrics{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.scientific-fold-metric{
+  display:flex;flex-direction:column;gap:7px;min-width:0;
+  padding:11px;background:rgba(5,21,33,.68);
+  border:1px solid #2a4b5d;border-radius:8px;
+}
+.scientific-fold-metric small{
+  color:#9cb4c3;font-size:9px;font-weight:850;line-height:1.45;
+}
+.scientific-fold-metric strong{
+  color:#a8e8c9;font-size:21px;line-height:1.2;font-variant-numeric:tabular-nums;
+}
+.scientific-fold-metric span{
+  color:#92b1be;font-size:10px;line-height:1.5;overflow-wrap:anywhere;
+}
+.scientific-fold-foot{
+  padding-top:10px;margin-top:10px;
+  border-top:1px solid #315063;color:#c7dbdc;font-size:11px;
+}
+.scientific-model-notice{
+  border:1px solid #736341;border-radius:10px;
+  background:rgba(60,50,29,.20);color:#d1cfbb;
+  margin-top:15px;padding:13px 15px;font-size:11px;line-height:1.75;
+}
+.scientific-model-notice strong{color:#eacb91;margin-right:6px;}
+.scientific-model-notice p{margin:7px 0 0;color:#b8bdbe;}
+@media(max-width:1100px){
+  .scientific-metrics,.scientific-fold-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:600px){
+  .scientific-metrics,.scientific-fold-metrics{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .scientific-metrics strong{font-size:18px;}
+  .scientific-fold-metric strong{font-size:18px;}
+  .scientific-fold{padding:10px;}
+  .scientific-empty{padding:15px;gap:10px;}
+  .scientific-empty-symbol{width:37px;height:37px;flex-basis:37px;}
+}
