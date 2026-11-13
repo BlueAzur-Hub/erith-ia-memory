@@ -35,7 +35,13 @@ def main():
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6
             desktop.locator("#comparison-rows > tr").first.locator("button").click()
-            desktop.locator("#result").wait_for(state="visible",timeout=30000)
+            try:
+                desktop.locator("#result").wait_for(state="visible",timeout=15000)
+            except Exception:
+                print("BROWSER NOTICE:",desktop.locator("#message").inner_text(),flush=True)
+                print("FORM CONFIG:",desktop.locator("#config").evaluate("e => Object.fromEntries(new FormData(e))"),flush=True)
+                print("BROWSER JS ERRORS:",errors,flush=True)
+                raise
             assert "USDT" in desktop.locator("#equity").inner_text()
             assert desktop.locator("#zero-cost").inner_text()!="—"
             assert desktop.locator("#readout-equity").inner_text().endswith("USDT")
