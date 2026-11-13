@@ -169,7 +169,7 @@ def list_sources(workspace: Path) -> dict:
 def read_source(workspace: Path, source_id: str):
     from src.engine import load_bars
     manifest, csv_file = _validate_cached(workspace, source_id)
-    bars = load_bars(csv_file)
+    bars = load_bars(csv_file, expected_count=COUNT, interval_seconds=BASE_INTERVAL_SECONDS)
     if len(bars) != COUNT or bars[0][0] != manifest["first_timestamp"] or bars[-1][0] != manifest["last_timestamp"]:
         raise PublicMarketError("Période du cache OKX incohérente")
     for i, b in enumerate(bars):
