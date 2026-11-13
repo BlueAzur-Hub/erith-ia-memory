@@ -30,7 +30,7 @@ def main():
             assert desktop.locator("#okx-pair option").count()==4
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
-            assert "4.4.0" in desktop.locator(".masthead").inner_text()
+            assert "4.5.0" in desktop.locator(".masthead").inner_text()
             desktop.locator("#compare").click()
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6
@@ -142,6 +142,32 @@ def main():
             expect(desktop.locator("#robustness-result")).to_be_visible(timeout=35000)
             assert desktop.locator(".scientific-fold").count()==1
             assert desktop.locator("#scientific-source").inner_text().endswith("CUSTOM_RULES")
+            # V4.5: verify a fixed, at-most-five-variant filter experiment
+            # selects only from past training and reports ALL later outcomes.
+            assert desktop.locator("#filters-run").is_enabled()
+            desktop.locator("#filters-run").click()
+            expect(desktop.locator("#research-result")).to_be_visible(timeout=40000)
+            expect(desktop.locator("#research-source")).to_contain_text("BTC/USDC")
+            assert "SHA-256" in desktop.locator("#research-sha").inner_text()
+            assert desktop.locator(".research-fold").count()==1
+            assert 1<=int(desktop.locator("#research-variants").inner_text())<=5
+            assert desktop.locator("#research-delta").inner_text().endswith("pt")
+            assert desktop.locator(".research-comparison-item").count()==4
+            assert desktop.locator(".research-fold-badge").first.inner_text().endswith("VARIANTES")
+            desktop.locator(".research-details").first.locator("summary").click()
+            assert desktop.locator(".research-table tbody tr").count()>=3
+            assert desktop.locator(".research-selected-row").count()==1
+            assert "Sélectionnée sur le passé" in desktop.locator(".research-selected-row").inner_text()
+            assert "non utilisés" in desktop.locator(".research-disclosure").inner_text().lower() or "jamais utilisés" in desktop.locator(".research-disclosure").inner_text().lower()
+            assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"filter_research").exists()
+            assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"research").exists()
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_DESKTOP_COCKPIT.png"),full_page=True)
+            # A draft change must invalidate the old study, not silently
+            # present a stale comparison under new settings.
+            desktop.locator('input[name="rsi_period"]').fill("16")
+            expect(desktop.locator("#research-result")).to_be_hidden()
+            expect(desktop.locator("#research-empty")).to_be_visible()
+
             assert not list((Path(os.environ["SEVEN_LAB_WORKSPACE"])/"robustness").glob("*.json"))
             desktop.locator("#compare").click()
             expect(desktop.locator("#comparison-badge")).to_contain_text("7 MODÈLES",timeout=40000)
@@ -154,10 +180,10 @@ def main():
             mobile.goto(BASE,wait_until="domcontentloaded")
             expect(mobile.locator("#dataset-badge")).to_have_text("ARCHIVE AUTHENTIFIÉE", timeout=15000)
             mobile.locator("#laboratory").scroll_into_view_if_needed()
-            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_4_TRADE_FORENSICS_MOBILE_COCKPIT.png"),full_page=True)
+            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_MOBILE_COCKPIT.png"),full_page=True)
             width=mobile.evaluate("document.documentElement.scrollWidth")
             assert width<=390, f"Unexpected horizontal body overflow mobile: {width}px"
-            print("PASS: Chromium V4.4 verified historical trade forensics, trigger evidence, ETH/BTC units, scientific folds, microscope, PAPER integrity and zero workspace clutter")
+            print("PASS: Chromium V4.5 controlled training-only filter research, variant matrix, paper forensic trace, source SHA, draft invalidation, no USB research file and responsive mobile")
         finally:
             browser.close()
 
