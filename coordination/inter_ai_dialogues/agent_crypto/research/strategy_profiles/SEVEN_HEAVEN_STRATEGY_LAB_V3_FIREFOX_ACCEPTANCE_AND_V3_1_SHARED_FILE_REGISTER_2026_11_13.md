@@ -26,6 +26,7 @@ Owner's actual Firefox screenshots and pasted interface on 2026-11-13 confirm:
 ## New artifact of this thread — V3.1 candidate, not validated release
 
 - SEVEN_HEAVEN_STRATEGY_LAB_V3_1_HISTORICAL_UTC_WINDOW_COLLECTOR_SAFE_WINDOWS_PATCH_2026_11_13.zip — 7,145 bytes; SHA-256 2d30dde00c5c7c56d59d8cd3ba5b9c6fd0fd41ba9308b868b4f0475b399b6930. Three inner files: installer .cmd, upgrading Python .py, detailed README .md.
+- [V3.1 candidate ZIP in this shared folder](./SEVEN_HEAVEN_STRATEGY_LAB_V3_1_HISTORICAL_UTC_WINDOW_COLLECTOR_SAFE_WINDOWS_PATCH_2026_11_13.zip), [readable V3.1 setup](./SEVEN_HEAVEN_STRATEGY_LAB_V3_1_HISTORICAL_UTC_WINDOWS_README_2026_11_13.md), and [exact six-case unit-test source](./SEVEN_HEAVEN_STRATEGY_LAB_V3_1_CANDIDATE_OFFLINE_PATCH_UNIT_TESTS_2026_11_13.py). Test source SHA-256: 65eb55ff963b75cf32b5ed49ae26e10dd0648467ee8dd1e443cf0b8eae40e4be.
 - Six local focused unittest cases passed (UTC/date/pagination and offline patch preflight/backup/failure behavior), but no owner Windows V3.1/Firefox, real historical OKX API fetch, or full GitHub CI has yet been verified.
 - Candidate only: 240 contiguous 1h candles ending at chosen UTC midnight; empty date preserves recent 10-day V3 logic; preserves local workspace/ and all V1/V2/V3 data; source-pinned four-file update and local backup. No order endpoint.
 
