@@ -21,7 +21,7 @@ def main():
             errors=[]
             desktop.on("pageerror",lambda err:errors.append(str(err)))
             desktop.goto(BASE,wait_until="domcontentloaded")
-            desktop.locator("#dataset-badge").get_by_text("ARCHIVE AUTHENTIFIÉE").wait_for(timeout=15000)
+            desktop.wait_for_function("document.querySelector(\u0027#dataset-badge\u0027)?.textContent.trim() === \u0027ARCHIVE AUTHENTIFIÉE\u0027", timeout=15000)
             assert desktop.locator("#comparison-empty").is_visible()
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
@@ -43,7 +43,7 @@ def main():
 
             mobile=browser.new_page(viewport={"width":390,"height":844},device_scale_factor=1)
             mobile.goto(BASE,wait_until="domcontentloaded")
-            mobile.locator("#dataset-badge").get_by_text("ARCHIVE AUTHENTIFIÉE").wait_for(timeout=15000)
+            mobile.wait_for_function("document.querySelector(\u0027#dataset-badge\u0027)?.textContent.trim() === \u0027ARCHIVE AUTHENTIFIÉE\u0027", timeout=15000)
             mobile.locator("#laboratory").scroll_into_view_if_needed()
             mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_MOBILE_COCKPIT.png"),full_page=True)
             width=mobile.evaluate("document.documentElement.scrollWidth")
