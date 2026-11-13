@@ -22,7 +22,7 @@ permissions:
 jobs:
   validate-and-package:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 26
     defaults:
       run:
         working-directory: seven_heaven_strategy_lab
@@ -181,6 +181,17 @@ jobs:
               assert ex.code==404
           print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
           PY
+      - name: Open real premium V2 cockpit in Chromium, test interaction and capture desktop/mobile
+        env:
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          google-chrome --version
+          python -m src.server > "$RUNNER_TEMP/seven-lab-browser-server.log" 2>&1 &
+          serverpid=$!
+          trap 'kill "$serverpid" 2>/dev/null || true' EXIT
+          python tests/browser_acceptance_v2.py
       - name: Build Docker local image and smoke HTTP health
         run: |
           set -euo pipefail
@@ -223,6 +234,8 @@ jobs:
             ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_ARCHIVE_SHA256.txt
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_DESKTOP_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_MOBILE_COCKPIT.png
           retention-days: 30
           if-no-files-found: error
 
@@ -313,5 +326,7 @@ jobs:
             delivery/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_PREMIUM_PYTHON313_WINDOWS_PORTABLE_PAPER.zip \
             delivery/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_ARCHIVE_SHA256.txt \
             delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_DESKTOP_COCKPIT.png \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_MOBILE_COCKPIT.png
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
