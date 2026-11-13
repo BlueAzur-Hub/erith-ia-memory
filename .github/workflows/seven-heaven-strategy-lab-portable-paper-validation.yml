@@ -1,11 +1,11 @@
-name: Seven Heaven Strategy Lab V4.2 historical market microscope validation
+name: Seven Heaven Strategy Lab V4.3 scientific walk-forward research validation
 
 on:
   push:
     branches:
       - feature/seven-heaven-strategy-lab-local-paper
       - feature/seven-heaven-strategy-lab-v2-observatory-20261113
-      - feature/seven-heaven-strategy-lab-v4-2-market-microscope-20261113
+      - feature/seven-heaven-strategy-lab-v4-3-walk-forward-research-20261113
       - main
     paths:
       - 'seven_heaven_strategy_lab/**'
@@ -142,6 +142,8 @@ jobs:
           trap 'kill "$serverpid" 2>/dev/null || true' EXIT
           python - <<'PY'
           import json, time, urllib.request, urllib.error
+          import os
+          from pathlib import Path
           base="http://127.0.0.1:8777"
           def request(path, data=None):
               payload=None if data is None else json.dumps(data).encode()
@@ -156,9 +158,10 @@ jobs:
               except Exception:
                   time.sleep(.2)
           assert health["live_trading"] is False
-          assert health["version"] == "4.2.0"
+          assert health["version"] == "4.3.0"
           assert health["strategy_creator_enabled"] is True
           assert health["market_microscope_enabled"] is True
+          assert health["walk_forward_research_enabled"] is True
           assert request("/api/datasets")["datasets"][0]["available"]
           report=request("/api/run",{"params":{"kind":"EMA_CROSS", "fee":0.001}})
           assert report["report"]["run"]["safety"]["orders_real"]==0
@@ -182,6 +185,17 @@ jobs:
               raise AssertionError("Invalid microscope viewport accepted")
           except urllib.error.HTTPError as ex:
               assert ex.code==400
+          research=request("/api/robustness",{"params":{"kind":"EMA_CROSS","timeframe":"1h",
+                            "capital":1000,"fee":0.001,"slippage":0.0005}})
+          scientific=research["research"]
+          assert scientific["status"]=="CHRONOLOGICAL_PAPER_RESEARCH_NOT_UNTOUCHED_BLIND_OOS"
+          assert scientific["source"]["sha256"]==report["report"]["source_sha256"]
+          assert scientific["timeframe"]=="1h"
+          assert len(scientific["folds"])==2
+          assert scientific["safety"]["orders_real"]==0
+          assert all(f["selection"]["selected_on_training_only"] for f in scientific["folds"])
+          assert scientific["folds"][0]["holdout"]["last_bar_utc"]<scientific["folds"][1]["holdout"]["first_bar_utc"]
+          assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"robustness").exists()
           assert report["report"]["counterfactual"]["status"]=="COUNTERFACTUAL_IDEAL_FILLS_ONLY"
           v2=request("/api/run",{"params":{"kind":"EMA_CROSS","timeframe":"15m","fee":0.001}})
           assert v2["report"]["run"]["data"]["timeframe"]=="15m"
@@ -216,7 +230,7 @@ jobs:
               assert ex.code==404
           print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
           PY
-      - name: Open real premium V4.2 historical market microscope in Chromium, test interaction and capture desktop/mobile
+      - name: Open real premium V4.3 scientific walk-forward cockpit in Chromium, test interaction and capture desktop/mobile
         env:
           SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
         run: |
@@ -278,7 +292,7 @@ jobs:
                   with urllib.request.urlopen(url,timeout=3) as f:
                       j=json.loads(f.read())
                   assert j["status"]=="LOCAL_PAPER_ONLY"
-                  assert j["version"]=="4.2.0"
+                  assert j["version"]=="4.3.0"
                   print("PASS: Docker on localhost:8777, live trading disabled")
                   break
               except Exception:
@@ -289,15 +303,15 @@ jobs:
         run: |
           set -euo pipefail
           cd ..
-          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_PYTHON313_WINDOWS_PAPER.zip" \
+          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_PYTHON313_WINDOWS_PAPER.zip" \
             seven_heaven_strategy_lab/src seven_heaven_strategy_lab/web \
             seven_heaven_strategy_lab/README_FR.md \
             seven_heaven_strategy_lab/START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd \
             -x '*/__pycache__/*' '*.pyc'
           cd "$RUNNER_TEMP"
-          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_PYTHON313_WINDOWS_PAPER.zip \
-            > SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_SHA256.txt
-          cat SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_SHA256.txt
+          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_PYTHON313_WINDOWS_PAPER.zip \
+            > SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_SHA256.txt
+          cat SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_SHA256.txt
       - name: Strict-parse every packaged JSON proof before upload
         run: |
           set -euo pipefail
@@ -320,15 +334,15 @@ jobs:
       - name: Upload standalone ZIP, hash and measured historical smoke results
         uses: actions/upload-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_PAPER_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_PAPER_DELIVERY
           path: |
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_PYTHON313_WINDOWS_PAPER.zip
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_SHA256.txt
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_PYTHON313_WINDOWS_PAPER.zip
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_SHA256.txt
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_MARKET_MICROSCOPE_DESKTOP_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_SCIENTIFIC_DESKTOP_COCKPIT.png
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_MARKET_MICROSCOPE_MOBILE_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_SCIENTIFIC_MOBILE_COCKPIT.png
           retention-days: 30
           if-no-files-found: error
 
@@ -417,10 +431,10 @@ jobs:
             }
             $datasets = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/datasets" -TimeoutSec 5
             if ($datasets.datasets.Count -ne 1) { throw "Data API unavailable" }
-            if ($health.version -ne "4.2.0") { throw "V4.2 Python health not active" }
+            if ($health.version -ne "4.3.0") { throw "V4.3 Python health not active" }
             $sources = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/okx-sources" -TimeoutSec 5
-            if ($null -eq $sources.reserve_bytes -or $health.public_okx_enabled -ne $true) { throw "V4.2 OKX source API unavailable" }
-            if (-not $page.Content.Contains("Matrice de")) { throw "Premium V4.2 cockpit HTML not served" }
+            if ($null -eq $sources.reserve_bytes -or $health.public_okx_enabled -ne $true) { throw "V4.3 OKX source API unavailable" }
+            if (-not $page.Content.Contains("Matrice de")) { throw "Premium V4.3 cockpit HTML not served" }
             Write-Host "PASS: Actual CMD launched Python 3.13 and served PAPER UI on Windows localhost"
           } finally {
             taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null
@@ -435,25 +449,25 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_PAPER_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_PAPER_DELIVERY
           path: delivery
       - name: Publish executable prototype without changing MASTER or Operator
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG=seven-heaven-strategy-lab-v4-2-historical-market-microscope-2026-11-13
+          TAG=seven-heaven-strategy-lab-v4-3-aether-scientific-walk-forward-2026-11-13
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" \
-              --title "Seven Heaven Strategy Lab V4.2 — Historical Market Microscope PAPER cockpit" \
+              --title "Seven Heaven Strategy Lab V4.3 — Aether Scientific Walk-forward PAPER cockpit" \
               --notes "Independent V3 public OKX Spot Aether Observatory PAPER laboratory for Windows with existing Python 3.13. Docker Desktop optional. Five timeframes, six comparable methods, zero-cost diagnostics and persistent V1-compatible research. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
               --latest=false
           fi
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --title "Seven Heaven Strategy Lab V4.2 — Historical Market Microscope · Python 3.13" \
-            --notes "V4.2 keeps the independent V4 creator, seven-way PAPER comparisons and the Quant desk, and adds source-SHA-matched archived OHLCV candlesticks, volume, optional EMA/SMA/Bollinger/approximate daily VWAP, hypothetical next-open trade markers, pan/zoom and the draft-versus-last-run notice. Local SVG only; no new dependencies or live order API., plus selectable OKX 10/30/60/90 day historical windows and optional UTC end date, using 240 to 2160 closed hourly candles for BTC/ETH against USDC/USDT, native 1h and 4h simulation, SHA256 provenance, strict gap checks and USB free-space reserve. Public internet is allowed; no trading API. Preserves V1/V2 workspace. Windows: extract over your existing application files WITHOUT deleting workspace, close old Python window, double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd. No Docker or external Python packages required. PAPER only."
+            --title "Seven Heaven Strategy Lab V4.3 — Aether Scientific Walk-forward · Python 3.13" \
+            --notes "V4.3 preserves the owner-accepted V4.2 premium independent OHLCV microscope, full V4.1 Quant desk, independent strategy creator and identical PAPER engines. Adds Aether Scientific expanding chronological train-before-test validation over 1-2 non-overlapping later holdout windows with up to five predeclared EMA alternatives chosen using past-only training, fixed non-EMA rules, fresh independent paper capital per window, Buy & Hold 50 percent/Cash benchmarks and 2x fee/slippage stress. Clearly labels limits of non-blind user-inspected data and no position carryover. Corrects BTC-only trade amount header to BTC/ETH unit by market. No user USB study files created by the new endpoint. Source SHA-verified Binance/OKX; public network optional, account and order API never requested. One complete Windows/Python 3.13 ZIP, no tests/build tools or workspace. Close old server, back up workspace separately and extract the archive contents over existing application files WITHOUT removing workspace. PAPER only."
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_PYTHON313_WINDOWS_PAPER.zip \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_2_HISTORICAL_MARKET_MICROSCOPE_SHA256.txt
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_PYTHON313_WINDOWS_PAPER.zip \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_3_AETHER_SCIENTIFIC_WALK_FORWARD_SHA256.txt
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
