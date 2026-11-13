@@ -1,0 +1,75 @@
+name: Seven Heaven BTC ETH Frozen Forward Observation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-btc-eth-frozen-forward-observation.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FROZEN_NOVEMBER_HOLDOUT_AND_FORWARD_OBSERVATION_2026_11_13.py'
+  schedule:
+    # Mondays 02:45 UTC, after Sunday's daily UTC candle has closed.
+    - cron: '45 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-frozen-btc-eth-forward-evidence
+  cancel-in-progress: false
+
+jobs:
+  frozen-research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout public shared research only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare Python runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original 2024-2026 BTC ETH baseline without new data
+        run: |
+          set -euo pipefail
+          python -m py_compile 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FROZEN_NOVEMBER_HOLDOUT_AND_FORWARD_OBSERVATION_2026_11_13.py'
+          python 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FROZEN_NOVEMBER_HOLDOUT_AND_FORWARD_OBSERVATION_2026_11_13.py' --selftest
+      - name: Diagnose November 1-12 as retrospective, not prospective
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          python 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FROZEN_NOVEMBER_HOLDOUT_AND_FORWARD_OBSERVATION_2026_11_13.py' --mode diagnostic
+      - name: Collect closed future UTC days, do not retune
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          python 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FROZEN_NOVEMBER_HOLDOUT_AND_FORWARD_OBSERVATION_2026_11_13.py' --mode forward
+      - name: Preserve execution evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-frozen-ema-research-evidence
+          path: 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_ema_frozen_forward_evidence/'
+          retention-days: 90
+          if-no-files-found: ignore
+      - name: Publish only new evidence into shared research directory
+        run: |
+          set -euo pipefail
+          d='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_ema_frozen_forward_evidence'
+          if [ ! -d "$d" ]; then
+            echo 'No fully closed future day yet: no future performance has been claimed'
+            exit 0
+          fi
+          git add -- "$d"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No new immutable evidence to commit'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive frozen BTC ETH EMA observations without retuning'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
