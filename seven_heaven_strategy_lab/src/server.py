@@ -185,6 +185,10 @@ def main():
     WORKSPACE.mkdir(parents=True, exist_ok=True)
     with ThreadingHTTPServer((host, port), Handler) as server:
         print(f"Seven Heaven Strategy Lab | PAPER uniquement | http://127.0.0.1:{port}", flush=True)
+        if os.environ.get("SEVEN_LAB_OPEN_BROWSER") == "1":
+            import webbrowser
+            if not webbrowser.open(f"http://127.0.0.1:{port}/"):
+                print("Ouvre le laboratoire dans Firefox : http://127.0.0.1:8777", flush=True)
         server.serve_forever()
 
 

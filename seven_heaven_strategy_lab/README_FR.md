@@ -4,27 +4,33 @@
 
 Seven Heaven Strategy Lab est un projet **indépendant** de l'Administrator, de l'Operator et du TRADUS de Yoann. Il utilise une interface Web locale, un moteur PAPER original et une archive historique publique vérifiée. Il peut être transporté sur un SSD USB.
 
-## Premier démarrage sur Windows
+## Premier démarrage Windows — sans Docker, avec ton Python 3.13
 
-1. Installer et démarrer **Docker Desktop** sur le PC. Docker reste installé sur ce PC ; la clé ou le SSD transporte seulement le projet et les données.
-2. Copier ou extraire ce dossier **entier** sur un dossier du SSD USB, sans mélanger les fichiers avec l'Administrator.
-3. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_WINDOWS.cmd`. Au premier démarrage, Docker télécharge l'image officielle Python et construit notre petite application locale.
-4. Le navigateur ouvre **http://127.0.0.1:8777**. Cliquer sur **Charger l'archive vérifiée**. C'est le seul téléchargement du laboratoire : l'archive Binance Spot BTCUSDT de janvier 2026, déjà publiée dans notre propre GitHub.
-5. Choisir EMA, Bollinger, DCA, Buy & Hold ou conservation USDT. Modifier paramètres et budget, puis lancer **PAPER**.
-6. Donner un nom et enregistrer son profil. Les rapports JSON et le CSV historique sont conservés dans `workspace/` sur ton SSD.
-7. Avant de débrancher le SSD, double-cliquer sur `STOP_SEVEN_HEAVEN_STRATEGY_LAB_WINDOWS.cmd` puis éjecter proprement le disque.
+Sur le PC de Christophe, `py -0p` a confirmé Python **3.13** (par défaut) et Python **3.8** (ancien). **N'installe ni un autre Python ni Docker Desktop pour cette version.**
 
-Le dossier `workspace/` n'est pas publié dans GitHub et ne doit contenir aucune clé de compte. Un **SSD externe** est préférable à une clé USB classique pour les usages répétés.
+1. Télécharge le ZIP Seven Heaven Strategy Lab de notre Release et **extrais son contenu** dans un dossier sur ton PC ou sur un SSD externe. Ne lance pas le fichier `.cmd` directement depuis le ZIP compressé.
+2. Ouvre le dossier `seven_heaven_strategy_lab`.
+3. **Double-clique sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`** (pas sur le lanceur Docker). Il choisit explicitement `py -3.13`, crée `workspace/` et démarre le serveur en boucle locale.
+4. Le navigateur par défaut s'ouvre automatiquement à `http://127.0.0.1:8777`. S'il ne s'ouvre pas, copie cette adresse dans Firefox.
+5. Clique une fois sur **Charger l'archive vérifiée**. Le téléchargement utilise seulement notre archive publique BTC/USDT 1 minute de janvier 2026 ; elle est refusée si ses empreintes SHA-256 ne correspondent pas.
+6. Choisis ta stratégie, modifie les paramètres et lance **PAPER**. Enregistre tes profils et résultats ; ils restent dans le dossier `workspace/` sur ton disque ou SSD.
+7. Pour arrêter, ferme la fenêtre de commandes ouverte par le lanceur ou utilise **Ctrl+C** dans celle-ci. Attends l'arrêt avant d'éjecter le SSD.
 
-### Démarrage sans Docker, avec Python 3.11+
+**Important :** laisser la fenêtre de commande ouverte pendant l'utilisation. Aucun identifiant OKX, accès au Bridge ou connexion à un compte n'est nécessaire. Le lanceur n'installe aucune bibliothèque Python et ne modifie ni ComfyUI ni l'environnement Python 3.8 du Bridge.
+
+### Démarrage Python manuel (solution de secours)
 
 Depuis le dossier `seven_heaven_strategy_lab` :
 
-```bash
-python -m src.server
+```cmd
+py -3.13 -m src.server
 ```
 
-Ouvrir `http://127.0.0.1:8777`. Arrêter par Ctrl+C.
+Ouvrir `http://127.0.0.1:8777` dans Firefox puis arrêter avec Ctrl+C. Les modules sont dans la bibliothèque standard de Python : aucun `pip install` n'est requis.
+
+### Option Docker Desktop (facultative)
+
+Docker Desktop est une autre manière de lancer exactement le même laboratoire, utile sur une machine différente. Il est **inutile** pour le premier test avec Python 3.13 sur le PC de Christophe. Ne pas double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_WINDOWS.cmd` sans Docker Desktop : ce fichier est réservé à cette option.
 
 ### Avec Docker manuellement
 
