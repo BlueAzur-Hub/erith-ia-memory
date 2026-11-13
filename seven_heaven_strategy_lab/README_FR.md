@@ -1,10 +1,19 @@
-# Seven Heaven Strategy Lab — V3.1 Connected OKX Spot Historical Observatory
+# Seven Heaven Strategy Lab — V4 Native Strategy Creator + OKX Observatory
 
-**Version 3.1.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
+**Version 4.0.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
 
 La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan) et ajoute une **vraie source publique OKX Spot**. L'objectif est de commencer à étudier des données plus récentes avec un suivi transparent des dates, instruments, frais, volumes et preuves SHA-256, sans employer d'API privée et sans ordre réel.
 
-## V3.1 — historiques étendus, intégrés au programme
+## V4 — créateur de stratégies indépendant, sans bot externe obligatoire
+
+- Dans **Atelier de configuration → Ma stratégie personnalisée**, combiner une règle d'entrée (**croisement EMA haussier** ou **prix au-dessus de l'EMA lente**), un filtre optionnel (**RSI** ou **volume**) et une règle de sortie (**croisement EMA baissier**, **prix sous l'EMA lente**, **RSI**).
+- Ajuster EMA 10/30, RSI, volume, stop-loss fictif et objectif fictif. **0 % désactive** stop/objectif. Ces seuils sont vérifiés sur la **dernière bougie clôturée** puis supposés exécutés à l'ouverture suivante : pas de stop exchange natif ni de garantie de prix.
+- Le moteur est **notre code Python indépendant**. Il valide une liste fermée de règles, sans exécuter de code Python, JavaScript ni expressions utilisateur. Pas de dépendance Freqtrade/Hummingbot, aucun ordre réel.
+- Le bouton **Comparer ma stratégie aux six références** produit sept lignes sur les mêmes données, mêmes frais et même capital. Les six méthodes V3.1 sont conservées **inchangées**.
+- Utiliser **Bibliothèque de tes profils** pour nommer, enregistrer et recharger une stratégie. Les profils et expériences V1/V2/V3/V3.1 restent lisibles dans le même `workspace/`, sans migration.
+- Ce premier créateur est une **composition de règles prédéfinies**, pas encore un langage libre ou un automate temps réel. Le futur PAPER autonome est une étape distincte, avec validation des risques avant tout connecteur d'ordres.
+
+## V3.1 — historiques étendus, conservés dans le programme
 
 - La durée OKX est sélectionnable : **10, 30, 60 ou 90 jours** (240, 720, 1 440 ou 2 160 bougies horaires clôturées). Une **date de fin UTC facultative** permet de choisir une autre période historique.
 - Date vide : le comportement V3 reste inchangé, avec collecte récente et alignement sur la dernière clôture complète 4h UTC. Date sélectionnée : période se terminant à 00:00 UTC (borne exclue).
@@ -31,14 +40,14 @@ La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan
 
 Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes des pages passent par ce serveur local, et ce serveur Python peut **sortir vers les API publiques OKX** lors d'un clic. Aucune clé API OKX, compte, portefeuille, mot de passe ni ordre réel ne sont nécessaires. Les résultats ne deviennent jamais de vrais achats/ventes.
 
-## Mise à niveau sur la clé USB depuis la V2 déjà testée
+## Mise à niveau sur la clé USB depuis la V3.1 déjà validée
 
 1. Fermer la fenêtre noire `Seven Heaven Strategy Lab` (Ctrl+C), puis garder la clé branchée.
 2. Copier `E:\seven_heaven_strategy_lab\workspace\` vers **une sauvegarde distincte**, avant d'écraser les fichiers du programme.
-3. Télécharger le **ZIP V3**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
+3. Télécharger le **ZIP V4 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
-5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 3.1.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
-6. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
+5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.0.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
+6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER puis comparer **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
 7. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
 ## Provenance, contrôles et limitations

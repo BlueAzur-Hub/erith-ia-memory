@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 3.1.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.0.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -83,7 +83,7 @@
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V3 / PUBLIC MARKET CONNECTORS</div>
+          <div><div class="overline">V4 / PUBLIC MARKET CONNECTORS</div>
             <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
             <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
           </div>
@@ -126,7 +126,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 03</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -140,6 +140,7 @@
             <label class="field field-wide"><span>Famille de stratégie <small>STRATEGY MODEL</small></span>
               <select name="kind" id="kind">
                 <option value="EMA_CROSS">Croisement de moyennes EMA</option>
+                <option value="CUSTOM_RULES">★ Ma stratégie personnalisée · Créateur V4</option>
                 <option value="BOLLINGER">Retour à la moyenne · Bollinger</option>
                 <option value="DCA">Achats programmés · DCA</option>
                 <option value="HOLD_50">Buy & Hold · 50 % actif</option>
@@ -176,6 +177,29 @@
           <div id="dca-fields" class="form-grid dynamic-fields" hidden>
             <label class="field"><span>Intervalle d'achat <small>MINUTES</small></span><input name="dca_every" type="number" min="1" max="100000" value="1440"></label>
             <label class="field"><span>Montant de chaque achat <small id="dca-unit">USDT</small></span><input name="dca_quote" type="number" min="5" max="100000" value="50"></label>
+          </div>
+          <div id="custom-fields" class="dynamic-fields" hidden>
+            <div class="micro-title">V4 / CRÉATEUR DE STRATÉGIES · RÈGLES PERSONNELLES</div>
+            <p class="field-caveat">Compose tes règles sans écrire de code. Les signaux utilisent les bougies déjà closes ; les ordres sont uniquement simulés à l'ouverture suivante.</p>
+            <div class="form-grid">
+              <label class="field"><span>Condition d'entrée <small>OUVERTURE DE POSITION</small></span>
+                <select name="entry_rule"><option value="EMA_CROSS_UP">Croisement EMA haussier</option><option value="PRICE_ABOVE_EMA">Prix au-dessus de l'EMA lente (tendance)</option></select>
+              </label>
+              <label class="field"><span>Filtre complémentaire <small>CONDITION ET</small></span>
+                <select name="filter_rule"><option value="NONE">Aucun filtre</option><option value="RSI_BELOW">RSI inférieur au seuil</option><option value="VOLUME_ABOVE">Volume supérieur à sa moyenne × facteur</option></select>
+              </label>
+              <label class="field"><span>Condition de sortie <small>FERMETURE DE POSITION</small></span>
+                <select name="exit_rule"><option value="EMA_CROSS_DOWN">Croisement EMA baissier</option><option value="PRICE_BELOW_EMA">Prix sous l'EMA lente</option><option value="RSI_ABOVE">RSI supérieur au seuil</option></select>
+              </label>
+              <label class="field"><span>Seuil RSI entrée <small>SI FILTRE RSI</small></span><input name="rsi_entry_max" type="text" inputmode="decimal" value="60"></label>
+              <label class="field"><span>Seuil RSI sortie <small>SI SORTIE RSI</small></span><input name="rsi_exit_min" type="text" inputmode="decimal" value="70"></label>
+              <label class="field"><span>Période RSI <small>BOUGIES</small></span><input name="rsi_period" type="number" min="2" max="100" value="14"></label>
+              <label class="field"><span>Période moyenne de volume <small>BOUGIES</small></span><input name="volume_period" type="number" min="2" max="200" value="20"></label>
+              <label class="field"><span>Volume × facteur <small>SI FILTRE VOLUME</small></span><input name="volume_multiplier" type="text" inputmode="decimal" value="1"></label>
+              <label class="field"><span>Stop-loss fictif <small>% · 0 = DÉSACTIVÉ</small></span><input name="stop_loss_pct" type="text" inputmode="decimal" value="0"></label>
+              <label class="field"><span>Objectif fictif <small>% · 0 = DÉSACTIVÉ</small></span><input name="take_profit_pct" type="text" inputmode="decimal" value="0"></label>
+            </div>
+            <p class="source-caution">Ce ne sont pas des ordres stop natifs : le seuil est contrôlé après la clôture, puis exécuté fictivement à l'ouverture suivante. Aucun fill ou prix de protection garanti.</p>
           </div>
           <div class="action-stack">
             <button id="run" type="submit" class="action-button action-primary">▶ <span>Lancer la simulation PAPER</span></button>
@@ -229,7 +253,7 @@
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th>BTC</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V3 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -268,7 +292,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 3.1.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.0.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>

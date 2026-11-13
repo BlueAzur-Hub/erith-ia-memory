@@ -13,7 +13,8 @@
   const whenLocal = s => new Date(s).toLocaleString("fr-FR", {dateStyle:"short",timeStyle:"short"});
   const kinds = {
     EMA_CROSS:"Croisement EMA", BOLLINGER:"Bandes Bollinger", DCA:"DCA programmé",
-    HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver les USDT"
+    HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver les USDT",
+    CUSTOM_RULES:"Ma stratégie personnalisée"
   };
   let profiles = [];
   let busy = false;
@@ -65,7 +66,12 @@
       slippage:number(val("slippage_pct")) / 100,
       ema_fast:number(val("ema_fast")), ema_slow:number(val("ema_slow")),
       bb_period:number(val("bb_period")), bb_sigma:number(val("bb_sigma")),
-      dca_every:number(val("dca_every")), dca_quote:number(val("dca_quote"))
+      dca_every:number(val("dca_every")), dca_quote:number(val("dca_quote")),
+      entry_rule:val("entry_rule"), filter_rule:val("filter_rule"), exit_rule:val("exit_rule"),
+      rsi_period:number(val("rsi_period")), rsi_entry_max:number(val("rsi_entry_max")),
+      rsi_exit_min:number(val("rsi_exit_min")),
+      volume_period:number(val("volume_period")), volume_multiplier:number(val("volume_multiplier")),
+      stop_loss_pct:number(val("stop_loss_pct")), take_profit_pct:number(val("take_profit_pct"))
     };
   }
   function chooseParams(p) {
@@ -73,7 +79,11 @@
       kind:p.kind, capital:p.capital, fee_pct:print(p.fee*100,2),
       slippage_pct:print(p.slippage*100,2), ema_fast:p.ema_fast,
       ema_slow:p.ema_slow, bb_period:p.bb_period, bb_sigma:p.bb_sigma,
-      dca_every:p.dca_every, dca_quote:p.dca_quote
+      dca_every:p.dca_every, dca_quote:p.dca_quote,
+      entry_rule:p.entry_rule, filter_rule:p.filter_rule, exit_rule:p.exit_rule,
+      rsi_period:p.rsi_period, rsi_entry_max:p.rsi_entry_max, rsi_exit_min:p.rsi_exit_min,
+      volume_period:p.volume_period, volume_multiplier:p.volume_multiplier,
+      stop_loss_pct:p.stop_loss_pct, take_profit_pct:p.take_profit_pct
     };
     for (const [name, value] of Object.entries(values)) {
       const field = form.elements.namedItem(name);
@@ -152,7 +162,12 @@
 
   function showFields() {
     const kind = $("kind").value;
-    $("ema-fields").hidden = kind !== "EMA_CROSS";
+    $("ema-fields").hidden = kind !== "EMA_CROSS" && kind !== "CUSTOM_RULES";
+    $("custom-fields").hidden = kind !== "CUSTOM_RULES";
+    const cmpButton=$("compare");
+    const cmpLabel=kind === "CUSTOM_RULES" ? "≋ Comparer ma stratégie aux 6 références" : "≋ Comparer les 6 méthodes sur cet horizon";
+    cmpButton.dataset.defaultText=cmpLabel;
+    if(!busy)cmpButton.textContent=cmpLabel;
     $("bb-fields").hidden = kind !== "BOLLINGER";
     $("dca-fields").hidden = kind !== "DCA";
   }
@@ -258,7 +273,7 @@
     currency=source.quote;
     $("comparison-empty").hidden=true;
     $("comparison-result").hidden=false;
-    $("comparison-badge").textContent="6 MODÈLES · "+comparison.timeframe;
+    $("comparison-badge").textContent=comparison.rows.length+" MODÈLES · "+comparison.timeframe;
     $("compare-context").textContent=
       source.pair+" · "+source.exchange+" · "+comparison.aggregated_candles+" BOUGIES "+comparison.timeframe;
     const tbody=$("comparison-rows");tbody.replaceChildren();
@@ -330,7 +345,7 @@
     for(const cmp of list.comparisons.slice(0,12)){
       const button=el("button",undefined,"history-item");
       button.type="button";
-      button.append(el("span","Six stratégies · "+cmp.timeframe+" · "+whenLocal(cmp.created_utc)));
+      button.append(el("span",((cmp.rows?.length)||6)+" stratégies · "+cmp.timeframe+" · "+whenLocal(cmp.created_utc)));
       button.append(el("strong","Voir le tableau"));
       button.addEventListener("click",async()=>{
         if(busy)return;
@@ -354,7 +369,7 @@
       const d=await api("/api/run",{params});
       renderRun(d.report);
       await refreshHistory();
-      notice("Simulation V3 enregistrée : "+params.timeframe+
+      notice("Simulation PAPER enregistrée : "+params.timeframe+
         " · "+(kinds[params.kind]||params.kind)+". Aucun ordre envoyé.","success");
     }catch(e){notice(e.message,"error");}
     finally{setBusy(false);}
@@ -364,12 +379,12 @@
     let params;
     try {params=requestParams();}catch(e){notice(e.message,"error");return;}
     setBusy(true,"Comparaison PAPER…");
-    notice("Comparaison des six stratégies sur exactement les mêmes bougies et frais…");
+    notice("Comparaison des stratégies sur exactement les mêmes bougies et frais…");
     try{
       const d=await api("/api/compare",{params});
       renderComparison(d.report);
       await refreshComparisonHistory();
-      notice("Six méthodes comparées et rapport enregistré localement. Résultats fictifs.","success");
+      notice(d.report.comparison.rows.length+" méthodes comparées et rapport enregistré localement. Résultats fictifs.","success");
       $("comparison").scrollIntoView({behavior:"smooth",block:"start"});
     }catch(e){notice(e.message,"error");}
     finally {setBusy(false);}
@@ -429,8 +444,8 @@
       if(!health.public_okx_enabled)throw new Error("Le serveur Python V3.1 n'est pas actif. Relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V3.1 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V3.1 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V4 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
