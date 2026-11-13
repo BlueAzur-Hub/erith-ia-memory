@@ -1,0 +1,266 @@
+{
+  "schema": "seven-heaven.okx-spot-paper-quantity-inventory-adapter-tests-v1",
+  "date_utc": "2026-11-13",
+  "status": "PASS_OFFLINE_RESEARCH_ONLY_NOT_EXCHANGE_CERTIFIED",
+  "program": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_SPOT_PAPER_LOT_MINIMUM_INVENTORY_ADAPTER_2026_11_13.cjs",
+  "program_sha256": "6321d764b7857f6c776dd48ca3845bfa75a28473e48b650c19349f3a362574bf",
+  "original_v6": "public/agent_crypto_erith_ia/administrator/js/market-microscope-orderbook-paper-v6.js",
+  "original_v6_sha256": "6372c8cfc8bb11037d39eaaa2218182e6bbba45871d71b6bf57dde62d1978525",
+  "public_instrument_evidence": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_okx_public_eligibility_evidence/SEVEN_HEAVEN_OKX_BTC_ETH_USDC_PUBLIC_ELIGIBILITY_2026_11_13_PROOFS.json",
+  "public_instrument_evidence_sha256": "ee471aaaddd116b7a4de85a68931c212c51c7c4915557739f39a32d79c7719ff",
+  "tests_passed": 32,
+  "tests_failed": 0,
+  "tests": [
+    {
+      "name": "Safe offline exports, no order path",
+      "result": "PASS"
+    },
+    {
+      "name": "Source provenance and public instrument identity",
+      "result": "PASS"
+    },
+    {
+      "name": "BTC-USDC 10 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.00014082",
+      "remaining_quote": "0.000189747558",
+      "pnl": "-0.02996854494"
+    },
+    {
+      "name": "BTC-USDC 10 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.00014089",
+      "sold_qty": "0.00014089",
+      "pnl": "-0.020015835633"
+    },
+    {
+      "name": "BTC-USDC 20 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.00028164",
+      "remaining_quote": "0.000379495117",
+      "pnl": "-0.059937089878"
+    },
+    {
+      "name": "BTC-USDC 20 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.00028178",
+      "sold_qty": "0.00028178",
+      "pnl": "-0.040037671266"
+    },
+    {
+      "name": "BTC-USDC 100 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.00140822",
+      "remaining_quote": "0.000477249733",
+      "pnl": "-0.299689705673"
+    },
+    {
+      "name": "BTC-USDC 100 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.00140892",
+      "sold_qty": "0.00140892",
+      "pnl": "-0.200215198524"
+    },
+    {
+      "name": "BTC-USDC 1000 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.01408226",
+      "remaining_quote": "0.00051181977",
+      "pnl": "-2.996909825588"
+    },
+    {
+      "name": "BTC-USDC 1000 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.01408928",
+      "sold_qty": "0.01408928",
+      "pnl": "-2.002217354016"
+    },
+    {
+      "name": "BTC-USDC refuses sub-minimum after lot floor in extreme reference scenario",
+      "result": "PASS"
+    },
+    {
+      "name": "BTC-USDC refuses sub-minimum after lot floor in extreme book scenario",
+      "result": "PASS"
+    },
+    {
+      "name": "BTC-USDC limit-price tick precision is checked without inventing a market limit order",
+      "result": "PASS"
+    },
+    {
+      "name": "BTC-USDC book timestamp and pair integrity are fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "BTC-USDC cannot sell inventory smaller than minSz",
+      "result": "PASS"
+    },
+    {
+      "name": "BTC-USDC refuses missing depth instead of partial fill",
+      "result": "PASS"
+    },
+    {
+      "name": "ETH-USDC 10 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.004969",
+      "remaining_quote": "0.001404165062",
+      "pnl": "-0.030000461751"
+    },
+    {
+      "name": "ETH-USDC 10 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.004972",
+      "sold_qty": "0.004972",
+      "pnl": "-0.0200683962"
+    },
+    {
+      "name": "ETH-USDC 20 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.009939",
+      "remaining_quote": "0.000796135349",
+      "pnl": "-0.060006961026"
+    },
+    {
+      "name": "ETH-USDC 20 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.009944",
+      "sold_qty": "0.009944",
+      "pnl": "-0.0401967924"
+    },
+    {
+      "name": "ETH-USDC 100 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.049696",
+      "remaining_quote": "0.001968481975",
+      "pnl": "-0.300040842649"
+    },
+    {
+      "name": "ETH-USDC 100 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.049721",
+      "sold_qty": "0.049721",
+      "pnl": "-0.20122801035"
+    },
+    {
+      "name": "ETH-USDC 1000 USDC V5 entry inventory and fees",
+      "result": "PASS",
+      "qty": "0.496969",
+      "remaining_quote": "0.001575066782",
+      "pnl": "-3.000462764211"
+    },
+    {
+      "name": "ETH-USDC 1000 USDC V6 book two levels and exact inventory sell",
+      "result": "PASS",
+      "qty": "0.497215",
+      "sold_qty": "0.497215",
+      "pnl": "-2.01284034525"
+    },
+    {
+      "name": "ETH-USDC refuses sub-minimum after lot floor in extreme reference scenario",
+      "result": "PASS"
+    },
+    {
+      "name": "ETH-USDC refuses sub-minimum after lot floor in extreme book scenario",
+      "result": "PASS"
+    },
+    {
+      "name": "ETH-USDC limit-price tick precision is checked without inventing a market limit order",
+      "result": "PASS"
+    },
+    {
+      "name": "ETH-USDC book timestamp and pair integrity are fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "ETH-USDC cannot sell inventory smaller than minSz",
+      "result": "PASS"
+    },
+    {
+      "name": "ETH-USDC refuses missing depth instead of partial fill",
+      "result": "PASS"
+    },
+    {
+      "name": "V6 original raw fraction is different from adapter's lot-rounded quantity",
+      "result": "PASS"
+    },
+    {
+      "name": "No input mutation for contract metadata, order book or original proofs",
+      "result": "PASS"
+    }
+  ],
+  "fixtures": [
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": "10",
+      "bought_base": "0.00014089",
+      "sell_base": "0.00014089",
+      "residual_usdc": "0.00020774755",
+      "same_book_friction_usdc": "-0.020015835633"
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": "20",
+      "bought_base": "0.00028178",
+      "sell_base": "0.00028178",
+      "residual_usdc": "0.0004124921",
+      "same_book_friction_usdc": "-0.040037671266"
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": "100",
+      "bought_base": "0.00140892",
+      "sell_base": "0.00140892",
+      "residual_usdc": "0.0006309304",
+      "same_book_friction_usdc": "-0.200215198524"
+    },
+    {
+      "pair": "BTC-USDC",
+      "budget_usdc": "1000",
+      "bought_base": "0.01408928",
+      "sell_base": "0.01408928",
+      "residual_usdc": "0.0006042046",
+      "same_book_friction_usdc": "-2.002217354016"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": "10",
+      "bought_base": "0.004972",
+      "sell_base": "0.004972",
+      "residual_usdc": "0.00034765732",
+      "same_book_friction_usdc": "-0.0200683962"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": "20",
+      "bought_base": "0.009944",
+      "sell_base": "0.009944",
+      "residual_usdc": "0.00066528464",
+      "same_book_friction_usdc": "-0.0401967924"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": "100",
+      "bought_base": "0.049721",
+      "sell_base": "0.049721",
+      "residual_usdc": "0.00119510401",
+      "same_book_friction_usdc": "-0.20122801035"
+    },
+    {
+      "pair": "ETH-USDC",
+      "budget_usdc": "1000",
+      "bought_base": "0.497215",
+      "sell_base": "0.497215",
+      "residual_usdc": "0.00162477415",
+      "same_book_friction_usdc": "-2.01284034525"
+    }
+  ],
+  "risks_and_limits": [
+    "No actual orders, private API, network, bridge or modification of V5/V6 runtime",
+    "Only known public minSz lotSz tickSz are enforced; not a guarantee of account-specific order validity",
+    "Flat 0.1% taker fee charged in USDC quote is assumed; actual account fee currency/exceptions unverified",
+    "V5 fixed 0.05% slippage is a hypothesis separate from V6 book impact",
+    "Prices and 2-level books in tests are synthetic fixtures anchored to a historical public snapshot",
+    "Buying and selling on the same static book measures friction, not temporal profitability",
+    "Quote arithmetic uses 12 decimal fixed-point atoms; actual OKX quote-precision and min-notional need separate verification"
+  ]
+}
