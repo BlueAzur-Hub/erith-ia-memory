@@ -9,6 +9,7 @@ The directory is now reserved for current coordination.
 - [Canonical application source](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/seven_heaven_strategy_lab) — developer code; ZIP binaries remain in GitHub Releases, not duplicated in this shared folder.
 
 
+- **[Crypto conversation archive — Memory Entry (58 volumes)](./Archives/crypto_conversation_2026_11_13/MEMORY_ENTRY.md)** — direct continuation for IA: current status, topic index, and 58 full archives. Public research record; read selectively.
 - [Archives](./Archives/) — historical files and build packages.
 - [Archive inventory](./Archives/INDEX_ROOT.md) — all relocated files and preservation details.
 - [Legacy inventory](./Archives/MANIFEST.md) — previous archive group.

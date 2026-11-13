@@ -12,6 +12,15 @@
 - Reconstruction : `python RECONSTRUCT_AND_VERIFY.py`
 - Chaque volume contient uniquement les octets des lignes originales, sans préambule ajouté.
 
+## Démarrage rapide / reprise IA
+
+- **[MEMORY_ENTRY.md](MEMORY_ENTRY.md)** — point d'entrée d'une nouvelle IA : quoi lire, dans quel ordre et quand s'arrêter.
+- **[CURRENT_STATE.md](CURRENT_STATE.md)** — état documenté Agent-Crypto / Strategy Lab, preuves et travaux ouverts.
+- **[TOPIC_INDEX.md](TOPIC_INDEX.md)** — 20 rubriques, 860 liens ancrés vers les lignes des volumes.
+- **[volumes/](volumes/)** — l'intégralité des 58 volumes, à consulter à la demande.
+
+> **Usage :** ne chargez pas les 58 volumes à chaque session ; commencez par MEMORY_ENTRY puis CURRENT_STATE. L'archive est publique : les extraits sensibles exigent un contrôle avant toute redistribution.
+
 ## Volumes (ordre de la conversation)
 
 | Volume | Lignes d’origine | Taille | Repères thématiques (index automatique) |
@@ -77,7 +86,7 @@
 
 ## Rechercher un sujet précis
 
-Consulter `TOPIC_INDEX.md` (dans l’archive privée) : chaque thème donne les volumes et la première ligne où le sujet apparaît dans chacun.
+Consulter [TOPIC_INDEX.md](TOPIC_INDEX.md) (désormais publié ici avec liens ancrés) : chaque thème donne les volumes et la première ligne où le sujet apparaît dans chacun.
 Les repères proviennent de correspondances automatiques et **ne constituent pas des résumés interprétatifs**.
 
 ## Contrôle
