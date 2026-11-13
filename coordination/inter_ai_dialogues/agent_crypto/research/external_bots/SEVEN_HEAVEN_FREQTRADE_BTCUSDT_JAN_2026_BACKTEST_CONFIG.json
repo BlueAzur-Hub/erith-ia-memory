@@ -1,0 +1,43 @@
+{
+  "$schema": "https://www.freqtrade.io/en/stable/configuration/",
+  "bot_name": "SevenHeavenOfflineResearchOnly",
+  "dry_run": true,
+  "dry_run_wallet": 1000,
+  "initial_state": "stopped",
+  "trading_mode": "spot",
+  "max_open_trades": 1,
+  "stake_currency": "USDT",
+  "stake_amount": "unlimited",
+  "tradable_balance_ratio": 0.99,
+  "fiat_display_currency": "USD",
+  "timeframe": "1m",
+  "dataformat_ohlcv": "json",
+  "exchange": {
+    "name": "binance",
+    "key": "",
+    "secret": "",
+    "password": "",
+    "ccxt_config": {
+      "enableRateLimit": false
+    },
+    "pair_whitelist": [
+      "BTC/USDT"
+    ],
+    "pair_blacklist": []
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    }
+  ],
+  "telegram": {
+    "enabled": false
+  },
+  "api_server": {
+    "enabled": false
+  },
+  "force_entry_enable": false,
+  "internals": {
+    "process_throttle_secs": 10
+  }
+}
