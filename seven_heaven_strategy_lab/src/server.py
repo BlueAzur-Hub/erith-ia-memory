@@ -13,6 +13,7 @@ from src.engine import LabError, load_bars, options
 from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
 from src.microscope import build_microscope, ALLOWED_WINDOWS
 from src.robustness import study as study_robustness
+from src.filter_research import study as study_filter_research
 from src.forensics import diagnose as diagnose_paper_trades
 from src.okx_public import (
     PublicMarketError, ALLOWED_SPOT, ALLOWED_DAYS, collect as collect_okx, list_sources as okx_sources,
@@ -97,7 +98,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.4"
+    server_version = "SevenHeavenStrategyLab/4.5"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -143,7 +144,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.4.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.5.0",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
@@ -153,6 +154,7 @@ class Handler(BaseHTTPRequestHandler):
                         "market_microscope_enabled": True,
                         "walk_forward_research_enabled": True,
                         "paper_trade_forensics_enabled": True,
+                        "controlled_filter_research_enabled": True,
                         "market_microscope_windows": list(ALLOWED_WINDOWS),
                         "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
                         "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
@@ -253,7 +255,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self._safe_origin():
             return
         path = urlsplit(self.path).path
-        if path not in ("/api/import-reference", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness"):
+        if path not in ("/api/import-reference", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study"):
             self._send({"error": "Action interdite"}, 404)
             return
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
@@ -275,6 +277,15 @@ class Handler(BaseHTTPRequestHandler):
                 with IMPORT_LOCK:
                     self._send({"source": collect_okx(WORKSPACE, data.get("pair"),
                         days=data.get("days",10), end_date=data.get("end_date"))}, 201)
+            elif path == "/api/filters-study":
+                # Scientific train-only experiment, memory-only, no USB files
+                # or account endpoints. Always verify source SHA via resolver.
+                requested=data.get("params", {})
+                if not isinstance(requested,dict):
+                    raise LabError("Paramètres d'étude des filtres invalides")
+                source,historical=_resolve_source(requested.get("source_id"))
+                study=study_filter_research(historical,requested,source)
+                self._send({"research":study},200)
             elif path == "/api/robustness":
                 # Fully ephemeral PAPER analysis: no proliferating JSON files on
                 # the user's USB, no account keys and no trading endpoints.
