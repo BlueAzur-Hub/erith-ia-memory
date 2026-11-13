@@ -9,7 +9,8 @@ import threading
 import uuid
 from urllib.parse import urlsplit
 
-from src.engine import LabError, load_bars, options, simulate
+from src.engine import LabError, load_bars, options
+from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
 from src.reference_data import CSV_NAME, SourceError, dataset_status, install_reference
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,7 +47,12 @@ def _list_records(category: str) -> list:
                 data = {"id": data["id"], "created_utc": data["created_utc"],
                         "kind": data["run"]["params"]["kind"],
                         "results": data["run"]["results"],
-                        "pair": data["run"]["data"]["pair"]}
+                        "pair": data["run"]["data"]["pair"],
+                        "timeframe": data["run"]["data"].get("timeframe", "1m")}
+            if category == "comparisons":
+                data = {"id": data["id"], "created_utc": data["created_utc"],
+                        "timeframe": data["comparison"]["timeframe"],
+                        "rows": data["comparison"]["rows"]}
             records.append(data)
         except (OSError, ValueError, KeyError, TypeError):
             continue
@@ -54,7 +60,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/0.1"
+    server_version = "SevenHeavenStrategyLab/2.0"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -100,18 +106,29 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "0.1",
-                        "status": "LOCAL_PAPER_ONLY", "live_trading": False})
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "2.0.0",
+                        "status": "LOCAL_PAPER_ONLY", "live_trading": False,
+                        "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
+                        "source": "SHA-verified Binance BTCUSDT January 2026",
+                        "engines": {"internal_paper": True, "freqtrade": False, "hummingbot": False}})
         elif path == "/api/datasets":
             self._send({"datasets": [dataset_status(WORKSPACE)]})
         elif path == "/api/profiles":
             self._send({"profiles": _list_records("profiles")})
         elif path == "/api/results":
             self._send({"runs": _list_records("results")})
+        elif path == "/api/comparisons":
+            self._send({"comparisons": _list_records("comparisons")})
         elif re.fullmatch(r"/api/results/[0-9a-f]{32}", path):
             file = WORKSPACE / "results" / (path.rsplit("/", 1)[-1] + ".json")
             if not file.is_file():
                 self._send({"error": "Résultat introuvable"}, 404)
+            else:
+                self._send(json.loads(file.read_text(encoding="utf-8")))
+        elif re.fullmatch(r"/api/comparisons/[0-9a-f]{32}", path):
+            file = WORKSPACE / "comparisons" / (path.rsplit("/", 1)[-1] + ".json")
+            if not file.is_file():
+                self._send({"error": "Comparaison introuvable"}, 404)
             else:
                 self._send(json.loads(file.read_text(encoding="utf-8")))
         else:
@@ -121,7 +138,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self._safe_origin():
             return
         path = urlsplit(self.path).path
-        if path not in ("/api/import-reference", "/api/run", "/api/profiles"):
+        if path not in ("/api/import-reference", "/api/run", "/api/compare", "/api/profiles"):
             self._send({"error": "Action interdite"}, 404)
             return
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
@@ -145,7 +162,12 @@ class Handler(BaseHTTPRequestHandler):
                     raise LabError("Nom de profil : 1 à 64 caractères")
                 if any(ord(c) < 32 for c in name):
                     raise LabError("Nom de profil invalide")
-                config = options(data.get("params"))
+                requested = data.get("params")
+                config = options(requested)
+                timeframe = requested.get("timeframe", "1m")
+                if timeframe not in TIMEFRAMES:
+                    raise LabError("Période de bougies inconnue")
+                config["timeframe"] = timeframe
                 from datetime import datetime, timezone
                 saved = {"id": uuid.uuid4().hex,
                          "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -156,20 +178,29 @@ class Handler(BaseHTTPRequestHandler):
                 if not dataset_status(WORKSPACE)["available"]:
                     raise LabError("Charge d'abord l'archive historique vérifiée")
                 historical = load_bars(WORKSPACE / "datasets" / CSV_NAME)
-                result = simulate(historical, data.get("params", {}))
-                baselines = {}
-                for kind in ("HOLD_50", "CASH"):
-                    if result["params"]["kind"] == kind:
-                        baselines[kind] = result["results"]
-                    else:
-                        baselines[kind] = simulate(historical, {**result["params"], "kind": kind})["results"]
+                requested = data.get("params", {})
                 from datetime import datetime, timezone
-                record = {"id": uuid.uuid4().hex,
-                          "created_utc": datetime.now(timezone.utc).isoformat(),
-                          "source_sha256": dataset_status(WORKSPACE)["data_sha256"],
-                          "run": result, "baselines": baselines}
-                _atomic_json(WORKSPACE / "results" / (record["id"] + ".json"), record)
-                self._send({"report": record}, 201)
+                metadata = {"id": uuid.uuid4().hex,
+                            "created_utc": datetime.now(timezone.utc).isoformat(),
+                            "source_sha256": dataset_status(WORKSPACE)["data_sha256"]}
+                if path == "/api/compare":
+                    record = {**metadata, "comparison": compare(historical, requested)}
+                    _atomic_json(WORKSPACE / "comparisons" / (record["id"] + ".json"), record)
+                    self._send({"report": record}, 201)
+                else:
+                    result, counterfactual = run_with_diagnostics(historical, requested)
+                    baselines = {}
+                    for kind in ("HOLD_50", "CASH"):
+                        if result["params"]["kind"] == kind:
+                            baselines[kind] = result["results"]
+                        else:
+                            baselines[kind] = run_one(historical, {
+                                **result["params"], "timeframe": result["data"]["timeframe"]
+                            }, kind=kind)["results"]
+                    record = {**metadata, "run": result,
+                              "baselines": baselines, "counterfactual": counterfactual}
+                    _atomic_json(WORKSPACE / "results" / (record["id"] + ".json"), record)
+                    self._send({"report": record}, 201)
         except (LabError, SourceError, ValueError, OverflowError) as exc:
             self._send({"error": str(exc)}, 400)
         except (TimeoutError, OSError) as exc:
