@@ -6,7 +6,9 @@
   const form = $("config");
   const print = (n, digits=2) => Number(n).toLocaleString("fr-FR", {maximumFractionDigits: digits});
   const signed = (n, digits=2) => (Number(n) > 0 ? "+" : "") + print(n, digits);
-  const money = n => print(n, 2) + " USDT";
+  let currency="USDT";
+  const money = n => print(n,2)+" "+currency;
+  const BINANCE="BINANCE_BTCUSDT_2026_01_1M";
   const whenUTC = t => new Date(t * 1000).toISOString().slice(0,16).replace("T"," ");
   const whenLocal = s => new Date(s).toLocaleString("fr-FR", {dateStyle:"short",timeStyle:"short"});
   const kinds = {
@@ -15,7 +17,9 @@
   };
   let profiles = [];
   let busy = false;
-  let available = false;
+  let available=false;
+  let binanceAvailable=false;
+  let connectedSources=[];
 
   async function api(path, data) {
     const init = data === undefined
@@ -36,7 +40,7 @@
   }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","run","compare","save-profile"]) {
+    for (const id of ["import","okx-import","run","compare","save-profile"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare") && !available);
@@ -55,6 +59,7 @@
     const val = key => data.get(key);
     return {
       kind:val("kind"), timeframe:val("timeframe") || "1m",
+      source_id:$("source-choice").value,
       capital:number(val("capital")), fee:number(val("fee_pct")) / 100,
       slippage:number(val("slippage_pct")) / 100,
       ema_fast:number(val("ema_fast")), ema_slow:number(val("ema_slow")),
@@ -73,11 +78,65 @@
       const field = form.elements.namedItem(name);
       if (field && value !== undefined) field.value = String(value);
     }
+    if(p.source_id && [...$("source-choice").options].some(x=>x.value===p.source_id)){
+      $("source-choice").value=p.source_id; updateSource();
+    }
     const target = p.timeframe || "1m";
     const radio = form.querySelector('input[name="timeframe"][value="'+target+'"]');
-    if (radio) radio.checked = true;
+    if (radio && !radio.disabled) radio.checked=true;
     showFields();
   }
+  function updateSource(){
+    const id=$("source-choice").value;
+    const source=id===BINANCE?{
+      id:BINANCE,exchange:"Binance Spot",pair:"BTC/USDT",base:"BTC",quote:"USDT",
+      available_timeframes:["1m","5m","15m","1h","4h"]
+    }:connectedSources.find(x=>x.id===id);
+    available=!!source&&(id!==BINANCE||binanceAvailable);
+    if(!source){if(!busy)setBusy(false);return;}
+    currency=source.quote;
+    const supported=new Set(source.available_timeframes);
+    for(const radio of form.querySelectorAll('input[name="timeframe"]')){
+      radio.disabled=!supported.has(radio.value);
+      radio.closest("label").classList.toggle("source-disabled",radio.disabled);
+    }
+    const checked=form.querySelector('input[name="timeframe"]:checked');
+    if(!checked||checked.disabled){
+      const fallback=form.querySelector('input[name="timeframe"]:not(:disabled)');
+      if(fallback)fallback.checked=true;
+    }
+    $("source-active-title").textContent=source.exchange+" · "+source.pair;
+    $("source-active-detail").textContent=id===BINANCE
+      ?"Janvier 2026 · archive V1/V2 intégralement préservée"
+      :"240 bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
+    $("source-active-hash").textContent=id===BINANCE
+      ?"Empreinte de référence du coffre V2"
+      :"SHA-256 "+source.sha256.slice(0,24)+"…";
+    $("available-timeframe-label").textContent=id===BINANCE
+      ?"sur l'archive Binance vérifiée 1m"
+      :"source OKX native 1h : horizons 1h et 4h seulement";
+    $("capital-unit").textContent=source.quote;
+    $("dca-unit").textContent=source.quote;
+    $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+(id===BINANCE?"Jan 2026":"240 bougies closes");
+    $("okx-source-badge").textContent=id===BINANCE?"ARCHIVE V1/V2":"ARCHIVE OKX ACTIVE";
+    if(!busy)setBusy(false);
+  }
+  async function refreshSources(prefer){
+    const d=await api("/api/okx-sources");
+    connectedSources=d.sources;
+    $("usb-storage").textContent="Libre : "+print(d.free_bytes/1e9,2)+" Go · réserve : "+
+      print(d.reserve_bytes/1e9,1)+" Go";
+    $("usb-storage").classList.toggle("storage-low",d.free_bytes<d.reserve_bytes);
+    const select=$("source-choice"), chosen=prefer||select.value||BINANCE;
+    select.replaceChildren(new Option("Binance BTC/USDT · Janvier 2026 · 44 640 × 1m",BINANCE));
+    for(const source of connectedSources) {
+      select.add(new Option(source.exchange+" "+source.pair+" · "+source.rows+
+        " × "+source.bar+" · "+source.close_boundary_utc.slice(0,16),source.id));
+    }
+    select.value=[...select.options].some(x=>x.value===chosen)?chosen:BINANCE;
+    updateSource();
+  }
+
   function showFields() {
     const kind = $("kind").value;
     $("ema-fields").hidden = kind !== "EMA_CROSS";
