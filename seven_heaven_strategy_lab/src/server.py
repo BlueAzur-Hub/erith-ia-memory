@@ -12,7 +12,7 @@ from urllib.parse import urlsplit
 from src.engine import LabError, load_bars, options
 from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
 from src.okx_public import (
-    PublicMarketError, ALLOWED_SPOT, collect as collect_okx, list_sources as okx_sources,
+    PublicMarketError, ALLOWED_SPOT, ALLOWED_DAYS, collect as collect_okx, list_sources as okx_sources,
     read_source as read_okx_source,
 )
 from src.reference_data import CSV_NAME, SourceError, dataset_status, install_reference
@@ -58,7 +58,7 @@ def _resolve_source(source_id: str | None):
              "exchange": "OKX Spot", "source_timeframe": "1h",
              "sha256": manifest["sha256"],
              "label": manifest["exchange"] + " " + manifest["pair"] +
-                      " · 240 bougies horaires clôturées",
+                      f" · {manifest['rows']} bougies horaires clôturées",
              "available_timeframes": manifest["available_timeframes"],
              "close_boundary_utc": manifest["close_boundary_utc"]}, bars)
 
@@ -138,11 +138,12 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "3.0.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "3.1.0",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
                         "public_pairs": list(ALLOWED_SPOT),
+                        "public_history_days": list(ALLOWED_DAYS),
                         "source": "SHA-verified Binance BTCUSDT January 2026",
                         "engines": {"internal_paper": True, "freqtrade": False, "hummingbot": False}})
         elif path == "/api/datasets":
@@ -194,7 +195,8 @@ class Handler(BaseHTTPRequestHandler):
                     self._send({"dataset": install_reference(WORKSPACE)})
             elif path == "/api/okx-import":
                 with IMPORT_LOCK:
-                    self._send({"source": collect_okx(WORKSPACE, data.get("pair"))}, 201)
+                    self._send({"source": collect_okx(WORKSPACE, data.get("pair"),
+                        days=data.get("days",10), end_date=data.get("end_date"))}, 201)
             elif path == "/api/profiles":
                 name = data.get("name", "")
                 if not isinstance(name, str) or not 1 <= len(name.strip()) <= 64:
