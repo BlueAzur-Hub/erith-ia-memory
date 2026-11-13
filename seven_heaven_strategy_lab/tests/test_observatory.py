@@ -9,6 +9,7 @@ from src.engine import LabError
 from src.observatory import (ORDER, TIMEFRAMES, aggregate_bars, compare,
                              run_one, run_with_diagnostics)
 import src.server as server
+from src.microscope import build_microscope, ALLOWED_WINDOWS
 
 
 def build_bars(n=1440, base=100.0):
@@ -19,6 +20,96 @@ def build_bars(n=1440, base=100.0):
         bars.append((1767225600+i*60,opening,max(opening,close)+.7,
                      min(opening,close)-.7,close,1.25))
     return bars
+
+
+def _microscope_fixture(*, timeframe="1h", rows=240, params=None):
+    series=[]
+    for i in range(rows):
+        opening=100+7*math.sin((i-1)/8)
+        closing=100+7*math.sin(i/8)
+        series.append((1767225600+i*3600,opening,max(opening,closing)+1,
+                       min(opening,closing)-1,closing,2.0+i%5))
+    source={"id":"OKX_BTC_USDC_1H_1768089600",
+            "sha256":"test-sha-verified-history","pair":"BTC/USDC",
+            "base":"BTC","quote":"USDC","exchange":"OKX Spot",
+            "source_timeframe":"1h"}
+    raw={"kind":"EMA_CROSS","ema_fast":10,"ema_slow":30,
+         "timeframe":timeframe,"fee":.001,"slippage":.0005,**(params or {})}
+    run=run_one(series,raw,source_timeframe="1h")
+    run["data"]["source_id"]=source["id"]
+    run["data"]["source_sha256"]=source["sha256"]
+    record={"id":"f"*32,"source_sha256":source["sha256"],
+            "source":source,"run":run}
+    return series,source,record
+
+
+class MarketMicroscopeV42Tests(unittest.TestCase):
+    def test_last_page_is_exact_same_sha_source_and_has_ohlcv_markers(self):
+        bars,source,record=_microscope_fixture()
+        panel=build_microscope(bars,record,source,limit=60)
+        self.assertEqual(panel["status"],"SAME_VERIFIED_HISTORICAL_RUN_PAPER_ONLY")
+        self.assertEqual(panel["start_index"],180)
+        self.assertEqual(panel["total_bars"],240)
+        self.assertEqual(panel["source_sha256"],source["sha256"])
+        self.assertEqual(panel["candles"][0]["t"],bars[180][0])
+        self.assertEqual(panel["candles"][-1]["t"],bars[-1][0])
+        self.assertEqual(panel["candles"][0]["v"],bars[180][5])
+        self.assertEqual(panel["safety"]["orders_real"],0)
+        actual={t["timestamp"] for t in record["run"]["trades"]}
+        self.assertTrue(all(m["t"] in actual for m in panel["markers"]))
+        self.assertTrue(all(m["kind"]=="HYPOTHETICAL_NEXT_BAR_OPEN_FILL"
+                            for m in panel["markers"]))
+
+    def test_4h_aggregates_and_keeps_execution_marker_times(self):
+        bars,source,record=_microscope_fixture(timeframe="4h")
+        panel=build_microscope(bars,record,source,limit=60)
+        self.assertEqual(panel["total_bars"],60)
+        self.assertEqual(panel["timeframe"],"4h")
+        self.assertEqual(panel["candles"][0]["o"],bars[0][1])
+        self.assertEqual(panel["candles"][0]["c"],bars[3][4])
+        self.assertAlmostEqual(panel["candles"][0]["v"],sum(b[5] for b in bars[:4]))
+        self.assertTrue(all(c["t"]%14400==0 for c in panel["candles"]))
+        self.assertTrue(all(m["t"] in {c["t"] for c in panel["candles"]}
+                            for m in panel["markers"]))
+
+    def test_indicator_display_has_no_future_candles(self):
+        bars,source,record=_microscope_fixture()
+        original=build_microscope(bars,record,source,limit=90,start_index=0)
+        rewritten=list(bars)
+        for i in range(95,len(rewritten)):
+            t,o,h,l,c,v=rewritten[i]
+            rewritten[i]=(t,o+200,h+200,l+200,c+200,v)
+        changed=build_microscope(rewritten,record,source,limit=90,start_index=0)
+        self.assertEqual(original["candles"],changed["candles"])
+        for item in original["candles"]:
+            self.assertTrue(math.isfinite(item["ema_fast"]))
+            self.assertTrue(math.isfinite(item["ema_slow"]))
+        self.assertIsNone(original["candles"][0]["sma20"])
+        self.assertIsNotNone(original["candles"][19]["sma20"])
+
+    def test_refuse_mismatched_sha_and_report_chronology_and_invalid_window(self):
+        bars,source,record=_microscope_fixture()
+        with self.assertRaisesRegex(LabError,"ne correspondent"):
+            build_microscope(bars,record,{**source,"sha256":"wrong"},limit=60)
+        with self.assertRaisesRegex(LabError,"chronologie"):
+            changed={**record,"run":{**record["run"],
+                "data":{**record["run"]["data"],"last_utc":0}}}
+            build_microscope(bars,changed,source,limit=60)
+        for bad in (0,200,"60",True,None):
+            with self.subTest(limit=bad),self.assertRaises(LabError):
+                build_microscope(bars,record,source,limit=bad)
+        with self.assertRaisesRegex(LabError,"hors historique"):
+            build_microscope(bars,record,source,limit=180,start_index=61)
+
+    def test_v42_viewport_never_mutates_original_paper_report(self):
+        import copy
+        bars,source,record=_microscope_fixture()
+        before=copy.deepcopy(record)
+        for count in ALLOWED_WINDOWS:
+            p=build_microscope(bars,record,source,limit=count)
+            self.assertLessEqual(len(p["candles"]),count)
+            self.assertEqual(p["safety"]["orders_real"],0)
+        self.assertEqual(record,before)
 
 
 class ObservatoryV2Tests(unittest.TestCase):
