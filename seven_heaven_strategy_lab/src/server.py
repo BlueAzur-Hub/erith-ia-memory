@@ -7,10 +7,11 @@ from pathlib import Path
 import re
 import threading
 import uuid
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 from src.engine import LabError, load_bars, options
 from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
+from src.microscope import build_microscope, ALLOWED_WINDOWS
 from src.okx_public import (
     PublicMarketError, ALLOWED_SPOT, ALLOWED_DAYS, collect as collect_okx, list_sources as okx_sources,
     read_source as read_okx_source,
@@ -92,7 +93,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.1"
+    server_version = "SevenHeavenStrategyLab/4.2"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -138,13 +139,15 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.1.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.2.0",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
                         "public_pairs": list(ALLOWED_SPOT),
                         "public_history_days": list(ALLOWED_DAYS),
                         "strategy_creator_enabled": True,
+                        "market_microscope_enabled": True,
+                        "market_microscope_windows": list(ALLOWED_WINDOWS),
                         "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
                         "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
                         "source": "SHA-verified Binance BTCUSDT January 2026",
@@ -153,6 +156,45 @@ class Handler(BaseHTTPRequestHandler):
             self._send({"datasets": [dataset_status(WORKSPACE)]})
         elif path == "/api/okx-sources":
             self._send(okx_sources(WORKSPACE))
+        elif path == "/api/microscope":
+            # Read-only viewport of an existing PAPER report. Never fetches live
+            # exchange prices or runs a new simulation to fill chart gaps.
+            try:
+                query = parse_qs(urlsplit(self.path).query, keep_blank_values=True)
+                if not set(query).issubset({"run_id", "limit", "start_index"}):
+                    raise LabError("Paramètres microscope non autorisés")
+                if any(len(values) != 1 for values in query.values()):
+                    raise LabError("Paramètres microscope ambigus")
+                run_id = (query.get("run_id") or [""])[0]
+                if not re.fullmatch(r"[0-9a-f]{32}", run_id):
+                    raise LabError("Identifiant de simulation invalide")
+                limit_raw = (query.get("limit") or ["120"])[0]
+                if not re.fullmatch(r"(60|90|120|180)", limit_raw):
+                    raise LabError("Fenêtre du microscope incorrecte")
+                start_raw = (query.get("start_index") or [None])[0]
+                if start_raw is not None and not re.fullmatch(r"(0|[1-9][0-9]{0,6})", start_raw):
+                    raise LabError("Position du microscope invalide")
+                file = WORKSPACE / "results" / (run_id + ".json")
+                if not file.is_file():
+                    self._send({"error": "Rapport local introuvable"}, 404)
+                    return
+                record = json.loads(file.read_text(encoding="utf-8"))
+                if record.get("id") != run_id:
+                    raise LabError("Identifiant du rapport incohérent")
+                source_id = record.get("run", {}).get("data", {}).get("source_id")
+                if source_id is None and isinstance(record.get("source"), dict):
+                    source_id = record["source"].get("id")
+                if not source_id:
+                    raise LabError("Rapport ancien sans provenance exploitable pour le microscope")
+                source, bars = _resolve_source(source_id)
+                data = build_microscope(
+                    bars, record, source,
+                    limit=int(limit_raw),
+                    start_index=int(start_raw) if start_raw is not None else None,
+                )
+                self._send({"microscope": data})
+            except (LabError, SourceError, PublicMarketError, ValueError, TypeError, OSError) as exc:
+                self._send({"error": str(exc)}, 400)
         elif path == "/api/profiles":
             self._send({"profiles": _list_records("profiles")})
         elif path == "/api/results":
