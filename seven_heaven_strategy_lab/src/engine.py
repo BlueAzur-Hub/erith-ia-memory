@@ -12,7 +12,10 @@ import csv
 import math
 from pathlib import Path
 
-KINDS = {"HOLD_50", "HOLD_100", "CASH", "EMA_CROSS", "BOLLINGER", "DCA"}
+KINDS = {"HOLD_50", "HOLD_100", "CASH", "EMA_CROSS", "BOLLINGER", "DCA", "CUSTOM_RULES"}
+ENTRY_RULES = {"EMA_CROSS_UP", "PRICE_ABOVE_EMA"}
+FILTER_RULES = {"NONE", "RSI_BELOW", "VOLUME_ABOVE"}
+EXIT_RULES = {"EMA_CROSS_DOWN", "PRICE_BELOW_EMA", "RSI_ABOVE"}
 COLS = ["timestamp", "open", "high", "low", "close", "volume"]
 BASE_STEP = 0.00000001
 MIN_HYPOTHETICAL_NOTIONAL = 5.0  # LAB assumption, not historical OKX/Binance rules
@@ -50,9 +53,25 @@ def options(raw):
         "bb_sigma": _finite(raw.get("bb_sigma", 2), 0.5, 4, "Bollinger écart-type"),
         "dca_every": int(_finite(raw.get("dca_every", 1440), 1, 100000, "DCA intervalle en minutes")),
         "dca_quote": _finite(raw.get("dca_quote", 50), 5, 100000, "DCA montant USDT"),
+        "entry_rule": raw.get("entry_rule", "EMA_CROSS_UP"),
+        "filter_rule": raw.get("filter_rule", "NONE"),
+        "exit_rule": raw.get("exit_rule", "EMA_CROSS_DOWN"),
+        "rsi_period": int(_finite(raw.get("rsi_period", 14), 2, 100, "RSI période")),
+        "rsi_entry_max": _finite(raw.get("rsi_entry_max", 60), 1, 99, "RSI entrée maximum"),
+        "rsi_exit_min": _finite(raw.get("rsi_exit_min", 70), 1, 99, "RSI sortie minimum"),
+        "volume_period": int(_finite(raw.get("volume_period", 20), 2, 200, "Volume période")),
+        "volume_multiplier": _finite(raw.get("volume_multiplier", 1.0), 0.1, 5, "Volume multiplicateur"),
+        "stop_loss_pct": _finite(raw.get("stop_loss_pct", 0), 0, 50, "Stop loss %"),
+        "take_profit_pct": _finite(raw.get("take_profit_pct", 0), 0, 200, "Take profit %"),
     }
     if result["ema_fast"] >= result["ema_slow"]:
         raise LabError("L'EMA rapide doit être inférieure à l'EMA lente")
+    if result["entry_rule"] not in ENTRY_RULES:
+        raise LabError("Règle d'entrée personnalisée non autorisée")
+    if result["filter_rule"] not in FILTER_RULES:
+        raise LabError("Filtre personnalisé non autorisé")
+    if result["exit_rule"] not in EXIT_RULES:
+        raise LabError("Règle de sortie personnalisée non autorisée")
     return result
 
 
@@ -95,12 +114,15 @@ def simulate(bars, raw_options):
     rejected = 0
     peak, max_dd, points = capital, 0.0, []
     ema_fast = ema_slow = previous_diff = None
+    custom_fast = custom_slow = custom_prev_diff = position_entry = None
+    changes = deque(maxlen=p["rsi_period"])
+    volumes = deque(maxlen=p["volume_period"])
     alpha_fast, alpha_slow = 2 / (p["ema_fast"] + 1), 2 / (p["ema_slow"] + 1)
     bb_window = deque(maxlen=p["bb_period"])
     downsample = max(1, len(bars) // 240)
 
     def buy(ts, open_price, quote):
-        nonlocal cash, quantity, paid_fees, turnover, rejected
+        nonlocal cash, quantity, paid_fees, turnover, rejected, position_entry
         if cash < MIN_HYPOTHETICAL_NOTIONAL or quote < MIN_HYPOTHETICAL_NOTIONAL:
             rejected += 1
             return
@@ -114,6 +136,7 @@ def simulate(bars, raw_options):
             return
         cash = max(0.0, cash - cost)
         quantity += units
+        position_entry = price
         paid_fees += notional * fee
         turnover += notional
         trades.append({"timestamp": ts, "side": "BUY", "price": round(price, 5),
@@ -121,7 +144,7 @@ def simulate(bars, raw_options):
                        "cash_after": round(cash, 5)})
 
     def sell(ts, open_price):
-        nonlocal cash, quantity, paid_fees, turnover, rejected
+        nonlocal cash, quantity, paid_fees, turnover, rejected, position_entry
         if quantity <= 0:
             return
         price = open_price * (1 - slip)
@@ -137,6 +160,7 @@ def simulate(bars, raw_options):
                        "qty": round(quantity, 8), "fee": round(commission, 7),
                        "cash_after": round(cash, 5)})
         quantity = 0.0
+        position_entry = None
 
     for i, (ts, o, h, l, c, volume) in enumerate(bars):
         # Signals use previous CLOSED candle only; order is at this candle's OPEN.
