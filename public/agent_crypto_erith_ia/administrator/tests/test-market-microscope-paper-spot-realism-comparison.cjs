@@ -42,8 +42,8 @@ function sampleBook(pair,price,step){
  return {provider:"okx",freshness:"FRESH",loading:false,error:null,external:false,
    pair:pair.replace("-","/"),loadedAsset:pair.split("-")[0],loadedQuote:"USDC",
    sourceObservedAt:new Date(now-1000).toISOString(),
-   asks:[[price+step,0.00003],[price+step*2,100]],
-   bids:[[price-step,0.00003],[price-step*2,100]]};
+   asks:[[(price+step).toFixed(step===0.1?1:2),0.00003],[(price+step*2).toFixed(step===0.1?1:2),100]],
+   bids:[[(price-step).toFixed(step===0.1?1:2),0.00003],[(price-step*2).toFixed(step===0.1?1:2),100]]};
 }
 const positions=[
  ["BTC-USDC",70904.9,0.1,"0.00000001"],
