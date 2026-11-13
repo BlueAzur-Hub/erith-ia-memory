@@ -18,7 +18,10 @@ function test(name,fn){
 }
 const S=1000000000000n;
 function atoms(s){
- const p=String(s).split(".");return BigInt(p[0])*S+BigInt((p[1]||"").padEnd(12,"0"));
+ const v=String(s),negative=v.startsWith("-");
+ const p=(negative?v.slice(1):v).split(".");
+ const magnitude=BigInt(p[0])*S+BigInt((p[1]||"").padEnd(12,"0"));
+ return negative?-magnitude:magnitude;
 }
 function quoteConserved(start,spent,residual){
  assert.equal(atoms(spent)+atoms(residual),atoms(start));
