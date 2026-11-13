@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V4_OFFICIAL_RELEASE_ALL_CI_PASS_OWNER_USB_FIREFOX_PENDING",
+  "status": "V4_OWNER_FIREFOX_VALIDATED_PAPER_30DAY_BTC_USDC",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -120,7 +120,7 @@
     {
       "stage": "C2",
       "version": "4.0.0",
-      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING",
+      "status": "PUBLISHED_CI_PASS_OWNER_USB_FIREFOX_VALIDATED_BTC_USDC_30D_CUSTOM_PAPER",
       "features": [
         "native_independent_declarative_rule_composer",
         "entry_ema_cross_or_above_ema",
@@ -143,7 +143,8 @@
         "python_313_windows_double_click": true,
         "chromium_visual_creator_profile_save_and_7_way_compare": true,
         "public_okx_240_1h_real_network": true,
-        "owner_windows_firefox_verification": false
+        "owner_windows_firefox_verification": true,
+        "owner_custom_saved_profile_and_seven_model_comparison": true
       }
     },
     {
@@ -313,6 +314,46 @@
       "ema_zero_fee_slippage_return_pct": 7.19,
       "ema_frictions_return_gap_percentage_points": 12.12,
       "evidence_qualification": "The screen shows a full 90-day OKX dataset, replay and local saved comparison; raw workspace bytes and full SHA were not supplied; this is not a native bot backtest or actual fill confirmation."
+    },
+    "owner_v4_btc_usdc_30_day_2026_11_13": {
+      "evidence": "USER_SUPPLIED_FIREFOX_SCREENSHOT_AND_PASTED_RUN_NOT_RAW_WORKSPACE",
+      "local_build": "4.0.0",
+      "pair": "BTC/USDC",
+      "exchange": "OKX Spot",
+      "source_candles": 720,
+      "source_timeframe": "1h",
+      "source_end_exclusive_utc": "2026-11-13T08:00:00Z",
+      "source_sha256_prefix": "c6c0324882fcb0c23d7cfddc",
+      "source_complete_sha256_not_supplied": true,
+      "capital_initial_usdc": 10000,
+      "fees_taker_pct_side": 0.1,
+      "slippage_pct_side": 0.05,
+      "selected_custom_rules": {
+        "entry": "EMA_CROSS_UP",
+        "filter": "NONE",
+        "exit": "EMA_CROSS_DOWN",
+        "ema_fast": 12,
+        "ema_slow": 32
+      },
+      "profile_saved_name": "EMA 12/32 1h",
+      "result": {
+        "equity_final_usdc": 8363.69,
+        "return_pct": -16.36,
+        "max_drawdown_pct": -16.43,
+        "fees_usdc": 202.06,
+        "buy_events": 11,
+        "sell_events": 11,
+        "rejected_orders": 0,
+        "no_fee_slippage_counterfactual_pct": -13.56,
+        "matches_builtin_ema_comparator": true,
+        "hold_50_pct": -9.02,
+        "hold_100_pct": -18.05,
+        "dca_pct": -2,
+        "bollinger_pct": -4.67,
+        "cash_pct": 0
+      },
+      "status": "OWNER_UI_CONFIRMED_NOT_INDEPENDENT_SOURCE_BYTES_TEST",
+      "orders_real": 0
     }
   },
   "safety": {
@@ -325,8 +366,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V3.1 owner Firefox 90-day OKX acceptance remains final verified local baseline. V4 is published and CI-tested but NOT yet owner-tested: when convenient, protect workspace/ backup, replace only canonical runtime files with full V4 ZIP and confirm BUILD 4.0.0; select 'Ma stratégie personnalisée', save and compare 7 PAPER methods. No patch installers.",
-  "next_developer_task": "Do not duplicate external engines. After V4 owner acceptance, design V5 autonomous PAPER research and independent risk limits; keep Freqtrade/Hummingbot as optional scientific validation only; real OKX orders require separate explicit authorization and isolation.",
+  "next_single_owner_check": "V4.0.0 has been accepted on owner's Firefox (720 OKX BTC/USDC 1h candles, custom EMA12/32, seven-model comparison, profile saved). Do not re-request V4 acceptance. Next scientific improvement: V4.1 professional report metrics, drawdown visualization, market-relative comparisons; preserve canonical workspace and no trading.",
+  "next_developer_task": "V4.1 professional performance analytics and auditable strategy results, using original PAPER core and tests. Professional references: TradingView Strategy Tester, Freqtrade lookahead-analysis, NautilusTrader data-vs-execution granularity. No external bot runtime dependency, no new USB dev tooling.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -334,7 +375,7 @@
     "V3.1 has GitHub Windows/Chromium and default 240 candle OKX actual-network tests; extended 30/90-day OKX coverage is verified only with deterministic fixtures and is not guaranteed by exchange API",
     "V3.1 owner Firefox 90-day OKX history is confirmed, but the full SHA-256 and raw CSV are local to owner USB; do not pretend independent GitHub CI has re-fetched the exact 90-day source",
     "V4 custom strategy composer is a bounded no-code rule combination, not arbitrary strategy scripting, not a live scheduler or bot; stop/target use previous-close triggers and assumed next-open fills.",
-    "V4 owner Windows Firefox acceptance is still pending; Python 3.13/Chromium/OKX CI proof is independent evidence, not user validation."
+    "Owner V4 acceptance is confirmed by screenshot and pasted UI results only: complete raw 720-candle SHA and workspace bytes were not accessed independently."
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
 }
