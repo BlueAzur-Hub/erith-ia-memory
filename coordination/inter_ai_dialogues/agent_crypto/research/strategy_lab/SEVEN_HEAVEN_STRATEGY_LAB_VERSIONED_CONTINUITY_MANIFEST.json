@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V4_1_OWNER_FIREFOX_VERIFIED_60_DAY_BTC_USDC",
+  "status": "V4_2_PUBLISHED_ALL_CI_PASS_OWNER_FIREFOX_PENDING_V4_1_OWNER_VALIDATED",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -20,7 +20,7 @@
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
       "last_owner_reported_free_gb": 4.07
     },
-    "version": "4.1.0"
+    "version": "4.2.0"
   },
   "release_train": [
     {
@@ -181,6 +181,41 @@
       }
     },
     {
+      "stage": "C2++",
+      "version": "4.2.0",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING",
+      "features": [
+        "professional_archived_OHLCV_candlesticks_and_volume",
+        "bounded_60_90_120_180_candle_pan_zoom_viewport",
+        "same_saved_run_id_same_source_SHA256_timeframe_first_last_UTC",
+        "EMA_fast_slow_SMA20_Bollinger_and_approximate_UTC_daily_OHLCV_VWAP",
+        "hypothetical_next_open_BUY_SELL_fill_markers_not_signals",
+        "selected_draft_vs_last_simulation_report_warning",
+        "no_market_live_data_mixed_with_archive",
+        "independent_local_SVG_no_CDN_or_new_python_packages",
+        "all_v4_1_PAPER_results_profiles_workspace_backward_compatible",
+        "one_clean_windows_python313_runtime_ZIP_no_dev_scripts_or_workspace",
+        "paper_only_zero_real_orders"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v4-2-historical-market-microscope-2026-11-13",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-2-historical-market-microscope-2026-11-13",
+      "size_bytes": 63568,
+      "sha256": "2dbde7f87145f6ed7a4dff06347e5c24d3ba3d20f731060cc06f3328e3ca5b63",
+      "provenance": {
+        "commit": "f618a1e940488905b8c0467b161431a2e2bf7125",
+        "pr": 763,
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43410870359",
+        "all_workflow_jobs_success": true,
+        "python_313_windows_launcher_verified": true,
+        "chromium_desktop_mobile_market_microscope_verified": true,
+        "public_okx_240_1h_actual_network_verified": true,
+        "verified_archive_gates_and_open_close_alignment": true,
+        "view_source_SHA_vs_saved_run_guard_verified": true,
+        "new_no_lookahead_indicator_tests_passed": true,
+        "owner_firefox_verified": false
+      }
+    },
+    {
       "stage": "D",
       "version": "5.0-planned",
       "status": "NOT_BUILT",
@@ -196,7 +231,7 @@
   ],
   "engines": {
     "erith_internal": {
-      "status": "V4_1_NATIVE_PAPER_QUANT_RISK_DESK_CI_PASS_OWNER_PENDING",
+      "status": "V4_2_LOCAL_HISTORICAL_MARKET_MICROSCOPE_PAPER_CI_PASS_OWNER_PENDING",
       "trade_api": false
     },
     "freqtrade": {
@@ -430,8 +465,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Owner V4.1 Firefox acceptance confirmed on 2026-11-13: 60-day OKX BTC/USDC, 1440 1h candles, 360 replay 4h bars, Aether Quant 5 closed positions, valid local run. Custom strategy composer is present; it is shown only while selected in Famille de stratégie. No additional test requested today; owner is sleeping.",
-  "next_developer_task": "V4.2 native professional historical candlestick microscope with verified same-source OHLCV, EMA/SMA/Bollinger optional overlays, PAPER trade markers, zoom and clear distinction between current draft settings and last-run report. Preserve independent core, no Binance/OKX live orderbook/history mixing, no API order access. Owner asked to resume upon return; no background task.",
+  "next_single_owner_check": "User V4.1 is last owner-validated Firefox version (60-day OKX BTC/USDC, 1440 1H candles, risk desk). V4.2 published and CI-success but not yet owner-validated. When owner returns: stop Python; back up private workspace to separate storage; copy ONE complete V4.2 runtime ZIP contents over existing app without replacing/deleting workspace. Launch normal Windows CMD; verify BUILD 4.2.0; load a saved 1H/4H PAPER report and check source-locked historical candles, EMA overlays and hypothetical fills. No patch scripts.",
+  "next_developer_task": "After owner V4.2 Firefox acceptance: V4.3 out-of-sample/walk-forward research, market regime/robustness, fee and slippage sensitivity; then V4.4 advanced strategy editor/risk controls. Freqtrade/Hummingbot remain optional validators; V5 paper autonomy only. No real orders.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -441,7 +476,9 @@
     "V4 custom strategy composer is a bounded no-code rule combination, not arbitrary strategy scripting, not a live scheduler or bot; stop/target use previous-close triggers and assumed next-open fills.",
     "Owner V4 acceptance is confirmed by screenshot and pasted UI results only: complete raw 720-candle SHA and workspace bytes were not accessed independently.",
     "V4.1 profit factor/win rate refer only to fully closed simulated long positions; stops are previous-close signals executed at assumed next open, never exchange-native stop orders.",
-    "V4.1 user Firefox screenshot verified (not full raw workspace and SHA); UI custom-config selection alone does not change prior displayed EMA 4h result until a new PAPER simulation is run."
+    "V4.1 user Firefox screenshot verified (not full raw workspace and SHA); UI custom-config selection alone does not change prior displayed EMA 4h result until a new PAPER simulation is run.",
+    "V4.2 owner Windows Firefox acceptance has NOT yet occurred. CI success proves Python 3.13, Chromium and public OKX default-window smoke, not on-device owner operation.",
+    "Microscope EMA/SMA/Bollinger daily OHLCV VWAP overlays are chart analytics only; markers are saved hypothetical next-bar-open executions, not actual fills, signals, live orderbook or verified tick-level VWAP."
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md",
   "session_handoff_2026_11_13": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_SESSION_CONTINUITY_AND_V4_2_HANDOFF_2026_11_13.md"
