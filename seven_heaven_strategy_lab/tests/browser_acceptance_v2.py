@@ -38,7 +38,7 @@ def main():
             desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_DESKTOP_COCKPIT.png"),full_page=True)
             desktop.locator("#profile-name").fill("V2 EMA 10-30 Browser Acceptance")
             desktop.locator("#save-profile").click()
-            desktop.locator("#saved-profiles option").filter(has_text="V2 EMA 10-30").wait_for(timeout=15000)
+            desktop.locator("#saved-profiles option").filter(has_text="V2 EMA 10-30").wait_for(state="attached",timeout=15000)
             assert not errors, f"Unexpected JavaScript page exceptions: {errors}"
 
             mobile=browser.new_page(viewport={"width":390,"height":844},device_scale_factor=1)
