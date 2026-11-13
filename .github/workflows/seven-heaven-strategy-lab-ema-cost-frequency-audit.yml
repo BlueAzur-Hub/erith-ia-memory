@@ -1,0 +1,92 @@
+name: Seven Heaven EMA fee and candle-frequency scientific audit
+
+on:
+  push:
+    branches: [research/seven-heaven-strategy-lab-fee-frequency-and-freqtrade-20261113]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_SENSITIVITY_2026_01.py'
+      - '.github/workflows/seven-heaven-strategy-lab-ema-cost-frequency-audit.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_SENSITIVITY_2026_01.py'
+      - '.github/workflows/seven-heaven-strategy-lab-ema-cost-frequency-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fee-and-frequency-internal-paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout only the independent PAPER engine and research script
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/src/
+            /seven_heaven_strategy_lab/tests/
+            /coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_SENSITIVITY_2026_01.py
+            /.github/workflows/seven-heaven-strategy-lab-ema-cost-frequency-audit.yml
+      - name: Set up Python 3.13 to match owner's machine
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify existing 14 PAPER tests
+        env:
+          PYTHONPATH: seven_heaven_strategy_lab
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s seven_heaven_strategy_lab/tests -p 'test_*.py'
+      - name: Download and validate exact frozen Binance January 2026 historical source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: seven_heaven_strategy_lab
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/seven-strategy-source" "$RUNNER_TEMP/seven-cost-study"
+          gh release download crypto-spot-bulk-2026-01-1m \
+            --repo BlueAzur-Hub/erith-ia-memory \
+            --pattern BTCUSDT-1m-2026-01.zip \
+            --dir "$RUNNER_TEMP/seven-strategy-source"
+          python - <<'PY'
+          from pathlib import Path
+          from src.reference_data import _convert, ZIP_NAME, CSV_NAME, CSV_SHA
+          import hashlib, os
+          root=Path(os.environ["RUNNER_TEMP"])
+          raw=(root/"seven-strategy-source"/ZIP_NAME).read_bytes()
+          normalized=_convert(raw)
+          assert hashlib.sha256(normalized).hexdigest()==CSV_SHA
+          (root/"seven-strategy-source"/CSV_NAME).write_bytes(normalized)
+          print("PASS: exact 44640 one-minute bars validated by immutable archive and CSV SHA256")
+          PY
+      - name: Run 20 predeclared timeframe and fee scenarios
+        env:
+          PYTHONPATH: seven_heaven_strategy_lab
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_SENSITIVITY_2026_01.py \
+            --csv "$RUNNER_TEMP/seven-strategy-source/BTCUSDT-1m-2026-01_HUMMINGBOT_CANDLES.csv" \
+            --output "$RUNNER_TEMP/seven-cost-study/SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_2026_JANUARY_20_CASES.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          x=json.loads((Path(os.environ["RUNNER_TEMP"])/"seven-cost-study"/"SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_2026_JANUARY_20_CASES.json").read_text())
+          assert len(x["cases"]) == 20
+          assert x["case_count"] == 20
+          for c in x["cases"]:
+              assert c["cash_final"] >= 0 and c["base_inventory_btc"] >= 0
+              assert abs(c["equity_final"]-c["cash_final"]-c["inventory_marked_usdt"]) < 1e-5
+          assert x["safety"]["live_orders"]==0
+          print("PASS: all 20 cases with nonnegative cash/positions and full inventory marked")
+          PY
+      - name: Preserve actual 20-case proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEES_AND_FREQUENCY_JAN_2026_20_CASES
+          path: ${{ runner.temp }}/seven-cost-study/SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEE_FREQUENCY_2026_JANUARY_20_CASES.json
+          if-no-files-found: error
+          retention-days: 30
