@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V4_3_PUBLISHED_ALL_CI_PASS_OWNER_FIREFOX_PENDING_V4_2_OWNER_ACCEPTED_ETH_USDC_4H",
+  "status": "V4_4_RELEASE_ALL_CI_SUCCESS_OWNER_USB_FIREFOX_PENDING_V4_3_OWNER_CONFIRMED",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -20,7 +20,7 @@
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
       "last_owner_reported_free_gb": 4.07
     },
-    "version": "4.3.0"
+    "version": "4.4.0"
   },
   "release_train": [
     {
@@ -219,7 +219,7 @@
     {
       "stage": "C2+++",
       "version": "4.3.0",
-      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_CONFIRMED_ETH_USDC_1H_720_BARS",
       "features": [
         "ephemeral_aether_scientific_walk_forward_dashboard",
         "historical_expanding_train_then_strictly_later_holdout",
@@ -253,6 +253,46 @@
         "offline_unit_test_suite_61_pass": true,
         "training_and_holdout_strict_temporal_separation_tested": true,
         "no_extra_user_workspace_study_files_tested": true,
+        "owner_firefox_verified": true,
+        "owner_720hour_eth_usdc_custom_strategy_verified": true,
+        "owner_two_chronological_robustness_folds_verified": true
+      }
+    },
+    {
+      "stage": "C2++++",
+      "version": "4.4.0",
+      "status": "PUBLISHED_FULL_CI_SUCCESS_OWNER_FIREFOX_PENDING",
+      "features": [
+        "aether_forensics_premium_causal_trade_autopsy",
+        "replay_exact_prior_saved_paper_run_on_same_SHA_verified_OHLCV",
+        "refuse_forensics_if_original_fills_or_final_equity_differ",
+        "exact_ema_bollinger_custom_stop_target_dca_hold_causal_trigger_trace",
+        "old_saved_reports_without_reason_fields_supported_via_deterministic_replay",
+        "full_closed_position_net_pnl_and_entry_exit_fees",
+        "open_inventory_not_credited_as_closed_wins",
+        "posthoc_MFE_MAE_from_high_low_excluding_exit_candle",
+        "disable_excursion_when_multiple_DCA_entries_to_avoid_false_average",
+        "loss_win_open_filter_and_expandable_premium_position_cards",
+        "zero_extra_USB_user_workspace_json",
+        "owner_v4_3_scientific_and_v4_2_microscope_preserved",
+        "original_custom_rules_fills_and_cash_exactly_unchanged",
+        "standalone_no_external_bot_dependencies",
+        "one_clean_portable_python313_windows_PAPER_only_ZIP"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v4-4-paper-trade-forensics-2026-11-13",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-4-paper-trade-forensics-2026-11-13",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_4_PAPER_TRADE_FORENSICS_PYTHON313_WINDOWS_PAPER.zip",
+      "size_bytes": 85621,
+      "sha256": "6517435ca8ad21f26980caf501ed161341b5869aa3e4cdddde512812bfce341a",
+      "provenance": {
+        "commit": "726af4aa8f1ef8f480c898298511436cda44bc46",
+        "pr": 765,
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43480581531",
+        "all_workflow_jobs_success": true,
+        "python313_68_unit_tests_passed": true,
+        "windows_python313_double_click_verified": true,
+        "chromium_premium_forensics_accepted": true,
+        "actual_public_okx_source_smoke_verified": true,
         "owner_firefox_verified": false
       }
     },
@@ -272,7 +312,7 @@
   ],
   "engines": {
     "erith_internal": {
-      "status": "V4_3_AETHER_SCIENTIFIC_PAPER_CI_PASS_OWNER_PENDING",
+      "status": "V4_4_DETERMINISTIC_VERIFIED_PAPER_FORENSICS_OFFICIAL_RELEASE_FULL_CI_OWNER_PENDING",
       "trade_api": false
     },
     "freqtrade": {
@@ -522,6 +562,48 @@
       "microscope_window_bars": 120,
       "microscope_last_bars_range": "61–180 / 180",
       "note": "Owner sees Aether Market OHLCV volume chart/EMA and PAPER markers correctly, and the personal strategy editor / 7 method comparison. ETH results show 0 ETH inventory. The transaction table currently still titles its amount column BTC (UI label only); V4.3 to fix."
+    },
+    "owner_v4_3_eth_usdc_1h_2026_11_13": {
+      "evidence": "OWNER_FIREFOX_SCREENSHOTS_AND_PASTED_INTERFACE_TEXT_ONLY_NOT_RAW_USB_SOURCE",
+      "build": "4.3.0",
+      "exchange": "OKX Spot",
+      "pair": "ETH/USDC",
+      "candles": 720,
+      "timeframe": "1h",
+      "source_sha256_visible_prefix": "4f7b0d0379609885550ce53cb81",
+      "source_end_exclusive_utc": "2026-11-13T16:00:00Z",
+      "simulation": {
+        "capital_initial_usdc": 1000,
+        "capital_final_usdc": 899.87,
+        "return_pct": -10.01,
+        "max_drawdown_pct": -10.43,
+        "fees_usdc": 15.19,
+        "buy_events": 8,
+        "sell_events": 8,
+        "closed_positions": 8,
+        "winning_closed_positions": 0,
+        "realized_pnl_usdc": -100.13,
+        "time_in_position_pct": 26.1
+      },
+      "robustness": {
+        "folds": 2,
+        "mean_holdout_return_pct": -2.55,
+        "worst_holdout_return_pct": -4.35,
+        "mean_double_fee_slippage_return_pct": -3.12,
+        "selection_first": "EMA_10_30",
+        "first_holdout_return_pct": -4.35,
+        "selection_second": "EMA_20_50",
+        "second_holdout_return_pct": -0.74
+      },
+      "user_verified_features": [
+        "aether_scientific_folds",
+        "microscope_with_ema",
+        "forensics_not_yet_in_v4_3",
+        "ETH_unit_in_transaction_table",
+        "risk_drawdown"
+      ],
+      "paper_only": true,
+      "real_orders": 0
     }
   },
   "safety": {
@@ -534,8 +616,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V4.2 last owner-accepted Firefox version: ETH/USDC OKX, 720 source 1H bars, 180 4H bars, custom strategy and 120-candle microscope. V4.3 is published (61 Python tests; full CI success including Windows and Chromium), but has not been tested by owner. When owner wakes: stop old Python, back up E:\\seven_heaven_strategy_lab\\workspace\\ to separate storage, then unzip ONE complete V4.3 archive over existing app files without deleting workspace; launch normal Python .cmd and check BUILD 4.3.0; choose already cached 30-day ETH/USDC 4h with 180 bars and click 'Éprouver cette stratégie dans le temps' to see 1 chronological holdout; for 60-day 4h or 30-day 1h expect 2 holdout windows. No new study file is written to workspace.",
-  "next_developer_task": "After owner V4.3 acceptance, design V4.4 advanced risk and strategy composition: guard overfitting/position sizing/partial fills and usability, then V5 self-contained simulated (PAPER only) bot operation; no live orders absent distinct authorization.",
+  "next_single_owner_check": "V4.3 owner Firefox CONFIRMED 2026-11-13 ETH/USDC 720 1h candles, Aether Scientific 2-fold training/holdout with no extra USB files, V4.2 microscope and trade ETH unit. V4.4 is published and full CI-success but NOT owner Firefox validated. When owner returns: stop local Python process, make independent backup of E:\\seven_heaven_strategy_lab\\workspace\\ on another device, unpack one COMPLETE V4.4 ZIP into current E:\\seven_heaven_strategy_lab WITHOUT deleting workspace; launch normal START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd, verify BUILD 4.4.0, reopen saved ETH/USDC 1h PAPER run, expand Aether Forensics card, inspect verified cause and fees, filter losses. Do not install patches, add developer files or retest prior versions.",
+  "next_developer_task": "After V4.4 owner acceptance, evaluate V4.5 evidence-backed strategy diagnostics and controlled counterfactual entry filter comparisons (not claim avoided losses from retrospective MFE/MAE), then studio risk management V4.6+. V5 paper autonomous only until separately authorized and safety audited. Never couple to Administrator/Trader or live orders.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -549,7 +631,9 @@
     "Microscope EMA/SMA/Bollinger daily OHLCV VWAP overlays are chart analytics only; markers are saved hypothetical next-bar-open executions, not actual fills, signals, live orderbook or verified tick-level VWAP.",
     "Owner V4.2 UI screenshot confirms functionality but not a cryptographic rehash of raw USB data, and not proof of live fill execution.",
     "V4.3 owner Windows Firefox acceptance pending. Successful GitHub CI is NOT proof of owner USB-run.",
-    "V4.3 training-and-later validation is not automatically a blind untouched out-of-sample experiment if owner tuned settings after viewing any historical window. Separate fresh starting cash and indicator warmup per test slice; walk-forward returns are not compounded across independent windows."
+    "V4.3 training-and-later validation is not automatically a blind untouched out-of-sample experiment if owner tuned settings after viewing any historical window. Separate fresh starting cash and indicator warmup per test slice; walk-forward returns are not compounded across independent windows.",
+    "V4.4 owner USB/Firefox acceptance PENDING; GitHub CI Chromium/Windows/OKX passes but is not local owner evidence.",
+    "V4.4 MFE/MAE extrema are retrospective candle wick descriptions, not realizable fills and not causally known to an entry strategy; on multi-entry positions these are deliberately unavailable."
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md",
   "session_handoff_2026_11_13": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_SESSION_CONTINUITY_AND_V4_2_HANDOFF_2026_11_13.md"
