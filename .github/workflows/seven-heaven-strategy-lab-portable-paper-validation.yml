@@ -26,8 +26,14 @@ jobs:
       run:
         working-directory: seven_heaven_strategy_lab
     steps:
-      - name: Checkout independent lab
+      - name: Checkout independent lab (sparse, avoid large MASTER assets)
         uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+            /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
