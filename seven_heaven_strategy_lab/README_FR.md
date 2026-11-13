@@ -1,8 +1,22 @@
-# Seven Heaven Strategy Lab — V4.4 Aether Forensics + Scientific Research
+# Seven Heaven Strategy Lab — V4.5 Aether Research + Forensics
 
-**Version 4.4.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
+**Version 4.5.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
 
 Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.2 étend le cockpit premium bleu nuit, or et cyan avec le **graphique historique directement lié à chaque rapport**, sans dépendre des interfaces Administrator ou Trader, sans clés privées ni ordre réel.
+
+## V4.5 — Aether Research : comparer les filtres d'entrée sur le même historique
+
+**But :** la V4.4 explique pourquoi une transaction PAPER a eu lieu ; la V4.5 compare **des variantes prédéfinies** de la stratégie sur des **fenêtres chronologiques identiques**, sans attribuer rétrospectivement un pouvoir prédictif à un filtre.
+
+- Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée** (ou **Croisement EMA**). Cliquer sur **Comparer 5 variantes de filtres · Aether Research V4.5**. Les autres familles ne sont pas prises en charge par ce comparateur de filtres EMA.
+- Les variantes préétablies sont : **configuration d'origine**, **sans filtre**, **RSI sous 60**, **RSI sous 45**, **volume au moins 1,2 fois sa moyenne**. Une variante identique au profil d'origine est fusionnée pour éviter les essais redondants (5 variantes maximum).
+- L'entrée, la sortie, les EMA, les périodes RSI/volume, les stops/targets fictifs, le même actif, le timeframe, le capital PAPER, les frais et le glissement sont **maintenus identiques** : **seul le filtre d'entrée change**. La stratégie EMA classique est reproduite par son équivalent déclaratif d'entrée/sortie EMA dans le moteur autonome, sans changement de transactions financières.
+- Sur les **anciennes bougies d'entraînement uniquement**, le moteur compare les variantes avec le score préétabli **rendement net + 0,35 × drawdown négatif**. Les variantes qui n'ont aucune position clôturée sur l'entraînement ne sont pas éligibles au titre de « meilleure stratégie ». Si aucune variante n'est éligible, le programme **conserve le profil d'origine**, sans annoncer de gagnant.
+- La variante retenue est ensuite simulée sur **des périodes strictement ultérieures** (une fenêtre avec 150–299 bougies dans le timeframe étudié, deux fenêtres dès 300). Toutes les autres variantes sont également évaluées sur ces **mêmes périodes**, mais leurs résultats sont affichés **pour transparence, pas pour changer le choix du passé**. Les références Buy & Hold 50 % et conservation de la devise de cotation sont calculées sur ces mêmes périodes.
+- Le nouveau **Studio des stratégies comparées** affiche les choix et scores des deux périodes, les tableaux détaillés de chaque variante, les écarts en points de pourcentage face au profil d'origine, l'impact de frais et glissement ×2, et les cas de simulation sans transaction.
+- **Limites explicites :** il ne s'agit **pas** d'un test aveugle si les dates ont été précédemment vues ; le capital et les indicateurs redémarrent à chaque fenêtre. Les seconds entraînements peuvent réutiliser les anciennes dates de validation. Les figures sur les fenêtres ultérieures ne prouvent pas qu'un filtre évitera à l'avenir une perte observée. Aucun ordre réel ou simulation de carnet historique.
+- **Indépendance et économie USB :** calcul local en mémoire, **aucun nouveau fichier dans workspace/**, aucune dépendance Freqtrade/Hummingbot, aucun téléchargement additionnel pour l'étude. Le nouveau module s'appuie sur le moteur V4 et conserve V4.1 Quant, V4.2 Microscope, V4.3 Scientific et V4.4 Forensics.
+- **Étape suivante** : après réception locale V4.5, comparer des profils choisis avec Yoann, étendre à d'autres règles et gérer un budget de risque plus réaliste sans fabriquer de performances.
 
 ## V4.4 — Aether Forensics : pourquoi chaque transaction PAPER a-t-elle eu lieu ?
 
@@ -95,13 +109,14 @@ Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes d
 
 1. Fermer la fenêtre noire `Seven Heaven Strategy Lab` (Ctrl+C), puis garder la clé branchée.
 2. Copier `E:\seven_heaven_strategy_lab\workspace\` vers **une sauvegarde distincte**, avant d'écraser les fichiers du programme.
-3. Télécharger le **ZIP V4.4 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
+3. Télécharger le **ZIP V4.5 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
-5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.4.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
+5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.5.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
 6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER, puis vérifier **Microscope des bougies** : même source, horodatages UTC, overlays EMA/Bollinger, marqueurs PAPER et navigation temporelle ; comparer ensuite **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
 7. Depuis **Lecture de la simulation**, ouvrir **Anatomie des décisions PAPER** : vérifier le nom de la source, l'empreinte SHA et une fiche de position ; sélectionner « Pertes clôturées » pour étudier les transactions qui ont coûté de l'argent. Vérifier que le résultat net et les frais concordent avec le rapport d'origine. Aucun nouveau fichier n'est créé sur la clé.
 8. Cliquer sur **Éprouver cette stratégie dans le temps** ; ouvrir le **Laboratoire de robustesse** en bas, lire entraînement, validation ultérieure et frais/glissement ×2. Avec moins de 150 bougies sur le timeframe choisi, le programme refuse proprement au lieu de produire un faux résultat. Ne touche pas au dossier `workspace/`.
-9. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
+9. Dans **Atelier**, avec une stratégie EMA ou personnelle et un historique OKX 1h/4h suffisamment long, cliquer **Comparer 5 variantes de filtres · Aether Research V4.5**. Ouvrir le **Studio des stratégies comparées**, lire la variante choisie sur le passé, le résultat sur une ou deux fenêtres de vérification, puis le tableau repliable de **toutes** les variantes. Les dates et le SHA doivent correspondre. Ne pas interpréter une absence de fills comme une victoire. Aucun fichier additionnel dans `workspace/`.
+10. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
 ## Provenance, contrôles et limitations
 

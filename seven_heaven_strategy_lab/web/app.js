@@ -43,10 +43,11 @@
   }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","okx-import","run","compare","robustness-run","save-profile"]) {
+    for (const id of ["import","okx-import","run","compare","robustness-run","filters-run","save-profile"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
-      b.disabled = working || ((id === "run" || id === "compare") && !available);
+      b.disabled = working || ((id === "run" || id === "compare" || id === "filters-run") && !available)
+        || (id === "filters-run" && !["EMA_CROSS","CUSTOM_RULES"].includes($("kind").value));
       b.textContent = working && (id === "run" || id === "compare") ? label : b.dataset.defaultText;
     }
   }
@@ -174,6 +175,7 @@
   }
   function markDraftChanged(){
     resetScientific();
+    window.AetherFilterStudio.reset();
     if(lastRenderedReport && !$("result").hidden){
       $("draft-status").hidden=false;
     }
@@ -188,6 +190,7 @@
     if(!busy)cmpButton.textContent=cmpLabel;
     $("bb-fields").hidden = kind !== "BOLLINGER";
     $("dca-fields").hidden = kind !== "DCA";
+    if(!busy)$("filters-run").disabled=!available || !["EMA_CROSS","CUSTOM_RULES"].includes(kind);
   }
   function el(tag, textValue, className) {
     const n=document.createElement(tag);
@@ -553,6 +556,27 @@
     }catch(e){notice(e.message,"error");}
     finally{setBusy(false);}
   }
+  async function runFilterStudy(){
+    if(busy)return;
+    let params;
+    try{params=requestParams();}catch(e){notice(e.message,"error");return;}
+    if(!["EMA_CROSS","CUSTOM_RULES"].includes(params.kind)){
+      notice("Aether Research compare les filtres d'entrée des stratégies EMA et personnelles. Choisis l'une de ces deux familles.","error");
+      return;
+    }
+    setBusy(true,"Recherche comparée…");
+    window.AetherFilterStudio.reset();
+    notice("Aether Research V4.5 : mêmes règles, cinq filtres maximum, sélection sur le passé, vérification chronologique…");
+    try {
+      const payload=await api("/api/filters-study",{params});
+      window.AetherFilterStudio.display(payload.research);
+      const summary=payload.research.summary;
+      notice("Recherche terminée : "+summary.variants_compared+
+        " variantes, "+summary.verification_windows+" fenêtre(s) indépendantes. Aucun fichier USB créé.","success");
+      $("strategy-research").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  }
   async function runCurrent() {
     if(busy)return;
     let params;
@@ -605,6 +629,7 @@
   form.addEventListener("submit",event=>{event.preventDefault();runCurrent();});
   $("compare").addEventListener("click",compareCurrent);
   $("robustness-run").addEventListener("click",runRobustness);
+  $("filters-run").addEventListener("click",runFilterStudy);
   $("saved-profiles").addEventListener("change",event=>{
     const profile=profiles.find(p=>p.id===event.target.value);
     if(profile){chooseParams(profile.params);$("profile-name").value=profile.name;}
@@ -638,11 +663,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(!health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled)throw new Error("Le serveur Python V4.4 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
+      if(!health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled)throw new Error("Le serveur Python V4.5 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.4 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V4.4 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.5 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V4.5 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();

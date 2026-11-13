@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/styles.css">
   <script src="/microscope.js" defer></script>
   <script src="/forensics.js" defer></script>
+  <script src="/strategy_research.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -22,7 +23,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.4.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.5.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -85,7 +86,7 @@
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V4.4 / PUBLIC MARKET CONNECTORS</div>
+          <div><div class="overline">V4.5 / PUBLIC MARKET CONNECTORS</div>
             <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
             <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
           </div>
@@ -128,7 +129,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.4</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.5</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -207,6 +208,7 @@
             <button id="run" type="submit" class="action-button action-primary">▶ <span>Lancer la simulation PAPER</span></button>
             <button id="compare" type="button" class="action-button action-secondary">≋ <span>Comparer les 6 méthodes sur cet horizon</span></button>
             <button id="robustness-run" type="button" class="action-button action-robustness">♜ <span>Éprouver cette stratégie dans le temps · Aether Scientific</span></button>
+            <button id="filters-run" type="button" class="action-button action-research">◇ <span>Comparer 5 variantes de filtres · Aether Research V4.5</span></button>
           </div>
         </form>
         <div class="profile-group">
@@ -221,7 +223,7 @@
 
       <section id="results" class="panel result-panel" aria-labelledby="result-title">
         <div class="section-heading compact">
-          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.4 FORENSICS</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
+          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.5 FORENSICS</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
           <span id="run-id" class="mini-badge">EN ATTENTE</span>
         </div>
         <div id="draft-status" class="draft-status" hidden>Réglages modifiés : le résultat à droite correspond toujours au <strong>dernier rapport PAPER</strong>. Lance une nouvelle simulation pour appliquer ces réglages.</div>
@@ -371,7 +373,7 @@
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th id="trades-base-label">ACTIF</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V4.4 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4.5 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -440,9 +442,54 @@
       </div>
     </section>
 
+    <section id="strategy-research" class="panel research-panel" aria-labelledby="strategy-research-title">
+      <div class="section-heading">
+        <div><div class="overline">06 / AETHER RESEARCH · V4.5 CONTROLLED FILTER STUDY</div>
+          <h2 id="strategy-research-title">Studio des <span class="accent-text">stratégies comparées</span></h2>
+        </div>
+        <span class="mini-badge research-badge">5 VARIANTES MAX · 0 ORDRE · 0 FICHIER</span>
+      </div>
+      <p class="panel-lead">Même actif, même archive SHA-256, même capital, mêmes commissions et règles de sortie.
+        Une seule dimension change : <strong>le filtre d'entrée</strong>.
+        La sélection est fondée sur <strong>l'historique antérieur seulement</strong>, puis vérifiée sur des périodes ultérieures.
+        Les autres variantes restent visibles pour éviter les classements trompeurs.</p>
+      <div class="research-empty" id="research-empty">
+        <div class="research-empty-emblem">◇</div>
+        <div>
+          <strong>L'expérience se construit avec tes propres règles.</strong>
+          <p>Dans l'Atelier, choisis <strong>Ma stratégie personnalisée</strong> ou <strong>Croisement EMA</strong>,
+            puis clique sur « Comparer 5 variantes de filtres ».
+            Le moteur testera ta configuration, l'entrée sans filtre, RSI sous 60, RSI sous 45 et volume au moins 1,2×.
+            Les variantes identiques sont regroupées. Rien n'est sauvegardé ou envoyé à une plateforme.</p>
+        </div>
+      </div>
+      <div id="research-result" hidden>
+        <div class="research-provenance">
+          <strong id="research-source">Archive historique en cours d'analyse…</strong>
+          <span id="research-sha">SOURCE SHA-256 —</span>
+        </div>
+        <div class="research-metrics">
+          <div><small>VARIANTES COMPARÉES</small><strong id="research-variants">—</strong><span>Préétablies, sans recherche libre de paramètres</span></div>
+          <div><small>FENÊTRES DE VÉRIFICATION</small><strong id="research-folds">—</strong><span>Entraînement antérieur seulement</span></div>
+          <div><small>VARIANTE SÉLECTIONNÉE · MOYENNE</small><strong id="research-selected">—</strong><span>Rendement PAPER net, non cumulé</span></div>
+          <div><small>DIFFÉRENCE AVEC TON PROFIL</small><strong id="research-delta">—</strong><span>Points de pourcentage · pas une prédiction</span></div>
+        </div>
+        <div class="research-subheading">Trajectoire des vérifications</div>
+        <div class="research-folds" id="research-fold-list"></div>
+        <div class="research-disclosure">
+          <strong>Interprétation :</strong> ces données ne sont pas un test aveugle : tu as déjà pu examiner cette période.
+          Le programme choisit ses filtres uniquement sur les anciennes bougies ; les autres résultats ultérieurs sont
+          affichés pour transparence, jamais utilisés pour déclarer un nouveau gagnant. Les indicateurs, le capital et
+          les positions recommencent sur chaque fenêtre, sans report de l'historique précédent.
+          Une stratégie sans aucune opération PAPER n'est pas une victoire.
+          <strong>Aucun ordre réel ni nouveau fichier sur la clé USB.</strong>
+        </div>
+      </div>
+    </section>
+
     <section id="vault" class="panel vault-panel" aria-labelledby="vault-title">
       <div class="section-heading">
-        <div><div class="overline">06 / AETHER MEMORY VAULT</div><h2 id="vault-title">Coffre de <span class="accent-text">tes expériences</span></h2></div>
+        <div><div class="overline">07 / AETHER MEMORY VAULT</div><h2 id="vault-title">Coffre de <span class="accent-text">tes expériences</span></h2></div>
         <span class="mini-badge">ENREGISTRÉ SUR TA CLÉ USB</span>
       </div>
       <div class="vault-columns">
@@ -453,7 +500,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.4.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.5.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>
