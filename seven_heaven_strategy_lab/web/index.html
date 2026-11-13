@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Seven Heaven Strategy Lab — laboratoire local et indépendant de simulations PAPER.">
+  <title>Seven Heaven Strategy Lab · PAPER</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Seven Heaven Strategy Lab">
+      <span class="mark" aria-hidden="true">✦</span>
+      <span><strong>SEVEN HEAVEN</strong><small>STRATEGY LAB</small></span>
+    </a>
+    <span class="status"><span class="dot"></span> LOCAL · PAPER ONLY</span>
+  </header>
+
+  <main>
+    <div class="intro">
+      <div class="eyebrow">ATELIER DE RECHERCHE · PREMIER PROTOTYPE</div>
+      <h1>Créer, simuler, comprendre.</h1>
+      <p>Une station de recherche indépendante, pour expérimenter des stratégies Spot sans risque d'envoi d'ordres. Les résultats sont enregistrés localement sur ton ordinateur ou ton SSD.</p>
+    </div>
+    <div id="message" class="notice" role="status" aria-live="polite">Connexion au laboratoire local…</div>
+
+    <section class="dataset-panel panel">
+      <div class="section-head">
+        <div><div class="eyebrow">01 · SOURCES</div><h2>Historique vérifié</h2></div>
+        <span id="dataset-badge" class="pill">Non chargé</span>
+      </div>
+      <div class="dataset-grid">
+        <div><span class="muted small">Marché</span><strong>BTC / USDT · Binance Spot</strong></div>
+        <div><span class="muted small">Période</span><strong>Janvier 2026</strong></div>
+        <div><span class="muted small">Résolution</span><strong>1 minute · 44 640 bougies</strong></div>
+        <div><span class="muted small">Origine</span><strong>Archive GitHub déjà auditée</strong></div>
+      </div>
+      <div class="dataset-actions">
+        <button id="import" type="button" class="primary">Charger l'archive vérifiée</button>
+        <span id="dataset-state" class="muted small">Aucun téléchargement automatique. Aucun accès à ton compte OKX.</span>
+      </div>
+    </section>
+
+    <div class="two-cols">
+      <section class="panel controls">
+        <div class="section-head"><div><div class="eyebrow">02 · CONFIGURER</div><h2>Ta stratégie</h2></div><span class="pill muted-pill">SPOT · LONG ONLY</span></div>
+        <form id="config" autocomplete="off">
+          <label class="field wide"><span>Modèle de stratégie</span>
+            <select name="kind" id="kind">
+              <option value="EMA_CROSS">Croisement EMA</option>
+              <option value="BOLLINGER">Bandes de Bollinger</option>
+              <option value="DCA">Achats programmés DCA</option>
+              <option value="HOLD_50">Buy &amp; Hold (50 % BTC)</option>
+              <option value="HOLD_100">Buy &amp; Hold (100 % BTC)</option>
+              <option value="CASH">Conserver les USDT</option>
+            </select>
+          </label>
+          <div class="field-grid">
+            <label class="field"><span>Capital fictif (USDT)</span><input name="capital" type="number" min="100" max="100000" step="100" value="1000"></label>
+            <label class="field"><span>Frais Taker par côté (%)</span><input name="fee_pct" type="text" inputmode="decimal" value="0,10" aria-label="Frais Taker OKX observés, 0,10 pour cent"></label>
+            <label class="field"><span>Glissement simulé (%)</span><input name="slippage_pct" type="text" inputmode="decimal" value="0,05"></label>
+            <div class="field note-field"><span>Frais Maker observés</span><strong>0,08 %</strong><small>Non utilisés pour ces ordres fictifs immédiats</small></div>
+          </div>
+          <div id="ema-fields" class="field-grid strategy-fields">
+            <label class="field"><span>EMA rapide</span><input name="ema_fast" type="number" min="2" max="150" value="10"></label>
+            <label class="field"><span>EMA lente</span><input name="ema_slow" type="number" min="3" max="400" value="30"></label>
+          </div>
+          <div id="bb-fields" class="field-grid strategy-fields" hidden>
+            <label class="field"><span>Période Bollinger</span><input name="bb_period" type="number" min="5" max="250" value="20"></label>
+            <label class="field"><span>Écart-type</span><input name="bb_sigma" type="text" inputmode="decimal" value="2"></label>
+          </div>
+          <div id="dca-fields" class="field-grid strategy-fields" hidden>
+            <label class="field"><span>Intervalle en minutes</span><input name="dca_every" type="number" min="1" max="100000" value="1440"></label>
+            <label class="field"><span>Achat fixe en USDT</span><input name="dca_quote" type="number" min="5" max="100000" value="50"></label>
+          </div>
+          <div class="actions">
+            <button id="run" type="submit" class="primary">Lancer la simulation PAPER</button>
+          </div>
+        </form>
+        <div class="profile-row">
+          <label class="field"><span>Nom de configuration</span><input id="profile-name" maxlength="64" placeholder="Ex. EMA 10/30 conservatrice"></label>
+          <button type="button" id="save-profile" class="secondary">Enregistrer</button>
+        </div>
+        <label class="field"><span>Reprendre une configuration enregistrée</span>
+          <select id="saved-profiles"><option value="">Choisir un profil…</option></select>
+        </label>
+      </section>
+
+      <section class="panel results">
+        <div class="section-head"><div><div class="eyebrow">03 · MESURER</div><h2>Résultat PAPER</h2></div><span id="run-id" class="pill muted-pill">Aucun calcul</span></div>
+        <div id="empty-result" class="empty">Charge les données puis lance une stratégie. Les résultats apparaîtront ici, sans trading réel.</div>
+        <div id="result" hidden>
+          <div class="headline-metric"><span class="muted small">Capital total après évaluation de l'inventaire BTC</span><strong id="equity">—</strong><span id="return" class="performance">—</span></div>
+          <div class="stat-grid">
+            <div><span class="muted small">Perte maximale historique</span><strong id="drawdown">—</strong></div>
+            <div><span class="muted small">Frais fictifs payés</span><strong id="fees">—</strong></div>
+            <div><span class="muted small">USDT restants</span><strong id="cash">—</strong></div>
+            <div><span class="muted small">BTC détenus</span><strong id="inventory">—</strong></div>
+            <div><span class="muted small">Achats / Ventes</span><strong id="counts">—</strong></div>
+            <div><span class="muted small">Ordres simulés refusés</span><strong id="rejected">—</strong></div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-title">Capital total estimé · en USDT</div>
+            <svg id="equity-chart" viewBox="0 0 720 220" role="img" aria-label="Courbe du capital simulé"></svg>
+          </div>
+          <div class="benchmarks">
+            <div><span>Référence Buy &amp; Hold 50 % BTC</span><strong id="hold50">—</strong></div>
+            <div><span>Référence conservation USDT</span><strong id="holdcash">—</strong></div>
+          </div>
+          <div class="section-subhead">Dernières opérations hypothétiques</div>
+          <div class="table-scroll"><table><thead><tr><th>Date UTC</th><th>Action</th><th>BTC</th><th>Prix USDT</th><th>Frais</th></tr></thead><tbody id="trades"></tbody></table></div>
+          <p class="footnote">Simulation interne indépendante. Exécutions supposées à l'ouverture suivant un signal sur bougie clôturée ; elle n'utilise ni le carnet réel ni le moteur Freqtrade ou Hummingbot.</p>
+        </div>
+      </section>
+    </div>
+    <section class="panel archive-panel">
+      <div class="section-head"><div><div class="eyebrow">04 · CONSERVER</div><h2>Journal de tes simulations</h2></div><span class="pill muted-pill">Sur ton SSD / disque local</span></div>
+      <div id="history" class="history"><span class="muted">Aucune simulation enregistrée.</span></div>
+    </section>
+    <footer>SEVEN HEAVEN STRATEGY LAB · RESEARCH 0.1 · PAS D'ORDRES RÉELS · AUCUN LEVIER · LE PROPRIÉTAIRE GARDE LE CONTRÔLE</footer>
+  </main>
+</div>
+</body>
+</html>

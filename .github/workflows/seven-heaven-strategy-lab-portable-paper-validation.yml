@@ -1,0 +1,200 @@
+name: Seven Heaven Strategy Lab portable PAPER validation
+
+on:
+  push:
+    branches:
+      - feature/seven-heaven-strategy-lab-local-paper
+      - main
+    paths:
+      - 'seven_heaven_strategy_lab/**'
+      - '.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'seven_heaven_strategy_lab/**'
+      - '.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout independent lab (sparse, avoid large MASTER assets)
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+            /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Static Python and JavaScript syntax
+        run: |
+          set -euo pipefail
+          python -m compileall -q src tests
+          node --check web/app.js
+          docker compose config --quiet
+      - name: Unit tests for causal PAPER engine and data integrity
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s tests -p 'test_*.py'
+      - name: Import exact archived January 2026 source and replay six strategies
+        env:
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from src.reference_data import install_reference, dataset_status, CSV_NAME
+          from src.engine import load_bars, simulate
+          root = Path(os.environ["SEVEN_LAB_WORKSPACE"])
+          status = install_reference(root)
+          assert status["available"] and status["rows_expected"] == 44640
+          bars = load_bars(root / "datasets" / CSV_NAME)
+          assert len(bars) == 44640
+          evidence = {}
+          for kind in ("EMA_CROSS", "BOLLINGER", "DCA", "HOLD_50", "HOLD_100", "CASH"):
+              report = simulate(bars, {"kind": kind})
+              r = report["results"]
+              assert report["status"] == "HYPOTHETICAL_PAPER_BACKTEST"
+              assert report["safety"]["orders_real"] == 0
+              assert r["cash_final"] >= 0 and r["base_inventory_btc"] >= 0
+              assert abs(r["equity_final"]-(r["cash_final"]+r["inventory_marked_usdt"])) < 0.00001
+              assert len(report["series"]) >= 200
+              evidence[kind] = {"return_pct":r["return_pct"],
+                                "equity_final":r["equity_final"],
+                                "fees_paid_usdt":r["fees_paid_usdt"],
+                                "drawdown_pct":r["max_drawdown_pct"],
+                                "trades":r["hypothetical_fills"]}
+          file = root.parent / "SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json"
+          file.parent.mkdir(parents=True, exist_ok=True)
+          file.write_text(json.dumps({"schema":"seven.heaven.strategy_lab.six_strategy_smoke.v1",
+                        "data_sha256":status["data_sha256"], "historical":True,
+                        "paper_only":True, "native_freqtrade":False,
+                        "native_hummingbot":False,"cases":evidence},indent=2)+"\n")
+          print("PASS: immutable 44640-minute source; six PAPER models; cash/inventory conserved; no orders")
+          print(json.dumps(evidence,indent=2))
+          PY
+      - name: Start real local API and test run/profile/history requests
+        env:
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
+        run: |
+          set -euo pipefail
+          python -m src.server > "$RUNNER_TEMP/seven-lab-server.log" 2>&1 &
+          serverpid=$!
+          trap 'kill "$serverpid" 2>/dev/null || true' EXIT
+          python - <<'PY'
+          import json, time, urllib.request, urllib.error
+          base="http://127.0.0.1:8777"
+          def request(path, data=None):
+              payload=None if data is None else json.dumps(data).encode()
+              req=urllib.request.Request(base+path, data=payload,
+                         headers={"Content-Type":"application/json"} if data is not None else {})
+              with urllib.request.urlopen(req, timeout=20) as res:
+                  return json.loads(res.read())
+          for attempt in range(35):
+              try:
+                  health=request("/api/health")
+                  break
+              except Exception:
+                  time.sleep(.2)
+          assert health["live_trading"] is False
+          assert request("/api/datasets")["datasets"][0]["available"]
+          report=request("/api/run",{"params":{"kind":"EMA_CROSS", "fee":0.001}})
+          assert report["report"]["run"]["safety"]["orders_real"]==0
+          assert report["report"]["run"]["data"]["rows"]==44640
+          assert len(request("/api/results")["runs"])>=1
+          saved=request("/api/profiles",{"name":"EMA 10/30 PAPER","params":{"kind":"EMA_CROSS"}})
+          assert saved["profile"]["name"]=="EMA 10/30 PAPER"
+          assert len(request("/api/profiles")["profiles"])>=1
+          assert request("/api/results/"+report["report"]["id"])["id"]==report["report"]["id"]
+          try:
+              request("/api/trade",{})
+              raise AssertionError("Unexpected trade endpoint")
+          except urllib.error.HTTPError as ex:
+              assert ex.code==404
+          print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
+          PY
+      - name: Build Docker local image and smoke HTTP health
+        run: |
+          set -euo pipefail
+          mkdir -p workspace
+          docker compose build --pull
+          docker compose up -d
+          trap 'docker compose down --remove-orphans || true' EXIT
+          python - <<'PY'
+          import json, time, urllib.request
+          url="http://127.0.0.1:8777/api/health"
+          for i in range(60):
+              try:
+                  with urllib.request.urlopen(url,timeout=3) as f:
+                      j=json.loads(f.read())
+                  assert j["status"]=="LOCAL_PAPER_ONLY"
+                  print("PASS: Docker on localhost:8777, live trading disabled")
+                  break
+              except Exception:
+                  if i==59: raise
+                  time.sleep(.5)
+          PY
+      - name: Build complete long-name portable ZIP and checksum
+        run: |
+          set -euo pipefail
+          cd ..
+          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip" \
+            seven_heaven_strategy_lab -x \
+            '*/__pycache__/*' '*/workspace/*' '*/.gitignore' '*.pyc'
+          cd "$RUNNER_TEMP"
+          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip \
+            > SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt
+          cat SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt
+      - name: Upload standalone ZIP, hash and measured historical smoke results
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_DELIVERY
+          path: |
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
+          retention-days: 30
+          if-no-files-found: error
+
+  publish-standalone-release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [validate-and-package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_DELIVERY
+          path: delivery
+      - name: Publish executable prototype without changing MASTER or Operator
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=seven-heaven-strategy-lab-portable-paper-initial-2026-11-13
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "Seven Heaven Strategy Lab — portable local PAPER prototype" \
+              --notes "Independent research-only Docker/Windows laboratory. Requires Docker Desktop on the host. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
+              --latest=false
+          fi
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
