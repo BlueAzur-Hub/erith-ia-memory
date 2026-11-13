@@ -194,6 +194,54 @@ def simulate(bars, raw_options):
                         buy(ts, o, cash)
                     elif prev_close > mean + p["bb_sigma"] * std and quantity > 0:
                         sell(ts, o)
+        elif i >= 1 and kind == "CUSTOM_RULES":
+            # Signals are based exclusively on the last CLOSED candle.
+            prev_close, prev_volume = bars[i - 1][4], bars[i - 1][5]
+            if custom_fast is None:
+                custom_fast = custom_slow = prev_close
+            else:
+                custom_fast = alpha_fast * prev_close + (1 - alpha_fast) * custom_fast
+                custom_slow = alpha_slow * prev_close + (1 - alpha_slow) * custom_slow
+            diff = custom_fast - custom_slow
+            if i >= 2:
+                changes.append(prev_close - bars[i - 2][4])
+            volumes.append(prev_volume)
+            rsi = None
+            if len(changes) == p["rsi_period"]:
+                gains = sum(max(v, 0.0) for v in changes)
+                losses = sum(max(-v, 0.0) for v in changes)
+                rsi = (50.0 if gains == losses == 0
+                       else (100.0 if losses == 0 else 100.0 * gains / (gains + losses)))
+            ready = i >= p["ema_slow"] and custom_prev_diff is not None
+            if ready and quantity:
+                exit_signal = (
+                    (p["exit_rule"] == "EMA_CROSS_DOWN" and custom_prev_diff >= 0 > diff)
+                    or (p["exit_rule"] == "PRICE_BELOW_EMA" and prev_close < custom_slow)
+                    or (p["exit_rule"] == "RSI_ABOVE" and rsi is not None and rsi > p["rsi_exit_min"])
+                )
+                stop_triggered = (position_entry is not None and p["stop_loss_pct"] > 0
+                                  and prev_close <= position_entry * (1 - p["stop_loss_pct"] / 100))
+                target_triggered = (position_entry is not None and p["take_profit_pct"] > 0
+                                    and prev_close >= position_entry * (1 + p["take_profit_pct"] / 100))
+                if exit_signal or stop_triggered or target_triggered:
+                    sell(ts, o)
+            elif ready and quantity == 0:
+                entry_signal = (
+                    (p["entry_rule"] == "EMA_CROSS_UP" and custom_prev_diff <= 0 < diff)
+                    or (p["entry_rule"] == "PRICE_ABOVE_EMA" and custom_fast > custom_slow
+                        and prev_close > custom_slow)
+                )
+                filter_ok = (
+                    p["filter_rule"] == "NONE"
+                    or (p["filter_rule"] == "RSI_BELOW" and rsi is not None
+                        and rsi < p["rsi_entry_max"])
+                    or (p["filter_rule"] == "VOLUME_ABOVE"
+                        and len(volumes) == p["volume_period"]
+                        and prev_volume >= p["volume_multiplier"] * sum(volumes) / len(volumes))
+                )
+                if entry_signal and filter_ok:
+                    buy(ts, o, cash)
+            custom_prev_diff = diff
         equity = cash + quantity * c  # open inventory marked to each close
         if equity > peak:
             peak = equity
@@ -236,6 +284,8 @@ def simulate(bars, raw_options):
             "Regle taille 1e-8 BTC / minimum 5 USDT HYPOTHETIQUE, non certifiee exchange",
             "Frais Taker OKX 0,10% comme hypothese et non frais historiques Binance",
             "Inventaire restant inclus dans la valeur finale; pas de liquidation forcee",
+            "Règles personnelles déclaratives, aucun code utilisateur exécuté",
+            "Stop et objectif personnalisés évalués sur la dernière clôture, puis fill fictif à l'ouverture suivante ; pas de stop garanti",
         ],
         "safety": {"paper_only": True, "leverage": 1, "private_keys_used": False, "orders_real": 0},
     }
