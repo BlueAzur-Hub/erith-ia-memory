@@ -22,6 +22,7 @@
   let binanceAvailable=false;
   let connectedSources=[];
   let selectedSourceId=BINANCE;
+  let lastRenderedReport=null;
 
   async function api(path, data) {
     const init = data === undefined
@@ -96,11 +97,15 @@
     const radio = form.querySelector('input[name="timeframe"][value="'+target+'"]');
     if (radio && !radio.disabled) radio.checked=true;
     showFields();
+    markDraftChanged();
   }
   function updateSource(){
     const id=$("source-choice").value;
     if(id!==selectedSourceId) {
       selectedSourceId=id;
+      lastRenderedReport=null;
+      $("draft-status").hidden=true;
+      window.AetherMicroscope.clear();
       $("result").hidden=true;
       $("empty-result").hidden=false;
       $("comparison-result").hidden=true;
@@ -160,6 +165,11 @@
     updateSource();
   }
 
+  function markDraftChanged(){
+    if(lastRenderedReport && !$("result").hidden){
+      $("draft-status").hidden=false;
+    }
+  }
   function showFields() {
     const kind = $("kind").value;
     $("ema-fields").hidden = kind !== "EMA_CROSS" && kind !== "CUSTOM_RULES";
@@ -332,6 +342,9 @@
     else for (const t of report.trades.slice(-12).reverse())
       tableRow(tbody,[whenUTC(t.timestamp),t.side,print(t.qty,8),print(t.price,2),print(t.fee,4)]);
     updateReadout(record);
+    lastRenderedReport=record;
+    $("draft-status").hidden=true;
+    window.AetherMicroscope.displayRun(record);
     return record;
   }
   function renderComparison(record) {
@@ -461,6 +474,8 @@
     finally {setBusy(false);}
   }
   $("kind").addEventListener("change",showFields);
+  form.addEventListener("change",markDraftChanged);
+  form.addEventListener("input",markDraftChanged);
   $("source-choice").addEventListener("change",updateSource);
   $("okx-import").addEventListener("click",async()=>{
     if(busy)return;
@@ -515,8 +530,8 @@
       if(!health.public_okx_enabled)throw new Error("Le serveur Python V3.1 n'est pas actif. Relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.1 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V4.1 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.2 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V4.2 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
