@@ -45,7 +45,7 @@ class WalkForwardScientificV43Tests(unittest.TestCase):
         self.assertEqual(two["holdout"]["first_bar_utc"],raw[540][0])
         self.assertEqual(report["safety"]["orders_real"],0)
         self.assertTrue(all(f["selection"]["selected_on_training_only"] for f in report["folds"]))
-        self.assertEqual(len(report["candidate_ema_pairs"]),5)
+        self.assertEqual(len(report["candidate_ema_pairs"]),4)  # 12/32 overlaps a predefined candidate; duplicate removed
 
     def test_4h_eth_window_30days_independent_one_fold(self):
         raw,source=sample()
