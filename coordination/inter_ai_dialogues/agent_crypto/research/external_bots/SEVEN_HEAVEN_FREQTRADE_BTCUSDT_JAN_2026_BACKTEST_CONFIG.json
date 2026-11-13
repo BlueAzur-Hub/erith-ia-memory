@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.freqtrade.io/en/stable/configuration/",
-  "bot_name": "SevenHeavenOfflineResearchOnly",
+  "bot_name": "SevenHeavenOKXMetadataBinanceHistoryPaperOnly",
   "dry_run": true,
   "dry_run_wallet": 1000,
   "initial_state": "stopped",
@@ -13,7 +13,7 @@
   "timeframe": "1m",
   "dataformat_ohlcv": "json",
   "exchange": {
-    "name": "binance",
+    "name": "okx",
     "key": "",
     "secret": "",
     "password": "",
