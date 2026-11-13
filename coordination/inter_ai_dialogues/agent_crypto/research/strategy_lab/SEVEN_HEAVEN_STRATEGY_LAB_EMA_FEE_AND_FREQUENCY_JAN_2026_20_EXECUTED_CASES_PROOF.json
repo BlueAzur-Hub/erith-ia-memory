@@ -1,0 +1,212 @@
+{
+  "schema": "seven.heaven.strategy_lab.ema_cost_frequency_summary_verified.v1",
+  "status": "EXECUTED_20_ACTUAL_INTERNAL_PAPER_SCENARIOS",
+  "source": "SHA-verified Binance Spot BTCUSDT January 2026 44640 one-minute candles",
+  "source_sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4",
+  "capital_usdt": 1000,
+  "ema_fast_bars": 10,
+  "ema_slow_bars": 30,
+  "scenarios": [
+    {
+      "name": "OBSERVED_OKX_TAKER_PLUS_ASSUMED_SLIP",
+      "fee_percent": 0.1,
+      "slippage_percent": 0.05
+    },
+    {
+      "name": "TAKER_FEE_ONLY_NO_SLIP",
+      "fee_percent": 0.1,
+      "slippage_percent": 0
+    },
+    {
+      "name": "SLIPPAGE_ONLY_NO_FEE",
+      "fee_percent": 0,
+      "slippage_percent": 0.05
+    },
+    {
+      "name": "IDEAL_ZERO_COST_BENCHMARK",
+      "fee_percent": 0,
+      "slippage_percent": 0
+    }
+  ],
+  "by_timeframe": [
+    {
+      "timeframe": "1m",
+      "scenario": "OBSERVED_OKX_TAKER_PLUS_ASSUMED_SLIP",
+      "return_pct": -92.20371,
+      "fees_usdt": 614.195579,
+      "fills": 1642,
+      "equity_final": 77.962934
+    },
+    {
+      "timeframe": "1m",
+      "scenario": "TAKER_FEE_ONLY_NO_SLIP",
+      "return_pct": -82.28086,
+      "fees_usdt": 809.803271,
+      "fills": 1642,
+      "equity_final": 177.191375
+    },
+    {
+      "timeframe": "1m",
+      "scenario": "SLIPPAGE_ONLY_NO_FEE",
+      "return_pct": -59.72849,
+      "fees_usdt": 0,
+      "fills": 1642,
+      "equity_final": 402.715141
+    },
+    {
+      "timeframe": "1m",
+      "scenario": "IDEAL_ZERO_COST_BENCHMARK",
+      "return_pct": -8.4721,
+      "fees_usdt": 0,
+      "fills": 1642,
+      "equity_final": 915.278973
+    },
+    {
+      "timeframe": "5m",
+      "scenario": "OBSERVED_OKX_TAKER_PLUS_ASSUMED_SLIP",
+      "return_pct": -45.66149,
+      "fees_usdt": 273.107056,
+      "fills": 359,
+      "equity_final": 543.385105
+    },
+    {
+      "timeframe": "5m",
+      "scenario": "TAKER_FEE_ONLY_NO_SLIP",
+      "return_pct": -34.97753,
+      "fees_usdt": 296.511786,
+      "fills": 359,
+      "equity_final": 650.22472
+    },
+    {
+      "timeframe": "5m",
+      "scenario": "SLIPPAGE_ONLY_NO_FEE",
+      "return_pct": -22.19291,
+      "fees_usdt": 0,
+      "fills": 359,
+      "equity_final": 778.070935
+    },
+    {
+      "timeframe": "5m",
+      "scenario": "IDEAL_ZERO_COST_BENCHMARK",
+      "return_pct": -6.89458,
+      "fees_usdt": 0,
+      "fills": 359,
+      "equity_final": 931.054164
+    },
+    {
+      "timeframe": "15m",
+      "scenario": "OBSERVED_OKX_TAKER_PLUS_ASSUMED_SLIP",
+      "return_pct": -19.53146,
+      "fees_usdt": 102.834475,
+      "fills": 110,
+      "equity_final": 804.685423
+    },
+    {
+      "timeframe": "15m",
+      "scenario": "TAKER_FEE_ONLY_NO_SLIP",
+      "return_pct": -14.98172,
+      "fees_usdt": 105.58801,
+      "fills": 110,
+      "equity_final": 850.182774
+    },
+    {
+      "timeframe": "15m",
+      "scenario": "SLIPPAGE_ONLY_NO_FEE",
+      "return_pct": -10.17474,
+      "fees_usdt": 0,
+      "fills": 110,
+      "equity_final": 898.252624
+    },
+    {
+      "timeframe": "15m",
+      "scenario": "IDEAL_ZERO_COST_BENCHMARK",
+      "return_pct": -5.09596,
+      "fees_usdt": 0,
+      "fills": 110,
+      "equity_final": 949.040355
+    },
+    {
+      "timeframe": "1h",
+      "scenario": "OBSERVED_OKX_TAKER_PLUS_ASSUMED_SLIP",
+      "return_pct": -7.44012,
+      "fees_usdt": 21.347779,
+      "fills": 22,
+      "equity_final": 925.598783
+    },
+    {
+      "timeframe": "1h",
+      "scenario": "TAKER_FEE_ONLY_NO_SLIP",
+      "return_pct": -6.41635,
+      "fees_usdt": 21.464258,
+      "fills": 22,
+      "equity_final": 935.836544
+    },
+    {
+      "timeframe": "1h",
+      "scenario": "SLIPPAGE_ONLY_NO_FEE",
+      "return_pct": -5.38124,
+      "fees_usdt": 0,
+      "fills": 22,
+      "equity_final": 946.187565
+    },
+    {
+      "timeframe": "1h",
+      "scenario": "IDEAL_ZERO_COST_BENCHMARK",
+      "return_pct": -4.33469,
+      "fees_usdt": 0,
+      "fills": 22,
+      "equity_final": 956.65309
+    },
+    {
+      "timeframe": "4h",
+      "scenario": "OBSERVED_OKX_TAKER_PLUS_ASSUMED_SLIP",
+      "return_pct": -2.23387,
+      "fees_usdt": 5.947437,
+      "fills": 6,
+      "equity_final": 977.661306
+    },
+    {
+      "timeframe": "4h",
+      "scenario": "TAKER_FEE_ONLY_NO_SLIP",
+      "return_pct": -1.94013,
+      "fees_usdt": 5.956346,
+      "fills": 6,
+      "equity_final": 980.598688
+    },
+    {
+      "timeframe": "4h",
+      "scenario": "SLIPPAGE_ONLY_NO_FEE",
+      "return_pct": -1.64551,
+      "fees_usdt": 0,
+      "fills": 6,
+      "equity_final": 983.5449
+    },
+    {
+      "timeframe": "4h",
+      "scenario": "IDEAL_ZERO_COST_BENCHMARK",
+      "return_pct": -1.35,
+      "fees_usdt": 0,
+      "fills": 6,
+      "equity_final": 986.499965
+    }
+  ],
+  "reference_hold50_return_pct": -5.14847,
+  "provenance": {
+    "run_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43375218684",
+    "job_id": 131720004072,
+    "artifact_id": 14013614874,
+    "full_artifact_name": "SEVEN_HEAVEN_STRATEGY_LAB_EMA_FEES_AND_FREQUENCY_JAN_2026_20_CASES",
+    "deterministic_unit_tests": "14 PASS"
+  },
+  "limits": [
+    "Results from original ERITH PAPER engine; NOT Freqtrade/Hummingbot",
+    "Same nominal EMA periods in bars implies different clock durations (1m EMA10=10 minutes vs 4h EMA10=40 hours)",
+    "No full orderbook, actual order fills, historical exchange constraints or verified Binance fee tier",
+    "One month only; intervals selected before examination; no future profitability claim"
+  ],
+  "safety": {
+    "paper_only": true,
+    "no_leverage": true,
+    "real_orders": 0
+  }
+}
