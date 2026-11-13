@@ -1,0 +1,79 @@
+{
+  "schema": "seven.heaven.strategy_lab.first_six_historical_paper_results.v1",
+  "date_utc": "2026-11-13",
+  "status": "PASS_REAL_PAPER_ENGINE_EXECUTION_NOT_EXTERNAL_FRAMEWORKS",
+  "experimental_scope": "2026-01-01T00:00:00Z to 2026-01-31T23:59:00Z, 44640 Binance Spot BTCUSDT 1-minute OHLCV bars",
+  "source_sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4",
+  "archive_sha256": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+  "assumptions": {
+    "capital_initial_usdt": 1000,
+    "fee_fraction_per_side": 0.001,
+    "fee_percent_per_side": 0.1,
+    "slippage_fraction_per_side": 0.0005,
+    "execution": "previous closed candle signals -> next candle open fills",
+    "size_step_btc": "1e-8 hypothetical",
+    "min_order_usdt": "5 hypothetical",
+    "leverage": 1,
+    "real_orders": 0
+  },
+  "cases": {
+    "EMA_CROSS": {
+      "return_pct": -92.20371,
+      "equity_final": 77.962934,
+      "fees_paid_usdt": 614.195579,
+      "drawdown_pct": -92.25533,
+      "trades": 1642
+    },
+    "BOLLINGER": {
+      "return_pct": -77.95277,
+      "equity_final": 220.472267,
+      "fees_paid_usdt": 546.834457,
+      "drawdown_pct": -78.80268,
+      "trades": 1015
+    },
+    "DCA": {
+      "return_pct": -14.81025,
+      "equity_final": 851.897513,
+      "fees_paid_usdt": 0.998992,
+      "drawdown_pct": -21.89794,
+      "trades": 20
+    },
+    "HOLD_50": {
+      "return_pct": -5.14847,
+      "equity_final": 948.515296,
+      "fees_paid_usdt": 0.4995,
+      "drawdown_pct": -11.88489,
+      "trades": 1
+    },
+    "HOLD_100": {
+      "return_pct": -10.29695,
+      "equity_final": 897.030501,
+      "fees_paid_usdt": 0.999001,
+      "drawdown_pct": -22.54793,
+      "trades": 1
+    },
+    "CASH": {
+      "return_pct": 0,
+      "equity_final": 1000,
+      "fees_paid_usdt": 0,
+      "drawdown_pct": 0,
+      "trades": 0
+    }
+  },
+  "provenance": {
+    "workflow_run": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43371764153",
+    "job_id": 131708903364,
+    "branch_head_sha": "cb6059a943e607059ae4bf179daf9f5b8f99de8b",
+    "unit_tests_passed": 14,
+    "full_historical_models_executed": 6,
+    "container_http_smoke_passed": true,
+    "api_http_smoke_passed": true
+  },
+  "limitations": [
+    "This is original internal Python PAPER engine, NOT Freqtrade or Hummingbot",
+    "One month evaluated; no out-of-sample validation or tuning claims",
+    "Hypothetical full fills at next candle open, no orderbook or liquidity",
+    "Binance BTCUSDT historical prices, OKX user's current taker fee used only as a simulation assumption",
+    "Exchange-specific minSize/lotSz/tickSz are NOT historically certified; no real execution or future profit claims"
+  ]
+}
