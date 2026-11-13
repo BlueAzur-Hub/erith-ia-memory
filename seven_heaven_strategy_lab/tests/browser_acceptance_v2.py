@@ -30,7 +30,7 @@ def main():
             assert desktop.locator("#okx-pair option").count()==4
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
-            assert "4.0.0" in desktop.locator(".masthead").inner_text()
+            assert "4.1.0" in desktop.locator(".masthead").inner_text()
             desktop.locator("#compare").click()
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6
@@ -44,6 +44,9 @@ def main():
                 raise
             assert "USDT" in desktop.locator("#equity").inner_text()
             assert desktop.locator("#zero-cost").inner_text()!="—"
+            assert desktop.locator("#quant-desk").is_visible()
+            assert desktop.locator("#quant-closed").inner_text()!="—"
+            assert desktop.locator("#drawdown-chart polyline").count()==1
             assert desktop.locator("#readout-equity").inner_text().endswith("USDT")
             assert desktop.locator("#history > button").count()>=1
             desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png"),full_page=True)
@@ -81,6 +84,10 @@ def main():
             desktop.locator("#saved-profiles option").filter(has_text="Yoann").wait_for(state="attached",timeout=10000)
             desktop.locator("#run").click()
             expect(desktop.locator("#run-id")).to_contain_text("personnalisée",timeout=30000)
+            assert desktop.locator("#quant-desk").is_visible()
+            assert "USDC" in desktop.locator("#quant-realized").inner_text()
+            assert "USDC" in desktop.locator("#quant-unrealized").inner_text()
+            assert desktop.locator("#drawdown-chart polyline").count()==1
             desktop.locator("#compare").click()
             expect(desktop.locator("#comparison-badge")).to_contain_text("7 MODÈLES",timeout=40000)
             assert desktop.locator("#comparison-rows > tr").count()==7
@@ -95,7 +102,7 @@ def main():
             mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_MOBILE_COCKPIT.png"),full_page=True)
             width=mobile.evaluate("document.documentElement.scrollWidth")
             assert width<=390, f"Unexpected horizontal body overflow mobile: {width}px"
-            print("PASS: real Chromium V3 buttons, historical 6-way comparison, per-row replay, profile save, desktop/mobile rendering and no script errors")
+            print("PASS: Chromium V4.1 native risk desk + drawdown, six/seven methods, historical OKX, profiles, desktop/mobile and no JS errors")
         finally:
             browser.close()
 
