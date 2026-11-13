@@ -1,0 +1,45 @@
+{
+  "schema": "seven.heaven.hummingbot.native_offline_provider_probe.v1",
+  "status": "PASS_REAL_HUMMINGBOT_ENGINE_IMPORTED_WITH_OFFLINE_CANDLES",
+  "python": "3.13.15",
+  "pandas": "3.0.6",
+  "hummingbot_engine": "hummingbot.strategy_v2.backtesting.backtesting_engine_base.BacktestingEngineBase",
+  "hummingbot_provider": "hummingbot.strategy_v2.backtesting.backtesting_data_provider.BacktestingDataProvider",
+  "source": {
+    "pair": "BTC-USDT",
+    "exchange": "Binance Spot",
+    "sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4",
+    "rows": 44640,
+    "start_timestamp": 1767225600,
+    "end_timestamp": 1769903940,
+    "feed_key": "binance_BTC-USDT_1m"
+  },
+  "data_provider": {
+    "actual_feed_rows": 44640,
+    "actual_filtered_rows": 44640,
+    "external_candle_factory_calls": 0,
+    "trading_rules_initialized": false
+  },
+  "safety": {
+    "network_disabled_by_docker": true,
+    "exchange_api_keys_used": false,
+    "controllers_executed": false,
+    "orders_sent": 0,
+    "strategy_returns_computed": false,
+    "historic_execution_certified": false
+  },
+  "limitations": [
+    "Hummingbot actual engine imported and its historical candle cache exercised only",
+    "No Spot controller run: exchange rules not yet frozen or verified",
+    "Not a simulation or proof of fills, fees, inventory or returns",
+    "Docker image digest must be recorded by CI for reproducibility"
+  ],
+  "provenance": {
+    "run_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43366839385",
+    "job_id": 131693124117,
+    "git_head_sha": "2b3a2c7ef27ef1174e2bdfde42bfbc89a7799e00",
+    "artifact_id": 14010208385,
+    "official_image": "hummingbot/hummingbot@sha256:b676cb7279ca147b76a510777abf515a0d2f1b17e45a70da4831bb03a587c8e1",
+    "actual_tests": "native BacktestingEngineBase constructed, native BacktestingDataProvider cached 44640 minute candles, no CandlesFactory fallback, no network"
+  }
+}

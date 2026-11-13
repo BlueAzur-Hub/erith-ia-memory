@@ -1,0 +1,193 @@
+{
+  "schema": "seven.heaven.hummingbot.native_grid_executor_probe.v1",
+  "status": "HYPOTHETICAL_NATIVE_SIMULATOR_RUN_MODEL_NON_EQUIVALENT",
+  "replay_source": "Frozen Binance BTCUSDT Jan 2026 1m",
+  "normalized_csv_sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4",
+  "input_candles": 44640,
+  "native_class": "hummingbot.strategy_v2.backtesting.executors_simulator.grid_executor_simulator.GridExecutorSimulator",
+  "config": {
+    "connector_name": "binance",
+    "pair": "BTC-USDT",
+    "side": "BUY",
+    "leverage": 1,
+    "max_open_orders_configured": 10,
+    "price_lower": "78883.389",
+    "price_upper": "96413.031",
+    "min_spread_between_orders": "0.022",
+    "take_profit_fraction": "0.01",
+    "capital_quote_usdt": 1000,
+    "instrument_rules": null,
+    "live_order_commands": false
+  },
+  "scenarios": [
+    {
+      "scenario": "REFERENCE_TAKER_ASSUMPTION",
+      "trade_cost_fraction_per_fill_assumed": 0.001,
+      "simulated_rows": 19609,
+      "first_minute": 1767225600,
+      "last_simulated_minute": 1768402080,
+      "termination": "CloseType.TAKE_PROFIT",
+      "event_counts": {
+        "entry": 12,
+        "tp": 11
+      },
+      "hypothetical_event_count": 23,
+      "open_entry_events_minus_tp_events": 1,
+      "reported_net_pnl_quote_usdt": 8.826586590769073,
+      "reported_cum_fees_quote_usdt": 2.4,
+      "generated_grid_level_prices": [
+        78883.389,
+        80831.127,
+        82778.86499999999,
+        84726.603,
+        86674.341,
+        88622.079,
+        90569.817,
+        92517.55500000001,
+        94465.293,
+        96413.031
+      ],
+      "event_samples_first_three": [
+        {
+          "timestamp": 1767225600,
+          "price": 88622.079,
+          "side": "entry",
+          "level_idx": 5,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1767225600,
+          "price": 90569.817,
+          "side": "entry",
+          "level_idx": 6,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1767225600,
+          "price": 92517.55500000001,
+          "side": "entry",
+          "level_idx": 7,
+          "amount_quote": 100
+        }
+      ],
+      "event_samples_last_three": [
+        {
+          "timestamp": 1768232160,
+          "price": 91475.51517,
+          "side": "tp",
+          "level_idx": 6,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1768319940,
+          "price": 93442.73055000001,
+          "side": "tp",
+          "level_idx": 7,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1768342200,
+          "price": 95409.94593,
+          "side": "tp",
+          "level_idx": 8,
+          "amount_quote": 100
+        }
+      ]
+    },
+    {
+      "scenario": "MAKER_ASSUMPTION_ONLY",
+      "trade_cost_fraction_per_fill_assumed": 0.0008,
+      "simulated_rows": 19609,
+      "first_minute": 1767225600,
+      "last_simulated_minute": 1768402080,
+      "termination": "CloseType.TAKE_PROFIT",
+      "event_counts": {
+        "entry": 12,
+        "tp": 11
+      },
+      "hypothetical_event_count": 23,
+      "open_entry_events_minus_tp_events": 1,
+      "reported_net_pnl_quote_usdt": 9.306586590769074,
+      "reported_cum_fees_quote_usdt": 1.9199999999999997,
+      "generated_grid_level_prices": [
+        78883.389,
+        80831.127,
+        82778.86499999999,
+        84726.603,
+        86674.341,
+        88622.079,
+        90569.817,
+        92517.55500000001,
+        94465.293,
+        96413.031
+      ],
+      "event_samples_first_three": [
+        {
+          "timestamp": 1767225600,
+          "price": 88622.079,
+          "side": "entry",
+          "level_idx": 5,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1767225600,
+          "price": 90569.817,
+          "side": "entry",
+          "level_idx": 6,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1767225600,
+          "price": 92517.55500000001,
+          "side": "entry",
+          "level_idx": 7,
+          "amount_quote": 100
+        }
+      ],
+      "event_samples_last_three": [
+        {
+          "timestamp": 1768232160,
+          "price": 91475.51517,
+          "side": "tp",
+          "level_idx": 6,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1768319940,
+          "price": 93442.73055000001,
+          "side": "tp",
+          "level_idx": 7,
+          "amount_quote": 100
+        },
+        {
+          "timestamp": 1768342200,
+          "price": 95409.94593,
+          "side": "tp",
+          "level_idx": 8,
+          "amount_quote": 100
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Native grid executor simulator, not full Strategy V2 controller or a true Spot wallet",
+    "Hummingbot simulator uses OHLC low/high threshold fills, not actual maker queue",
+    "Model does not establish order-level affordability, exact Binance tick/lot, or orderbook liquidity",
+    "Configured max_open_orders may not be enforced by this simulator",
+    "This long-only directional grid with executor TP differs from symmetric 50/50 inventory Spot Grid",
+    "Both simulated fee assumptions come from observed OKX Spot user tier, NOT January Binance actual fees",
+    "Do not convert this simulator PnL to certified portfolio return or compare directly with ERITH reference"
+  ],
+  "paper_only": true,
+  "exchange_keys_used": false,
+  "orders_real": 0,
+  "provenance": {
+    "run_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43367180118",
+    "job_id": 131694244975,
+    "commit": "46fb3f8e0bfb55eb6e14b2e1a647a03654568704",
+    "artifact_id": 14010573147,
+    "official_image_digest": "sha256:b676cb7279ca147b76a510777abf515a0d2f1b17e45a70da4831bb03a587c8e1",
+    "is_native_hummingbot_simulator": true,
+    "all_results_hypothetical": true
+  }
+}
