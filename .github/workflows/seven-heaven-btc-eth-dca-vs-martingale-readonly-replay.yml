@@ -1,0 +1,66 @@
+name: Seven Heaven BTC ETH Fixed DCA vs Bounded Martingale PAPER replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-btc-eth-dca-vs-martingale-readonly-replay.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FIXED_DCA_VS_SPOT_MARTINGALE_CAUSAL_REPLAY_2026_11_13.cjs'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-btc-eth-frozen-dca-martingale-2026-11-13
+  cancel-in-progress: false
+
+jobs:
+  causal-research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Sparse checkout frozen protocol and native daily prices only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FIXED_DCA_VS_SPOT_MARTINGALE_CAUSAL_REPLAY_2026_11_13.cjs
+            /coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_FIXED_DCA_AND_SPOT_MARTINGALE_DAILY_CAUSAL_PROTOCOL_2026_11_13.md
+            /coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/native_bitstamp_btc_eth_2024_2026_evidence/bitstamp_btcusd_daily_2023_2026.csv
+            /coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/native_bitstamp_eth_2024_2026_evidence/bitstamp_ethusd_daily_2023_2026.csv
+      - name: Prepare Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse self-contained causal PAPER experiment
+        run: node --check 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FIXED_DCA_VS_SPOT_MARTINGALE_CAUSAL_REPLAY_2026_11_13.cjs'
+      - name: Replay identical dates, bankroll and fee regime across four policies
+        run: node 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FIXED_DCA_VS_SPOT_MARTINGALE_CAUSAL_REPLAY_2026_11_13.cjs'
+      - name: Independently check deterministic replay against archived proof
+        run: node 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_FIXED_DCA_VS_SPOT_MARTINGALE_CAUSAL_REPLAY_2026_11_13.cjs' --check
+      - name: Preserve research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-btc-eth-dca-martingale-causal-replay
+          path: 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_dca_martingale_causal_evidence/'
+          retention-days: 90
+          if-no-files-found: error
+      - name: Commit only newly created immutable research evidence
+        run: |
+          set -euo pipefail
+          folder='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_dca_martingale_causal_evidence'
+          git add -- "$folder"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'Proof already committed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive fixed DCA vs bounded Spot Martingale causal proof'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
