@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V3_1_PUBLISHED_CI_SUCCESS_OWNER_USB_V3_1_ACCEPTANCE_PENDING",
+  "status": "V3_1_PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_ACCEPTED_90_DAY_OKX",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -89,7 +89,7 @@
     {
       "stage": "C1+",
       "version": "3.1.0",
-      "status": "PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_PENDING",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_ACCEPTED_90_DAY_OKX",
       "features": [
         "10_30_60_90_day_public_okx_closed_1h_windows",
         "optional_historical_utc_end_date",
@@ -111,7 +111,10 @@
         "public_okx_240_1h_network_verified": true,
         "extended_30_90_deterministic_fixture_tests": true,
         "extended_30_90_live_network_verified": false,
-        "owner_usb_firefox_verified": false
+        "owner_usb_firefox_verified": true,
+        "owner_real_okx_90_day_2160_candles_verified": true,
+        "owner_six_paper_comparisons_verified": true,
+        "extended_90_owner_firefox_verified": true
       }
     },
     {
@@ -212,8 +215,86 @@
       "live_smoke_proven_days": [
         10
       ],
-      "long_window_live_source_not_yet_verified": true,
-      "owner_usb_acceptance_pending": true
+      "long_window_live_source_not_yet_verified": false,
+      "owner_usb_acceptance_pending": false,
+      "owner_firefox_confirmed_days": [
+        10,
+        90
+      ],
+      "owner_firefox_long_window_90_day_verified": true,
+      "long_window_independent_ci_not_yet_verified": true
+    },
+    "owner_okx_90_day_btc_usdc_2026_11_13": {
+      "proof_type": "USER_FIREFOX_SCREENSHOT_AND_INTERFACE_PASTE_NOT_INDEPENDENT_CI",
+      "seen_date": "2026-11-13",
+      "program_build": "3.1.0",
+      "exchange": "OKX Spot",
+      "pair": "BTC/USDC",
+      "timeframe": "1h",
+      "candle_count": 2160,
+      "coverage_start_utc": "2026-08-15T08:00:00Z",
+      "coverage_end_exclusive_utc": "2026-11-13T08:00:00Z",
+      "source_sha256_visible_prefix": "832a3ac04ad8468d20034d0f",
+      "full_source_sha256_not_available_from_screenshot": true,
+      "paper_only": true,
+      "capital_initial_usdc": 1000,
+      "assumed_taker_fee_per_side": 0.001,
+      "assumed_slippage_per_side": 0.0005,
+      "six_model_results": [
+        {
+          "kind": "EMA_CROSS",
+          "return_pct": -4.93,
+          "equity_final_usdc": 950.7,
+          "max_drawdown_pct": -23.49,
+          "fee_usdc": 89.82,
+          "fills": 80,
+          "buys": 40,
+          "sells": 40
+        },
+        {
+          "kind": "BOLLINGER",
+          "return_pct": -6.47,
+          "equity_final_usdc": 935.31,
+          "max_drawdown_pct": -11.73,
+          "fee_usdc": 58.14,
+          "fills": 57
+        },
+        {
+          "kind": "DCA",
+          "return_pct": -6.76,
+          "equity_final_usdc": 932.36,
+          "max_drawdown_pct": -21.88,
+          "fee_usdc": 1,
+          "fills": 20
+        },
+        {
+          "kind": "HOLD_50",
+          "return_pct": 4.29,
+          "equity_final_usdc": 1042.9,
+          "max_drawdown_pct": -12.69,
+          "fee_usdc": 0.5,
+          "fills": 1
+        },
+        {
+          "kind": "HOLD_100",
+          "return_pct": 8.58,
+          "equity_final_usdc": 1085.79,
+          "max_drawdown_pct": -21.88,
+          "fee_usdc": 1,
+          "fills": 1
+        },
+        {
+          "kind": "CASH",
+          "return_pct": 0,
+          "equity_final_usdc": 1000,
+          "max_drawdown_pct": 0,
+          "fee_usdc": 0,
+          "fills": 0
+        }
+      ],
+      "ema_zero_fee_slippage_return_pct": 7.19,
+      "ema_frictions_return_gap_percentage_points": 12.12,
+      "evidence_qualification": "The screen shows a full 90-day OKX dataset, replay and local saved comparison; raw workspace bytes and full SHA were not supplied; this is not a native bot backtest or actual fill confirmation."
     }
   },
   "safety": {
@@ -226,14 +307,14 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "When ready: stop V3 Python, back up private workspace externally, copy only complete V3.1 app files over existing program without deleting workspace; verify BUILD 3.1.0 and optional longer historical UTC collection in Firefox",
-  "next_developer_task": "V4 native Freqtrade and Hummingbot comparison research, PAPER only, not a delivered engine",
+  "next_single_owner_check": "V3.1 accepted on owner's Firefox including 90-day OKX BTC/USDC historical fetch and 6-way PAPER replay. No further test or installation required; next developer research: compare causality and execution accounting to native Freqtrade directional backtest and previously executed Hummingbot Grid executor, on strictly identical source and window where possible.",
+  "next_developer_task": "V4 scientific engine parity: import frozen SHA-verified source into native Freqtrade directional backtester, match EMA timeframes/startup/fee/exit conventions; separate Hummingbot Grid Executor semantics; do not re-ask user for already validated 90-day fetch, no new USB dev files.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
     "No permission to access private archives or send real orders",
     "V3.1 has GitHub Windows/Chromium and default 240 candle OKX actual-network tests; extended 30/90-day OKX coverage is verified only with deterministic fixtures and is not guaranteed by exchange API",
-    "Owner V3.1 Firefox acceptance is not yet confirmed; V3.0 Firefox is confirmed by screenshots"
+    "V3.1 owner Firefox 90-day OKX history is confirmed, but the full SHA-256 and raw CSV are local to owner USB; do not pretend independent GitHub CI has re-fetched the exact 90-day source"
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
 }
