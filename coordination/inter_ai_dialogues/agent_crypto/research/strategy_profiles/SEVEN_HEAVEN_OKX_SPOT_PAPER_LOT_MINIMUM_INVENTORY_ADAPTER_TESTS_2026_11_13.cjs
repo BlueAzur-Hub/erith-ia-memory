@@ -129,8 +129,9 @@ for(const pair of ["BTC-USDC","ETH-USDC"]){
   assert.throws(()=>adapter.buyFromBook({spec,budget:"10",book:wrong,nowMs:NOW}),/pair/);
  });
  test(pair+" cannot sell inventory smaller than minSz",()=>{
-  const below=(atoms(spec.minSz)-atoms(spec.lotSz))/S;
-  const x=adapter.sellInventoryToBook({spec,inventoryBase:String(below),book:book(pair),nowMs:NOW});
+  const belowAtoms=atoms(spec.minSz)-atoms(spec.lotSz);
+  const asDecimal=(x)=>{const f=(x%S).toString().padStart(12,"0").replace(/0+$/,"");return (x/S).toString()+(f?"."+f:"");};
+  const x=adapter.sellInventoryToBook({spec,inventoryBase:asDecimal(belowAtoms),book:book(pair),nowMs:NOW});
   assert.equal(x.ok,false);assert.equal(x.code,"MIN_SIZE_AFTER_LOT");
  });
  test(pair+" refuses missing depth instead of partial fill",()=>{
