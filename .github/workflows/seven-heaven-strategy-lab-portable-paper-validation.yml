@@ -193,6 +193,38 @@ jobs:
           serverpid=$!
           trap 'kill "$serverpid" 2>/dev/null || true' EXIT
           python tests/browser_acceptance_v2.py
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["SEVEN_LAB_WORKSPACE"])
+          proven=[]
+          for file in (root/"comparisons").glob("*.json"):
+              record=json.loads(file.read_text(encoding="utf-8"))
+              if record.get("source",{}).get("exchange")=="OKX Spot":
+                  proven.append(record)
+          assert proven, "No real OKX 6-strategy comparison persisted"
+          record=max(proven,key=lambda x:x["created_utc"])
+          assert record["source"]["pair"]=="BTC/USDC"
+          assert record["source"]["source_timeframe"]=="1h"
+          assert len(record["comparison"]["rows"])==6
+          assert record["comparison"]["aggregated_candles"]==240
+          assert record["comparison"]["safety"]["orders_real"]==0
+          report={
+            "schema":"seven.heaven.v3.public_okx_actual_api_internal_paper_comparison.v1",
+            "status":"PASS_ACTUAL_OKX_CLOSED_CANDLES_AND_LOCAL_PAPER_COMPARATOR",
+            "source":record["source"],
+            "captured_utc":record["created_utc"],
+            "comparison":record["comparison"],
+            "limitations":["Original local simulator only, NOT native Freqtrade/Hummingbot",
+                          "240 1H closed public OKX candles, not orderbook fills",
+                          "Historical fees 0.10% are a modeling assumption",
+                          "Not an investment signal; no real orders"],
+            "paper_only":True
+          }
+          target=root.parent/"SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json"
+          target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+          print("PASS: 240 real public OKX closed 1H candles through browser, 6 internal PAPER models")
+          PY
       - name: Build Docker local image and smoke HTTP health
         run: |
           set -euo pipefail
@@ -236,6 +268,7 @@ jobs:
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_MOBILE_COCKPIT.png
           retention-days: 30
           if-no-files-found: error
@@ -367,5 +400,6 @@ jobs:
             delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json \
             delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json \
             delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json \
             delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_MOBILE_COCKPIT.png
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
