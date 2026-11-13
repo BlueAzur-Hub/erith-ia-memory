@@ -101,6 +101,15 @@ class OKXSourceTests(unittest.TestCase):
             self.assertEqual(listed["sources"][0]["base"],"ETH")
             self.assertGreater(listed["free_bytes"],0)
 
+    def test_existing_verified_cache_remains_readable_below_reserve(self):
+        with TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            source=collect(root,"BTC-USDC",now=NOW,transport=FakeOKX(),min_free_bytes=1)
+            cached=collect(root,"BTC-USDC",now=NOW,
+                transport=lambda _:self.fail("Cached archive must not call public APIs"),
+                min_free_bytes=10**20)
+            self.assertEqual(cached["sha256"],source["sha256"])
+
     def test_reject_missing_candle_no_partial_files(self):
         with TemporaryDirectory() as tmp:
             root=Path(tmp)
