@@ -8,6 +8,8 @@
 **Machine-readable continuity registry:** `coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_VERSIONED_CONTINUITY_MANIFEST.json`  
 **Notion hub:** https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099
 
+**UPDATE 13 NOVEMBER 2026 — VERIFIED V3.0 RELEASED:** V1/V2 have now been observed working on the owner's USB Firefox; V3.0 public OKX Spot connector is complete and the refreshed evidence JSON is strict-valid, available from the separate V3 release. V3's owner's USB Firefox acceptance remains pending; subsequent expansions belong to V3.1. Cross-check [V3 delivery dossier](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md) and the machine-readable continuity registry before making new claims.
+
 ## 0. The user's confirmed direction (not an inference)
 
 - A **premium professional-grade local research and bot-building cockpit**, visually in the family of **ERITH.IA Administrator**: navy / gold / cyan, instrument display, responsive graph, configurable indicators and a beautiful accessible technical-reading workspace. User-supplied image of Aerith-5 is a **visual reference only**, not permission to copy protected personal image files into a public repo.
@@ -103,11 +105,22 @@ User's Aerith profiles and seven private archives should remain **in separate fo
 ### A / V1 — COMPLETE, owner's Windows/USB observed
 - Single local Python launch, PAPER, immutable source, results/profiles, six basic strategies, no account or trade API.
 
-### B / V2 — BUILT, CI VERIFIED, USB upgrade extracted, owner final UI check pending
+### B / V2 — COMPLETED, USER FIREFOX/USB ACCEPTED
 - Premium cockpit, six-strategy comparison, five timeframes, cost counterfactual, V1 data compatibility and SVG equity chart.
-- Final acceptance: confirm V2 badge, archive persistence and an on-device PAPER comparison; never require full re-download if already cached.
+- **Owner Firefox/USB acceptance completed 13 November 2026:** screenshot shows BUILD 2.0.0, 44,640 SHA-authenticated bars preserved, V1 journal intact, six-way comparison actually executed with cash/fee results. Never re-request the same validation.
 
-### C1 / V3 — CONNECTED DATA OBSERVATORY (NEXT BUILD, NOT YET DELIVERED)
+### C1 / V3.0 — OKX CONNECTED SPOT OBSERVATORY (RELEASED; OWNER V3 USB ACCEPTANCE PENDING)
+
+**Source merged and final verified release:** [V3 public OKX Spot release](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v3-public-okx-spot-research-2026-11-13), ZIP SHA-256 `6c7560ff22e3e9db27d2cb15f6c360173b68e81efd0155f41a2dea1ac9993fdb`. Final [Actions proof](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43386693211) PASS: 37 Python tests, real OKX BTC/USDC public API, Windows Python 3.13 CMD, Chromium click→collect→six PAPER comparisons, Docker optional, three strictly parsed evidence JSONs.
+- Actual 240 confirmed contiguous native OKX Spot BTC/USDC 1H candles, Nov 3–13 2026 UTC, SHA-256, cached locally and replayed 1H/4H without invented 1m candles.
+- Four fixed Spot pair options BTC/ETH vs USDC/USDT; only BTC-USDC tested against a live actual API; others covered by local mock fixtures.
+- Public instrument current tick/lot/min sizes are stored for evidence **but not applied to simulated fills**. No authenticated exchange account, book depth or live orders.
+- USB download reserve 2.5 GB; already verified cached datasets remain readable below threshold, no deletion, no hidden import of private archives.
+- V1/V2 data/profiles preserved; source switching clears old displayed results, base/quote correctly labelled. Full [V3 handoff](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md).
+- **Owner acceptance pending:** stop Python, back up `workspace/` separately, upgrade only program files, relaunch and inspect BUILD 3.0.0 in Firefox on the 8 GB USB.
+- **Not yet built:** date/month arbitrary selection, historical deeper retrieval, live L2 books, native Freqtrade/Hummingbot adapter.
+
+### C1+ / V3.1 — CONNECTED DATA HISTORY EXPANSION (NEXT PLANNED BUILD)
 - Select authenticated **exchange+pair+Spot market+month/date range+timeframe**.
 - Providers: first public **OKX Spot** (prefer BTC-USDC/ETH-USDC for the owner's market), additional **Binance Spot** as independent source, then Bitget/Kraken only after contract tests. Restrict query sizes, source provider pagination, rate-limit, timeouts, retries, exact UTC and endpoint terms.
 - Public-only connections: HTTP market metadata, historical candles, orderbook snapshots. Data provenance `requested_at`/`exchange_timestamp`/`closed_bar`/`hash`/`gap_count`/`market_type`. Visible `FRESH` / `DELAYED` / `STALE` classifications; never conflate historical OHLCV and a live L2 book.
