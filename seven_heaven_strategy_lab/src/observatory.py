@@ -18,13 +18,18 @@ NAMES = {
 }
 
 
-def aggregate_bars(source: list, timeframe: str) -> list:
+def aggregate_bars(source: list, timeframe: str, *, source_timeframe: str = '1m') -> list:
     if timeframe not in TIMEFRAMES:
         raise LabError("Période de bougies non autorisée")
-    step = TIMEFRAMES[timeframe]
+    if source_timeframe not in ("1m", "1h"):
+        raise LabError("Origine temporelle de source non autorisée")
+    source_minutes = TIMEFRAMES[source_timeframe]
+    if TIMEFRAMES[timeframe] < source_minutes or TIMEFRAMES[timeframe] % source_minutes:
+        raise LabError("Impossible de fabriquer des bougies plus fines que la source")
+    step = TIMEFRAMES[timeframe] // source_minutes
     if not isinstance(source, list) or len(source) < 60 or len(source) % step:
         raise LabError("Historique incomplet pour cette période de bougies")
-    if source[0][0] % (step * 60) != 0:
+    if source[0][0] % (TIMEFRAMES[timeframe] * 60) != 0:
         raise LabError("Historique désaligné pour cette période")
     if step == 1:
         return source
@@ -32,7 +37,7 @@ def aggregate_bars(source: list, timeframe: str) -> list:
     for pos in range(0, len(source), step):
         segment = source[pos:pos + step]
         start = segment[0][0]
-        if any(c[0] != start + 60 * i for i, c in enumerate(segment)):
+        if any(c[0] != start + source_minutes * 60 * i for i, c in enumerate(segment)):
             raise LabError("Bougies manquantes ou non continues")
         out.append((
             start,
@@ -56,7 +61,7 @@ def _request(params: dict) -> tuple[dict, str]:
 
 
 def run_one(source: list, raw_params: dict, *, kind: str | None = None,
-            zero_cost: bool = False) -> dict:
+            zero_cost: bool = False, source_timeframe: str = "1m") -> dict:
     """Run a specified scenario on the identical frozen raw minute source."""
     p, timeframe = _request(raw_params)
     if kind is not None:
@@ -66,7 +71,7 @@ def run_one(source: list, raw_params: dict, *, kind: str | None = None,
     if zero_cost:
         p["fee"] = 0.0
         p["slippage"] = 0.0
-    bars = aggregate_bars(source, timeframe)
+    bars = aggregate_bars(source, timeframe, source_timeframe=source_timeframe)
     minutes = TIMEFRAMES[timeframe]
     requested_dca_minutes = p["dca_every"]
     # V1's engine defines DCA intervals in number of bars. Convert explicitly:
@@ -76,7 +81,7 @@ def run_one(source: list, raw_params: dict, *, kind: str | None = None,
     result = simulate(bars, p)
     result["params"]["dca_every"] = requested_dca_minutes
     result["data"]["timeframe"] = timeframe
-    result["data"]["source_interval"] = "1m"
+    result["data"]["source_interval"] = source_timeframe
     result["data"]["source_candles"] = len(source)
     result["data"]["aggregated_completed_candles"] = len(bars)
     result["data"]["execution_model"] = "hypothetical NEXT candle OPEN"
@@ -87,12 +92,12 @@ def run_one(source: list, raw_params: dict, *, kind: str | None = None,
     return result
 
 
-def compare(source: list, raw_params: dict) -> dict:
+def compare(source: list, raw_params: dict, *, source_timeframe: str = "1m", source_label: str = "Binance Spot BTC/USDT, 2026-01") -> dict:
     """Same month, same timeframe, same budget/fee/slippage for 6 methods."""
     p, timeframe = _request(raw_params)
     rows = []
     for kind in ORDER:
-        result = run_one(source, {**p, "timeframe": timeframe}, kind=kind)
+        result = run_one(source, {**p, "timeframe": timeframe}, kind=kind, source_timeframe=source_timeframe)
         r = result["results"]
         rows.append({
             "kind": kind,
@@ -110,15 +115,18 @@ def compare(source: list, raw_params: dict) -> dict:
         "schema": "seven.heaven.strategy_lab.comparison.v2",
         "status": "SIX_MODELS_PAPER_ONLY",
         "timeframe": timeframe,
-        "input_1m_candles": len(source),
-        "aggregated_candles": len(source) // TIMEFRAMES[timeframe],
-        "common_source": "Binance Spot BTC/USDT, 2026-01",
+        "input_source_candles": len(source),
+        "input_1m_candles": len(source) if source_timeframe == "1m" else None,
+        "source_timeframe": source_timeframe,
+        "aggregated_candles": len(source) * TIMEFRAMES[source_timeframe] // TIMEFRAMES[timeframe],
+        "common_source": source_label,
         "params": {**p, "timeframe": timeframe},
         "rows": rows,
         "warnings": [
             "Six hypothetical models, not a ranking of future returns",
             "Same EMA lengths in bars imply different clock horizons per timeframe",
             "Fills are assumed at next candle open; no historical orderbook",
+            "Instrument rules are observed at collection, NOT historical fill constraints",
             "0.10% OKX Taker is a scenario, not historical Binance realized fees",
             "DCA frequency entered in minutes and rounded up to full timeframe bars",
             "Freqtrade and Hummingbot not executed by this comparator",
@@ -127,9 +135,9 @@ def compare(source: list, raw_params: dict) -> dict:
     }
 
 
-def run_with_diagnostics(source: list, raw_params: dict) -> tuple[dict, dict]:
-    run = run_one(source, raw_params)
-    ideal = run_one(source, raw_params, zero_cost=True)
+def run_with_diagnostics(source: list, raw_params: dict, *, source_timeframe: str = "1m") -> tuple[dict, dict]:
+    run = run_one(source, raw_params, source_timeframe=source_timeframe)
+    ideal = run_one(source, raw_params, zero_cost=True, source_timeframe=source_timeframe)
     r, zero = run["results"], ideal["results"]
     return run, {
         "status": "COUNTERFACTUAL_IDEAL_FILLS_ONLY",
