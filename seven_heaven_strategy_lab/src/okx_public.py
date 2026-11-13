@@ -27,12 +27,13 @@ INSTRUMENT_PATH = "/api/v5/public/instruments"
 HISTORY_PATH = "/api/v5/market/history-candles"
 ALLOWED_SPOT = ("BTC-USDC", "ETH-USDC", "BTC-USDT", "ETH-USDT")
 BASE_INTERVAL_SECONDS = 3600
-COUNT = 240  # ten full UTC days; even 4h boundary for fair 1H/4H replay
+COUNT = 240  # V3-compatible default: 10 days, 240 hourly candles
+ALLOWED_DAYS = (10, 30, 60, 90)  # bounded public archival windows
 PAGE_LIMIT = 100
-MAX_PAGES = 6
+MAX_PAGES = 30  # at most 2,160 hourly candles plus bounded pagination
 MIN_FREE_BYTES = 2_500_000_000  # protect ~2.5GB for owner's private files
 MAX_RESPONSE_BYTES = 850_000
-SOURCE_ID = re.compile(r"^OKX_(BTC|ETH)_(USDC|USDT)_1H_[0-9]{10}$")
+SOURCE_ID = re.compile(r"^OKX_(BTC|ETH)_(USDC|USDT)_1H_[0-9]{10}(?:_N(?:720|1440|2160))?$")
 CSV_HEADER = "timestamp,open,high,low,close,volume\n"
 
 
@@ -147,8 +148,12 @@ def _validate_cached(workspace: Path, source_id: str):
     raw = csv_file.read_bytes()
     if hashlib.sha256(raw).hexdigest() != manifest.get("sha256"):
         raise PublicMarketError("Archive OKX modifiée ou corrompue : SHA-256 non conforme")
-    if manifest.get("rows") != COUNT:
-        raise PublicMarketError("Archives OKX incomplètes")
+    rows = manifest.get("rows")
+    if type(rows) is not int or rows not in (d * 24 for d in ALLOWED_DAYS):
+        raise PublicMarketError("Nombre de bougies du cache OKX incorrect")
+    suffix = "" if rows == COUNT else f"_N{rows}"
+    if (rows == COUNT and "_N" in source_id) or (rows != COUNT and not source_id.endswith(suffix)):
+        raise PublicMarketError("Identifiant et taille de l'archive OKX incohérents")
     return manifest, csv_file
 
 
@@ -169,8 +174,9 @@ def list_sources(workspace: Path) -> dict:
 def read_source(workspace: Path, source_id: str):
     from src.engine import load_bars
     manifest, csv_file = _validate_cached(workspace, source_id)
-    bars = load_bars(csv_file, expected_count=COUNT, interval_seconds=BASE_INTERVAL_SECONDS)
-    if len(bars) != COUNT or bars[0][0] != manifest["first_timestamp"] or bars[-1][0] != manifest["last_timestamp"]:
+    expected_rows = manifest["rows"]
+    bars = load_bars(csv_file, expected_count=expected_rows, interval_seconds=BASE_INTERVAL_SECONDS)
+    if len(bars) != expected_rows or bars[0][0] != manifest["first_timestamp"] or bars[-1][0] != manifest["last_timestamp"]:
         raise PublicMarketError("Période du cache OKX incohérente")
     for i, b in enumerate(bars):
         if b[0] != manifest["first_timestamp"] + i * BASE_INTERVAL_SECONDS:
@@ -178,17 +184,34 @@ def read_source(workspace: Path, source_id: str):
     return manifest, bars
 
 
-def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_bytes=MIN_FREE_BYTES):
+def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_bytes=MIN_FREE_BYTES, days=10, end_date=None):
     if pair not in ALLOWED_SPOT:
         raise PublicMarketError("Paire refusée ; BTC/ETH contre USDC/USDT Spot uniquement")
+    if type(days) is not int or days not in ALLOWED_DAYS:
+        raise PublicMarketError("Durée OKX refusée : choisir 10, 30, 60 ou 90 jours")
+    now = time.time() if now is None else now
+    current_boundary = int(now // (4 * BASE_INTERVAL_SECONDS)) * (4 * BASE_INTERVAL_SECONDS)
+    historical = end_date not in (None, "")
+    if historical:
+        if not isinstance(end_date, str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", end_date):
+            raise PublicMarketError("Date historique UTC : format YYYY-MM-DD attendu")
+        try:
+            date_value = datetime.strptime(end_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            end = int(date_value.timestamp())
+        except (ValueError, OverflowError) as exc:
+            raise PublicMarketError("Date historique UTC invalide") from exc
+        if date_value.strftime("%Y-%m-%d") != end_date or end <= 0 or end > current_boundary:
+            raise PublicMarketError("Date historique future ou invalide")
+    else:
+        end = current_boundary
+    count = days * 24
+    start = end - count * BASE_INTERVAL_SECONDS
+    if start < 0:
+        raise PublicMarketError("Début de période historique non valide")
+    suffix = "" if count == COUNT else f"_N{count}"
+    source_id = f"OKX_{pair.replace('-', '_')}_1H_{end}{suffix}"
     root = _target_dir(workspace)
     root.mkdir(parents=True, exist_ok=True)
-    now = time.time() if now is None else now
-    # Use the last COMPLETE 4H UTC boundary, so the 240 x 1H candles
-    # can also replay 60 x full 4H candles without hidden partial bars.
-    end = int(now // (4 * BASE_INTERVAL_SECONDS)) * (4 * BASE_INTERVAL_SECONDS)
-    start = end - COUNT * BASE_INTERVAL_SECONDS
-    source_id = f"OKX_{pair.replace('-', '_')}_1H_{end}"
     try:
         cached, _ = _validate_cached(workspace, source_id)
         return cached
@@ -207,9 +230,13 @@ def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_by
 
     rules = _rules(pair, transport=transport)
     selected = {}
-    after = None
+    # 'after' starts at the chosen historical end; never scan unbounded from now.
+    after = end * 1000 if historical else None
     previous_oldest = None
-    for page in range(MAX_PAGES):
+    page_budget = min(MAX_PAGES, (count + PAGE_LIMIT - 1) // PAGE_LIMIT + 4)
+    for page in range(page_budget):
+        if page and transport is None:
+            time.sleep(0.15)  # public API pacing; click-triggered only
         args = {"instId": pair, "bar": "1H", "limit": str(PAGE_LIMIT)}
         if after is not None:
             args["after"] = str(after)
@@ -237,6 +264,7 @@ def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_by
         if oldest <= start * 1000:
             break
     timestamps = list(range(start, end, BASE_INTERVAL_SECONDS))
+    assert len(timestamps) == count
     missing = [t for t in timestamps if t not in selected]
     if missing:
         raise PublicMarketError(
@@ -255,18 +283,19 @@ def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_by
         "id": source_id,
         "source": "OKX Spot public history-candles 1H",
         "endpoint": HISTORY_PATH,
-        "status": "COMPLETE_CLOSED_240_1H_CANDLES",
+        "status": f"COMPLETE_CLOSED_{count}_1H_CANDLES",
         "exchange": "OKX Spot", "market_type": "SPOT",
         "pair": pair.replace("-", "/"), "instId": pair,
         "base": rules["base"], "quote": rules["quote"],
-        "bar": "1h", "rows": COUNT, "first_timestamp": start,
+        "bar": "1h", "rows": count, "days": days, "first_timestamp": start,
         "last_timestamp": end - BASE_INTERVAL_SECONDS,
         "close_boundary_utc": datetime.fromtimestamp(end, timezone.utc).isoformat(),
         "collected_at_utc": datetime.fromtimestamp(now, timezone.utc).isoformat(),
+        "historical_end_date_utc": end_date if historical else None,
         "sha256": sha, "bytes": len(blob),
         "rules_observed": rules,
         "available_timeframes": ["1h", "4h"],
-        "meaning": "Recent public CLOSED candles, not a realtime trade or a historic book; "
+        "meaning": "Public CLOSED candles from selected UTC window, not a realtime trade or a historic book; "
                    "instrument rules at collection are not automatically used for fills.",
         "paper_only": True, "live_orders": 0,
     }
