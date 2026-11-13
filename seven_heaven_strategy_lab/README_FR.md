@@ -1,8 +1,36 @@
-# Seven Heaven Strategy Lab — Station locale de recherche PAPER
+# Seven Heaven Strategy Lab — V2 Aether Observatory · PAPER local
 
-**Statut : prototype initial autonome · aucune connexion à un compte ni possibilité d'envoyer un ordre.**
+**Version 2.0.0 · Windows Python 3.13 · Sans Docker obligatoire · Sans ordre réel.**
 
-Seven Heaven Strategy Lab est un projet **indépendant** de l'Administrator, de l'Operator et du TRADUS de Yoann. Il utilise une interface Web locale, un moteur PAPER original et une archive historique publique vérifiée. Il peut être transporté sur un SSD USB.
+Notre deuxième version est un **cockpit de recherche premium**, inspiré du langage visuel bleu nuit, or et cyan de l'Interface ERITH.IA, mais autonome. Elle fonctionne depuis le dossier sur une clé USB de 8 Go. Elle ne contient aucun code ni accès à l'Administrator, à l'Operator, au Bridge ou au TRADUS privé.
+
+## Passer de V1 à V2 sur la clé USB E:
+
+1. **Arrête le laboratoire V1** : ferme la fenêtre du serveur Python (ou utilise Ctrl+C).
+2. **Sauvegarde le dossier `workspace/`** de ta clé ailleurs. Il conserve tes données authentifiées, tes profils et tes résultats V1.
+3. Décompresse le **nouveau ZIP V2**, puis copie son contenu de dossier `seven_heaven_strategy_lab/` **dans le dossier existant**, en remplaçant les fichiers du programme **mais sans effacer `workspace/`**. Ne déplace pas le dossier USB pendant qu'il fonctionne.
+4. Double-clique sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd` (Python 3.13). Il ouvre Firefox si c'est ton navigateur par défaut, sinon ouvre `http://127.0.0.1:8777` toi-même.
+5. Le bandeau doit afficher **BUILD 2.0.0**. L'archive déjà chargée doit être toujours **AUTHENTIFIÉE** ; les anciens profils et rapports continuent à être lisibles.
+
+Si tu préfères installer la V2 dans un autre dossier, **copie également le dossier `workspace/`** de la V1 vers la V2. Un ZIP de programme ne contient **pas** ce dossier personnel. La sauvegarde est importante : une clé USB peut tomber en panne.
+
+## Nouveaux modules V2
+
+- **Aether Observatory** : cockpit responsive bleu nuit / or / cyan, lecture stratégique active, indicateurs de l'archive et état local PAPER.
+- **Choix de bougies** : 1m, 5m, 15m, 1h, 4h. Les bougies sont **agrégées à partir de l'historique authentifié 1m**. Chaque échelle est distincte ; le moteur ne télécharge ni ne fabrique d'historique 4h indépendant.
+- **Atelier de scénarios** : EMA, Bollinger, DCA, Buy & Hold 50 %, Buy & Hold 100 %, conservation USDT ; montant, commissions, glissement et paramètres configurables.
+- **Comparateur six méthodes** : un bouton exécute six calculs PAPER sur le même mois, au même timeframe, avec le même capital, les mêmes frais et la même hypothèse de glissement.
+- **Coûts visibles** : pour chaque calcul individuel, diagnostic supplémentaire **sans frais ni glissement** étiqueté comme contrefactuel. Il ne représente pas une transaction réalisable.
+- **Coffre local** : sauvegardes distinctes de `workspace/results/`, `workspace/profiles/` (anciens et nouveaux) et `workspace/comparisons/`. Les rapports V1 restent compatibles et affichés en 1m.
+- **DCA temporel corrigé pour les échelles V2** : sa fréquence est renseignée en **minutes**, puis arrondie vers le haut au nombre entier de bougies. Exemple : tous les 1 440 minutes = toutes les 24 bougies 1h, **pas** 1 440 bougies 1h.
+
+### État exact du développement
+
+Le moteur est le **moteur Python PAPER interne**, et non Freqtrade ou Hummingbot. Les frameworks externes sont préservés séparément dans une Release commune, mais ne sont pas intégrés à ce prototype. Les périodes disponibles sont dérivées du **seul mois de janvier 2026 BTC/USDT Binance Spot** ; le sélecteur multi-actifs, l'import d'autres mois et la connexion OKX live restent à développer dans des étapes ultérieures.
+
+Internet est **autorisé** : l'application télécharge sur demande une archive publique précise, avec vérification SHA-256. L'accès au marché en temps réel n'est pas encore implémenté. **PAPER uniquement** : pas d'API d'ordre, ni de clé de compte, ni de levier.
+
+Les frais OKX personnels observés sont **0,10 % Taker** (fraction 0.001 dans le calcul) et **0,08 % Maker** (information affichée, pas appliquée à ces fills à ouverture suivante). Ce sont des **hypothèses** lorsqu'on les applique aux anciens cours Binance, pas les frais Binance effectivement encourus.
 
 ## Premier démarrage Windows — sans Docker, avec ton Python 3.13
 
@@ -42,7 +70,7 @@ docker compose down
 
 La publication réseau est limitée à `127.0.0.1` côté hôte ; aucune API de trading réel n'existe dans cette application. Le téléchargement initial du dossier historique nécessite une connexion Internet et ne demande **aucune clé OKX**.
 
-## Stratégies de la première version
+## Stratégies de la version initiale
 
 | Modèle | Règle utilisée | Hypothèse |
 |---|---|---|

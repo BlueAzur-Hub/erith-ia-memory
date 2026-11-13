@@ -1,9 +1,10 @@
-name: Seven Heaven Strategy Lab portable PAPER validation
+name: Seven Heaven Strategy Lab V2 Aether Observatory validation
 
 on:
   push:
     branches:
       - feature/seven-heaven-strategy-lab-local-paper
+      - feature/seven-heaven-strategy-lab-v2-observatory-20261113
       - main
     paths:
       - 'seven_heaven_strategy_lab/**'
@@ -21,7 +22,7 @@ permissions:
 jobs:
   validate-and-package:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 26
     defaults:
       run:
         working-directory: seven_heaven_strategy_lab
@@ -37,7 +38,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
       - name: Static Python and JavaScript syntax
         run: |
           set -euo pipefail
@@ -86,6 +87,49 @@ jobs:
           print("PASS: immutable 44640-minute source; six PAPER models; cash/inventory conserved; no orders")
           print(json.dumps(evidence,indent=2))
           PY
+      - name: Run all 30 historical PAPER comparisons over 5 available timeframes
+        env:
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, os
+          from src.engine import load_bars
+          from src.reference_data import CSV_NAME, CSV_SHA
+          from src.observatory import compare, run_with_diagnostics
+          workspace=Path(os.environ["SEVEN_LAB_WORKSPACE"])
+          bars=load_bars(workspace/"datasets"/CSV_NAME)
+          summaries={}
+          for tf, expected in (("1m",44640),("5m",8928),("15m",2976),("1h",744),("4h",186)):
+              v=compare(bars,{"kind":"EMA_CROSS","timeframe":tf,"capital":1000,
+                              "fee":0.001,"slippage":0.0005})
+              assert len(v["rows"])==6 and v["aggregated_candles"]==expected
+              assert v["safety"]["orders_real"]==0
+              for row in v["rows"]:
+                  assert row["cash_final"]>=0 and row["base_inventory_btc"]>=0
+              summaries[tf]=v
+          original,diag=run_with_diagnostics(bars,{"kind":"EMA_CROSS","timeframe":"1m"})
+          assert original["results"]["return_pct"]==-92.20371
+          assert abs(diag["zero_friction_return_pct"] - (-8.4721)) < .0001
+          result={
+            "schema":"seven.heaven.strategy_lab.v2.aether_observatory.executed.30_cases",
+            "status":"PASS_REAL_V2_INTERNAL_PAPER_REPLAY",
+            "source_sha256":CSV_SHA,"source_rows":len(bars),
+            "engine":"ORIGINAL_PYTHON_PAPER_NOT_FREQTRADE_OR_HUMMINGBOT",
+            "timeframes":summaries,"ema_1m_cost_counterfactual":diag,
+            "actual_order_count":0,"historical":True,
+            "limitations":[
+              "Binance January 2026 OHLCV, not OKX historical book fills",
+              "All fills assumed next-bar open with static slippage",
+              "Different timeframes imply different EMA clock horizons",
+              "No out-of-sample or performance guarantee"
+            ]
+          }
+          target=workspace.parent/"SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json"
+          target.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+          print("PASS: 30 V2 scenario backtests / five timeframes / single SHA-verified source")
+          PY
       - name: Start real local API and test run/profile/history requests
         env:
           SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
@@ -110,10 +154,21 @@ jobs:
               except Exception:
                   time.sleep(.2)
           assert health["live_trading"] is False
+          assert health["version"] == "2.0.0"
           assert request("/api/datasets")["datasets"][0]["available"]
           report=request("/api/run",{"params":{"kind":"EMA_CROSS", "fee":0.001}})
           assert report["report"]["run"]["safety"]["orders_real"]==0
           assert report["report"]["run"]["data"]["rows"]==44640
+          assert report["report"]["counterfactual"]["status"]=="COUNTERFACTUAL_IDEAL_FILLS_ONLY"
+          v2=request("/api/run",{"params":{"kind":"EMA_CROSS","timeframe":"15m","fee":0.001}})
+          assert v2["report"]["run"]["data"]["timeframe"]=="15m"
+          assert v2["report"]["run"]["data"]["rows"]==2976
+          comparison=request("/api/compare",{"params":{"kind":"EMA_CROSS","timeframe":"1h"}})
+          assert comparison["report"]["comparison"]["aggregated_candles"]==744
+          assert len(comparison["report"]["comparison"]["rows"])==6
+          assert len(request("/api/comparisons")["comparisons"])>=1
+          stored_cmp=request("/api/comparisons/"+comparison["report"]["id"])
+          assert stored_cmp["comparison"]["schema"]=="seven.heaven.strategy_lab.comparison.v2"
           assert len(request("/api/results")["runs"])>=1
           saved=request("/api/profiles",{"name":"EMA 10/30 PAPER","params":{"kind":"EMA_CROSS"}})
           assert saved["profile"]["name"]=="EMA 10/30 PAPER"
@@ -126,6 +181,17 @@ jobs:
               assert ex.code==404
           print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
           PY
+      - name: Open real premium V2 cockpit in Chromium, test interaction and capture desktop/mobile
+        env:
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          google-chrome --version
+          python -m src.server > "$RUNNER_TEMP/seven-lab-browser-server.log" 2>&1 &
+          serverpid=$!
+          trap 'kill "$serverpid" 2>/dev/null || true' EXIT
+          python tests/browser_acceptance_v2.py
       - name: Build Docker local image and smoke HTTP health
         run: |
           set -euo pipefail
@@ -141,6 +207,7 @@ jobs:
                   with urllib.request.urlopen(url,timeout=3) as f:
                       j=json.loads(f.read())
                   assert j["status"]=="LOCAL_PAPER_ONLY"
+                  assert j["version"]=="2.0.0"
                   print("PASS: Docker on localhost:8777, live trading disabled")
                   break
               except Exception:
@@ -151,21 +218,24 @@ jobs:
         run: |
           set -euo pipefail
           cd ..
-          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip" \
+          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_PREMIUM_PYTHON313_WINDOWS_PORTABLE_PAPER.zip" \
             seven_heaven_strategy_lab -x \
             '*/__pycache__/*' '*/workspace/*' '*/.gitignore' '*.pyc'
           cd "$RUNNER_TEMP"
-          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip \
-            > SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt
-          cat SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt
+          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_PREMIUM_PYTHON313_WINDOWS_PORTABLE_PAPER.zip \
+            > SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_ARCHIVE_SHA256.txt
+          cat SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_ARCHIVE_SHA256.txt
       - name: Upload standalone ZIP, hash and measured historical smoke results
         uses: actions/upload-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_LOCAL_PAPER_DELIVERY
           path: |
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_PREMIUM_PYTHON313_WINDOWS_PORTABLE_PAPER.zip
+            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_ARCHIVE_SHA256.txt
             ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_DESKTOP_COCKPIT.png
+            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_MOBILE_COCKPIT.png
           retention-days: 30
           if-no-files-found: error
 
@@ -218,6 +288,8 @@ jobs:
             }
             $datasets = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/datasets" -TimeoutSec 5
             if ($datasets.datasets.Count -ne 1) { throw "Data API unavailable" }
+            if ($health.version -ne "2.0.0") { throw "V2 Python health not active" }
+            if (-not $page.Content.Contains("Matrice de")) { throw "Premium V2 cockpit HTML not served" }
             Write-Host "PASS: Actual CMD launched Python 3.13 and served PAPER UI on Windows localhost"
           } finally {
             taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null
@@ -232,26 +304,29 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_DELIVERY
+          name: SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_LOCAL_PAPER_DELIVERY
           path: delivery
       - name: Publish executable prototype without changing MASTER or Operator
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG=seven-heaven-strategy-lab-portable-paper-initial-2026-11-13
+          TAG=seven-heaven-strategy-lab-v2-aether-observatory-2026-11-13
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" \
-              --title "Seven Heaven Strategy Lab — portable local PAPER prototype" \
-              --notes "Independent PAPER laboratory for Windows with preinstalled Python 3.13 (no Docker needed). Docker Desktop remains optional. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
+              --title "Seven Heaven Strategy Lab V2 — Aether Observatory premium PAPER cockpit" \
+              --notes "Independent V2 premium Aether Observatory PAPER laboratory for Windows with existing Python 3.13. Docker Desktop optional. Five timeframes, six comparable methods, zero-cost diagnostics and persistent V1-compatible research. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
               --latest=false
           fi
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --title "Seven Heaven Strategy Lab — Python 3.13 Windows or Docker (PAPER)" \
-            --notes "Windows: with Python 3.13 already installed, extract the ZIP and double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd; Docker Desktop is NOT required. Alternative Docker launcher is provided. PAPER only, no real orders or exchange keys. See README_FR.md."
+            --title "Seven Heaven Strategy Lab V2 — Premium Aether Observatory · Python 3.13" \
+            --notes "V2: dark navy/gold/cyan ERITH-style cockpit, five timeframes, six-way comparison, historical cost diagnostics and V1 profile/result preservation. Windows: extract over your existing application files WITHOUT deleting workspace, close old Python window, double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd. No Docker or external Python packages required. PAPER only."
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt \
-            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_PREMIUM_PYTHON313_WINDOWS_PORTABLE_PAPER.zip \
+            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_ARCHIVE_SHA256.txt \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_DESKTOP_COCKPIT.png \
+            delivery/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_PREMIUM_MOBILE_COCKPIT.png
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
