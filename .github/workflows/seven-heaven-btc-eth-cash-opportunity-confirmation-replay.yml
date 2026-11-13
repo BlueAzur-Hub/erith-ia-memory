@@ -1,0 +1,23 @@
+name: Seven Heaven BTC ETH daily cash opportunity research verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_DAILY_CASH_OPPORTUNITY_CONFIRMATION_AND_RISK_REPORT_2026_11_13.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-readonly-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout shared research repository
+        uses: actions/checkout@v4
+      - name: Verify BTC and ETH immutable CSVs and archived proof
+        run: node coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_BTC_ETH_DAILY_CASH_OPPORTUNITY_CONFIRMATION_AND_RISK_REPLAY_2026_11_13.js --check
+      - name: Confirm no repository files were changed
+        run: git diff --exit-code
