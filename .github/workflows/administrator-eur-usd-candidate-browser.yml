@@ -1,0 +1,80 @@
+name: Candidate EUR-USD - isolated Firefox/Chromium validation
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - '.github/workflows/administrator-eur-usd-candidate-browser.yml'
+      - '.github/validation/administrator-eur-usd-candidate-smoke.mjs'
+permissions:
+  contents: read
+jobs:
+  boot-candidate:
+    # Runs only on the deliberate draft PR. Never publishes or merges anything.
+    if: github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout test harness only
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/validation/administrator-eur-usd-candidate-smoke.mjs
+          path: harness
+      - name: Checkout existing candidate at immutable commit - no patch
+        uses: actions/checkout@v4
+        with:
+          ref: 951f8906d0a13de183c226970a85970537ed1e6d
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/index.html
+            /public/agent_crypto_erith_ia/administrator/app.js
+            /public/agent_crypto_erith_ia/administrator/*.css
+            /public/agent_crypto_erith_ia/administrator/build.json
+            /public/agent_crypto_erith_ia/administrator/js/
+            /public/agent_crypto_erith_ia/administrator/css/
+            /public/agent_crypto_erith_ia/administrator/assets/aether/
+            /public/agent_crypto_erith_ia/administrator/views/
+            /public/agent_crypto_erith_ia/data/crypto/latest.json
+            /public/agent_crypto_erith_ia/data/crypto/status.json
+            /public/agent_crypto_erith_ia/data/news/latest.json
+            /public/agent_crypto_erith_ia/trader/*.js
+          path: source
+      - name: Archive exact previous Aerith candidate for offline comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: erith-eur-usd-original-candidate-two-files
+          path: |
+            source/public/agent_crypto_erith_ia/administrator/app.js
+            source/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          retention-days: 14
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser and Chart.js dependencies
+        run: |
+          npm install --prefix harness/.github/validation --no-save --no-package-lock playwright@1.56.1 chart.js@4.4.9
+          npx --prefix harness/.github/validation playwright install --with-deps chromium firefox
+      - name: Verify unmodified candidate syntax
+        run: |
+          node --check source/public/agent_crypto_erith_ia/administrator/app.js
+          node --check source/public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          test "$(git -C source rev-parse HEAD)" = '951f8906d0a13de183c226970a85970537ed1e6d'
+      - name: Start isolated HTTP server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory source > /tmp/erith-server.log 2>&1 &
+          echo $! > /tmp/erith-server.pid
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/public/agent_crypto_erith_ia/administrator/index.html >/dev/null && break || sleep 1; done
+      - name: Browser smoke against original EUR-USD candidate
+        run: node harness/.github/validation/administrator-eur-usd-candidate-smoke.mjs source preproduction-results
+      - name: Upload results even on failure (never Pages)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erith-eur-usd-candidate-smoke
+          path: preproduction-results/
+          if-no-files-found: warn
+          retention-days: 14
