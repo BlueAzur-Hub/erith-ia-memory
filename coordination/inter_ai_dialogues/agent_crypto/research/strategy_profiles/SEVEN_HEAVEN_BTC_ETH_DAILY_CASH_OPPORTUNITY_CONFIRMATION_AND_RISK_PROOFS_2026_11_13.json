@@ -1,0 +1,2624 @@
+{
+  "metadata": {
+    "source_sha256": {
+      "BTC": "89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb",
+      "ETH": "881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49"
+    },
+    "source_files": {
+      "BTC": "native_bitstamp_btc_eth_2024_2026_evidence/bitstamp_btcusd_daily_2023_2026.csv",
+      "ETH": "native_bitstamp_eth_2024_2026_evidence/bitstamp_ethusd_daily_2023_2026.csv"
+    },
+    "limitations": [
+      "Same 2024-2026 dates already investigated, not an out-of-sample forecast",
+      "Historical Bitstamp BTC/USD and ETH/USD, not OKX USDC",
+      "Fees and slippage assumed, no order fills and no tax",
+      "Cash-window attribution uses future prices ONLY for evaluating past positions, never for making a decision",
+      "Cash log timing identities are theoretical before fees; net portfolios incur fee and slip",
+      "Last cash windows are censored at final close; do not classify as a completed sale-rebuy cycle"
+    ]
+  },
+  "results": {
+    "schema": "seven-heaven.btc-eth-daily-cash-windows-multimodel-v1",
+    "research_date": "2026-11-13",
+    "status": "RETROSPECTIVE_PAPER_ONLY_NO_ACTUAL_ORDERS",
+    "source": "Bitstamp native BTC/USD and ETH/USD, 1310 UTC calendar days each",
+    "warmup": [
+      "2023-04-01",
+      "2023-12-31"
+    ],
+    "study": [
+      "2024-01-01",
+      "2026-10-31"
+    ],
+    "method_definitions": {
+      "hold": "Buy at first test-day open, stay invested until valuation at final close",
+      "fast": "EMA5 > EMA13 AND close > EMA13",
+      "slow": "EMA10 > EMA30 AND close > EMA30",
+      "gate": "fast AND slow",
+      "c2": "EMA10/30 raw state must persist for 2 daily closes before both entries and exits",
+      "c3": "EMA10/30 raw state must persist for 3 daily closes before both entries and exits",
+      "e1n2": "EMA10/30 one bearish close to exit and two bullish closes to enter"
+    },
+    "fee_pct_side": 0.1,
+    "slippage_pct_side": 0.05,
+    "note": "Yearly performance is the actual continuous portfolio change, never a yearly reset.",
+    "results": {
+      "BTC": {
+        "hold": {
+          "return_pct": 82.682476,
+          "final_usd": 1826.824764,
+          "gross_no_cost_return_pct": 83.23153,
+          "cost_penalty_percentage_points": 0.549054,
+          "stress_double_cost_return_pct": 82.134703,
+          "max_drawdown_pct": -53.076959,
+          "transactions": 1,
+          "exposed_days": 1035,
+          "cash_days": 0,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 120.316114,
+              "exposed_days": 366,
+              "cash_days": 0
+            },
+            "2025": {
+              "return_pct": -6.302139,
+              "exposed_days": 365,
+              "cash_days": 0
+            },
+            "2026": {
+              "return_pct": -11.504549,
+              "exposed_days": 304,
+              "cash_days": 0
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1,
+          "cash_log_missed_upside": 0,
+          "cash_log_avoided_downside": 0,
+          "windows_summary": {
+            "completed": 0,
+            "positive": 0,
+            "negative": 0,
+            "rise_ge_3_pct": 0,
+            "decline_le_minus_3_pct": 0,
+            "quick_reentry_le_7_days": 0,
+            "best_avoided_decline": null,
+            "worst_missed_rise": null,
+            "censored_at_end": 0
+          }
+        },
+        "fast": {
+          "return_pct": 103.286721,
+          "final_usd": 2032.867211,
+          "gross_no_cost_return_pct": 135.489526,
+          "cost_penalty_percentage_points": 32.202805,
+          "stress_double_cost_return_pct": 75.470361,
+          "max_drawdown_pct": -25.995671,
+          "transactions": 98,
+          "exposed_days": 470,
+          "cash_days": 565,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 72.20287,
+              "exposed_days": 196,
+              "cash_days": 170
+            },
+            "2025": {
+              "return_pct": 1.736501,
+              "exposed_days": 143,
+              "cash_days": 222
+            },
+            "2026": {
+              "return_pct": 16.035754,
+              "exposed_days": 131,
+              "cash_days": 173
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.285202,
+          "cash_log_missed_upside": 0.931022,
+          "cash_log_avoided_downside": -1.181938,
+          "windows_summary": {
+            "completed": 48,
+            "positive": 36,
+            "negative": 12,
+            "rise_ge_3_pct": 15,
+            "decline_le_minus_3_pct": 7,
+            "quick_reentry_le_7_days": 22,
+            "best_avoided_decline": {
+              "start": "2026-01-20",
+              "start_price": 92559,
+              "initial": false,
+              "end": "2026-03-04",
+              "end_price": 68336,
+              "days": 43,
+              "ret_pct": -26.170335,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2025-09-23",
+              "start_price": 112741,
+              "initial": false,
+              "end": "2025-10-02",
+              "end_price": 118674,
+              "days": 9,
+              "ret_pct": 5.262504,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        },
+        "slow": {
+          "return_pct": 65.781857,
+          "final_usd": 1657.818574,
+          "gross_no_cost_return_pct": 83.590335,
+          "cost_penalty_percentage_points": 17.808478,
+          "stress_double_cost_return_pct": 49.69062,
+          "max_drawdown_pct": -34.475555,
+          "transactions": 68,
+          "exposed_days": 487,
+          "cash_days": 548,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 63.742728,
+              "exposed_days": 215,
+              "cash_days": 151
+            },
+            "2025": {
+              "return_pct": 4.721217,
+              "exposed_days": 146,
+              "cash_days": 219
+            },
+            "2026": {
+              "return_pct": -3.319186,
+              "exposed_days": 126,
+              "cash_days": 178
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.001958,
+          "cash_log_missed_upside": 0.811052,
+          "cash_log_avoided_downside": -0.813008,
+          "windows_summary": {
+            "completed": 33,
+            "positive": 26,
+            "negative": 7,
+            "rise_ge_3_pct": 12,
+            "decline_le_minus_3_pct": 5,
+            "quick_reentry_le_7_days": 18,
+            "best_avoided_decline": {
+              "start": "2026-05-17",
+              "start_price": 78117,
+              "initial": false,
+              "end": "2026-07-17",
+              "end_price": 63782.65,
+              "days": 61,
+              "ret_pct": -18.349847,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2024-03-20",
+              "start_price": 61919,
+              "initial": false,
+              "end": "2024-03-21",
+              "end_price": 67842,
+              "days": 1,
+              "ret_pct": 9.565723,
+              "censored": false
+            },
+            "censored_at_end": 1
+          },
+          "windows": [
+            {
+              "start": "2024-01-13",
+              "start_price": 42772,
+              "initial": false,
+              "end": "2024-02-03",
+              "end_price": 43183,
+              "days": 21,
+              "ret_pct": 0.960909,
+              "censored": false
+            },
+            {
+              "start": "2024-03-20",
+              "start_price": 61919,
+              "initial": false,
+              "end": "2024-03-21",
+              "end_price": 67842,
+              "days": 1,
+              "ret_pct": 9.565723,
+              "censored": false
+            },
+            {
+              "start": "2024-04-03",
+              "start_price": 65471,
+              "initial": false,
+              "end": "2024-04-05",
+              "end_price": 68522,
+              "days": 2,
+              "ret_pct": 4.660079,
+              "censored": false
+            },
+            {
+              "start": "2024-04-13",
+              "start_price": 67146,
+              "initial": false,
+              "end": "2024-05-18",
+              "end_price": 67059,
+              "days": 35,
+              "ret_pct": -0.129568,
+              "censored": false
+            },
+            {
+              "start": "2024-06-12",
+              "start_price": 67306,
+              "initial": false,
+              "end": "2024-06-13",
+              "end_price": 68240,
+              "days": 1,
+              "ret_pct": 1.387692,
+              "censored": false
+            },
+            {
+              "start": "2024-06-14",
+              "start_price": 66765,
+              "initial": false,
+              "end": "2024-07-19",
+              "end_price": 63977,
+              "days": 35,
+              "ret_pct": -4.175841,
+              "censored": false
+            },
+            {
+              "start": "2024-08-03",
+              "start_price": 61419,
+              "initial": false,
+              "end": "2024-08-25",
+              "end_price": 64176,
+              "days": 22,
+              "ret_pct": 4.488839,
+              "censored": false
+            },
+            {
+              "start": "2024-08-28",
+              "start_price": 59433,
+              "initial": false,
+              "end": "2024-09-19",
+              "end_price": 61765,
+              "days": 22,
+              "ret_pct": 3.923746,
+              "censored": false
+            },
+            {
+              "start": "2024-10-02",
+              "start_price": 60760,
+              "initial": false,
+              "end": "2024-10-05",
+              "end_price": 62080,
+              "days": 3,
+              "ret_pct": 2.172482,
+              "censored": false
+            },
+            {
+              "start": "2024-10-10",
+              "start_price": 60589,
+              "initial": false,
+              "end": "2024-10-12",
+              "end_price": 62511,
+              "days": 2,
+              "ret_pct": 3.172193,
+              "censored": false
+            },
+            {
+              "start": "2024-12-23",
+              "start_price": 95100,
+              "initial": false,
+              "end": "2024-12-25",
+              "end_price": 98637,
+              "days": 2,
+              "ret_pct": 3.719243,
+              "censored": false
+            },
+            {
+              "start": "2024-12-27",
+              "start_price": 95666,
+              "initial": false,
+              "end": "2025-01-05",
+              "end_price": 98218,
+              "days": 9,
+              "ret_pct": 2.667614,
+              "censored": false
+            },
+            {
+              "start": "2025-01-09",
+              "start_price": 95034,
+              "initial": false,
+              "end": "2025-01-16",
+              "end_price": 100512,
+              "days": 7,
+              "ret_pct": 5.764253,
+              "censored": false
+            },
+            {
+              "start": "2025-02-02",
+              "start_price": 100638,
+              "initial": false,
+              "end": "2025-02-04",
+              "end_price": 101456,
+              "days": 2,
+              "ret_pct": 0.812814,
+              "censored": false
+            },
+            {
+              "start": "2025-02-05",
+              "start_price": 97809,
+              "initial": false,
+              "end": "2025-04-21",
+              "end_price": 85197,
+              "days": 75,
+              "ret_pct": -12.894519,
+              "censored": false
+            },
+            {
+              "start": "2025-06-06",
+              "start_price": 101558,
+              "initial": false,
+              "end": "2025-06-07",
+              "end_price": 104416,
+              "days": 1,
+              "ret_pct": 2.814155,
+              "censored": false
+            },
+            {
+              "start": "2025-06-18",
+              "start_price": 104617,
+              "initial": false,
+              "end": "2025-06-26",
+              "end_price": 107417,
+              "days": 8,
+              "ret_pct": 2.676429,
+              "censored": false
+            },
+            {
+              "start": "2025-08-02",
+              "start_price": 113243,
+              "initial": false,
+              "end": "2025-08-08",
+              "end_price": 117515,
+              "days": 6,
+              "ret_pct": 3.772419,
+              "censored": false
+            },
+            {
+              "start": "2025-08-19",
+              "start_price": 116295,
+              "initial": false,
+              "end": "2025-09-13",
+              "end_price": 116108,
+              "days": 25,
+              "ret_pct": -0.160798,
+              "censored": false
+            },
+            {
+              "start": "2025-09-23",
+              "start_price": 112741,
+              "initial": false,
+              "end": "2025-10-02",
+              "end_price": 118674,
+              "days": 9,
+              "ret_pct": 5.262504,
+              "censored": false
+            },
+            {
+              "start": "2025-10-11",
+              "start_price": 112989,
+              "initial": false,
+              "end": "2026-01-06",
+              "end_price": 93876,
+              "days": 87,
+              "ret_pct": -16.915806,
+              "censored": false
+            },
+            {
+              "start": "2026-01-21",
+              "start_price": 88317,
+              "initial": false,
+              "end": "2026-03-16",
+              "end_price": 72849,
+              "days": 54,
+              "ret_pct": -17.514182,
+              "censored": false
+            },
+            {
+              "start": "2026-03-20",
+              "start_price": 69921,
+              "initial": false,
+              "end": "2026-03-26",
+              "end_price": 71305,
+              "days": 6,
+              "ret_pct": 1.979377,
+              "censored": false
+            },
+            {
+              "start": "2026-03-27",
+              "start_price": 68779,
+              "initial": false,
+              "end": "2026-04-10",
+              "end_price": 71797,
+              "days": 14,
+              "ret_pct": 4.387967,
+              "censored": false
+            },
+            {
+              "start": "2026-05-17",
+              "start_price": 78117,
+              "initial": false,
+              "end": "2026-07-17",
+              "end_price": 63782.65,
+              "days": 61,
+              "ret_pct": -18.349847,
+              "censored": false
+            },
+            {
+              "start": "2026-07-25",
+              "start_price": 64086.59,
+              "initial": false,
+              "end": "2026-07-26",
+              "end_price": 64306.95,
+              "days": 1,
+              "ret_pct": 0.343847,
+              "censored": false
+            },
+            {
+              "start": "2026-07-28",
+              "start_price": 63697.72,
+              "initial": false,
+              "end": "2026-07-31",
+              "end_price": 64716.76,
+              "days": 3,
+              "ret_pct": 1.599806,
+              "censored": false
+            },
+            {
+              "start": "2026-08-01",
+              "start_price": 62817.96,
+              "initial": false,
+              "end": "2026-08-08",
+              "end_price": 64877.77,
+              "days": 7,
+              "ret_pct": 3.279014,
+              "censored": false
+            },
+            {
+              "start": "2026-08-11",
+              "start_price": 63911.15,
+              "initial": false,
+              "end": "2026-08-20",
+              "end_price": 69298.02,
+              "days": 9,
+              "ret_pct": 8.428686,
+              "censored": false
+            },
+            {
+              "start": "2026-09-16",
+              "start_price": 75577.29,
+              "initial": false,
+              "end": "2026-09-17",
+              "end_price": 76138.6,
+              "days": 1,
+              "ret_pct": 0.742697,
+              "censored": false
+            },
+            {
+              "start": "2026-10-09",
+              "start_price": 81676.03,
+              "initial": false,
+              "end": "2026-10-10",
+              "end_price": 82562.21,
+              "days": 1,
+              "ret_pct": 1.084994,
+              "censored": false
+            },
+            {
+              "start": "2026-10-13",
+              "start_price": 81745.85,
+              "initial": false,
+              "end": "2026-10-14",
+              "end_price": 83093.57,
+              "days": 1,
+              "ret_pct": 1.648671,
+              "censored": false
+            },
+            {
+              "start": "2026-10-15",
+              "start_price": 81576.88,
+              "initial": false,
+              "end": "2026-10-21",
+              "end_price": 82946.02,
+              "days": 6,
+              "ret_pct": 1.678343,
+              "censored": false
+            },
+            {
+              "start": "2026-10-23",
+              "start_price": 81303.16,
+              "initial": false,
+              "end": "2026-10-31",
+              "end_price": 77429.98,
+              "days": 9,
+              "ret_pct": -4.763874,
+              "censored": true
+            }
+          ],
+          "trades": [
+            {
+              "date": "2024-01-01",
+              "side": "BUY",
+              "opening_price": 42258
+            },
+            {
+              "date": "2024-01-13",
+              "side": "SELL",
+              "opening_price": 42772
+            },
+            {
+              "date": "2024-02-03",
+              "side": "BUY",
+              "opening_price": 43183
+            },
+            {
+              "date": "2024-03-20",
+              "side": "SELL",
+              "opening_price": 61919
+            },
+            {
+              "date": "2024-03-21",
+              "side": "BUY",
+              "opening_price": 67842
+            },
+            {
+              "date": "2024-04-03",
+              "side": "SELL",
+              "opening_price": 65471
+            },
+            {
+              "date": "2024-04-05",
+              "side": "BUY",
+              "opening_price": 68522
+            },
+            {
+              "date": "2024-04-13",
+              "side": "SELL",
+              "opening_price": 67146
+            },
+            {
+              "date": "2024-05-18",
+              "side": "BUY",
+              "opening_price": 67059
+            },
+            {
+              "date": "2024-06-12",
+              "side": "SELL",
+              "opening_price": 67306
+            },
+            {
+              "date": "2024-06-13",
+              "side": "BUY",
+              "opening_price": 68240
+            },
+            {
+              "date": "2024-06-14",
+              "side": "SELL",
+              "opening_price": 66765
+            },
+            {
+              "date": "2024-07-19",
+              "side": "BUY",
+              "opening_price": 63977
+            },
+            {
+              "date": "2024-08-03",
+              "side": "SELL",
+              "opening_price": 61419
+            },
+            {
+              "date": "2024-08-25",
+              "side": "BUY",
+              "opening_price": 64176
+            },
+            {
+              "date": "2024-08-28",
+              "side": "SELL",
+              "opening_price": 59433
+            },
+            {
+              "date": "2024-09-19",
+              "side": "BUY",
+              "opening_price": 61765
+            },
+            {
+              "date": "2024-10-02",
+              "side": "SELL",
+              "opening_price": 60760
+            },
+            {
+              "date": "2024-10-05",
+              "side": "BUY",
+              "opening_price": 62080
+            },
+            {
+              "date": "2024-10-10",
+              "side": "SELL",
+              "opening_price": 60589
+            },
+            {
+              "date": "2024-10-12",
+              "side": "BUY",
+              "opening_price": 62511
+            },
+            {
+              "date": "2024-12-23",
+              "side": "SELL",
+              "opening_price": 95100
+            },
+            {
+              "date": "2024-12-25",
+              "side": "BUY",
+              "opening_price": 98637
+            },
+            {
+              "date": "2024-12-27",
+              "side": "SELL",
+              "opening_price": 95666
+            },
+            {
+              "date": "2025-01-05",
+              "side": "BUY",
+              "opening_price": 98218
+            },
+            {
+              "date": "2025-01-09",
+              "side": "SELL",
+              "opening_price": 95034
+            },
+            {
+              "date": "2025-01-16",
+              "side": "BUY",
+              "opening_price": 100512
+            },
+            {
+              "date": "2025-02-02",
+              "side": "SELL",
+              "opening_price": 100638
+            },
+            {
+              "date": "2025-02-04",
+              "side": "BUY",
+              "opening_price": 101456
+            },
+            {
+              "date": "2025-02-05",
+              "side": "SELL",
+              "opening_price": 97809
+            },
+            {
+              "date": "2025-04-21",
+              "side": "BUY",
+              "opening_price": 85197
+            },
+            {
+              "date": "2025-06-06",
+              "side": "SELL",
+              "opening_price": 101558
+            },
+            {
+              "date": "2025-06-07",
+              "side": "BUY",
+              "opening_price": 104416
+            },
+            {
+              "date": "2025-06-18",
+              "side": "SELL",
+              "opening_price": 104617
+            },
+            {
+              "date": "2025-06-26",
+              "side": "BUY",
+              "opening_price": 107417
+            },
+            {
+              "date": "2025-08-02",
+              "side": "SELL",
+              "opening_price": 113243
+            },
+            {
+              "date": "2025-08-08",
+              "side": "BUY",
+              "opening_price": 117515
+            },
+            {
+              "date": "2025-08-19",
+              "side": "SELL",
+              "opening_price": 116295
+            },
+            {
+              "date": "2025-09-13",
+              "side": "BUY",
+              "opening_price": 116108
+            },
+            {
+              "date": "2025-09-23",
+              "side": "SELL",
+              "opening_price": 112741
+            },
+            {
+              "date": "2025-10-02",
+              "side": "BUY",
+              "opening_price": 118674
+            },
+            {
+              "date": "2025-10-11",
+              "side": "SELL",
+              "opening_price": 112989
+            },
+            {
+              "date": "2026-01-06",
+              "side": "BUY",
+              "opening_price": 93876
+            },
+            {
+              "date": "2026-01-21",
+              "side": "SELL",
+              "opening_price": 88317
+            },
+            {
+              "date": "2026-03-16",
+              "side": "BUY",
+              "opening_price": 72849
+            },
+            {
+              "date": "2026-03-20",
+              "side": "SELL",
+              "opening_price": 69921
+            },
+            {
+              "date": "2026-03-26",
+              "side": "BUY",
+              "opening_price": 71305
+            },
+            {
+              "date": "2026-03-27",
+              "side": "SELL",
+              "opening_price": 68779
+            },
+            {
+              "date": "2026-04-10",
+              "side": "BUY",
+              "opening_price": 71797
+            },
+            {
+              "date": "2026-05-17",
+              "side": "SELL",
+              "opening_price": 78117
+            },
+            {
+              "date": "2026-07-17",
+              "side": "BUY",
+              "opening_price": 63782.65
+            },
+            {
+              "date": "2026-07-25",
+              "side": "SELL",
+              "opening_price": 64086.59
+            },
+            {
+              "date": "2026-07-26",
+              "side": "BUY",
+              "opening_price": 64306.95
+            },
+            {
+              "date": "2026-07-28",
+              "side": "SELL",
+              "opening_price": 63697.72
+            },
+            {
+              "date": "2026-07-31",
+              "side": "BUY",
+              "opening_price": 64716.76
+            },
+            {
+              "date": "2026-08-01",
+              "side": "SELL",
+              "opening_price": 62817.96
+            },
+            {
+              "date": "2026-08-08",
+              "side": "BUY",
+              "opening_price": 64877.77
+            },
+            {
+              "date": "2026-08-11",
+              "side": "SELL",
+              "opening_price": 63911.15
+            },
+            {
+              "date": "2026-08-20",
+              "side": "BUY",
+              "opening_price": 69298.02
+            },
+            {
+              "date": "2026-09-16",
+              "side": "SELL",
+              "opening_price": 75577.29
+            },
+            {
+              "date": "2026-09-17",
+              "side": "BUY",
+              "opening_price": 76138.6
+            },
+            {
+              "date": "2026-10-09",
+              "side": "SELL",
+              "opening_price": 81676.03
+            },
+            {
+              "date": "2026-10-10",
+              "side": "BUY",
+              "opening_price": 82562.21
+            },
+            {
+              "date": "2026-10-13",
+              "side": "SELL",
+              "opening_price": 81745.85
+            },
+            {
+              "date": "2026-10-14",
+              "side": "BUY",
+              "opening_price": 83093.57
+            },
+            {
+              "date": "2026-10-15",
+              "side": "SELL",
+              "opening_price": 81576.88
+            },
+            {
+              "date": "2026-10-21",
+              "side": "BUY",
+              "opening_price": 82946.02
+            },
+            {
+              "date": "2026-10-23",
+              "side": "SELL",
+              "opening_price": 81303.16
+            }
+          ]
+        },
+        "gate": {
+          "return_pct": 83.728801,
+          "final_usd": 1837.288014,
+          "gross_no_cost_return_pct": 107.161938,
+          "cost_penalty_percentage_points": 23.433137,
+          "stress_double_cost_return_pct": 62.933241,
+          "max_drawdown_pct": -28.358172,
+          "transactions": 80,
+          "exposed_days": 400,
+          "cash_days": 635,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 63.265115,
+              "exposed_days": 178,
+              "cash_days": 188
+            },
+            "2025": {
+              "return_pct": 12.948645,
+              "exposed_days": 119,
+              "cash_days": 246
+            },
+            "2026": {
+              "return_pct": -0.36709,
+              "exposed_days": 103,
+              "cash_days": 201
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.130602,
+          "cash_log_missed_upside": 0.851219,
+          "cash_log_avoided_downside": -0.973969,
+          "windows_summary": {
+            "completed": 39,
+            "positive": 28,
+            "negative": 11,
+            "rise_ge_3_pct": 14,
+            "decline_le_minus_3_pct": 5,
+            "quick_reentry_le_7_days": 17,
+            "best_avoided_decline": {
+              "start": "2026-01-20",
+              "start_price": 92559,
+              "initial": false,
+              "end": "2026-03-16",
+              "end_price": 72849,
+              "days": 55,
+              "ret_pct": -21.294526,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2026-08-11",
+              "start_price": 63911.15,
+              "initial": false,
+              "end": "2026-08-20",
+              "end_price": 69298.02,
+              "days": 9,
+              "ret_pct": 8.428686,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        },
+        "c2": {
+          "return_pct": 50.488131,
+          "final_usd": 1504.881307,
+          "gross_no_cost_return_pct": 61.726758,
+          "cost_penalty_percentage_points": 11.238627,
+          "stress_double_cost_return_pct": 40.023755,
+          "max_drawdown_pct": -36.054689,
+          "transactions": 48,
+          "exposed_days": 492,
+          "cash_days": 543,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 56.094367,
+              "exposed_days": 218,
+              "cash_days": 148
+            },
+            "2025": {
+              "return_pct": -2.666689,
+              "exposed_days": 146,
+              "cash_days": 219
+            },
+            "2026": {
+              "return_pct": -0.950218,
+              "exposed_days": 128,
+              "cash_days": 176
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 0.882636,
+          "cash_log_missed_upside": 0.816897,
+          "cash_log_avoided_downside": -0.692055,
+          "windows_summary": {
+            "completed": 23,
+            "positive": 19,
+            "negative": 4,
+            "rise_ge_3_pct": 11,
+            "decline_le_minus_3_pct": 4,
+            "quick_reentry_le_7_days": 7,
+            "best_avoided_decline": {
+              "start": "2026-05-18",
+              "start_price": 77419,
+              "initial": false,
+              "end": "2026-07-18",
+              "end_price": 63891.98,
+              "days": 61,
+              "ret_pct": -17.472481,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2026-08-12",
+              "start_price": 63539.69,
+              "initial": false,
+              "end": "2026-08-21",
+              "end_price": 73000.01,
+              "days": 9,
+              "ret_pct": 14.888836,
+              "censored": false
+            },
+            "censored_at_end": 1
+          },
+          "windows": [
+            {
+              "start": "2024-01-14",
+              "start_price": 42834,
+              "initial": false,
+              "end": "2024-02-04",
+              "end_price": 42991,
+              "days": 21,
+              "ret_pct": 0.366531,
+              "censored": false
+            },
+            {
+              "start": "2024-04-04",
+              "start_price": 65984,
+              "initial": false,
+              "end": "2024-04-06",
+              "end_price": 67851,
+              "days": 2,
+              "ret_pct": 2.829474,
+              "censored": false
+            },
+            {
+              "start": "2024-04-14",
+              "start_price": 64039,
+              "initial": false,
+              "end": "2024-05-19",
+              "end_price": 66923,
+              "days": 35,
+              "ret_pct": 4.503506,
+              "censored": false
+            },
+            {
+              "start": "2024-06-15",
+              "start_price": 65995,
+              "initial": false,
+              "end": "2024-07-20",
+              "end_price": 66705,
+              "days": 35,
+              "ret_pct": 1.075839,
+              "censored": false
+            },
+            {
+              "start": "2024-08-04",
+              "start_price": 60669,
+              "initial": false,
+              "end": "2024-08-26",
+              "end_price": 64248,
+              "days": 22,
+              "ret_pct": 5.899224,
+              "censored": false
+            },
+            {
+              "start": "2024-08-29",
+              "start_price": 59033,
+              "initial": false,
+              "end": "2024-09-20",
+              "end_price": 62950,
+              "days": 22,
+              "ret_pct": 6.635272,
+              "censored": false
+            },
+            {
+              "start": "2024-10-03",
+              "start_price": 60627,
+              "initial": false,
+              "end": "2024-10-06",
+              "end_price": 62057,
+              "days": 3,
+              "ret_pct": 2.358685,
+              "censored": false
+            },
+            {
+              "start": "2024-10-11",
+              "start_price": 60278,
+              "initial": false,
+              "end": "2024-10-13",
+              "end_price": 63193,
+              "days": 2,
+              "ret_pct": 4.835927,
+              "censored": false
+            },
+            {
+              "start": "2024-12-24",
+              "start_price": 94750,
+              "initial": false,
+              "end": "2024-12-26",
+              "end_price": 99357,
+              "days": 2,
+              "ret_pct": 4.862269,
+              "censored": false
+            },
+            {
+              "start": "2024-12-28",
+              "start_price": 94159,
+              "initial": false,
+              "end": "2025-01-06",
+              "end_price": 98389,
+              "days": 9,
+              "ret_pct": 4.492401,
+              "censored": false
+            },
+            {
+              "start": "2025-01-10",
+              "start_price": 92545,
+              "initial": false,
+              "end": "2025-01-17",
+              "end_price": 99975,
+              "days": 7,
+              "ret_pct": 8.028527,
+              "censored": false
+            },
+            {
+              "start": "2025-02-03",
+              "start_price": 97670,
+              "initial": false,
+              "end": "2025-04-22",
+              "end_price": 87505,
+              "days": 78,
+              "ret_pct": -10.407495,
+              "censored": false
+            },
+            {
+              "start": "2025-06-19",
+              "start_price": 104922,
+              "initial": false,
+              "end": "2025-06-27",
+              "end_price": 107005,
+              "days": 8,
+              "ret_pct": 1.985284,
+              "censored": false
+            },
+            {
+              "start": "2025-08-03",
+              "start_price": 112522,
+              "initial": false,
+              "end": "2025-08-09",
+              "end_price": 116675,
+              "days": 6,
+              "ret_pct": 3.690834,
+              "censored": false
+            },
+            {
+              "start": "2025-08-20",
+              "start_price": 112870,
+              "initial": false,
+              "end": "2025-09-14",
+              "end_price": 115980,
+              "days": 25,
+              "ret_pct": 2.755382,
+              "censored": false
+            },
+            {
+              "start": "2025-09-24",
+              "start_price": 112025,
+              "initial": false,
+              "end": "2025-10-03",
+              "end_price": 120645,
+              "days": 9,
+              "ret_pct": 7.694711,
+              "censored": false
+            },
+            {
+              "start": "2025-10-12",
+              "start_price": 110769,
+              "initial": false,
+              "end": "2026-01-07",
+              "end_price": 93712,
+              "days": 87,
+              "ret_pct": -15.398713,
+              "censored": false
+            },
+            {
+              "start": "2026-01-22",
+              "start_price": 89373,
+              "initial": false,
+              "end": "2026-03-17",
+              "end_price": 74884,
+              "days": 54,
+              "ret_pct": -16.211831,
+              "censored": false
+            },
+            {
+              "start": "2026-03-21",
+              "start_price": 70498,
+              "initial": false,
+              "end": "2026-04-11",
+              "end_price": 72980,
+              "days": 21,
+              "ret_pct": 3.520667,
+              "censored": false
+            },
+            {
+              "start": "2026-05-18",
+              "start_price": 77419,
+              "initial": false,
+              "end": "2026-07-18",
+              "end_price": 63891.98,
+              "days": 61,
+              "ret_pct": -17.472481,
+              "censored": false
+            },
+            {
+              "start": "2026-07-29",
+              "start_price": 63849.63,
+              "initial": false,
+              "end": "2026-08-09",
+              "end_price": 64908.72,
+              "days": 11,
+              "ret_pct": 1.658725,
+              "censored": false
+            },
+            {
+              "start": "2026-08-12",
+              "start_price": 63539.69,
+              "initial": false,
+              "end": "2026-08-21",
+              "end_price": 73000.01,
+              "days": 9,
+              "ret_pct": 14.888836,
+              "censored": false
+            },
+            {
+              "start": "2026-10-16",
+              "start_price": 82131.11,
+              "initial": false,
+              "end": "2026-10-22",
+              "end_price": 84023.25,
+              "days": 6,
+              "ret_pct": 2.303804,
+              "censored": false
+            },
+            {
+              "start": "2026-10-24",
+              "start_price": 81076.46,
+              "initial": false,
+              "end": "2026-10-31",
+              "end_price": 77429.98,
+              "days": 8,
+              "ret_pct": -4.497582,
+              "censored": true
+            }
+          ]
+        },
+        "c3": {
+          "return_pct": 53.324744,
+          "final_usd": 1533.247438,
+          "gross_no_cost_return_pct": 62.809075,
+          "cost_penalty_percentage_points": 9.484331,
+          "stress_double_cost_return_pct": 44.387127,
+          "max_drawdown_pct": -33.253751,
+          "transactions": 40,
+          "exposed_days": 500,
+          "cash_days": 535,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 77.470051,
+              "exposed_days": 225,
+              "cash_days": 141
+            },
+            "2025": {
+              "return_pct": -8.883537,
+              "exposed_days": 149,
+              "cash_days": 216
+            },
+            "2026": {
+              "return_pct": -5.182103,
+              "exposed_days": 126,
+              "cash_days": 178
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 0.888543,
+          "cash_log_missed_upside": 0.796502,
+          "cash_log_avoided_downside": -0.67833,
+          "windows_summary": {
+            "completed": 19,
+            "positive": 15,
+            "negative": 4,
+            "rise_ge_3_pct": 8,
+            "decline_le_minus_3_pct": 4,
+            "quick_reentry_le_7_days": 3,
+            "best_avoided_decline": {
+              "start": "2025-10-13",
+              "start_price": 115089,
+              "initial": false,
+              "end": "2026-01-08",
+              "end_price": 91273,
+              "days": 87,
+              "ret_pct": -20.69355,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2026-08-13",
+              "start_price": 63406.33,
+              "initial": false,
+              "end": "2026-08-22",
+              "end_price": 78325.29,
+              "days": 9,
+              "ret_pct": 23.529133,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        },
+        "e1n2": {
+          "return_pct": 59.057368,
+          "final_usd": 1590.573683,
+          "gross_no_cost_return_pct": 73.520191,
+          "cost_penalty_percentage_points": 14.462823,
+          "stress_double_cost_return_pct": 45.79154,
+          "max_drawdown_pct": -34.321296,
+          "transactions": 58,
+          "exposed_days": 454,
+          "cash_days": 581,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 63.256733,
+              "exposed_days": 204,
+              "cash_days": 162
+            },
+            "2025": {
+              "return_pct": 4.793447,
+              "exposed_days": 137,
+              "cash_days": 228
+            },
+            "2026": {
+              "return_pct": -7.028773,
+              "exposed_days": 113,
+              "cash_days": 191
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 0.947,
+          "cash_log_missed_upside": 0.81118,
+          "cash_log_avoided_downside": -0.756724,
+          "windows_summary": {
+            "completed": 28,
+            "positive": 21,
+            "negative": 7,
+            "rise_ge_3_pct": 12,
+            "decline_le_minus_3_pct": 4,
+            "quick_reentry_le_7_days": 10,
+            "best_avoided_decline": {
+              "start": "2026-05-17",
+              "start_price": 78117,
+              "initial": false,
+              "end": "2026-07-18",
+              "end_price": 63891.98,
+              "days": 62,
+              "ret_pct": -18.20989,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2026-08-11",
+              "start_price": 63911.15,
+              "initial": false,
+              "end": "2026-08-21",
+              "end_price": 73000.01,
+              "days": 10,
+              "ret_pct": 14.221087,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        }
+      },
+      "ETH": {
+        "hold": {
+          "return_pct": -1.619464,
+          "final_usd": 983.805358,
+          "gross_no_cost_return_pct": -1.323781,
+          "cost_penalty_percentage_points": 0.295683,
+          "stress_double_cost_return_pct": -1.914458,
+          "max_drawdown_pct": -67.590691,
+          "transactions": 1,
+          "exposed_days": 1035,
+          "cash_days": 0,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 45.537783,
+              "exposed_days": 366,
+              "cash_days": 0
+            },
+            "2025": {
+              "return_pct": -10.947078,
+              "exposed_days": 365,
+              "cash_days": 0
+            },
+            "2026": {
+              "return_pct": -24.092401,
+              "exposed_days": 304,
+              "cash_days": 0
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1,
+          "cash_log_missed_upside": 0,
+          "cash_log_avoided_downside": 0,
+          "windows_summary": {
+            "completed": 0,
+            "positive": 0,
+            "negative": 0,
+            "rise_ge_3_pct": 0,
+            "decline_le_minus_3_pct": 0,
+            "quick_reentry_le_7_days": 0,
+            "best_avoided_decline": null,
+            "worst_missed_rise": null,
+            "censored_at_end": 0
+          }
+        },
+        "fast": {
+          "return_pct": 62.863822,
+          "final_usd": 1628.638224,
+          "gross_no_cost_return_pct": 89.230234,
+          "cost_penalty_percentage_points": 26.366412,
+          "stress_double_cost_return_pct": 40.157129,
+          "max_drawdown_pct": -45.596272,
+          "transactions": 100,
+          "exposed_days": 419,
+          "cash_days": 616,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 46.734598,
+              "exposed_days": 152,
+              "cash_days": 214
+            },
+            "2025": {
+              "return_pct": 3.730819,
+              "exposed_days": 130,
+              "cash_days": 235
+            },
+            "2026": {
+              "return_pct": 7.000126,
+              "exposed_days": 137,
+              "cash_days": 167
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.917688,
+          "cash_log_missed_upside": 1.356909,
+          "cash_log_avoided_downside": -2.00803,
+          "windows_summary": {
+            "completed": 49,
+            "positive": 34,
+            "negative": 15,
+            "rise_ge_3_pct": 18,
+            "decline_le_minus_3_pct": 12,
+            "quick_reentry_le_7_days": 27,
+            "best_avoided_decline": {
+              "start": "2026-01-20",
+              "start_price": 3186.64,
+              "initial": false,
+              "end": "2026-03-05",
+              "end_price": 2128.31,
+              "days": 44,
+              "ret_pct": -33.21147,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2025-08-22",
+              "start_price": 4223.7,
+              "initial": false,
+              "end": "2025-08-23",
+              "end_price": 4829.5,
+              "days": 1,
+              "ret_pct": 14.342875,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        },
+        "slow": {
+          "return_pct": 89.548633,
+          "final_usd": 1895.486331,
+          "gross_no_cost_return_pct": 105.546575,
+          "cost_penalty_percentage_points": 15.997942,
+          "stress_double_cost_return_pct": 74.786371,
+          "max_drawdown_pct": -54.100527,
+          "transactions": 54,
+          "exposed_days": 442,
+          "cash_days": 593,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": -10.070465,
+              "exposed_days": 162,
+              "cash_days": 204
+            },
+            "2025": {
+              "return_pct": 94.630317,
+              "exposed_days": 135,
+              "cash_days": 230
+            },
+            "2026": {
+              "return_pct": 8.294854,
+              "exposed_days": 145,
+              "cash_days": 159
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 2.083041,
+          "cash_log_missed_upside": 1.0506,
+          "cash_log_avoided_downside": -1.784428,
+          "windows_summary": {
+            "completed": 26,
+            "positive": 20,
+            "negative": 6,
+            "rise_ge_3_pct": 13,
+            "decline_le_minus_3_pct": 5,
+            "quick_reentry_le_7_days": 13,
+            "best_avoided_decline": {
+              "start": "2025-01-08",
+              "start_price": 3379.7,
+              "initial": false,
+              "end": "2025-04-30",
+              "end_price": 1798.1,
+              "days": 112,
+              "ret_pct": -46.797053,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2024-11-01",
+              "start_price": 2514,
+              "initial": false,
+              "end": "2024-11-08",
+              "end_price": 2897.8,
+              "days": 7,
+              "ret_pct": 15.266508,
+              "censored": false
+            },
+            "censored_at_end": 1
+          },
+          "windows": [
+            {
+              "start": "2024-01-04",
+              "start_price": 2209.2,
+              "initial": false,
+              "end": "2024-01-05",
+              "end_price": 2271.1,
+              "days": 1,
+              "ret_pct": 2.801919,
+              "censored": false
+            },
+            {
+              "start": "2024-01-07",
+              "start_price": 2241.7,
+              "initial": false,
+              "end": "2024-01-09",
+              "end_price": 2333.5,
+              "days": 2,
+              "ret_pct": 4.095106,
+              "censored": false
+            },
+            {
+              "start": "2024-01-23",
+              "start_price": 2310.8,
+              "initial": false,
+              "end": "2024-02-09",
+              "end_price": 2420.1,
+              "days": 17,
+              "ret_pct": 4.729964,
+              "censored": false
+            },
+            {
+              "start": "2024-03-20",
+              "start_price": 3157,
+              "initial": false,
+              "end": "2024-03-21",
+              "end_price": 3516.6,
+              "days": 1,
+              "ret_pct": 11.390561,
+              "censored": false
+            },
+            {
+              "start": "2024-03-23",
+              "start_price": 3336.3,
+              "initial": false,
+              "end": "2024-03-25",
+              "end_price": 3458.7,
+              "days": 2,
+              "ret_pct": 3.668735,
+              "censored": false
+            },
+            {
+              "start": "2024-04-03",
+              "start_price": 3281.3,
+              "initial": false,
+              "end": "2024-04-09",
+              "end_price": 3695.5,
+              "days": 6,
+              "ret_pct": 12.623046,
+              "censored": false
+            },
+            {
+              "start": "2024-04-13",
+              "start_price": 3237.5,
+              "initial": false,
+              "end": "2024-05-21",
+              "end_price": 3667.4,
+              "days": 38,
+              "ret_pct": 13.278764,
+              "censored": false
+            },
+            {
+              "start": "2024-06-12",
+              "start_price": 3497,
+              "initial": false,
+              "end": "2024-06-17",
+              "end_price": 3622.2,
+              "days": 5,
+              "ret_pct": 3.580212,
+              "censored": false
+            },
+            {
+              "start": "2024-06-18",
+              "start_price": 3510.1,
+              "initial": false,
+              "end": "2024-07-20",
+              "end_price": 3506.2,
+              "days": 32,
+              "ret_pct": -0.111108,
+              "censored": false
+            },
+            {
+              "start": "2024-07-25",
+              "start_price": 3335.3,
+              "initial": false,
+              "end": "2024-09-24",
+              "end_price": 2647.1,
+              "days": 61,
+              "ret_pct": -20.633826,
+              "censored": false
+            },
+            {
+              "start": "2024-10-02",
+              "start_price": 2446.3,
+              "initial": false,
+              "end": "2024-10-16",
+              "end_price": 2606.7,
+              "days": 14,
+              "ret_pct": 6.556841,
+              "censored": false
+            },
+            {
+              "start": "2024-10-24",
+              "start_price": 2522.4,
+              "initial": false,
+              "end": "2024-10-29",
+              "end_price": 2565.3,
+              "days": 5,
+              "ret_pct": 1.700761,
+              "censored": false
+            },
+            {
+              "start": "2024-11-01",
+              "start_price": 2514,
+              "initial": false,
+              "end": "2024-11-08",
+              "end_price": 2897.8,
+              "days": 7,
+              "ret_pct": 15.266508,
+              "censored": false
+            },
+            {
+              "start": "2024-12-19",
+              "start_price": 3624.9,
+              "initial": false,
+              "end": "2025-01-06",
+              "end_price": 3635.9,
+              "days": 18,
+              "ret_pct": 0.303457,
+              "censored": false
+            },
+            {
+              "start": "2025-01-08",
+              "start_price": 3379.7,
+              "initial": false,
+              "end": "2025-04-30",
+              "end_price": 1798.1,
+              "days": 112,
+              "ret_pct": -46.797053,
+              "censored": false
+            },
+            {
+              "start": "2025-06-06",
+              "start_price": 2415.3,
+              "initial": false,
+              "end": "2025-06-07",
+              "end_price": 2478.3,
+              "days": 1,
+              "ret_pct": 2.608372,
+              "censored": false
+            },
+            {
+              "start": "2025-06-18",
+              "start_price": 2510.4,
+              "initial": false,
+              "end": "2025-07-04",
+              "end_price": 2592.5,
+              "days": 16,
+              "ret_pct": 3.270395,
+              "censored": false
+            },
+            {
+              "start": "2025-09-07",
+              "start_price": 4274.3,
+              "initial": false,
+              "end": "2025-09-08",
+              "end_price": 4304.6,
+              "days": 1,
+              "ret_pct": 0.708888,
+              "censored": false
+            },
+            {
+              "start": "2025-09-23",
+              "start_price": 4202.6,
+              "initial": false,
+              "end": "2025-10-05",
+              "end_price": 4490.61,
+              "days": 12,
+              "ret_pct": 6.853139,
+              "censored": false
+            },
+            {
+              "start": "2025-10-10",
+              "start_price": 4371.11,
+              "initial": false,
+              "end": "2026-01-05",
+              "end_price": 3143.03,
+              "days": 87,
+              "ret_pct": -28.095381,
+              "censored": false
+            },
+            {
+              "start": "2026-01-21",
+              "start_price": 2936.75,
+              "initial": false,
+              "end": "2026-03-17",
+              "end_price": 2352.72,
+              "days": 55,
+              "ret_pct": -19.88695,
+              "censored": false
+            },
+            {
+              "start": "2026-03-22",
+              "start_price": 2083.39,
+              "initial": false,
+              "end": "2026-03-24",
+              "end_price": 2152.18,
+              "days": 2,
+              "ret_pct": 3.30183,
+              "censored": false
+            },
+            {
+              "start": "2026-03-27",
+              "start_price": 2058.8,
+              "initial": false,
+              "end": "2026-04-08",
+              "end_price": 2239.71,
+              "days": 12,
+              "ret_pct": 8.787158,
+              "censored": false
+            },
+            {
+              "start": "2026-04-30",
+              "start_price": 2252.15,
+              "initial": false,
+              "end": "2026-05-02",
+              "end_price": 2295.38,
+              "days": 2,
+              "ret_pct": 1.919499,
+              "censored": false
+            },
+            {
+              "start": "2026-05-13",
+              "start_price": 2274.43,
+              "initial": false,
+              "end": "2026-07-11",
+              "end_price": 1795.73,
+              "days": 59,
+              "ret_pct": -21.047032,
+              "censored": false
+            },
+            {
+              "start": "2026-08-02",
+              "start_price": 1843.34,
+              "initial": false,
+              "end": "2026-08-03",
+              "end_price": 1883.4,
+              "days": 1,
+              "ret_pct": 2.173229,
+              "censored": false
+            },
+            {
+              "start": "2026-10-08",
+              "start_price": 2572.95,
+              "initial": false,
+              "end": "2026-10-31",
+              "end_price": 2251.89,
+              "days": 24,
+              "ret_pct": -12.478284,
+              "censored": true
+            }
+          ],
+          "trades": [
+            {
+              "date": "2024-01-01",
+              "side": "BUY",
+              "opening_price": 2282.1
+            },
+            {
+              "date": "2024-01-04",
+              "side": "SELL",
+              "opening_price": 2209.2
+            },
+            {
+              "date": "2024-01-05",
+              "side": "BUY",
+              "opening_price": 2271.1
+            },
+            {
+              "date": "2024-01-07",
+              "side": "SELL",
+              "opening_price": 2241.7
+            },
+            {
+              "date": "2024-01-09",
+              "side": "BUY",
+              "opening_price": 2333.5
+            },
+            {
+              "date": "2024-01-23",
+              "side": "SELL",
+              "opening_price": 2310.8
+            },
+            {
+              "date": "2024-02-09",
+              "side": "BUY",
+              "opening_price": 2420.1
+            },
+            {
+              "date": "2024-03-20",
+              "side": "SELL",
+              "opening_price": 3157
+            },
+            {
+              "date": "2024-03-21",
+              "side": "BUY",
+              "opening_price": 3516.6
+            },
+            {
+              "date": "2024-03-23",
+              "side": "SELL",
+              "opening_price": 3336.3
+            },
+            {
+              "date": "2024-03-25",
+              "side": "BUY",
+              "opening_price": 3458.7
+            },
+            {
+              "date": "2024-04-03",
+              "side": "SELL",
+              "opening_price": 3281.3
+            },
+            {
+              "date": "2024-04-09",
+              "side": "BUY",
+              "opening_price": 3695.5
+            },
+            {
+              "date": "2024-04-13",
+              "side": "SELL",
+              "opening_price": 3237.5
+            },
+            {
+              "date": "2024-05-21",
+              "side": "BUY",
+              "opening_price": 3667.4
+            },
+            {
+              "date": "2024-06-12",
+              "side": "SELL",
+              "opening_price": 3497
+            },
+            {
+              "date": "2024-06-17",
+              "side": "BUY",
+              "opening_price": 3622.2
+            },
+            {
+              "date": "2024-06-18",
+              "side": "SELL",
+              "opening_price": 3510.1
+            },
+            {
+              "date": "2024-07-20",
+              "side": "BUY",
+              "opening_price": 3506.2
+            },
+            {
+              "date": "2024-07-25",
+              "side": "SELL",
+              "opening_price": 3335.3
+            },
+            {
+              "date": "2024-09-24",
+              "side": "BUY",
+              "opening_price": 2647.1
+            },
+            {
+              "date": "2024-10-02",
+              "side": "SELL",
+              "opening_price": 2446.3
+            },
+            {
+              "date": "2024-10-16",
+              "side": "BUY",
+              "opening_price": 2606.7
+            },
+            {
+              "date": "2024-10-24",
+              "side": "SELL",
+              "opening_price": 2522.4
+            },
+            {
+              "date": "2024-10-29",
+              "side": "BUY",
+              "opening_price": 2565.3
+            },
+            {
+              "date": "2024-11-01",
+              "side": "SELL",
+              "opening_price": 2514
+            },
+            {
+              "date": "2024-11-08",
+              "side": "BUY",
+              "opening_price": 2897.8
+            },
+            {
+              "date": "2024-12-19",
+              "side": "SELL",
+              "opening_price": 3624.9
+            },
+            {
+              "date": "2025-01-06",
+              "side": "BUY",
+              "opening_price": 3635.9
+            },
+            {
+              "date": "2025-01-08",
+              "side": "SELL",
+              "opening_price": 3379.7
+            },
+            {
+              "date": "2025-04-30",
+              "side": "BUY",
+              "opening_price": 1798.1
+            },
+            {
+              "date": "2025-06-06",
+              "side": "SELL",
+              "opening_price": 2415.3
+            },
+            {
+              "date": "2025-06-07",
+              "side": "BUY",
+              "opening_price": 2478.3
+            },
+            {
+              "date": "2025-06-18",
+              "side": "SELL",
+              "opening_price": 2510.4
+            },
+            {
+              "date": "2025-07-04",
+              "side": "BUY",
+              "opening_price": 2592.5
+            },
+            {
+              "date": "2025-09-07",
+              "side": "SELL",
+              "opening_price": 4274.3
+            },
+            {
+              "date": "2025-09-08",
+              "side": "BUY",
+              "opening_price": 4304.6
+            },
+            {
+              "date": "2025-09-23",
+              "side": "SELL",
+              "opening_price": 4202.6
+            },
+            {
+              "date": "2025-10-05",
+              "side": "BUY",
+              "opening_price": 4490.61
+            },
+            {
+              "date": "2025-10-10",
+              "side": "SELL",
+              "opening_price": 4371.11
+            },
+            {
+              "date": "2026-01-05",
+              "side": "BUY",
+              "opening_price": 3143.03
+            },
+            {
+              "date": "2026-01-21",
+              "side": "SELL",
+              "opening_price": 2936.75
+            },
+            {
+              "date": "2026-03-17",
+              "side": "BUY",
+              "opening_price": 2352.72
+            },
+            {
+              "date": "2026-03-22",
+              "side": "SELL",
+              "opening_price": 2083.39
+            },
+            {
+              "date": "2026-03-24",
+              "side": "BUY",
+              "opening_price": 2152.18
+            },
+            {
+              "date": "2026-03-27",
+              "side": "SELL",
+              "opening_price": 2058.8
+            },
+            {
+              "date": "2026-04-08",
+              "side": "BUY",
+              "opening_price": 2239.71
+            },
+            {
+              "date": "2026-04-30",
+              "side": "SELL",
+              "opening_price": 2252.15
+            },
+            {
+              "date": "2026-05-02",
+              "side": "BUY",
+              "opening_price": 2295.38
+            },
+            {
+              "date": "2026-05-13",
+              "side": "SELL",
+              "opening_price": 2274.43
+            },
+            {
+              "date": "2026-07-11",
+              "side": "BUY",
+              "opening_price": 1795.73
+            },
+            {
+              "date": "2026-08-02",
+              "side": "SELL",
+              "opening_price": 1843.34
+            },
+            {
+              "date": "2026-08-03",
+              "side": "BUY",
+              "opening_price": 1883.4
+            },
+            {
+              "date": "2026-10-08",
+              "side": "SELL",
+              "opening_price": 2572.95
+            }
+          ]
+        },
+        "gate": {
+          "return_pct": 48.445115,
+          "final_usd": 1484.451145,
+          "gross_no_cost_return_pct": 67.378099,
+          "cost_penalty_percentage_points": 18.932984,
+          "stress_double_cost_return_pct": 31.64318,
+          "max_drawdown_pct": -49.644111,
+          "transactions": 80,
+          "exposed_days": 353,
+          "cash_days": 682,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": 20.918674,
+              "exposed_days": 133,
+              "cash_days": 233
+            },
+            "2025": {
+              "return_pct": 39.716937,
+              "exposed_days": 103,
+              "cash_days": 262
+            },
+            "2026": {
+              "return_pct": -12.13347,
+              "exposed_days": 117,
+              "cash_days": 187
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.696235,
+          "cash_log_missed_upside": 1.430199,
+          "cash_log_avoided_downside": -1.958611,
+          "windows_summary": {
+            "completed": 39,
+            "positive": 31,
+            "negative": 8,
+            "rise_ge_3_pct": 18,
+            "decline_le_minus_3_pct": 6,
+            "quick_reentry_le_7_days": 24,
+            "best_avoided_decline": {
+              "start": "2025-01-08",
+              "start_price": 3379.7,
+              "initial": false,
+              "end": "2025-04-30",
+              "end_price": 1798.1,
+              "days": 112,
+              "ret_pct": -46.797053,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2024-11-01",
+              "start_price": 2514,
+              "initial": false,
+              "end": "2024-11-08",
+              "end_price": 2897.8,
+              "days": 7,
+              "ret_pct": 15.266508,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        },
+        "c2": {
+          "return_pct": 40.176859,
+          "final_usd": 1401.768585,
+          "gross_no_cost_return_pct": 49.295254,
+          "cost_penalty_percentage_points": 9.118395,
+          "stress_double_cost_return_pct": 31.60984,
+          "max_drawdown_pct": -55.751704,
+          "transactions": 42,
+          "exposed_days": 447,
+          "cash_days": 588,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": -23.326211,
+              "exposed_days": 164,
+              "cash_days": 202
+            },
+            "2025": {
+              "return_pct": 77.037182,
+              "exposed_days": 137,
+              "cash_days": 228
+            },
+            "2026": {
+              "return_pct": 3.267795,
+              "exposed_days": 146,
+              "cash_days": 158
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.512981,
+          "cash_log_missed_upside": 1.151963,
+          "cash_log_avoided_downside": -1.566045,
+          "windows_summary": {
+            "completed": 20,
+            "positive": 13,
+            "negative": 7,
+            "rise_ge_3_pct": 12,
+            "decline_le_minus_3_pct": 5,
+            "quick_reentry_le_7_days": 7,
+            "best_avoided_decline": {
+              "start": "2025-01-09",
+              "start_price": 3326.7,
+              "initial": false,
+              "end": "2025-05-01",
+              "end_price": 1794.1,
+              "days": 112,
+              "ret_pct": -46.069679,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2024-04-14",
+              "start_price": 3012,
+              "initial": false,
+              "end": "2024-05-22",
+              "end_price": 3789.2,
+              "days": 38,
+              "ret_pct": 25.803453,
+              "censored": false
+            },
+            "censored_at_end": 1
+          },
+          "windows": [
+            {
+              "start": "2024-01-08",
+              "start_price": 2222.7,
+              "initial": false,
+              "end": "2024-01-10",
+              "end_price": 2346.7,
+              "days": 2,
+              "ret_pct": 5.578801,
+              "censored": false
+            },
+            {
+              "start": "2024-01-24",
+              "start_price": 2239.8,
+              "initial": false,
+              "end": "2024-02-10",
+              "end_price": 2488,
+              "days": 17,
+              "ret_pct": 11.081347,
+              "censored": false
+            },
+            {
+              "start": "2024-03-24",
+              "start_price": 3329.7,
+              "initial": false,
+              "end": "2024-03-26",
+              "end_price": 3593.6,
+              "days": 2,
+              "ret_pct": 7.925639,
+              "censored": false
+            },
+            {
+              "start": "2024-04-04",
+              "start_price": 3311.4,
+              "initial": false,
+              "end": "2024-04-10",
+              "end_price": 3503.5,
+              "days": 6,
+              "ret_pct": 5.801172,
+              "censored": false
+            },
+            {
+              "start": "2024-04-14",
+              "start_price": 3012,
+              "initial": false,
+              "end": "2024-05-22",
+              "end_price": 3789.2,
+              "days": 38,
+              "ret_pct": 25.803453,
+              "censored": false
+            },
+            {
+              "start": "2024-06-13",
+              "start_price": 3558.9,
+              "initial": false,
+              "end": "2024-07-21",
+              "end_price": 3520.8,
+              "days": 38,
+              "ret_pct": -1.070556,
+              "censored": false
+            },
+            {
+              "start": "2024-07-26",
+              "start_price": 3174.7,
+              "initial": false,
+              "end": "2024-09-25",
+              "end_price": 2653.4,
+              "days": 61,
+              "ret_pct": -16.420449,
+              "censored": false
+            },
+            {
+              "start": "2024-10-03",
+              "start_price": 2363.6,
+              "initial": false,
+              "end": "2024-10-17",
+              "end_price": 2611.2,
+              "days": 14,
+              "ret_pct": 10.475546,
+              "censored": false
+            },
+            {
+              "start": "2024-10-25",
+              "start_price": 2534.1,
+              "initial": false,
+              "end": "2024-10-30",
+              "end_price": 2638,
+              "days": 5,
+              "ret_pct": 4.100075,
+              "censored": false
+            },
+            {
+              "start": "2024-11-02",
+              "start_price": 2510.1,
+              "initial": false,
+              "end": "2024-11-09",
+              "end_price": 2963.6,
+              "days": 7,
+              "ret_pct": 18.067009,
+              "censored": false
+            },
+            {
+              "start": "2024-12-20",
+              "start_price": 3420.7,
+              "initial": false,
+              "end": "2025-01-07",
+              "end_price": 3686.4,
+              "days": 18,
+              "ret_pct": 7.767416,
+              "censored": false
+            },
+            {
+              "start": "2025-01-09",
+              "start_price": 3326.7,
+              "initial": false,
+              "end": "2025-05-01",
+              "end_price": 1794.1,
+              "days": 112,
+              "ret_pct": -46.069679,
+              "censored": false
+            },
+            {
+              "start": "2025-06-19",
+              "start_price": 2525.5,
+              "initial": false,
+              "end": "2025-07-05",
+              "end_price": 2508.6,
+              "days": 16,
+              "ret_pct": -0.669174,
+              "censored": false
+            },
+            {
+              "start": "2025-09-24",
+              "start_price": 4165.3,
+              "initial": false,
+              "end": "2025-10-06",
+              "end_price": 4515.02,
+              "days": 12,
+              "ret_pct": 8.396034,
+              "censored": false
+            },
+            {
+              "start": "2025-10-11",
+              "start_price": 3835.4,
+              "initial": false,
+              "end": "2026-01-06",
+              "end_price": 3224.99,
+              "days": 87,
+              "ret_pct": -15.915159,
+              "censored": false
+            },
+            {
+              "start": "2026-01-22",
+              "start_price": 2979.57,
+              "initial": false,
+              "end": "2026-03-18",
+              "end_price": 2318.4,
+              "days": 55,
+              "ret_pct": -22.190115,
+              "censored": false
+            },
+            {
+              "start": "2026-03-23",
+              "start_price": 2054.85,
+              "initial": false,
+              "end": "2026-03-25",
+              "end_price": 2155.69,
+              "days": 2,
+              "ret_pct": 4.907414,
+              "censored": false
+            },
+            {
+              "start": "2026-03-28",
+              "start_price": 1990.86,
+              "initial": false,
+              "end": "2026-04-09",
+              "end_price": 2189.1,
+              "days": 12,
+              "ret_pct": 9.957506,
+              "censored": false
+            },
+            {
+              "start": "2026-05-01",
+              "start_price": 2256.76,
+              "initial": false,
+              "end": "2026-05-03",
+              "end_price": 2316.72,
+              "days": 2,
+              "ret_pct": 2.656906,
+              "censored": false
+            },
+            {
+              "start": "2026-05-14",
+              "start_price": 2257.31,
+              "initial": false,
+              "end": "2026-07-12",
+              "end_price": 1786.7,
+              "days": 59,
+              "ret_pct": -20.848266,
+              "censored": false
+            },
+            {
+              "start": "2026-10-09",
+              "start_price": 2473.02,
+              "initial": false,
+              "end": "2026-10-31",
+              "end_price": 2251.89,
+              "days": 23,
+              "ret_pct": -8.941699,
+              "censored": true
+            }
+          ]
+        },
+        "c3": {
+          "return_pct": 77.15959,
+          "final_usd": 1771.595902,
+          "gross_no_cost_return_pct": 85.87362,
+          "cost_penalty_percentage_points": 8.71403,
+          "stress_double_cost_return_pct": 68.848672,
+          "max_drawdown_pct": -52.120993,
+          "transactions": 32,
+          "exposed_days": 454,
+          "cash_days": 581,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": -14.116103,
+              "exposed_days": 169,
+              "cash_days": 197
+            },
+            "2025": {
+              "return_pct": 79.593627,
+              "exposed_days": 135,
+              "cash_days": 230
+            },
+            "2026": {
+              "return_pct": 14.858199,
+              "exposed_days": 150,
+              "cash_days": 154
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.883672,
+          "cash_log_missed_upside": 0.996333,
+          "cash_log_avoided_downside": -1.629556,
+          "windows_summary": {
+            "completed": 15,
+            "positive": 9,
+            "negative": 6,
+            "rise_ge_3_pct": 8,
+            "decline_le_minus_3_pct": 5,
+            "quick_reentry_le_7_days": 3,
+            "best_avoided_decline": {
+              "start": "2024-12-21",
+              "start_price": 3468.8,
+              "initial": false,
+              "end": "2025-05-02",
+              "end_price": 1838.2,
+              "days": 132,
+              "ret_pct": -47.007611,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2024-11-03",
+              "start_price": 2492.9,
+              "initial": false,
+              "end": "2024-11-10",
+              "end_price": 3127.9,
+              "days": 7,
+              "ret_pct": 25.472341,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        },
+        "e1n2": {
+          "return_pct": 79.881625,
+          "final_usd": 1798.816247,
+          "gross_no_cost_return_pct": 94.479161,
+          "cost_penalty_percentage_points": 14.597536,
+          "stress_double_cost_return_pct": 66.371104,
+          "max_drawdown_pct": -54.67316,
+          "transactions": 52,
+          "exposed_days": 416,
+          "cash_days": 619,
+          "yearly_continuous": {
+            "2024": {
+              "return_pct": -15.96843,
+              "exposed_days": 149,
+              "cash_days": 217
+            },
+            "2025": {
+              "return_pct": 93.949822,
+              "exposed_days": 129,
+              "cash_days": 236
+            },
+            "2026": {
+              "return_pct": 10.370989,
+              "exposed_days": 138,
+              "cash_days": 166
+            }
+          },
+          "cash_timing_gross_relative_to_hold": 1.970882,
+          "cash_log_missed_upside": 1.099396,
+          "cash_log_avoided_downside": -1.777877,
+          "windows_summary": {
+            "completed": 25,
+            "positive": 19,
+            "negative": 6,
+            "rise_ge_3_pct": 13,
+            "decline_le_minus_3_pct": 5,
+            "quick_reentry_le_7_days": 11,
+            "best_avoided_decline": {
+              "start": "2025-01-08",
+              "start_price": 3379.7,
+              "initial": false,
+              "end": "2025-05-01",
+              "end_price": 1794.1,
+              "days": 113,
+              "ret_pct": -46.915407,
+              "censored": false
+            },
+            "worst_missed_rise": {
+              "start": "2024-11-01",
+              "start_price": 2514,
+              "initial": false,
+              "end": "2024-11-09",
+              "end_price": 2963.6,
+              "days": 8,
+              "ret_pct": 17.88385,
+              "censored": false
+            },
+            "censored_at_end": 1
+          }
+        }
+      }
+    },
+    "dual_50_50_initial_unrebalanced": {
+      "hold": {
+        "capital_usd": 1405.315061,
+        "return_pct": 40.531506,
+        "max_drawdown_pct": -58.584541,
+        "transactions": 2,
+        "stress_double_cost_return_pct": 40.110123,
+        "yearly_continuous": {
+          "2024": 82.926949,
+          "2025": -8.149909,
+          "2026": -16.359538
+        }
+      },
+      "fast": {
+        "capital_usd": 1830.752718,
+        "return_pct": 83.075272,
+        "max_drawdown_pct": -33.830214,
+        "transactions": 198,
+        "stress_double_cost_return_pct": 57.813745,
+        "yearly_continuous": {
+          "2024": 59.468734,
+          "2025": 2.654033,
+          "2026": 11.835098
+        }
+      },
+      "slow": {
+        "capital_usd": 1776.652453,
+        "return_pct": 77.665245,
+        "max_drawdown_pct": -42.15057,
+        "transactions": 122,
+        "stress_double_cost_return_pct": 62.238495,
+        "yearly_continuous": {
+          "2024": 26.836132,
+          "2025": 36.594956,
+          "2026": 2.547441
+        }
+      },
+      "gate": {
+        "capital_usd": 1660.86958,
+        "return_pct": 66.086958,
+        "max_drawdown_pct": -36.385697,
+        "transactions": 160,
+        "stress_double_cost_return_pct": 47.288211,
+        "yearly_continuous": {
+          "2024": 42.091895,
+          "2025": 24.33841,
+          "2026": -5.992843
+        }
+      },
+      "c2": {
+        "capital_usd": 1453.324946,
+        "return_pct": 45.332495,
+        "max_drawdown_pct": -43.031981,
+        "transactions": 90,
+        "stress_double_cost_return_pct": 35.816797,
+        "yearly_continuous": {
+          "2024": 16.384078,
+          "2025": 23.587752,
+          "2026": 1.04009
+        }
+      },
+      "c3": {
+        "capital_usd": 1652.42167,
+        "return_pct": 65.242167,
+        "max_drawdown_pct": -37.857837,
+        "transactions": 72,
+        "stress_double_cost_return_pct": 56.617899,
+        "yearly_continuous": {
+          "2024": 31.676974,
+          "2025": 19.970269,
+          "2026": 4.601379
+        }
+      },
+      "e1n2": {
+        "capital_usd": 1694.694965,
+        "return_pct": 69.469497,
+        "max_drawdown_pct": -41.520408,
+        "transactions": 110,
+        "stress_double_cost_return_pct": 56.081322,
+        "yearly_continuous": {
+          "2024": 23.644152,
+          "2025": 35.089867,
+          "2026": 1.460076
+        }
+      }
+    }
+  }
+}
