@@ -15,6 +15,9 @@ on:
 permissions:
   contents: read
 
+env:
+  HB_IMAGE: hummingbot/hummingbot@sha256:b676cb7279ca147b76a510777abf515a0d2f1b17e45a70da4831bb03a587c8e1
+
 jobs:
   actual-hummingbot-offline-data-provider:
     runs-on: ubuntu-latest
@@ -54,11 +57,11 @@ jobs:
       - name: Pull official Hummingbot image, record its exact digest
         run: |
           set -euo pipefail
-          docker pull hummingbot/hummingbot:latest
-          docker image inspect hummingbot/hummingbot:latest \
+          docker pull "$HB_IMAGE"
+          docker image inspect "$HB_IMAGE" \
             --format '{{json .RepoDigests}}' | tee "$RUNNER_TEMP/probe-results/HUMMINGBOT_IMAGE_DIGEST.json"
           test -s "$RUNNER_TEMP/probe-results/HUMMINGBOT_IMAGE_DIGEST.json"
-          docker image inspect hummingbot/hummingbot:latest \
+          docker image inspect "$HB_IMAGE" \
             --format 'IMAGE_ID={{.Id}} COMMIT={{index .Config.Labels "commit"}}' \
             | tee "$RUNNER_TEMP/probe-results/HUMMINGBOT_IMAGE_INFO.txt"
       - name: Import actual Hummingbot backtesting engine and load offline candle cache
@@ -72,11 +75,12 @@ jobs:
             --cpus 2 \
             --pids-limit 256 \
             -e PYTHONDONTWRITEBYTECODE=1 \
+            -e PYTHONPATH=/home/hummingbot \
             -v "$RUNNER_TEMP/normalized:/dataset:ro" \
             -v "$RUNNER_TEMP/probe-results:/results:rw" \
             -v "$PWD/coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE.py:/probe.py:ro" \
             --entrypoint /opt/conda/envs/hummingbot/bin/python \
-            hummingbot/hummingbot:latest /probe.py
+            "$HB_IMAGE" /probe.py
           test -s "$RUNNER_TEMP/probe-results/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE_RESULT.json"
       - name: Publish machine evidence only if actual Hummingbot probe passed
         uses: actions/upload-artifact@v4
