@@ -1,0 +1,90 @@
+name: Seven Heaven real Hummingbot offline candle-provider smoke
+
+on:
+  push:
+    branches: [research/hummingbot-native-engine-candles-20261113]
+    paths:
+      - '.github/workflows/seven-heaven-hummingbot-native-offline-provider-probe.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-hummingbot-native-offline-provider-probe.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE.py'
+
+permissions:
+  contents: read
+
+jobs:
+  actual-hummingbot-offline-data-provider:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - name: Sparse checkout — no account secrets
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /coordination/inter_ai_dialogues/agent_crypto/research/external_bots/
+            /.github/workflows/seven-heaven-hummingbot-native-offline-provider-probe.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify reference Python scripts
+        run: |
+          python -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE.py
+          python -m py_compile coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_FROZEN_BTC_JAN_2026_DATA_GATE.py
+      - name: Download exact public source archive by release, not by market API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/frozen-zip" "$RUNNER_TEMP/normalized" "$RUNNER_TEMP/probe-results"
+          gh release download crypto-spot-bulk-2026-01-1m \
+            --repo BlueAzur-Hub/erith-ia-memory \
+            --pattern BTCUSDT-1m-2026-01.zip \
+            --dir "$RUNNER_TEMP/frozen-zip"
+      - name: Enforce source SHA, 44640 minutes and normalized CSV identity
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_FROZEN_BTC_JAN_2026_DATA_GATE.py \
+            --archive "$RUNNER_TEMP/frozen-zip/BTCUSDT-1m-2026-01.zip" \
+            --output-dir "$RUNNER_TEMP/normalized"
+          echo "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4  $RUNNER_TEMP/normalized/BTCUSDT-1m-2026-01_HUMMINGBOT_CANDLES.csv" | sha256sum --check -
+      - name: Pull official Hummingbot image, record its exact digest
+        run: |
+          set -euo pipefail
+          docker pull hummingbot/hummingbot:latest
+          docker image inspect hummingbot/hummingbot:latest \
+            --format '{{json .RepoDigests}}' | tee "$RUNNER_TEMP/probe-results/HUMMINGBOT_IMAGE_DIGEST.json"
+          test -s "$RUNNER_TEMP/probe-results/HUMMINGBOT_IMAGE_DIGEST.json"
+          docker image inspect hummingbot/hummingbot:latest \
+            --format 'IMAGE_ID={{.Id}} COMMIT={{index .Config.Labels "commit"}}' \
+            | tee "$RUNNER_TEMP/probe-results/HUMMINGBOT_IMAGE_INFO.txt"
+      - name: Import actual Hummingbot backtesting engine and load offline candle cache
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            --network none \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --memory 4g \
+            --cpus 2 \
+            --pids-limit 256 \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -v "$RUNNER_TEMP/normalized:/dataset:ro" \
+            -v "$RUNNER_TEMP/probe-results:/results:rw" \
+            -v "$PWD/coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE.py:/probe.py:ro" \
+            --entrypoint /opt/conda/envs/hummingbot/bin/python \
+            hummingbot/hummingbot:latest /probe.py
+          test -s "$RUNNER_TEMP/probe-results/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE_RESULT.json"
+      - name: Publish machine evidence only if actual Hummingbot probe passed
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_REAL_HUMMINGBOT_OFFLINE_PROVIDER_BTCUSDT_JANUARY_2026
+          path: |
+            ${{ runner.temp }}/probe-results/HUMMINGBOT_IMAGE_DIGEST.json
+            ${{ runner.temp }}/probe-results/HUMMINGBOT_IMAGE_INFO.txt
+            ${{ runner.temp }}/probe-results/SEVEN_HEAVEN_HUMMINGBOT_NATIVE_OFFLINE_PROVIDER_PROBE_RESULT.json
+          retention-days: 14
+          if-no-files-found: error
