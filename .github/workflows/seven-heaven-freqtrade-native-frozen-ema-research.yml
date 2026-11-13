@@ -136,7 +136,8 @@ jobs:
           cd /tmp/seven-freqtrade
           docker pull freqtradeorg/freqtrade:2026.10
           docker image inspect freqtradeorg/freqtrade:2026.10 --format '{{json .RepoDigests}}' > image_digests.json
-          docker run --rm --user "$(id -u):$(id -g)" \
+          chmod -R a+rwX /tmp/seven-freqtrade
+          docker run --rm \
             -v "$PWD:/work" -w /work -e HOME=/work \
             freqtradeorg/freqtrade:2026.10 \
             backtesting --config /work/config.json \
