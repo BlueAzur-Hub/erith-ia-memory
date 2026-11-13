@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V4_1_PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING_V4_OWNER_ACCEPTED",
+  "status": "V4_1_OWNER_FIREFOX_VERIFIED_60_DAY_BTC_USDC",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -150,7 +150,7 @@
     {
       "stage": "C2+",
       "version": "4.1.0",
-      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_ACCEPTED_60_DAY_OKX_RISK_DESK",
       "features": [
         "premium_aether_quant_risk_desk",
         "closed_round_trip_win_rate",
@@ -175,7 +175,9 @@
         "chromium_desktop_mobile_risk_desk_verified": true,
         "real_public_okx_240_candles_verified": true,
         "calculation_and_regression_tests_verified": true,
-        "owner_firefox_verified": false
+        "owner_firefox_verified": true,
+        "owner_quant_risk_desk_verified": true,
+        "owner_60_day_okx_1440_hourly_verified": true
       }
     },
     {
@@ -385,6 +387,37 @@
       },
       "status": "OWNER_UI_CONFIRMED_NOT_INDEPENDENT_SOURCE_BYTES_TEST",
       "orders_real": 0
+    },
+    "owner_v4_1_60_day_btc_usdc_2026_11_13": {
+      "proof_type": "OWNER_SUPPLIED_FIREFOX_SCREENSHOT_AND_INTERFACE_TEXT_NOT_RAW_LOCAL_BYTES",
+      "build": "4.1.0",
+      "exchange": "OKX Spot",
+      "pair": "BTC/USDC",
+      "source_candles": 1440,
+      "source_interval": "1h",
+      "source_end_exclusive_utc": "2026-11-13T08:00:00Z",
+      "source_sha256_visible_prefix": "f9c6373f5c8eb5655cfe826c",
+      "simulation_resolution": "4h",
+      "simulation_bars": 360,
+      "capital_initial_usdc": 10000,
+      "capital_final_usdc": 8708.21,
+      "net_return_pct": -12.92,
+      "max_drawdown_pct": -14.68,
+      "fee_total_usdc": 94.8,
+      "buy_events": 5,
+      "sell_events": 5,
+      "closed_positions": 5,
+      "closed_winners": 0,
+      "realized_pnl_usdc": -1291.79,
+      "unrealized_pnl_usdc": 0,
+      "profit_factor": 0,
+      "time_in_position_pct": 15.6,
+      "strategy": "EMA_CROSS",
+      "ema_fast": 12,
+      "ema_slow": 32,
+      "account_access": false,
+      "orders_real": 0,
+      "note": "Screenshot shows last EMA 4h report. The 'My personal strategy' config was later selected to reveal the editor, without evidence of rerunning the report. Do not confuse selected config with displayed last simulation."
     }
   },
   "safety": {
@@ -397,8 +430,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V4.0.0 owner Firefox PASSED (OKX BTC/USDC 720 1H, personal EMA12/32, seven comparisons). V4.1 published CI-success, NOT owner validated; when convenient back up existing private workspace to another medium, replace only runtime files from one full ZIP, check BUILD 4.1.0; rerun custom 720-candle PAPER scenario and inspect closed vs open PnL and drawdown. No developer files or patch scripts.",
-  "next_developer_task": "Post V4.1 owner acceptance: next V4.2 candlestick chart + safe indicator overlays and signals, explicitly separate historical simulation from live Administrator order book; then V4.3 robustness/walkforward and V4.4 risk limits/strategy studio. Independent V5 future robot PAPER, no real orders.",
+  "next_single_owner_check": "Owner V4.1 Firefox acceptance confirmed on 2026-11-13: 60-day OKX BTC/USDC, 1440 1h candles, 360 replay 4h bars, Aether Quant 5 closed positions, valid local run. Custom strategy composer is present; it is shown only while selected in Famille de stratégie. No additional test requested today; owner is sleeping.",
+  "next_developer_task": "V4.2 native professional historical candlestick microscope with verified same-source OHLCV, EMA/SMA/Bollinger optional overlays, PAPER trade markers, zoom and clear distinction between current draft settings and last-run report. Preserve independent core, no Binance/OKX live orderbook/history mixing, no API order access. Owner asked to resume upon return; no background task.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -408,7 +441,8 @@
     "V4 custom strategy composer is a bounded no-code rule combination, not arbitrary strategy scripting, not a live scheduler or bot; stop/target use previous-close triggers and assumed next-open fills.",
     "Owner V4 acceptance is confirmed by screenshot and pasted UI results only: complete raw 720-candle SHA and workspace bytes were not accessed independently.",
     "V4.1 profit factor/win rate refer only to fully closed simulated long positions; stops are previous-close signals executed at assumed next open, never exchange-native stop orders.",
-    "V4.1 owner Firefox acceptance pending. V4.0 Firefox is confirmed by owner screenshot; GitHub actions and Chromium are independent CI proofs."
+    "V4.1 user Firefox screenshot verified (not full raw workspace and SHA); UI custom-config selection alone does not change prior displayed EMA 4h result until a new PAPER simulation is run."
   ],
-  "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
+  "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md",
+  "session_handoff_2026_11_13": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_SESSION_CONTINUITY_AND_V4_2_HANDOFF_2026_11_13.md"
 }
