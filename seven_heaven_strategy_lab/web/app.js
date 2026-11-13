@@ -107,6 +107,7 @@
       resetScientific();
       $("draft-status").hidden=true;
       window.AetherMicroscope.clear();
+      window.AetherForensics.clear();
       $("result").hidden=true;
       $("empty-result").hidden=false;
       $("comparison-result").hidden=true;
@@ -353,6 +354,7 @@
     lastRenderedReport=record;
     $("draft-status").hidden=true;
     window.AetherMicroscope.displayRun(record);
+    window.AetherForensics.displayRun(record);
     return record;
   }
   function renderComparison(record) {
@@ -636,11 +638,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(!health.public_okx_enabled || !health.walk_forward_research_enabled)throw new Error("Le serveur Python V4.3 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
+      if(!health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled)throw new Error("Le serveur Python V4.4 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.3 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V4.3 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.4 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V4.4 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
