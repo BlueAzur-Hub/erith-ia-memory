@@ -183,12 +183,6 @@ def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_by
         raise PublicMarketError("Paire refusée ; BTC/ETH contre USDC/USDT Spot uniquement")
     root = _target_dir(workspace)
     root.mkdir(parents=True, exist_ok=True)
-    free = shutil.disk_usage(root).free
-    if free < min_free_bytes:
-        raise PublicMarketError(
-            f"Espace USB insuffisant : {free / 1e9:.2f} Go libres ; "
-            f"réserve minimale demandée {min_free_bytes / 1e9:.2f} Go. "
-            "Conserver tes archives privées ; utiliser la clé 32 Go si nécessaire.")
     now = time.time() if now is None else now
     # Use the last COMPLETE 4H UTC boundary, so the 240 x 1H candles
     # can also replay 60 x full 4H candles without hidden partial bars.
@@ -201,6 +195,15 @@ def collect(workspace: Path, pair: str, *, transport=None, now=None, min_free_by
     except PublicMarketError as exc:
         if "absente" not in str(exc):
             raise
+
+    # Existing verified archives remain usable even when the owner's USB
+    # has less than the planned reserve. Refuse only NEW data downloads.
+    free = shutil.disk_usage(root).free
+    if free < min_free_bytes:
+        raise PublicMarketError(
+            f"Espace USB insuffisant : {free / 1e9:.2f} Go libres ; "
+            f"réserve minimale demandée {min_free_bytes / 1e9:.2f} Go. "
+            "Conserver tes archives privées ; utiliser la clé 32 Go si nécessaire.")
 
     rules = _rules(pair, transport=transport)
     selected = {}
