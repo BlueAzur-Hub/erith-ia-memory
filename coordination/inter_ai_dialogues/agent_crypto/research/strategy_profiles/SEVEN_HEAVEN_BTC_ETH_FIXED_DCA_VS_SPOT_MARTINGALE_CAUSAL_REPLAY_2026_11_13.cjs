@@ -232,7 +232,7 @@ summary.push("",
 "- No change to Administrator, Trader, Operator, Bridge, live bots or account permissions; separate strategy learning evidence only.",
 "");
 fs.writeFileSync(jfile,JSON.stringify(result,null,2)+"\n");
-fs.writeFileSync(mfile,summary.join("\n")+"\n");
+fs.writeFileSync(mfile,summary.join("\n").trimEnd()+"\n");
 for(const asset of ["BTC","ETH"])for(const year of Object.keys(WINDOWS)){
  const w=result.results[asset][year],p=w.policies;
  console.log(asset+" "+year+" HOLD "+p.HOLD.return_pct+" DCA "+p.MONTHLY_DCA.return_pct+
