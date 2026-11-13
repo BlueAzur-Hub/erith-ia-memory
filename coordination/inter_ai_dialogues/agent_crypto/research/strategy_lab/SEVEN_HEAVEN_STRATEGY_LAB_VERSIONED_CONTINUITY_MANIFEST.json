@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V4_OWNER_FIREFOX_VALIDATED_PAPER_30DAY_BTC_USDC",
+  "status": "V4_1_PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING_V4_OWNER_ACCEPTED",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -20,7 +20,7 @@
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
       "last_owner_reported_free_gb": 4.07
     },
-    "version": "4.0.0"
+    "version": "4.1.0"
   },
   "release_train": [
     {
@@ -148,6 +148,37 @@
       }
     },
     {
+      "stage": "C2+",
+      "version": "4.1.0",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING",
+      "features": [
+        "premium_aether_quant_risk_desk",
+        "closed_round_trip_win_rate",
+        "realized_vs_unrealized_pnl_distinction",
+        "profit_factor_excluding_open_positions",
+        "time_in_position_percentage",
+        "full_precision_max_drawdown_with_sampled_drawdown_chart",
+        "six_reference_strategies_and_v4_custom_composer_unchanged",
+        "existing_workspace_compatible_without_migration",
+        "no_freqtrade_hummingbot_dependency",
+        "single_clean_windows_python313_zip_paper_only"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v4-1-professional-risk-desk-2026-11-13",
+      "size_bytes": 52984,
+      "sha256": "1686537f089d4fdab75d652023f17384b4219c5d3aa8bc9e65035bc3b5434a19",
+      "provenance": {
+        "commit": "92bd9c20cceeaf10e3c33c8a4bda3f212ac0f984",
+        "pr": 762,
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43406412922",
+        "all_workflow_jobs_success": true,
+        "python_313_windows_launcher_verified": true,
+        "chromium_desktop_mobile_risk_desk_verified": true,
+        "real_public_okx_240_candles_verified": true,
+        "calculation_and_regression_tests_verified": true,
+        "owner_firefox_verified": false
+      }
+    },
+    {
       "stage": "D",
       "version": "5.0-planned",
       "status": "NOT_BUILT",
@@ -163,7 +194,7 @@
   ],
   "engines": {
     "erith_internal": {
-      "status": "V4_NATIVE_INDEPENDENT_DECLARATIVE_CREATOR_PAPER_CI_PASS_OWNER_PENDING",
+      "status": "V4_1_NATIVE_PAPER_QUANT_RISK_DESK_CI_PASS_OWNER_PENDING",
       "trade_api": false
     },
     "freqtrade": {
@@ -366,8 +397,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V4.0.0 has been accepted on owner's Firefox (720 OKX BTC/USDC 1h candles, custom EMA12/32, seven-model comparison, profile saved). Do not re-request V4 acceptance. Next scientific improvement: V4.1 professional report metrics, drawdown visualization, market-relative comparisons; preserve canonical workspace and no trading.",
-  "next_developer_task": "V4.1 professional performance analytics and auditable strategy results, using original PAPER core and tests. Professional references: TradingView Strategy Tester, Freqtrade lookahead-analysis, NautilusTrader data-vs-execution granularity. No external bot runtime dependency, no new USB dev tooling.",
+  "next_single_owner_check": "V4.0.0 owner Firefox PASSED (OKX BTC/USDC 720 1H, personal EMA12/32, seven comparisons). V4.1 published CI-success, NOT owner validated; when convenient back up existing private workspace to another medium, replace only runtime files from one full ZIP, check BUILD 4.1.0; rerun custom 720-candle PAPER scenario and inspect closed vs open PnL and drawdown. No developer files or patch scripts.",
+  "next_developer_task": "Post V4.1 owner acceptance: next V4.2 candlestick chart + safe indicator overlays and signals, explicitly separate historical simulation from live Administrator order book; then V4.3 robustness/walkforward and V4.4 risk limits/strategy studio. Independent V5 future robot PAPER, no real orders.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -375,7 +406,9 @@
     "V3.1 has GitHub Windows/Chromium and default 240 candle OKX actual-network tests; extended 30/90-day OKX coverage is verified only with deterministic fixtures and is not guaranteed by exchange API",
     "V3.1 owner Firefox 90-day OKX history is confirmed, but the full SHA-256 and raw CSV are local to owner USB; do not pretend independent GitHub CI has re-fetched the exact 90-day source",
     "V4 custom strategy composer is a bounded no-code rule combination, not arbitrary strategy scripting, not a live scheduler or bot; stop/target use previous-close triggers and assumed next-open fills.",
-    "Owner V4 acceptance is confirmed by screenshot and pasted UI results only: complete raw 720-candle SHA and workspace bytes were not accessed independently."
+    "Owner V4 acceptance is confirmed by screenshot and pasted UI results only: complete raw 720-candle SHA and workspace bytes were not accessed independently.",
+    "V4.1 profit factor/win rate refer only to fully closed simulated long positions; stops are previous-close signals executed at assumed next open, never exchange-native stop orders.",
+    "V4.1 owner Firefox acceptance pending. V4.0 Firefox is confirmed by owner screenshot; GitHub actions and Chromium are independent CI proofs."
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
 }
