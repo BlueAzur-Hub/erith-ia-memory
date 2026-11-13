@@ -1,0 +1,151 @@
+{
+  "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
+  "updated_utc_date": "2026-11-13",
+  "status": "V2_PUBLISHED_CI_PASS_OWNER_USB_UPGRADE_EXTRACTED_PENDING_V2_SCREENSHOT",
+  "product": {
+    "name": "Seven Heaven Strategy Lab",
+    "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
+    "python": "3.13",
+    "http_url": "http://127.0.0.1:8777/",
+    "local_directory_example": "E:\\seven_heaven_strategy_lab",
+    "windows_start_script": "seven_heaven_strategy_lab/START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd",
+    "user_storage": {
+      "current_drive_gb_label": 8,
+      "optional_drive_gb_label": 32,
+      "proposed_reserve_current_gb": 3,
+      "proposed_reserve_future_gb": 8,
+      "free_bytes_measured": false,
+      "workspace_is_private_local": true,
+      "backup_required_before_upgrade": true,
+      "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies"
+    }
+  },
+  "release_train": [
+    {
+      "stage": "A",
+      "version": "1.0",
+      "status": "PUBLISHED_AND_USER_WINDOWS_USB_UI_OBSERVED",
+      "features": [
+        "python_local",
+        "sha_ohlcv",
+        "6_paper_models",
+        "json_reports"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-portable-paper-initial-2026-11-13"
+    },
+    {
+      "stage": "B",
+      "version": "2.0.0",
+      "status": "PUBLISHED_CI_PASS_USER_EXTRACTED_ZIP_OWNER_V2_VERIFICATION_PENDING",
+      "features": [
+        "premium_observatory",
+        "5_timeframes",
+        "6_way_comparison",
+        "fee_zero_cost_counterfactual",
+        "v1_workspace_compatibility"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v2-aether-observatory-2026-11-13",
+      "sha256": "39d9a7ef89c2f89ec519f11d1f206400e54f169b8a0799fa751ff00ee9240c13",
+      "provenance": {
+        "commit": "4fe8996b05814f590168bc90931bfb8fa1048bb0",
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43380143039",
+        "unit_tests": 26,
+        "historical_cases": 30
+      }
+    },
+    {
+      "stage": "C1",
+      "version": "3.0-planned",
+      "status": "NOT_BUILT",
+      "features": [
+        "okx_public_market_data",
+        "binance_secondary",
+        "pair_period_timeframe_selection",
+        "sha_provenance",
+        "cache_quota_reserve",
+        "gaps_freshness"
+      ]
+    },
+    {
+      "stage": "C2",
+      "version": "4.0-planned",
+      "status": "NOT_BUILT",
+      "features": [
+        "freqtrade_native_backtest_adapter",
+        "hummingbot_paper_script_adapter",
+        "spot_grid_pmm",
+        "native_execution_proof",
+        "engine_result_contract"
+      ]
+    },
+    {
+      "stage": "D",
+      "version": "5.0-planned",
+      "status": "NOT_BUILT",
+      "features": [
+        "user_strategy_designer",
+        "regime_walkforward_tests",
+        "parameter_optimizer",
+        "risk_inventories",
+        "freqai_optional"
+      ]
+    }
+  ],
+  "engines": {
+    "erith_internal": {
+      "status": "VALIDATED_PAPER_V2",
+      "trade_api": false
+    },
+    "freqtrade": {
+      "status": "RESEARCH_ONLY_NATIVE_ADAPTER_NOT_RELEASED",
+      "capabilities": [
+        "historical_backtesting",
+        "dry_run",
+        "hyperopt",
+        "freqai_optional"
+      ],
+      "installation_note": "Windows official docs recommend Docker/WSL; UI remains Python 3.13 without Docker"
+    },
+    "hummingbot": {
+      "status": "RESEARCH_ONLY_NATIVE_ADAPTER_NOT_RELEASED",
+      "capabilities": [
+        "CEX",
+        "DEX_gateway_optional",
+        "pmm_paper_script",
+        "strategies_v2"
+      ],
+      "limitation": "V2 controller framework paper-trade connector not currently supported per quickstart"
+    }
+  },
+  "sources": {
+    "verified_historical": {
+      "exchange": "Binance Spot",
+      "pair": "BTC/USDT",
+      "start_utc": "2026-01-01",
+      "end_utc": "2026-01-31",
+      "timeframe": "1m",
+      "rows": 44640,
+      "csv_sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4"
+    },
+    "live_okx": "NOT_AVAILABLE_IN_V2"
+  },
+  "safety": {
+    "public_internet": true,
+    "live_exchange_orders_approved": false,
+    "paper_default": true,
+    "exchange_credentials_configured": false,
+    "no_trade_endpoint": true,
+    "private_archives_publicly_uploaded": false
+  },
+  "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
+  "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
+  "next_single_owner_check": "Restart existing Python 3.13 cmd from USB and check BUILD 2.0.0 plus authenticated 44640 candles and V1 journal",
+  "next_developer_task": "Implement V3 OKX public Spot data source with rate-limit, UTC, exact pair, gap/freshness proof, SHA cache and USB free-space guard; publish distinct verified release. No Docker requirement for the base UI.",
+  "explicit_non_claims": [
+    "V2 not independently running Freqtrade/Hummingbot",
+    "V2 has no dynamic OKX source selection",
+    "Current screenshots are Administrator not V2 local screenshot",
+    "USB free space is not measured",
+    "No permission to access private archives or send real orders"
+  ]
+}
