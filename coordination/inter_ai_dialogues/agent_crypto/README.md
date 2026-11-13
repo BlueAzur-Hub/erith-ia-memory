@@ -2,6 +2,13 @@
 
 The directory is now reserved for current coordination.
 
+## Seven Heaven Strategy Lab — version registry
+
+- **[Central Strategy Lab release index (V1 → V4.5)](./research/strategy_lab/README.md)** — all ten official ZIP download links, full SHA-256 hashes, owner Firefox validation states, protection of local USB `workspace/`, shared workflow, and next handoff.
+- [Versioned continuity and provenance manifest](./research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_VERSIONED_CONTINUITY_MANIFEST.json) — machine-readable facts and validation evidence.
+- [Canonical application source](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/seven_heaven_strategy_lab) — developer code; ZIP binaries remain in GitHub Releases, not duplicated in this shared folder.
+
+
 - [Archives](./Archives/) — historical files and build packages.
 - [Archive inventory](./Archives/INDEX_ROOT.md) — all relocated files and preservation details.
 - [Legacy inventory](./Archives/MANIFEST.md) — previous archive group.
