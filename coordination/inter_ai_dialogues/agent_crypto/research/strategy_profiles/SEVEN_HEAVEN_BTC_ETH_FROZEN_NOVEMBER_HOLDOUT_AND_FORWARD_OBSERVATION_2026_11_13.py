@@ -18,7 +18,7 @@ START_HIST="2023-04-01"
 END_HIST="2026-10-31"
 NOV_START="2026-11-01"
 NOV_END="2026-11-12"
-FORWARD_START="2026-11-13"
+FORWARD_START="2026-11-14"
 SOURCES={
  "BTC":{"market":"btcusd","pair":"BTC/USD",
         "file":"native_bitstamp_btc_eth_2024_2026_evidence/bitstamp_btcusd_daily_2023_2026.csv",
@@ -178,6 +178,15 @@ def main():
   if (utc_date(end)-utc_date(FORWARD_START)).days+1>120:
    raise ValueError("Forward 120-day API window exceeded: new frozen protocol required")
  if yesterday<end: raise ValueError("Attempted to use an unclosed UTC daily candle")
+ tag="2026_11_13_NOVEMBER_01_12" if args.mode=="diagnostic" else end.replace("-","_")
+ prefix="SEVEN_HEAVEN_BTC_ETH_" + ("NOVEMBER_TEMPORAL_DIAGNOSTIC_" if args.mode=="diagnostic" else "PROSPECTIVE_")
+ old_json=OUT/(prefix+tag+"_PROOFS.json")
+ old_md=OUT/(prefix+tag+"_REPORT.md")
+ if old_json.exists() and old_md.exists():
+  print("IMMUTABLE_EVIDENCE_ALREADY_ARCHIVED; previously published files left unchanged: "+tag)
+  return
+ if old_json.exists() or old_md.exists():
+  raise ValueError("Incomplete immutable pair, refusing to overwrite: "+tag)
  detail={}; calls={}; source={}
  for asset,spec in SOURCES.items():
   past=read_baseline(spec)
