@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V2_PUBLISHED_CI_PASS_OWNER_USB_UPGRADE_EXTRACTED_PENDING_V2_SCREENSHOT",
+  "status": "V3_PUBLISHED_ALL_CI_AND_STRICT_JSON_PASS_OWNER_USB_V3_ACCEPTANCE_PENDING",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -18,7 +18,8 @@
       "workspace_is_private_local": true,
       "backup_required_before_upgrade": true,
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies"
-    }
+    },
+    "version": "3.0.0"
   },
   "release_train": [
     {
@@ -36,7 +37,7 @@
     {
       "stage": "B",
       "version": "2.0.0",
-      "status": "PUBLISHED_CI_PASS_USER_EXTRACTED_ZIP_OWNER_V2_VERIFICATION_PENDING",
+      "status": "PUBLISHED_CI_PASS_USER_USB_FIREFOX_ACCEPTED",
       "features": [
         "premium_observatory",
         "5_timeframes",
@@ -55,15 +56,44 @@
     },
     {
       "stage": "C1",
-      "version": "3.0-planned",
+      "version": "3.0.0",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_PENDING",
+      "features": [
+        "public_okx_spot_api",
+        "4_allowlisted_spot_pairs",
+        "240_strict_closed_1h_candles",
+        "sha256_immutable_cache",
+        "utc_4h_aligned_window",
+        "1h_4h_paper_replay",
+        "usb_2_5GB_download_reserve",
+        "v1_v2_workspace_compatible",
+        "USDC_USDT_BTC_ETH_units"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v3-public-okx-spot-research-2026-11-13",
+      "sha256": "6c7560ff22e3e9db27d2cb15f6c360173b68e81efd0155f41a2dea1ac9993fdb",
+      "size_bytes": 55987,
+      "provenance": {
+        "commit": "c996f0737ada5cae9efddda2475216182ff07451",
+        "original_feature_pr": 757,
+        "proof_json_fix_pr": 758,
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43386693211",
+        "unit_tests": 37,
+        "real_okx_btc_usdc_1h_candles": 240,
+        "paper_cases": 6,
+        "verified_strict_proof_json": true,
+        "windows_python": true,
+        "chromium": true
+      }
+    },
+    {
+      "stage": "C1+",
+      "version": "3.1-planned",
       "status": "NOT_BUILT",
       "features": [
-        "okx_public_market_data",
-        "binance_secondary",
-        "pair_period_timeframe_selection",
-        "sha_provenance",
-        "cache_quota_reserve",
-        "gaps_freshness"
+        "arbitrary_historical_date_ranges",
+        "more_okx_candle_windows",
+        "source_freshness_rules",
+        "quota_guard_extension"
       ]
     },
     {
@@ -127,7 +157,31 @@
       "rows": 44640,
       "csv_sha256": "38a2e6ce6e76ccfeca2e421679ee39ef4467f0426cf0064610b25100307f54c4"
     },
-    "live_okx": "NOT_AVAILABLE_IN_V2"
+    "live_okx": "PUBLIC_HISTORIC_SPOT_1H_ON_DEMAND_ONLY_NOT_REALTIME_ORDERBOOK",
+    "public_okx_1h": {
+      "status": "ACTUAL_PUBLIC_BTC_USDC_OKX_API_AND_SIX_INTERNAL_PAPER_SCENARIOS_VERIFIED",
+      "exchange": "OKX Spot",
+      "pair": "BTC/USDC",
+      "first_utc": "2026-11-03T04:00:00Z",
+      "end_exclusive_utc": "2026-11-13T04:00:00Z",
+      "rows": 240,
+      "candle_interval": "1h",
+      "native_4h_aggregation": 60,
+      "source_sha256": "d52d0dd251bf102e18c917d87f0ad5aacc7b04df378420a8824e5cc29c9f13d9",
+      "proof_json_sha256": "6282b73d651ac9c639619662b6f8352196f9f9d3ec3f810cfd917a14bb016129",
+      "public_pairs_allowlisted": [
+        "BTC-USDC",
+        "ETH-USDC",
+        "BTC-USDT",
+        "ETH-USDT"
+      ],
+      "independently_network_tested": [
+        "BTC-USDC"
+      ],
+      "no_live_order": true,
+      "current_instrument_rules_are_not_applied_to_historical_fills": true,
+      "model": "ERITH original PAPER with next-bar-open fills, fee/slippage scenarios; neither Freqtrade nor Hummingbot"
+    }
   },
   "safety": {
     "public_internet": true,
@@ -139,13 +193,14 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Restart existing Python 3.13 cmd from USB and check BUILD 2.0.0 plus authenticated 44640 candles and V1 journal",
-  "next_developer_task": "Implement V3 OKX public Spot data source with rate-limit, UTC, exact pair, gap/freshness proof, SHA cache and USB free-space guard; publish distinct verified release. No Docker requirement for the base UI.",
+  "next_single_owner_check": "Stop existing Python, backup E:\\seven_heaven_strategy_lab\\workspace on separate disk, copy V3 application files over V2 without deleting workspace, restart and confirm BUILD 3.0.0 then collect public OKX BTC/USDC 1H",
+  "next_developer_task": "V3.1 extended OKX history retrieval/date ranges; subsequent V4 native Freqtrade then Hummingbot, fully separated PAPER with source/fee parity and independently verified engine versions",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
-    "Current screenshots are Administrator not V2 local screenshot",
     "USB free space is not measured",
-    "No permission to access private archives or send real orders"
-  ]
+    "No permission to access private archives or send real orders",
+    "Owner Firefox V2 is confirmed by screenshots; owner Firefox V3 has not yet been observed."
+  ],
+  "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
 }
