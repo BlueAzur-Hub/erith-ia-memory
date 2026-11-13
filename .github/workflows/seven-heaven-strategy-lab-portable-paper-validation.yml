@@ -274,7 +274,7 @@ jobs:
               raw=file.read_text(encoding="utf-8")
               loaded=json.loads(raw)
               assert isinstance(loaded,dict) and loaded.get("schema"),file
-              assert raw.endswith("\\n") and not raw.endswith("\\\\n"),file
+              assert raw and ord(raw[-1])==10,file
               print("PASS strict JSON and final newline:",file.name)
           PY
       - name: Upload standalone ZIP, hash and measured historical smoke results
