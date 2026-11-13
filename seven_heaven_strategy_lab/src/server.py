@@ -92,7 +92,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.0"
+    server_version = "SevenHeavenStrategyLab/4.1"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -138,7 +138,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.0.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.1.0",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
