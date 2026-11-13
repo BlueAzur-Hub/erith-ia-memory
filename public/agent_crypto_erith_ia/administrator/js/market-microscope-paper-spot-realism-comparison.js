@@ -53,8 +53,7 @@ function compareV5(snapshot,cross,settings,nowMs=Date.now()){
       inventory=entry.quantity_base;
       const exit=adapter.referenceSell({spec,inventoryBase:inventory,referencePrice:fixedPrice(t.exitPrice),feePpm:fee,slipPpm:0});
       if(!exit.ok)throw Error("Vente refusée après achat accepté : "+exit.code);
-      cash=String(Number(cash)+Number(exit.net_proceeds_usdc));
-      // Use exact 12 decimal decimal serialization below to avoid floating-point cash drift.
+      // Keep the complete PAPER ledger in exact 12-decimal fixed-point arithmetic.
       cash=decimalSum(entry.cash_remainder_usdc,exit.net_proceeds_usdc);
       if(exit.inventory_after_base!=="0")throw Error("Inventaire résiduel inattendu");
       inventory="0";completed++;
