@@ -1,0 +1,57 @@
+name: Seven Heaven OKX Spot Small-Order Eligibility Research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-okx-spot-small-order-eligibility-public-audit.yml'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_USDC_SPOT_ORDER_ELIGIBILITY_PUBLIC_AUDIT_2026_11_13.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seven-heaven-okx-public-spot-small-order-audit-2026-11-13
+  cancel-in-progress: false
+
+jobs:
+  okx-public-spot-instruments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Checkout existing research only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Python standard runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile read-only audit
+        run: python -m py_compile 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_USDC_SPOT_ORDER_ELIGIBILITY_PUBLIC_AUDIT_2026_11_13.py'
+      - name: Retrieve live BTC USDC and ETH USDC public instruments and quotes
+        run: python 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/SEVEN_HEAVEN_OKX_BTC_ETH_USDC_SPOT_ORDER_ELIGIBILITY_PUBLIC_AUDIT_2026_11_13.py'
+      - name: Keep collected evidence in this workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-okx-public-eligibility-evidence-2026-11-13
+          path: 'coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_okx_public_eligibility_evidence/'
+          retention-days: 60
+          if-no-files-found: error
+      - name: Publish only source-free research evidence on main
+        run: |
+          set -euo pipefail
+          folder='coordination/inter_ai_dialogues/agent_crypto/research/strategy_profiles/seven_heaven_okx_public_eligibility_evidence'
+          git add -- "$folder"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No new research evidence'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'research: archive public OKX spot small order eligibility evidence'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
