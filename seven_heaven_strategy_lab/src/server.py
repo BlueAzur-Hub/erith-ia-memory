@@ -92,7 +92,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/3.0"
+    server_version = "SevenHeavenStrategyLab/4.0"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -138,12 +138,15 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "3.1.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.0.0",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
                         "public_pairs": list(ALLOWED_SPOT),
                         "public_history_days": list(ALLOWED_DAYS),
+                        "strategy_creator_enabled": True,
+                        "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
+                        "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
                         "source": "SHA-verified Binance BTCUSDT January 2026",
                         "engines": {"internal_paper": True, "freqtrade": False, "hummingbot": False}})
         elif path == "/api/datasets":
