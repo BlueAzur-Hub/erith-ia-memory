@@ -39,7 +39,7 @@ def _list_records(category: str) -> list:
     if not folder.is_dir():
         return []
     records = []
-    for file in sorted(folder.glob("*.json"), reverse=True)[:50]:
+    for file in sorted(folder.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)[:50]:
         try:
             data = json.loads(file.read_text(encoding="utf-8"))
             if category == "results":
