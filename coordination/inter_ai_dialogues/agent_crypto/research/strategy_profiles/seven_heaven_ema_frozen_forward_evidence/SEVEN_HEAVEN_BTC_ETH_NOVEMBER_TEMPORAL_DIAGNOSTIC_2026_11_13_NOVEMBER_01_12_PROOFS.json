@@ -1,0 +1,810 @@
+{
+  "schema": "seven-heaven.frozen-bitstamp-ema-diagnostic-forward.v1",
+  "status": "RETROSPECTIVE_LATER_DATE_DIAGNOSTIC_NOT_PROSPECTIVE",
+  "run_utc": "2026-11-13T01:29:28.883106+00:00",
+  "frozen_protocol": "SEVEN_HEAVEN_BTC_ETH_EMA_PROSPECTIVE_NO_RETUNING_PROTOCOL_2026_11_13.md",
+  "mode": "diagnostic",
+  "evaluation_utc": [
+    "2026-11-01",
+    "2026-11-12"
+  ],
+  "source": {
+    "BTC": {
+      "source_pair": "BTC/USD",
+      "historical_sha256": "89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb",
+      "http": {
+        "url": "https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=86400&limit=160&end=1794527999&exclude_current_candle=true",
+        "retrieved_utc": "2026-11-13T01:29:29.388468+00:00",
+        "raw_http_body_sha256": "d2428120ed8717ba8852b1e5d92cdb4de283492e21f79cec8fe1e623a6fdfab7",
+        "received_day_count": 160,
+        "selected_day_count": 12,
+        "selected_ohlc_canonical_sha256": "0c6a3b3ab6bd9e591469881b27996d940211a8d7119f4229c97d5e34fd58f8c2"
+      },
+      "selected_closed_days": [
+        {
+          "date": "2026-11-01",
+          "open": 77424.97,
+          "high": 78295.2,
+          "low": 77376.86,
+          "close": 78233.25,
+          "volume": 644.17682567,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-02",
+          "open": 78240.65,
+          "high": 78749.56,
+          "low": 76571.94,
+          "close": 76674.25,
+          "volume": 1583.99113214,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-03",
+          "open": 76674.26,
+          "high": 77972.0,
+          "low": 76268.0,
+          "close": 77345.0,
+          "volume": 1416.31359455,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-04",
+          "open": 77342.69,
+          "high": 81105.28,
+          "low": 75618.0,
+          "close": 80434.13,
+          "volume": 2572.81076371,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-05",
+          "open": 80423.32,
+          "high": 80821.81,
+          "low": 75088.0,
+          "close": 75971.22,
+          "volume": 2813.91827647,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-06",
+          "open": 75982.57,
+          "high": 76294.91,
+          "low": 74761.63,
+          "close": 75746.53,
+          "volume": 1595.83211898,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-07",
+          "open": 75746.53,
+          "high": 76143.75,
+          "low": 75475.22,
+          "close": 75747.4,
+          "volume": 463.24513075,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-08",
+          "open": 75747.4,
+          "high": 76081.4,
+          "low": 73500.01,
+          "close": 74742.52,
+          "volume": 1189.40492829,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-09",
+          "open": 74761.15,
+          "high": 75500.0,
+          "low": 73650.01,
+          "close": 75266.85,
+          "volume": 2175.02845999,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-10",
+          "open": 75255.09,
+          "high": 75333.75,
+          "low": 72677.46,
+          "close": 73697.92,
+          "volume": 2246.39905563,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-11",
+          "open": 73697.93,
+          "high": 74711.57,
+          "low": 73117.73,
+          "close": 73915.03,
+          "volume": 1864.8963694,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-12",
+          "open": 73923.44,
+          "high": 74116.56,
+          "low": 71040.0,
+          "close": 71374.07,
+          "volume": 2197.83567532,
+          "FAST": false,
+          "SLOW": false
+        }
+      ]
+    },
+    "ETH": {
+      "source_pair": "ETH/USD",
+      "historical_sha256": "881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49",
+      "http": {
+        "url": "https://www.bitstamp.net/api/v2/ohlc/ethusd/?step=86400&limit=160&end=1794527999&exclude_current_candle=true",
+        "retrieved_utc": "2026-11-13T01:29:29.765762+00:00",
+        "raw_http_body_sha256": "c79ef26d2456508b1a943a0d58207718eda33abc9ac1db84fcbdaac9c30b319e",
+        "received_day_count": 160,
+        "selected_day_count": 12,
+        "selected_ohlc_canonical_sha256": "ed2a192ea6185722daa10c1d7bfd5cfdba3f570cd58406388a1d6d8e7235f3fe"
+      },
+      "selected_closed_days": [
+        {
+          "date": "2026-11-01",
+          "open": 2251.58,
+          "high": 2274.81,
+          "low": 2245.57,
+          "close": 2272.59,
+          "volume": 3134.286724,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-02",
+          "open": 2272.7,
+          "high": 2313.54,
+          "low": 2233.6,
+          "close": 2248.99,
+          "volume": 6667.343624,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-03",
+          "open": 2249.58,
+          "high": 2304.56,
+          "low": 2237.53,
+          "close": 2272.02,
+          "volume": 4631.363504,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-04",
+          "open": 2273.42,
+          "high": 2447.19,
+          "low": 2223.01,
+          "close": 2422.31,
+          "volume": 14931.405173,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-05",
+          "open": 2422.47,
+          "high": 2433.78,
+          "low": 2202.4,
+          "close": 2234.66,
+          "volume": 13809.211834,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-06",
+          "open": 2235.37,
+          "high": 2250.24,
+          "low": 2206.88,
+          "close": 2235.12,
+          "volume": 8291.501009,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-07",
+          "open": 2235.4,
+          "high": 2248.53,
+          "low": 2220.0,
+          "close": 2236.78,
+          "volume": 2301.836383,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-08",
+          "open": 2236.19,
+          "high": 2242.69,
+          "low": 2070.0,
+          "close": 2123.17,
+          "volume": 7196.424068,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-09",
+          "open": 2124.47,
+          "high": 2157.42,
+          "low": 2080.91,
+          "close": 2132.32,
+          "volume": 12301.620618,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-10",
+          "open": 2132.32,
+          "high": 2132.71,
+          "low": 2001.54,
+          "close": 2050.82,
+          "volume": 12612.481093,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-11",
+          "open": 2050.78,
+          "high": 2101.11,
+          "low": 2033.67,
+          "close": 2054.2,
+          "volume": 6229.82412,
+          "FAST": false,
+          "SLOW": false
+        },
+        {
+          "date": "2026-11-12",
+          "open": 2054.24,
+          "high": 2063.37,
+          "low": 1981.42,
+          "close": 2017.18,
+          "volume": 9813.43742,
+          "FAST": false,
+          "SLOW": false
+        }
+      ]
+    }
+  },
+  "historical_controls": {
+    "BTC": {
+      "historical_reference_reproduced": true,
+      "baseline_ema10_30_pct": 65.781857,
+      "final_day_closed": "2026-11-12",
+      "most_recent_signal_asof_last_close": {
+        "FAST": false,
+        "SLOW": false
+      }
+    },
+    "ETH": {
+      "historical_reference_reproduced": true,
+      "baseline_ema10_30_pct": 89.548633,
+      "final_day_closed": "2026-11-12",
+      "most_recent_signal_asof_last_close": {
+        "FAST": false,
+        "SLOW": false
+      }
+    }
+  },
+  "assumptions": {
+    "fee_pct_side": 0.1,
+    "slippage_pct_side": 0.05,
+    "double_costs_factor": 2,
+    "capital_usd_per_asset": 1000,
+    "executable_orders": false,
+    "leverage": false
+  },
+  "individual": {
+    "BTC": {
+      "HOLD": {
+        "start": "2026-11-01",
+        "end": "2026-11-12",
+        "days": 12,
+        "return_pct": -8.091411,
+        "capital_usd": 919.08589,
+        "max_drawdown_pct": -11.26395,
+        "transactions": 1,
+        "exposed_days": 12,
+        "cash_days": 0,
+        "last_position": "ETH_OR_BTC",
+        "trades": [
+          {
+            "date": "2026-11-01",
+            "side": "BUY",
+            "open": 77424.97
+          }
+        ],
+        "daily_equity": [
+          {
+            "date": "2026-11-01",
+            "equity": 1007.41174185,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-02",
+            "equity": 987.33645538,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-03",
+            "equity": 995.97372183,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-04",
+            "equity": 1035.75253498,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-05",
+            "equity": 978.28351846,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-06",
+            "equity": 975.39017907,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-07",
+            "equity": 975.40138208,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-08",
+            "equity": 962.4615143,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-09",
+            "equity": 969.21332633,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-10",
+            "equity": 949.01017097,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-11",
+            "equity": 951.80590249,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-12",
+            "equity": 919.08588972,
+            "exposed": true
+          }
+        ],
+        "double_cost_return_pct": -8.366999
+      },
+      "FAST": {
+        "start": "2026-11-01",
+        "end": "2026-11-12",
+        "days": 12,
+        "return_pct": 0.0,
+        "capital_usd": 1000.0,
+        "max_drawdown_pct": 0.0,
+        "transactions": 0,
+        "exposed_days": 0,
+        "cash_days": 12,
+        "last_position": "CASH",
+        "trades": [],
+        "daily_equity": [
+          {
+            "date": "2026-11-01",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-02",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-03",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-04",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-05",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-06",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-07",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-08",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-09",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-10",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-11",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-12",
+            "equity": 1000.0,
+            "exposed": false
+          }
+        ],
+        "double_cost_return_pct": 0.0
+      },
+      "SLOW": {
+        "start": "2026-11-01",
+        "end": "2026-11-12",
+        "days": 12,
+        "return_pct": 0.0,
+        "capital_usd": 1000.0,
+        "max_drawdown_pct": 0.0,
+        "transactions": 0,
+        "exposed_days": 0,
+        "cash_days": 12,
+        "last_position": "CASH",
+        "trades": [],
+        "daily_equity": [
+          {
+            "date": "2026-11-01",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-02",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-03",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-04",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-05",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-06",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-07",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-08",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-09",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-10",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-11",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-12",
+            "equity": 1000.0,
+            "exposed": false
+          }
+        ],
+        "double_cost_return_pct": 0.0
+      }
+    },
+    "ETH": {
+      "HOLD": {
+        "start": "2026-11-01",
+        "end": "2026-11-12",
+        "days": 12,
+        "return_pct": -10.678923,
+        "capital_usd": 893.210774,
+        "max_drawdown_pct": -16.724944,
+        "transactions": 1,
+        "exposed_days": 12,
+        "cash_days": 0,
+        "last_position": "ETH_OR_BTC",
+        "trades": [
+          {
+            "date": "2026-11-01",
+            "side": "BUY",
+            "open": 2251.58
+          }
+        ],
+        "daily_equity": [
+          {
+            "date": "2026-11-01",
+            "equity": 1006.3067619,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-02",
+            "equity": 995.8566413,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-03",
+            "equity": 1006.05436492,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-04",
+            "equity": 1072.60303549,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-05",
+            "equity": 989.51129264,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-06",
+            "equity": 989.71498143,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-07",
+            "equity": 990.45003229,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-08",
+            "equity": 940.14332883,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-09",
+            "equity": 944.19496457,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-10",
+            "equity": 908.10662435,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-11",
+            "equity": 909.60329417,
+            "exposed": true
+          },
+          {
+            "date": "2026-11-12",
+            "equity": 893.21077448,
+            "exposed": true
+          }
+        ],
+        "double_cost_return_pct": -10.946752
+      },
+      "FAST": {
+        "start": "2026-11-01",
+        "end": "2026-11-12",
+        "days": 12,
+        "return_pct": 0.0,
+        "capital_usd": 1000.0,
+        "max_drawdown_pct": 0.0,
+        "transactions": 0,
+        "exposed_days": 0,
+        "cash_days": 12,
+        "last_position": "CASH",
+        "trades": [],
+        "daily_equity": [
+          {
+            "date": "2026-11-01",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-02",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-03",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-04",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-05",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-06",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-07",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-08",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-09",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-10",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-11",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-12",
+            "equity": 1000.0,
+            "exposed": false
+          }
+        ],
+        "double_cost_return_pct": 0.0
+      },
+      "SLOW": {
+        "start": "2026-11-01",
+        "end": "2026-11-12",
+        "days": 12,
+        "return_pct": 0.0,
+        "capital_usd": 1000.0,
+        "max_drawdown_pct": 0.0,
+        "transactions": 0,
+        "exposed_days": 0,
+        "cash_days": 12,
+        "last_position": "CASH",
+        "trades": [],
+        "daily_equity": [
+          {
+            "date": "2026-11-01",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-02",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-03",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-04",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-05",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-06",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-07",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-08",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-09",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-10",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-11",
+            "equity": 1000.0,
+            "exposed": false
+          },
+          {
+            "date": "2026-11-12",
+            "equity": 1000.0,
+            "exposed": false
+          }
+        ],
+        "double_cost_return_pct": 0.0
+      }
+    }
+  },
+  "portfolio_50_50": {
+    "HOLD": {
+      "return_pct": -9.385167,
+      "max_drawdown_pct": -14.042172,
+      "transactions": 2,
+      "double_cost_return_pct": -9.656875
+    },
+    "FAST": {
+      "return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "transactions": 0,
+      "double_cost_return_pct": 0.0
+    },
+    "SLOW": {
+      "return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "transactions": 0,
+      "double_cost_return_pct": 0.0
+    }
+  },
+  "limits": [
+    "NOT ACTUAL TRADES; hypothetical next-day open fills",
+    "Historical fiat USD values, not OKX BTC/USDC or ETH/USDC",
+    "Static fees and slippage; risks, taxes and order queue omitted",
+    "November 1-12 dates already happened before protocol freeze",
+    "Even 90 forward days insufficient to establish reliable profitability"
+  ]
+}
