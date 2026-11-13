@@ -49,7 +49,7 @@ def main():
             assert desktop.locator("#drawdown-chart polyline").count()==1
             assert desktop.locator("#readout-equity").inner_text().endswith("USDT")
             assert desktop.locator("#history > button").count()>=1
-            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png"),full_page=True)
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_DESKTOP_COCKPIT.png"),full_page=True)
             desktop.locator("#profile-name").fill("V3 EMA 10-30 Browser Acceptance")
             desktop.locator("#save-profile").click()
             desktop.locator("#saved-profiles option").filter(has_text="V3 EMA 10-30").wait_for(state="attached",timeout=15000)
@@ -71,7 +71,7 @@ def main():
             desktop.locator("#comparison-rows > tr").first.locator("button").click()
             expect(desktop.locator("#equity")).to_contain_text("USDC",timeout=25000)
             assert desktop.locator("#inventory").inner_text().endswith("BTC")
-            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png"),full_page=True)
+            desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_DESKTOP_COCKPIT.png"),full_page=True)
             # V4: compose and execute Yoann's own declarative strategy.
             desktop.locator("#kind").select_option("CUSTOM_RULES")
             assert desktop.locator("#custom-fields").is_visible()
@@ -99,7 +99,7 @@ def main():
             mobile.goto(BASE,wait_until="domcontentloaded")
             expect(mobile.locator("#dataset-badge")).to_have_text("ARCHIVE AUTHENTIFIÉE", timeout=15000)
             mobile.locator("#laboratory").scroll_into_view_if_needed()
-            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_MOBILE_COCKPIT.png"),full_page=True)
+            mobile.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V4_1_PROFESSIONAL_MOBILE_COCKPIT.png"),full_page=True)
             width=mobile.evaluate("document.documentElement.scrollWidth")
             assert width<=390, f"Unexpected horizontal body overflow mobile: {width}px"
             print("PASS: Chromium V4.1 native risk desk + drawdown, six/seven methods, historical OKX, profiles, desktop/mobile and no JS errors")
