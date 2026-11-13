@@ -1,10 +1,22 @@
-# Seven Heaven Strategy Lab — V4.1 Professional Risk Desk + Native Strategy Creator
+# Seven Heaven Strategy Lab — V4.2 Market Microscope + Professional Risk Desk
 
-**Version 4.1.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
+**Version 4.2.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
 
-La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan) et ajoute une **vraie source publique OKX Spot**. L'objectif est de commencer à étudier des données plus récentes avec un suivi transparent des dates, instruments, frais, volumes et preuves SHA-256, sans employer d'API privée et sans ordre réel.
+Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.2 étend le cockpit premium bleu nuit, or et cyan avec le **graphique historique directement lié à chaque rapport**, sans dépendre des interfaces Administrator ou Trader, sans clés privées ni ordre réel.
 
-## V4.1 — analyse professionnelle intégrée (sans modifier les anciennes stratégies)
+## V4.2 — Microscope professionnel des bougies historiques
+
+- Dans **Lecture de la simulation**, le nouveau **Microscope des bougies** affiche les bougies **OHLCV** et leurs volumes, uniquement sur la paire, la fenêtre et l'échelle de la **simulation enregistrée**.
+- L'historique est vérifié avec l'identifiant de source et son SHA-256 avant chaque fenêtre graphique. Les bougies 4h proviennent de l'agrégation stricte de quatre bougies 1h closes (ou du 1m de la source Binance) ; **aucune donnée live Administrator ou carnet actuel n'est mélangé**.
+- Le graphique est réalisé en **SVG local**, sans TradingView, Freqtrade, Hummingbot, CDN, nouveaux paquets Python, scripts d'upgrade ni accès au compte. Le programme reste exploitable hors ligne pour les données déjà archivées.
+- Zoom par fenêtres de **60/90/120/180 bougies**, boutons précédent/suivant et curseur temporel. Survol des bougies : UTC, ouverture, maximum, minimum, clôture et volume.
+- Superpositions facultatives : **EMA rapide/lente**, **SMA20**, **Bollinger** avec les paramètres enregistrés et **VWAP quotidien approximatif** calculé sur le prix typique OHLCV pondéré par le volume. Cette VWAP n'est pas une vraie VWAP calculée sur chaque transaction.
+- Marqueurs **▲ BUY / ▼ SELL PAPER** au prix d'exécution supposé à l'**ouverture suivante**. Ce sont les remplissages fictifs du rapport conservé, **pas** les signaux de l'indicateur, ni des ordres réels.
+- **Protection contre la confusion de mode** : si un paramètre de l'Atelier change après une simulation, un encadré indique clairement que la zone de résultats affiche encore le dernier rapport. Aucune simulation n'est lancée automatiquement.
+- Les six stratégies de référence, le créateur V4, l'analyse des risques V4.1, les historiques vérifiés, les profils et le dossier personnel `workspace/` sont **conservés sans migration**. Les anciens rapports dépourvus de provenance fiable ne reçoivent pas de faux graphique.
+- La recette GitHub (Python 3.13, Windows, Chromium, API locale, données OKX publiques, tests du moteur et marqueurs PAPER) est distincte de la validation à faire sur le Firefox du propriétaire.
+
+## V4.1 — analyse professionnelle intégrée (conservée)
 
 - Sous le graphique du portefeuille, le **Desk Aether Quant** présente les positions **entièrement clôturées**, le **taux de réussite des sorties**, le **profit factor**, le **temps en position**, le **résultat réalisé** et le **résultat latent**. Un graphique distinct affiche le **drawdown historique**.
 - Les positions encore ouvertes ne sont **pas** comptées comme gagnantes ou perdantes. Les six stratégies existantes, les stratégies personnelles et leurs prix d'exécution fictifs ne changent pas.
@@ -50,14 +62,14 @@ La V3 conserve intégralement le cockpit premium de la V2 (bleu nuit, or et cyan
 
 Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes des pages passent par ce serveur local, et ce serveur Python peut **sortir vers les API publiques OKX** lors d'un clic. Aucune clé API OKX, compte, portefeuille, mot de passe ni ordre réel ne sont nécessaires. Les résultats ne deviennent jamais de vrais achats/ventes.
 
-## Mise à niveau sur la clé USB depuis la V4 déjà validée
+## Mise à niveau sur la clé USB depuis la V4.1 déjà validée
 
 1. Fermer la fenêtre noire `Seven Heaven Strategy Lab` (Ctrl+C), puis garder la clé branchée.
 2. Copier `E:\seven_heaven_strategy_lab\workspace\` vers **une sauvegarde distincte**, avant d'écraser les fichiers du programme.
-3. Télécharger le **ZIP V4.1 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
+3. Télécharger le **ZIP V4.2 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
-5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.1.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
-6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER puis comparer **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
+5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.2.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
+6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER, puis vérifier **Microscope des bougies** : même source, horodatages UTC, overlays EMA/Bollinger, marqueurs PAPER et navigation temporelle ; comparer ensuite **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
 7. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
 ## Provenance, contrôles et limitations
