@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V3_1_PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_ACCEPTED_90_DAY_OKX",
+  "status": "V4_OFFICIAL_RELEASE_ALL_CI_PASS_OWNER_USB_FIREFOX_PENDING",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -20,7 +20,7 @@
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
       "last_owner_reported_free_gb": 4.07
     },
-    "version": "3.1.0"
+    "version": "4.0.0"
   },
   "release_train": [
     {
@@ -119,32 +119,50 @@
     },
     {
       "stage": "C2",
-      "version": "4.0-planned",
-      "status": "NOT_BUILT",
+      "version": "4.0.0",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_FIREFOX_PENDING",
       "features": [
-        "freqtrade_native_backtest_adapter",
-        "hummingbot_paper_script_adapter",
-        "spot_grid_pmm",
-        "native_execution_proof",
-        "engine_result_contract"
-      ]
+        "native_independent_declarative_rule_composer",
+        "entry_ema_cross_or_above_ema",
+        "optional_rsi_or_volume_filter",
+        "exit_ema_cross_or_below_ema_or_rsi",
+        "optional_closed_bar_stop_loss_take_profit_not_live_stop",
+        "existing_profile_save_restore",
+        "seven_way_comparison_vs_six_unchanged_baselines",
+        "sha_verified_existing_okx_and_binance_sources",
+        "one_clean_windows_zip_without_workspace_or_developer_tests",
+        "paper_only_zero_real_orders"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v4-native-strategy-creator-2026-11-13",
+      "size_bytes": 49029,
+      "sha256": "01f52290fb0af507e3d845416a2861da6df63c2f6dd8d14baf20791ef7ecd294",
+      "provenance": {
+        "commit": "a556e14a5d4086e805021214ecbd4e5f64ce774e",
+        "pr": 761,
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43403476091",
+        "python_313_windows_double_click": true,
+        "chromium_visual_creator_profile_save_and_7_way_compare": true,
+        "public_okx_240_1h_real_network": true,
+        "owner_windows_firefox_verification": false
+      }
     },
     {
       "stage": "D",
       "version": "5.0-planned",
       "status": "NOT_BUILT",
       "features": [
-        "user_strategy_designer",
-        "regime_walkforward_tests",
-        "parameter_optimizer",
-        "risk_inventories",
-        "freqai_optional"
+        "live_public_market_paper_monitor_without_orders",
+        "independent_strategy_scheduler",
+        "strict_risk_engine_and_kill_switch",
+        "walk_forward_out_of_sample",
+        "user_defined_no_code_models_extended",
+        "separate_future_okx_spot_execution_only_after_explicit_authorization"
       ]
     }
   ],
   "engines": {
     "erith_internal": {
-      "status": "VALIDATED_PAPER_V2",
+      "status": "V4_NATIVE_INDEPENDENT_DECLARATIVE_CREATOR_PAPER_CI_PASS_OWNER_PENDING",
       "trade_api": false
     },
     "freqtrade": {
@@ -307,14 +325,16 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V3.1 accepted on owner's Firefox including 90-day OKX BTC/USDC historical fetch and 6-way PAPER replay. No further test or installation required; next developer research: compare causality and execution accounting to native Freqtrade directional backtest and previously executed Hummingbot Grid executor, on strictly identical source and window where possible.",
-  "next_developer_task": "V4 scientific engine parity: import frozen SHA-verified source into native Freqtrade directional backtester, match EMA timeframes/startup/fee/exit conventions; separate Hummingbot Grid Executor semantics; do not re-ask user for already validated 90-day fetch, no new USB dev files.",
+  "next_single_owner_check": "V3.1 owner Firefox 90-day OKX acceptance remains final verified local baseline. V4 is published and CI-tested but NOT yet owner-tested: when convenient, protect workspace/ backup, replace only canonical runtime files with full V4 ZIP and confirm BUILD 4.0.0; select 'Ma stratégie personnalisée', save and compare 7 PAPER methods. No patch installers.",
+  "next_developer_task": "Do not duplicate external engines. After V4 owner acceptance, design V5 autonomous PAPER research and independent risk limits; keep Freqtrade/Hummingbot as optional scientific validation only; real OKX orders require separate explicit authorization and isolation.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
     "No permission to access private archives or send real orders",
     "V3.1 has GitHub Windows/Chromium and default 240 candle OKX actual-network tests; extended 30/90-day OKX coverage is verified only with deterministic fixtures and is not guaranteed by exchange API",
-    "V3.1 owner Firefox 90-day OKX history is confirmed, but the full SHA-256 and raw CSV are local to owner USB; do not pretend independent GitHub CI has re-fetched the exact 90-day source"
+    "V3.1 owner Firefox 90-day OKX history is confirmed, but the full SHA-256 and raw CSV are local to owner USB; do not pretend independent GitHub CI has re-fetched the exact 90-day source",
+    "V4 custom strategy composer is a bounded no-code rule combination, not arbitrary strategy scripting, not a live scheduler or bot; stop/target use previous-close triggers and assumed next-open fills.",
+    "V4 owner Windows Firefox acceptance is still pending; Python 3.13/Chromium/OKX CI proof is independent evidence, not user validation."
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
 }
