@@ -43,7 +43,7 @@
   }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","okx-import","run","compare","save-profile"]) {
+    for (const id of ["import","okx-import","run","compare","robustness-run","save-profile"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare") && !available);
@@ -104,6 +104,7 @@
     if(id!==selectedSourceId) {
       selectedSourceId=id;
       lastRenderedReport=null;
+      resetScientific();
       $("draft-status").hidden=true;
       window.AetherMicroscope.clear();
       $("result").hidden=true;
@@ -165,7 +166,13 @@
     updateSource();
   }
 
+  function resetScientific(){
+    $("robustness-result").hidden=true;
+    $("robustness-empty").hidden=false;
+    $("scientific-fold-list").replaceChildren();
+  }
   function markDraftChanged(){
+    resetScientific();
     if(lastRenderedReport && !$("result").hidden){
       $("draft-status").hidden=false;
     }
@@ -316,6 +323,7 @@
     }
     currency=source.quote;
     $("inventory-label").textContent="INVENTAIRE "+source.base;
+    $("trades-base-label").textContent=source.base;
     $("hold50-label").textContent="BUY & HOLD · 50 % "+source.base;
     $("holdcash-label").textContent="CONSERVER LES "+source.quote;
     $("empty-result").hidden=true;
@@ -443,6 +451,106 @@
       root.append(button);
     }
   }
+  function makeScientificMetric(label, value, note, negative=false){
+    const tile=el("div",undefined,"scientific-fold-metric");
+    const caption=el("small",label);
+    const num=el("strong",value,negative?"scientific-negative":"scientific-positive");
+    tile.append(caption,num,el("span",note));
+    return tile;
+  }
+  function renderScientific(research) {
+    if(!research || research.safety?.orders_real!==0 ||
+       !Array.isArray(research.folds) || !research.folds.length)
+       throw new Error("Analyse de robustesse incohérente");
+    const quote=research.source.quote||"USDC";
+    $("robustness-empty").hidden=true;
+    $("robustness-result").hidden=false;
+    $("scientific-source").textContent=research.source.exchange+" · "+
+      research.source.pair+" · "+research.timeframe+" · "+
+      print(research.total_bars,0)+" bougies clôturées · "+research.selected_kind;
+    $("scientific-hash").textContent="SOURCE SHA-256 "+
+      research.source.sha256.slice(0,27)+"… · CAPITAL PAR FENÊTRE : "+
+      print(research.capital_per_independent_window,2)+" "+quote;
+    const total=research.summary;
+    $("scientific-folds-count").textContent=print(total.holdout_windows,0);
+    $("scientific-average").textContent=signed(total.mean_holdout_return_pct)+" %";
+    $("scientific-worst").textContent=signed(total.worst_holdout_return_pct)+" %";
+    $("scientific-stressed").textContent=signed(total.mean_holdout_double_cost_return_pct)+" %";
+    for(const [id,val] of [["scientific-average",total.mean_holdout_return_pct],
+                            ["scientific-worst",total.worst_holdout_return_pct],
+                            ["scientific-stressed",total.mean_holdout_double_cost_return_pct]]){
+      $(id).className=val<0?"scientific-negative":"scientific-positive";
+    }
+    const target=$("scientific-fold-list");
+    target.replaceChildren();
+    for(const fold of research.folds){
+      const card=el("article",undefined,"scientific-fold");
+      const heading=el("div",undefined,"scientific-fold-heading");
+      const left=el("div");
+      left.append(el("small","FENÊTRE "+String(fold.fold).padStart(2,"0")+" · SÉLECTION SUR PASSÉ"));
+      const pair=fold.selection.ema_fast+"/"+fold.selection.ema_slow;
+      left.append(el("strong",research.selected_kind==="EMA_CROSS"||
+        research.selected_kind==="CUSTOM_RULES"?"EMA "+pair+" · "+kinds[research.selected_kind]:
+        kinds[research.selected_kind]||research.selected_kind));
+      heading.append(left,el("span",fold.selection.candidates_considered+
+        (fold.selection.candidates_considered>1?" CONFIGURATIONS ESSAYÉES":" CONFIGURATION CONSERVÉE"),
+        "scientific-candidate-count"));
+      const grid=el("div",undefined,"scientific-fold-metrics");
+      grid.append(
+        makeScientificMetric("APPRENTISSAGE · HISTORIQUE ANTÉRIEUR",
+          signed(fold.training.metrics.return_pct)+" %",
+          utcSpan(fold.training.first_bar_utc,fold.training.last_bar_utc)+
+          " · "+fold.training.bars+" bougies",
+          fold.training.metrics.return_pct<0),
+        makeScientificMetric("VÉRIFICATION · HISTORIQUE ULTÉRIEUR",
+          signed(fold.holdout.metrics.return_pct)+" %",
+          utcSpan(fold.holdout.first_bar_utc,fold.holdout.last_bar_utc)+
+          " · "+fold.holdout.bars+" bougies",
+          fold.holdout.metrics.return_pct<0),
+        makeScientificMetric("DRAWDOWN EN VÉRIFICATION",
+          print(fold.holdout.metrics.max_drawdown_pct)+" %",
+          print(fold.holdout.metrics.hypothetical_fills,0)+
+          " fills PAPER · frais "+moneyFor(fold.holdout.metrics.fees_paid_quote,quote),
+          fold.holdout.metrics.max_drawdown_pct<0),
+        makeScientificMetric("FRAIS ET GLISSEMENT ×2",
+          signed(fold.holdout.both_x2.return_pct)+" %",
+          "Frais ×2 : "+signed(fold.holdout.fee_x2.return_pct)+
+          " % · glissement ×2 : "+signed(fold.holdout.slippage_x2.return_pct)+" %",
+          fold.holdout.both_x2.return_pct<0)
+      );
+      const foot=el("div",undefined,"scientific-fold-foot");
+      foot.textContent="Références sur la même vérification : Buy & Hold 50 % "+
+        signed(fold.holdout.benchmark_hold_50.return_pct)+
+        " % · Conservation "+quote+" "+
+        signed(fold.holdout.benchmark_cash.return_pct)+" %";
+      card.append(heading,grid,foot);
+      target.append(card);
+    }
+    $("scientific-method").textContent=research.folds.length>1?
+      "Deux fenêtres de validation chronologiques distinctes. Le second entraînement réutilise les dates passées du premier test, comme une recherche walk-forward expansive.":
+      "Une seule séparation entraînement/vérification : l'historique est trop court pour deux vérifications indépendantes de 60 bougies.";
+  }
+  function utcSpan(from,to){
+    return whenUTC(from).slice(0,16)+" → "+whenUTC(to).slice(0,16)+" UTC";
+  }
+  function moneyFor(amount,quote){return print(amount,2)+" "+quote;}
+  async function runRobustness(){
+    if(busy)return;
+    let params;
+    try{params=requestParams();}catch(e){notice(e.message,"error");return;}
+    setBusy(true,"Étude chronologique…");
+    notice("Aether Scientific : séparation des dates, sélection EMA sur le passé et vérifications PAPER ultérieures…");
+    resetScientific();
+    try{
+      const payload=await api("/api/robustness",{params});
+      renderScientific(payload.research);
+      notice("Robustesse calculée sur la source SHA-256 : "+
+        payload.research.summary.holdout_windows+
+        " fenêtre(s) de vérification. Aucun fichier ajouté à ta clé USB.","success");
+      $("robustness").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  }
   async function runCurrent() {
     if(busy)return;
     let params;
@@ -494,6 +602,7 @@
   });
   form.addEventListener("submit",event=>{event.preventDefault();runCurrent();});
   $("compare").addEventListener("click",compareCurrent);
+  $("robustness-run").addEventListener("click",runRobustness);
   $("saved-profiles").addEventListener("change",event=>{
     const profile=profiles.find(p=>p.id===event.target.value);
     if(profile){chooseParams(profile.params);$("profile-name").value=profile.name;}
@@ -527,11 +636,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(!health.public_okx_enabled)throw new Error("Le serveur Python V3.1 n'est pas actif. Relance le lanceur.");
+      if(!health.public_okx_enabled || !health.walk_forward_research_enabled)throw new Error("Le serveur Python V4.3 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.2 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V4.2 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.3 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V4.3 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
