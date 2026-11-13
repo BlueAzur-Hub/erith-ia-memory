@@ -113,7 +113,14 @@ class PaperEngineTests(unittest.TestCase):
                               "entry_rule": "EMA_CROSS_UP",
                               "filter_rule": "NONE",
                               "exit_rule": "EMA_CROSS_DOWN"})
-        self.assertEqual(old["trades"], own["trades"])
+        # Same PAPER fills, different correctly attributed rule descriptions.
+        execution_keys=("timestamp","side","price","qty","fee","cash_after")
+        self.assertEqual([{k:t[k] for k in execution_keys} for t in old["trades"]],
+                         [{k:t[k] for k in execution_keys} for t in own["trades"]])
+        self.assertTrue(all(t["reason_code"] in ("EMA_CROSS_UP","EMA_CROSS_DOWN")
+                            for t in old["trades"]))
+        self.assertTrue(all(t["reason_code"].startswith("RULE_")
+                            for t in own["trades"]))
         self.assertEqual(old["results"], own["results"])
         self.assertEqual(own["safety"]["orders_real"], 0)
 
