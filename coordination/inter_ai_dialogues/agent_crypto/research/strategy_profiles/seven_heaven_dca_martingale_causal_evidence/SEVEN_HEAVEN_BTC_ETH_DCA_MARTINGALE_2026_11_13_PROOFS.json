@@ -1,0 +1,4637 @@
+{
+  "schema": "seven-heaven.btc-eth-spot-fixed-dca-martingale-daily-proxy-v1",
+  "date": "2026-11-13",
+  "status": "RETROSPECTIVE_PAPER_EXPLORATORY_NO_LIVE_ORDERS",
+  "frozen_protocol": "SEVEN_HEAVEN_FIXED_DCA_AND_SPOT_MARTINGALE_DAILY_CAUSAL_PROTOCOL_2026_11_13.md",
+  "venue": "Bitstamp native historical BTC/USD and ETH/USD daily",
+  "source_provenance": {
+    "BTC": {
+      "daily_count": 1310,
+      "range": [
+        "2023-04-01",
+        "2026-10-31"
+      ],
+      "sha256": "89a85a2f419244b3140f0518fb731f37c06abc3b73734433eb3fbf4642907dbb"
+    },
+    "ETH": {
+      "daily_count": 1310,
+      "range": [
+        "2023-04-01",
+        "2026-10-31"
+      ],
+      "sha256": "881227ba20481322b6829c19d97b799d11a73ae155be8868cf5ec943039c6b49"
+    }
+  },
+  "windows": {
+    "2024": [
+      "2024-01-01",
+      "2024-12-31"
+    ],
+    "2025": [
+      "2025-01-01",
+      "2025-12-31"
+    ],
+    "2026_JAN_OCT": [
+      "2026-01-01",
+      "2026-10-31"
+    ]
+  },
+  "methods": [
+    "CASH",
+    "HOLD",
+    "MONTHLY_DCA",
+    "SPOT_DCA_MARTINGALE_DAILY_PROXY"
+  ],
+  "capital_usd_per_policy_per_asset_per_window": 1000,
+  "roundtrip_hypotheses": {
+    "fee_pct_per_side": 0.1,
+    "slippage_pct_per_side": 0.05
+  },
+  "martingale_parameters": {
+    "initial_order_usd": 40,
+    "drop_since_last_buy_pct": 5,
+    "safety_multiplier": 1.8,
+    "max_safety_buys": 4,
+    "planned_full_cycle_total_usd": 894.784,
+    "take_profit_vs_all_in_avg_cost_pct": 6,
+    "trigger": "previous daily close; next daily open hypothetical fill",
+    "leverage": false,
+    "no_stop_loss": true,
+    "no_intraday_trigger": true
+  },
+  "caveats": [
+    "This is NOT a faithful exchange-hosted OKX intraday DCA bot; daily causal proxy only",
+    "USD Bitstamp, not OKX USDC; no authenticated eligibility, minSz/lotSz or historical book fills",
+    "2024/2025/2026 already explored in other strategies: NO out-of-sample validation",
+    "Equal initial bankroll but unequal time invested; compare average cash and maximum exposure",
+    "Fixed 0.1% taker + 0.05% slippage per side are PAPER assumptions, not Bitstamp verified fees",
+    "Stop-loss absent by design: large drawdowns possible; an open losing cycle is not a realized win",
+    "No account order endpoint, connection, private key, trading action or recommendation"
+  ],
+  "results": {
+    "BTC": {
+      "2024": {
+        "underlying_first_open_last_close_change_pct": 120.978276,
+        "policies": {
+          "CASH": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "CASH",
+            "final_usd": 1000,
+            "return_pct": 0,
+            "max_drawdown_pct": 0,
+            "buy_count": 0,
+            "sell_count": 0,
+            "asset_exposure_days": 0,
+            "asset_exposure_pct": 0,
+            "average_idle_cash_usd": 1000,
+            "max_marked_inventory_usd": 0,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 1000,
+              "base_qty": 0,
+              "marked_inventory_usd": 0
+            },
+            "actions": [],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0,
+            "stress_actions_buy_count": 0,
+            "stress_actions_sell_count": 0
+          },
+          "HOLD": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "HOLD",
+            "final_usd": 2203.163347,
+            "return_pct": 120.316335,
+            "max_drawdown_pct": -26.211348,
+            "buy_count": 1,
+            "sell_count": 0,
+            "asset_exposure_days": 366,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 0,
+            "max_marked_inventory_usd": 2505.29879,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.023628703396,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.023628703396,
+              "marked_inventory_usd": 2203.16334717
+            },
+            "actions": [
+              {
+                "date": "2024-01-01",
+                "side": "BUY",
+                "reason": "INITIAL_HOLD",
+                "signal_at": null,
+                "price_open": 42258,
+                "modeled_fill": 42279.129,
+                "quote_debit_usd": 1000,
+                "base_qty": 0.023628703396,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 119.656375,
+            "stress_actions_buy_count": 1,
+            "stress_actions_sell_count": 0
+          },
+          "MONTHLY_DCA": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "MONTHLY_DCA",
+            "final_usd": 1533.417959,
+            "return_pct": 53.341796,
+            "max_drawdown_pct": -16.471847,
+            "buy_count": 12,
+            "sell_count": 0,
+            "asset_exposure_days": 366,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 457.1949,
+            "max_marked_inventory_usd": 1743.706459,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.016445752053,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.016445752053,
+              "marked_inventory_usd": 1533.41795916
+            },
+            "actions": [
+              {
+                "date": "2024-01-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 42258,
+                "modeled_fill": 42279.129,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001969058616,
+                "cash_after": 916.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 42548,
+                "modeled_fill": 42569.274,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001955637845,
+                "cash_after": 833.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 61161,
+                "modeled_fill": 61191.5805,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001360482644,
+                "cash_after": 750,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-04-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 71296,
+                "modeled_fill": 71331.648,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001167084816,
+                "cash_after": 666.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-05-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 60611,
+                "modeled_fill": 60641.3055,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001372828018,
+                "cash_after": 583.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-06-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 67513,
+                "modeled_fill": 67546.7565,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001232480841,
+                "cash_after": 500,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-07-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 62676,
+                "modeled_fill": 62707.338,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001327597151,
+                "cash_after": 416.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-08-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 64612,
+                "modeled_fill": 64644.306,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001287817728,
+                "cash_after": 333.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-09-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 58967,
+                "modeled_fill": 58996.4835,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001411102464,
+                "cash_after": 250,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-10-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 63331,
+                "modeled_fill": 63362.6655,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001313866495,
+                "cash_after": 166.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 70202,
+                "modeled_fill": 70237.101,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.0011852722,
+                "cash_after": 83.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-12-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 96471,
+                "modeled_fill": 96519.2355,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000862523235,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 52.882459,
+            "stress_actions_buy_count": 12,
+            "stress_actions_sell_count": 0
+          },
+          "SPOT_DCA_MARTINGALE_DAILY_PROXY": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "SPOT_DCA_MARTINGALE_DAILY_PROXY",
+            "final_usd": 1209.925271,
+            "return_pct": 20.992527,
+            "max_drawdown_pct": -3.257421,
+            "buy_count": 45,
+            "sell_count": 24,
+            "asset_exposure_days": 342,
+            "asset_exposure_pct": 93.443,
+            "average_idle_cash_usd": 1002.15182,
+            "max_marked_inventory_usd": 512.592371,
+            "max_quote_committed_in_cycle_usd": 474.88,
+            "completed_cycles": 24,
+            "open_cycle_base_inventory": 0.00245510666,
+            "max_safety_buys_used": 3,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 981.00873227,
+              "base_qty": 0.00245510666,
+              "marked_inventory_usd": 228.91653921
+            },
+            "actions": [
+              {
+                "date": "2024-01-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 42258,
+                "modeled_fill": 42279.129,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000945148136,
+                "cash_after": 960,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-01-03",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-01-02",
+                "price_open": 44972,
+                "modeled_fill": 44949.514,
+                "base_qty": 0.000945148136,
+                "quote_net": 42.441465415,
+                "cycle_pnl_usd": 2.441465415,
+                "cash_after": 1002.441465415,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-01-04",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 42863,
+                "modeled_fill": 42884.4315,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000931807618,
+                "cash_after": 962.441465415,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-01-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-01-08",
+                "price_open": 47012,
+                "modeled_fill": 46988.494,
+                "base_qty": 0.000931807618,
+                "quote_net": 43.740452425,
+                "cycle_pnl_usd": 3.740452425,
+                "cash_after": 1006.181917841,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-01-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 46103,
+                "modeled_fill": 46126.0515,
+                "quote_debit_usd": 40,
+                "base_qty": 0.00086632258,
+                "cash_after": 966.181917841,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-01-13",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-01-12",
+                "price_open": 42772,
+                "modeled_fill": 42793.386,
+                "quote_debit_usd": 72,
+                "base_qty": 0.00168082217,
+                "cash_after": 894.181917841,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-01-23",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-01-22",
+                "price_open": 39515,
+                "modeled_fill": 39534.7575,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.00327485326,
+                "cash_after": 764.581917841,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-02-08",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-07",
+                "price_open": 44342,
+                "modeled_fill": 44319.829,
+                "base_qty": 0.00582199801,
+                "quote_net": 257.771926301,
+                "cycle_pnl_usd": 16.171926301,
+                "cash_after": 1022.353844142,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-02-09",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 45299,
+                "modeled_fill": 45321.6495,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000881698711,
+                "cash_after": 982.353844142,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-12",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-11",
+                "price_open": 48313,
+                "modeled_fill": 48288.8435,
+                "base_qty": 0.000881698711,
+                "quote_net": 42.533634875,
+                "cycle_pnl_usd": 2.533634875,
+                "cash_after": 1024.887479017,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-02-13",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 49937,
+                "modeled_fill": 49961.9685,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000799809158,
+                "cash_after": 984.887479017,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-27",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-26",
+                "price_open": 54534,
+                "modeled_fill": 54506.733,
+                "base_qty": 0.000799809158,
+                "quote_net": 43.551389244,
+                "cycle_pnl_usd": 3.551389244,
+                "cash_after": 1028.438868261,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-02-28",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 57065,
+                "modeled_fill": 57093.5325,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000699904844,
+                "cash_after": 988.438868261,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-29",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-28",
+                "price_open": 62512,
+                "modeled_fill": 62480.744,
+                "base_qty": 0.000699904844,
+                "quote_net": 43.686844809,
+                "cycle_pnl_usd": 3.686844809,
+                "cash_after": 1032.12571307,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-03-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 61161,
+                "modeled_fill": 61191.5805,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000653031669,
+                "cash_after": 992.12571307,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-05",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-04",
+                "price_open": 68359,
+                "modeled_fill": 68324.8205,
+                "base_qty": 0.000653031669,
+                "quote_net": 44.573653313,
+                "cycle_pnl_usd": 4.573653313,
+                "cash_after": 1036.699366383,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-03-06",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 63815,
+                "modeled_fill": 63846.9075,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000625872756,
+                "cash_after": 996.699366383,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-08",
+                "price_open": 68285,
+                "modeled_fill": 68250.8575,
+                "base_qty": 0.000625872756,
+                "quote_net": 42.673635932,
+                "cycle_pnl_usd": 2.673635932,
+                "cash_after": 1039.373002315,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-03-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 68464,
+                "modeled_fill": 68498.232,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000583373305,
+                "cash_after": 999.373002315,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-14",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-13",
+                "price_open": 73130,
+                "modeled_fill": 73093.435,
+                "base_qty": 0.000583373305,
+                "quote_net": 42.598117961,
+                "cycle_pnl_usd": 2.598117961,
+                "cash_after": 1041.971120275,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-03-15",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 71387,
+                "modeled_fill": 71422.6935,
+                "quote_debit_usd": 40,
+                "base_qty": 0.0005594866,
+                "cash_after": 1001.971120275,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-17",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-03-16",
+                "price_open": 65245,
+                "modeled_fill": 65277.6225,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001101879468,
+                "cash_after": 929.971120275,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-03-20",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-03-19",
+                "price_open": 61919,
+                "modeled_fill": 61949.9595,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.002089921132,
+                "cash_after": 800.371120275,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-03-26",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-25",
+                "price_open": 69889,
+                "modeled_fill": 69854.0555,
+                "base_qty": 0.0037512872,
+                "quote_net": 261.780581608,
+                "cycle_pnl_usd": 20.180581608,
+                "cash_after": 1062.151701884,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-03-27",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 69999,
+                "modeled_fill": 70033.9995,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000570580579,
+                "cash_after": 1022.151701884,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-04-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-04-02",
+                "price_open": 65471,
+                "modeled_fill": 65503.7355,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001098075879,
+                "cash_after": 950.151701884,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-04-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-04-08",
+                "price_open": 71623,
+                "modeled_fill": 71587.1885,
+                "base_qty": 0.001668656458,
+                "quote_net": 119.334969942,
+                "cycle_pnl_usd": 7.334969942,
+                "cash_after": 1069.486671825,
+                "safety_used": 1
+              },
+              {
+                "date": "2024-04-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 69100,
+                "modeled_fill": 69134.55,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000578003906,
+                "cash_after": 1029.486671825,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-04-14",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-04-13",
+                "price_open": 64039,
+                "modeled_fill": 64071.0195,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001122630364,
+                "cash_after": 957.486671825,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-05-01",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-04-30",
+                "price_open": 60611,
+                "modeled_fill": 60641.3055,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.002135022134,
+                "cash_after": 827.886671825,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-05-18",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-05-17",
+                "price_open": 67059,
+                "modeled_fill": 67025.4705,
+                "base_qty": 0.003835656404,
+                "quote_net": 256.829588476,
+                "cycle_pnl_usd": 15.229588476,
+                "cash_after": 1084.716260302,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-05-19",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 66923,
+                "modeled_fill": 66956.4615,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000596806329,
+                "cash_after": 1044.716260302,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-05-21",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-05-20",
+                "price_open": 71435,
+                "modeled_fill": 71399.2825,
+                "base_qty": 0.000596806329,
+                "quote_net": 42.568932106,
+                "cycle_pnl_usd": 2.568932106,
+                "cash_after": 1087.285192407,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-05-22",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 70155,
+                "modeled_fill": 70190.0775,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000569311808,
+                "cash_after": 1047.285192407,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-06-15",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-06-14",
+                "price_open": 65995,
+                "modeled_fill": 66027.9975,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001089357161,
+                "cash_after": 975.285192407,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-06-25",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-06-24",
+                "price_open": 60250,
+                "modeled_fill": 60280.125,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.002147814549,
+                "cash_after": 845.685192407,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-07-05",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-07-04",
+                "price_open": 57030,
+                "modeled_fill": 57058.515,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.004084350128,
+                "cash_after": 612.405192407,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2024-07-16",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-07-15",
+                "price_open": 64759,
+                "modeled_fill": 64726.6205,
+                "base_qty": 0.007890833647,
+                "quote_net": 510.236247877,
+                "cycle_pnl_usd": 35.356247877,
+                "cash_after": 1122.641440284,
+                "safety_used": 3
+              },
+              {
+                "date": "2024-07-17",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 65081,
+                "modeled_fill": 65113.5405,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000613697852,
+                "cash_after": 1082.641440284,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-08-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-02",
+                "price_open": 61419,
+                "modeled_fill": 61449.7095,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001170519316,
+                "cash_after": 1010.641440284,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-08-05",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-04",
+                "price_open": 58137,
+                "modeled_fill": 58166.0685,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.002225877265,
+                "cash_after": 881.041440284,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-08-06",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-05",
+                "price_open": 54040,
+                "modeled_fill": 54067.02,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.004310334711,
+                "cash_after": 647.761440284,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2024-08-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-08-08",
+                "price_open": 61733,
+                "modeled_fill": 61702.1335,
+                "base_qty": 0.008320429145,
+                "quote_net": 512.87484163,
+                "cycle_pnl_usd": 37.99484163,
+                "cash_after": 1160.636281914,
+                "safety_used": 3
+              },
+              {
+                "date": "2024-08-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 60842,
+                "modeled_fill": 60872.421,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000656455572,
+                "cash_after": 1120.636281914,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-08-16",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-15",
+                "price_open": 57556,
+                "modeled_fill": 57584.778,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001249081345,
+                "cash_after": 1048.636281914,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-08-24",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-08-23",
+                "price_open": 64095,
+                "modeled_fill": 64062.9525,
+                "base_qty": 0.001905536917,
+                "quote_net": 121.952246663,
+                "cycle_pnl_usd": 9.952246663,
+                "cash_after": 1170.588528578,
+                "safety_used": 1
+              },
+              {
+                "date": "2024-08-25",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 64176,
+                "modeled_fill": 64208.088,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000622352124,
+                "cash_after": 1130.588528578,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-08-28",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-27",
+                "price_open": 59433,
+                "modeled_fill": 59462.7165,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001209633131,
+                "cash_after": 1058.588528578,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-09-06",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-09-05",
+                "price_open": 56179,
+                "modeled_fill": 56207.0895,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.0023034555,
+                "cash_after": 928.988528578,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-09-20",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-09-19",
+                "price_open": 62950,
+                "modeled_fill": 62918.525,
+                "base_qty": 0.004135440755,
+                "quote_net": 259.935636727,
+                "cycle_pnl_usd": 18.335636727,
+                "cash_after": 1188.924165305,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-09-21",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 63189,
+                "modeled_fill": 63220.5945,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000632073144,
+                "cash_after": 1148.924165305,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-10-17",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-10-16",
+                "price_open": 67608,
+                "modeled_fill": 67574.196,
+                "base_qty": 0.000632073144,
+                "quote_net": 42.669122715,
+                "cycle_pnl_usd": 2.669122715,
+                "cash_after": 1191.59328802,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-10-18",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 67392,
+                "modeled_fill": 67425.696,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000592652984,
+                "cash_after": 1151.59328802,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-10-30",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-10-29",
+                "price_open": 72727,
+                "modeled_fill": 72690.6365,
+                "base_qty": 0.000592652984,
+                "quote_net": 43.037242337,
+                "cycle_pnl_usd": 3.037242337,
+                "cash_after": 1194.630530357,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-10-31",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 72330,
+                "modeled_fill": 72366.165,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000552192312,
+                "cash_after": 1154.630530357,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-04",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-11-03",
+                "price_open": 68738,
+                "modeled_fill": 68772.369,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001045886204,
+                "cash_after": 1082.630530357,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-11-07",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-11-06",
+                "price_open": 75638,
+                "modeled_fill": 75600.181,
+                "base_qty": 0.001598078516,
+                "quote_net": 120.694210007,
+                "cycle_pnl_usd": 8.694210007,
+                "cash_after": 1203.324740364,
+                "safety_used": 1
+              },
+              {
+                "date": "2024-11-08",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 75918,
+                "modeled_fill": 75955.959,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000526094865,
+                "cash_after": 1163.324740364,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-12",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-11-11",
+                "price_open": 88771,
+                "modeled_fill": 88726.6145,
+                "base_qty": 0.000526094865,
+                "quote_net": 46.631937619,
+                "cycle_pnl_usd": 6.631937619,
+                "cash_after": 1209.956677983,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-11-13",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 88038,
+                "modeled_fill": 88082.019,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000453668529,
+                "cash_after": 1169.956677983,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-21",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-11-20",
+                "price_open": 94374,
+                "modeled_fill": 94326.813,
+                "base_qty": 0.000453668529,
+                "quote_net": 42.750313359,
+                "cycle_pnl_usd": 2.750313359,
+                "cash_after": 1212.706991343,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-11-22",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 98451,
+                "modeled_fill": 98500.2255,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000405684756,
+                "cash_after": 1172.706991343,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-26",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-11-25",
+                "price_open": 93006,
+                "modeled_fill": 93052.503,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000772983742,
+                "cash_after": 1100.706991343,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-12-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-12-08",
+                "price_open": 101188,
+                "modeled_fill": 101137.406,
+                "base_qty": 0.001178668498,
+                "quote_net": 119.088266913,
+                "cycle_pnl_usd": 7.088266913,
+                "cash_after": 1219.795258255,
+                "safety_used": 1
+              },
+              {
+                "date": "2024-12-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 97318,
+                "modeled_fill": 97366.659,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000410407837,
+                "cash_after": 1179.795258255,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-12-16",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-12-15",
+                "price_open": 104476,
+                "modeled_fill": 104423.762,
+                "base_qty": 0.000410407837,
+                "quote_net": 42.813474011,
+                "cycle_pnl_usd": 2.813474011,
+                "cash_after": 1222.608732266,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-12-17",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 106109,
+                "modeled_fill": 106162.0545,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000376406053,
+                "cash_after": 1182.608732266,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-12-19",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-12-18",
+                "price_open": 100133,
+                "modeled_fill": 100183.0665,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000717966363,
+                "cash_after": 1110.608732266,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-12-23",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-12-22",
+                "price_open": 95100,
+                "modeled_fill": 95147.55,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.001360734244,
+                "cash_after": 981.008732266,
+                "safety_count_after": 2
+              }
+            ],
+            "cycles": [
+              {
+                "closed_at": "2024-01-03",
+                "pnl_usd": 2.44146542,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-01-09",
+                "pnl_usd": 3.74045243,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-02-08",
+                "pnl_usd": 16.1719263,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-02-12",
+                "pnl_usd": 2.53363488,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-02-27",
+                "pnl_usd": 3.55138924,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-02-29",
+                "pnl_usd": 3.68684481,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-05",
+                "pnl_usd": 4.57365331,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-09",
+                "pnl_usd": 2.67363593,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-14",
+                "pnl_usd": 2.59811796,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-26",
+                "pnl_usd": 20.18058161,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-04-09",
+                "pnl_usd": 7.33496994,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2024-05-18",
+                "pnl_usd": 15.22958848,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-05-21",
+                "pnl_usd": 2.56893211,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-07-16",
+                "pnl_usd": 35.35624788,
+                "safety_buys": 3
+              },
+              {
+                "closed_at": "2024-08-09",
+                "pnl_usd": 37.99484163,
+                "safety_buys": 3
+              },
+              {
+                "closed_at": "2024-08-24",
+                "pnl_usd": 9.95224666,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2024-09-20",
+                "pnl_usd": 18.33563673,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-10-17",
+                "pnl_usd": 2.66912272,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-10-30",
+                "pnl_usd": 3.03724234,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-11-07",
+                "pnl_usd": 8.69421001,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2024-11-12",
+                "pnl_usd": 6.63193762,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-11-21",
+                "pnl_usd": 2.75031336,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-12-09",
+                "pnl_usd": 7.08826691,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2024-12-16",
+                "pnl_usd": 2.81347401,
+                "safety_buys": 0
+              }
+            ],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 19.981337,
+            "stress_actions_buy_count": 45,
+            "stress_actions_sell_count": 24
+          }
+        }
+      },
+      "2025": {
+        "underlying_first_open_last_close_change_pct": -6.268011,
+        "policies": {
+          "CASH": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "CASH",
+            "final_usd": 1000,
+            "return_pct": 0,
+            "max_drawdown_pct": 0,
+            "buy_count": 0,
+            "sell_count": 0,
+            "asset_exposure_days": 0,
+            "asset_exposure_pct": 0,
+            "average_idle_cash_usd": 1000,
+            "max_marked_inventory_usd": 0,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 1000,
+              "base_qty": 0,
+              "marked_inventory_usd": 0
+            },
+            "actions": [],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0,
+            "stress_actions_buy_count": 0,
+            "stress_actions_sell_count": 0
+          },
+          "HOLD": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "HOLD",
+            "final_usd": 934.512146,
+            "return_pct": -6.548785,
+            "max_drawdown_pct": -32.109069,
+            "buy_count": 1,
+            "sell_count": 0,
+            "asset_exposure_days": 365,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 0,
+            "max_marked_inventory_usd": 1332.173253,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.010696666718,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.010696666718,
+              "marked_inventory_usd": 934.51214579
+            },
+            "actions": [
+              {
+                "date": "2025-01-01",
+                "side": "BUY",
+                "reason": "INITIAL_HOLD",
+                "signal_at": null,
+                "price_open": 93347,
+                "modeled_fill": 93393.6735,
+                "quote_debit_usd": 1000,
+                "base_qty": 0.010696666718,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": -6.828719,
+            "stress_actions_buy_count": 1,
+            "stress_actions_sell_count": 0
+          },
+          "MONTHLY_DCA": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "MONTHLY_DCA",
+            "final_usd": 878.11185,
+            "return_pct": -12.188815,
+            "max_drawdown_pct": -29.264093,
+            "buy_count": 12,
+            "sell_count": 0,
+            "asset_exposure_days": 365,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 456.16438,
+            "max_marked_inventory_usd": 1042.508882,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.010051094408,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.010051094408,
+              "marked_inventory_usd": 878.11185024
+            },
+            "actions": [
+              {
+                "date": "2025-01-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 93347,
+                "modeled_fill": 93393.6735,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000891388893,
+                "cash_after": 916.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-02-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 102408,
+                "modeled_fill": 102459.204,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000812519325,
+                "cash_after": 833.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-03-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 84316,
+                "modeled_fill": 84358.158,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.00098686464,
+                "cash_after": 750,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-04-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 82537,
+                "modeled_fill": 82578.2685,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.001008135491,
+                "cash_after": 666.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-05-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 94181,
+                "modeled_fill": 94228.0905,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000883495387,
+                "cash_after": 583.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-06-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 104646,
+                "modeled_fill": 104698.323,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000795142471,
+                "cash_after": 500,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-07-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 107164,
+                "modeled_fill": 107217.582,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000776459249,
+                "cash_after": 416.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 115749,
+                "modeled_fill": 115806.8745,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.00071886996,
+                "cash_after": 333.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-09-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 108268,
+                "modeled_fill": 108322.134,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000768541758,
+                "cash_after": 250,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-10-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 114079,
+                "modeled_fill": 114136.0395,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000729393482,
+                "cash_after": 166.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-11-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 109554,
+                "modeled_fill": 109608.777,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000759520228,
+                "cash_after": 83.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-12-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 90369,
+                "modeled_fill": 90414.1845,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.000920763525,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": -12.451854,
+            "stress_actions_buy_count": 12,
+            "stress_actions_sell_count": 0
+          },
+          "SPOT_DCA_MARTINGALE_DAILY_PROXY": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "SPOT_DCA_MARTINGALE_DAILY_PROXY",
+            "final_usd": 1014.073479,
+            "return_pct": 1.407348,
+            "max_drawdown_pct": -12.815225,
+            "buy_count": 18,
+            "sell_count": 7,
+            "asset_exposure_days": 358,
+            "asset_exposure_pct": 98.082,
+            "average_idle_cash_usd": 781.08785,
+            "max_marked_inventory_usd": 992.674002,
+            "max_quote_committed_in_cycle_usd": 894.784,
+            "completed_cycles": 7,
+            "open_cycle_base_inventory": 0.008952684898,
+            "max_safety_buys_used": 4,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 72,
+            "ending_balance": {
+              "cash_usd": 231.92395546,
+              "base_qty": 0.008952684898,
+              "marked_inventory_usd": 782.14952329
+            },
+            "actions": [
+              {
+                "date": "2025-01-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 93347,
+                "modeled_fill": 93393.6735,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000427866669,
+                "cash_after": 960,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-01-07",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-01-06",
+                "price_open": 102278,
+                "modeled_fill": 102226.861,
+                "base_qty": 0.000427866669,
+                "quote_net": 43.695727003,
+                "cycle_pnl_usd": 3.695727003,
+                "cash_after": 1003.695727003,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-01-08",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 96922,
+                "modeled_fill": 96970.461,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000412084665,
+                "cash_after": 963.695727003,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-01-18",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-01-17",
+                "price_open": 104119,
+                "modeled_fill": 104066.9405,
+                "base_qty": 0.000412084665,
+                "quote_net": 42.841505949,
+                "cycle_pnl_usd": 2.841505949,
+                "cash_after": 1006.537232952,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-01-19",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 104432,
+                "modeled_fill": 104484.216,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000382450493,
+                "cash_after": 966.537232952,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-02-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-02-02",
+                "price_open": 97670,
+                "modeled_fill": 97718.835,
+                "quote_debit_usd": 72,
+                "base_qty": 0.00073607173,
+                "cash_after": 894.537232952,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-02-25",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-02-24",
+                "price_open": 91516,
+                "modeled_fill": 91561.758,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.001414024067,
+                "cash_after": 764.937232952,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2025-02-27",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-02-26",
+                "price_open": 84150,
+                "modeled_fill": 84192.075,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.002768039071,
+                "cash_after": 531.657232952,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2025-03-11",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-03-10",
+                "price_open": 78599,
+                "modeled_fill": 78638.2995,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.005334353847,
+                "cash_after": 111.753232952,
+                "safety_count_after": 4
+              },
+              {
+                "date": "2025-04-23",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-04-22",
+                "price_open": 93482,
+                "modeled_fill": 93435.259,
+                "base_qty": 0.010634939209,
+                "quote_net": 992.68462113,
+                "cycle_pnl_usd": 97.90062113,
+                "cash_after": 1104.437854082,
+                "safety_used": 4
+              },
+              {
+                "date": "2025-04-24",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 93730,
+                "modeled_fill": 93776.865,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000426118318,
+                "cash_after": 1064.437854082,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-05-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-05-08",
+                "price_open": 103234,
+                "modeled_fill": 103182.383,
+                "base_qty": 0.000426118318,
+                "quote_net": 43.923935565,
+                "cycle_pnl_usd": 3.923935565,
+                "cash_after": 1108.361789647,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-05-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 102992,
+                "modeled_fill": 103043.496,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000387797789,
+                "cash_after": 1068.361789647,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-05-22",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-05-21",
+                "price_open": 109696,
+                "modeled_fill": 109641.152,
+                "base_qty": 0.000387797789,
+                "quote_net": 42.476077776,
+                "cycle_pnl_usd": 2.476077776,
+                "cash_after": 1110.837867422,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-05-23",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 111742,
+                "modeled_fill": 111797.871,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000357431135,
+                "cash_after": 1070.837867422,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-05-30",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-05-29",
+                "price_open": 105577,
+                "modeled_fill": 105629.7885,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000680944958,
+                "cash_after": 998.837867422,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-07-11",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-07-10",
+                "price_open": 116038,
+                "modeled_fill": 115979.981,
+                "base_qty": 0.001038376094,
+                "quote_net": 120.310408774,
+                "cycle_pnl_usd": 8.310408774,
+                "cash_after": 1119.148276197,
+                "safety_used": 1
+              },
+              {
+                "date": "2025-07-12",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 117579,
+                "modeled_fill": 117637.7895,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000339687103,
+                "cash_after": 1079.148276197,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-26",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-08-25",
+                "price_open": 110128,
+                "modeled_fill": 110183.064,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000652805153,
+                "cash_after": 1007.148276197,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-10-03",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-10-02",
+                "price_open": 120645,
+                "modeled_fill": 120584.6775,
+                "base_qty": 0.000992492256,
+                "quote_net": 119.559679268,
+                "cycle_pnl_usd": 7.559679268,
+                "cash_after": 1126.707955465,
+                "safety_used": 1
+              },
+              {
+                "date": "2025-10-04",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 122329,
+                "modeled_fill": 122390.1645,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000326497151,
+                "cash_after": 1086.707955465,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-10-11",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-10-10",
+                "price_open": 112989,
+                "modeled_fill": 113045.4945,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000636275442,
+                "cash_after": 1014.707955465,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-10-18",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-10-17",
+                "price_open": 106470,
+                "modeled_fill": 106523.235,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.001215420556,
+                "cash_after": 885.107955465,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2025-11-14",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-11-13",
+                "price_open": 99618,
+                "modeled_fill": 99667.809,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.002338236943,
+                "cash_after": 651.827955465,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2025-11-15",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-11-14",
+                "price_open": 94511,
+                "modeled_fill": 94558.2555,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.004436254807,
+                "cash_after": 231.923955465,
+                "safety_count_after": 4
+              }
+            ],
+            "cycles": [
+              {
+                "closed_at": "2025-01-07",
+                "pnl_usd": 3.695727,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-01-18",
+                "pnl_usd": 2.84150595,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-04-23",
+                "pnl_usd": 97.90062113,
+                "safety_buys": 4
+              },
+              {
+                "closed_at": "2025-05-09",
+                "pnl_usd": 3.92393556,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-05-22",
+                "pnl_usd": 2.47607778,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-07-11",
+                "pnl_usd": 8.31040877,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2025-10-03",
+                "pnl_usd": 7.55967927,
+                "safety_buys": 1
+              }
+            ],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0.752038,
+            "stress_actions_buy_count": 18,
+            "stress_actions_sell_count": 7
+          }
+        }
+      },
+      "2026_JAN_OCT": {
+        "underlying_first_open_last_close_change_pct": -11.504549,
+        "policies": {
+          "CASH": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "CASH",
+            "final_usd": 1000,
+            "return_pct": 0,
+            "max_drawdown_pct": 0,
+            "buy_count": 0,
+            "sell_count": 0,
+            "asset_exposure_days": 0,
+            "asset_exposure_pct": 0,
+            "average_idle_cash_usd": 1000,
+            "max_marked_inventory_usd": 0,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 1000,
+              "base_qty": 0,
+              "marked_inventory_usd": 0
+            },
+            "actions": [],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0,
+            "stress_actions_buy_count": 0,
+            "stress_actions_sell_count": 0
+          },
+          "HOLD": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "HOLD",
+            "final_usd": 882.303626,
+            "return_pct": -11.769637,
+            "max_drawdown_pct": -39.627643,
+            "buy_count": 1,
+            "sell_count": 0,
+            "asset_exposure_days": 304,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 0,
+            "max_marked_inventory_usd": 1104.640323,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.01141197024,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.01141197024,
+              "marked_inventory_usd": 882.30362632
+            },
+            "actions": [
+              {
+                "date": "2026-01-01",
+                "side": "BUY",
+                "reason": "INITIAL_HOLD",
+                "signal_at": null,
+                "price_open": 87496,
+                "modeled_fill": 87539.748,
+                "quote_debit_usd": 1000,
+                "base_qty": 0.01141197024,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": -12.033932,
+            "stress_actions_buy_count": 1,
+            "stress_actions_sell_count": 0
+          },
+          "MONTHLY_DCA": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "MONTHLY_DCA",
+            "final_usd": 1066.348177,
+            "return_pct": 6.634818,
+            "max_drawdown_pct": -17.027035,
+            "buy_count": 10,
+            "sell_count": 0,
+            "asset_exposure_days": 304,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 447.36842,
+            "max_marked_inventory_usd": 1191.398363,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.013792455678,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.013792455678,
+              "marked_inventory_usd": 1066.34817696
+            },
+            "actions": [
+              {
+                "date": "2026-01-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 87496,
+                "modeled_fill": 87539.748,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001141197024,
+                "cash_after": 900,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-02-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 78644,
+                "modeled_fill": 78683.322,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001269647714,
+                "cash_after": 800,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-03-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 66982,
+                "modeled_fill": 67015.491,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001490701604,
+                "cash_after": 700,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-04-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 68215,
+                "modeled_fill": 68249.1075,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001463756869,
+                "cash_after": 600,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-05-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 76310,
+                "modeled_fill": 76348.155,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001308480865,
+                "cash_after": 500,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-06-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 73568,
+                "modeled_fill": 73604.784,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001357250093,
+                "cash_after": 400,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-07-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 58526.63,
+                "modeled_fill": 58555.893315,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001706063971,
+                "cash_after": 300,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-08-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 62817.96,
+                "modeled_fill": 62849.36898,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001589516355,
+                "cash_after": 200,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-09-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 78571.18,
+                "modeled_fill": 78610.46559,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001270824427,
+                "cash_after": 100,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-10-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 83555.46,
+                "modeled_fill": 83597.23773,
+                "quote_debit_usd": 100,
+                "base_qty": 0.001195016757,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 6.315392,
+            "stress_actions_buy_count": 10,
+            "stress_actions_sell_count": 0
+          },
+          "SPOT_DCA_MARTINGALE_DAILY_PROXY": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "SPOT_DCA_MARTINGALE_DAILY_PROXY",
+            "final_usd": 1127.568192,
+            "return_pct": 12.756819,
+            "max_drawdown_pct": -9.474904,
+            "buy_count": 18,
+            "sell_count": 6,
+            "asset_exposure_days": 298,
+            "asset_exposure_pct": 98.026,
+            "average_idle_cash_usd": 786.89665,
+            "max_marked_inventory_usd": 953.491596,
+            "max_quote_committed_in_cycle_usd": 894.784,
+            "completed_cycles": 6,
+            "open_cycle_base_inventory": 0.003020369487,
+            "max_safety_buys_used": 4,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 29,
+            "ending_balance": {
+              "cash_usd": 894.05172692,
+              "base_qty": 0.003020369487,
+              "marked_inventory_usd": 233.51646516
+            },
+            "actions": [
+              {
+                "date": "2026-01-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 87496,
+                "modeled_fill": 87539.748,
+                "quote_debit_usd": 40,
+                "base_qty": 0.00045647881,
+                "cash_after": 960,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-01-06",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-01-05",
+                "price_open": 93876,
+                "modeled_fill": 93829.062,
+                "base_qty": 0.00045647881,
+                "quote_net": 42.788147549,
+                "cycle_pnl_usd": 2.788147549,
+                "cash_after": 1002.788147549,
+                "safety_used": 0
+              },
+              {
+                "date": "2026-01-07",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 93712,
+                "modeled_fill": 93758.856,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000426200166,
+                "cash_after": 962.788147549,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-01-21",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-01-20",
+                "price_open": 88317,
+                "modeled_fill": 88361.1585,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000814023641,
+                "cash_after": 890.788147549,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2026-02-01",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-01-31",
+                "price_open": 78644,
+                "modeled_fill": 78683.322,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.001645463437,
+                "cash_after": 761.188147549,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2026-02-05",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-02-04",
+                "price_open": 73000,
+                "modeled_fill": 73036.5,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.0031908286,
+                "cash_after": 527.908147549,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2026-02-06",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-02-05",
+                "price_open": 62795,
+                "modeled_fill": 62826.3975,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.00667688316,
+                "cash_after": 108.004147549,
+                "safety_count_after": 4
+              },
+              {
+                "date": "2026-03-17",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-03-16",
+                "price_open": 74884,
+                "modeled_fill": 74846.558,
+                "base_qty": 0.012753399004,
+                "quote_net": 953.593470211,
+                "cycle_pnl_usd": 58.809470211,
+                "cash_after": 1061.597617761,
+                "safety_used": 4
+              },
+              {
+                "date": "2026-03-18",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 73931,
+                "modeled_fill": 73967.9655,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000540234407,
+                "cash_after": 1021.597617761,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-03-20",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-03-19",
+                "price_open": 69921,
+                "modeled_fill": 69955.9605,
+                "quote_debit_usd": 72,
+                "base_qty": 0.001028190756,
+                "cash_after": 949.597617761,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2026-03-28",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-03-27",
+                "price_open": 66359,
+                "modeled_fill": 66392.1795,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.00195008705,
+                "cash_after": 819.997617761,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2026-04-11",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-04-10",
+                "price_open": 72980,
+                "modeled_fill": 72943.51,
+                "base_qty": 0.003518512213,
+                "quote_net": 256.395978167,
+                "cycle_pnl_usd": 14.795978167,
+                "cash_after": 1076.393595928,
+                "safety_used": 2
+              },
+              {
+                "date": "2026-04-12",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 73060,
+                "modeled_fill": 73096.53,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000546674924,
+                "cash_after": 1036.393595928,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-04-23",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-04-22",
+                "price_open": 78209,
+                "modeled_fill": 78169.8955,
+                "base_qty": 0.000546674924,
+                "quote_net": 42.690788136,
+                "cycle_pnl_usd": 2.690788136,
+                "cash_after": 1079.084384064,
+                "safety_used": 0
+              },
+              {
+                "date": "2026-04-24",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 78269,
+                "modeled_fill": 78308.1345,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000510292324,
+                "cash_after": 1039.084384064,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-05-28",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-05-27",
+                "price_open": 74330.47,
+                "modeled_fill": 74367.635235,
+                "quote_debit_usd": 72,
+                "base_qty": 0.0009671959,
+                "cash_after": 967.084384064,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2026-06-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-06-02",
+                "price_open": 66669.99,
+                "modeled_fill": 66703.324995,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.00194099064,
+                "cash_after": 837.484384064,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2026-06-06",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-06-05",
+                "price_open": 61032.64,
+                "modeled_fill": 61063.15632,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.003816490452,
+                "cash_after": 604.204384064,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2026-08-21",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-08-20",
+                "price_open": 73000.01,
+                "modeled_fill": 72963.509995,
+                "base_qty": 0.007234969316,
+                "quote_net": 527.360867275,
+                "cycle_pnl_usd": 52.480867275,
+                "cash_after": 1131.565251339,
+                "safety_used": 3
+              },
+              {
+                "date": "2026-08-22",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 78325.29,
+                "modeled_fill": 78364.452645,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000509925593,
+                "cash_after": 1091.565251339,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-09-22",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-09-21",
+                "price_open": 86586.52,
+                "modeled_fill": 86543.22674,
+                "base_qty": 0.000509925593,
+                "quote_net": 44.086475582,
+                "cycle_pnl_usd": 4.086475582,
+                "cash_after": 1135.651726921,
+                "safety_used": 0
+              },
+              {
+                "date": "2026-09-23",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 86201.35,
+                "modeled_fill": 86244.450675,
+                "quote_debit_usd": 40,
+                "base_qty": 0.000463334622,
+                "cash_after": 1095.651726921,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-10-09",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-10-08",
+                "price_open": 81676.03,
+                "modeled_fill": 81716.868015,
+                "quote_debit_usd": 72,
+                "base_qty": 0.000880210826,
+                "cash_after": 1023.651726921,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2026-10-31",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-10-30",
+                "price_open": 77173.17,
+                "modeled_fill": 77211.756585,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.001676824038,
+                "cash_after": 894.051726921,
+                "safety_count_after": 2
+              }
+            ],
+            "cycles": [
+              {
+                "closed_at": "2026-01-06",
+                "pnl_usd": 2.78814755,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2026-03-17",
+                "pnl_usd": 58.80947021,
+                "safety_buys": 4
+              },
+              {
+                "closed_at": "2026-04-11",
+                "pnl_usd": 14.79597817,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2026-04-23",
+                "pnl_usd": 2.69078814,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2026-08-21",
+                "pnl_usd": 52.48086728,
+                "safety_buys": 3
+              },
+              {
+                "closed_at": "2026-09-22",
+                "pnl_usd": 4.08647558,
+                "safety_buys": 0
+              }
+            ],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 12.127633,
+            "stress_actions_buy_count": 18,
+            "stress_actions_sell_count": 6
+          }
+        }
+      }
+    },
+    "ETH": {
+      "2024": {
+        "underlying_first_open_last_close_change_pct": 45.975198,
+        "policies": {
+          "CASH": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "CASH",
+            "final_usd": 1000,
+            "return_pct": 0,
+            "max_drawdown_pct": 0,
+            "buy_count": 0,
+            "sell_count": 0,
+            "asset_exposure_days": 0,
+            "asset_exposure_pct": 0,
+            "average_idle_cash_usd": 1000,
+            "max_marked_inventory_usd": 0,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 1000,
+              "base_qty": 0,
+              "marked_inventory_usd": 0
+            },
+            "actions": [],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0,
+            "stress_actions_buy_count": 0,
+            "stress_actions_sell_count": 0
+          },
+          "HOLD": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "HOLD",
+            "final_usd": 1455.379288,
+            "return_pct": 45.537929,
+            "max_drawdown_pct": -45.32153,
+            "buy_count": 1,
+            "sell_count": 0,
+            "asset_exposure_days": 366,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 0,
+            "max_marked_inventory_usd": 1776.573672,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.437536369189,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.437536369189,
+              "marked_inventory_usd": 1455.3792881
+            },
+            "actions": [
+              {
+                "date": "2024-01-01",
+                "side": "BUY",
+                "reason": "INITIAL_HOLD",
+                "signal_at": null,
+                "price_open": 2282.1,
+                "modeled_fill": 2283.24105,
+                "quote_debit_usd": 1000,
+                "base_qty": 0.437536369189,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 45.101969,
+            "stress_actions_buy_count": 1,
+            "stress_actions_sell_count": 0
+          },
+          "MONTHLY_DCA": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "MONTHLY_DCA",
+            "final_usd": 1134.467776,
+            "return_pct": 13.446778,
+            "max_drawdown_pct": -29.891768,
+            "buy_count": 12,
+            "sell_count": 0,
+            "asset_exposure_days": 366,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 457.1949,
+            "max_marked_inventory_usd": 1364.712324,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.341059485863,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.341059485863,
+              "marked_inventory_usd": 1134.46777614
+            },
+            "actions": [
+              {
+                "date": "2024-01-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2282.1,
+                "modeled_fill": 2283.24105,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.036461364099,
+                "cash_after": 916.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2281.5,
+                "modeled_fill": 2282.64075,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.036470952887,
+                "cash_after": 833.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3341.9,
+                "modeled_fill": 3343.57095,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.024898554418,
+                "cash_after": 750,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-04-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3644.9,
+                "modeled_fill": 3646.72245,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.022828741258,
+                "cash_after": 666.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-05-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3011.8,
+                "modeled_fill": 3013.3059,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.027627491537,
+                "cash_after": 583.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-06-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3758.6,
+                "modeled_fill": 3760.4793,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.022138157561,
+                "cash_after": 500,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-07-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3433.3,
+                "modeled_fill": 3435.01665,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.024235714622,
+                "cash_after": 416.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-08-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3231.7,
+                "modeled_fill": 3233.31585,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.025747587651,
+                "cash_after": 333.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-09-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2512.8,
+                "modeled_fill": 2514.0564,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.033113848699,
+                "cash_after": 250,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-10-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2601.3,
+                "modeled_fill": 2602.60065,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.031987267524,
+                "cash_after": 166.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2514,
+                "modeled_fill": 2515.257,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.033098042566,
+                "cash_after": 83.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-12-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3706.1,
+                "modeled_fill": 3707.95305,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.022451763042,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 13.106947,
+            "stress_actions_buy_count": 12,
+            "stress_actions_sell_count": 0
+          },
+          "SPOT_DCA_MARTINGALE_DAILY_PROXY": {
+            "asset_calendar": [
+              "2024-01-01",
+              "2024-12-31"
+            ],
+            "days": 366,
+            "method": "SPOT_DCA_MARTINGALE_DAILY_PROXY",
+            "final_usd": 1237.419516,
+            "return_pct": 23.741952,
+            "max_drawdown_pct": -15.552234,
+            "buy_count": 32,
+            "sell_count": 15,
+            "asset_exposure_days": 351,
+            "asset_exposure_pct": 95.902,
+            "average_idle_cash_usd": 788.48637,
+            "max_marked_inventory_usd": 975.853971,
+            "max_quote_committed_in_cycle_usd": 894.784,
+            "completed_cycles": 15,
+            "open_cycle_base_inventory": 0.03156062881,
+            "max_safety_buys_used": 4,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 77,
+            "ending_balance": {
+              "cash_usd": 1132.4392476,
+              "base_qty": 0.03156062881,
+              "marked_inventory_usd": 104.98026844
+            },
+            "actions": [
+              {
+                "date": "2024-01-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2282.1,
+                "modeled_fill": 2283.24105,
+                "quote_debit_usd": 40,
+                "base_qty": 0.017501454768,
+                "cash_after": 960,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-01-11",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-01-10",
+                "price_open": 2585.7,
+                "modeled_fill": 2584.40715,
+                "base_qty": 0.017501454768,
+                "quote_net": 45.185653952,
+                "cycle_pnl_usd": 5.185653952,
+                "cash_after": 1005.185653952,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-01-12",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2618.8,
+                "modeled_fill": 2620.1094,
+                "quote_debit_usd": 40,
+                "base_qty": 0.01525128682,
+                "cash_after": 965.185653952,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-01-15",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-01-14",
+                "price_open": 2471.8,
+                "modeled_fill": 2473.0359,
+                "quote_debit_usd": 72,
+                "base_qty": 0.029084928338,
+                "cash_after": 893.185653952,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-01-23",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-01-22",
+                "price_open": 2310.8,
+                "modeled_fill": 2311.9554,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.056000444243,
+                "cash_after": 763.585653952,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-02-13",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-12",
+                "price_open": 2663.4,
+                "modeled_fill": 2662.0683,
+                "base_qty": 0.100336659401,
+                "quote_net": 266.83593728,
+                "cycle_pnl_usd": 25.23593728,
+                "cash_after": 1030.421591232,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-02-14",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2642.1,
+                "modeled_fill": 2643.42105,
+                "quote_debit_usd": 40,
+                "base_qty": 0.015116789647,
+                "cash_after": 990.421591232,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-16",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-15",
+                "price_open": 2826.6,
+                "modeled_fill": 2825.1867,
+                "base_qty": 0.015116789647,
+                "quote_net": 42.665045303,
+                "cycle_pnl_usd": 2.665045303,
+                "cash_after": 1033.086636535,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-02-17",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2804.2,
+                "modeled_fill": 2805.6021,
+                "quote_debit_usd": 40,
+                "base_qty": 0.014242946268,
+                "cash_after": 993.086636535,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-21",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-20",
+                "price_open": 3015.8,
+                "modeled_fill": 3014.2921,
+                "base_qty": 0.014242946268,
+                "quote_net": 42.889468016,
+                "cycle_pnl_usd": 2.889468016,
+                "cash_after": 1035.976104551,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-02-22",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2967.8,
+                "modeled_fill": 2969.2839,
+                "quote_debit_usd": 40,
+                "base_qty": 0.013457803735,
+                "cash_after": 995.976104551,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-02-27",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-02-26",
+                "price_open": 3179.9,
+                "modeled_fill": 3178.31005,
+                "base_qty": 0.013457803735,
+                "quote_net": 42.730299789,
+                "cycle_pnl_usd": 2.730299789,
+                "cash_after": 1038.70640434,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-02-28",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3244.1,
+                "modeled_fill": 3245.72205,
+                "quote_debit_usd": 40,
+                "base_qty": 0.012311602579,
+                "cash_after": 998.70640434,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-04",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-03",
+                "price_open": 3489.5,
+                "modeled_fill": 3487.75525,
+                "base_qty": 0.012311602579,
+                "quote_net": 42.896916673,
+                "cycle_pnl_usd": 2.896916673,
+                "cash_after": 1041.603321013,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-03-05",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3632.4,
+                "modeled_fill": 3634.2162,
+                "quote_debit_usd": 40,
+                "base_qty": 0.010995504329,
+                "cash_after": 1001.603321013,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-08",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-07",
+                "price_open": 3877.2,
+                "modeled_fill": 3875.2614,
+                "base_qty": 0.010995504329,
+                "quote_net": 42.567843047,
+                "cycle_pnl_usd": 2.567843047,
+                "cash_after": 1044.17116406,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-03-09",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3895.7,
+                "modeled_fill": 3897.64785,
+                "quote_debit_usd": 40,
+                "base_qty": 0.010252347441,
+                "cash_after": 1004.17116406,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-03-17",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-03-16",
+                "price_open": 3520,
+                "modeled_fill": 3521.76,
+                "quote_debit_usd": 72,
+                "base_qty": 0.020423899394,
+                "cash_after": 932.17116406,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-03-20",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-03-19",
+                "price_open": 3157,
+                "modeled_fill": 3158.5785,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.040990125612,
+                "cash_after": 802.57116406,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-03-26",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-03-25",
+                "price_open": 3593.6,
+                "modeled_fill": 3591.8032,
+                "base_qty": 0.071666372446,
+                "quote_net": 257.154094379,
+                "cycle_pnl_usd": 15.554094379,
+                "cash_after": 1059.725258439,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-03-27",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3588.2,
+                "modeled_fill": 3589.9941,
+                "quote_debit_usd": 40,
+                "base_qty": 0.011130948644,
+                "cash_after": 1019.725258439,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-04-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-04-02",
+                "price_open": 3281.3,
+                "modeled_fill": 3282.94065,
+                "quote_debit_usd": 72,
+                "base_qty": 0.021909647355,
+                "cash_after": 947.725258439,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-04-09",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-04-08",
+                "price_open": 3695.5,
+                "modeled_fill": 3693.65225,
+                "base_qty": 0.033040595999,
+                "quote_net": 121.918431281,
+                "cycle_pnl_usd": 9.918431281,
+                "cash_after": 1069.64368972,
+                "safety_used": 1
+              },
+              {
+                "date": "2024-04-10",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3503.5,
+                "modeled_fill": 3505.25175,
+                "quote_debit_usd": 40,
+                "base_qty": 0.011400048502,
+                "cash_after": 1029.64368972,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-04-13",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-04-12",
+                "price_open": 3237.5,
+                "modeled_fill": 3239.11875,
+                "quote_debit_usd": 72,
+                "base_qty": 0.022206062043,
+                "cash_after": 957.64368972,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-04-14",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-04-13",
+                "price_open": 3012,
+                "modeled_fill": 3013.506,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.042963421832,
+                "cash_after": 828.04368972,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-05-21",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-05-20",
+                "price_open": 3667.4,
+                "modeled_fill": 3665.5663,
+                "base_qty": 0.076569532377,
+                "quote_net": 280.390026789,
+                "cycle_pnl_usd": 38.790026789,
+                "cash_after": 1108.433716509,
+                "safety_used": 2
+              },
+              {
+                "date": "2024-05-22",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3789.2,
+                "modeled_fill": 3791.0946,
+                "quote_debit_usd": 40,
+                "base_qty": 0.010540501933,
+                "cash_after": 1068.433716509,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-06-12",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-06-11",
+                "price_open": 3497,
+                "modeled_fill": 3498.7485,
+                "quote_debit_usd": 72,
+                "base_qty": 0.020558228729,
+                "cash_after": 996.433716509,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-07-04",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-07-03",
+                "price_open": 3292.8,
+                "modeled_fill": 3294.4464,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.039299631486,
+                "cash_after": 866.833716509,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-07-05",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-07-04",
+                "price_open": 3058,
+                "modeled_fill": 3059.529,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.076170859321,
+                "cash_after": 633.553716509,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2024-07-16",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-07-15",
+                "price_open": 3485.2,
+                "modeled_fill": 3483.4574,
+                "base_qty": 0.146569221469,
+                "quote_net": 510.057071499,
+                "cycle_pnl_usd": 35.177071499,
+                "cash_after": 1143.610788008,
+                "safety_used": 3
+              },
+              {
+                "date": "2024-07-17",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3447.5,
+                "modeled_fill": 3449.22375,
+                "quote_debit_usd": 40,
+                "base_qty": 0.011585226954,
+                "cash_after": 1103.610788008,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-07-26",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-07-25",
+                "price_open": 3174.7,
+                "modeled_fill": 3176.28735,
+                "quote_debit_usd": 72,
+                "base_qty": 0.022645328965,
+                "cash_after": 1031.610788008,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-08-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-02",
+                "price_open": 2986.1,
+                "modeled_fill": 2987.59305,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.043336065958,
+                "cash_after": 902.010788008,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2024-08-05",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-04",
+                "price_open": 2687.8,
+                "modeled_fill": 2689.1439,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.086662135502,
+                "cash_after": 668.730788008,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2024-08-06",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-08-05",
+                "price_open": 2420.8,
+                "modeled_fill": 2422.0104,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.173196826688,
+                "cash_after": 248.826788008,
+                "safety_count_after": 4
+              },
+              {
+                "date": "2024-11-08",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-11-07",
+                "price_open": 2897.8,
+                "modeled_fill": 2896.3511,
+                "base_qty": 0.337425584067,
+                "quote_net": 976.32565862,
+                "cycle_pnl_usd": 81.54165862,
+                "cash_after": 1225.152446628,
+                "safety_used": 4
+              },
+              {
+                "date": "2024-11-09",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2963.6,
+                "modeled_fill": 2965.0818,
+                "quote_debit_usd": 40,
+                "base_qty": 0.013476876071,
+                "cash_after": 1185.152446628,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-11",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-11-10",
+                "price_open": 3187.4,
+                "modeled_fill": 3185.8063,
+                "base_qty": 0.013476876071,
+                "quote_net": 42.891781976,
+                "cycle_pnl_usd": 2.891781976,
+                "cash_after": 1228.044228604,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-11-12",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3376,
+                "modeled_fill": 3377.688,
+                "quote_debit_usd": 40,
+                "base_qty": 0.011830589433,
+                "cash_after": 1188.044228604,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-11-14",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-11-13",
+                "price_open": 3191.7,
+                "modeled_fill": 3193.29585,
+                "quote_debit_usd": 72,
+                "base_qty": 0.022524712807,
+                "cash_after": 1116.044228604,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2024-11-28",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-11-27",
+                "price_open": 3660.4,
+                "modeled_fill": 3658.5698,
+                "base_qty": 0.034355302239,
+                "quote_net": 125.565579972,
+                "cycle_pnl_usd": 13.565579972,
+                "cash_after": 1241.609808576,
+                "safety_used": 1
+              },
+              {
+                "date": "2024-11-29",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3579.3,
+                "modeled_fill": 3581.08965,
+                "quote_debit_usd": 40,
+                "base_qty": 0.011158625967,
+                "cash_after": 1201.609808576,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-12-05",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2024-12-04",
+                "price_open": 3844,
+                "modeled_fill": 3842.078,
+                "base_qty": 0.011158625967,
+                "quote_net": 42.829439028,
+                "cycle_pnl_usd": 2.829439028,
+                "cash_after": 1244.439247604,
+                "safety_used": 0
+              },
+              {
+                "date": "2024-12-06",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3788,
+                "modeled_fill": 3789.894,
+                "quote_debit_usd": 40,
+                "base_qty": 0.010543841057,
+                "cash_after": 1204.439247604,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2024-12-20",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2024-12-19",
+                "price_open": 3420.7,
+                "modeled_fill": 3422.41035,
+                "quote_debit_usd": 72,
+                "base_qty": 0.021016787753,
+                "cash_after": 1132.439247604,
+                "safety_count_after": 1
+              }
+            ],
+            "cycles": [
+              {
+                "closed_at": "2024-01-11",
+                "pnl_usd": 5.18565395,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-02-13",
+                "pnl_usd": 25.23593728,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-02-16",
+                "pnl_usd": 2.6650453,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-02-21",
+                "pnl_usd": 2.88946802,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-02-27",
+                "pnl_usd": 2.73029979,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-04",
+                "pnl_usd": 2.89691667,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-08",
+                "pnl_usd": 2.56784305,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-03-26",
+                "pnl_usd": 15.55409438,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-04-09",
+                "pnl_usd": 9.91843128,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2024-05-21",
+                "pnl_usd": 38.79002679,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2024-07-16",
+                "pnl_usd": 35.1770715,
+                "safety_buys": 3
+              },
+              {
+                "closed_at": "2024-11-08",
+                "pnl_usd": 81.54165862,
+                "safety_buys": 4
+              },
+              {
+                "closed_at": "2024-11-11",
+                "pnl_usd": 2.89178198,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2024-11-28",
+                "pnl_usd": 13.56557997,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2024-12-05",
+                "pnl_usd": 2.82943903,
+                "safety_buys": 0
+              }
+            ],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 22.846928,
+            "stress_actions_buy_count": 32,
+            "stress_actions_sell_count": 15
+          }
+        }
+      },
+      "2025": {
+        "underlying_first_open_last_close_change_pct": -10.93371,
+        "policies": {
+          "CASH": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "CASH",
+            "final_usd": 1000,
+            "return_pct": 0,
+            "max_drawdown_pct": 0,
+            "buy_count": 0,
+            "sell_count": 0,
+            "asset_exposure_days": 0,
+            "asset_exposure_pct": 0,
+            "average_idle_cash_usd": 1000,
+            "max_marked_inventory_usd": 0,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 1000,
+              "base_qty": 0,
+              "marked_inventory_usd": 0
+            },
+            "actions": [],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0,
+            "stress_actions_buy_count": 0,
+            "stress_actions_sell_count": 0
+          },
+          "HOLD": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "HOLD",
+            "final_usd": 887.994918,
+            "return_pct": -11.200508,
+            "max_drawdown_pct": -60.099217,
+            "buy_count": 1,
+            "sell_count": 0,
+            "asset_exposure_days": 365,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 0,
+            "max_marked_inventory_usd": 1445.638558,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.299778355989,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.299778355989,
+              "marked_inventory_usd": 887.99491841
+            },
+            "actions": [
+              {
+                "date": "2025-01-01",
+                "side": "BUY",
+                "reason": "INITIAL_HOLD",
+                "signal_at": null,
+                "price_open": 3330.8,
+                "modeled_fill": 3332.4654,
+                "quote_debit_usd": 1000,
+                "base_qty": 0.299778355989,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": -11.466508,
+            "stress_actions_buy_count": 1,
+            "stress_actions_sell_count": 0
+          },
+          "MONTHLY_DCA": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "MONTHLY_DCA",
+            "final_usd": 1056.909566,
+            "return_pct": 5.690957,
+            "max_drawdown_pct": -39.091883,
+            "buy_count": 12,
+            "sell_count": 0,
+            "asset_exposure_days": 365,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 456.16438,
+            "max_marked_inventory_usd": 1438.104389,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.356802280832,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.356802280832,
+              "marked_inventory_usd": 1056.90956644
+            },
+            "actions": [
+              {
+                "date": "2025-01-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3330.8,
+                "modeled_fill": 3332.4654,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.024981529666,
+                "cash_after": 916.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-02-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3299.5,
+                "modeled_fill": 3301.14975,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.025218511596,
+                "cash_after": 833.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-03-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2236.8,
+                "modeled_fill": 2237.9184,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.037199784965,
+                "cash_after": 750,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-04-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 1821,
+                "modeled_fill": 1821.9105,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.045693838007,
+                "cash_after": 666.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-05-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 1794.1,
+                "modeled_fill": 1794.99705,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.046378952684,
+                "cash_after": 583.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-06-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2529.4,
+                "modeled_fill": 2530.6647,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.03289652843,
+                "cash_after": 500,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-07-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2486.1,
+                "modeled_fill": 2487.34305,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.033469481924,
+                "cash_after": 416.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3698,
+                "modeled_fill": 3699.849,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.022500940782,
+                "cash_after": 333.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-09-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 4391.6,
+                "modeled_fill": 4393.7958,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.018947189865,
+                "cash_after": 250,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-10-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 4146.07,
+                "modeled_fill": 4148.143035,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.020069241236,
+                "cash_after": 166.666666667,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-11-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 3846.42,
+                "modeled_fill": 3848.34321,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.021632707559,
+                "cash_after": 83.333333333,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-12-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2991.65,
+                "modeled_fill": 2993.145825,
+                "quote_debit_usd": 83.333333333,
+                "base_qty": 0.027813574118,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 5.374358,
+            "stress_actions_buy_count": 12,
+            "stress_actions_sell_count": 0
+          },
+          "SPOT_DCA_MARTINGALE_DAILY_PROXY": {
+            "asset_calendar": [
+              "2025-01-01",
+              "2025-12-31"
+            ],
+            "days": 365,
+            "method": "SPOT_DCA_MARTINGALE_DAILY_PROXY",
+            "final_usd": 1061.889168,
+            "return_pct": 6.188917,
+            "max_drawdown_pct": -44.416249,
+            "buy_count": 23,
+            "sell_count": 8,
+            "asset_exposure_days": 357,
+            "asset_exposure_pct": 97.808,
+            "average_idle_cash_usd": 491.93965,
+            "max_marked_inventory_usd": 973.900493,
+            "max_quote_committed_in_cycle_usd": 894.784,
+            "completed_cycles": 8,
+            "open_cycle_base_inventory": 0.269264285121,
+            "max_safety_buys_used": 4,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 199,
+            "ending_balance": {
+              "cash_usd": 264.28216191,
+              "base_qty": 0.269264285121,
+              "marked_inventory_usd": 797.60700571
+            },
+            "actions": [
+              {
+                "date": "2025-01-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3330.8,
+                "modeled_fill": 3332.4654,
+                "quote_debit_usd": 40,
+                "base_qty": 0.01199113424,
+                "cash_after": 960,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-01-04",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-01-03",
+                "price_open": 3609.2,
+                "modeled_fill": 3607.3954,
+                "base_qty": 0.01199113424,
+                "quote_net": 43.213505734,
+                "cycle_pnl_usd": 3.213505734,
+                "cash_after": 1003.213505734,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-01-05",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3656.5,
+                "modeled_fill": 3658.32825,
+                "quote_debit_usd": 40,
+                "base_qty": 0.010923032935,
+                "cash_after": 963.213505734,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-01-08",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-01-07",
+                "price_open": 3379.7,
+                "modeled_fill": 3381.38985,
+                "quote_debit_usd": 72,
+                "base_qty": 0.021271747748,
+                "cash_after": 891.213505734,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-01-14",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-01-13",
+                "price_open": 3137.6,
+                "modeled_fill": 3139.1688,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.041243570422,
+                "cash_after": 761.613505734,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2025-02-03",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-02-02",
+                "price_open": 2869.6,
+                "modeled_fill": 2871.0348,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.081171761849,
+                "cash_after": 528.333505734,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2025-02-07",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-02-06",
+                "price_open": 2687.4,
+                "modeled_fill": 2688.7437,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.156015062159,
+                "cash_after": 108.429505734,
+                "safety_count_after": 4
+              },
+              {
+                "date": "2025-07-16",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-07-15",
+                "price_open": 3138.6,
+                "modeled_fill": 3137.0307,
+                "base_qty": 0.310625175113,
+                "quote_net": 973.466269813,
+                "cycle_pnl_usd": 78.682269813,
+                "cash_after": 1081.895775547,
+                "safety_used": 4
+              },
+              {
+                "date": "2025-07-17",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3373,
+                "modeled_fill": 3374.6865,
+                "quote_debit_usd": 40,
+                "base_qty": 0.011841111748,
+                "cash_after": 1041.895775547,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-07-20",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-07-19",
+                "price_open": 3594.4,
+                "modeled_fill": 3592.6028,
+                "base_qty": 0.011841111748,
+                "quote_net": 42.497870809,
+                "cycle_pnl_usd": 2.497870809,
+                "cash_after": 1084.393646356,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-07-21",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3759.4,
+                "modeled_fill": 3761.2797,
+                "quote_debit_usd": 40,
+                "base_qty": 0.01062405435,
+                "cash_after": 1044.393646356,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-02",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-08-01",
+                "price_open": 3486.5,
+                "modeled_fill": 3488.24325,
+                "quote_debit_usd": 72,
+                "base_qty": 0.020620142224,
+                "cash_after": 972.393646356,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-08-08",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-08-07",
+                "price_open": 3911.2,
+                "modeled_fill": 3909.2444,
+                "base_qty": 0.031244196575,
+                "quote_net": 122.019059292,
+                "cycle_pnl_usd": 10.019059292,
+                "cash_after": 1094.412705648,
+                "safety_used": 1
+              },
+              {
+                "date": "2025-08-09",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 4010.4,
+                "modeled_fill": 4012.4052,
+                "quote_debit_usd": 40,
+                "base_qty": 0.009959123759,
+                "cash_after": 1054.412705648,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-10",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-08-09",
+                "price_open": 4262.8,
+                "modeled_fill": 4260.6686,
+                "base_qty": 0.009959123759,
+                "quote_net": 42.39009336,
+                "cycle_pnl_usd": 2.39009336,
+                "cash_after": 1096.802799008,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-08-11",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 4251.6,
+                "modeled_fill": 4253.7258,
+                "quote_debit_usd": 40,
+                "base_qty": 0.009394126899,
+                "cash_after": 1056.802799008,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-13",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-08-12",
+                "price_open": 4590.2,
+                "modeled_fill": 4587.9049,
+                "base_qty": 0.009394126899,
+                "quote_net": 43.056261472,
+                "cycle_pnl_usd": 3.056261472,
+                "cash_after": 1099.859060479,
+                "safety_used": 0
+              },
+              {
+                "date": "2025-08-14",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 4751.2,
+                "modeled_fill": 4753.5756,
+                "quote_debit_usd": 40,
+                "base_qty": 0.008406312074,
+                "cash_after": 1059.859060479,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-16",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-08-15",
+                "price_open": 4443.4,
+                "modeled_fill": 4445.6217,
+                "quote_debit_usd": 72,
+                "base_qty": 0.016179530509,
+                "cash_after": 987.859060479,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-08-20",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-08-19",
+                "price_open": 4075.8,
+                "modeled_fill": 4077.8379,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.031749797968,
+                "cash_after": 858.259060479,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2025-08-23",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-08-22",
+                "price_open": 4829.5,
+                "modeled_fill": 4827.08525,
+                "base_qty": 0.056335640551,
+                "quote_net": 271.665002613,
+                "cycle_pnl_usd": 30.065002613,
+                "cash_after": 1129.924063093,
+                "safety_used": 2
+              },
+              {
+                "date": "2025-08-24",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 4776.6,
+                "modeled_fill": 4778.9883,
+                "quote_debit_usd": 40,
+                "base_qty": 0.008361610753,
+                "cash_after": 1089.924063093,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-08-26",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-08-25",
+                "price_open": 4376.5,
+                "modeled_fill": 4378.68825,
+                "quote_debit_usd": 72,
+                "base_qty": 0.016426853848,
+                "cash_after": 1017.924063093,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-09-25",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-09-24",
+                "price_open": 4154.3,
+                "modeled_fill": 4156.37715,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.031149851132,
+                "cash_after": 888.324063093,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2025-09-26",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-09-25",
+                "price_open": 3876.1,
+                "modeled_fill": 3878.03805,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.060094034675,
+                "cash_after": 655.044063093,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2025-10-02",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2025-10-01",
+                "price_open": 4350.33,
+                "modeled_fill": 4348.154835,
+                "base_qty": 0.116032350408,
+                "quote_net": 504.022098818,
+                "cycle_pnl_usd": 29.142098818,
+                "cash_after": 1159.06616191,
+                "safety_used": 3
+              },
+              {
+                "date": "2025-10-03",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 4487.36,
+                "modeled_fill": 4489.60368,
+                "quote_debit_usd": 40,
+                "base_qty": 0.008900571812,
+                "cash_after": 1119.06616191,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2025-10-11",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-10-10",
+                "price_open": 3835.4,
+                "modeled_fill": 3837.3177,
+                "quote_debit_usd": 72,
+                "base_qty": 0.018744361961,
+                "cash_after": 1047.06616191,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2025-11-04",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-11-03",
+                "price_open": 3602.93,
+                "modeled_fill": 3604.731465,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.035916830623,
+                "cash_after": 917.46616191,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2025-11-05",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-11-04",
+                "price_open": 3285.9,
+                "modeled_fill": 3287.54295,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.070887880886,
+                "cash_after": 684.18616191,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2025-11-15",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2025-11-14",
+                "price_open": 3110.01,
+                "modeled_fill": 3111.565005,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.134814639839,
+                "cash_after": 264.28216191,
+                "safety_count_after": 4
+              }
+            ],
+            "cycles": [
+              {
+                "closed_at": "2025-01-04",
+                "pnl_usd": 3.21350573,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-07-16",
+                "pnl_usd": 78.68226981,
+                "safety_buys": 4
+              },
+              {
+                "closed_at": "2025-07-20",
+                "pnl_usd": 2.49787081,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-08-08",
+                "pnl_usd": 10.01905929,
+                "safety_buys": 1
+              },
+              {
+                "closed_at": "2025-08-10",
+                "pnl_usd": 2.39009336,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-08-13",
+                "pnl_usd": 3.05626147,
+                "safety_buys": 0
+              },
+              {
+                "closed_at": "2025-08-23",
+                "pnl_usd": 30.06500261,
+                "safety_buys": 2
+              },
+              {
+                "closed_at": "2025-10-02",
+                "pnl_usd": 29.14209882,
+                "safety_buys": 3
+              }
+            ],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 5.37008,
+            "stress_actions_buy_count": 22,
+            "stress_actions_sell_count": 7
+          }
+        }
+      },
+      "2026_JAN_OCT": {
+        "underlying_first_open_last_close_change_pct": -24.096751,
+        "policies": {
+          "CASH": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "CASH",
+            "final_usd": 1000,
+            "return_pct": 0,
+            "max_drawdown_pct": 0,
+            "buy_count": 0,
+            "sell_count": 0,
+            "asset_exposure_days": 0,
+            "asset_exposure_pct": 0,
+            "average_idle_cash_usd": 1000,
+            "max_marked_inventory_usd": 0,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 1000,
+              "base_qty": 0,
+              "marked_inventory_usd": 0
+            },
+            "actions": [],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 0,
+            "stress_actions_buy_count": 0,
+            "stress_actions_sell_count": 0
+          },
+          "HOLD": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "HOLD",
+            "final_usd": 756.758804,
+            "return_pct": -24.32412,
+            "max_drawdown_pct": -53.342435,
+            "buy_count": 1,
+            "sell_count": 0,
+            "asset_exposure_days": 304,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 0,
+            "max_marked_inventory_usd": 1127.377016,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.336559631159,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.336559631159,
+              "marked_inventory_usd": 756.75880386
+            },
+            "actions": [
+              {
+                "date": "2026-01-01",
+                "side": "BUY",
+                "reason": "INITIAL_HOLD",
+                "signal_at": null,
+                "price_open": 2966.79,
+                "modeled_fill": 2968.273395,
+                "quote_debit_usd": 1000,
+                "base_qty": 0.336559631159,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": -24.550807,
+            "stress_actions_buy_count": 1,
+            "stress_actions_sell_count": 0
+          },
+          "MONTHLY_DCA": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "MONTHLY_DCA",
+            "final_usd": 1038.311581,
+            "return_pct": 3.831158,
+            "max_drawdown_pct": -19.721559,
+            "buy_count": 10,
+            "sell_count": 0,
+            "asset_exposure_days": 304,
+            "asset_exposure_pct": 100,
+            "average_idle_cash_usd": 447.36842,
+            "max_marked_inventory_usd": 1257.280612,
+            "max_quote_committed_in_cycle_usd": 0,
+            "completed_cycles": 0,
+            "open_cycle_base_inventory": 0.46177693743,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 0,
+            "ending_balance": {
+              "cash_usd": 0,
+              "base_qty": 0.46177693743,
+              "marked_inventory_usd": 1038.31158126
+            },
+            "actions": [
+              {
+                "date": "2026-01-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2966.79,
+                "modeled_fill": 2968.273395,
+                "quote_debit_usd": 100,
+                "base_qty": 0.033655963116,
+                "cash_after": 900,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-02-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2449.23,
+                "modeled_fill": 2450.454615,
+                "quote_debit_usd": 100,
+                "base_qty": 0.040767986189,
+                "cash_after": 800,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-03-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 1964.79,
+                "modeled_fill": 1965.772395,
+                "quote_debit_usd": 100,
+                "base_qty": 0.050819769447,
+                "cash_after": 700,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-04-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2102.54,
+                "modeled_fill": 2103.59127,
+                "quote_debit_usd": 100,
+                "base_qty": 0.04749026169,
+                "cash_after": 600,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-05-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2256.76,
+                "modeled_fill": 2257.88838,
+                "quote_debit_usd": 100,
+                "base_qty": 0.044244924056,
+                "cash_after": 500,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-06-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2004.07,
+                "modeled_fill": 2005.072035,
+                "quote_debit_usd": 100,
+                "base_qty": 0.049823696185,
+                "cash_after": 400,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-07-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 1569.74,
+                "modeled_fill": 1570.52487,
+                "quote_debit_usd": 100,
+                "base_qty": 0.063609371496,
+                "cash_after": 300,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-08-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 1860.55,
+                "modeled_fill": 1861.480275,
+                "quote_debit_usd": 100,
+                "base_qty": 0.053667020404,
+                "cash_after": 200,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-09-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2465.54,
+                "modeled_fill": 2466.77277,
+                "quote_debit_usd": 100,
+                "base_qty": 0.040498298471,
+                "cash_after": 100,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-10-01",
+                "side": "BUY",
+                "reason": "FIXED_MONTHLY_QUOTA",
+                "signal_at": null,
+                "price_open": 2684.17,
+                "modeled_fill": 2685.512085,
+                "quote_debit_usd": 100,
+                "base_qty": 0.037199646376,
+                "cash_after": 0,
+                "safety_count_after": 0
+              }
+            ],
+            "cycles": [],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": 3.520131,
+            "stress_actions_buy_count": 10,
+            "stress_actions_sell_count": 0
+          },
+          "SPOT_DCA_MARTINGALE_DAILY_PROXY": {
+            "asset_calendar": [
+              "2026-01-01",
+              "2026-10-31"
+            ],
+            "days": 304,
+            "method": "SPOT_DCA_MARTINGALE_DAILY_PROXY",
+            "final_usd": 865.67994,
+            "return_pct": -13.432006,
+            "max_drawdown_pct": -37.118244,
+            "buy_count": 6,
+            "sell_count": 1,
+            "asset_exposure_days": 303,
+            "asset_exposure_pct": 99.671,
+            "average_idle_cash_usd": 184.90468,
+            "max_marked_inventory_usd": 933.261303,
+            "max_quote_committed_in_cycle_usd": 894.784,
+            "completed_cycles": 1,
+            "open_cycle_base_inventory": 0.336717149069,
+            "max_safety_buys_used": 0,
+            "skipped_safety_due_to_cash": 0,
+            "days_all_safety_used_and_underwater": 257,
+            "ending_balance": {
+              "cash_usd": 108.56695542,
+              "base_qty": 0.336717149069,
+              "marked_inventory_usd": 757.11298497
+            },
+            "actions": [
+              {
+                "date": "2026-01-01",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 2966.79,
+                "modeled_fill": 2968.273395,
+                "quote_debit_usd": 40,
+                "base_qty": 0.013462385246,
+                "cash_after": 960,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-01-06",
+                "side": "SELL",
+                "reason": "PREVIOUS_CLOSE_TP_6PCT",
+                "signal_at": "2026-01-05",
+                "price_open": 3224.99,
+                "modeled_fill": 3223.377505,
+                "base_qty": 0.013462385246,
+                "quote_net": 43.350955417,
+                "cycle_pnl_usd": 3.350955417,
+                "cash_after": 1003.350955417,
+                "safety_used": 0
+              },
+              {
+                "date": "2026-01-07",
+                "side": "BUY",
+                "reason": "START_NEW_CYCLE",
+                "signal_at": null,
+                "price_open": 3295.4,
+                "modeled_fill": 3297.0477,
+                "quote_debit_usd": 40,
+                "base_qty": 0.012119945963,
+                "cash_after": 963.350955417,
+                "safety_count_after": 0
+              },
+              {
+                "date": "2026-01-09",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-01-08",
+                "price_open": 3103.48,
+                "modeled_fill": 3105.03174,
+                "quote_debit_usd": 72,
+                "base_qty": 0.023165003759,
+                "cash_after": 891.350955417,
+                "safety_count_after": 1
+              },
+              {
+                "date": "2026-01-21",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-01-20",
+                "price_open": 2936.75,
+                "modeled_fill": 2938.218375,
+                "quote_debit_usd": 129.6,
+                "base_qty": 0.044064297798,
+                "cash_after": 761.750955417,
+                "safety_count_after": 2
+              },
+              {
+                "date": "2026-01-31",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-01-30",
+                "price_open": 2702.79,
+                "modeled_fill": 2704.141395,
+                "quote_debit_usd": 233.28,
+                "base_qty": 0.086181496825,
+                "cash_after": 528.470955417,
+                "safety_count_after": 3
+              },
+              {
+                "date": "2026-02-01",
+                "side": "BUY",
+                "reason": "PREVIOUS_CLOSE_SAFETY_DOWN_5PCT",
+                "signal_at": "2026-01-31",
+                "price_open": 2449.23,
+                "modeled_fill": 2450.454615,
+                "quote_debit_usd": 419.904,
+                "base_qty": 0.171186404725,
+                "cash_after": 108.566955417,
+                "safety_count_after": 4
+              }
+            ],
+            "cycles": [
+              {
+                "closed_at": "2026-01-06",
+                "pnl_usd": 3.35095542,
+                "safety_buys": 0
+              }
+            ],
+            "drawdown_calculation": "daily liquidatable equity, not intra-bar path",
+            "costs_doubled_return_pct": -13.671786,
+            "stress_actions_buy_count": 6,
+            "stress_actions_sell_count": 1
+          }
+        }
+      }
+    }
+  }
+}
