@@ -66,11 +66,11 @@ def options(raw):
     }
     if result["ema_fast"] >= result["ema_slow"]:
         raise LabError("L'EMA rapide doit être inférieure à l'EMA lente")
-    if result["entry_rule"] not in ENTRY_RULES:
+    if not isinstance(result["entry_rule"], str) or result["entry_rule"] not in ENTRY_RULES:
         raise LabError("Règle d'entrée personnalisée non autorisée")
-    if result["filter_rule"] not in FILTER_RULES:
+    if not isinstance(result["filter_rule"], str) or result["filter_rule"] not in FILTER_RULES:
         raise LabError("Filtre personnalisé non autorisé")
-    if result["exit_rule"] not in EXIT_RULES:
+    if not isinstance(result["exit_rule"], str) or result["exit_rule"] not in EXIT_RULES:
         raise LabError("Règle de sortie personnalisée non autorisée")
     return result
 
