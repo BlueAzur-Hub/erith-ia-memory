@@ -1,0 +1,186 @@
+{
+  "schema": "seven-heaven.okx-public-spot-order-eligibility-v1",
+  "started_utc": "2026-11-13T01:41:02.146365+00:00",
+  "status": "PUBLIC_DATA_ONLY_NO_ORDERS",
+  "account_reference": {
+    "maker_pct": "0.08",
+    "taker_pct": "0.10",
+    "source": "Notion OKX MEMORY CORE 01 Trading Fees, authenticated screenshots 6,9,12 Nov 2026",
+    "account_fee_verified_against_trade_fills": false
+  },
+  "v5_fixed_slippage_pct_side": "0.05",
+  "scope": "Public OKX Spot instrument and ticker fields, not EEA account trading permission",
+  "pairs": {
+    "BTC-USDC": {
+      "instrument_request": {
+        "url": "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=BTC-USDC",
+        "host": "https://www.okx.com",
+        "sha256": "27910dec44fc92fd9b48e13dc0bbcb42d2a704a81e61ba3e98cddf81fc56618f",
+        "retrieved_utc": "2026-11-13T01:41:02.406404+00:00",
+        "code": "0"
+      },
+      "instrument": {
+        "instId": "BTC-USDC",
+        "instType": "SPOT",
+        "state": "live",
+        "baseCcy": "BTC",
+        "quoteCcy": "USDC",
+        "lotSz": "0.00000001",
+        "minSz": "0.00001",
+        "tickSz": "0.1",
+        "tradeQuoteCcyList": [
+          "USDG",
+          "USD",
+          "USDC",
+          "RLUSD"
+        ],
+        "ruleType": "normal"
+      },
+      "ticker_request": {
+        "url": "https://www.okx.com/api/v5/market/ticker?instId=BTC-USDC",
+        "host": "https://www.okx.com",
+        "sha256": "89a352cdaa6d420261f1a46bbb24ece35e18c2322296bfbe27fefb408ceb3097",
+        "retrieved_utc": "2026-11-13T01:41:02.599440+00:00",
+        "code": "0"
+      },
+      "ticker": {
+        "instId": "BTC-USDC",
+        "last": "70904.8",
+        "bidPx": "70904.8",
+        "askPx": "70904.9",
+        "ts": "1794534062040"
+      },
+      "ticker_age_seconds_at_check": 0.56,
+      "order_size_estimates": {
+        "minimum_base_qty": "0.00001",
+        "minimum_base_notional_at_ask_usdc": "0.709049",
+        "budget_scenarios": [
+          {
+            "budget_usdc": "10",
+            "qty_approx_base": "0.00014089",
+            "estimated_ask_notional_usdc": "9.989791361",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          },
+          {
+            "budget_usdc": "20",
+            "qty_approx_base": "0.00028178",
+            "estimated_ask_notional_usdc": "19.979582722",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          },
+          {
+            "budget_usdc": "100",
+            "qty_approx_base": "0.00140893",
+            "estimated_ask_notional_usdc": "99.900040757",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          },
+          {
+            "budget_usdc": "1000",
+            "qty_approx_base": "0.01408930",
+            "estimated_ask_notional_usdc": "999.000407570",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          }
+        ]
+      }
+    },
+    "ETH-USDC": {
+      "instrument_request": {
+        "url": "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=ETH-USDC",
+        "host": "https://www.okx.com",
+        "sha256": "593d43c3dc6bbb6c1e8689fe36d1834d09eeff338b567fa550d8f3550f41235b",
+        "retrieved_utc": "2026-11-13T01:41:02.783707+00:00",
+        "code": "0"
+      },
+      "instrument": {
+        "instId": "ETH-USDC",
+        "instType": "SPOT",
+        "state": "live",
+        "baseCcy": "ETH",
+        "quoteCcy": "USDC",
+        "lotSz": "0.000001",
+        "minSz": "0.001",
+        "tickSz": "0.01",
+        "tradeQuoteCcyList": [
+          "USDG",
+          "USD",
+          "USDC",
+          "RLUSD"
+        ],
+        "ruleType": "normal"
+      },
+      "ticker_request": {
+        "url": "https://www.okx.com/api/v5/market/ticker?instId=ETH-USDC",
+        "host": "https://www.okx.com",
+        "sha256": "cbd4d738d29ed6e1728f8e647cc986ae05b1c7157b10fe2c722eefea911b9b76",
+        "retrieved_utc": "2026-11-13T01:41:02.974243+00:00",
+        "code": "0"
+      },
+      "ticker": {
+        "instId": "ETH-USDC",
+        "last": "2009.35",
+        "bidPx": "2009.17",
+        "askPx": "2009.18",
+        "ts": "1794534062467"
+      },
+      "ticker_age_seconds_at_check": 0.51,
+      "order_size_estimates": {
+        "minimum_base_qty": "0.001",
+        "minimum_base_notional_at_ask_usdc": "2.00918",
+        "budget_scenarios": [
+          {
+            "budget_usdc": "10",
+            "qty_approx_base": "0.004972",
+            "estimated_ask_notional_usdc": "9.98964296",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          },
+          {
+            "budget_usdc": "20",
+            "qty_approx_base": "0.009944",
+            "estimated_ask_notional_usdc": "19.97928592",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          },
+          {
+            "budget_usdc": "100",
+            "qty_approx_base": "0.049721",
+            "estimated_ask_notional_usdc": "99.89843878",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          },
+          {
+            "budget_usdc": "1000",
+            "qty_approx_base": "0.497218",
+            "estimated_ask_notional_usdc": "999.00046124",
+            "above_minSz_only": true,
+            "note": "Approximate only: other min-notional rules, quote rounding, fees in crypto, and account eligibility NOT tested"
+          }
+        ]
+      }
+    }
+  },
+  "errors": [],
+  "v5_flat_price_roundtrip": {
+    "factor": "0.9970034977511244377811094453",
+    "cost_pct": "0.2996502248875562218890554700",
+    "break_even_price_rise_pct": "0.300550826113907955128865900",
+    "cost_by_budget_usdc": {
+      "10": "0.0299650224887556221889055470",
+      "20": "0.0599300449775112443778110940",
+      "100": "0.2996502248875562218890554700",
+      "1000": "2.996502248875562218890554700"
+    }
+  },
+  "completed_utc": "2026-11-13T01:41:02.974322+00:00",
+  "limitations": [
+    "Public instrument state is NOT proof of permission for a specific France/EEA account",
+    "Minimum base size alone may not capture min quote amount or exchange order validity",
+    "Ticker is a snapshot, not historical execution or an orderbook fill",
+    "No maker queue, effective fee discounts, market pair exception, order rounding or conversion",
+    "V5 5 bp slip is a fixed research assumption; never double-count spread against real VWAP",
+    "No orders or authenticated API operations. No credentials used."
+  ]
+}
