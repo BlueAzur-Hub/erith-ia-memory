@@ -106,6 +106,58 @@ class PaperEngineTests(unittest.TestCase):
             self.assertGreaterEqual(r["results"]["base_inventory_btc"], 0)
             self.assertEqual(r["safety"]["leverage"], 1)
 
+    def test_custom_rules_default_matches_existing_ema_orders(self):
+        bars = bars_waves(800)
+        old = simulate(bars, {"kind": "EMA_CROSS"})
+        own = simulate(bars, {"kind": "CUSTOM_RULES",
+                              "entry_rule": "EMA_CROSS_UP",
+                              "filter_rule": "NONE",
+                              "exit_rule": "EMA_CROSS_DOWN"})
+        self.assertEqual(old["trades"], own["trades"])
+        self.assertEqual(old["results"], own["results"])
+        self.assertEqual(own["safety"]["orders_real"], 0)
+
+    def test_custom_rules_allowlisted_values_only(self):
+        for bad in ("eval", {"code": "buy()"}, ["EMA_CROSS_UP"], None, True):
+            with self.subTest(bad=bad):
+                with self.assertRaises(LabError):
+                    options({"kind": "CUSTOM_RULES", "entry_rule": bad})
+        for field, bad in (("filter_rule", "PYTHON"), ("exit_rule", ["RSI_ABOVE"]),
+                           ("stop_loss_pct", 80), ("rsi_period", -2),
+                           ("volume_multiplier", "NaN")):
+            with self.subTest(field=field):
+                with self.assertRaises(LabError):
+                    options({"kind": "CUSTOM_RULES", field: bad})
+
+    def test_custom_volume_filter_blocks_entries_when_insufficient(self):
+        bars=bars_waves(600)
+        default=simulate(bars, {"kind": "CUSTOM_RULES"})
+        filtered=simulate(bars, {"kind": "CUSTOM_RULES",
+            "filter_rule": "VOLUME_ABOVE", "volume_multiplier": 2,
+            "volume_period": 20})
+        self.assertGreater(default["results"]["buy_events"], 0)
+        self.assertEqual(filtered["results"]["buy_events"], 0)
+        self.assertEqual(filtered["results"]["equity_final"], 1000)
+
+    def test_custom_future_candle_changes_cannot_rewrite_past_trades(self):
+        old=bars_waves(800)
+        changed=list(old)
+        for i in range(420,len(changed)):
+            t,o,h,l,c,v=changed[i]
+            changed[i]=(t,o+75,h+75,l+75,c+75,v)
+        params={"kind":"CUSTOM_RULES","entry_rule":"PRICE_ABOVE_EMA",
+                "filter_rule":"RSI_BELOW","rsi_entry_max":75,
+                "exit_rule":"RSI_ABOVE","rsi_exit_min":75,
+                "stop_loss_pct":5,"take_profit_pct":8}
+        a=simulate(old,params)
+        b=simulate(changed,params)
+        cutoff=changed[420][0]
+        self.assertEqual([t for t in a["trades"] if t["timestamp"]<cutoff],
+                         [t for t in b["trades"] if t["timestamp"]<cutoff])
+        self.assertEqual(a["safety"]["orders_real"],0)
+        self.assertGreaterEqual(a["results"]["cash_final"],0)
+        self.assertGreaterEqual(a["results"]["base_inventory_btc"],0)
+
     def test_csv_gaps_rejected(self):
         with TemporaryDirectory() as td:
             file = Path(td) / "bars.csv"
