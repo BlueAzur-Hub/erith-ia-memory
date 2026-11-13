@@ -217,6 +217,76 @@
     add("text",{x:X0,y:229,fill:"#91aebe","font-size":10},whenUTC(series[0].t)+" UTC");
     add("text",{x:X1,y:229,fill:"#91aebe","font-size":10,"text-anchor":"end"},whenUTC(last.t)+" UTC");
   }
+  function drawDrawdown(series) {
+    const root=$("drawdown-chart");
+    root.replaceChildren();
+    if(!Array.isArray(series) || !series.length ||
+       !series.every(x=>Number.isFinite(Number(x.drawdown_pct))))return;
+    const values=series.map(x=>Math.min(0,Number(x.drawdown_pct)));
+    const minimum=Math.min(...values);
+    const bottom=Math.min(-1,minimum*1.08);
+    const X0=20,X1=702,Y0=15,Y1=114;
+    const svgNS="http://www.w3.org/2000/svg";
+    const node=(tag,attrs,label)=>{
+      const n=document.createElementNS(svgNS,tag);
+      for(const [key,value] of Object.entries(attrs))n.setAttribute(key,String(value));
+      if(label!==undefined)n.textContent=String(label);
+      root.append(n);return n;
+    };
+    for(const fraction of [0,.5,1]){
+      const y=Y0+(Y1-Y0)*fraction;
+      node("line",{x1:X0,y1:y,x2:X1,y2:y,stroke:"#335467","stroke-width":1});
+      node("text",{x:X0+3,y:y-3,fill:"#93b1bd","font-size":9},print(bottom*fraction,1)+" %");
+    }
+    const pts=values.map((v,i)=>{
+      const x=X0+(X1-X0)*i/Math.max(1,values.length-1);
+      const y=Y0+(Y1-Y0)*v/bottom;
+      return x.toFixed(2)+","+y.toFixed(2);
+    }).join(" ");
+    node("polygon",{points:pts+" "+X1+","+Y0+" "+X0+","+Y0,
+                    fill:"#e598ad","fill-opacity":".12"});
+    node("polyline",{points:pts,stroke:"#f4a8b9",fill:"none",
+                     "stroke-width":2.5,"stroke-linejoin":"round","stroke-linecap":"round"});
+    const last=values[values.length-1];
+    node("circle",{cx:X1,cy:Y0+(Y1-Y0)*last/bottom,r:3.5,fill:"#f1cf95"});
+    node("text",{x:X0,y:139,fill:"#91adbc","font-size":10},whenUTC(series[0].t)+" UTC");
+    node("text",{x:X1,y:139,fill:"#91adbc","font-size":10,"text-anchor":"end"},
+         whenUTC(series[series.length-1].t)+" UTC");
+  }
+  function renderQuantDesk(record) {
+    const a=record.run.analytics;
+    const series=record.run.series;
+    const root=$("quant-desk");
+    if(!a || !Array.isArray(series) ||
+       !series.every(x=>typeof x.drawdown_pct==="number")){
+      root.hidden=true;return;
+    }
+    root.hidden=false;
+    $("quant-closed").textContent=print(a.closed_positions,0);
+    $("quant-trade-split").textContent=
+      print(a.winning_positions,0)+" gagnante(s) · "+
+      print(a.losing_positions,0)+" perdante(s)";
+    $("quant-winrate").textContent=
+      a.win_rate_pct===null?"Non calculable":print(a.win_rate_pct,1)+" %";
+    $("quant-profitfactor").textContent=
+      a.profit_factor!==null?print(a.profit_factor,2):
+      a.profit_factor_status==="NO_CLOSED_LOSSES"?"Pas de pertes clôturées":"Non calculable";
+    $("quant-exposure").textContent=print(a.time_in_position_pct,1)+" %";
+    $("quant-realized").textContent=signed(a.realized_pnl_quote)+" "+currency;
+    $("quant-unrealized").textContent=signed(a.unrealized_pnl_quote)+" "+currency;
+    $("quant-realized").className=a.realized_pnl_quote<0?"quant-negative":"quant-positive";
+    $("quant-unrealized").className=a.unrealized_pnl_quote<0?"quant-negative":"quant-positive";
+    const diff=record.counterfactual?.difference_final_usdt;
+    $("quant-cost-drag").textContent=Number.isFinite(diff)
+      ? "ÉCART SANS FRICTIONS : "+print(diff,2)+" "+currency : "ÉCART SANS FRICTIONS : NON DISPONIBLE";
+    $("quant-limits").textContent=
+      "Statistiques calculées sur les positions entièrement clôturées uniquement. "+
+      "Résultat latent = inventaire ouvert valorisé à la dernière clôture. "+
+      "Le graphique échantillonne les bougies pour l'affichage ; le drawdown maximal est calculé sur toutes. "+
+      "L'écart au scénario sans frais ni glissement n'est pas une simple addition de commissions. "+
+      "Aucun carnet historique, aucune exécution garantie, aucun ordre réel.";
+    drawDrawdown(series);
+  }
   function updateReadout(record) {
     const r=record.run.results;
     $("readout-mode").textContent="SIMULATION TERMINÉE · "+(record.run.data.timeframe||"1m");
@@ -256,6 +326,7 @@
     $("zero-cost").textContent=record.counterfactual?
       signed(record.counterfactual.zero_friction_return_pct)+" %":"Non calculé dans V1";
     drawChart(report.series);
+    renderQuantDesk(record);
     const tbody=$("trades");tbody.replaceChildren();
     if (!report.trades.length) tableRow(tbody,["Aucune opération fictive","—","—","—","—"]);
     else for (const t of report.trades.slice(-12).reverse())
@@ -444,8 +515,8 @@
       if(!health.public_okx_enabled)throw new Error("Le serveur Python V3.1 n'est pas actif. Relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V4 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.1 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
+        "Seven Heaven V4.1 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
