@@ -765,6 +765,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-13",
+      "date_utc": "2026-11-13",
+      "first_seen_at_utc": "2026-11-13T01:19:45.073Z",
+      "source_times_utc": [
+        "2026-11-13T00:51:42.649Z",
+        "2026-11-13T00:51:38.968Z"
+      ],
+      "universe_eligible": 379,
+      "policy_matches": 15,
+      "selected": [
+        {
+          "coin_id": "celestia",
+          "symbol": "TIA",
+          "source_at_utc": "2026-11-13T00:51:42.649Z",
+          "rank": 112,
+          "price_usd": 0.43865806288810577
+        },
+        {
+          "coin_id": "plume",
+          "symbol": "PLUME",
+          "source_at_utc": "2026-11-13T00:51:38.968Z",
+          "rank": 273,
+          "price_usd": 0.013767864350798015
+        },
+        {
+          "coin_id": "beldex",
+          "symbol": "BDX",
+          "source_at_utc": "2026-11-13T00:51:42.649Z",
+          "rank": 95,
+          "price_usd": 0.07255631830665851
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1775,6 +1810,27 @@
       "sha256": "8d7bc01071ca5259c41a3f7ba9930214f8ae33c2942a12a50bad23988f9c2717",
       "recorded_at_utc": "2026-11-12T16:58:21.851Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-11",
+      "file": "observations/2026-11-13T011945073Z--2026-11-11.json",
+      "sha256": "69bc242d5227bfbe397641c92402bb6d1da277fef6981b271c0d38bcc86712b2",
+      "recorded_at_utc": "2026-11-13T01:19:45.073Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-12",
+      "file": "observations/2026-11-13T011945073Z--2026-11-12.json",
+      "sha256": "0355a6521a65320d82d42f664b117865bd22c85b7773715999121c842af39274",
+      "recorded_at_utc": "2026-11-13T01:19:45.073Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-13",
+      "file": "observations/2026-11-13T011945073Z--2026-11-13.json",
+      "sha256": "c7d39014a86c4bc1ed8aefd7e75513e44545ecb88cb1380b294304f5fbbcff62",
+      "recorded_at_utc": "2026-11-13T01:19:45.073Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
