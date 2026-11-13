@@ -1,0 +1,133 @@
+name: Seven Heaven independent Freqtrade frozen EMA research
+
+on:
+  push:
+    branches: [research/seven-heaven-strategy-lab-fee-frequency-and-freqtrade-20261113]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SevenHeavenEMA1030Frozen.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_FROZEN_IMPORT.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_BACKTEST_CONFIG.json'
+      - '.github/workflows/seven-heaven-strategy-lab-freqtrade-frozen-independent-ema.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SevenHeavenEMA1030Frozen.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_FROZEN_IMPORT.py'
+      - 'coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_BACKTEST_CONFIG.json'
+      - '.github/workflows/seven-heaven-strategy-lab-freqtrade-frozen-independent-ema.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-freqtrade-btc-jan-ema-research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 26
+    steps:
+      - name: Checkout only immutable data converter and native strategy
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/src/
+            /coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SevenHeavenEMA1030Frozen.py
+            /coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_FROZEN_IMPORT.py
+            /coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_BACKTEST_CONFIG.json
+            /.github/workflows/seven-heaven-strategy-lab-freqtrade-frozen-independent-ema.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify independent research code compiles
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SevenHeavenEMA1030Frozen.py \
+            coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_FROZEN_IMPORT.py
+          python -m json.tool coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_BACKTEST_CONFIG.json >/dev/null
+      - name: Fetch ONLY already archived immutable market source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: seven_heaven_strategy_lab
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/seven-source" "$RUNNER_TEMP/freqtrade-user_data/data/binance" \
+            "$RUNNER_TEMP/freqtrade-user_data/strategies" "$RUNNER_TEMP/freqtrade-user_data/backtest_results" "$RUNNER_TEMP/freqtrade-evidence"
+          gh release download crypto-spot-bulk-2026-01-1m \
+            --repo BlueAzur-Hub/erith-ia-memory \
+            --pattern BTCUSDT-1m-2026-01.zip --dir "$RUNNER_TEMP/seven-source"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from src.reference_data import _convert, ZIP_NAME, CSV_NAME, CSV_SHA
+          import hashlib
+          root=Path(os.environ["RUNNER_TEMP"])
+          raw=(root/"seven-source"/ZIP_NAME).read_bytes()
+          data=_convert(raw)
+          assert hashlib.sha256(data).hexdigest()==CSV_SHA
+          (root/"seven-source"/CSV_NAME).write_bytes(data)
+          print("PASS: 44640 authentic Binance Spot BTCUSDT January 2026 minute bars")
+          PY
+      - name: Convert audited OHLCV to Freqtrade's positional JSON
+        env:
+          PYTHONPATH: seven_heaven_strategy_lab
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_FROZEN_IMPORT.py \
+            --source-csv "$RUNNER_TEMP/seven-source/BTCUSDT-1m-2026-01_HUMMINGBOT_CANDLES.csv" \
+            --output-dir "$RUNNER_TEMP/freqtrade-user_data/data/binance"
+          cp coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SevenHeavenEMA1030Frozen.py "$RUNNER_TEMP/freqtrade-user_data/strategies/"
+          cp coordination/inter_ai_dialogues/agent_crypto/research/external_bots/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_JAN_2026_BACKTEST_CONFIG.json "$RUNNER_TEMP/freqtrade-user_data/config.json"
+          chmod -R 0777 "$RUNNER_TEMP/freqtrade-user_data" "$RUNNER_TEMP/freqtrade-evidence"
+      - name: Pull official Freqtrade stable runtime and capture exact image digest
+        run: |
+          set -euo pipefail
+          docker pull freqtradeorg/freqtrade:stable
+          docker image inspect freqtradeorg/freqtrade:stable --format '{{json .RepoDigests}}' \
+            | tee "$RUNNER_TEMP/freqtrade-evidence/FREQTRADE_IMAGE_REPO_DIGESTS.json"
+          docker image inspect freqtradeorg/freqtrade:stable --format '{{.Id}}' \
+            | tee "$RUNNER_TEMP/freqtrade-evidence/FREQTRADE_IMAGE_ID.txt"
+          test -s "$RUNNER_TEMP/freqtrade-evidence/FREQTRADE_IMAGE_REPO_DIGESTS.json"
+      - name: Run actual Freqtrade list-data and offline backtesting
+        run: |
+          set -euo pipefail
+          docker run --rm --network none --cap-drop ALL \
+            --security-opt no-new-privileges --memory 5g --cpus 2 --pids-limit 256 \
+            -v "$RUNNER_TEMP/freqtrade-user_data:/freqtrade/user_data:rw" \
+            -v "$RUNNER_TEMP/freqtrade-evidence:/evidence:rw" \
+            freqtradeorg/freqtrade:stable \
+              list-data --exchange binance \
+              --datadir /freqtrade/user_data/data/binance \
+              --data-format-ohlcv json --show-timerange
+          docker run --rm --network none --cap-drop ALL \
+            --security-opt no-new-privileges --memory 5g --cpus 2 --pids-limit 256 \
+            -v "$RUNNER_TEMP/freqtrade-user_data:/freqtrade/user_data:rw" \
+            -v "$RUNNER_TEMP/freqtrade-evidence:/evidence:rw" \
+            freqtradeorg/freqtrade:stable \
+              backtesting \
+              --config /freqtrade/user_data/config.json \
+              --strategy SevenHeavenEMA1030Frozen \
+              --strategy-path /freqtrade/user_data/strategies \
+              --datadir /freqtrade/user_data/data/binance \
+              --data-format-ohlcv json \
+              --timerange 20260101-20260201 \
+              --fee 0.001 --dry-run-wallet 1000 --cache none \
+              --export trades \
+              --export-filename /freqtrade/user_data/backtest_results/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_2026_JAN_EMA1030.zip \
+              2>&1 | tee "$RUNNER_TEMP/freqtrade-evidence/FREQTRADE_NATIVE_EXECUTION_LOG.txt"
+          ls -lah "$RUNNER_TEMP/freqtrade-user_data/backtest_results"
+          test -f "$RUNNER_TEMP/freqtrade-user_data/backtest_results/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_2026_JAN_EMA1030.zip"
+      - name: Save actual native result, config, strategy and checksums
+        run: |
+          set -euo pipefail
+          cp "$RUNNER_TEMP/freqtrade-user_data/backtest_results/SEVEN_HEAVEN_FREQTRADE_BTCUSDT_2026_JAN_EMA1030.zip" "$RUNNER_TEMP/freqtrade-evidence/"
+          cp "$RUNNER_TEMP/freqtrade-user_data/data/binance/SEVEN_HEAVEN_FREQTRADE_DATA_SOURCE_AUDIT.json" "$RUNNER_TEMP/freqtrade-evidence/"
+          (cd "$RUNNER_TEMP/freqtrade-evidence" && sha256sum *.zip *.json > SHA256SUMS.txt)
+      - name: Upload successful native Freqtrade evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEVEN_HEAVEN_NATIVE_FREQTRADE_BTCUSDT_JANUARY_2026_EMA1030_BACKTEST
+          path: ${{ runner.temp }}/freqtrade-evidence/*
+          retention-days: 30
+          if-no-files-found: error
