@@ -1,281 +1,330 @@
 "use strict";
-
+/* Seven Heaven Strategy Lab V2 · all API calls stay on same-origin localhost.
+   No external scripts, exchange keys, account access or order endpoints. */
 (() => {
   const $ = id => document.getElementById(id);
-  const config = $("config");
-  const format = (n, max = 2) => Number(n).toLocaleString("fr-FR", {maximumFractionDigits: max});
-  const signed = (n, max = 2) => (n > 0 ? "+" : "") + format(n, max);
-  const money = n => format(n, 2) + " USDT";
-  const day = timestamp => new Date(timestamp * 1000).toISOString().slice(0, 16).replace("T", " ");
+  const form = $("config");
+  const print = (n, digits=2) => Number(n).toLocaleString("fr-FR", {maximumFractionDigits: digits});
+  const signed = (n, digits=2) => (Number(n) > 0 ? "+" : "") + print(n, digits);
+  const money = n => print(n, 2) + " USDT";
+  const whenUTC = t => new Date(t * 1000).toISOString().slice(0,16).replace("T"," ");
+  const whenLocal = s => new Date(s).toLocaleString("fr-FR", {dateStyle:"short",timeStyle:"short"});
+  const kinds = {
+    EMA_CROSS:"Croisement EMA", BOLLINGER:"Bandes Bollinger", DCA:"DCA programmé",
+    HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver les USDT"
+  };
   let profiles = [];
+  let busy = false;
+  let available = false;
 
-  async function api(path, body) {
-    const settings = body === undefined
-      ? {cache: "no-store"}
-      : {method: "POST", cache: "no-store", headers: {"Content-Type": "application/json"},
-         body: JSON.stringify(body)};
+  async function api(path, data) {
+    const init = data === undefined
+      ? {cache:"no-store"}
+      : {method:"POST", cache:"no-store", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)};
     let response;
-    try {
-      response = await fetch(path, settings);
-    } catch (_) {
-      throw new Error("Serveur local inaccessible. Lance le laboratoire depuis son programme Docker ou Python.");
-    }
+    try { response = await fetch(path, init); }
+    catch (_) { throw new Error("Le serveur local ne répond pas. Vérifie la fenêtre Python sur ta clé USB."); }
     let payload;
-    try {
-      payload = await response.json();
-    } catch (_) {
-      throw new Error("Le serveur n'a pas renvoyé de rapport lisible.");
-    }
-    if (!response.ok) throw new Error(payload.error || "Opération impossible");
+    try { payload = await response.json(); }
+    catch (_) { throw new Error("Le serveur n'a pas renvoyé de JSON lisible."); }
+    if (!response.ok) throw new Error(payload.error || "Une opération locale a échoué.");
     return payload;
   }
-
-  function notice(text, tone = "") {
-    const box = $("message");
-    box.textContent = text;
-    box.className = "notice" + (tone ? " " + tone : "");
+  function notice(message, tone="") {
+    $("message").textContent = message;
+    $("message").className = "notice" + (tone ? " " + tone : "");
   }
-
-  function setBusy(id, busy, text) {
-    const button = $(id);
-    if (!button.dataset.original) button.dataset.original = button.textContent;
-    button.disabled = busy;
-    button.textContent = busy ? text : button.dataset.original;
+  function setBusy(working, label="Calcul en cours…") {
+    busy = working;
+    for (const id of ["import","run","compare","save-profile"]) {
+      const b = $(id);
+      if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
+      b.disabled = working || ((id === "run" || id === "compare") && !available);
+      b.textContent = working && (id === "run" || id === "compare") ? label : b.dataset.defaultText;
+    }
   }
-
-  function comma(number) {
-    const raw = String(number).trim().replace(",", ".");
-    if (!raw || !/^-?\d+(\.\d+)?$/.test(raw)) throw new Error("Nombre incorrect : " + number);
-    const n = Number(raw);
-    if (!Number.isFinite(n)) throw new Error("Nombre incorrect : " + number);
-    return n;
+  function number(input) {
+    const text = String(input).trim().replace(",",".");
+    if (!/^-?\d+(\.\d+)?$/.test(text)) throw new Error("Nombre incorrect : " + input);
+    const val = Number(text);
+    if (!Number.isFinite(val)) throw new Error("Nombre non fini : " + input);
+    return val;
   }
-
-  function getParams() {
-    const entries = new FormData(config);
-    const raw = name => entries.get(name);
+  function requestParams() {
+    const data = new FormData(form);
+    const val = key => data.get(key);
     return {
-      kind: raw("kind"),
-      capital: comma(raw("capital")),
-      // UI percentages to decimal fractions: 0,10 % -> 0.001.
-      fee: comma(raw("fee_pct")) / 100,
-      slippage: comma(raw("slippage_pct")) / 100,
-      ema_fast: comma(raw("ema_fast")),
-      ema_slow: comma(raw("ema_slow")),
-      bb_period: comma(raw("bb_period")),
-      bb_sigma: comma(raw("bb_sigma")),
-      dca_every: comma(raw("dca_every")),
-      dca_quote: comma(raw("dca_quote")),
+      kind:val("kind"), timeframe:val("timeframe") || "1m",
+      capital:number(val("capital")), fee:number(val("fee_pct")) / 100,
+      slippage:number(val("slippage_pct")) / 100,
+      ema_fast:number(val("ema_fast")), ema_slow:number(val("ema_slow")),
+      bb_period:number(val("bb_period")), bb_sigma:number(val("bb_sigma")),
+      dca_every:number(val("dca_every")), dca_quote:number(val("dca_quote"))
     };
   }
-
-  function setParams(p) {
+  function chooseParams(p) {
     const values = {
-      kind: p.kind,
-      capital: p.capital,
-      fee_pct: format(p.fee * 100, 2),
-      slippage_pct: format(p.slippage * 100, 2),
-      ema_fast: p.ema_fast,
-      ema_slow: p.ema_slow,
-      bb_period: p.bb_period,
-      bb_sigma: p.bb_sigma,
-      dca_every: p.dca_every,
-      dca_quote: p.dca_quote
+      kind:p.kind, capital:p.capital, fee_pct:print(p.fee*100,2),
+      slippage_pct:print(p.slippage*100,2), ema_fast:p.ema_fast,
+      ema_slow:p.ema_slow, bb_period:p.bb_period, bb_sigma:p.bb_sigma,
+      dca_every:p.dca_every, dca_quote:p.dca_quote
     };
     for (const [name, value] of Object.entries(values)) {
-      const field = config.elements.namedItem(name);
-      if (field) field.value = String(value);
+      const field = form.elements.namedItem(name);
+      if (field && value !== undefined) field.value = String(value);
     }
+    const target = p.timeframe || "1m";
+    const radio = form.querySelector('input[name="timeframe"][value="'+target+'"]');
+    if (radio) radio.checked = true;
     showFields();
   }
-
   function showFields() {
     const kind = $("kind").value;
     $("ema-fields").hidden = kind !== "EMA_CROSS";
     $("bb-fields").hidden = kind !== "BOLLINGER";
     $("dca-fields").hidden = kind !== "DCA";
   }
-
-  async function refreshDataset() {
-    const result = await api("/api/datasets");
-    const dataset = result.datasets[0];
-    const present = dataset.available === true;
-    $("dataset-badge").textContent = present ? "Archive authentifiée" : "Non chargée";
-    $("dataset-badge").className = "pill" + (present ? " ready" : "");
-    $("dataset-state").textContent = present
-      ? "44 640 bougies conservées localement · SHA-256 conforme · aucun téléchargement nécessaire."
-      : "Téléchargement public sur demande, vérifié par SHA-256. Aucune connexion à un compte.";
-    $("run").disabled = !present;
-    return present;
+  function el(tag, textValue, className) {
+    const n=document.createElement(tag);
+    if (textValue!==undefined) n.textContent=String(textValue);
+    if (className) n.className=className;
+    return n;
   }
-
-  async function refreshProfiles() {
-    const data = await api("/api/profiles");
-    profiles = data.profiles;
-    const select = $("saved-profiles");
-    select.replaceChildren(new Option("Choisir un profil…", ""));
-    for (const p of profiles) {
-      select.append(new Option(p.name + " · " + p.params.kind, p.id));
-    }
+  function tableRow(parent, columns) {
+    const tr=el("tr");
+    for (const col of columns) tr.append(el("td", col));
+    parent.append(tr);
+    return tr;
   }
-
-  function rowText(cells, container) {
-    const tr = document.createElement("tr");
-    cells.forEach(value => {
-      const td = document.createElement("td");
-      td.textContent = String(value);
-      tr.append(td);
-    });
-    container.append(tr);
-  }
-
-  function plot(points) {
-    const svg = $("equity-chart");
-    svg.replaceChildren();
-    if (!points.length) return;
-    const ns = "http://www.w3.org/2000/svg";
-    const make = (tag, attrs, label) => {
-      const el = document.createElementNS(ns, tag);
-      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, String(v)));
-      if (label != null) el.textContent = label;
-      svg.append(el);
-      return el;
-    };
-    const values = points.map(p => p.equity);
-    const min = Math.min(...values), max = Math.max(...values);
-    const range = Math.max(max - min, 1);
-    const low = min - range * .12, high = max + range * .12;
-    const h = 185, left = 10, right = 708;
-    const xy = (p, i) => [
-      left + i / Math.max(1, points.length - 1) * (right - left),
-      12 + (high - p.equity) / (high - low) * h
-    ];
-    for (let j = 0; j < 4; j++) {
-      const y = 14 + j * 61;
-      make("line", {x1: left, y1: y, x2: right, y2: y, stroke: "#29415a", "stroke-width": 1});
-    }
-    const coords = points.map((p, i) => xy(p, i).map(n => n.toFixed(2)).join(",")).join(" ");
-    const yZero = xy(points[0], 0)[1];
-    make("line", {x1: left, y1: yZero, x2: right, y2: yZero,
-      stroke: "#74859b", "stroke-dasharray": "4 6", opacity: ".5"});
-    make("polyline", {points: coords, fill: "none", stroke: "#71e3cb",
-      "stroke-width": "2.5", "stroke-linecap": "round", "stroke-linejoin": "round"});
-    make("text", {x: 12, y: 213, fill: "#9cb0c5", "font-size": 12}, "Début");
-    make("text", {x: 705, y: 213, fill: "#9cb0c5", "font-size": 12, "text-anchor": "end"}, "Fin");
-  }
-
-  function render(record) {
-    const report = record.run, results = report.results, baseline = record.baselines;
-    $("empty-result").hidden = true;
-    $("result").hidden = false;
-    $("run-id").textContent = report.params.kind + " · " + report.data.rows + " bougies";
-    $("equity").textContent = money(results.equity_final);
-    const perf = $("return");
-    perf.textContent = signed(results.return_pct, 2) + " %";
-    perf.className = "performance" + (results.return_pct < 0 ? " negative" : "");
-    $("drawdown").textContent = format(results.max_drawdown_pct, 2) + " %";
-    $("fees").textContent = money(results.fees_paid_usdt);
-    $("cash").textContent = money(results.cash_final);
-    $("inventory").textContent = format(results.base_inventory_btc, 8) + " BTC";
-    $("counts").textContent = results.buy_events + " / " + results.sell_events;
-    $("rejected").textContent = String(results.rejected_orders);
-    $("hold50").textContent = signed(baseline.HOLD_50.return_pct, 2) + " %";
-    $("holdcash").textContent = signed(baseline.CASH.return_pct, 2) + " %";
-    plot(report.series);
-    const table = $("trades");
-    table.replaceChildren();
-    report.trades.slice(-12).reverse().forEach(trade =>
-      rowText([day(trade.timestamp), trade.side, format(trade.qty, 8),
-        format(trade.price, 2), format(trade.fee, 4)], table));
-    if (!report.trades.length) {
-      rowText(["Aucune opération fictive", "—", "—", "—", "—"], table);
-    }
-  }
-
-  async function refreshHistory() {
-    const listing = await api("/api/results");
-    const root = $("history");
+  function drawChart(series) {
+    const root=$("equity-chart");
     root.replaceChildren();
-    if (!listing.runs.length) {
-      const text = document.createElement("span");
-      text.className = "muted";
-      text.textContent = "Aucune simulation enregistrée.";
-      root.append(text);
-      return;
+    if (!series || !series.length) return;
+    const uri="http://www.w3.org/2000/svg";
+    const add=(tag,attrs,label)=>{
+      const n=document.createElementNS(uri,tag);
+      for (const [name,v] of Object.entries(attrs)) n.setAttribute(name,String(v));
+      if (label!==undefined) n.textContent=String(label);
+      root.append(n); return n;
+    };
+    const values=series.map(x=>Number(x.equity));
+    const min=Math.min(...values),max=Math.max(...values);
+    const spread=Math.max(1,max-min);
+    const low=min-spread*.12,high=max+spread*.12;
+    const X0=18,X1=705,Y0=20,Y1=207;
+    for(let i=0;i<5;i++){
+      const y=Y0+(Y1-Y0)*i/4;
+      add("line",{x1:X0,y1:y,x2:X1,y2:y,stroke:"#294859","stroke-width":1});
+      const value=high+(low-high)*i/4;
+      add("text",{x:X0+3,y:y-3,fill:"#7c9aab","font-size":9},print(value,0));
     }
-    listing.runs.slice(0, 12).forEach(r => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "history-item";
-      const label = document.createElement("span");
-      label.textContent = r.kind + " · " + new Date(r.created_utc).toLocaleString("fr-FR");
-      const val = document.createElement("strong");
-      val.textContent = signed(r.results.return_pct) + " %";
-      button.append(label, val);
-      button.addEventListener("click", async () => {
-        try {
-          const old = await api("/api/results/" + r.id);
-          render(old);
-          notice("Rapport historique rechargé. Aucune nouvelle opération.");
-        } catch (e) { notice(e.message, "error"); }
+    const coords=series.map((r,i)=>{
+      const x=X0+(X1-X0)*(i/Math.max(1,series.length-1));
+      const y=Y0+(high-r.equity)/(high-low)*(Y1-Y0);
+      return x.toFixed(2)+","+y.toFixed(2);
+    }).join(" ");
+    const shade=add("polygon",{points:coords+" "+X1+","+Y1+" "+X0+","+Y1,fill:"#56d7cc","fill-opacity":".07"});
+    const line=add("polyline",{points:coords,stroke:"#70ece0",fill:"none","stroke-width":2.5,"stroke-linejoin":"round","stroke-linecap":"round"});
+    const last=series[series.length-1], endingY=Y0+(high-last.equity)/(high-low)*(Y1-Y0);
+    add("circle",{cx:X1,cy:endingY,r:4,fill:"#f1d393",stroke:"#8bd5d1","stroke-width":1.5});
+    add("text",{x:X0,y:229,fill:"#91aebe","font-size":10},whenUTC(series[0].t)+" UTC");
+    add("text",{x:X1,y:229,fill:"#91aebe","font-size":10,"text-anchor":"end"},whenUTC(last.t)+" UTC");
+  }
+  function updateReadout(record) {
+    const r=record.run.results;
+    $("readout-mode").textContent="SIMULATION TERMINÉE · "+(record.run.data.timeframe||"1m");
+    $("readout-name").textContent=kinds[record.run.params.kind]||record.run.params.kind;
+    $("readout-equity").textContent=money(r.equity_final);
+    $("readout-performance").textContent=signed(r.return_pct)+" %";
+    $("readout-performance").style.color=r.return_pct<0?"#ffabb9":"#9bf2d2";
+    $("readout-summary").textContent=r.hypothetical_fills+" opérations fictives · "+
+      money(r.fees_paid_usdt)+" de commissions · Drawdown "+print(r.max_drawdown_pct,2)+" %";
+  }
+  function renderRun(record) {
+    const report=record.run,r=report.results,timeframe=report.data.timeframe||"1m";
+    $("empty-result").hidden=true;
+    $("result").hidden=false;
+    $("run-id").textContent=(kinds[report.params.kind]||report.params.kind)+" · "+timeframe;
+    $("equity").textContent=money(r.equity_final);
+    $("return").textContent=signed(r.return_pct)+" %";
+    $("return").className="return-chip"+(r.return_pct<0?" negative":"");
+    $("drawdown").textContent=print(r.max_drawdown_pct)+" %";
+    $("fees").textContent=money(r.fees_paid_usdt);
+    $("cash").textContent=money(r.cash_final);
+    $("inventory").textContent=print(r.base_inventory_btc,8)+" BTC";
+    $("counts").textContent=r.buy_events+" / "+r.sell_events;
+    $("rejected").textContent=r.rejected_orders;
+    $("chart-timeframe").textContent="BOUGIES "+timeframe+" · "+report.data.rows+" POINTS D'ENTRÉE";
+    $("hold50").textContent=record.baselines?.HOLD_50?signed(record.baselines.HOLD_50.return_pct)+" %":"—";
+    $("holdcash").textContent=record.baselines?.CASH?signed(record.baselines.CASH.return_pct)+" %":"—";
+    $("zero-cost").textContent=record.counterfactual?
+      signed(record.counterfactual.zero_friction_return_pct)+" %":"Non calculé dans V1";
+    drawChart(report.series);
+    const tbody=$("trades");tbody.replaceChildren();
+    if (!report.trades.length) tableRow(tbody,["Aucune opération fictive","—","—","—","—"]);
+    else for (const t of report.trades.slice(-12).reverse())
+      tableRow(tbody,[whenUTC(t.timestamp),t.side,print(t.qty,8),print(t.price,2),print(t.fee,4)]);
+    updateReadout(record);
+    return record;
+  }
+  function renderComparison(record) {
+    const comparison=record.comparison;
+    $("comparison-empty").hidden=true;
+    $("comparison-result").hidden=false;
+    $("comparison-badge").textContent="6 MODÈLES · "+comparison.timeframe;
+    $("compare-context").textContent=
+      "BTC/USDT · JANVIER 2026 · "+comparison.aggregated_candles+" BOUGIES "+comparison.timeframe;
+    const tbody=$("comparison-rows");tbody.replaceChildren();
+    for(const row of comparison.rows){
+      const tr=el("tr");
+      tr.append(el("td",row.label,"strategy-label"));
+      tr.append(el("td",signed(row.return_pct)+" %",row.return_pct<0?"numeric-loss":"numeric-gain"));
+      tr.append(el("td",money(row.equity_final)));
+      tr.append(el("td",print(row.max_drawdown_pct)+" %"));
+      tr.append(el("td",money(row.fees_paid_usdt)));
+      tr.append(el("td",row.hypothetical_fills));
+      const cell=el("td"),button=el("button","Examiner","study-button");
+      button.type="button";
+      button.addEventListener("click",async()=>{
+        if(busy)return;
+        chooseParams({...comparison.params,kind:row.kind,timeframe:comparison.timeframe});
+        await runCurrent();
+        $("results").scrollIntoView({behavior:"smooth",block:"start"});
+      });
+      cell.append(button);tr.append(cell);tbody.append(tr);
+    }
+  }
+  async function refreshDataset() {
+    const result=await api("/api/datasets");
+    const ok=result.datasets[0]?.available===true;
+    available=ok;
+    $("dataset-badge").textContent=ok?"ARCHIVE AUTHENTIFIÉE":"SOURCE NON CHARGÉE";
+    $("dataset-badge").className="mini-badge"+(ok?"":" gold-badge");
+    $("dataset-state").textContent=ok
+      ?"44 640 bougies conservées sur ta clé · SHA-256 vérifié · aucun nouveau téléchargement."
+      :"Téléchargement de notre archive GitHub sur demande · pas d'accès à un compte.";
+    if (!busy) setBusy(false);
+    return ok;
+  }
+  async function refreshProfiles() {
+    const d=await api("/api/profiles");profiles=d.profiles;
+    const select=$("saved-profiles");
+    select.replaceChildren(new Option("Choisir une configuration…",""));
+    for (const profile of profiles) select.append(new Option(
+      profile.name+" · "+(profile.params.timeframe||"1m"),profile.id));
+  }
+  async function refreshHistory() {
+    const list=await api("/api/results");
+    const root=$("history");root.replaceChildren();
+    if(!list.runs.length){root.append(el("span","Aucune simulation enregistrée.","muted"));return;}
+    for(const run of list.runs.slice(0,12)){
+      const button=el("button",undefined,"history-item");
+      button.type="button";
+      button.append(el("span",(kinds[run.kind]||run.kind)+" · "+
+        (run.timeframe||"1m")+" · "+whenLocal(run.created_utc)));
+      button.append(el("strong",signed(run.results.return_pct)+" %"));
+      button.addEventListener("click",async()=>{
+        if(busy)return;
+        try{
+          const stored=await api("/api/results/"+run.id);
+          renderRun(stored);
+          notice("Rapport sauvegardé rechargé depuis ta clé USB. Aucun nouveau calcul.","success");
+          $("results").scrollIntoView({behavior:"smooth",block:"start"});
+        }catch(e){notice(e.message,"error");}
       });
       root.append(button);
-    });
+    }
   }
-
-  $("kind").addEventListener("change", showFields);
-  $("saved-profiles").addEventListener("change", event => {
-    const found = profiles.find(x => x.id === event.target.value);
-    if (found) { setParams(found.params); $("profile-name").value = found.name; }
-  });
-
-  $("import").addEventListener("click", async () => {
-    setBusy("import", true, "Vérification de l'archive…");
-    notice("Récupération de notre archive publique et contrôle de toutes les bougies…");
+  async function refreshComparisonHistory() {
+    const list=await api("/api/comparisons");
+    const root=$("comparison-history");root.replaceChildren();
+    if(!list.comparisons.length){root.append(el("span","Aucune comparaison enregistrée.","muted"));return;}
+    for(const cmp of list.comparisons.slice(0,12)){
+      const button=el("button",undefined,"history-item");
+      button.type="button";
+      button.append(el("span","Six stratégies · "+cmp.timeframe+" · "+whenLocal(cmp.created_utc)));
+      button.append(el("strong","Voir le tableau"));
+      button.addEventListener("click",async()=>{
+        if(busy)return;
+        try {
+          const stored=await api("/api/comparisons/"+cmp.id);
+          renderComparison(stored);
+          notice("Comparaison enregistrée rechargée depuis ta clé USB.","success");
+          $("comparison").scrollIntoView({behavior:"smooth",block:"start"});
+        }catch(e){notice(e.message,"error");}
+      });
+      root.append(button);
+    }
+  }
+  async function runCurrent() {
+    if(busy)return;
+    let params;
+    try {params=requestParams();}catch(e){notice(e.message,"error");return;}
+    setBusy(true,"Calcul PAPER…");
+    notice("Rejeu local des bougies, frais et inventaire BTC en cours…");
     try {
-      await api("/api/import-reference", {});
-      await refreshDataset();
-      notice("Archive contrôlée : 44 640 bougies authentifiées. Le laboratoire peut simuler.", "success");
-    } catch (e) { notice(e.message, "error"); }
-    finally { setBusy("import", false); }
-  });
-
-  config.addEventListener("submit", async event => {
-    event.preventDefault();
-    setBusy("run", true, "Simulation PAPER en cours…");
-    notice("Calcul local des signaux, frais et positions fictives…");
-    try {
-      const data = await api("/api/run", {params: getParams()});
-      render(data.report);
+      const d=await api("/api/run",{params});
+      renderRun(d.report);
       await refreshHistory();
-      notice("Simulation terminée et enregistrée localement. Aucun ordre réel.", "success");
-    } catch (e) { notice(e.message, "error"); }
-    finally { setBusy("run", false); }
+      notice("Simulation V2 enregistrée : "+params.timeframe+
+        " · "+(kinds[params.kind]||params.kind)+". Aucun ordre envoyé.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  }
+  async function compareCurrent() {
+    if(busy)return;
+    let params;
+    try {params=requestParams();}catch(e){notice(e.message,"error");return;}
+    setBusy(true,"Comparaison PAPER…");
+    notice("Comparaison des six stratégies sur exactement les mêmes bougies et frais…");
+    try{
+      const d=await api("/api/compare",{params});
+      renderComparison(d.report);
+      await refreshComparisonHistory();
+      notice("Six méthodes comparées et rapport enregistré localement. Résultats fictifs.","success");
+      $("comparison").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){notice(e.message,"error");}
+    finally {setBusy(false);}
+  }
+  $("kind").addEventListener("change",showFields);
+  form.addEventListener("submit",event=>{event.preventDefault();runCurrent();});
+  $("compare").addEventListener("click",compareCurrent);
+  $("saved-profiles").addEventListener("change",event=>{
+    const profile=profiles.find(p=>p.id===event.target.value);
+    if(profile){chooseParams(profile.params);$("profile-name").value=profile.name;}
   });
-
-  $("save-profile").addEventListener("click", async () => {
-    const name = $("profile-name").value.trim();
-    if (!name) return notice("Choisis d'abord un nom pour enregistrer ton profil.", "error");
-    setBusy("save-profile", true, "Enregistrement…");
+  $("import").addEventListener("click",async()=>{
+    if(busy)return;
+    setBusy(true,"Vérification des données…");
+    notice("Chargement et vérification de l'archive publique du Coffre…");
     try {
-      await api("/api/profiles", {name, params: getParams()});
-      await refreshProfiles();
-      notice("Profil " + name + " enregistré sur ton espace local.", "success");
-    } catch (e) { notice(e.message, "error"); }
-    finally { setBusy("save-profile", false); }
+      await api("/api/import-reference",{});
+      await refreshDataset();
+      notice("44 640 bougies authentifiées : le laboratoire est prêt.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
   });
-
-  (async () => {
+  $("save-profile").addEventListener("click",async()=>{
+    if(busy)return;
+    const name=$("profile-name").value.trim();
+    if(!name){notice("Choisis un nom avant de sauvegarder le profil.","error");return;}
+    let params;try{params=requestParams();}catch(e){notice(e.message,"error");return;}
+    setBusy(true);
+    try {
+      await api("/api/profiles",{name,params});
+      await refreshProfiles();
+      notice("Profil « "+name+" » conservé sur ton espace local.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  });
+  (async()=>{
     showFields();
     try {
-      await api("/api/health");
-      const [present] = await Promise.all([refreshDataset(), refreshProfiles(), refreshHistory()]);
-      notice(present
-        ? "Seven Heaven Strategy Lab prêt. Source historique vérifiée en local."
-        : "Laboratoire prêt. Première étape : charger l'archive historique depuis notre GitHub.", "success");
-    } catch (e) {
-      $("run").disabled = true;
-      notice(e.message, "error");
-    }
+      const health=await api("/api/health");
+      if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
+      const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
+      notice(ok?"Seven Heaven V2 opérationnel · Archive vérifiée · PAPER uniquement.":
+        "Seven Heaven V2 opérationnel. Charge l'archive historique vérifiée pour commencer.","success");
+    }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
