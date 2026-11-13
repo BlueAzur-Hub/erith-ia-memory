@@ -235,6 +235,11 @@ class Handler(BaseHTTPRequestHandler):
                     comparison = compare(historical, requested, source_timeframe=base_tf,
                                          source_label=source["label"])
                     comparison["params"]["source_id"] = source["id"]
+                    comparison["asset_units"] = {"base": source["base"], "quote": source["quote"]}
+                    for row in comparison["rows"]:
+                        row["base_inventory"] = row["base_inventory_btc"]
+                        row["fees_paid_quote"] = row["fees_paid_usdt"]
+                        row["cash_quote"] = row["cash_final"]
                     # Human strategy labels must follow the actual underlying and
                     # quote asset, never label USDC/ETH simulations as BTC/USDT.
                     for row in comparison["rows"]:
@@ -261,6 +266,11 @@ class Handler(BaseHTTPRequestHandler):
                     result["data"]["exchange"] = source["exchange"]
                     result["data"]["source_id"] = source["id"]
                     result["data"]["source_sha256"] = source["sha256"]
+                    result["results"]["asset_units"] = {"base": source["base"], "quote": source["quote"]}
+                    result["results"]["base_inventory"] = result["results"]["base_inventory_btc"]
+                    result["results"]["fees_paid_quote"] = result["results"]["fees_paid_usdt"]
+                    result["results"]["inventory_marked_quote"] = result["results"]["inventory_marked_usdt"]
+                    result["results"]["cash_quote"] = result["results"]["cash_final"]
                     result["params"]["source_id"] = source["id"]
                     if base_tf == "1h":
                         result["warnings"] = [
