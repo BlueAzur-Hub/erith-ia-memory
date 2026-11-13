@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
   "updated_utc_date": "2026-11-13",
-  "status": "V3_PUBLISHED_ALL_CI_AND_STRICT_JSON_PASS_OWNER_USB_V3_ACCEPTANCE_PENDING",
+  "status": "V3_1_PUBLISHED_CI_SUCCESS_OWNER_USB_V3_1_ACCEPTANCE_PENDING",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -14,12 +14,13 @@
       "optional_drive_gb_label": 32,
       "proposed_reserve_current_gb": 3,
       "proposed_reserve_future_gb": 8,
-      "free_bytes_measured": false,
+      "free_bytes_measured": true,
       "workspace_is_private_local": true,
       "backup_required_before_upgrade": true,
-      "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies"
+      "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
+      "last_owner_reported_free_gb": 4.07
     },
-    "version": "3.0.0"
+    "version": "3.1.0"
   },
   "release_train": [
     {
@@ -57,7 +58,7 @@
     {
       "stage": "C1",
       "version": "3.0.0",
-      "status": "PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_PENDING",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_ACCEPTED",
       "features": [
         "public_okx_spot_api",
         "4_allowlisted_spot_pairs",
@@ -87,14 +88,31 @@
     },
     {
       "stage": "C1+",
-      "version": "3.1-planned",
-      "status": "NOT_BUILT",
+      "version": "3.1.0",
+      "status": "PUBLISHED_FULL_CI_PASS_OWNER_USB_FIREFOX_PENDING",
       "features": [
-        "arbitrary_historical_date_ranges",
-        "more_okx_candle_windows",
-        "source_freshness_rules",
-        "quota_guard_extension"
-      ]
+        "10_30_60_90_day_public_okx_closed_1h_windows",
+        "optional_historical_utc_end_date",
+        "240_720_1440_2160_verified_candles",
+        "strict_sha_immutable_archives",
+        "legacy_v3_240_candle_cache_compatible",
+        "same_internal_paper_six_methods",
+        "single_runtime_only_windows_zip_no_developer_files"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v3-1-extended-okx-history-2026-11-13",
+      "sha256": "d766a57632c07c489f1b6f958249af340cdfe6046fcea116a8a5d80dbd967d7b",
+      "size_bytes": 46040,
+      "provenance": {
+        "commit": "952dbb4a1b96d6db0f198c8e5a05c2e5c1f856a2",
+        "pr": 760,
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43397116624",
+        "windows_python_313": true,
+        "chromium_browser": true,
+        "public_okx_240_1h_network_verified": true,
+        "extended_30_90_deterministic_fixture_tests": true,
+        "extended_30_90_live_network_verified": false,
+        "owner_usb_firefox_verified": false
+      }
     },
     {
       "stage": "C2",
@@ -181,6 +199,21 @@
       "no_live_order": true,
       "current_instrument_rules_are_not_applied_to_historical_fills": true,
       "model": "ERITH original PAPER with next-bar-open fills, fee/slippage scenarios; neither Freqtrade nor Hummingbot"
+    },
+    "extended_okx_1h": {
+      "days_available": [
+        10,
+        30,
+        60,
+        90
+      ],
+      "end_utc_optional": true,
+      "network_coverage_not_guaranteed": true,
+      "live_smoke_proven_days": [
+        10
+      ],
+      "long_window_live_source_not_yet_verified": true,
+      "owner_usb_acceptance_pending": true
     }
   },
   "safety": {
@@ -193,14 +226,14 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Stop existing Python, backup E:\\seven_heaven_strategy_lab\\workspace on separate disk, copy V3 application files over V2 without deleting workspace, restart and confirm BUILD 3.0.0 then collect public OKX BTC/USDC 1H",
-  "next_developer_task": "V3.1 extended OKX history retrieval/date ranges; subsequent V4 native Freqtrade then Hummingbot, fully separated PAPER with source/fee parity and independently verified engine versions",
+  "next_single_owner_check": "When ready: stop V3 Python, back up private workspace externally, copy only complete V3.1 app files over existing program without deleting workspace; verify BUILD 3.1.0 and optional longer historical UTC collection in Firefox",
+  "next_developer_task": "V4 native Freqtrade and Hummingbot comparison research, PAPER only, not a delivered engine",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
-    "USB free space is not measured",
     "No permission to access private archives or send real orders",
-    "Owner Firefox V2 is confirmed by screenshots; owner Firefox V3 has not yet been observed."
+    "V3.1 has GitHub Windows/Chromium and default 240 candle OKX actual-network tests; extended 30/90-day OKX coverage is verified only with deterministic fixtures and is not guaranteed by exchange API",
+    "Owner V3.1 Firefox acceptance is not yet confirmed; V3.0 Firefox is confirmed by screenshots"
   ],
   "github_v3_handoff": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md"
 }
