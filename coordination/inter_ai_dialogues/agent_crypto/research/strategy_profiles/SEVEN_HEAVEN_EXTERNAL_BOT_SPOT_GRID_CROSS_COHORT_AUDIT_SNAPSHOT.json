@@ -1,0 +1,57 @@
+{
+  "schema": "seven.heaven.crypto.external-bot-strategy-proof-audit.v1",
+  "asof_utc": "2026-11-13",
+  "source_blob_sha": {
+    "quarter": "da0145e0d99546326b720d15a07e160dc0c05ca6",
+    "ten_month": "3044008b4347771dccb064a24957f8459b821249"
+  },
+  "original_data_scope": {
+    "quarter_minutes": 260640,
+    "ten_month_minutes": 437760
+  },
+  "quarterly": {
+    "2024": {
+      "grid_return_pct": 9.3505,
+      "hold50_return_pct": 34.0355,
+      "grid_minus_hold50_pp": -24.685,
+      "grid_daily_dd_pct": -6.7158,
+      "hold50_daily_dd_pct": -9.6421,
+      "drawdown_gap_pp": 2.9263,
+      "grid_closed_cycles_pnl_usdt": 93.50491,
+      "grid_open_inventory_pnl_usdt": 0
+    },
+    "2025": {
+      "grid_return_pct": 1.2091,
+      "hold50_return_pct": -6.0236,
+      "grid_minus_hold50_pp": 7.2327,
+      "grid_daily_dd_pct": -10.1973,
+      "hold50_daily_dd_pct": -13.7739,
+      "drawdown_gap_pp": 3.5766,
+      "grid_closed_cycles_pnl_usdt": 117.672533,
+      "grid_open_inventory_pnl_usdt": -105.58195
+    }
+  },
+  "ten_months_2026": {
+    "grid_fixed_return_pct": -3.6467,
+    "hold50_return_pct": -5.875,
+    "grid_minus_hold50_pp": 2.2283,
+    "grid_daily_dd_pct": -31.6038,
+    "hold50_daily_dd_pct": -20.7326,
+    "grid_minus_hold50_drawdown_pp": -10.8712,
+    "monthly_reset_minus_fixed_pp": -14.6945,
+    "double_cost_minus_standard_pp": -1.2092,
+    "touch_minus_close_pp": 0.1386,
+    "grid_hypothetical_cycles_pnl_usdt": 77.085195,
+    "grid_total_net_pnl_usdt": -36.466696,
+    "grid_inventory_qty_btc": 0.012438195,
+    "grid_cash_usdt": 0,
+    "grid_completed_cycles": 31
+  },
+  "warnings": [
+    "Historical PAPER only; fills were not observed",
+    "Binance BTCUSDT 1-minute, not OKX BTCUSDC",
+    "Mixed windows and grid widths, not the same cohort",
+    "Not an execution of Freqtrade or Hummingbot",
+    "Maker/taker and queue-specific OKX fills not tested"
+  ]
+}
