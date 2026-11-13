@@ -434,3 +434,114 @@ tbody tr:hover { background: #102f3b; }
   .quant-metric{padding:10px;}
   .quant-metric strong{font-size:17px;}
 }
+
+
+/* SEVEN HEAVEN V4.2 · INDEPENDENT HISTORICAL MARKET MICROSCOPE
+   Offline SVG, no external charts, no live orderbook or execution. */
+.market-microscope {
+  margin: 21px 0 18px;
+  padding: 18px;
+  border: 1px solid #426c7e;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse 78% 90% at 90% 0%,rgba(42,144,158,.18),transparent 70%),
+    linear-gradient(148deg,#0b2637,#071725 67%,#0b2030);
+  box-shadow:inset 0 1px 0 rgba(154,241,229,.09),0 15px 45px rgba(0,0,0,.13);
+}
+.market-microscope-heading {
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:12px;margin-bottom:13px;
+}
+.market-microscope-heading h3{
+  margin:4px 0;color:#f5dba8;line-height:1.2;
+  font:700 clamp(20px,2.15vw,27px)/1.2 Georgia,serif;letter-spacing:-.02em;
+}
+.market-microscope-heading p{margin:4px 0 0;color:#a6c2cc;font-size:11px;}
+.market-microscope-heading .mini-badge{
+  color:#95e6d7;border-color:#316866;background:rgba(9,57,58,.6);
+  font-size:9px;white-space:normal;text-align:right;
+}
+.micro-provenance {
+  display:flex;justify-content:space-between;align-items:center;
+  gap:8px 16px;flex-wrap:wrap;margin:0 0 12px;
+  padding:11px 13px;border:1px solid #345c6c;border-radius:9px;
+  background:rgba(8,36,50,.8);
+}
+.micro-provenance strong{font-size:11px;color:#dceef2;}
+.micro-provenance span{font-size:10px;color:#9be1d8;overflow-wrap:anywhere;}
+.micro-toolbar{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+  gap:12px;margin:0 0 12px;
+}
+.micro-window-controls,.micro-overlay-controls{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.micro-button,.micro-zoom select{
+  padding:7px 10px;border:1px solid #487388;border-radius:8px;
+  background:#102d3c;color:#dceaf0;font-weight:700;font-size:11px;min-height:32px;
+}
+.micro-button:hover:not(:disabled){border-color:#83d6d9;background:#184253;}
+.micro-zoom{display:flex;align-items:center;gap:7px;color:#9fbec8;font-size:11px;}
+.micro-overlay-controls{
+  border:1px solid #345565;border-radius:9px;padding:6px 9px;
+  background:rgba(6,26,39,.6);gap:7px 12px;
+}
+.micro-overlay-controls label{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;color:#c3dbe3;cursor:pointer;white-space:nowrap;
+}
+.micro-overlay-controls input{accent-color:#74e4dd;}
+.micro-scrub{
+  display:flex;align-items:center;gap:8px 12px;
+  margin-bottom:12px;color:#aec6d0;font-size:10px;
+}
+.micro-scrub label{white-space:nowrap;font-weight:750;}
+.micro-scrub input{flex:1;min-width:90px;accent-color:#80ebe0;}
+.micro-scrub span{min-width:106px;text-align:right;color:#e6d4a6;font-weight:750;}
+.market-chart-frame{
+  border:1px solid #33566a;border-radius:9px;overflow:hidden;
+  padding:9px 8px 0;background:linear-gradient(#071c2a,#0c2532);
+}
+#market-candle-chart{width:100%;height:auto;display:block;max-height:470px;}
+#market-candle-chart .micro-hover-target{cursor:crosshair;}
+.micro-candle-readout{
+  min-height:32px;padding:8px 12px;
+  border-top:1px solid #274759;color:#a6dfdc;
+  font-size:11px;line-height:1.55;font-variant-numeric:tabular-nums;
+  overflow-wrap:anywhere;
+}
+.micro-legend{
+  display:flex;align-items:center;flex-wrap:wrap;gap:7px 15px;
+  margin:12px 0 0;font-size:10px;color:#b7cdd5;
+}
+.micro-legend span{display:inline-flex;align-items:center;gap:6px;}
+.micro-swatch{width:14px;height:3px;border-radius:2px;display:inline-block;}
+.micro-up,.micro-buy{background:#72e4ce;}
+.micro-down,.micro-sell{background:#ff95aa;}
+.micro-ema-fast{background:#7debef;}
+.micro-ema-slow{background:#eca76c;}
+.micro-safety{
+  border-left:2px solid #d0ae72;padding-left:12px;
+  margin:12px 0 0;color:#9eb9c5;font-size:10px;line-height:1.65;
+}
+.draft-status{
+  margin:0 0 12px;padding:11px 13px;border-radius:9px;
+  border:1px solid #846c3c;background:rgba(87,65,23,.19);
+  color:#efdaa8;font-size:11px;line-height:1.6;
+}
+@media(max-width:900px){
+  .market-microscope{padding:13px;}
+  .micro-toolbar{align-items:flex-start;}
+  .micro-overlay-controls{width:100%;}
+  .micro-provenance{align-items:flex-start;}
+}
+@media(max-width:550px){
+  .market-microscope{padding:10px;}
+  .micro-window-controls{width:100%;justify-content:space-between;}
+  .micro-button{padding:6px 7px;}
+  .micro-zoom select{max-width:110px;}
+  .micro-scrub{flex-wrap:wrap;}
+  .micro-scrub input{width:100%;flex:1 0 100%;order:3;}
+  .micro-scrub span{margin-left:auto;}
+  .micro-candle-readout{font-size:10px;}
+}

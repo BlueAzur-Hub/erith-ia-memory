@@ -7,6 +7,7 @@
   <meta name="description" content="Seven Heaven Strategy Lab — observatoire de recherches Spot PAPER, local, connecté à des archives publiques authentifiées.">
   <title>Seven Heaven Strategy Lab · Aether Research Console</title>
   <link rel="stylesheet" href="/styles.css">
+  <script src="/microscope.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.1.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.2.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -83,7 +84,7 @@
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V4.1 / PUBLIC MARKET CONNECTORS</div>
+          <div><div class="overline">V4.2 / PUBLIC MARKET CONNECTORS</div>
             <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
             <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
           </div>
@@ -126,7 +127,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.1</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.2</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -218,9 +219,10 @@
 
       <section id="results" class="panel result-panel" aria-labelledby="result-title">
         <div class="section-heading compact">
-          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.1 QUANT</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
+          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.2 MARKET</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
           <span id="run-id" class="mini-badge">EN ATTENTE</span>
         </div>
+        <div id="draft-status" class="draft-status" hidden>Réglages modifiés : le résultat à droite correspond toujours au <strong>dernier rapport PAPER</strong>. Lance une nouvelle simulation pour appliquer ces réglages.</div>
         <div id="empty-result" class="empty-result">
           <div class="empty-symbol" aria-hidden="true">✧</div>
           <strong>Analyse prête à démarrer</strong>
@@ -244,6 +246,57 @@
             <div class="chart-top"><span>CAPITAL TOTAL · MARQUÉ AUX PRIX HISTORIQUES</span><span id="chart-timeframe">—</span></div>
             <svg id="equity-chart" viewBox="0 0 720 240" role="img" aria-label="Évolution du capital total fictif"></svg>
           </div>
+          <section class="market-microscope" id="market-microscope" aria-labelledby="market-microscope-title" hidden>
+            <div class="market-microscope-heading">
+              <div><div class="overline">AETHER MARKET · VERIFIED HISTORY / PAPER FILLS</div>
+                <h3 id="market-microscope-title">Microscope <span class="accent-text">des bougies</span></h3>
+                <p class="micro-subtitle">La même archive, les mêmes bougies et les mêmes exécutions fictives que ce rapport.</p>
+              </div>
+              <span class="mini-badge">ARCHIVE FIGÉE · AUCUN FLUX LIVE</span>
+            </div>
+            <div class="micro-provenance">
+              <strong id="micro-context">Source historique vérifiée</strong>
+              <span id="micro-sha">SHA-256 —</span>
+            </div>
+            <div class="micro-toolbar">
+              <div class="micro-window-controls">
+                <button id="micro-prev" class="micro-button" type="button" title="Fenêtre précédente">◂ Précédent</button>
+                <label class="micro-zoom">Vue
+                  <select id="micro-limit" aria-label="Nombre de bougies visibles">
+                    <option value="60">60 bougies</option><option value="90">90 bougies</option>
+                    <option value="120" selected>120 bougies</option><option value="180">180 bougies</option>
+                  </select>
+                </label>
+                <button id="micro-next" class="micro-button" type="button" title="Fenêtre suivante">Suivant ▸</button>
+              </div>
+              <div class="micro-overlay-controls">
+                <label><input type="checkbox" id="micro-ema" checked> EMA</label>
+                <label><input type="checkbox" id="micro-sma"> SMA20</label>
+                <label><input type="checkbox" id="micro-bb"> Bollinger</label>
+                <label><input type="checkbox" id="micro-vwap"> VWAP UTC*</label>
+                <label><input type="checkbox" id="micro-trades" checked> Fills PAPER</label>
+              </div>
+            </div>
+            <div class="micro-scrub">
+              <label for="micro-range">Navigation temporelle</label>
+              <input id="micro-range" type="range" min="0" max="0" step="1" value="0"
+                     aria-label="Position dans l'historique du rapport">
+              <span id="micro-range-label">—</span>
+            </div>
+            <div class="market-chart-frame">
+              <svg id="market-candle-chart" viewBox="0 0 960 460" role="img" aria-label="Bougies historiques avec volumes et exécutions PAPER"></svg>
+              <div id="micro-candle-readout" class="micro-candle-readout">Survole une bougie pour lire son OHLCV et les marqueurs PAPER.</div>
+            </div>
+            <div class="micro-legend">
+              <span><i class="micro-swatch micro-up"></i> Bougie haussière</span>
+              <span><i class="micro-swatch micro-down"></i> Bougie baissière</span>
+              <span><i class="micro-swatch micro-ema-fast"></i> EMA rapide</span>
+              <span><i class="micro-swatch micro-ema-slow"></i> EMA lente</span>
+              <span><i class="micro-swatch micro-buy"></i> ▲ Achat fictif</span>
+              <span><i class="micro-swatch micro-sell"></i> ▼ Vente fictive</span>
+            </div>
+            <p id="micro-safety" class="micro-safety">Les marqueurs indiquent les prix de remplissage supposés à l'ouverture suivante, pas les signaux ni des opérations réelles. *VWAP : approximation à partir des volumes OHLCV, remise à zéro chaque jour UTC.</p>
+          </section>
           <section class="quant-desk" id="quant-desk" aria-labelledby="quant-desk-title" hidden>
             <div class="quant-desk-head">
               <div><div class="overline">AETHER QUANT · PERFORMANCE FORENSICS</div>
@@ -274,7 +327,7 @@
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th>BTC</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V4.1 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4.2 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -313,7 +366,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.1.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.2.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>
