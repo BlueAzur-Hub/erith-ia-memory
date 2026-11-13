@@ -4,6 +4,10 @@
 **Status: A/V1 and B/V2 delivered; subsequent stages are DESIGN, not completed software.**  
 **Canonical location:** `coordination/inter_ai_dialogues/agent_crypto/`. Read this alongside the existing V2 delivery dossier and the application's `README_FR.md`. This is a **project specification**, not a trading recommendation.
 
+**Current Notion master page:** https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72  
+**Machine-readable continuity registry:** `coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_VERSIONED_CONTINUITY_MANIFEST.json`  
+**Notion hub:** https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099
+
 ## 0. The user's confirmed direction (not an inference)
 
 - A **premium professional-grade local research and bot-building cockpit**, visually in the family of **ERITH.IA Administrator**: navy / gold / cyan, instrument display, responsive graph, configurable indicators and a beautiful accessible technical-reading workspace. User-supplied image of Aerith-5 is a **visual reference only**, not permission to copy protected personal image files into a public repo.
