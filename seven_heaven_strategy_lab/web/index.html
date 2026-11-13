@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.3.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.4.0</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -84,7 +84,7 @@
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V4.3 / PUBLIC MARKET CONNECTORS</div>
+          <div><div class="overline">V4.4 / PUBLIC MARKET CONNECTORS</div>
             <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
             <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
           </div>
@@ -127,7 +127,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.3</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.4</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -220,7 +220,7 @@
 
       <section id="results" class="panel result-panel" aria-labelledby="result-title">
         <div class="section-heading compact">
-          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.3 MARKET</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
+          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.4 FORENSICS</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
           <span id="run-id" class="mini-badge">EN ATTENTE</span>
         </div>
         <div id="draft-status" class="draft-status" hidden>Réglages modifiés : le résultat à droite correspond toujours au <strong>dernier rapport PAPER</strong>. Lance une nouvelle simulation pour appliquer ces réglages.</div>
@@ -319,6 +319,48 @@
             </div>
             <p class="quant-limits" id="quant-limits">Les positions ouvertes ne sont jamais comptées comme gagnées ou perdues avant leur clôture. Les exécutions restent hypothétiques.</p>
           </section>
+          <section class="forensic-desk" id="forensic-desk" aria-labelledby="forensic-title" hidden>
+            <div class="forensic-heading">
+              <div>
+                <div class="overline">AETHER FORENSICS · TRANSACTION INTELLIGENCE / V4.4</div>
+                <h3 id="forensic-title">Anatomie des <span class="accent-text">décisions PAPER</span></h3>
+                <p>Chaque transaction est expliquée à partir de la règle effectivement déclenchée et de l'historique conservé.</p>
+              </div>
+              <span class="mini-badge">RELECTURE DÉTERMINISTE · AUCUN ORDRE</span>
+            </div>
+            <div class="forensic-provenance">
+              <strong id="forensic-source">Validation du journal historique…</strong>
+              <span id="forensic-integrity">Même source SHA-256 et mêmes exécutions</span>
+            </div>
+            <div id="forensic-result" hidden>
+              <div class="forensic-metrics">
+                <div><small>POSITIONS ANALYSÉES</small><strong id="forensic-total">—</strong><span>Clôturées et en cours</span></div>
+                <div><small>POSITIONS CLÔTURÉES</small><strong id="forensic-closed">—</strong><span id="forensic-wins">Gagnantes / perdantes</span></div>
+                <div><small>RÉSULTAT RÉALISÉ NET</small><strong id="forensic-realized">—</strong><span>Commissions d'entrée et sortie incluses</span></div>
+                <div><small>FILLS VÉRIFIÉS</small><strong id="forensic-fills">—</strong><span>Relecture exacte du moteur PAPER</span></div>
+              </div>
+              <div class="forensic-toolbar">
+                <div><div class="forensic-subheading">Registre des positions</div>
+                  <span id="forensic-count">—</span></div>
+                <label>Afficher
+                  <select id="forensic-filter" aria-label="Filtrer les positions analysées">
+                    <option value="all">Toutes les positions</option>
+                    <option value="loss">Pertes clôturées</option>
+                    <option value="win">Gains clôturés</option>
+                    <option value="open">Positions ouvertes</option>
+                  </select>
+                </label>
+              </div>
+              <div id="forensic-list" class="forensic-list"></div>
+              <div class="forensic-warning">
+                <strong>Lecture scientifique :</strong> la cause est reconstruite par le moteur à partir de la dernière bougie close.
+                Les prix d'exécution restent fictifs, à l'ouverture suivante. Les extrêmes MFE/MAE sont observés après coup
+                sur les mèches OHLC, hors bougie de sortie ; ils ne prouvent ni un prix exécutable ni qu'un filtre aurait évité la perte.
+                Les positions avec plusieurs entrées ne reçoivent pas de MFE/MAE artificielle.
+                Le diagnostic n'écrit aucun nouveau fichier sur ta clé.
+              </div>
+            </div>
+          </section>
           <div class="benchmarks">
             <div><span id="hold50-label">BUY & HOLD · 50 % BTC</span><strong id="hold50">—</strong></div>
             <div><span id="holdcash-label">CONSERVER LES USDT</span><strong id="holdcash">—</strong></div>
@@ -328,7 +370,7 @@
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th id="trades-base-label">ACTIF</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V4.3 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4.4 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -410,7 +452,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.3.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.4.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>
