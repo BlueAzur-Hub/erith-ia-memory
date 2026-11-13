@@ -128,7 +128,7 @@ jobs:
             ]
           }
           target=workspace.parent/"SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json"
-          target.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+          target.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
           print("PASS: 30 V2 scenario backtests / five timeframes / single SHA-verified source")
           PY
       - name: Start real local API and test run/profile/history requests
@@ -222,7 +222,7 @@ jobs:
             "paper_only":True
           }
           target=root.parent/"SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json"
-          target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+          target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
           print("PASS: 240 real public OKX closed 1H candles through browser, 6 internal PAPER models")
           PY
       - name: Build Docker local image and smoke HTTP health
@@ -258,6 +258,25 @@ jobs:
           sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_SPOT_CONNECTED_OBSERVATORY_PYTHON313_WINDOWS_PAPER.zip \
             > SEVEN_HEAVEN_STRATEGY_LAB_V3_PUBLIC_SPOT_ARCHIVE_SHA256.txt
           cat SEVEN_HEAVEN_STRATEGY_LAB_V3_PUBLIC_SPOT_ARCHIVE_SHA256.txt
+      - name: Strict-parse every packaged JSON proof before upload
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])/"seven-lab-evidence"
+          proofs=[
+              root/"SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json",
+              root/"SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json",
+              root/"SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json"
+          ]
+          for file in proofs:
+              raw=file.read_text(encoding="utf-8")
+              loaded=json.loads(raw)
+              assert isinstance(loaded,dict) and loaded.get("schema"),file
+              assert raw.endswith("\\n") and not raw.endswith("\\\\n"),file
+              print("PASS strict JSON and final newline:",file.name)
+          PY
       - name: Upload standalone ZIP, hash and measured historical smoke results
         uses: actions/upload-artifact@v4
         with:
