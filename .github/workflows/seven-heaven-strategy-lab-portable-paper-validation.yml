@@ -169,9 +169,63 @@ jobs:
           retention-days: 30
           if-no-files-found: error
 
+  windows-python-313-double-click:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout Strategy Lab only
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+            /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
+      - name: Set up Python matching Christophe's existing Windows installation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify Python 3.13 and PAPER unit tests
+        shell: pwsh
+        working-directory: seven_heaven_strategy_lab
+        run: |
+          py -3.13 --version
+          py -3.13 -m unittest discover -v -s tests -p 'test_*.py'
+          if (-not (Test-Path "START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd")) {
+            throw "Missing double-click launcher"
+          }
+      - name: Launch actual Windows CMD double-click script and test local server
+        shell: pwsh
+        run: |
+          $env:SEVEN_LAB_OPEN_BROWSER = "0"
+          $process = Start-Process -FilePath "cmd.exe" -ArgumentList '/c START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd' -WorkingDirectory "seven_heaven_strategy_lab" -PassThru
+          try {
+            $ready = $false
+            for ($i = 0; $i -lt 50; $i++) {
+              try {
+                $health = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/health" -TimeoutSec 2
+                if ($health.name -eq "Seven Heaven Strategy Lab" -and $health.live_trading -eq $false) {
+                  $ready = $true
+                  break
+                }
+              } catch { }
+              Start-Sleep -Milliseconds 250
+            }
+            if (-not $ready) { throw "Python CMD launcher failed to start loopback PAPER server" }
+            $page = Invoke-WebRequest -Uri "http://127.0.0.1:8777/" -UseBasicParsing -TimeoutSec 5
+            if ($page.StatusCode -ne 200 -or -not $page.Content.Contains("SEVEN HEAVEN")) {
+              throw "Local French UI was not served"
+            }
+            $datasets = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/datasets" -TimeoutSec 5
+            if ($datasets.datasets.Count -ne 1) { throw "Data API unavailable" }
+            Write-Host "PASS: Actual CMD launched Python 3.13 and served PAPER UI on Windows localhost"
+          } finally {
+            taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null
+          }
+
   publish-standalone-release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [validate-and-package]
+    needs: [validate-and-package, windows-python-313-double-click]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -190,9 +244,12 @@ jobs:
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" \
               --title "Seven Heaven Strategy Lab — portable local PAPER prototype" \
-              --notes "Independent research-only Docker/Windows laboratory. Requires Docker Desktop on the host. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
+              --notes "Independent PAPER laboratory for Windows with preinstalled Python 3.13 (no Docker needed). Docker Desktop remains optional. Contains original simulated Spot strategies, validated historical Binance data import, profiles and JSON reports. No Freqtrade/Hummingbot adapter, account keys or real orders. See README_FR.md inside ZIP." \
               --latest=false
           fi
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --title "Seven Heaven Strategy Lab — Python 3.13 Windows or Docker (PAPER)" \
+            --notes "Windows: with Python 3.13 already installed, extract the ZIP and double-click START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd; Docker Desktop is NOT required. Alternative Docker launcher is provided. PAPER only, no real orders or exchange keys. See README_FR.md."
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
             delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_PAPER_RESEARCH_FOR_CHRISTOPHE.zip \
             delivery/SEVEN_HEAVEN_STRATEGY_LAB_PORTABLE_ARCHIVE_SHA256.txt \
