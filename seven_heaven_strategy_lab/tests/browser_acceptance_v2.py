@@ -30,7 +30,7 @@ def main():
             assert desktop.locator("#okx-pair option").count()==4
             assert desktop.locator("#run").is_enabled()
             assert desktop.locator(".identity-title").inner_text()=="Strategy Lab"
-            assert "3.1.0" in desktop.locator(".masthead").inner_text()
+            assert "4.0.0" in desktop.locator(".masthead").inner_text()
             desktop.locator("#compare").click()
             desktop.locator("#comparison-result").wait_for(state="visible",timeout=35000)
             assert desktop.locator("#comparison-rows > tr").count()==6
@@ -63,6 +63,23 @@ def main():
             expect(desktop.locator("#equity")).to_contain_text("USDC",timeout=25000)
             assert desktop.locator("#inventory").inner_text().endswith("BTC")
             desktop.screenshot(path=str(OUTPUT/"SEVEN_HEAVEN_STRATEGY_LAB_V3_PREMIUM_DESKTOP_COCKPIT.png"),full_page=True)
+            # V4: compose and execute Yoann's own declarative strategy.
+            desktop.locator("#kind").select_option("CUSTOM_RULES")
+            assert desktop.locator("#custom-fields").is_visible()
+            desktop.locator('select[name="entry_rule"]').select_option("PRICE_ABOVE_EMA")
+            desktop.locator('select[name="filter_rule"]').select_option("VOLUME_ABOVE")
+            desktop.locator('input[name="volume_multiplier"]').fill("1")
+            desktop.locator('input[name="stop_loss_pct"]').fill("4")
+            desktop.locator("#profile-name").fill("Yoann · Premier scénario PAPER")
+            desktop.locator("#save-profile").click()
+            desktop.locator("#saved-profiles option").filter(has_text="Yoann").wait_for(state="attached",timeout=10000)
+            desktop.locator("#run").click()
+            expect(desktop.locator("#run-id")).to_contain_text("personnalisée",timeout=30000)
+            desktop.locator("#compare").click()
+            expect(desktop.locator("#comparison-badge")).to_contain_text("7 MODÈLES",timeout=40000)
+            assert desktop.locator("#comparison-rows > tr").count()==7
+            desktop.locator("#comparison-rows > tr").last.locator("button").click()
+            expect(desktop.locator("#run-id")).to_contain_text("personnalisée",timeout=30000)
             assert not errors, f"Unexpected JavaScript page exceptions: {errors}"
 
             mobile=browser.new_page(viewport={"width":390,"height":844},device_scale_factor=1)
