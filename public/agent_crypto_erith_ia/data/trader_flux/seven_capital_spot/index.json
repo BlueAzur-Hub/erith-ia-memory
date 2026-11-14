@@ -800,6 +800,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-14",
+      "date_utc": "2026-11-14",
+      "first_seen_at_utc": "2026-11-14T00:58:02.012Z",
+      "source_times_utc": [
+        "2026-11-14T00:54:51.203Z",
+        "2026-11-14T00:55:51.143Z"
+      ],
+      "universe_eligible": 382,
+      "policy_matches": 6,
+      "selected": [
+        {
+          "coin_id": "falcon-finance-ff",
+          "symbol": "FF",
+          "source_at_utc": "2026-11-14T00:54:51.203Z",
+          "rank": 123,
+          "price_usd": 0.08896434791405637
+        },
+        {
+          "coin_id": "zero-gravity",
+          "symbol": "0G",
+          "source_at_utc": "2026-11-14T00:55:51.143Z",
+          "rank": 259,
+          "price_usd": 0.15982542992026252
+        },
+        {
+          "coin_id": "cap-4",
+          "symbol": "CAP",
+          "source_at_utc": "2026-11-14T00:54:51.203Z",
+          "rank": 180,
+          "price_usd": 0.1070585529073825
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1866,6 +1901,27 @@
       "sha256": "3cbaf9ee93ec4ef1e217ef48959a5c29576f61b0da9f7cd30117df1165519b9a",
       "recorded_at_utc": "2026-11-13T19:58:44.591Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-12",
+      "file": "observations/2026-11-14T005802012Z--2026-11-12.json",
+      "sha256": "817133cdb9fc35dbe0c03d44d5b2ab25fe9bd1a1a799f127a68426421c73a1f4",
+      "recorded_at_utc": "2026-11-14T00:58:02.012Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-13",
+      "file": "observations/2026-11-14T005802012Z--2026-11-13.json",
+      "sha256": "2993f429b5a3fbb918fc240eb2eb8d9a7c7de8b6eb2cae99c885543e4fd67be7",
+      "recorded_at_utc": "2026-11-14T00:58:02.012Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-14",
+      "file": "observations/2026-11-14T005802012Z--2026-11-14.json",
+      "sha256": "97318d18eaad05748971cc87b2cffa3168bd29bb9b2ce50897ce7919a28091cd",
+      "recorded_at_utc": "2026-11-14T00:58:02.012Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
