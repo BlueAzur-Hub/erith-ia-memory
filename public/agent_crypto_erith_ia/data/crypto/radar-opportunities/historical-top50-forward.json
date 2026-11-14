@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-11-13",
+  "latest_archive_day_utc": "2026-11-14",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,23 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "bitway",
-      "symbol": "BTW",
-      "rank": 45,
-      "observed_at": "2026-09-15T21:25:58.830Z",
-      "price_usd": 0.6950909855722655,
-      "change24h_pct": 10.87068,
-      "change7d_pct": 56.8,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-22",
-      "observed_followup_at": "2026-09-22T22:12:40.224Z",
-      "observed_followup_price_usd": 0.9006287379094279,
-      "followup_change_pct": 29.57,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-09-15.jsonl",
-      "followup_source_path": "data/history/2026-09-22.jsonl"
-    },
     {
       "id": "zcash",
       "symbol": "ZEC",
