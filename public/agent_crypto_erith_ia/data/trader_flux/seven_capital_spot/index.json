@@ -835,6 +835,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-15",
+      "date_utc": "2026-11-15",
+      "first_seen_at_utc": "2026-11-15T15:46:31.095Z",
+      "source_times_utc": [
+        "2026-11-15T15:40:07.029Z",
+        "2026-11-15T15:40:12.683Z"
+      ],
+      "universe_eligible": 379,
+      "policy_matches": 6,
+      "selected": [
+        {
+          "coin_id": "falcon-finance-ff",
+          "symbol": "FF",
+          "source_at_utc": "2026-11-15T15:40:07.029Z",
+          "rank": 116,
+          "price_usd": 0.09746651452032294
+        },
+        {
+          "coin_id": "kite-2",
+          "symbol": "KITE",
+          "source_at_utc": "2026-11-15T15:40:07.029Z",
+          "rank": 118,
+          "price_usd": 0.1361485040621161
+        },
+        {
+          "coin_id": "unibase",
+          "symbol": "UB",
+          "source_at_utc": "2026-11-15T15:40:07.029Z",
+          "rank": 136,
+          "price_usd": 0.10556800333127617
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -1971,6 +2006,20 @@
       "sha256": "98939c6581ea36bc5e5218f871c9cb64a78b8d607fcf7147c537346f7a943773",
       "recorded_at_utc": "2026-11-15T00:02:50.793Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-14",
+      "file": "observations/2026-11-15T154631095Z--2026-11-14.json",
+      "sha256": "678be80be4780c4d7d7961f5b1081b8585aa71f4877297143b07ce386a014a61",
+      "recorded_at_utc": "2026-11-15T15:46:31.095Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-15",
+      "file": "observations/2026-11-15T154631095Z--2026-11-15.json",
+      "sha256": "dd22a5d45ea193835179566ae9052a390a1cbce8f8e9535bd2be40f82ea6a9f1",
+      "recorded_at_utc": "2026-11-15T15:46:31.095Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
