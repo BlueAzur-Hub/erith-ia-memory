@@ -9,8 +9,15 @@
   let currency="USDT";
   const money = n => print(n,2)+" "+currency;
   const BINANCE="BINANCE_BTCUSDT_2026_01_1M";
+  const BINANCE_MONTHLY="BINANCE_SPOT_BTCUSDT_1H_2020_01";
   const whenUTC = t => new Date(t * 1000).toISOString().slice(0,16).replace("T"," ");
   const whenLocal = s => new Date(s).toLocaleString("fr-FR", {dateStyle:"short",timeStyle:"short"});
+  const sourceTime = value => {
+    if (typeof value === "number") return whenUTC(value);
+    return String(value || "").slice(0,16).replace("T"," ");
+  };
+  const assetName = base => ({BTC:"Bitcoin",ETH:"Ethereum"})[base] || base || "Actif";
+  const assetIcon = base => ({BTC:"₿",ETH:"Ξ"})[base] || "◇";
   const kinds = {
     EMA_CROSS:"Croisement EMA", BOLLINGER:"Bandes Bollinger", DCA:"DCA programmé",
     HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver les USDT",
@@ -43,7 +50,7 @@
   }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","okx-import","run","compare","robustness-run","filters-run","save-profile"]) {
+    for (const id of ["import","binance-monthly-import","okx-import","run","compare","robustness-run","filters-run","save-profile"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare" || id === "filters-run") && !available)
@@ -100,12 +107,56 @@
     showFields();
     markDraftChanged();
   }
+  function renderSourceSummary(source,id){
+    const legacy=id===BINANCE;
+    const monthly=source.source_kind==="BINANCE_MONTHLY_CERTIFIED";
+    $("summary-asset-icon").textContent=assetIcon(source.base);
+    $("summary-market").textContent=assetName(source.base)+" · "+source.pair;
+    $("summary-exchange").textContent=source.exchange+" · "+
+      (legacy?"archive V1/V2":monthly?"mois public certifié":"archive publique clôturée");
+    if(legacy){
+      $("summary-window").textContent="Janvier 2026 · mois complet";
+      $("summary-window-range").textContent="2026-01-01 → 2026-02-01 UTC · borne de fin exclue";
+      $("summary-coverage").textContent="44 640 bougies";
+      $("summary-resolution").textContent="Résolution native : 1 minute";
+      $("summary-integrity").textContent=binanceAvailable?"SHA-256 vérifié":"Archive non chargée";
+      $("summary-provenance").textContent=binanceAvailable
+        ?"Archive GitHub du Coffre public · V1/V2 conservée"
+        :"Import explicite requis · aucune donnée inventée";
+      $("dataset-badge").textContent=binanceAvailable?"V1/V2 · SHA-256 ✓":"V1/V2 · NON CHARGÉE";
+      $("dataset-badge").className="mini-badge"+(binanceAvailable?"":" gold-badge");
+      return;
+    }
+    if(monthly){
+      $("summary-window").textContent="Janvier 2020 · mois complet";
+      $("summary-window-range").textContent="2020-01-01 → 2020-02-01 UTC · borne de fin exclue";
+      $("summary-coverage").textContent=print(source.rows,0)+" bougies clôturées";
+      $("summary-resolution").textContent="Résolution native : 1 heure";
+      $("summary-integrity").textContent="CHECKSUM officiel concordant";
+      $("summary-provenance").textContent="Binance Public Data · ZIP "+
+        source.source_archive_sha256.slice(0,12)+"… · CSV "+source.sha256.slice(0,12)+"…";
+      $("dataset-badge").textContent="BINANCE · CHECKSUM ✓";
+      $("dataset-badge").className="mini-badge";
+      return;
+    }
+    const days=source.days||Math.round(source.rows/24);
+    $("summary-window").textContent=days+" jours · "+(source.bar||"1h");
+    $("summary-window-range").textContent=sourceTime(source.first_timestamp)+" → "+
+      sourceTime(source.close_boundary_utc)+" UTC · borne de fin exclue";
+    $("summary-coverage").textContent=print(source.rows,0)+" bougies clôturées";
+    $("summary-resolution").textContent="Résolution native : 1 heure";
+    $("summary-integrity").textContent="SHA-256 vérifié";
+    $("summary-provenance").textContent="Archive OKX publique · "+source.sha256.slice(0,18)+"…";
+    $("dataset-badge").textContent="OKX · SHA-256 ✓";
+    $("dataset-badge").className="mini-badge";
+  }
   function updateSource(){
     const id=$("source-choice").value;
     if(id!==selectedSourceId) {
       selectedSourceId=id;
       lastRenderedReport=null;
       resetScientific();
+      window.AetherFilterStudio.reset();
       $("draft-status").hidden=true;
       window.AetherMicroscope.clear();
       window.AetherForensics.clear();
@@ -121,11 +172,12 @@
     }
     const source=id===BINANCE?{
       id:BINANCE,exchange:"Binance Spot",pair:"BTC/USDT",base:"BTC",quote:"USDT",
-      available_timeframes:["1m","5m","15m","1h","4h"]
+      available_timeframes:["1m","5m","15m","1h","4h"],source_kind:"LEGACY_BINANCE_V1_V2"
     }:connectedSources.find(x=>x.id===id);
     available=!!source&&(id!==BINANCE||binanceAvailable);
     if(!source){if(!busy)setBusy(false);return;}
     currency=source.quote;
+    renderSourceSummary(source,id);
     const supported=new Set(source.available_timeframes);
     for(const radio of form.querySelectorAll('input[name="timeframe"]')){
       radio.disabled=!supported.has(radio.value);
@@ -137,23 +189,32 @@
       if(fallback)fallback.checked=true;
     }
     $("source-active-title").textContent=source.exchange+" · "+source.pair;
+    const monthly=source.source_kind==="BINANCE_MONTHLY_CERTIFIED";
     $("source-active-detail").textContent=id===BINANCE
       ?"Janvier 2026 · archive V1/V2 intégralement préservée"
-      :source.rows+" bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
+      :monthly
+        ?source.rows+" bougies 1h · janvier 2020 complet · CHECKSUM officiel concordant"
+        :source.rows+" bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
     $("source-active-hash").textContent=id===BINANCE
       ?"Empreinte de référence du coffre V2"
-      :"SHA-256 "+source.sha256.slice(0,24)+"…";
+      :monthly
+        ?"ZIP SHA-256 "+source.source_archive_sha256.slice(0,18)+"… · CSV "+source.sha256.slice(0,18)+"…"
+        :"SHA-256 "+source.sha256.slice(0,24)+"…";
     $("available-timeframe-label").textContent=id===BINANCE
       ?"sur l'archive Binance vérifiée 1m"
-      :"source OKX native 1h : horizons 1h et 4h seulement";
+      :monthly
+        ?"source Binance mensuelle native 1h : horizons 1h et 4h seulement"
+        :"source OKX native 1h : horizons 1h et 4h seulement";
     $("capital-unit").textContent=source.quote;
     $("dca-unit").textContent=source.quote;
-    $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+(id===BINANCE?"Jan 2026":source.rows+" bougies closes");
-    $("okx-source-badge").textContent=id===BINANCE?"ARCHIVE V1/V2":"ARCHIVE OKX ACTIVE";
+    $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+
+      (id===BINANCE?"Jan 2026":monthly?"Jan 2020 certifié":source.rows+" bougies closes");
+    $("active-source-badge").textContent=id===BINANCE?"ARCHIVE V1/V2":
+      monthly?"BINANCE CERTIFIÉ ACTIF":"ARCHIVE OKX ACTIVE";
     if(!busy)setBusy(false);
   }
   async function refreshSources(prefer){
-    const d=await api("/api/okx-sources");
+    const d=await api("/api/sources");
     connectedSources=d.sources;
     $("usb-storage").textContent="Libre : "+print(d.free_bytes/1e9,2)+" Go · réserve : "+
       print(d.reserve_bytes/1e9,1)+" Go";
@@ -161,8 +222,11 @@
     const select=$("source-choice"), chosen=prefer||select.value||BINANCE;
     select.replaceChildren(new Option("Binance BTC/USDT · Janvier 2026 · 44 640 × 1m",BINANCE));
     for(const source of connectedSources) {
-      select.add(new Option(source.exchange+" "+source.pair+" · "+source.rows+
-        " × "+source.bar+" · "+source.close_boundary_utc.slice(0,16),source.id));
+      const label=source.source_kind==="BINANCE_MONTHLY_CERTIFIED"
+        ?"Binance BTC/USDT · Janvier 2020 · 744 × 1h · CHECKSUM certifié"
+        :source.exchange+" "+source.pair+" · "+source.rows+
+          " × "+source.bar+" · "+source.close_boundary_utc.slice(0,16);
+      select.add(new Option(label,source.id));
     }
     select.value=[...select.options].some(x=>x.value===chosen)?chosen:BINANCE;
     updateSource();
@@ -398,11 +462,9 @@
     const result=await api("/api/datasets");
     const ok=result.datasets[0]?.available===true;
     binanceAvailable=ok;
-    $("dataset-badge").textContent=ok?"ARCHIVE AUTHENTIFIÉE":"SOURCE NON CHARGÉE";
-    $("dataset-badge").className="mini-badge"+(ok?"":" gold-badge");
     $("dataset-state").textContent=ok
-      ?"44 640 bougies conservées sur ta clé · SHA-256 vérifié · aucun nouveau téléchargement."
-      :"Téléchargement de notre archive GitHub sur demande · pas d'accès à un compte.";
+      ?"Coffre V1/V2 Binance : 44 640 bougies conservées · SHA-256 vérifié · aucun téléchargement."
+      :"Coffre V1/V2 Binance : téléchargement GitHub sur demande · pas d'accès à un compte.";
     updateSource();
     return ok;
   }
@@ -524,16 +586,17 @@
           fold.holdout.both_x2.return_pct<0)
       );
       const foot=el("div",undefined,"scientific-fold-foot");
-      foot.textContent="Références sur la même vérification : Buy & Hold 50 % "+
+      foot.textContent="Préchauffage indicateurs : "+fold.warmup.used_bars+" bougies antérieures, 0 fill autorisé, portefeuille neuf · Références : Buy & Hold 50 % "+
         signed(fold.holdout.benchmark_hold_50.return_pct)+
         " % · Conservation "+quote+" "+
         signed(fold.holdout.benchmark_cash.return_pct)+" %";
       card.append(heading,grid,foot);
       target.append(card);
     }
-    $("scientific-method").textContent=research.folds.length>1?
-      "Deux fenêtres de validation chronologiques distinctes. Le second entraînement réutilise les dates passées du premier test, comme une recherche walk-forward expansive.":
-      "Une seule séparation entraînement/vérification : l'historique est trop court pour deux vérifications indépendantes de 60 bougies.";
+    $("scientific-method").textContent=(research.folds.length>1?
+      "Deux fenêtres de validation chronologiques distinctes. Le second entraînement réutilise les dates passées du premier test, comme une recherche walk-forward expansive. ":
+      "Une seule séparation entraînement/vérification : l'historique est trop court pour deux vérifications indépendantes de 60 bougies. ")+
+      "V4.6 précharge les indicateurs avec le passé disponible, interdit tout fill pendant ce préchauffage, puis démarre chaque test avec du cash neuf et zéro position.";
   }
   function utcSpan(from,to){
     return whenUTC(from).slice(0,16)+" → "+whenUTC(to).slice(0,16)+" UTC";
@@ -566,7 +629,7 @@
     }
     setBusy(true,"Recherche comparée…");
     window.AetherFilterStudio.reset();
-    notice("Aether Research V4.5 : mêmes règles, cinq filtres maximum, sélection sur le passé, vérification chronologique…");
+    notice("Aether Research V4.6 : moteur OWNER préservé, préchauffage sans transaction, cinq filtres maximum et vérification chronologique…");
     try {
       const payload=await api("/api/filters-study",{params});
       window.AetherFilterStudio.display(payload.research);
@@ -611,6 +674,17 @@
   form.addEventListener("change",markDraftChanged);
   form.addEventListener("input",markDraftChanged);
   $("source-choice").addEventListener("change",updateSource);
+  $("binance-monthly-import").addEventListener("click",async()=>{
+    if(busy)return;
+    setBusy(true,"Certification Binance…");
+    notice("Binance public data : téléchargement du mois pilote, contrôle .CHECKSUM, continuité UTC et normalisation locale…");
+    try {
+      const result=await api("/api/binance-monthly-import",{});
+      await refreshSources(result.source.id);
+      notice("Binance BTC/USDT janvier 2020 certifié : 744 bougies 1h continues. Le ZIP brut n'est pas conservé ; aucun ordre réel.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  });
   $("okx-import").addEventListener("click",async()=>{
     if(busy)return;
     setBusy(true,"Collecte OKX…");
@@ -663,11 +737,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(!health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled)throw new Error("Le serveur Python V4.5 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
+      if(health.version!=="4.6.2" || !health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled || !health.certified_binance_monthly_enabled || !health.explicit_no_trade_warmup_enabled)throw new Error("Le serveur Python V4.6.2 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.5 opérationnel · Archive V1/V2 conservée · OKX public disponible.":
-        "Seven Heaven V4.5 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.6.2 opérationnel · Tous les résultats sont réalignés lors d'un changement de source · Archive V1/V2 conservée · Binance mensuel certifiable · OKX public disponible.":
+        "Seven Heaven V4.6.2 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();

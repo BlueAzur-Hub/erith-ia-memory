@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.5.0</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.6.2</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
     </div>
@@ -71,27 +71,36 @@
 
     <section class="source-panel" aria-labelledby="source-title">
       <div class="section-heading">
-        <div><div class="overline">01 / DATA INTELLIGENCE</div><h2 id="source-title">Coffre des données <span class="accent-text">historiques</span></h2></div>
+        <div><div class="overline">01 / ACTIVE DATA INTELLIGENCE</div><h2 id="source-title">Source active &amp; <span class="accent-text">coffre historique</span></h2></div>
         <span id="dataset-badge" class="mini-badge">À authentifier</span>
       </div>
       <div class="source-layout">
-        <div class="source-tile"><span class="tile-icon">₿</span><small>ACTIF & MARCHÉ</small><strong>Bitcoin · BTC/USDT</strong><span>Binance Spot · source publique</span></div>
-        <div class="source-tile"><span class="tile-icon">◴</span><small>FENÊTRE D'OBSERVATION</small><strong>Janvier 2026</strong><span>Du 1er au 31, UTC</span></div>
-        <div class="source-tile"><span class="tile-icon">▥</span><small>COUVERTURE DES DONNÉES</small><strong>44 640 bougies</strong><span>Résolution originale : 1 minute</span></div>
-        <div class="source-tile"><span class="tile-icon">✧</span><small>PROVENANCE</small><strong>SHA-256 vérifié</strong><span>Archive GitHub du Coffre public</span></div>
+        <div class="source-tile"><span class="tile-icon" id="summary-asset-icon">◇</span><small>ACTIF &amp; MARCHÉ ACTIFS</small><strong id="summary-market">Source en cours de lecture</strong><span id="summary-exchange">Sélection locale</span></div>
+        <div class="source-tile"><span class="tile-icon">◴</span><small>FENÊTRE ACTIVE</small><strong id="summary-window">—</strong><span id="summary-window-range">Bornes UTC en attente</span></div>
+        <div class="source-tile"><span class="tile-icon">▥</span><small>COUVERTURE ACTIVE</small><strong id="summary-coverage">—</strong><span id="summary-resolution">Résolution en attente</span></div>
+        <div class="source-tile"><span class="tile-icon">✧</span><small>INTÉGRITÉ &amp; PROVENANCE</small><strong id="summary-integrity">Vérification en cours</strong><span id="summary-provenance">Aucune attribution avant lecture du manifeste</span></div>
       </div>
       <div class="source-bottom">
-        <button id="import" type="button" class="action-button action-outline"><span aria-hidden="true">↧</span> Charger / vérifier l'archive</button>
-        <span id="dataset-state" class="foot-detail">Import uniquement à ta demande · Réseau public autorisé · Aucune clé de compte</span>
+        <button id="import" type="button" class="action-button action-outline"><span aria-hidden="true">↧</span> Charger / vérifier le Coffre V1/V2 Binance</button>
+        <span id="dataset-state" class="foot-detail">Coffre V1/V2 Binance : import uniquement à ta demande · aucune clé de compte</span>
       </div>
       <div class="connected-market-panel">
         <div class="connected-market-head">
-          <div><div class="overline">V4.5 / PUBLIC MARKET CONNECTORS</div>
-            <h3>Observatoire connecté <span class="accent-text">OKX Spot</span></h3>
-            <p>Une collecte sur demande, sans identifiant. Les bougies sont confirmées et conservées avec leur empreinte SHA-256 sur ta clé.</p>
+          <div><div class="overline">V4.6 / CERTIFIED HISTORICAL SOURCES</div>
+            <h3>Sources publiques <span class="accent-text">séparées et vérifiées</span></h3>
+            <p>Chaque import est déclenché par toi, sans identifiant. Binance mensuel et OKX restent dans deux dossiers distincts avec leur empreinte SHA-256.</p>
           </div>
-          <span class="mini-badge" id="okx-source-badge">COLLECTE À LA DEMANDE</span>
+          <span class="mini-badge" id="active-source-badge">IMPORT À LA DEMANDE</span>
         </div>
+        <div class="certified-source-callout">
+          <div>
+            <small>BINANCE PUBLIC DATA · PILOTE V4.6 FIGÉ</small>
+            <strong>BTC/USDT · janvier 2020 · 744 bougies horaires</strong>
+            <span>Le ZIP officiel est contrôlé contre son fichier .CHECKSUM, puis seules les bougies normalisées sont conservées. Aucun flux live.</span>
+          </div>
+          <button id="binance-monthly-import" class="action-button action-outline" type="button">✓ Certifier le mois pilote Binance</button>
+        </div>
+        <div class="source-divider"><span>ARCHIVES OKX SPOT</span></div>
         <div class="connected-source-grid">
           <label class="field"><span>Choix de la paire <small>SPOT PUBLIC OKX</small></span>
             <select id="okx-pair"><option value="BTC-USDC">BTC / USDC</option><option value="ETH-USDC">ETH / USDC</option>
@@ -129,7 +138,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.5</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.6.2</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -208,7 +217,7 @@
             <button id="run" type="submit" class="action-button action-primary">▶ <span>Lancer la simulation PAPER</span></button>
             <button id="compare" type="button" class="action-button action-secondary">≋ <span>Comparer les 6 méthodes sur cet horizon</span></button>
             <button id="robustness-run" type="button" class="action-button action-robustness">♜ <span>Éprouver cette stratégie dans le temps · Aether Scientific</span></button>
-            <button id="filters-run" type="button" class="action-button action-research">◇ <span>Comparer 5 variantes de filtres · Aether Research V4.5</span></button>
+            <button id="filters-run" type="button" class="action-button action-research">◇ <span>Comparer 5 variantes de filtres · Aether Research V4.6</span></button>
           </div>
         </form>
         <div class="profile-group">
@@ -223,7 +232,7 @@
 
       <section id="results" class="panel result-panel" aria-labelledby="result-title">
         <div class="section-heading compact">
-          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.5 FORENSICS</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
+          <div><div class="overline">03 / STRATEGIC ANALYSIS · V4.6</div><h2 id="result-title">Lecture de <span class="accent-text">la simulation</span></h2></div>
           <span id="run-id" class="mini-badge">EN ATTENTE</span>
         </div>
         <div id="draft-status" class="draft-status" hidden>Réglages modifiés : le résultat à droite correspond toujours au <strong>dernier rapport PAPER</strong>. Lance une nouvelle simulation pour appliquer ces réglages.</div>
@@ -373,7 +382,7 @@
           <div class="micro-title">DERNIÈRES TRANSACTIONS HYPOTHÉTIQUES</div>
           <div class="table-scroll"><table><thead><tr><th>HORODATAGE UTC</th><th>ACTION</th><th id="trades-base-label">ACTIF</th><th>PRIX</th><th>FRAIS</th></tr></thead><tbody id="trades"></tbody></table></div>
         </div>
-        <div class="result-foot">MOTEUR INTERNE V4.5 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
+        <div class="result-foot">MOTEUR INTERNE V4.6 · SOURCE VÉRIFIÉE BINANCE / OKX · FILLS FICTIFS À L'OUVERTURE SUIVANTE · PAS DE CARNET HISTORIQUE</div>
       </section>
     </div>
 
@@ -436,7 +445,7 @@
           <strong>Lecture scientifique :</strong>
           <span id="scientific-method">Sélection sur le passé, vérification sur l'avenir de la fenêtre choisie.</span>
           <p>Une période de vérification n'est pas automatiquement « vierge » : les dates ont pu être inspectées avant cette étude.
-          Les portefeuilles et indicateurs redémarrent à chaque fenêtre ; un nouveau capital est attribué sans reporter les positions.
+          Chaque portefeuille démarre avec un nouveau capital et zéro position. Les indicateurs sont préchauffés uniquement avec les bougies antérieures disponibles, sans autoriser de transaction avant la fenêtre testée.
           Pas de carnet historique ni de remplissage réel garanti. Aucune prédiction, aucun ordre réel.</p>
         </div>
       </div>
@@ -444,7 +453,7 @@
 
     <section id="strategy-research" class="panel research-panel" aria-labelledby="strategy-research-title">
       <div class="section-heading">
-        <div><div class="overline">06 / AETHER RESEARCH · V4.5 CONTROLLED FILTER STUDY</div>
+        <div><div class="overline">06 / AETHER RESEARCH · V4.6 NO-TRADE WARMUP</div>
           <h2 id="strategy-research-title">Studio des <span class="accent-text">stratégies comparées</span></h2>
         </div>
         <span class="mini-badge research-badge">5 VARIANTES MAX · 0 ORDRE · 0 FICHIER</span>
@@ -480,7 +489,8 @@
           <strong>Interprétation :</strong> ces données ne sont pas un test aveugle : tu as déjà pu examiner cette période.
           Le programme choisit ses filtres uniquement sur les anciennes bougies ; les autres résultats ultérieurs sont
           affichés pour transparence, jamais utilisés pour déclarer un nouveau gagnant. Les indicateurs, le capital et
-          les positions recommencent sur chaque fenêtre, sans report de l'historique précédent.
+          les positions recommencent sur chaque fenêtre. Les indicateurs utilisent seulement des bougies antérieures de préchauffage,
+          pendant lesquelles toute transaction est interdite ; aucun inventaire n'est reporté.
           Une stratégie sans aucune opération PAPER n'est pas une victoire.
           <strong>Aucun ordre réel ni nouveau fichier sur la clé USB.</strong>
         </div>
@@ -500,7 +510,7 @@
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.5.0 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.6.2 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>

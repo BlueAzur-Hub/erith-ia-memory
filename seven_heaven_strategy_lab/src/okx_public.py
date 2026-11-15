@@ -58,7 +58,7 @@ def _get(path: str, params: dict, *, transport=None) -> dict:
     if transport is None:
         def transport(url):
             request = urllib.request.Request(
-                url, headers={"User-Agent": "SevenHeavenStrategyLab/3.0 (+public-market-data)"})
+                url, headers={"User-Agent": "SevenHeavenStrategyLab/4.6.2 (+public-market-data)"})
             with urllib.request.urlopen(request, timeout=16) as response:
                 if not response.geturl().startswith(PUBLIC_BASE + "/"):
                     raise PublicMarketError("Redirection hors OKX refusée")

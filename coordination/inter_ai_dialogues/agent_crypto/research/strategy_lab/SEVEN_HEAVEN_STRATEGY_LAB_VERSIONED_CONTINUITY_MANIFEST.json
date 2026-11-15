@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
-  "updated_utc_date": "2026-11-13",
-  "status": "V4_5_RELEASE_CI_SUCCESS_OWNER_FIREFOX_UI_CONFIRMED_BTC_USDC_720_1H_FILTER_RESEARCH",
+  "updated_utc_date": "2026-11-15",
+  "status": "V4_6_2_RELEASE_TECHNICAL_69_TESTS_OWNER_FIREFOX_PENDING",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -20,7 +20,7 @@
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
       "last_owner_reported_free_gb": 4.07
     },
-    "version": "4.5.0"
+    "version": "4.6.2"
   },
   "release_train": [
     {
@@ -342,6 +342,99 @@
       }
     },
     {
+      "stage": "C2+++++a",
+      "version": "4.5.1",
+      "status": "PUBLISHED_OWNER_FIREFOX_ACCEPTED_SUPERSEDED_BY_V4_6_2",
+      "release_tag": "seven-heaven-strategy-lab-v4-5-1-ema-owner-equivalence-fix-2026-11-15",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-5-1-ema-owner-equivalence-fix-2026-11-15",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_EMA_OWNER_EQUIVALENCE_FIX_PYTHON313_WINDOWS_PAPER.zip",
+      "size_bytes": 97229,
+      "sha256": "7df0396258c3e6f708f559fec8be32a6c005e13bf891281911505eb0df4e925c",
+      "features": [
+        "preserve_true_EMA_OWNER_in_filter_research",
+        "neutralize_hidden_inactive_stop_target_for_EMA_variants",
+        "custom_rules_keep_active_stop_target",
+        "paper_only_no_workspace_packaged"
+      ],
+      "provenance": {
+        "owner_firefox_verified": true,
+        "technical_regressions_passed": 4,
+        "github_release_date": "2026-11-15"
+      }
+    },
+    {
+      "stage": "C2+++++b",
+      "version": "4.6.0",
+      "status": "PUBLISHED_OWNER_OKX_PATH_OBSERVED_BINANCE_MONTHLY_NOT_YET_OWNER_TESTED_SUPERSEDED",
+      "release_tag": "seven-heaven-strategy-lab-v4-6-certified-binance-monthly-2026-11-15",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-6-certified-binance-monthly-2026-11-15",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_6_CERTIFIED_BINANCE_MONTHLY_NO_TRADE_WARMUP_PYTHON313_WINDOWS_PAPER.zip",
+      "size_bytes": 108404,
+      "sha256": "586dd98fbf65179eab5e3cbb75528afd330bf8c839b5b21b043082a87d339302",
+      "features": [
+        "certified_fixed_Binance_BTCUSDT_January_2020_1h_source",
+        "official_checksum_match",
+        "744_continuous_closed_hourly_bars",
+        "separate_bounded_storage",
+        "explicit_no_trade_indicator_warmup",
+        "paper_only"
+      ],
+      "provenance": {
+        "owner_okx_path_observed": true,
+        "owner_binance_monthly_verified": false,
+        "github_release_date": "2026-11-15"
+      }
+    },
+    {
+      "stage": "C2+++++c",
+      "version": "4.6.1",
+      "status": "PUBLISHED_OWNER_FIREFOX_BINANCE_MONTHLY_RECEIVED_RESEARCH_CONTEXT_DEFECT_FOUND",
+      "release_tag": "seven-heaven-strategy-lab-v4-6-1-active-source-provenance-2026-11-15",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-6-1-active-source-provenance-2026-11-15",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_6_1_ACTIVE_SOURCE_PROVENANCE_PYTHON313_WINDOWS_PAPER.zip",
+      "size_bytes": 108444,
+      "sha256": "7a1f447beb22fe91879db2cbfbea11990673e88152912de02ce560bdb7cbe879",
+      "features": [
+        "active_source_summary_pair_exchange_window_coverage_resolution_integrity_provenance",
+        "legacy_Binance_V1_V2_explicitly_distinguished",
+        "monthly_Binance_and_OKX_provenance_distinct",
+        "paper_engine_unchanged"
+      ],
+      "provenance": {
+        "owner_firefox_verified": true,
+        "owner_binance_monthly_rows": 744,
+        "owner_research_context_defect_found": true,
+        "github_release_date": "2026-11-15"
+      }
+    },
+    {
+      "stage": "C2+++++d",
+      "version": "4.6.2",
+      "status": "PUBLISHED_TECHNICAL_69_TESTS_OWNER_FIREFOX_PENDING",
+      "release_tag": "seven-heaven-strategy-lab-v4-6-2-source-context-reset-2026-11-15",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-6-2-source-context-reset-2026-11-15",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_6_2_SOURCE_CONTEXT_RESET_PYTHON313_WINDOWS_PAPER.zip",
+      "size_bytes": 112322,
+      "sha256": "7137ec9b940f726f60fd8ba04a0f9cb21c51c9b09e680909e64a31155ced378d",
+      "features": [
+        "reset_Aether_Research_on_every_actual_source_change",
+        "prevent_stale_OKX_research_under_Binance_and_inverse",
+        "preserve_report_microscope_forensics_scientific_reset",
+        "financial_engine_fills_fees_results_unchanged",
+        "private_workspace_excluded",
+        "paper_only_zero_real_orders"
+      ],
+      "provenance": {
+        "offline_tests_passed": 69,
+        "python_compile_passed": true,
+        "javascript_syntax_passed": true,
+        "fresh_zip_boot_passed": true,
+        "owner_workspace_files_verified_unchanged": 62,
+        "owner_firefox_verified": false,
+        "github_release_date": "2026-11-15"
+      }
+    },
+    {
       "stage": "D",
       "version": "5.0-planned",
       "status": "NOT_BUILT",
@@ -357,7 +450,7 @@
   ],
   "engines": {
     "erith_internal": {
-      "status": "V4_5_RELEASE_AND_OWNER_FIREFOX_UI_CONFIRMED_PAPER_ONLY",
+      "status": "V4_6_2_RELEASE_PAPER_ONLY_OWNER_FIREFOX_PENDING",
       "trade_api": false
     },
     "freqtrade": {
@@ -696,6 +789,19 @@
       ],
       "paper_only": true,
       "orders_real": 0
+    },
+    "certified_monthly_binance_1h": {
+      "status": "OWNER_V4_6_1_IMPORTED_AND_TECHNICALLY_REPLAYED_V4_6_2_UNCHANGED",
+      "exchange": "Binance Spot",
+      "pair": "BTC/USDT",
+      "start_utc": "2020-01-01T00:00:00Z",
+      "end_exclusive_utc": "2020-02-01T00:00:00Z",
+      "timeframe": "1h",
+      "rows": 744,
+      "missing_bars": 0,
+      "archive_sha256": "4ef7fa698b6821493f4c8317bc616d48bcdf5951d32fe6e40aaa7608886e51ca",
+      "normalized_csv_sha256": "651e8bebd2b7744d92281da462a51b9426f874ed4dc06186c1d5597dcb492bd2",
+      "raw_zip_retained": false
     }
   },
   "safety": {
@@ -765,3 +871,4 @@
     "note": "Pilot module is isolated in a draft PR; current released and owner accepted product remains V4.5.0. Main's existing CI repackages V4.5 on code pushes; review before merging pilot."
   }
 }
+
