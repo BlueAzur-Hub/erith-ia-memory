@@ -1,4 +1,4 @@
-"""V4.3 Aether Scientific: chronological, bounded WALK-FORWARD PAPER research.
+"""V4.6 Aether Scientific: bounded WALK-FORWARD with no-trade warmup.
 
 On each fold, choose a small, fixed EMA configuration grid using ONLY
 earlier training candles; apply chosen parameters to strictly LATER candles.
@@ -39,15 +39,45 @@ def _schedule(count):
     return windows
 
 
-def _execute(bars, canonical_params, *, timeframe, fee=None, slippage=None):
-    """Same unmodified legacy PAPER engine, new cash portfolio per independent slice."""
+def _execute(bars, canonical_params, *, timeframe, fee=None, slippage=None,
+             trade_start_index=0):
+    """Legacy-compatible PAPER engine, new cash portfolio per independent slice."""
     params = {**canonical_params}
     params["dca_every"] = max(1, math.ceil(params["dca_every"] / TIMEFRAMES[timeframe]))
     if fee is not None:
         params["fee"] = fee
     if slippage is not None:
         params["slippage"] = slippage
-    return simulate(bars, params)
+    return simulate(bars, params, trade_start_index=trade_start_index)
+
+
+def _warmup_window(bars, train_end, test_end, params):
+    """Preload indicators from prior training bars without allowing PAPER fills.
+
+    Three slow-EMA lengths are requested because an EMA has no finite natural
+    cutoff. The available training history is the hard boundary: no candle from
+    the verification window can leak into warmup or selection.
+    """
+    required = max(
+        60,
+        int(params["ema_slow"]) * 3,
+        int(params["bb_period"]) + 1,
+        int(params["rsi_period"]) + 2,
+        int(params["volume_period"]) + 2,
+    )
+    warmup_bars = min(train_end, required)
+    start = train_end - warmup_bars
+    combined = bars[start:test_end]
+    return combined, warmup_bars, {
+        "requested_bars": required,
+        "used_bars": warmup_bars,
+        "complete": warmup_bars >= required,
+        "first_bar_utc": combined[0][0],
+        "last_bar_utc": bars[train_end - 1][0],
+        "trade_start_utc": bars[train_end][0],
+        "fills_allowed_during_warmup": 0,
+        "portfolio_at_trade_start": "FRESH_CASH_NO_POSITION",
+    }
 
 
 def _metrics(run):
@@ -124,17 +154,29 @@ def study(raw_bars, requested, source):
             scored.append((score, candidate, train_run))
         best = max(enumerate(scored), key=lambda pair: (pair[1][0], -pair[0]))[1]
         score, selected, fitted_run = best
-        checked_run = _execute(test, selected, timeframe=timeframe)
-        hold_run = _execute(test, {**selected, "kind": "HOLD_50"}, timeframe=timeframe)
-        cash_run = _execute(test, {**selected, "kind": "CASH"}, timeframe=timeframe)
+        warmed_test, warmup_bars, warmup = _warmup_window(
+            bars, train_end, test_end, selected)
+        checked_run = _execute(
+            warmed_test, selected, timeframe=timeframe,
+            trade_start_index=warmup_bars)
+        hold_run = _execute(
+            warmed_test, {**selected, "kind": "HOLD_50"}, timeframe=timeframe,
+            trade_start_index=warmup_bars)
+        cash_run = _execute(
+            warmed_test, {**selected, "kind": "CASH"}, timeframe=timeframe,
+            trade_start_index=warmup_bars)
         fee_double = min(0.01, selected["fee"] * 2)
         slip_double = min(0.02, selected["slippage"] * 2)
-        stress_fee = _execute(test, selected, timeframe=timeframe,
-                              fee=fee_double)
-        stress_slip = _execute(test, selected, timeframe=timeframe,
-                               slippage=slip_double)
-        stress_both = _execute(test, selected, timeframe=timeframe,
-                               fee=fee_double, slippage=slip_double)
+        stress_fee = _execute(
+            warmed_test, selected, timeframe=timeframe, fee=fee_double,
+            trade_start_index=warmup_bars)
+        stress_slip = _execute(
+            warmed_test, selected, timeframe=timeframe, slippage=slip_double,
+            trade_start_index=warmup_bars)
+        stress_both = _execute(
+            warmed_test, selected, timeframe=timeframe,
+            fee=fee_double, slippage=slip_double,
+            trade_start_index=warmup_bars)
         timeline.append({
             "fold": fold_idx,
             "training": {
@@ -155,6 +197,7 @@ def study(raw_bars, requested, source):
                 "slippage_x2": _metrics(stress_slip),
                 "both_x2": _metrics(stress_both),
             },
+            "warmup": warmup,
             "selection": {
                 "kind": selected["kind"],
                 "ema_fast": selected["ema_fast"],
@@ -175,8 +218,8 @@ def study(raw_bars, requested, source):
     declines = [fold["holdout"]["metrics"]["max_drawdown_pct"] for fold in timeline]
     stressed = [fold["holdout"]["both_x2"]["return_pct"] for fold in timeline]
     return {
-        "schema": "seven.heaven.strategy_lab.aether_scientific.walk_forward.v4_3",
-        "status": "CHRONOLOGICAL_PAPER_RESEARCH_NOT_UNTOUCHED_BLIND_OOS",
+        "schema": "seven.heaven.strategy_lab.aether_scientific.walk_forward.v4_6",
+        "status": "CHRONOLOGICAL_PAPER_RESEARCH_EXPLICIT_NO_TRADE_WARMUP_NOT_UNTOUCHED_BLIND_OOS",
         "source": {
             "id": source["id"],
             "sha256": source["sha256"],
@@ -211,7 +254,8 @@ def study(raw_bars, requested, source):
             "training_only_selection": True,
             "no_future_candles_for_training": True,
             "fresh_portfolio_each_window": True,
-            "warmup": "INDICATORS_REINITIALIZE_AT_TEST_WINDOW_START_AND_REQUIRE_THEIR_NORMAL_CLOSED_BAR_WARMUP",
+            "warmup": "PRIOR_TRAINING_BARS_PRELOAD_INDICATORS_ZERO_FILLS_FRESH_CASH_AT_HOLDOUT_START",
+            "warmup_no_trade_enforced_by_engine": True,
             "limits": [
                 "No strategy is promising future performance. User-chosen parameters may already reflect prior inspection of these same dates.",
                 "Not a fully blind untouched out-of-sample experiment unless rules/dataset were frozen before examination.",

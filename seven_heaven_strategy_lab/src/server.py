@@ -19,6 +19,13 @@ from src.okx_public import (
     PublicMarketError, ALLOWED_SPOT, ALLOWED_DAYS, collect as collect_okx, list_sources as okx_sources,
     read_source as read_okx_source,
 )
+from src.binance_monthly_source_v46 import (
+    MonthlySourceError,
+    SOURCE_ID as BINANCE_MONTHLY_SOURCE_ID,
+    install as install_binance_monthly,
+    list_sources as binance_monthly_sources,
+    read_source as read_binance_monthly_source,
+)
 from src.reference_data import CSV_NAME, SourceError, dataset_status, install_reference
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,10 +62,22 @@ def _resolve_source(source_id: str | None):
                  "quote": "USDT", "exchange": "Binance Spot",
                  "source_timeframe": "1m", "sha256": status["data_sha256"],
                  "label": "Binance Spot BTC/USDT · janvier 2026",
-                 "available_timeframes": list(TIMEFRAMES)},
+                 "available_timeframes": list(TIMEFRAMES),
+                 "source_kind": "LEGACY_BINANCE_V1_V2"},
                 load_bars(WORKSPACE / "datasets" / CSV_NAME))
     if not isinstance(source_id, str):
         raise PublicMarketError("Identifiant de source incorrect")
+    if source_id == BINANCE_MONTHLY_SOURCE_ID:
+        manifest, bars = read_binance_monthly_source(WORKSPACE, source_id)
+        return ({"id": manifest["id"], "pair": manifest["pair"],
+                 "base": manifest["base"], "quote": manifest["quote"],
+                 "exchange": manifest["exchange"], "source_timeframe": "1h",
+                 "sha256": manifest["stored_csv_sha256"],
+                 "source_archive_sha256": manifest["archive_sha256_observed"],
+                 "label": "Binance Spot BTC/USDT · janvier 2020 · mois certifié",
+                 "available_timeframes": manifest["available_timeframes"],
+                 "close_boundary_utc": manifest["close_boundary_utc"],
+                 "source_kind": "BINANCE_MONTHLY_CERTIFIED"}, bars)
     manifest, bars = read_okx_source(WORKSPACE, source_id)
     return ({"id": manifest["id"], "pair": manifest["pair"],
              "base": manifest["base"], "quote": manifest["quote"],
@@ -67,7 +86,32 @@ def _resolve_source(source_id: str | None):
              "label": manifest["exchange"] + " " + manifest["pair"] +
                       f" · {manifest['rows']} bougies horaires clôturées",
              "available_timeframes": manifest["available_timeframes"],
-             "close_boundary_utc": manifest["close_boundary_utc"]}, bars)
+             "close_boundary_utc": manifest["close_boundary_utc"],
+             "source_kind": "OKX_PUBLIC_ARCHIVE"}, bars)
+
+
+def _sources_catalog() -> dict:
+    """Return verified 1h archives without mixing their storage namespaces."""
+    okx = okx_sources(WORKSPACE)
+    monthly = [
+        {**source, "source_kind": "BINANCE_MONTHLY_CERTIFIED"}
+        for source in binance_monthly_sources(WORKSPACE)
+    ]
+    public_okx = [
+        {**source, "source_kind": "OKX_PUBLIC_ARCHIVE"}
+        for source in okx["sources"]
+    ]
+    return {
+        "sources": monthly + public_okx,
+        "free_bytes": okx["free_bytes"],
+        "reserve_bytes": okx["reserve_bytes"],
+        "public_connected": True,
+        "binance_monthly_pilot": {
+            "id": BINANCE_MONTHLY_SOURCE_ID,
+            "pair": "BTC/USDT", "bar": "1h", "year": 2020, "month": 1,
+            "installed": bool(monthly),
+        },
+    }
 
 
 def _list_records(category: str) -> list:
@@ -99,7 +143,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.5"
+    server_version = "SevenHeavenStrategyLab/4.6.2"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -145,7 +189,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.5.0",
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.6.2",
                         "status": "LOCAL_PAPER_ONLY", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
@@ -156,6 +200,8 @@ class Handler(BaseHTTPRequestHandler):
                         "walk_forward_research_enabled": True,
                         "paper_trade_forensics_enabled": True,
                         "controlled_filter_research_enabled": True,
+                        "certified_binance_monthly_enabled": True,
+                        "explicit_no_trade_warmup_enabled": True,
                         "market_microscope_windows": list(ALLOWED_WINDOWS),
                         "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
                         "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
@@ -165,6 +211,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send({"datasets": [dataset_status(WORKSPACE)]})
         elif path == "/api/okx-sources":
             self._send(okx_sources(WORKSPACE))
+        elif path == "/api/sources":
+            self._send(_sources_catalog())
         elif path == "/api/trade-forensics":
             # Postmortem only; exact saved result + same SHA-verified candles.
             # Replay causes without changing prior JSON or touching exchange APIs.
@@ -256,7 +304,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self._safe_origin():
             return
         path = urlsplit(self.path).path
-        if path not in ("/api/import-reference", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study"):
+        if path not in ("/api/import-reference", "/api/binance-monthly-import", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study"):
             self._send({"error": "Action interdite"}, 404)
             return
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
@@ -274,6 +322,11 @@ class Handler(BaseHTTPRequestHandler):
                 # Blocking only one explicit public release download at a time.
                 with IMPORT_LOCK:
                     self._send({"dataset": install_reference(WORKSPACE)})
+            elif path == "/api/binance-monthly-import":
+                if data:
+                    raise MonthlySourceError("L'import pilote V4.6 n'accepte aucun paramètre libre")
+                with IMPORT_LOCK:
+                    self._send({"source": install_binance_monthly(WORKSPACE)}, 201)
             elif path == "/api/okx-import":
                 with IMPORT_LOCK:
                     self._send({"source": collect_okx(WORKSPACE, data.get("pair"),
@@ -353,7 +406,7 @@ class Handler(BaseHTTPRequestHandler):
                     if base_tf == "1h":
                         comparison["warnings"] = [
                             w.replace("0.10% OKX Taker is a scenario, not historical Binance realized fees",
-                                      "0.10% observed OKX taker is a model assumption; historical fee not verified")
+                                      "Configured fees are a PAPER assumption; historical realized fees are not verified")
                             for w in comparison["warnings"]]
                     record = {**metadata, "comparison": comparison}
                     _atomic_json(WORKSPACE / "comparisons" / (record["id"] + ".json"), record)
@@ -374,11 +427,18 @@ class Handler(BaseHTTPRequestHandler):
                     result["results"]["cash_quote"] = result["results"]["cash_final"]
                     result["params"]["source_id"] = source["id"]
                     if base_tf == "1h":
-                        result["warnings"] = [
-                            "OKX public Spot CLOSED hourly candles, no historical order book or full fill proof",
-                            "Instrument lot/tick/min size retrieved but not applied to this legacy internal PAPER engine",
-                            "Same observed 0.10% taker fees across venues/dates are an assumed scenario",
-                            "Next-bar-open hypothetical fills; slippage fixed; zero real orders"]
+                        if source["source_kind"] == "BINANCE_MONTHLY_CERTIFIED":
+                            result["warnings"] = [
+                                "Binance public monthly Spot 1h archive matched its published checksum and UTC continuity",
+                                "No historical order book, queue position or full fill proof",
+                                "Configured fees and slippage are PAPER assumptions, not verified historical charges",
+                                "Next-bar-open hypothetical fills; zero real orders"]
+                        else:
+                            result["warnings"] = [
+                                "OKX public Spot CLOSED hourly candles, no historical order book or full fill proof",
+                                "Instrument lot/tick/min size retrieved but not applied to this internal PAPER engine",
+                                "Configured fees and slippage are PAPER assumptions, not verified historical charges",
+                                "Next-bar-open hypothetical fills; zero real orders"]
                     baselines = {}
                     for kind in ("HOLD_50", "CASH"):
                         if result["params"]["kind"] == kind:

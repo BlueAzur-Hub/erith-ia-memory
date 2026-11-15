@@ -353,6 +353,19 @@ tbody tr:hover { background: #102f3b; }
   color:#f0dba9;margin:5px 0 6px;
 }
 .connected-market-head p {color:#a8c9d2;font-size:12px;margin:0 0 17px;}
+.certified-source-callout {
+  display:grid;grid-template-columns:minmax(260px,1.5fr) minmax(230px,.7fr);
+  align-items:center;gap:16px;margin:4px 0 17px;padding:14px 15px;
+  border:1px solid #3c7e7c;border-radius:10px;
+  background:linear-gradient(115deg,rgba(17,70,75,.68),rgba(11,36,49,.9));
+}
+.certified-source-callout div {display:flex;flex-direction:column;gap:4px;}
+.certified-source-callout small {color:#dbbb74;font-size:9px;font-weight:900;letter-spacing:.12em;}
+.certified-source-callout strong {color:#b3f5e8;font-size:14px;}
+.certified-source-callout span {color:#a8c9d2;font-size:10px;line-height:1.45;}
+.certified-source-callout .action-button {width:100%;}
+.source-divider {display:flex;align-items:center;gap:10px;color:#9eb8bf;font-size:9px;font-weight:900;letter-spacing:.12em;}
+.source-divider:before,.source-divider:after {content:"";height:1px;background:#28505f;flex:1;}
 .connected-source-grid {
   display:grid;grid-template-columns:minmax(200px, 1fr) minmax(240px,1fr);
   align-items:end;gap:15px;margin-top:13px;
@@ -374,6 +387,7 @@ tbody tr:hover { background: #102f3b; }
 @media(max-width:700px) {
   .connected-market-panel {padding:16px;}
   .connected-source-grid {grid-template-columns:1fr;}
+  .certified-source-callout {grid-template-columns:1fr;}
 }
 
 
@@ -794,7 +808,7 @@ tbody tr:hover { background: #102f3b; }
 }
 
 
-/* V4.5 · AETHER RESEARCH / scientific filter comparison, offline and responsive */
+/* V4.6 · AETHER RESEARCH / scientific filter comparison, offline and responsive */
 .action-research{border:1px solid #b99869!important;
  background:linear-gradient(105deg,#273b49,#3b3441)!important;
  color:#f6daaa!important;font-weight:800!important;box-shadow:inset 0 1px 0 rgba(243,222,184,.16);}

@@ -1,22 +1,59 @@
-# Seven Heaven Strategy Lab — V4.5 Aether Research + Forensics
+# Seven Heaven Strategy Lab — V4.6.2 cohérence complète lors du changement de source
 
-**Version 4.5.0 · Windows Python 3.13 · Port 8777 en local · Internet public autorisé · PAPER uniquement.**
+**Version 4.6.2 · Windows Python 3.13 · Port 8777 en local · Internet public sur action explicite · PAPER uniquement.**
 
-Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.2 étend le cockpit premium bleu nuit, or et cyan avec le **graphique historique directement lié à chaque rapport**, sans dépendre des interfaces Administrator ou Trader, sans clés privées ni ordre réel.
+Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.6 ajoute une première source mensuelle longue certifiée et corrige la méthode de validation des indicateurs. La V4.6.1 aligne le résumé visuel sur la source active. La V4.6.2 garantit qu'un changement de source efface aussi l'ancienne étude Aether Research affichée, sans modifier le moteur, les fills, les frais ni les résultats.
+
+## V4.6.2 — remise à zéro de toutes les analyses liées à la source
+
+- **Défaut reproduit dans le dossier complet du propriétaire** : après une étude Aether Research sur une archive OKX, sélectionner ensuite Binance janvier 2020 mettait correctement à jour la source, le rapport principal, le Microscope, Forensics et Aether Scientific, mais l'ancien résultat Research OKX pouvait rester visible. Deux contextes de marché différents se retrouvaient donc affichés sur la même page.
+- **Cause précise** : le gestionnaire de changement de source appelait les remises à zéro du rapport, du Microscope, de Forensics et de Scientific, mais omettait celle du module `AetherFilterStudio`.
+- **Correction limitée** : chaque changement réel du sélecteur de source appelle désormais aussi `AetherFilterStudio.reset()`. La zone Research revient à son état d'attente jusqu'à ce qu'une nouvelle étude soit explicitement lancée sur la source sélectionnée.
+- **Aucune modification financière** : moteur PAPER, règles de stratégie, agrégation, préchauffage, capital, frais, glissement, fills, rapports sauvegardés et archives historiques restent strictement inchangés par ce correctif d'interface.
+- **Données personnelles protégées** : le `workspace/` fourni a servi à reproduire et contrôler le défaut. Il n'est ni modifié ni inclus dans l'archive de programme V4.6.2.
+- **État de validation** : la non-régression automatisée contrôle désormais explicitement la remise à zéro de tous les modules liés à une source. La réception visuelle finale de la V4.6.2 sur le Firefox et la clé USB du propriétaire reste à effectuer.
+
+## V4.6.1 — résumé de provenance aligné sur la source réellement simulée
+
+- **Défaut observé sur le Firefox Windows du propriétaire** : une simulation active `ETH/USDC · OKX Spot · 2 160 bougies 1h` était correctement utilisée par le moteur et les rapports, mais les quatre cartes supérieures affichaient encore statiquement `Bitcoin · BTC/USDT · janvier 2026 · Binance`. Le registre détaillé était juste ; le résumé supérieur ne l'était pas.
+- **Correction** : actif, paire, exchange, fenêtre UTC, nombre de bougies, résolution, contrôle d'intégrité et provenance suivent maintenant le choix exact du sélecteur de source. BTC et ETH ont également un pictogramme distinct.
+- **Ancien Coffre conservé sans ambiguïté** : le bouton et son état mentionnent explicitement le **Coffre V1/V2 Binance**. Ils ne sont plus présentés comme la description de la source active lorsqu'OKX ou le mois Binance certifié est sélectionné.
+- **Trois états explicites** : V1/V2 affiche son SHA-256 ou son absence ; Binance mensuel affiche le CHECKSUM officiel et les empreintes ZIP/CSV ; OKX affiche ses bornes UTC, sa couverture et son SHA-256.
+- **Aucune modification financière** : Python, agrégation, signaux, simulations, préchauffage sans transaction, forensics et comparaisons restent identiques à V4.6.0.
+- **Preuve reçue pour V4.6.0** : Firefox/Windows a rendu une simulation OKX ETH/USDC de 2 160 bougies, 66 fills réconciliés, deux fenêtres Scientific avec préchauffage `0 fill autorisé` et deux fenêtres Research.
+- **Preuve reçue pour V4.6.1** : le propriétaire a certifié Binance BTC/USDT janvier 2020 (744 bougies horaires), lancé une stratégie personnelle et obtenu 10 fills réconciliés avec le rapport, le Microscope et Forensics. Cette réception a précisément révélé la persistance visuelle d'une ancienne étude Research OKX après le changement de source, corrigée en V4.6.2.
+
+## V4.6 — mois Binance certifié et préchauffage sans transaction
+
+- **Nouvelle source distincte** : un bouton certifie le pilote public figé **Binance Spot BTC/USDT, 1h, janvier 2020**. Le programme n'accepte ni URL ni paire saisie par l'utilisateur : il télécharge uniquement le ZIP officiel fixé dans le code et son fichier `.CHECKSUM`.
+- **Triple contrôle avant acceptation** : SHA-256 publié = SHA-256 observé, schéma OHLCV strict, puis **744 bougies horaires UTC continues** du 1er au 31 janvier sans trou ni doublon. En cas d'écart, la source n'apparaît pas dans le sélecteur.
+- **Stockage séparé et borné** : seules les bougies normalisées et leur manifeste sont conservés dans `workspace/binance_monthly_sources/`. Le ZIP brut n'est pas retenu, l'archive V1/V2 reste dans `workspace/datasets/`, OKX reste dans `workspace/okx_sources/`, et la réserve de 2,5 Go est vérifiée avant tout téléchargement.
+- **Provenance visible** : l'interface distingue clairement l'ancienne archive Binance V1/V2, le mois Binance certifié V4.6 et les collectes OKX. Les rapports gardent l'identifiant exact, l'empreinte des données normalisées et, pour le mois pilote, l'empreinte de l'archive officielle.
+- **Préchauffage scientifique corrigé** : chaque validation chronologique précharge les EMA, Bollinger, RSI et volume avec des bougies antérieures déjà disponibles. Le moteur interdit tout fill durant cette zone, puis commence la fenêtre testée avec le capital initial et zéro position. Aucune bougie future n'entre dans le choix ou le préchauffage.
+- **Compatibilité financière** : sans frontière de validation (`trade_start_index=0`), les sept familles du moteur conservent exactement les résultats V4.5.1 contrôlés. Buy & Hold et DCA ne peuvent plus ouvrir pendant le préchauffage ; leur première opération se produit à la frontière testée.
+- **Portée honnête** : janvier 2020 n'est qu'un premier mois de recherche et ne prouve aucun rendement futur. Les frais, le glissement et les fills à l'ouverture suivante restent des hypothèses PAPER, sans carnet historique ni exécution réelle.
+- **État de livraison** : les tests automatisés Python et la certification du mois public ont été réalisés avant emballage. Le chemin OKX de V4.6.0 puis l'import mensuel Binance et la provenance active de V4.6.1 ont été observés sur le Firefox et la clé USB du propriétaire. La cohérence Research lors d'un changement de source est le contrôle local ciblé de V4.6.2.
+
+## V4.5.1 — correctif d'équivalence du profil EMA
+
+- Le profil **OWNER** d'une étude de filtres conserve désormais le véritable moteur EMA_CROSS au lieu d'être remplacé par CUSTOM_RULES.
+- Les champs stop-loss et objectif, inactifs mais éventuellement encore présents dans le formulaire masqué d'une EMA classique, sont normalisés à zéro avant de construire les variantes filtrées. Ils ne peuvent plus modifier silencieusement les sorties.
+- Une stratégie CUSTOM_RULES conserve intégralement ses stops, objectifs, entrée et sortie : la correction est strictement limitée à la conversion d'une EMA classique.
+- La recette de non-régression compare les fills, le capital final, le rendement, le drawdown et les frais entre l'EMA originale et son équivalent sans filtre, y compris avec des valeurs masquées non nulles.
 
 ## V4.5 — Aether Research : comparer les filtres d'entrée sur le même historique
 
 **But :** la V4.4 explique pourquoi une transaction PAPER a eu lieu ; la V4.5 compare **des variantes prédéfinies** de la stratégie sur des **fenêtres chronologiques identiques**, sans attribuer rétrospectivement un pouvoir prédictif à un filtre.
 
-- Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée** (ou **Croisement EMA**). Cliquer sur **Comparer 5 variantes de filtres · Aether Research V4.5**. Les autres familles ne sont pas prises en charge par ce comparateur de filtres EMA.
+- Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée** (ou **Croisement EMA**). Cliquer sur **Comparer 5 variantes de filtres · Aether Research V4.6**. Les autres familles ne sont pas prises en charge par ce comparateur de filtres EMA.
 - Les variantes préétablies sont : **configuration d'origine**, **sans filtre**, **RSI sous 60**, **RSI sous 45**, **volume au moins 1,2 fois sa moyenne**. Une variante identique au profil d'origine est fusionnée pour éviter les essais redondants (5 variantes maximum).
-- L'entrée, la sortie, les EMA, les périodes RSI/volume, les stops/targets fictifs, le même actif, le timeframe, le capital PAPER, les frais et le glissement sont **maintenus identiques** : **seul le filtre d'entrée change**. La stratégie EMA classique est reproduite par son équivalent déclaratif d'entrée/sortie EMA dans le moteur autonome, sans changement de transactions financières.
+- L'entrée, la sortie, les EMA, les périodes RSI/volume, le même actif, le timeframe, le capital PAPER, les frais et le glissement sont **maintenus identiques** : **seul le filtre d'entrée change**. Les stops/targets actifs d'une stratégie personnalisée restent identiques. Pour une EMA classique, les anciennes valeurs masquées et inactives sont neutralisées avant la conversion des variantes afin de préserver les transactions financières du moteur original.
 - Sur les **anciennes bougies d'entraînement uniquement**, le moteur compare les variantes avec le score préétabli **rendement net + 0,35 × drawdown négatif**. Les variantes qui n'ont aucune position clôturée sur l'entraînement ne sont pas éligibles au titre de « meilleure stratégie ». Si aucune variante n'est éligible, le programme **conserve le profil d'origine**, sans annoncer de gagnant.
 - La variante retenue est ensuite simulée sur **des périodes strictement ultérieures** (une fenêtre avec 150–299 bougies dans le timeframe étudié, deux fenêtres dès 300). Toutes les autres variantes sont également évaluées sur ces **mêmes périodes**, mais leurs résultats sont affichés **pour transparence, pas pour changer le choix du passé**. Les références Buy & Hold 50 % et conservation de la devise de cotation sont calculées sur ces mêmes périodes.
 - Le nouveau **Studio des stratégies comparées** affiche les choix et scores des deux périodes, les tableaux détaillés de chaque variante, les écarts en points de pourcentage face au profil d'origine, l'impact de frais et glissement ×2, et les cas de simulation sans transaction.
 - **Limites explicites :** il ne s'agit **pas** d'un test aveugle si les dates ont été précédemment vues ; le capital et les indicateurs redémarrent à chaque fenêtre. Les seconds entraînements peuvent réutiliser les anciennes dates de validation. Les figures sur les fenêtres ultérieures ne prouvent pas qu'un filtre évitera à l'avenir une perte observée. Aucun ordre réel ou simulation de carnet historique.
 - **Indépendance et économie USB :** calcul local en mémoire, **aucun nouveau fichier dans workspace/**, aucune dépendance Freqtrade/Hummingbot, aucun téléchargement additionnel pour l'étude. Le nouveau module s'appuie sur le moteur V4 et conserve V4.1 Quant, V4.2 Microscope, V4.3 Scientific et V4.4 Forensics.
-- **Étape suivante** : après réception locale V4.5, comparer des profils choisis avec Yoann, étendre à d'autres règles et gérer un budget de risque plus réaliste sans fabriquer de performances.
+- **Étape suivante** : après réception locale V4.6, comparer des profils choisis avec Yoann, étendre à plusieurs mois certifiés et gérer un budget de risque plus réaliste sans fabriquer de performances.
 
 ## V4.4 — Aether Forensics : pourquoi chaque transaction PAPER a-t-elle eu lieu ?
 
@@ -105,18 +142,20 @@ Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en dévelo
 
 Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes des pages passent par ce serveur local, et ce serveur Python peut **sortir vers les API publiques OKX** lors d'un clic. Aucune clé API OKX, compte, portefeuille, mot de passe ni ordre réel ne sont nécessaires. Les résultats ne deviennent jamais de vrais achats/ventes.
 
-## Mise à niveau sur la clé USB depuis la V4.3 déjà validée
+## Mise à niveau sur la clé USB depuis la V4.5.1, V4.6.0 ou V4.6.1
 
 1. Fermer la fenêtre noire `Seven Heaven Strategy Lab` (Ctrl+C), puis garder la clé branchée.
 2. Copier `E:\seven_heaven_strategy_lab\workspace\` vers **une sauvegarde distincte**, avant d'écraser les fichiers du programme.
-3. Télécharger le **ZIP V4.5 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
+3. Télécharger le **ZIP V4.6.2 complet**, décompresser, copier le contenu du dossier `seven_heaven_strategy_lab` **sur le contenu de `E:\seven_heaven_strategy_lab\`** en remplaçant ses fichiers, **sans supprimer `workspace\`**. Ne pas créer involontairement un dossier `seven_heaven_strategy_lab\seven_heaven_strategy_lab`.
 4. Double-cliquer sur `START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd`. Python 3.13 existant suffit ; Docker reste facultatif.
-5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.5.0` et l'ancienne archive Binance **AUTHENTIFIÉE**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
-6. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER, puis vérifier **Microscope des bougies** : même source, horodatages UTC, overlays EMA/Bollinger, marqueurs PAPER et navigation temporelle ; comparer ensuite **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier la source sélectionnée et le décompte disponible, puis tester le comparateur en **1h**, sans aucune action de trading.
-7. Depuis **Lecture de la simulation**, ouvrir **Anatomie des décisions PAPER** : vérifier le nom de la source, l'empreinte SHA et une fiche de position ; sélectionner « Pertes clôturées » pour étudier les transactions qui ont coûté de l'argent. Vérifier que le résultat net et les frais concordent avec le rapport d'origine. Aucun nouveau fichier n'est créé sur la clé.
-8. Cliquer sur **Éprouver cette stratégie dans le temps** ; ouvrir le **Laboratoire de robustesse** en bas, lire entraînement, validation ultérieure et frais/glissement ×2. Avec moins de 150 bougies sur le timeframe choisi, le programme refuse proprement au lieu de produire un faux résultat. Ne touche pas au dossier `workspace/`.
-9. Dans **Atelier**, avec une stratégie EMA ou personnelle et un historique OKX 1h/4h suffisamment long, cliquer **Comparer 5 variantes de filtres · Aether Research V4.5**. Ouvrir le **Studio des stratégies comparées**, lire la variante choisie sur le passé, le résultat sur une ou deux fenêtres de vérification, puis le tableau repliable de **toutes** les variantes. Les dates et le SHA doivent correspondre. Ne pas interpréter une absence de fills comme une victoire. Aucun fichier additionnel dans `workspace/`.
-10. Si le programme affiche une erreur réseau, un échec de continuité ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
+5. Ouvrir `http://127.0.0.1:8777` : vérifier `BUILD 4.6.2` et l'état explicite du **Coffre V1/V2 Binance**. Les rapports V1/V2 doivent rester disponibles dans le Coffre.
+6. Cliquer sur **Certifier le mois pilote Binance**. Attendre la confirmation de **744 bougies 1h** et sélectionner `Binance BTC/USDT · Janvier 2020 · CHECKSUM certifié`. Vérifier que l'interface affiche deux empreintes distinctes (ZIP officiel et CSV normalisé), puis lancer une simulation en 1h. Aucun fichier ZIP brut ne doit rester dans `workspace/`.
+7. Dans **Atelier de configuration**, sélectionner **Ma stratégie personnalisée**, choisir les règles, lancer PAPER, puis vérifier **Microscope des bougies** : même source, horodatages UTC, overlays EMA/Bollinger, marqueurs PAPER et navigation temporelle ; comparer ensuite **7 méthodes**. Dans **Observatoire connecté**, choisir `BTC/USDC` ou `ETH/USDC`, une durée et éventuellement une date UTC puis cliquer sur **Collecter la période OKX**. Vérifier que les quatre cartes du haut changent réellement vers cette paire, ses dates, sa couverture et son SHA-256, puis tester le comparateur en **1h**, sans aucune action de trading.
+8. Depuis **Lecture de la simulation**, ouvrir **Anatomie des décisions PAPER** : vérifier le nom de la source, l'empreinte SHA et une fiche de position ; sélectionner « Pertes clôturées » pour étudier les transactions qui ont coûté de l'argent. Vérifier que le résultat net et les frais concordent avec le rapport d'origine. Aucun nouveau fichier n'est créé sur la clé.
+9. Cliquer sur **Éprouver cette stratégie dans le temps** ; ouvrir le **Laboratoire de robustesse** et vérifier la ligne « préchauffage indicateurs », avec **0 fill autorisé** et portefeuille neuf. Avec moins de 150 bougies sur le timeframe choisi, le programme refuse proprement au lieu de produire un faux résultat.
+10. Avec une stratégie EMA ou personnelle, cliquer **Comparer 5 variantes de filtres · Aether Research V4.6**. Lire la variante choisie sur le passé, le résultat ultérieur et la preuve du préchauffage sans transaction. Les dates et le SHA doivent correspondre. Ne pas interpréter une absence de fills comme une victoire.
+11. Pour le contrôle V4.6.2, laisser ce résultat Research affiché puis choisir une autre source dans **Source pour les prochaines simulations**. Le Studio Research doit immédiatement revenir à **En attente d'une étude contrôlée** ; aucun ancien résultat OKX ne doit rester sous une source Binance, ni l'inverse.
+12. Si le programme affiche une erreur réseau, un échec de continuité, de CHECKSUM ou un espace USB inférieur à la réserve, **conserver l'erreur** : les archives V1/V2 ne sont pas détruites, et aucun ordre n'est envoyé.
 
 ## Provenance, contrôles et limitations
 
@@ -126,7 +165,7 @@ Le serveur du cockpit écoute seulement `http://127.0.0.1:8777`, les requêtes d
 - Les archives OKX sont vérifiées à chaque utilisation (SHA, 240 à 2 160 bougies, horodatage strictement horaire, continuité, intervalle UTC, actif et devise).
 - La V3.1 sélectionne une date de fin UTC et jusqu'à 90 jours historiques ; elle ne contient pas de carnet actualisé en continu ni d'archives historiques illimitées. Ce sont des versions suivantes, après tests en vrai navigateur.
 - L'API OKX peut être indisponible temporairement ou selon la région ; le laboratoire n'invente pas un prix pour masquer une erreur.
-- Windows Firefox sur la clé du propriétaire doit faire l'objet d'une validation distincte après publication. Les tests GitHub et Chromium sont des preuves techniques, **pas** un test déjà effectué sur son PC.
+- Le chemin OKX de V4.6.0, l'import mensuel Binance et le résumé de provenance V4.6.1 ont été observés sur Windows Firefox le 15 novembre 2026. La remise à zéro Research de V4.6.2 doit encore faire l'objet d'une validation distincte sur la clé du propriétaire. Les tests automatisés sont des preuves techniques, **pas** ce contrôle local final.
 - Aucune garantie de gain, pas de conseil d'investissement, pas de trading réel.
 
 ## Historique V1/V2 et architecture détaillée

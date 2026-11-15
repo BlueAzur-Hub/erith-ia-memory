@@ -1,11 +1,11 @@
-"""V4.5 Aether Research: controlled, non-blind comparison of declarative entry filters.
+"""V4.6 Aether Research: controlled filters with explicit no-trade warmup.
 
 Only a short, preregistered filter grid is tried. The common entry, exit,
 capital, dates, pricing model, fixed fee and fixed slippage remain unchanged.
 Choice is made on earlier TRAINING candles only, then evaluated on strictly
 later holdouts. All candidate holdout results are disclosed for inspection,
-not mined to choose a winner. Cash restarts and indicators warm up for each
-slice. No market data downloads, workspace writes, accounts, Freqtrade,
+not mined to choose a winner. Prior training bars preload indicators without
+fills; cash and inventory start fresh at each holdout. No market data downloads, workspace writes, accounts, Freqtrade,
 Hummingbot, or exchange orders. No claim of causal performance improvement.
 """
 from __future__ import annotations
@@ -14,10 +14,13 @@ import math
 
 from src.engine import LabError, options
 from src.observatory import aggregate_bars, TIMEFRAMES
-from src.robustness import _execute, _metrics, _schedule, MIN_RESEARCH, MAX_SOURCE_BARS
+from src.robustness import (
+    _execute, _metrics, _schedule, _warmup_window,
+    MIN_RESEARCH, MAX_SOURCE_BARS,
+)
 
 MAX_CANDIDATES = 5
-VERSION = "seven.heaven.aether_research.controlled_filters.v4_5"
+VERSION = "seven.heaven.aether_research.controlled_filters.v4_6"
 RULES = (
     ("NO_FILTER", "Sans filtre"),
     ("RSI_60", "RSI sous 60", "RSI_BELOW", 60.0),
@@ -29,16 +32,27 @@ RULES = (
 def _variations(canonical):
     if canonical["kind"] not in {"EMA_CROSS", "CUSTOM_RULES"}:
         raise LabError(
-            "Aether Research V4.5 étudie uniquement les croisements EMA ou "
+            "Aether Research V4.6 étudie uniquement les croisements EMA ou "
             "les stratégies personnelles fondées sur le même moteur d'entrée."
         )
+    owner = dict(canonical)
     base = dict(canonical)
     from_standard_ema = base["kind"] == "EMA_CROSS"
-    base["kind"] = "CUSTOM_RULES"
     if from_standard_ema:
-        base["entry_rule"] = "EMA_CROSS_UP"
-        base["exit_rule"] = "EMA_CROSS_DOWN"
-        base["filter_rule"] = "NONE"
+        # EMA_CROSS ignores the declarative rules and protective thresholds.
+        # Hidden values can remain in the form after a CUSTOM_RULES profile was
+        # used. Preserve the real EMA engine for OWNER, and normalize every
+        # ignored field before creating financially equivalent filtered variants.
+        active_semantics = {
+            "entry_rule": "EMA_CROSS_UP",
+            "exit_rule": "EMA_CROSS_DOWN",
+            "filter_rule": "NONE",
+            "stop_loss_pct": 0.0,
+            "take_profit_pct": 0.0,
+        }
+        owner.update(active_semantics)
+        base.update(active_semantics)
+    base["kind"] = "CUSTOM_RULES"
     result = []
     seen = set()
 
@@ -51,8 +65,10 @@ def _variations(canonical):
         seen.add(sig)
         result.append({"key":key, "label":label, "params":choice, "description":note})
 
-    add("OWNER", "Ta configuration d'origine",dict(base),
-        "Tous les réglages demandés, inchangés ; référence de comparaison.")
+    add("OWNER", "Ta configuration d'origine",dict(owner),
+        ("Moteur EMA classique original, sans activation de champs masqués."
+         if from_standard_ema else
+         "Tous les réglages actifs demandés, inchangés ; référence de comparaison."))
     add("NO_FILTER","Sans filtre d'entrée",{**base,"filter_rule":"NONE"},
         "Même entrée et sortie, sans filtre complémentaire.")
     add("RSI_60","Filtre RSI < 60",
@@ -132,13 +148,19 @@ def study(raw_bars, requested, source):
             i_best,best=0,scored[0]
             selection_status="NO_TRAINING_CLOSED_TRADE_RETAIN_OWNER_BASELINE"
         selected=best[0]
+        warmed_holdout,warmup_bars,warmup=_warmup_window(
+            bars,train_end,test_end,base)
         benchmark_hold=_small_metric(_execute(
-            holdout,{**base,"kind":"HOLD_50"},timeframe=timeframe))
+            warmed_holdout,{**base,"kind":"HOLD_50"},timeframe=timeframe,
+            trade_start_index=warmup_bars))
         benchmark_cash=_small_metric(_execute(
-            holdout,{**base,"kind":"CASH"},timeframe=timeframe))
+            warmed_holdout,{**base,"kind":"CASH"},timeframe=timeframe,
+            trade_start_index=warmup_bars))
         checked=[]
         for i,(candidate,metric,score,eligible) in enumerate(scored):
-            run=_execute(holdout,candidate["params"],timeframe=timeframe)
+            run=_execute(
+                warmed_holdout,candidate["params"],timeframe=timeframe,
+                trade_start_index=warmup_bars)
             checked.append({
                 "key":candidate["key"],"label":candidate["label"],
                 "description":candidate["description"],
@@ -156,9 +178,10 @@ def study(raw_bars, requested, source):
             })
         selected_row=checked[i_best]
         owner_row=checked[0]
-        stress=_execute(holdout,selected["params"],timeframe=timeframe,
+        stress=_execute(warmed_holdout,selected["params"],timeframe=timeframe,
                         fee=min(.01,selected["params"]["fee"]*2),
-                        slippage=min(.02,selected["params"]["slippage"]*2))
+                        slippage=min(.02,selected["params"]["slippage"]*2),
+                        trade_start_index=warmup_bars)
         chosen=selected_row["verification"]
         original=owner_row["verification"]
         fold_reports.append({
@@ -167,6 +190,7 @@ def study(raw_bars, requested, source):
                         "bars":len(train)},
             "verification":{"first_bar_utc":holdout[0][0],"last_bar_utc":holdout[-1][0],
                             "bars":len(holdout)},
+            "warmup":warmup,
             "candidate_count":len(checked),
             "selection":{
                 "key":selected["key"],"label":selected["label"],
@@ -191,7 +215,7 @@ def study(raw_bars, requested, source):
     nontrivial=sum(fold["selected_verification"]["hypothetical_fills"]>0 for fold in fold_reports)
     return {
         "schema":VERSION,
-        "status":"NONBLIND_PREDECLARED_TRAIN_ONLY_SELECTION_INDEPENDENT_LATER_HOLDOUTS",
+        "status":"NONBLIND_PREDECLARED_TRAIN_ONLY_SELECTION_LATER_HOLDOUTS_EXPLICIT_NO_TRADE_WARMUP",
         "source":{"id":source["id"],"sha256":source["sha256"],
                   "exchange":source.get("exchange"),"pair":source["pair"],
                   "base":source.get("base"),"quote":source.get("quote"),
@@ -200,6 +224,9 @@ def study(raw_bars, requested, source):
         "total_bars":len(bars),
         "original_kind":canonical["kind"],
         "ema_converted_to_equivalent_custom_rules":converted,
+        "ema_filter_variants_converted_to_equivalent_custom_rules":converted,
+        "owner_baseline_engine":candidates[0]["params"]["kind"],
+        "standard_ema_inactive_stop_target_values_normalized":converted,
         "entry_rule":base["entry_rule"],
         "exit_rule":base["exit_rule"],
         "ema_fast":base["ema_fast"],"ema_slow":base["ema_slow"],
@@ -227,6 +254,8 @@ def study(raw_bars, requested, source):
             "candidates_predeclared":True,
             "candidate_grid_maximum":MAX_CANDIDATES,
             "only_entry_filter_changed":True,
+            "owner_baseline_preserves_original_engine":True,
+            "standard_ema_ignored_fields_normalized_before_conversion":converted,
             "same_source_and_chronological_holdout_per_variant":True,
             "selection_uses_training_only":True,
             "qualification_closed_positions_minimum":1,
@@ -236,16 +265,18 @@ def study(raw_bars, requested, source):
             "folds_disjoint_verification":True,
             "later_training_reuses_previous_verification_history":True,
             "each_portfolio_resets_at_boundary":True,
-            "no_indicator_carryover":True,
+            "indicator_warmup_from_prior_training_only":True,
+            "warmup_fills_allowed":False,
+            "fresh_cash_and_zero_inventory_at_holdout_start":True,
             "user_may_have_already_inspected_these_dates":True,
             "no_new_workspace_files":True,
             "limits":[
                 "Research conducted on already observable market history, not an untouched blind out-of-sample test.",
                 "Five predeclared or fewer filter alternatives; this does not search every possible strategy or guarantee advantage.",
-                "Only entry filters change; common EMA, entry, exit, stop, take-profit, RSI/volume period, fees, slippage, market and capital are identical.",
+                "Only entry filters change. For CUSTOM_RULES, active stop/take-profit settings remain identical. For standard EMA, ignored hidden stop/take-profit values are normalized to zero before equivalent filtered variants are built.",
                 "The selected variant is chosen on training candles only, with >=1 closed position required; if no eligible candidate, original configuration is kept.",
                 "Validation results for ALL alternatives are shown to expose selection bias, not to reselect based on their outcomes.",
-                "Each test slice restarts EMAs, RSI, volume, capital and positions. This can suppress trades or produce zero-fills; such windows cannot prove profitability.",
+                "Each test slice preloads indicators from prior training candles without allowing fills. Cash and inventory still restart at the holdout boundary; zero-fill windows cannot prove profitability.",
                 "Each later expanding training set includes all older candles, including earlier tests; holdout windows themselves do not overlap.",
                 "No historic order book, slippage discovery, exchange fill proof or intrabar native protective stop. Real trading disabled."
             ],

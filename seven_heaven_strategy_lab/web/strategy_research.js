@@ -1,5 +1,5 @@
 "use strict";
-/* V4.5 Aether Research. Read-only rendering of ephemeral chronological
+/* V4.6 Aether Research. Read-only rendering of ephemeral chronological
    experiment results. All text is assigned through textContent. */
 (() => {
   const $=id=>document.getElementById(id);
@@ -109,6 +109,7 @@
     }
     table.append(body);scroller.append(table);details.append(scroller);
     details.append(node("p","research-table-note",
+      "Préchauffage V4.6 : "+fold.warmup.used_bars+" bougies antérieures chargent les indicateurs, 0 fill est autorisé et le portefeuille démarre ensuite avec cash neuf et zéro position. "+
       "Ces résultats ultérieurs des variantes NON sélectionnées sont affichés pour contrôle, jamais utilisés pour changer le choix du passé. "+date(fold.training.first_bar_utc)+" → "+
       date(fold.training.last_bar_utc)+" : entraînement historique antérieur."));
     box.append(details);
@@ -116,9 +117,11 @@
   }
   function display(research){
     if(!research || research.safety?.orders_real!==0 ||
-      research.status!=="NONBLIND_PREDECLARED_TRAIN_ONLY_SELECTION_INDEPENDENT_LATER_HOLDOUTS" ||
+      research.status!=="NONBLIND_PREDECLARED_TRAIN_ONLY_SELECTION_LATER_HOLDOUTS_EXPLICIT_NO_TRADE_WARMUP" ||
       !Array.isArray(research.folds) || !research.folds.length ||
-      !research.methodology?.selection_uses_training_only)
+      !research.methodology?.selection_uses_training_only ||
+      !research.methodology?.indicator_warmup_from_prior_training_only ||
+      research.methodology?.warmup_fills_allowed!==false)
       throw Error("Résultat de recherche non vérifié ou incohérent.");
     const source=research.source;
     const result=research.summary;
