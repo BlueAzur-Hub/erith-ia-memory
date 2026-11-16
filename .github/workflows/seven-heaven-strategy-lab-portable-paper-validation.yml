@@ -967,6 +967,36 @@ jobs:
           print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run Bollinger closed-trade anatomy diagnostic
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.bollinger_trade_anatomy import run_bollinger_trade_anatomy
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          out = run_bollinger_trade_anatomy(
+              bars,
+              {
+                  "kind": "BOLLINGER",
+                  "capital": 10000,
+                  "fee": 0.001,
+                  "slippage": 0.0005,
+                  "bb_period": 20,
+                  "bb_sigma": 2,
+              },
+              warmup_hours=720,
+          )
+          assert out["closed_round_trips"] > 0
+          assert out["methodology"]["parameters_optimized"] is False
+          assert out["safety"]["orders_real"] == 0
+          compact = {k: out[k] for k in ("schema","status","params","closed_round_trips","groups","correlations","methodology","safety")}
+          print("BOLLINGER_TRADE_ANATOMY_2024_2025")
+          print(json.dumps(compact, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove 2024-2025 inventory stayed ephemeral
         run: |
           set -euo pipefail
