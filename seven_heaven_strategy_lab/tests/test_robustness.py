@@ -28,7 +28,7 @@ class WalkForwardScientificV43Tests(unittest.TestCase):
         raw,source=sample()
         report=study(raw,{"kind":"EMA_CROSS","timeframe":"1h","capital":1000,
                           "ema_fast":12,"ema_slow":32,"fee":0.001,"slippage":0.0005},source)
-        self.assertEqual(report["status"],"CHRONOLOGICAL_PAPER_RESEARCH_NOT_UNTOUCHED_BLIND_OOS")
+        self.assertEqual(report["status"],"CHRONOLOGICAL_PAPER_RESEARCH_EXPLICIT_NO_TRADE_WARMUP_NOT_UNTOUCHED_BLIND_OOS")
         self.assertEqual(report["source"]["sha256"],source["sha256"])
         self.assertEqual(report["source"]["pair"],"ETH/USDC")
         self.assertEqual(report["timeframe"],"1h")
