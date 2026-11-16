@@ -1286,6 +1286,123 @@ jobs:
           echo "PASS Bollinger age-negative experiment used runner-temp only"
 
 
+
+  binance-bnb-xrp-sol-2024-2025-donchian-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download preregistered BNB XRP SOL monthly source sets
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-bnb-xrp-sol-2024-2025"
+          mkdir -p "$root"
+          total_bytes=0
+          for symbol in BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for year in 2024 2025; do
+              for mm in $(seq -w 1 12); do
+                file="$symbol-1h-$year-$mm.zip"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+                bytes=$(stat -c%s "$root/$symbol/$file")
+                if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                  echo "Unexpected archive size for $file: $bytes" >&2
+                  exit 1
+                fi
+                total_bytes=$((total_bytes + bytes))
+              done
+            done
+          done
+          if [ "$total_bytes" -gt 60000000 ]; then
+            echo "Multi-asset source set exceeded 60 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+      - name: Certify every month and run unchanged Donchian 55-20 4h
+        run: |
+          set -euo pipefail
+          MULTI_ROOT="$RUNNER_TEMP/binance-bnb-xrp-sol-2024-2025" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["MULTI_ROOT"])
+          results={}
+          certification={}
+          for symbol in ("BNBUSDT","XRPUSDT","SOLUSDT"):
+              yearly={2024:[],2025:[]}
+              months=[]
+              for year in (2024,2025):
+                  previous_last=None
+                  for month in range(1,13):
+                      name=f"{symbol}-1h-{year}-{month:02d}.zip"
+                      report=validate_symbol_month(
+                          (root/symbol/name).read_bytes(),
+                          (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                          symbol=symbol,year=year,month=month,
+                      )
+                      bars=report["bars"]
+                      if previous_last is not None:
+                          assert bars[0][0]==previous_last+3600
+                      previous_last=bars[-1][0]
+                      yearly[year].extend(bars)
+                      months.append({
+                          "month":f"{year}-{month:02d}",
+                          "archive_sha256":report["archive_sha256"],
+                          "rows":report["rows"],
+                          "timestamp_input_unit":report["timestamp_input_unit"],
+                      })
+              assert len(months)==24
+              assert len(yearly[2024])==8784
+              assert len(yearly[2025])==8760
+              certification[symbol]={"months_certified":24,"months_rejected":0,"months":months}
+              results[symbol]={}
+              for year in (2024,2025):
+                  bars4h=aggregate_bars(yearly[year],"4h",source_timeframe="1h")
+                  base=simulate_donchian(bars4h,fee=0.001,slippage=0.0005)
+                  ideal=simulate_donchian(bars4h,fee=0.0,slippage=0.0)
+                  stress=simulate_donchian(bars4h,fee=0.002,slippage=0.001)
+                  assert base["safety"]["orders_real"]==0
+                  results[symbol][str(year)]={
+                      "hourly_candles":len(yearly[year]),
+                      "candles_4h":len(bars4h),
+                      "base":base["results"],
+                      "zero_friction":ideal["results"],
+                      "double_cost":stress["results"],
+                  }
+
+          print("BNB_XRP_SOL_CERTIFICATION_SUMMARY")
+          print(json.dumps({k:{"months_certified":v["months_certified"],"months_rejected":v["months_rejected"]} for k,v in certification.items()},indent=2,sort_keys=True))
+          print("DONCHIAN_55_20_4H_BNB_XRP_SOL_RESULTS")
+          print(json.dumps(results,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove multi-asset validation stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS BNB/XRP/SOL PAPER validation used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
