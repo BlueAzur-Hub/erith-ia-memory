@@ -10,6 +10,26 @@
 
 **UPDATE 13 NOVEMBER 2026 — VERIFIED V3.0 RELEASED:** V1/V2 have now been observed working on the owner's USB Firefox; V3.0 public OKX Spot connector is complete and the refreshed evidence JSON is strict-valid, available from the separate V3 release. V3's owner's USB Firefox acceptance remains pending; subsequent expansions belong to V3.1. Cross-check [V3 delivery dossier](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_PUBLIC_SPOT_ACTUAL_WINDOWS_BROWSER_SCIENTIFIC_PAPER_DELIVERY_2026_11_13.md) and the machine-readable continuity registry before making new claims.
 
+## UPDATE 16 NOVEMBER 2026 — PRODUCT ORIENTATION / STRATEGYSPEC
+
+The owner-facing direction has been consolidated after V4.7.0-RC1 Firefox reception.
+
+**Canonical product architecture:**  
+[`SEVEN_HEAVEN_STRATEGY_LAB_PRODUCT_ARCHITECTURE_STRATEGYSPEC_COMPOSER_PAPER_BOT_ROADMAP_2026_11_16.md`](SEVEN_HEAVEN_STRATEGY_LAB_PRODUCT_ARCHITECTURE_STRATEGYSPEC_COMPOSER_PAPER_BOT_ROADMAP_2026_11_16.md)
+
+The key clarification is not a reversal of the existing architecture:
+
+- Seven Heaven remains the independent owner-facing home and primary PAPER runtime.
+- Freqtrade, Hummingbot, FreqAI and future engines remain optional validators/research sidecars.
+- The missing bridge between the current research console and V5 is now explicit: **Guided Mode → Strategy Atlas → Strategy Composer → Seven-owned `StrategySpec` → Seven internal simulator/backtester → Seven PAPER Bot**.
+- `StrategySpec` becomes the portability boundary so strategies do not belong to a particular UI, exchange or external bot framework.
+- The existing V4 scientific capabilities are preserved but should move behind an understandable owner-facing workflow.
+- V4.8 is now oriented toward product usability, StrategySpec, Source Catalog and Composer rather than adding another strategy family.
+- V4.9 targets Atlas integration, reusable templates and automated multi-market/multi-period experiments.
+- V5.0 remains the Seven-owned PAPER Bot milestone.
+- External engines and future ML remain optional and must never make Seven Heaven unusable if they disappear.
+- No real-order authorization is implied.
+
 ## 0. The user's confirmed direction (not an inference)
 
 - A **premium professional-grade local research and bot-building cockpit**, visually in the family of **ERITH.IA Administrator**: navy / gold / cyan, instrument display, responsive graph, configurable indicators and a beautiful accessible technical-reading workspace. User-supplied image of Aerith-5 is a **visual reference only**, not permission to copy protected personal image files into a public repo.
