@@ -277,8 +277,12 @@ jobs:
 
           with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
               for path in sorted(files,key=lambda p:p.as_posix()):
-                  arc=Path("seven_heaven_strategy_lab")/path.relative_to(root)
-                  zf.write(path,arc.as_posix())
+                  arc=(Path("seven_heaven_strategy_lab")/path.relative_to(root)).as_posix()
+                  info=zipfile.ZipInfo(arc,date_time=(2026,11,16,0,0,0))
+                  info.compress_type=zipfile.ZIP_DEFLATED
+                  info.create_system=3
+                  info.external_attr=0o644 << 16
+                  zf.writestr(info,path.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
 
           digest=hashlib.sha256(out.read_bytes()).hexdigest()
           checksum.write_text(f"{digest}  {out.name}\n",encoding="utf-8")
@@ -356,11 +360,11 @@ jobs:
           EOF
 
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release create "$TAG" --repo "$GITHUB_REPOSITORY"               --target "$GITHUB_SHA"               --title "$TITLE"               --notes-file "$NOTES_FILE"               --prerelease               --latest=false
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$TARGET_SHA" --title "$TITLE" --notes-file "$NOTES_FILE" --prerelease --latest=false
           else
-            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY"               --title "$TITLE"               --notes-file "$NOTES_FILE"               --prerelease               --latest=false
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --notes-file "$NOTES_FILE" --prerelease --latest=false
           fi
 
-          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber             delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip             delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
 
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,tagName,isPrerelease,isLatest,assets,targetCommitish
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,tagName,isPrerelease,assets,targetCommitish
