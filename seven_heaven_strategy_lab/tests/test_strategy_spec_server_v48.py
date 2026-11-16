@@ -108,7 +108,7 @@ class StrategySpecServerTests(unittest.TestCase):
             "/api/strategy-spec-run",
             {"strategy_spec_id": spec["id"]},
         )
-        self.assertEqual(status, 200)
+        self.assertEqual(status, 201)
         self.assertEqual(replay["report"]["safety"]["orders_real"], 0)
         self.assertEqual(
             replay["report"]["strategy_spec_fingerprint_sha256"],
