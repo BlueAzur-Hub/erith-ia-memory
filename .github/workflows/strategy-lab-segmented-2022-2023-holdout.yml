@@ -37,8 +37,8 @@ jobs:
           set -euo pipefail
           DOC=../coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_2022_2023_SOURCE_GATE_AND_SEGMENTED_HOLDOUT_PREREG_2026_11_16.md
           test -s "$DOC"
-          grep -q 'Segment B starts at **2023-03-24 16:00 UTC**' "$DOC"
-          grep -q 'only change: RSI entry <45' "$DOC"
+          grep -Fq 'Segment B starts at **2023-03-24 16:00 UTC**' "$DOC"
+          grep -Fq 'only change: RSI entry <45' "$DOC"
       - name: Compile V4.6.2 engine and fixed experiment
         run: |
           set -euo pipefail
