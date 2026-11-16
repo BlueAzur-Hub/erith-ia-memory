@@ -17,6 +17,12 @@ from src.binance_monthly_v46 import MonthlyArchiveError, validate_month
 
 FILE_RE = re.compile(r"^BTCUSDT-1h-(20\d{2})-(0[1-9]|1[0-2])\.zip$")
 
+HISTORICAL_INCIDENT_MONTHS = {
+    (2019, 3), (2019, 5), (2019, 8), (2019, 11),
+    (2020, 2), (2020, 3), (2020, 4), (2020, 6), (2020, 11), (2020, 12),
+    (2021, 2), (2021, 3), (2021, 4), (2021, 8),
+}
+
 
 class InventoryError(ValueError):
     """A local archive set cannot be certified as an inventory."""
@@ -94,6 +100,7 @@ def certify_directory(root: Path, *, require_contiguous: bool = False) -> dict:
             "source_csv_sha256": report["source_csv_sha256"],
             "normalized_csv_sha256": report["normalized_csv_sha256"],
             "source_zip": report["source_zip"],
+            "historical_incident_reported": (key.year, key.month) in HISTORICAL_INCIDENT_MONTHS,
         })
     return {
         "schema": "seven.heaven.binance_long_history_inventory.v1",
