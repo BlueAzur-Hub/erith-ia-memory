@@ -835,7 +835,7 @@
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
   "next_single_owner_check": "No owner runtime check required now. V4.6.2 remains accepted and unchanged. If a future research candidate survives preregistered validation and becomes a runtime change, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ before installation.",
-  "next_developer_task": "Keep V4.6.2 canonical. Do not promote RSI<45, VOLUME_1_2, or EMA 12/32 from observed training/holdout evidence. Next research priority is preregistered TURNOVER CONTROL on a fresh or properly segmented unused historical corpus: cooldown/minimum-hold, multi-candle confirmation, regime gating, or other fixed cost-aware entry controls. Preserve checksum-gated sources, explicit gap boundaries, fresh portfolio reset across source discontinuities, and no interpolation. Only consider V4.7 after a predeclared method survives later/untouched validation.",
+  "next_developer_task": "RESEARCH ONLY: ajouter MACD comme première nouvelle famille expérimentale sur les sources certifiées 2024-2025, avec paramètres gelés avant résultat, causalité next-bar-open, mêmes frais/glissement et aucune intégration runtime V4.6.2. Puis étudier SuperTrend, SAR, Donchian et VWAP une famille à la fois. Le holdout 2025 a déjà été observé pour les baselines: toute nouvelle règle doit être étiquetée comme nouvelle expérience, jamais comme untouched holdout. Spot Grid reste séparé.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -966,5 +966,59 @@
       "adopt_rsi45": false
     },
     "durable_report": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_LONG_HISTORY_PHASE_1_RESULTS_2026_11_16.md"
+  },
+  "long_history_research_2026_11_16": {
+    "binance_btcusdt_1h_2019_2021": {
+      "months_seen": 36,
+      "months_certified": 19,
+      "months_rejected": 17,
+      "status": "SEGMENTED_SOURCE_ONLY",
+      "daily_archive_gap_recovery": "FAILED_SAME_GAPS_OBSERVED",
+      "rule": "NO_INTERPOLATION_NO_GAP_FILL"
+    },
+    "binance_btcusdt_1h_2024_2025": {
+      "months_seen": 24,
+      "months_certified": 24,
+      "months_rejected": 0,
+      "candles_1h": 17544,
+      "status": "CONTIGUOUS_CERTIFIED_LONG_BLOCK",
+      "timestamp_units": [
+        "milliseconds_2024",
+        "microseconds_2025"
+      ]
+    },
+    "evidence": [
+      "SEVEN_HEAVEN_STRATEGY_LAB_BINANCE_REAL_MONTHLY_PILOT_EVIDENCE_2026_11_16.md",
+      "SEVEN_HEAVEN_STRATEGY_LAB_BINANCE_2019_2021_REAL_MONTHLY_INVENTORY_2026_11_16.md",
+      "SEVEN_HEAVEN_STRATEGY_LAB_2024_2025_CERTIFIED_BASELINES_AND_FRICTION_RESULTS_2026_11_16.md"
+    ]
+  },
+  "baseline_2024_2025": {
+    "protocol": "2024 research / 2025 procedural holdout; fixed before first performance read",
+    "costs": {
+      "fee_per_side": 0.001,
+      "slippage_per_side": 0.0005,
+      "capital_usdt": 10000,
+      "timeframe": "1h"
+    },
+    "returns_pct": {
+      "2024": {
+        "EMA_CROSS": 38.78347,
+        "BOLLINGER": 9.41469,
+        "DCA": 62.02402,
+        "HOLD_50": 60.48709,
+        "HOLD_100": 120.97419,
+        "CASH": 0
+      },
+      "2025": {
+        "EMA_CROSS": -56.16032,
+        "BOLLINGER": -22.0638,
+        "DCA": -9.36779,
+        "HOLD_50": -3.23753,
+        "HOLD_100": -6.47506,
+        "CASH": 0
+      }
+    },
+    "conclusion": "NO_ALWAYS_ACTIVE_BASELINE_POSITIVE_ON_BOTH_YEARS; REGIME_AND_FRICTION_MATTER"
   }
 }
