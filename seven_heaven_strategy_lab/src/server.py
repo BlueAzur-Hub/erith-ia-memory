@@ -10,6 +10,10 @@ import uuid
 from urllib.parse import parse_qs, urlsplit
 
 from src.engine import LabError, load_bars, options
+from src.strategy_spec import (
+    build_strategy_spec, explain_strategy_spec, strategy_spec_to_params,
+    validate_strategy_spec,
+)
 from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
 from src.microscope import build_microscope, ALLOWED_WINDOWS
 from src.robustness import study as study_robustness
@@ -114,6 +118,40 @@ def _sources_catalog() -> dict:
     }
 
 
+def _list_strategy_specs() -> list:
+    folder = WORKSPACE / "strategy_specs"
+    if not folder.is_dir():
+        return []
+    records = []
+    for file in sorted(folder.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)[:100]:
+        try:
+            spec = validate_strategy_spec(json.loads(file.read_text(encoding="utf-8")))
+            records.append({
+                "id": spec["id"],
+                "name": spec["name"],
+                "kind": spec["strategy"]["kind"],
+                "timeframe": spec["market"]["timeframe"],
+                "source_id": spec["market"]["source_id"],
+                "fingerprint_sha256": spec["fingerprint_sha256"],
+                "explanation": explain_strategy_spec(spec),
+            })
+        except (OSError, ValueError, KeyError, TypeError, LabError):
+            continue
+    return records
+
+
+def _load_strategy_spec(spec_id: str) -> dict:
+    if not isinstance(spec_id, str) or not re.fullmatch(r"[0-9a-f]{32}", spec_id):
+        raise LabError("StrategySpec : identifiant non autorisé")
+    file = WORKSPACE / "strategy_specs" / (spec_id + ".json")
+    if not file.is_file():
+        raise LabError("StrategySpec introuvable")
+    spec = validate_strategy_spec(json.loads(file.read_text(encoding="utf-8")))
+    if spec["id"] != spec_id:
+        raise LabError("StrategySpec : identifiant incohérent")
+    return spec
+
+
 def _list_records(category: str) -> list:
     folder = WORKSPACE / category
     if not folder.is_dir():
@@ -196,6 +234,8 @@ class Handler(BaseHTTPRequestHandler):
                         "public_pairs": list(ALLOWED_SPOT),
                         "public_history_days": list(ALLOWED_DAYS),
                         "strategy_creator_enabled": True,
+                        "strategy_spec_v1_enabled": True,
+                        "strategy_spec_external_engine_required": False,
                         "market_microscope_enabled": True,
                         "walk_forward_research_enabled": True,
                         "paper_trade_forensics_enabled": True,
@@ -279,6 +319,18 @@ class Handler(BaseHTTPRequestHandler):
                 self._send({"microscope": data})
             except (LabError, SourceError, PublicMarketError, ValueError, TypeError, OSError) as exc:
                 self._send({"error": str(exc)}, 400)
+        elif path == "/api/strategy-specs":
+            self._send({"strategy_specs": _list_strategy_specs()})
+        elif re.fullmatch(r"/api/strategy-specs/[0-9a-f]{32}", path):
+            try:
+                spec = _load_strategy_spec(path.rsplit("/", 1)[-1])
+                self._send({
+                    "strategy_spec": spec,
+                    "params": strategy_spec_to_params(spec),
+                    "explanation": explain_strategy_spec(spec),
+                })
+            except (LabError, ValueError, TypeError, OSError) as exc:
+                self._send({"error": str(exc)}, 404)
         elif path == "/api/profiles":
             self._send({"profiles": _list_records("profiles")})
         elif path == "/api/results":
@@ -304,7 +356,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self._safe_origin():
             return
         path = urlsplit(self.path).path
-        if path not in ("/api/import-reference", "/api/binance-monthly-import", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study"):
+        if path not in ("/api/import-reference", "/api/binance-monthly-import", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study", "/api/strategy-specs", "/api/strategy-spec-run"):
             self._send({"error": "Action interdite"}, 404)
             return
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
@@ -349,6 +401,73 @@ class Handler(BaseHTTPRequestHandler):
                 source, historical = _resolve_source(requested.get("source_id"))
                 report = study_robustness(historical, requested, source)
                 self._send({"research": report}, 200)
+            elif path == "/api/strategy-specs":
+                name = data.get("name", "")
+                requested = data.get("params")
+                if not isinstance(requested, dict):
+                    raise LabError("StrategySpec : paramètres manquants")
+                source, _ = _resolve_source(requested.get("source_id"))
+                timeframe = requested.get("timeframe", "1m")
+                if timeframe not in source["available_timeframes"]:
+                    raise LabError("StrategySpec : timeframe indisponible pour cette source")
+                bound = {**requested, "source_id": source["id"], "timeframe": timeframe}
+                spec = build_strategy_spec(name, bound, spec_id=uuid.uuid4().hex)
+                _atomic_json(WORKSPACE / "strategy_specs" / (spec["id"] + ".json"), spec)
+                self._send({
+                    "strategy_spec": spec,
+                    "params": strategy_spec_to_params(spec),
+                    "explanation": explain_strategy_spec(spec),
+                }, 201)
+            elif path == "/api/strategy-spec-run":
+                spec = _load_strategy_spec(data.get("strategy_spec_id"))
+                requested = strategy_spec_to_params(spec)
+                source, historical = _resolve_source(requested.get("source_id"))
+                timeframe = requested["timeframe"]
+                if timeframe not in source["available_timeframes"]:
+                    raise LabError("StrategySpec : timeframe indisponible pour cette source")
+                run, counterfactual = run_with_diagnostics(
+                    historical, requested, source_timeframe=source["source_timeframe"]
+                )
+                run["data"]["pair"] = source["pair"]
+                run["data"]["base"] = source["base"]
+                run["data"]["quote"] = source["quote"]
+                run["data"]["exchange"] = source["exchange"]
+                run["data"]["source_id"] = source["id"]
+                run["data"]["source_sha256"] = source["sha256"]
+                run["params"]["source_id"] = source["id"]
+                run["results"]["asset_units"] = {"base": source["base"], "quote": source["quote"]}
+                run["results"]["base_inventory"] = run["results"]["base_inventory_btc"]
+                run["results"]["fees_paid_quote"] = run["results"]["fees_paid_usdt"]
+                run["results"]["inventory_marked_quote"] = run["results"]["inventory_marked_usdt"]
+                run["results"]["cash_quote"] = run["results"]["cash_final"]
+                baselines = {}
+                for kind in ("HOLD_50", "CASH"):
+                    if run["params"]["kind"] == kind:
+                        baselines[kind] = run["results"]
+                    else:
+                        baselines[kind] = run_one(
+                            historical,
+                            {**run["params"], "timeframe": run["data"]["timeframe"]},
+                            kind=kind,
+                            source_timeframe=source["source_timeframe"],
+                        )["results"]
+                from datetime import datetime, timezone
+                report = {
+                    "id": uuid.uuid4().hex,
+                    "created_utc": datetime.now(timezone.utc).isoformat(),
+                    "source_sha256": source["sha256"],
+                    "source": source,
+                    "strategy_spec_id": spec["id"],
+                    "strategy_spec_fingerprint_sha256": spec["fingerprint_sha256"],
+                    "strategy_spec_name": spec["name"],
+                    "run": run,
+                    "baselines": baselines,
+                    "counterfactual": counterfactual,
+                    "explanation": explain_strategy_spec(spec),
+                    "safety": {"paper_only": True, "orders_real": 0},
+                }
+                _atomic_json(WORKSPACE / "results" / (report["id"] + ".json"), report)
+                self._send({"report": report}, 201)
             elif path == "/api/profiles":
                 name = data.get("name", "")
                 if not isinstance(name, str) or not 1 <= len(name.strip()) <= 64:

@@ -893,3 +893,54 @@ tbody tr:hover { background: #102f3b; }
  .research-metrics strong{font-size:20px;}
  .research-fold-metric strong{font-size:17px;}
 }
+
+
+/* V4.8 DEV · Guided product preview + Seven-owned StrategySpec v1 */
+.guided-panel{
+  margin:0 auto 20px;max-width:1480px;padding:22px 24px;
+  border:1px solid #355f70;border-radius:16px;
+  background:
+    radial-gradient(circle at 75% 0%,rgba(112,224,218,.09),transparent 36%),
+    linear-gradient(135deg,#0b2535,#0b1d2d 68%,#0d2d3a);
+  box-shadow:inset 0 1px 0 rgba(181,240,231,.06),0 18px 45px rgba(0,0,0,.16);
+}
+.guided-grid{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px;
+}
+.guided-card{
+  min-height:118px;padding:15px 14px;text-align:left;cursor:pointer;
+  border:1px solid #3c6574;border-radius:11px;color:#d8ebe7;
+  background:linear-gradient(145deg,#113346,#0c2637);
+  transition:transform .16s ease,border-color .16s ease,background .16s ease;
+}
+.guided-card:hover,.guided-card:focus-visible{
+  transform:translateY(-2px);border-color:#7cd8ce;
+  background:linear-gradient(145deg,#174358,#0e3042);outline:none;
+}
+.guided-card strong{display:block;color:#f1d49d;font:700 16px Georgia,serif;margin-bottom:8px;}
+.guided-card span{display:block;color:#a9c5cc;font-size:10px;line-height:1.65;}
+.guided-card.future-card{border-color:#6f624d;background:linear-gradient(145deg,#273342,#172c38);}
+.guided-card.future-card strong{color:#e9c782;}
+.strategy-spec-group{
+  margin-top:18px;padding:16px;border:1px solid #5e6b63;border-radius:12px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(217,177,97,.10),transparent 34%),
+    linear-gradient(140deg,#0d2837,#0b2232);
+}
+.strategy-spec-explanation{
+  display:flex;flex-direction:column;gap:7px;margin:13px 0;padding:13px 14px;
+  border:1px solid #6d6049;border-radius:9px;background:rgba(74,56,29,.13);
+}
+.strategy-spec-explanation strong{color:#f0d3a0;font:700 17px Georgia,serif;}
+.strategy-spec-explanation span{color:#bed3d4;font-size:10px;line-height:1.65;}
+.strategy-spec-explanation code{
+  color:#8fdcd4;font-size:9px;overflow-wrap:anywhere;white-space:normal;
+}
+@media(max-width:1100px){
+  .guided-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:620px){
+  .guided-panel{padding:14px;}
+  .guided-grid{grid-template-columns:1fr;}
+  .guided-card{min-height:auto;}
+}
