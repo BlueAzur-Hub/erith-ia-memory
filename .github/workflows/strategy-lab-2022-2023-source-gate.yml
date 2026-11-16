@@ -1,0 +1,53 @@
+name: Strategy Lab 2022-2023 source gate diagnostics only
+
+on:
+  push:
+    branches:
+      - research/strategy-lab-2022-2023-rsi45-holdout-20261116
+    paths:
+      - 'seven_heaven_strategy_lab/tools/source_gate_2022_2023_diagnostics.py'
+      - '.github/workflows/strategy-lab-2022-2023-source-gate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  source-gate-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/tools/source_gate_2022_2023_diagnostics.py
+            /.github/workflows/strategy-lab-2022-2023-source-gate.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile source-only diagnostics
+        run: python -m py_compile tools/source_gate_2022_2023_diagnostics.py
+      - name: Inspect source structure without performance calculation
+        run: python tools/source_gate_2022_2023_diagnostics.py
+      - name: Verify zero performance runs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("source_gate_2022_2023_diagnostics.json").read_text())
+          assert d["months_inspected"]==24
+          assert d["performance_runs"]==0
+          assert d["policy"]=="SOURCE_DIAGNOSTICS_ONLY_NO_STRATEGY_NO_GAP_FILLING"
+          assert d["status"] in ("SOURCE_GATE_PASS","SOURCE_GATE_FAIL")
+          print("PASS source-only gate:",d["status"],d["months_anomalous"],"anomalous months")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: strategy-lab-2022-2023-source-gate-diagnostics
+          path: seven_heaven_strategy_lab/source_gate_2022_2023_diagnostics.json
+          retention-days: 30
+          if-no-files-found: error
