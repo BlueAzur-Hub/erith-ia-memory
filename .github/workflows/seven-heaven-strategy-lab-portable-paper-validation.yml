@@ -660,6 +660,40 @@ jobs:
           print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run preregistered research-only MACD 12-26-9
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_macd import simulate_macd
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          samples = {
+              "2024_RESEARCH_REPLAY": [b for b in bars if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in bars if b[0] >= split],
+          }
+          out = {}
+          for label, sample in samples.items():
+              base = simulate_macd(sample, fee=0.001, slippage=0.0005)
+              ideal = simulate_macd(sample, fee=0.0, slippage=0.0)
+              stress = simulate_macd(sample, fee=0.002, slippage=0.001)
+              out[label] = {
+                  "params": base["params"],
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_MACD_12_26_9_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove 2024-2025 inventory stayed ephemeral
         run: |
           set -euo pipefail
