@@ -49,6 +49,14 @@ class BinanceSymbolMonthTests(unittest.TestCase):
         self.assertEqual(out["timestamp_input_unit"], "microseconds")
         self.assertEqual(out["rows"], 672)
 
+
+    def test_preregistered_multi_asset_2026_microseconds_are_accepted(self):
+        for symbol in ("ETHUSDT", "BNBUSDT", "XRPUSDT", "SOLUSDT"):
+            blob, checksum = fixture(symbol=symbol, year=2026, month=1)
+            out = validate_symbol_month(blob, checksum, symbol=symbol, year=2026, month=1)
+            self.assertEqual(out["timestamp_input_unit"], "microseconds")
+            self.assertEqual(out["rows"], 744)
+
     def test_gap_is_rejected_not_repaired(self):
         blob, checksum = fixture(remove_index=100)
         with self.assertRaises(MonthlyArchiveError):
