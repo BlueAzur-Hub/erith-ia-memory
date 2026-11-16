@@ -1,0 +1,73 @@
+name: Strategy Lab Binance long-history pilot
+
+on:
+  push:
+    branches:
+      - research/strategy-lab-binance-long-history-pilot-20261116
+    paths:
+      - 'seven_heaven_strategy_lab/tools/binance_long_history_pilot.py'
+      - 'seven_heaven_strategy_lab/src/binance_monthly_v46.py'
+      - '.github/workflows/strategy-lab-binance-long-history-pilot.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'seven_heaven_strategy_lab/tools/binance_long_history_pilot.py'
+      - 'seven_heaven_strategy_lab/src/binance_monthly_v46.py'
+      - '.github/workflows/strategy-lab-binance-long-history-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-four-official-months:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+            /.github/workflows/strategy-lab-binance-long-history-pilot.yml
+      - name: Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile validator and pilot
+        run: |
+          set -euo pipefail
+          python -m py_compile src/binance_monthly_v46.py tools/binance_long_history_pilot.py
+      - name: Verify official Binance monthly archives and checksums
+        run: |
+          set -euo pipefail
+          python tools/binance_long_history_pilot.py
+      - name: Strict-parse evidence
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("binance_long_history_pilot_evidence.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          assert data["status"] == "PASS"
+          assert data["months_tested"] == 4
+          assert data["safety"]["orders_real"] == 0
+          assert [x["timestamp_input_unit"] for x in data["reports"]] == [
+              "milliseconds", "milliseconds", "milliseconds", "microseconds"
+          ]
+          assert all(x["missing_bars"] == 0 for x in data["reports"])
+          print("PASS: four official monthly archives independently checksum-validated")
+          PY
+      - name: Upload research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: strategy-lab-binance-long-history-pilot-evidence
+          path: seven_heaven_strategy_lab/binance_long_history_pilot_evidence.json
+          retention-days: 30
+          if-no-files-found: error
