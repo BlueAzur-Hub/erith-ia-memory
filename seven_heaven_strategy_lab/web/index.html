@@ -154,6 +154,7 @@
                 <option value="EMA_CROSS">Croisement de moyennes EMA</option>
                 <option value="CUSTOM_RULES">★ Ma stratégie personnalisée · Créateur V4</option>
                 <option value="BOLLINGER">Retour à la moyenne · Bollinger</option>
+                <option value="DONCHIAN">Cassure de tendance · Donchian</option>
                 <option value="DCA">Achats programmés · DCA</option>
                 <option value="HOLD_50">Buy & Hold · 50 % actif</option>
                 <option value="HOLD_100">Buy & Hold · 100 % actif</option>
@@ -186,6 +187,11 @@
             <label class="field"><span>Bollinger · Période <small>BOUGIES</small></span><input name="bb_period" type="number" min="5" max="250" value="20"></label>
             <label class="field"><span>Écart-type <small>SIGMA</small></span><input name="bb_sigma" type="text" inputmode="decimal" value="2"></label>
           </div>
+          <div id="donchian-fields" class="form-grid dynamic-fields" hidden>
+            <label class="field"><span>Donchian · Entrée <small>PLUS HAUT · BOUGIES</small></span><input name="donchian_entry" type="number" min="3" max="500" value="55"></label>
+            <label class="field"><span>Donchian · Sortie <small>PLUS BAS · BOUGIES</small></span><input name="donchian_exit" type="number" min="2" max="499" value="20"></label>
+            <p class="field-caveat field-wide">Le canal exclut la bougie signal. Une clôture au-dessus du plus haut précédent ouvre fictivement à l'open suivant ; une clôture sous le plus bas précédent ferme à l'open suivant.</p>
+          </div>
           <div id="dca-fields" class="form-grid dynamic-fields" hidden>
             <label class="field"><span>Intervalle d'achat <small>MINUTES</small></span><input name="dca_every" type="number" min="1" max="100000" value="1440"></label>
             <label class="field"><span>Montant de chaque achat <small id="dca-unit">USDT</small></span><input name="dca_quote" type="number" min="5" max="100000" value="50"></label>
@@ -215,7 +221,7 @@
           </div>
           <div class="action-stack">
             <button id="run" type="submit" class="action-button action-primary">▶ <span>Lancer la simulation PAPER</span></button>
-            <button id="compare" type="button" class="action-button action-secondary">≋ <span>Comparer les 6 méthodes sur cet horizon</span></button>
+            <button id="compare" type="button" class="action-button action-secondary">≋ <span>Comparer les 7 méthodes sur cet horizon</span></button>
             <button id="robustness-run" type="button" class="action-button action-robustness">♜ <span>Éprouver cette stratégie dans le temps · Aether Scientific</span></button>
             <button id="filters-run" type="button" class="action-button action-research">◇ <span>Comparer 5 variantes de filtres · Aether Research V4.6</span></button>
           </div>

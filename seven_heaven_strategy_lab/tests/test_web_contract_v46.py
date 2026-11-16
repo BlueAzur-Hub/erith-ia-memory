@@ -42,6 +42,10 @@ class WebContractV46(unittest.TestCase):
         research = (ROOT / "web" / "strategy_research.js").read_text(encoding="utf-8")
         self.assertIn("BUILD 4.6.2", html)
         self.assertIn('id="binance-monthly-import"', html)
+        self.assertIn('value="DONCHIAN"', html)
+        self.assertIn('id="donchian-fields"', html)
+        self.assertIn('name="donchian_entry"', html)
+        self.assertIn('name="donchian_exit"', html)
         for dom_id in ("summary-asset-icon", "summary-market", "summary-exchange",
                        "summary-window", "summary-window-range", "summary-coverage",
                        "summary-resolution", "summary-integrity", "summary-provenance"):

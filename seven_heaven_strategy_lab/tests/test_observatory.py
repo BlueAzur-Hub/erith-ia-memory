@@ -70,11 +70,11 @@ class ObservatoryV2Tests(unittest.TestCase):
         self.assertEqual(r["results"]["return_pct"],0)
         self.assertEqual(r["data"]["rows"],60)
 
-    def test_compare_six_models_preserves_cash_and_inventory(self):
+    def test_compare_seven_models_preserves_cash_and_inventory(self):
         rows=build_bars(1440)
         report=compare(rows,{"kind":"EMA_CROSS","timeframe":"15m","capital":1000})
         self.assertEqual(report["schema"],"seven.heaven.strategy_lab.comparison.v2")
-        self.assertEqual(len(report["rows"]),6)
+        self.assertEqual(len(report["rows"]),7)
         self.assertEqual([r["kind"] for r in report["rows"]],list(ORDER))
         self.assertEqual(report["aggregated_candles"],96)
         self.assertEqual(report["safety"]["orders_real"],0)

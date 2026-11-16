@@ -19,7 +19,7 @@
   const assetName = base => ({BTC:"Bitcoin",ETH:"Ethereum"})[base] || base || "Actif";
   const assetIcon = base => ({BTC:"₿",ETH:"Ξ"})[base] || "◇";
   const kinds = {
-    EMA_CROSS:"Croisement EMA", BOLLINGER:"Bandes Bollinger", DCA:"DCA programmé",
+    EMA_CROSS:"Croisement EMA", BOLLINGER:"Bandes Bollinger", DONCHIAN:"Cassure Donchian", DCA:"DCA programmé",
     HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver les USDT",
     CUSTOM_RULES:"Ma stratégie personnalisée"
   };
@@ -75,6 +75,7 @@
       slippage:number(val("slippage_pct")) / 100,
       ema_fast:number(val("ema_fast")), ema_slow:number(val("ema_slow")),
       bb_period:number(val("bb_period")), bb_sigma:number(val("bb_sigma")),
+      donchian_entry:number(val("donchian_entry")), donchian_exit:number(val("donchian_exit")),
       dca_every:number(val("dca_every")), dca_quote:number(val("dca_quote")),
       entry_rule:val("entry_rule"), filter_rule:val("filter_rule"), exit_rule:val("exit_rule"),
       rsi_period:number(val("rsi_period")), rsi_entry_max:number(val("rsi_entry_max")),
@@ -88,6 +89,7 @@
       kind:p.kind, capital:p.capital, fee_pct:print(p.fee*100,2),
       slippage_pct:print(p.slippage*100,2), ema_fast:p.ema_fast,
       ema_slow:p.ema_slow, bb_period:p.bb_period, bb_sigma:p.bb_sigma,
+      donchian_entry:p.donchian_entry, donchian_exit:p.donchian_exit,
       dca_every:p.dca_every, dca_quote:p.dca_quote,
       entry_rule:p.entry_rule, filter_rule:p.filter_rule, exit_rule:p.exit_rule,
       rsi_period:p.rsi_period, rsi_entry_max:p.rsi_entry_max, rsi_exit_min:p.rsi_exit_min,
@@ -249,10 +251,11 @@
     $("ema-fields").hidden = kind !== "EMA_CROSS" && kind !== "CUSTOM_RULES";
     $("custom-fields").hidden = kind !== "CUSTOM_RULES";
     const cmpButton=$("compare");
-    const cmpLabel=kind === "CUSTOM_RULES" ? "≋ Comparer ma stratégie aux 6 références" : "≋ Comparer les 6 méthodes sur cet horizon";
+    const cmpLabel=kind === "CUSTOM_RULES" ? "≋ Comparer ma stratégie aux 7 références" : "≋ Comparer les 7 méthodes sur cet horizon";
     cmpButton.dataset.defaultText=cmpLabel;
     if(!busy)cmpButton.textContent=cmpLabel;
     $("bb-fields").hidden = kind !== "BOLLINGER";
+    $("donchian-fields").hidden = kind !== "DONCHIAN";
     $("dca-fields").hidden = kind !== "DCA";
     if(!busy)$("filters-run").disabled=!available || !["EMA_CROSS","CUSTOM_RULES"].includes(kind);
   }
@@ -504,7 +507,7 @@
     for(const cmp of list.comparisons.slice(0,12)){
       const button=el("button",undefined,"history-item");
       button.type="button";
-      button.append(el("span",((cmp.rows?.length)||6)+" stratégies · "+cmp.timeframe+" · "+whenLocal(cmp.created_utc)));
+      button.append(el("span",((cmp.rows?.length)||7)+" stratégies · "+cmp.timeframe+" · "+whenLocal(cmp.created_utc)));
       button.append(el("strong","Voir le tableau"));
       button.addEventListener("click",async()=>{
         if(busy)return;

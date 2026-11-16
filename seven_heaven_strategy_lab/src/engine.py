@@ -12,7 +12,7 @@ import csv
 import math
 from pathlib import Path
 
-KINDS = {"HOLD_50", "HOLD_100", "CASH", "EMA_CROSS", "BOLLINGER", "DCA", "CUSTOM_RULES"}
+KINDS = {"HOLD_50", "HOLD_100", "CASH", "EMA_CROSS", "BOLLINGER", "DONCHIAN", "DCA", "CUSTOM_RULES"}
 ENTRY_RULES = {"EMA_CROSS_UP", "PRICE_ABOVE_EMA"}
 FILTER_RULES = {"NONE", "RSI_BELOW", "VOLUME_ABOVE"}
 EXIT_RULES = {"EMA_CROSS_DOWN", "PRICE_BELOW_EMA", "RSI_ABOVE"}
@@ -51,6 +51,8 @@ def options(raw):
         "ema_slow": int(_finite(raw.get("ema_slow", 30), 3, 400, "EMA lente")),
         "bb_period": int(_finite(raw.get("bb_period", 20), 5, 250, "Bollinger période")),
         "bb_sigma": _finite(raw.get("bb_sigma", 2), 0.5, 4, "Bollinger écart-type"),
+        "donchian_entry": int(_finite(raw.get("donchian_entry", 55), 3, 500, "Donchian entrée")),
+        "donchian_exit": int(_finite(raw.get("donchian_exit", 20), 2, 499, "Donchian sortie")),
         "dca_every": int(_finite(raw.get("dca_every", 1440), 1, 100000, "DCA intervalle en minutes")),
         "dca_quote": _finite(raw.get("dca_quote", 50), 5, 100000, "DCA montant USDT"),
         "entry_rule": raw.get("entry_rule", "EMA_CROSS_UP"),
@@ -66,6 +68,8 @@ def options(raw):
     }
     if result["ema_fast"] >= result["ema_slow"]:
         raise LabError("L'EMA rapide doit être inférieure à l'EMA lente")
+    if result["donchian_exit"] >= result["donchian_entry"]:
+        raise LabError("La période de sortie Donchian doit être inférieure à la période d'entrée")
     if not isinstance(result["entry_rule"], str) or result["entry_rule"] not in ENTRY_RULES:
         raise LabError("Règle d'entrée personnalisée non autorisée")
     if not isinstance(result["filter_rule"], str) or result["filter_rule"] not in FILTER_RULES:
@@ -256,6 +260,40 @@ def simulate(bars, raw_options, *, trade_start_index=0):
         elif active and kind == "DCA" and active_index % p["dca_every"] == 0:
             if cash >= MIN_HYPOTHETICAL_NOTIONAL:
                 buy(ts, o, p["dca_quote"], reason="DCA_PERIODIC_ALLOCATION")
+        elif i >= 1 and kind == "DONCHIAN":
+            signal_index = i - 1
+            signal_bar = bars[signal_index]
+            signal_close = signal_bar[4]
+            if quantity == 0 and signal_index >= p["donchian_entry"]:
+                prior = bars[signal_index - p["donchian_entry"]:signal_index]
+                channel_high = max(bar[2] for bar in prior)
+                if active and signal_close > channel_high:
+                    buy(
+                        ts, o, cash,
+                        reason="DONCHIAN_CLOSE_BREAKOUT",
+                        signal_bar_open_utc=signal_bar[0],
+                        signal_context={
+                            "last_closed_price": signal_close,
+                            "prior_entry_channel_high": channel_high,
+                            "entry_period": p["donchian_entry"],
+                            "exit_period": p["donchian_exit"],
+                        },
+                    )
+            elif quantity > 0 and signal_index >= p["donchian_exit"]:
+                prior = bars[signal_index - p["donchian_exit"]:signal_index]
+                channel_low = min(bar[3] for bar in prior)
+                if active and signal_close < channel_low:
+                    sell(
+                        ts, o,
+                        reason="DONCHIAN_CLOSE_BREAKDOWN",
+                        signal_bar_open_utc=signal_bar[0],
+                        signal_context={
+                            "last_closed_price": signal_close,
+                            "prior_exit_channel_low": channel_low,
+                            "entry_period": p["donchian_entry"],
+                            "exit_period": p["donchian_exit"],
+                        },
+                    )
         elif i >= 1 and kind in ("EMA_CROSS", "BOLLINGER"):
             prev_close = bars[i - 1][4]
             if kind == "EMA_CROSS":
