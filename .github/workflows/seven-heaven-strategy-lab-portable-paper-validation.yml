@@ -169,6 +169,1666 @@ jobs:
               print("PASS real public OKX BTC-USDC 240 closed 1h candles; zero orders")
           PY
 
+
+  binance-long-history-real-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Certify three fixed official Binance monthly samples
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-long-history-pilot"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for month in 2019-01 2020-01 2021-05; do
+            file="BTCUSDT-1h-$month.zip"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+            bytes=$(stat -c%s "$root/$file")
+            if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+              echo "Unexpected archive size for $file: $bytes" >&2
+              exit 1
+            fi
+            echo "Downloaded bounded official sample: $file ($bytes bytes)"
+          done
+
+          python -m tools.certify_binance_history "$root"
+
+      - name: Prove no pilot files entered repository workspace
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS runner-temp only; repository workspace untouched"
+
+
+
+  binance-historical-incident-month-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Probe three historically reported Binance months
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-incident-month-probe"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for month in 2019-03 2020-03 2021-04; do
+            file="BTCUSDT-1h-$month.zip"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          PILOT_ROOT="$root" python - <<'PY'
+          import calendar, csv, hashlib, io, json, os, zipfile
+          from collections import Counter
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory
+
+          root = Path(os.environ["PILOT_ROOT"])
+          out = certify_directory(root)
+          expected_months = {"2019-03", "2020-03", "2021-04"}
+          observed_months = {m["month"] for m in out["months"]} | {m["month"] for m in out["rejected"]}
+          assert out["months_seen"] == 3
+          assert observed_months == expected_months
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+
+          diagnostics = []
+          for label in sorted(expected_months):
+              year, month = map(int, label.split("-"))
+              name = f"BTCUSDT-1h-{label}"
+              archive = (root / f"{name}.zip").read_bytes()
+              checksum = (root / f"{name}.zip.CHECKSUM").read_text(encoding="ascii").strip()
+              published = checksum.split()[0].lower()
+              observed = hashlib.sha256(archive).hexdigest()
+              assert observed == published
+              with zipfile.ZipFile(io.BytesIO(archive)) as z:
+                  rows = list(csv.reader(io.StringIO(z.read(f"{name}.csv").decode("utf-8"))))
+              factor = 1000
+              first = int(datetime(year, month, 1, tzinfo=timezone.utc).timestamp())
+              count = calendar.monthrange(year, month)[1] * 24
+              expected = {first + i * 3600 for i in range(count)}
+              stamps = [int(r[0]) // factor for r in rows if r and r[0].isdigit()]
+              counts = Counter(stamps)
+              actual = set(stamps)
+              missing = sorted(expected - actual)
+              outside = sorted(actual - expected)
+              duplicates = sorted(t for t, n in counts.items() if n > 1)
+              unordered = sum(1 for a, b in zip(stamps, stamps[1:]) if b <= a)
+              close_bad = []
+              for row in rows:
+                  if len(row) >= 7 and row[0].isdigit() and row[6].isdigit():
+                      open_raw = int(row[0])
+                      expected_close = open_raw + 3_600_000 - 1
+                      if int(row[6]) != expected_close:
+                          close_bad.append((open_raw // factor, int(row[6]), expected_close))
+              diagnostics.append({
+                  "month": label,
+                  "archive_sha256": observed,
+                  "rows": len(rows),
+                  "expected_rows": count,
+                  "missing_count": len(missing),
+                  "missing_utc_sample": [datetime.fromtimestamp(t, timezone.utc).isoformat() for t in missing[:12]],
+                  "duplicate_count": len(duplicates),
+                  "duplicate_utc_sample": [datetime.fromtimestamp(t, timezone.utc).isoformat() for t in duplicates[:12]],
+                  "outside_month_count": len(outside),
+                  "unordered_or_duplicate_transitions": unordered,
+                  "close_time_mismatch_count": len(close_bad),
+                  "close_time_mismatch_open_utc_sample": [
+                      datetime.fromtimestamp(t[0], timezone.utc).isoformat() for t in close_bad[:12]
+                  ],
+              })
+          print("INCIDENT_DIAGNOSTICS")
+          print(json.dumps(diagnostics, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove incident probe stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS incident probe used runner-temp only; repository workspace untouched"
+
+
+
+  binance-2019-2021-full-month-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Inventory all official Binance BTCUSDT 1h months from 2019 through 2021
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-2019-2021-inventory"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          total_bytes=0
+          for year in 2019 2020 2021; do
+            for mm in $(seq -w 1 12); do
+              file="BTCUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45                 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20                 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+              bytes=$(stat -c%s "$root/$file")
+              if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                echo "Unexpected archive size for $file: $bytes" >&2
+                exit 1
+              fi
+              total_bytes=$((total_bytes + bytes))
+            done
+          done
+          if [ "$total_bytes" -gt 20000000 ]; then
+            echo "Bounded pilot exceeded 20 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+          INVENTORY_ROOT="$root" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory
+          out = certify_directory(Path(os.environ["INVENTORY_ROOT"]))
+          assert out["months_seen"] == 36
+          certified = [
+              {
+                  "month": m["month"],
+                  "rows": m["rows"],
+                  "archive_sha256": m["archive_sha256"],
+                  "normalized_csv_sha256": m["normalized_csv_sha256"],
+                  "historical_incident_reported": m["historical_incident_reported"],
+              }
+              for m in out["months"]
+          ]
+          summary = {
+              "schema": out["schema"],
+              "certified_at_utc": out["certified_at_utc"],
+              "months_seen": out["months_seen"],
+              "months_certified": out["months_certified"],
+              "months_rejected": out["months_rejected"],
+              "certified": certified,
+              "rejected": out["rejected"],
+              "safety": out["safety"],
+          }
+          print("FULL_2019_2021_INVENTORY")
+          print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered Donchian 55-20 on certified 2019-2021 segments
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2019-2021-inventory" python - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root = Path(os.environ["INVENTORY_ROOT"])
+          blocks = {
+              "A_2019_01_02": ["2019-01", "2019-02"],
+              "B_2019_09_10": ["2019-09", "2019-10"],
+              "C_2020_07_10": ["2020-07", "2020-08", "2020-09", "2020-10"],
+              "D_2021_05_07": ["2021-05", "2021-06", "2021-07"],
+              "E_2021_10_11": ["2021-10", "2021-11"],
+          }
+          selected_root = root / "_selected_segments"
+          selected_root.mkdir(exist_ok=True)
+          out = {}
+
+          for label, months in blocks.items():
+              block_dir = selected_root / label
+              block_dir.mkdir()
+              for month in months:
+                  name = f"BTCUSDT-1h-{month}.zip"
+                  shutil.copy2(root / name, block_dir / name)
+                  shutil.copy2(root / f"{name}.CHECKSUM", block_dir / f"{name}.CHECKSUM")
+
+              hourly = load_certified_contiguous_block(block_dir)
+              bars = aggregate_bars(hourly, "4h", source_timeframe="1h")
+              base = simulate_donchian(bars, fee=0.001, slippage=0.0005)
+              ideal = simulate_donchian(bars, fee=0.0, slippage=0.0)
+              stress = simulate_donchian(bars, fee=0.002, slippage=0.001)
+              out[label] = {
+                  "months": months,
+                  "hourly_candles": len(hourly),
+                  "candles_4h": len(bars),
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+
+          print("DONCHIAN_55_20_4H_SEGMENTED_2019_2021_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove full inventory stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS 36-month inventory used runner-temp only; repository workspace untouched"
+
+
+
+  binance-daily-gap-recovery-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Probe official daily archives around monthly gaps
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-daily-gap-probe"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1h"
+          for day in 2019-03-12 2020-03-04 2021-04-20 2021-04-25; do
+            file="BTCUSDT-1h-$day.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          DAILY_ROOT="$root" python - <<'PY'
+          import csv, hashlib, io, json, os, zipfile
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path(os.environ["DAILY_ROOT"])
+          reports = []
+          for zip_path in sorted(root.glob("*.zip")):
+              label = zip_path.stem.removeprefix("BTCUSDT-1h-")
+              checksum_path = zip_path.with_name(zip_path.name + ".CHECKSUM")
+              checksum = checksum_path.read_text(encoding="ascii").strip()
+              expected_sha = checksum.split()[0].lower()
+              archive = zip_path.read_bytes()
+              observed_sha = hashlib.sha256(archive).hexdigest()
+              assert observed_sha == expected_sha
+              csv_name = zip_path.stem + ".csv"
+              with zipfile.ZipFile(io.BytesIO(archive)) as z:
+                  rows = list(csv.reader(io.StringIO(z.read(csv_name).decode("utf-8"))))
+              start = int(datetime.fromisoformat(label).replace(tzinfo=timezone.utc).timestamp())
+              expected = [start + i * 3600 for i in range(24)]
+              stamps = [int(row[0]) // 1000 for row in rows]
+              missing = [t for t in expected if t not in set(stamps)]
+              close_bad = []
+              for row in rows:
+                  opened = int(row[0])
+                  if int(row[6]) != opened + 3_600_000 - 1:
+                      close_bad.append(opened // 1000)
+              reports.append({
+                  "day": label,
+                  "archive_sha256": observed_sha,
+                  "rows": len(rows),
+                  "expected_rows": 24,
+                  "missing_utc": [datetime.fromtimestamp(t, timezone.utc).isoformat() for t in missing],
+                  "close_time_mismatch_open_utc": [
+                      datetime.fromtimestamp(t, timezone.utc).isoformat() for t in close_bad
+                  ],
+                  "complete_strict_day": len(rows) == 24 and stamps == expected and not close_bad,
+              })
+          assert len(reports) == 4
+          print("DAILY_GAP_RECOVERY_DIAGNOSTICS")
+          print(json.dumps(reports, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove daily gap probe stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS daily gap probe used runner-temp only; repository workspace untouched"
+
+
+
+  binance-2024-2025-full-month-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Inventory all official Binance BTCUSDT 1h months from 2024 through 2025
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-2024-2025-inventory"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          total_bytes=0
+          for year in 2024 2025; do
+            for mm in $(seq -w 1 12); do
+              file="BTCUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45                 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20                 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+              bytes=$(stat -c%s "$root/$file")
+              if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                echo "Unexpected archive size for $file: $bytes" >&2
+                exit 1
+              fi
+              total_bytes=$((total_bytes + bytes))
+            done
+          done
+          if [ "$total_bytes" -gt 20000000 ]; then
+            echo "Bounded pilot exceeded 20 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+          INVENTORY_ROOT="$root" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory
+          out = certify_directory(Path(os.environ["INVENTORY_ROOT"]))
+          assert out["months_seen"] == 24
+          units = sorted({m["timestamp_input_unit"] for m in out["months"]})
+          summary = {
+              "schema": out["schema"],
+              "certified_at_utc": out["certified_at_utc"],
+              "months_seen": out["months_seen"],
+              "months_certified": out["months_certified"],
+              "months_rejected": out["months_rejected"],
+              "timestamp_units_certified": units,
+              "certified": [
+                  {
+                      "month": m["month"],
+                      "rows": m["rows"],
+                      "timestamp_input_unit": m["timestamp_input_unit"],
+                      "archive_sha256": m["archive_sha256"],
+                      "normalized_csv_sha256": m["normalized_csv_sha256"],
+                  }
+                  for m in out["months"]
+              ],
+              "rejected": out["rejected"],
+              "safety": out["safety"],
+          }
+          print("FULL_2024_2025_INVENTORY")
+          print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered 2024 versus 2025 PAPER baselines
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from src.observatory import compare
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          y2024 = [b for b in bars if b[0] < split]
+          y2025 = [b for b in bars if b[0] >= split]
+          assert len(y2024) == 8784
+          assert len(y2025) == 8760
+
+          params = {
+              "kind": "EMA_CROSS",
+              "timeframe": "1h",
+              "capital": 10000,
+              "fee": 0.001,
+              "slippage": 0.0005,
+              "ema_fast": 10,
+              "ema_slow": 30,
+              "bb_period": 20,
+              "bb_sigma": 2,
+              "dca_every": 1440,
+              "dca_quote": 50,
+          }
+          reports = {}
+          for label, sample in (("2024_RESEARCH", y2024), ("2025_HOLDOUT", y2025)):
+              report = compare(
+                  sample,
+                  params,
+                  source_timeframe="1h",
+                  source_label=f"Binance Spot BTC/USDT certified {label}",
+              )
+              reports[label] = {
+                  "source_candles": len(sample),
+                  "timeframe": report["timeframe"],
+                  "rows": report["rows"],
+                  "safety": report["safety"],
+              }
+          print("PREREGISTERED_2024_2025_BASELINES")
+          print(json.dumps(reports, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered friction diagnostics
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from src.observatory import ORDER, run_one
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          samples = {
+              "2024_RESEARCH": [b for b in bars if b[0] < split],
+              "2025_HOLDOUT": [b for b in bars if b[0] >= split],
+          }
+          base = {
+              "kind": "EMA_CROSS", "timeframe": "1h", "capital": 10000,
+              "fee": 0.001, "slippage": 0.0005,
+              "ema_fast": 10, "ema_slow": 30,
+              "bb_period": 20, "bb_sigma": 2,
+              "dca_every": 1440, "dca_quote": 50,
+          }
+          out = {}
+          for label, sample in samples.items():
+              rows = []
+              for kind in ORDER:
+                  normal = run_one(sample, base, kind=kind, source_timeframe="1h")
+                  ideal = run_one(sample, base, kind=kind, zero_cost=True, source_timeframe="1h")
+                  stress = run_one(
+                      sample,
+                      {**base, "fee": 0.002, "slippage": 0.001},
+                      kind=kind,
+                      source_timeframe="1h",
+                  )
+                  rows.append({
+                      "kind": kind,
+                      "base_return_pct": normal["results"]["return_pct"],
+                      "zero_friction_return_pct": ideal["results"]["return_pct"],
+                      "double_cost_return_pct": stress["results"]["return_pct"],
+                      "base_fees_usdt": normal["results"]["fees_paid_usdt"],
+                      "base_fills": normal["results"]["hypothetical_fills"],
+                  })
+              out[label] = rows
+          print("PREREGISTERED_FRICTION_DIAGNOSTICS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered research-only MACD 12-26-9
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_macd import simulate_macd
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          samples = {
+              "2024_RESEARCH_REPLAY": [b for b in bars if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in bars if b[0] >= split],
+          }
+          out = {}
+          for label, sample in samples.items():
+              base = simulate_macd(sample, fee=0.001, slippage=0.0005)
+              ideal = simulate_macd(sample, fee=0.0, slippage=0.0)
+              stress = simulate_macd(sample, fee=0.002, slippage=0.001)
+              out[label] = {
+                  "params": base["params"],
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_MACD_12_26_9_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered research-only MACD 12-26-9 in 4h
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_macd import simulate_macd
+          from src.observatory import aggregate_bars
+
+          source = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          samples = {
+              "2024_RESEARCH_REPLAY": [b for b in source if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in source if b[0] >= split],
+          }
+          out = {}
+          for label, hourly in samples.items():
+              bars = aggregate_bars(hourly, "4h", source_timeframe="1h")
+              base = simulate_macd(bars, fee=0.001, slippage=0.0005)
+              ideal = simulate_macd(bars, fee=0.0, slippage=0.0)
+              stress = simulate_macd(bars, fee=0.002, slippage=0.001)
+              out[label] = {
+                  "source_1h_candles": len(hourly),
+                  "aggregated_4h_candles": len(bars),
+                  "params": {**base["params"], "timeframe": "4h"},
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_MACD_12_26_9_4H_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered research-only SuperTrend 20-4
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_supertrend import simulate_supertrend
+          from src.observatory import aggregate_bars
+
+          source = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          years = {
+              "2024_RESEARCH_REPLAY": [b for b in source if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in source if b[0] >= split],
+          }
+          out = {}
+          for label, hourly in years.items():
+              out[label] = {}
+              for timeframe, bars in (
+                  ("1h", hourly),
+                  ("4h", aggregate_bars(hourly, "4h", source_timeframe="1h")),
+              ):
+                  base = simulate_supertrend(bars, fee=0.001, slippage=0.0005)
+                  ideal = simulate_supertrend(bars, fee=0.0, slippage=0.0)
+                  stress = simulate_supertrend(bars, fee=0.002, slippage=0.001)
+                  out[label][timeframe] = {
+                      "source_candles": len(bars),
+                      "params": {**base["params"], "timeframe": timeframe},
+                      "base": base["results"],
+                      "zero_friction": ideal["results"],
+                      "double_cost": stress["results"],
+                      "safety": base["safety"],
+                  }
+                  assert base["safety"]["orders_real"] == 0
+                  assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_SUPERTREND_20_4_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered research-only Parabolic SAR
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_parabolic_sar import simulate_parabolic_sar
+          from src.observatory import aggregate_bars
+
+          source = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          years = {
+              "2024_RESEARCH_REPLAY": [b for b in source if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in source if b[0] >= split],
+          }
+          out = {}
+          for label, hourly in years.items():
+              out[label] = {}
+              for timeframe, bars in (
+                  ("1h", hourly),
+                  ("4h", aggregate_bars(hourly, "4h", source_timeframe="1h")),
+              ):
+                  base = simulate_parabolic_sar(bars, fee=0.001, slippage=0.0005)
+                  ideal = simulate_parabolic_sar(bars, fee=0.0, slippage=0.0)
+                  stress = simulate_parabolic_sar(bars, fee=0.002, slippage=0.001)
+                  out[label][timeframe] = {
+                      "source_candles": len(bars),
+                      "params": {**base["params"], "timeframe": timeframe},
+                      "base": base["results"],
+                      "zero_friction": ideal["results"],
+                      "double_cost": stress["results"],
+                      "safety": base["safety"],
+                  }
+                  assert base["safety"]["orders_real"] == 0
+                  assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_PARABOLIC_SAR_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered descriptive monthly regime map
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.monthly_regime_map import run_monthly_regime_map
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          out = run_monthly_regime_map(
+              bars,
+              {
+                  "kind": "EMA_CROSS",
+                  "capital": 10000,
+                  "fee": 0.001,
+                  "slippage": 0.0005,
+                  "ema_fast": 10,
+                  "ema_slow": 30,
+                  "bb_period": 20,
+                  "bb_sigma": 2,
+                  "dca_every": 1440,
+                  "dca_quote": 50,
+              },
+              warmup_hours=720,
+          )
+          assert out["active_months"] == 23
+          assert out["safety"]["orders_real"] == 0
+          print("MONTHLY_REGIME_MAP_2024_2025")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run preregistered research-only Donchian 55-20
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          source = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          years = {
+              "2024_RESEARCH_REPLAY": [b for b in source if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in source if b[0] >= split],
+          }
+          out = {}
+          for label, hourly in years.items():
+              out[label] = {}
+              for timeframe, bars in (
+                  ("1h", hourly),
+                  ("4h", aggregate_bars(hourly, "4h", source_timeframe="1h")),
+              ):
+                  base = simulate_donchian(bars, fee=0.001, slippage=0.0005)
+                  ideal = simulate_donchian(bars, fee=0.0, slippage=0.0)
+                  stress = simulate_donchian(bars, fee=0.002, slippage=0.001)
+                  out[label][timeframe] = {
+                      "source_candles": len(bars),
+                      "params": {**base["params"], "timeframe": timeframe},
+                      "base": base["results"],
+                      "zero_friction": ideal["results"],
+                      "double_cost": stress["results"],
+                      "safety": base["safety"],
+                  }
+                  assert base["safety"]["orders_real"] == 0
+                  assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_DONCHIAN_55_20_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run fixed-parameter Bollinger mechanism diagnostic
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.bollinger_mechanism import run_bollinger_mechanism_study
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          out = run_bollinger_mechanism_study(
+              bars,
+              {
+                  "kind": "BOLLINGER",
+                  "capital": 10000,
+                  "fee": 0.001,
+                  "slippage": 0.0005,
+                  "bb_period": 20,
+                  "bb_sigma": 2,
+              },
+              warmup_hours=720,
+          )
+          assert out["active_months"] == 23
+          assert out["methodology"]["parameters_optimized"] is False
+          assert out["safety"]["orders_real"] == 0
+          print("BOLLINGER_MECHANISM_2024_2025")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run Bollinger closed-trade anatomy diagnostic
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.bollinger_trade_anatomy import run_bollinger_trade_anatomy
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          out = run_bollinger_trade_anatomy(
+              bars,
+              {
+                  "kind": "BOLLINGER",
+                  "capital": 10000,
+                  "fee": 0.001,
+                  "slippage": 0.0005,
+                  "bb_period": 20,
+                  "bb_sigma": 2,
+              },
+              warmup_hours=720,
+          )
+          assert out["closed_round_trips"] > 0
+          assert out["methodology"]["parameters_optimized"] is False
+          assert out["safety"]["orders_real"] == 0
+          compact = {k: out[k] for k in ("schema","status","params","closed_round_trips","groups","correlations","methodology","safety")}
+          print("BOLLINGER_TRADE_ANATOMY_2024_2025")
+          print(json.dumps(compact, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run Bollinger trade aging diagnostic
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.bollinger_trade_aging import run_bollinger_trade_aging
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          out = run_bollinger_trade_aging(
+              bars,
+              {
+                  "kind": "BOLLINGER",
+                  "capital": 10000,
+                  "fee": 0.001,
+                  "slippage": 0.0005,
+                  "bb_period": 20,
+                  "bb_sigma": 2,
+              },
+              warmup_hours=720,
+          )
+          assert out["methodology"]["time_stop_applied"] is False
+          assert out["safety"]["orders_real"] == 0
+          print("BOLLINGER_TRADE_AGING_2024_2025")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove 2024-2025 inventory stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS 24-month inventory used runner-temp only; repository workspace untouched"
+
+
+
+  binance-ethusdt-2024-2025-donchian-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download bounded official ETHUSDT monthly source set
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-ethusdt-2024-2025"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1h"
+          total_bytes=0
+          for year in 2024 2025; do
+            for mm in $(seq -w 1 12); do
+              file="ETHUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45                 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20                 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+              bytes=$(stat -c%s "$root/$file")
+              if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                echo "Unexpected ETH archive size for $file: $bytes" >&2
+                exit 1
+              fi
+              total_bytes=$((total_bytes + bytes))
+            done
+          done
+          if [ "$total_bytes" -gt 20000000 ]; then
+            echo "ETH source set exceeded 20 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+      - name: Certify ETHUSDT 2024-2025 and run unchanged Donchian 55-20 4h
+        run: |
+          set -euo pipefail
+          ETH_ROOT="$RUNNER_TEMP/binance-ethusdt-2024-2025" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root = Path(os.environ["ETH_ROOT"])
+          yearly = {2024: [], 2025: []}
+          certified = []
+
+          for year in (2024, 2025):
+              previous_last = None
+              for month in range(1, 13):
+                  name = f"ETHUSDT-1h-{year}-{month:02d}.zip"
+                  report = validate_symbol_month(
+                      (root / name).read_bytes(),
+                      (root / f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                      symbol="ETHUSDT",
+                      year=year,
+                      month=month,
+                  )
+                  bars = report["bars"]
+                  if previous_last is not None:
+                      assert bars[0][0] == previous_last + 3600
+                  previous_last = bars[-1][0]
+                  yearly[year].extend(bars)
+                  certified.append({
+                      "month": f"{year}-{month:02d}",
+                      "rows": report["rows"],
+                      "archive_sha256": report["archive_sha256"],
+                      "normalized_csv_sha256": report["normalized_csv_sha256"],
+                      "timestamp_input_unit": report["timestamp_input_unit"],
+                  })
+
+          assert len(certified) == 24
+          assert len(yearly[2024]) == 8784
+          assert len(yearly[2025]) == 8760
+
+          results = {}
+          for year in (2024, 2025):
+              bars4h = aggregate_bars(yearly[year], "4h", source_timeframe="1h")
+              base = simulate_donchian(bars4h, fee=0.001, slippage=0.0005)
+              ideal = simulate_donchian(bars4h, fee=0.0, slippage=0.0)
+              stress = simulate_donchian(bars4h, fee=0.002, slippage=0.001)
+              results[str(year)] = {
+                  "hourly_candles": len(yearly[year]),
+                  "candles_4h": len(bars4h),
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+
+          print("ETHUSDT_2024_2025_CERTIFIED_MONTHS")
+          print(json.dumps(certified, indent=2, ensure_ascii=False, sort_keys=True))
+          print("DONCHIAN_55_20_4H_ETHUSDT_RESULTS")
+          print(json.dumps(results, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove ETH multi-asset validation stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS ETHUSDT source and PAPER study used runner-temp only; workspace untouched"
+
+
+
+  binance-2026-independent-confirmation-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Certify official Binance BTCUSDT 1h January through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-2026-confirmation"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          INVENTORY_ROOT="$root" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory, load_certified_contiguous_block
+
+          root=Path(os.environ["INVENTORY_ROOT"])
+          out=certify_directory(root, require_contiguous=True)
+          assert out["months_seen"]==10
+          assert out["months_certified"]==10
+          assert out["months_rejected"]==0
+          assert all(m["timestamp_input_unit"]=="microseconds" for m in out["months"])
+          bars=load_certified_contiguous_block(root)
+          assert len(bars)==7296
+          summary={
+              "months_seen":out["months_seen"],
+              "months_certified":out["months_certified"],
+              "months_rejected":out["months_rejected"],
+              "first_month":out["months"][0]["month"],
+              "last_month":out["months"][-1]["month"],
+              "rows":len(bars),
+              "first_utc":out["months"][0]["first_utc"],
+              "last_utc":out["months"][-1]["last_utc"],
+              "archive_sha256":[{"month":m["month"],"sha256":m["archive_sha256"]} for m in out["months"]],
+              "safety":out["safety"],
+          }
+          print("BINANCE_2026_INDEPENDENT_CONFIRMATION")
+          print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove 2026 inventory stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS 2026 confirmation inventory used runner-temp only"
+
+
+
+  bollinger-age-negative-selection-confirmation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify 2024 through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-bollinger-age-selection"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for year in 2024 2025; do
+            for mm in $(seq -w 1 12); do
+              file="BTCUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+            done
+          done
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+          EXP_ROOT="$root" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory,load_certified_contiguous_block
+          from tools.bollinger_age_negative_exit import run_selection_experiment
+
+          root=Path(os.environ["EXP_ROOT"])
+          inv=certify_directory(root,require_contiguous=True)
+          assert inv["months_seen"]==34 and inv["months_rejected"]==0
+          bars=load_certified_contiguous_block(root)
+          out=run_selection_experiment(
+              bars,
+              {"kind":"BOLLINGER","capital":10000,"fee":0.001,"slippage":0.0005,"bb_period":20,"bb_sigma":2},
+          )
+          assert out["methodology"]["selection_uses_2024_only"] is True
+          assert out["methodology"]["year_2026_used_for_selection"] is False
+          assert out["safety"]["orders_real"]==0
+          print("BOLLINGER_AGE_NEGATIVE_SELECTION_CONFIRMATION")
+          print(json.dumps(out,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove experiment stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Bollinger age-negative experiment used runner-temp only"
+
+
+
+  binance-bnb-xrp-sol-2024-2025-donchian-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download preregistered BNB XRP SOL monthly source sets
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-bnb-xrp-sol-2024-2025"
+          mkdir -p "$root"
+          total_bytes=0
+          for symbol in BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for year in 2024 2025; do
+              for mm in $(seq -w 1 12); do
+                file="$symbol-1h-$year-$mm.zip"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+                bytes=$(stat -c%s "$root/$symbol/$file")
+                if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                  echo "Unexpected archive size for $file: $bytes" >&2
+                  exit 1
+                fi
+                total_bytes=$((total_bytes + bytes))
+              done
+            done
+          done
+          if [ "$total_bytes" -gt 60000000 ]; then
+            echo "Multi-asset source set exceeded 60 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+      - name: Certify every month and run unchanged Donchian 55-20 4h
+        run: |
+          set -euo pipefail
+          MULTI_ROOT="$RUNNER_TEMP/binance-bnb-xrp-sol-2024-2025" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["MULTI_ROOT"])
+          results={}
+          certification={}
+          for symbol in ("BNBUSDT","XRPUSDT","SOLUSDT"):
+              yearly={2024:[],2025:[]}
+              months=[]
+              for year in (2024,2025):
+                  previous_last=None
+                  for month in range(1,13):
+                      name=f"{symbol}-1h-{year}-{month:02d}.zip"
+                      report=validate_symbol_month(
+                          (root/symbol/name).read_bytes(),
+                          (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                          symbol=symbol,year=year,month=month,
+                      )
+                      bars=report["bars"]
+                      if previous_last is not None:
+                          assert bars[0][0]==previous_last+3600
+                      previous_last=bars[-1][0]
+                      yearly[year].extend(bars)
+                      months.append({
+                          "month":f"{year}-{month:02d}",
+                          "archive_sha256":report["archive_sha256"],
+                          "rows":report["rows"],
+                          "timestamp_input_unit":report["timestamp_input_unit"],
+                      })
+              assert len(months)==24
+              assert len(yearly[2024])==8784
+              assert len(yearly[2025])==8760
+              certification[symbol]={"months_certified":24,"months_rejected":0,"months":months}
+              results[symbol]={}
+              for year in (2024,2025):
+                  bars4h=aggregate_bars(yearly[year],"4h",source_timeframe="1h")
+                  base=simulate_donchian(bars4h,fee=0.001,slippage=0.0005)
+                  ideal=simulate_donchian(bars4h,fee=0.0,slippage=0.0)
+                  stress=simulate_donchian(bars4h,fee=0.002,slippage=0.001)
+                  assert base["safety"]["orders_real"]==0
+                  results[symbol][str(year)]={
+                      "hourly_candles":len(yearly[year]),
+                      "candles_4h":len(bars4h),
+                      "base":base["results"],
+                      "zero_friction":ideal["results"],
+                      "double_cost":stress["results"],
+                  }
+
+          print("BNB_XRP_SOL_CERTIFICATION_SUMMARY")
+          print(json.dumps({k:{"months_certified":v["months_certified"],"months_rejected":v["months_rejected"]} for k,v in certification.items()},indent=2,sort_keys=True))
+          print("DONCHIAN_55_20_4H_BNB_XRP_SOL_RESULTS")
+          print(json.dumps(results,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove multi-asset validation stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS BNB/XRP/SOL PAPER validation used runner-temp only"
+
+
+
+  donchian-mechanism-regime-2024-2025:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify fixed five-asset 2024-2025 panel
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-regime-panel"
+          mkdir -p "$root"
+          for symbol in BTCUSDT ETHUSDT BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for year in 2024 2025; do
+              for mm in $(seq -w 1 12); do
+                file="$symbol-1h-$year-$mm.zip"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+              done
+            done
+          done
+
+      - name: Run preregistered descriptive mechanism/regime study
+        run: |
+          set -euo pipefail
+          PANEL_ROOT="$RUNNER_TEMP/donchian-regime-panel" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.donchian_mechanism_regime import analyze_asset_year,summarize
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["PANEL_ROOT"])
+          reports=[]
+          cert={}
+          for symbol in ("BTCUSDT","ETHUSDT","BNBUSDT","XRPUSDT","SOLUSDT"):
+              cert[symbol]=0
+              for year in (2024,2025):
+                  hourly=[]
+                  previous_last=None
+                  for month in range(1,13):
+                      name=f"{symbol}-1h-{year}-{month:02d}.zip"
+                      r=validate_symbol_month(
+                          (root/symbol/name).read_bytes(),
+                          (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                          symbol=symbol,year=year,month=month,
+                      )
+                      if previous_last is not None:
+                          assert r["bars"][0][0]==previous_last+3600
+                      previous_last=r["bars"][-1][0]
+                      hourly.extend(r["bars"])
+                      cert[symbol]+=1
+                  expected=8784 if year==2024 else 8760
+                  assert len(hourly)==expected
+                  bars4h=aggregate_bars(hourly,"4h",source_timeframe="1h")
+                  reports.append(analyze_asset_year(symbol,year,bars4h))
+          assert all(v==24 for v in cert.values())
+          out=summarize(reports)
+          assert out["windows"]==10
+          assert out["methodology"]["threshold_search_performed"] is False
+          assert out["safety"]["orders_real"]==0
+          compact={
+              "schema":out["schema"],
+              "status":out["status"],
+              "windows":out["windows"],
+              "closed_trades":out["closed_trades"],
+              "overall_trade_groups":out["overall_trade_groups"],
+              "by_window":out["by_window"],
+              "descriptive_regime_correlations":out["descriptive_regime_correlations"],
+              "methodology":out["methodology"],
+              "safety":out["safety"],
+              "certified_months":cert,
+          }
+          print("DONCHIAN_MECHANISM_REGIME_2024_2025")
+          print(json.dumps(compact,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove mechanism study stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Donchian mechanism/regime study used runner-temp only"
+
+
+
+  donchian-btc-2026-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify BTCUSDT January through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-btc-2026"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          BTC26_ROOT="$root" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory,load_certified_contiguous_block
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["BTC26_ROOT"])
+          inv=certify_directory(root,require_contiguous=True)
+          assert inv["months_seen"]==10 and inv["months_rejected"]==0
+          hourly=load_certified_contiguous_block(root)
+          assert len(hourly)==7296
+          bars4h=aggregate_bars(hourly,"4h",source_timeframe="1h")
+          assert len(bars4h)==1824
+
+          base=simulate_donchian(bars4h,fee=0.001,slippage=0.0005)
+          ideal=simulate_donchian(bars4h,fee=0.0,slippage=0.0)
+          stress=simulate_donchian(bars4h,fee=0.002,slippage=0.001)
+          assert base["safety"]["orders_real"]==0
+          out={
+              "period":"2026-01-01_to_2026-10-31",
+              "hourly_candles":len(hourly),
+              "candles_4h":len(bars4h),
+              "base":base["results"],
+              "zero_friction":ideal["results"],
+              "double_cost":stress["results"],
+              "safety":base["safety"],
+          }
+          print("DONCHIAN_55_20_4H_BTC_2026_RESULTS")
+          print(json.dumps(out,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove BTC 2026 replay stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Donchian BTC 2026 replay used runner-temp only"
+
+
+
+  donchian-eth-bnb-xrp-sol-2026-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download fixed ETH BNB XRP SOL January through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-multi-2026"
+          mkdir -p "$root"
+          for symbol in ETHUSDT BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for mm in $(seq -w 1 10); do
+              file="$symbol-1h-2026-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+            done
+          done
+
+      - name: Certify all sources and run unchanged Donchian
+        run: |
+          set -euo pipefail
+          MULTI26_ROOT="$RUNNER_TEMP/donchian-multi-2026" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["MULTI26_ROOT"])
+          out={}
+          cert={}
+          for symbol in ("ETHUSDT","BNBUSDT","XRPUSDT","SOLUSDT"):
+              hourly=[]
+              previous_last=None
+              cert[symbol]=0
+              for month in range(1,11):
+                  name=f"{symbol}-1h-2026-{month:02d}.zip"
+                  r=validate_symbol_month(
+                      (root/symbol/name).read_bytes(),
+                      (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                      symbol=symbol,year=2026,month=month,
+                  )
+                  if previous_last is not None:
+                      assert r["bars"][0][0]==previous_last+3600
+                  previous_last=r["bars"][-1][0]
+                  hourly.extend(r["bars"])
+                  cert[symbol]+=1
+              assert len(hourly)==7296
+              bars4h=aggregate_bars(hourly,"4h",source_timeframe="1h")
+              base=simulate_donchian(bars4h,fee=0.001,slippage=0.0005)
+              ideal=simulate_donchian(bars4h,fee=0.0,slippage=0.0)
+              stress=simulate_donchian(bars4h,fee=0.002,slippage=0.001)
+              assert base["safety"]["orders_real"]==0
+              out[symbol]={
+                  "hourly_candles":len(hourly),
+                  "candles_4h":len(bars4h),
+                  "base":base["results"],
+                  "zero_friction":ideal["results"],
+                  "double_cost":stress["results"],
+              }
+          assert all(v==10 for v in cert.values())
+          print("DONCHIAN_55_20_4H_ETH_BNB_XRP_SOL_2026_RESULTS")
+          print(json.dumps({"certified_months":cert,"results":out},indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove multi-asset 2026 replay stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Donchian multi-asset 2026 replay used runner-temp only"
+
+
+
+  donchian-equal-sleeve-portfolio-2026:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify fixed five-asset Jan-Oct 2026 panel
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-equal-sleeves-2026"
+          mkdir -p "$root"
+          for symbol in BTCUSDT ETHUSDT BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for mm in $(seq -w 1 10); do
+              file="$symbol-1h-2026-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+            done
+          done
+
+      - name: Run fixed equal-sleeve Donchian portfolio
+        run: |
+          set -euo pipefail
+          PANEL_ROOT="$RUNNER_TEMP/donchian-equal-sleeves-2026" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.donchian_equal_sleeve_portfolio import FIXED_SYMBOLS,equal_sleeve_portfolio
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["PANEL_ROOT"])
+          panel={}
+          cert={}
+          for symbol in FIXED_SYMBOLS:
+              hourly=[]; previous_last=None; cert[symbol]=0
+              for month in range(1,11):
+                  name=f"{symbol}-1h-2026-{month:02d}.zip"
+                  r=validate_symbol_month(
+                      (root/symbol/name).read_bytes(),
+                      (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                      symbol=symbol,year=2026,month=month,
+                  )
+                  if previous_last is not None:
+                      assert r["bars"][0][0]==previous_last+3600
+                  previous_last=r["bars"][-1][0]
+                  hourly.extend(r["bars"]); cert[symbol]+=1
+              assert len(hourly)==7296
+              panel[symbol]=aggregate_bars(hourly,"4h",source_timeframe="1h")
+              assert len(panel[symbol])==1824
+          assert all(v==10 for v in cert.values())
+          out=equal_sleeve_portfolio(panel,total_capital=10000,fee=0.001,slippage=0.0005)
+          assert out["safety"]["orders_real"]==0
+          compact={k:out[k] for k in ("schema","status","params","portfolio","sleeves","btc_only_reference","methodology","safety")}
+          print("DONCHIAN_EQUAL_SLEEVE_PORTFOLIO_2026")
+          print(json.dumps(compact,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove portfolio study stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS equal-sleeve portfolio used runner-temp only"
+
+
+
+  btc-donchian-bollinger-50-50-portfolio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify BTC 2024 through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/btc-dual-mechanism"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for year in 2024 2025; do
+            for mm in $(seq -w 1 12); do
+              file="BTCUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+            done
+          done
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+      - name: Run fixed 50-50 mechanism portfolio on three independent periods
+        run: |
+          set -euo pipefail
+          BTC_ROOT="$RUNNER_TEMP/btc-dual-mechanism" python - <<'PY'
+          import json,os
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory,load_certified_contiguous_block
+          from tools.btc_dual_mechanism_portfolio import run_dual_mechanism_portfolio
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["BTC_ROOT"])
+          inv=certify_directory(root,require_contiguous=True)
+          assert inv["months_seen"]==34 and inv["months_rejected"]==0
+          hourly=load_certified_contiguous_block(root)
+          t=lambda y,m,d:int(datetime(y,m,d,tzinfo=timezone.utc).timestamp())
+          periods={
+              "2024":[b for b in hourly if t(2024,1,1)<=b[0]<t(2025,1,1)],
+              "2025":[b for b in hourly if t(2025,1,1)<=b[0]<t(2026,1,1)],
+              "2026_JAN_OCT":[b for b in hourly if t(2026,1,1)<=b[0]<t(2026,11,1)],
+          }
+          out={}
+          for label,rows in periods.items():
+              bars4h=aggregate_bars(rows,"4h",source_timeframe="1h")
+              report=run_dual_mechanism_portfolio(bars4h,total_capital=10000,fee=0.001,slippage=0.0005)
+              assert report["safety"]["orders_real"]==0
+              out[label]={
+                  "bars_4h":len(bars4h),
+                  "portfolio":report["portfolio"],
+                  "sleeves":report["sleeves"],
+                  "references":report["references"],
+                  "methodology":report["methodology"],
+              }
+          print("BTC_DONCHIAN_BOLLINGER_50_50_PORTFOLIO_RESULTS")
+          print(json.dumps(out,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove dual-mechanism study stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS BTC dual-mechanism portfolio used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
