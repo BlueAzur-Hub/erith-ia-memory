@@ -66,6 +66,14 @@ class LongHistoryCertifierTests(unittest.TestCase):
             self.assertEqual(out["months_rejected"], 1)
             self.assertTrue(any(x in out["rejected"][0]["reason"] for x in ("Mois incomplet", "Bougies manquantes")))
 
+    def test_historically_reported_month_is_flagged_not_auto_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_fixture(root, 2020, 3)
+            out = certify_directory(root)
+            self.assertEqual(out["months_certified"], 1)
+            self.assertTrue(out["months"][0]["historical_incident_reported"])
+
     def test_missing_checksum_blocks_inventory(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
