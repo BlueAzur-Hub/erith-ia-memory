@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Review PR #774 and decide whether the V4.8 StrategySpec v1 foundation should be merged into main. After merge, the next product step is Source Catalog v1 expansion and guided Strategy Atlas/Composer integration—not another strategy backtest.",
-  "next_developer_task": "V4.8 StrategySpec v1 first engineering gate is READY FOR OWNER REVIEW in PR #774. Do not add strategies. Review the Guided Mode preview and StrategySpec create/save/reload/replay flow. CI run 43809018393 passed Linux 108 tests, Windows Python 3.13 real CMD launch and OKX public smoke. src/engine.py is unchanged. No merge/release/USB action without owner decision.",
+  "next_single_owner_check": "No merge decision remains for StrategySpec v1. The next owner-facing decision is whether to begin V4.8 gate 2: Source Catalog v1 + guided Atlas/Composer integration. No V4.8 release or USB install has been authorized.",
+  "next_developer_task": "V4.8 Product Foundation gate 1 is merged to main at e6c95b687aa72be3560e11d598253d52f1a41609 and post-merge workflow 43809401650 is fully green. StrategySpec v1, guided preview, local save/reload/replay are now in main. Do not add another strategy family. Next engineering target: Source Catalog v1 + Strategy Atlas/Composer guided integration, on a new isolated branch. Keep external engines optional and src/engine.py financial semantics unchanged unless separately justified.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -1311,12 +1311,12 @@
       "no_llm_chat_as_only_project_decision_storage"
     ],
     "first_engineering_gate": {
-      "status": "READY_FOR_OWNER_REVIEW",
+      "status": "MERGED_MAIN_POST_MERGE_VALIDATED",
       "branch": "feature/strategy-lab-v4-8-strategyspec-v1",
       "pr": 774,
       "head_sha": "9f07cd1d9dcb1d1b1e840ba2cd12cb16af0d845d",
       "workflow_run": 43809018393,
-      "validation": "LINUX_108_TESTS_PASS_WINDOWS_PY313_CMD_PASS_OKX_PUBLIC_SMOKE_PASS",
+      "validation": "POST_MERGE_LINUX_PASS_WINDOWS_PY313_REAL_CMD_PASS_OKX_PUBLIC_SMOKE_PASS",
       "files_changed": 8,
       "financial_engine_modified": false,
       "engine_py_modified": false,
@@ -1326,9 +1326,16 @@
       "guided_mode_preview": true,
       "external_engine_required": false,
       "real_orders": 0,
-      "merged": false,
+      "merged": true,
       "release_created": false,
-      "usb_install_authorized": false
+      "usb_install_authorized": false,
+      "premerge_head_sha": "9f07cd1d9dcb1d1b1e840ba2cd12cb16af0d845d",
+      "merge_commit_sha": "e6c95b687aa72be3560e11d598253d52f1a41609",
+      "premerge_workflow_run": 43809018393,
+      "postmerge_workflow_run": 43809401650,
+      "merged_to": "main",
+      "stable_runtime_modified": false,
+      "product_phase": "V4_8_FOUNDATION_IN_MAIN_NOT_RELEASED"
     }
   }
 }
