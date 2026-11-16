@@ -45,8 +45,8 @@ def validate_month(archive: bytes, checksum: str, *, year: int, month: int) -> d
     Returns a provenance report plus engine-compatible tuples (UTC seconds,
     open, high, low, close, base volume), without touching any storage.
     """
-    if type(year) is not int or type(month) is not int or not 2019 <= year <= 2025 or not 1 <= month <= 12:
-        raise MonthlyArchiveError("Année/mois hors du pilote 2019-2025")
+    if type(year) is not int or type(month) is not int or not 2019 <= year <= 2026 or not 1 <= month <= 12:
+        raise MonthlyArchiveError("Année/mois hors du pilote de recherche 2019-2026")
     if not isinstance(archive, bytes) or not 0 < len(archive) <= MAX_ZIP_BYTES:
         raise MonthlyArchiveError("Archive ZIP absente ou trop volumineuse")
     if not isinstance(checksum, str) or len(checksum) > 512:
