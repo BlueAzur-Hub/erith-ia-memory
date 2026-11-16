@@ -24,6 +24,8 @@
     CUSTOM_RULES:"Ma stratégie personnalisée"
   };
   let profiles = [];
+  let strategySpecs = [];
+  let selectedStrategySpec = null;
   let busy = false;
   let available=false;
   let binanceAvailable=false;
@@ -50,7 +52,7 @@
   }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","binance-monthly-import","okx-import","run","compare","robustness-run","filters-run","save-profile"]) {
+    for (const id of ["import","binance-monthly-import","okx-import","run","compare","robustness-run","filters-run","save-profile","save-strategy-spec","replay-strategy-spec"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare" || id === "filters-run") && !available)
@@ -478,6 +480,39 @@
     for (const profile of profiles) select.append(new Option(
       profile.name+" · "+(profile.params.timeframe||"1m"),profile.id));
   }
+  function renderStrategySpec(payload) {
+    const spec=payload.strategy_spec;
+    const explanation=payload.explanation;
+    selectedStrategySpec=spec;
+    $("strategy-spec-explanation").hidden=false;
+    $("strategy-spec-title").textContent=explanation.title+" · "+explanation.kind+" · "+explanation.timeframe;
+    $("strategy-spec-intent").textContent="Objectif : "+explanation.intent;
+    $("strategy-spec-execution").textContent=explanation.execution;
+    $("strategy-spec-weakness").textContent="Limite : "+explanation.weakness;
+    $("strategy-spec-fingerprint").textContent="SHA-256 "+spec.fingerprint_sha256;
+    $("replay-strategy-spec").disabled=busy;
+  }
+  async function refreshStrategySpecs(preferId=null) {
+    const d=await api("/api/strategy-specs");
+    strategySpecs=d.strategy_specs||[];
+    const select=$("saved-strategy-specs");
+    const current=preferId||select.value;
+    select.replaceChildren(new Option("Choisir un StrategySpec…",""));
+    for(const spec of strategySpecs){
+      select.append(new Option(spec.name+" · "+(kinds[spec.kind]||spec.kind)+" · "+spec.timeframe,spec.id));
+    }
+    if(current && strategySpecs.some(x=>x.id===current)){
+      select.value=current;
+      const payload=await api("/api/strategy-specs/"+current);
+      renderStrategySpec(payload);
+      if(payload.params)chooseParams(payload.params);
+      $("strategy-spec-name").value=payload.strategy_spec.name;
+    } else if(!strategySpecs.length) {
+      selectedStrategySpec=null;
+      $("strategy-spec-explanation").hidden=true;
+      $("replay-strategy-spec").disabled=true;
+    }
+  }
   async function refreshHistory() {
     const list=await api("/api/results");
     const root=$("history");root.replaceChildren();
@@ -711,6 +746,68 @@
     const profile=profiles.find(p=>p.id===event.target.value);
     if(profile){chooseParams(profile.params);$("profile-name").value=profile.name;}
   });
+  $("saved-strategy-specs").addEventListener("change",async event=>{
+    const id=event.target.value;
+    if(!id){
+      selectedStrategySpec=null;
+      $("strategy-spec-explanation").hidden=true;
+      $("replay-strategy-spec").disabled=true;
+      return;
+    }
+    try{
+      const payload=await api("/api/strategy-specs/"+id);
+      renderStrategySpec(payload);
+      if(payload.params)chooseParams(payload.params);
+      $("strategy-spec-name").value=payload.strategy_spec.name;
+      notice("StrategySpec rechargé : la stratégie, la source, le timeframe et les coûts ont été restaurés.","success");
+    }catch(e){notice(e.message,"error");}
+  });
+  $("save-strategy-spec").addEventListener("click",async()=>{
+    if(busy)return;
+    const name=$("strategy-spec-name").value.trim();
+    if(!name){notice("Donne un nom au StrategySpec avant de l'enregistrer.","error");return;}
+    let params;try{params=requestParams();}catch(e){notice(e.message,"error");return;}
+    setBusy(true,"Création StrategySpec…");
+    try{
+      const payload=await api("/api/strategy-specs",{name,params});
+      renderStrategySpec(payload);
+      await refreshStrategySpecs(payload.strategy_spec.id);
+      notice("StrategySpec v1 créé et conservé localement. Aucun moteur externe requis.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  });
+  $("replay-strategy-spec").addEventListener("click",async()=>{
+    if(busy||!selectedStrategySpec)return;
+    setBusy(true,"Replay StrategySpec…");
+    notice("Rejeu du StrategySpec par le moteur Seven existant, sans modification de sa logique financière…");
+    try{
+      const payload=await api("/api/strategy-spec-run",{strategy_spec_id:selectedStrategySpec.id});
+      renderRun(payload.report);
+      await refreshHistory();
+      notice("StrategySpec rejoué et rapport enregistré dans le Coffre local. Même moteur Seven, zéro ordre réel.","success");
+      $("results").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
+  });
+  $("guide-create").addEventListener("click",()=>{
+    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode guidé : compose d'abord la stratégie, puis crée son StrategySpec v1.","success");
+  });
+  $("guide-learn").addEventListener("click",()=>{
+    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode guidé : choisis une famille. Une fois le StrategySpec créé, Seven affiche son objectif, son exécution et sa faiblesse principale.","success");
+  });
+  $("guide-compare").addEventListener("click",()=>{
+    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode guidé : choisis la source et la stratégie ; le Comparateur conservera les mêmes bougies, coûts et capital.","success");
+  });
+  $("guide-paper").addEventListener("click",()=>{
+    notice("Robot PAPER Seven : étape V5 planifiée. Aucun automate temps réel n'est activé dans cette branche V4.8.","success");
+  });
+  $("guide-expert").addEventListener("click",()=>{
+    document.querySelector(".source-panel").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode expert : accès aux sources, coûts, timeframes, Scientific, Forensics et contrôles détaillés.","success");
+  });
   $("import").addEventListener("click",async()=>{
     if(busy)return;
     setBusy(true,"Vérification des données…");
@@ -740,11 +837,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(health.version!=="4.6.2" || !health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled || !health.certified_binance_monthly_enabled || !health.explicit_no_trade_warmup_enabled)throw new Error("Le serveur Python V4.6.2 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
-      const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
+      if(health.version!=="4.6.2" || !health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled || !health.certified_binance_monthly_enabled || !health.explicit_no_trade_warmup_enabled || !health.strategy_spec_v1_enabled)throw new Error("Le serveur de développement V4.8 StrategySpec n'est pas actif. Ferme l'ancien serveur puis relance cette branche.");
+      const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory(),refreshStrategySpecs()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.6.2 opérationnel · Tous les résultats sont réalignés lors d'un changement de source · Archive V1/V2 conservée · Binance mensuel certifiable · OKX public disponible.":
-        "Seven Heaven V4.6.2 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.8 DEV · StrategySpec v1 actif · moteur financier V4.6.2 préservé · archives et Coffre conservés.":
+        "Seven Heaven V4.8 DEV · StrategySpec v1 actif. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();
