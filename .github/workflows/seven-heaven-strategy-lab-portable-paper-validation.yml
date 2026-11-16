@@ -612,6 +612,54 @@ jobs:
           print(json.dumps(reports, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run preregistered friction diagnostics
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from src.observatory import ORDER, run_one
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          samples = {
+              "2024_RESEARCH": [b for b in bars if b[0] < split],
+              "2025_HOLDOUT": [b for b in bars if b[0] >= split],
+          }
+          base = {
+              "kind": "EMA_CROSS", "timeframe": "1h", "capital": 10000,
+              "fee": 0.001, "slippage": 0.0005,
+              "ema_fast": 10, "ema_slow": 30,
+              "bb_period": 20, "bb_sigma": 2,
+              "dca_every": 1440, "dca_quote": 50,
+          }
+          out = {}
+          for label, sample in samples.items():
+              rows = []
+              for kind in ORDER:
+                  normal = run_one(sample, base, kind=kind, source_timeframe="1h")
+                  ideal = run_one(sample, base, kind=kind, zero_cost=True, source_timeframe="1h")
+                  stress = run_one(
+                      sample,
+                      {**base, "fee": 0.002, "slippage": 0.001},
+                      kind=kind,
+                      source_timeframe="1h",
+                  )
+                  rows.append({
+                      "kind": kind,
+                      "base_return_pct": normal["results"]["return_pct"],
+                      "zero_friction_return_pct": ideal["results"]["return_pct"],
+                      "double_cost_return_pct": stress["results"]["return_pct"],
+                      "base_fees_usdt": normal["results"]["fees_paid_usdt"],
+                      "base_fills": normal["results"]["hypothetical_fills"],
+                  })
+              out[label] = rows
+          print("PREREGISTERED_FRICTION_DIAGNOSTICS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove 2024-2025 inventory stayed ephemeral
         run: |
           set -euo pipefail
