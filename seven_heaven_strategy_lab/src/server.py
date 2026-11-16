@@ -324,7 +324,11 @@ class Handler(BaseHTTPRequestHandler):
         elif re.fullmatch(r"/api/strategy-specs/[0-9a-f]{32}", path):
             try:
                 spec = _load_strategy_spec(path.rsplit("/", 1)[-1])
-                self._send({"strategy_spec": spec, "explanation": explain_strategy_spec(spec)})
+                self._send({
+                    "strategy_spec": spec,
+                    "params": strategy_spec_to_params(spec),
+                    "explanation": explain_strategy_spec(spec),
+                })
             except (LabError, ValueError, TypeError, OSError) as exc:
                 self._send({"error": str(exc)}, 404)
         elif path == "/api/profiles":
@@ -409,7 +413,11 @@ class Handler(BaseHTTPRequestHandler):
                 bound = {**requested, "source_id": source["id"], "timeframe": timeframe}
                 spec = build_strategy_spec(name, bound, spec_id=uuid.uuid4().hex)
                 _atomic_json(WORKSPACE / "strategy_specs" / (spec["id"] + ".json"), spec)
-                self._send({"strategy_spec": spec, "explanation": explain_strategy_spec(spec)}, 201)
+                self._send({
+                    "strategy_spec": spec,
+                    "params": strategy_spec_to_params(spec),
+                    "explanation": explain_strategy_spec(spec),
+                }, 201)
             elif path == "/api/strategy-spec-run":
                 spec = _load_strategy_spec(data.get("strategy_spec_id"))
                 requested = strategy_spec_to_params(spec)
@@ -427,13 +435,34 @@ class Handler(BaseHTTPRequestHandler):
                 run["data"]["source_id"] = source["id"]
                 run["data"]["source_sha256"] = source["sha256"]
                 run["params"]["source_id"] = source["id"]
+                run["results"]["asset_units"] = {"base": source["base"], "quote": source["quote"]}
+                run["results"]["base_inventory"] = run["results"]["base_inventory_btc"]
+                run["results"]["fees_paid_quote"] = run["results"]["fees_paid_usdt"]
+                run["results"]["inventory_marked_quote"] = run["results"]["inventory_marked_usdt"]
+                run["results"]["cash_quote"] = run["results"]["cash_final"]
+                baselines = {}
+                for kind in ("HOLD_50", "CASH"):
+                    if run["params"]["kind"] == kind:
+                        baselines[kind] = run["results"]
+                    else:
+                        baselines[kind] = run_one(
+                            historical,
+                            {**run["params"], "timeframe": run["data"]["timeframe"]},
+                            kind=kind,
+                            source_timeframe=source["source_timeframe"],
+                        )["results"]
+                from datetime import datetime, timezone
                 report = {
+                    "id": uuid.uuid4().hex,
+                    "created_utc": datetime.now(timezone.utc).isoformat(),
+                    "source_sha256": source["sha256"],
+                    "source": source,
                     "strategy_spec_id": spec["id"],
                     "strategy_spec_fingerprint_sha256": spec["fingerprint_sha256"],
                     "strategy_spec_name": spec["name"],
                     "run": run,
+                    "baselines": baselines,
                     "counterfactual": counterfactual,
-                    "source": source,
                     "explanation": explain_strategy_spec(spec),
                     "safety": {"paper_only": True, "orders_real": 0},
                 }
