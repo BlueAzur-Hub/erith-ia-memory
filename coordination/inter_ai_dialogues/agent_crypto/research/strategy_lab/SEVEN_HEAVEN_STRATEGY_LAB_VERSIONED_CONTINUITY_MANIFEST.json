@@ -835,7 +835,7 @@
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
   "next_single_owner_check": "No owner runtime check required now. V4.6.2 remains accepted and unchanged. If a future research candidate survives preregistered validation and becomes a runtime change, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ before installation.",
-  "next_developer_task": "RESEARCH ONLY: ajouter MACD comme première nouvelle famille expérimentale sur les sources certifiées 2024-2025, avec paramètres gelés avant résultat, causalité next-bar-open, mêmes frais/glissement et aucune intégration runtime V4.6.2. Puis étudier SuperTrend, SAR, Donchian et VWAP une famille à la fois. Le holdout 2025 a déjà été observé pour les baselines: toute nouvelle règle doit être étiquetée comme nouvelle expérience, jamais comme untouched holdout. Spot Grid reste séparé.",
+  "next_developer_task": "RESEARCH ONLY: falsifier Donchian 55/20 4h sans tuning. Étendre la validation multi-actif à un panier fixé avant résultat (BNB/USDT, XRP/USDT, SOL/USDT après BTC/ETH), certifier chaque source avant simulation, conserver tous les échecs et caractériser les régimes des fenêtres positives/négatives. Donchian reste RESEARCH_CANDIDATE_NOT_RUNTIME_INTEGRATED. Ne pas intégrer au runtime V4.6.2, ne pas créer V4.7 automatiquement. VWAP et Spot Grid restent en attente.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -1020,5 +1020,92 @@
       }
     },
     "conclusion": "NO_ALWAYS_ACTIVE_BASELINE_POSITIVE_ON_BOTH_YEARS; REGIME_AND_FRICTION_MATTER"
+  },
+  "donchian_55_20_4h_research_2026_11_16": {
+    "status": "RESEARCH_CANDIDATE_NOT_RUNTIME_INTEGRATED",
+    "rule": {
+      "entry": "close > prior 55-bar high channel",
+      "exit": "close < prior 20-bar low channel",
+      "timeframe": "4h",
+      "execution": "previous closed candle signal -> next bar open",
+      "fee_per_side": 0.001,
+      "slippage_per_side": 0.0005,
+      "capital_per_window_usdt": 10000
+    },
+    "btc_usdt": {
+      "2024": {
+        "return_pct": 71.39078,
+        "double_cost_pct": 64.34143,
+        "fills": 28,
+        "max_drawdown_pct": -21.89753
+      },
+      "2025": {
+        "return_pct": 8.12061,
+        "double_cost_pct": 4.29749,
+        "fills": 24,
+        "max_drawdown_pct": -11.47856
+      },
+      "2019-01_to_2019-02": {
+        "return_pct": 2.6896,
+        "double_cost_pct": 2.382,
+        "fills": 2,
+        "max_drawdown_pct": -9.5236
+      },
+      "2019-09_to_2019-10": {
+        "return_pct": -0.73714,
+        "double_cost_pct": -1.18263,
+        "fills": 3,
+        "max_drawdown_pct": -6.61908
+      },
+      "2020-07_to_2020-10": {
+        "return_pct": 42.29628,
+        "double_cost_pct": 40.81025,
+        "fills": 7,
+        "max_drawdown_pct": -12.62842
+      },
+      "2021-05_to_2021-07": {
+        "return_pct": 5.95218,
+        "double_cost_pct": 5.16071,
+        "fills": 5,
+        "max_drawdown_pct": -17.35612
+      },
+      "2021-10_to_2021-11": {
+        "return_pct": -6.76572,
+        "double_cost_pct": -7.60106,
+        "fills": 6,
+        "max_drawdown_pct": -20.70831
+      }
+    },
+    "eth_usdt": {
+      "2024": {
+        "return_pct": 48.73425,
+        "double_cost_pct": 43.04526,
+        "fills": 26,
+        "max_drawdown_pct": -27.8521
+      },
+      "2025": {
+        "return_pct": 18.03547,
+        "double_cost_pct": 13.86177,
+        "fills": 24,
+        "max_drawdown_pct": -31.8854
+      },
+      "data_gate": {
+        "months_seen": 24,
+        "months_certified": 24,
+        "months_rejected": 0
+      }
+    },
+    "interpretation": {
+      "old_btc_positive_segments": 3,
+      "old_btc_segments_total": 5,
+      "recent_btc_positive_years": 2,
+      "recent_eth_positive_years": 2,
+      "claim_limit": "Historical PAPER candidate only; not a profitability claim, not an untouched holdout, not a future prediction."
+    },
+    "evidence": [
+      "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_RESULTS_2026_11_16.md",
+      "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_2019_2021_SEGMENTED_RESULTS_2026_11_16.md",
+      "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_ETHUSDT_RESULTS_2026_11_16.md"
+    ]
   }
 }
