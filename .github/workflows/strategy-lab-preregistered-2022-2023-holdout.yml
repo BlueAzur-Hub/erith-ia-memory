@@ -1,0 +1,80 @@
+name: Strategy Lab preregistered 2022-2023 RSI45 holdout
+
+on:
+  push:
+    branches:
+      - research/strategy-lab-2022-2023-rsi45-holdout-20261116
+    paths:
+      - 'seven_heaven_strategy_lab/tools/preregistered_2022_2023_rsi45_holdout.py'
+      - 'seven_heaven_strategy_lab/src/**'
+      - '.github/workflows/strategy-lab-preregistered-2022-2023-holdout.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'seven_heaven_strategy_lab/tools/preregistered_2022_2023_rsi45_holdout.py'
+      - 'seven_heaven_strategy_lab/src/**'
+      - '.github/workflows/strategy-lab-preregistered-2022-2023-holdout.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preregistered-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout exact research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+            /coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_2024_2025_RESULTS_AND_2022_2023_HOLDOUT_PREREG_2026_11_16.md
+            /.github/workflows/strategy-lab-preregistered-2022-2023-holdout.yml
+      - name: Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify preregistration exists before experiment
+        run: |
+          set -euo pipefail
+          test -s ../coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_2024_2025_RESULTS_AND_2022_2023_HOLDOUT_PREREG_2026_11_16.md
+          grep -q 'PREREGISTRATION — untouched 2022–2023 test' ../coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_2024_2025_RESULTS_AND_2022_2023_HOLDOUT_PREREG_2026_11_16.md
+      - name: Compile current V4.6.2 engine and preregistered experiment
+        run: |
+          set -euo pipefail
+          python -m py_compile src/engine.py src/observatory.py src/binance_monthly_v46.py tools/preregistered_2022_2023_rsi45_holdout.py
+      - name: Run untouched 2022-2023 holdout once
+        run: |
+          set -euo pipefail
+          python tools/preregistered_2022_2023_rsi45_holdout.py
+      - name: Enforce fixed decision contract
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("preregistered_2022_2023_rsi45_holdout.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["source"]["months_verified"] == 24
+          assert d["source"]["rows_total"] == 17520
+          assert d["source"]["strict_continuity"] is True
+          assert d["source"]["gap_filling"] is False
+          assert d["preregistration"]["only_parameter_changed"] == "rsi_entry_max"
+          assert d["fixed_configuration"]["owner"]["rsi_entry_max"] == 61
+          assert d["fixed_configuration"]["candidate"]["rsi_entry_max"] == 45
+          assert d["safety"]["orders_real"] == 0
+          assert d["status"] in ("PREREGISTERED_HYPOTHESIS_PASS","PREREGISTERED_HYPOTHESIS_FAIL")
+          print("PASS: preregistered result recorded without post-hoc selection:",d["status"])
+          PY
+      - name: Upload immutable experiment evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: strategy-lab-preregistered-2022-2023-rsi45-holdout
+          path: seven_heaven_strategy_lab/preregistered_2022_2023_rsi45_holdout.json
+          retention-days: 30
+          if-no-files-found: error
