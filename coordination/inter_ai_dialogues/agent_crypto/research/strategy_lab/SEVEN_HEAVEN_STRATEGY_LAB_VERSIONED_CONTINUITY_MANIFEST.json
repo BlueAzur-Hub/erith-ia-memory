@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "No owner runtime check required now. V4.6.2 remains accepted and unchanged. If a future research candidate survives preregistered validation and becomes a runtime change, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ before installation.",
-  "next_developer_task": "RESEARCH ONLY: Donchian 55/20 4h a été falsifié sur BTC/ETH/BNB/XRP/SOL et n'est pas universel. Prochaine étape: diagnostic descriptif de régime et anatomie des positions, sans modifier la règle. Mesurer sur les fenêtres déjà certifiées des caractéristiques pré-entrée fixées à l'avance (efficacité directionnelle, largeur du canal, volatilité/ATR, exposition/durée) et les MFE/MAE rétrospectifs. Aucun filtre ne doit être créé avant d'avoir documenté ces mécanismes. Donchian reste RESEARCH_CANDIDATE_NOT_RUNTIME_INTEGRATED; aucune V4.7 automatique.",
+  "next_single_owner_check": "Christophe must explicitly choose whether to authorize preparation of a native Donchian research engine. Until that authorization: no stable runtime modification, no release, no USB install, no workspace change.",
+  "next_developer_task": "OWNER DECISION GATE: historical research phase is mature. Keep V4.6.2 stable. Do not publish or install any V4.7 automatically. Await Christophe's explicit authorization before preparing a native DONCHIAN engine on an isolated branch. Recommended scope: causal 55/20 defaults, previous-closed-candle signal, next-bar-open PAPER fill, Forensics signal_context, Comparator integration, Scientific/Research compatibility without automatic parameter optimization, parity tests against experimental_donchian.py. Spot Grid remains separate because its fill model is incompatible.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -1181,5 +1181,16 @@
       },
       "evidence": "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_BNB_XRP_SOL_RESULTS_2026_11_16.md"
     }
+  },
+  "research_phase_status": {
+    "as_of": "2026-11-16",
+    "status": "HISTORICAL_RESEARCH_MATURE_OWNER_SOFTWARE_GATE",
+    "stable_runtime": "4.6.2",
+    "stable_runtime_modified": false,
+    "recommended_native_candidate": "DONCHIAN_55_20",
+    "reason": "Simple causal trend-following family, low rotation, same next-bar-open contract, extensively tested and falsified; scientific integration value, not profitability claim.",
+    "major_falsification": "Jan-Oct 2026 Donchian 55/20 4h is negative on BTC, ETH, BNB, XRP and SOL even at zero friction.",
+    "spot_grid_policy": "KEEP_SEPARATE_EXECUTION_MODEL",
+    "owner_authorization_required": true
   }
 }
