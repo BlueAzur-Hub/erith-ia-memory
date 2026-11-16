@@ -15,7 +15,7 @@ import re
 
 from src.binance_monthly_v46 import MonthlyArchiveError, validate_month
 
-FILE_RE = re.compile(r"^BTCUSDT-1h-(20\\d{2})-(0[1-9]|1[0-2])\\.zip$")
+FILE_RE = re.compile(r"^BTCUSDT-1h-(20\d{2})-(0[1-9]|1[0-2])\.zip$")
 
 
 class InventoryError(ValueError):
