@@ -814,6 +814,38 @@ jobs:
           print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run preregistered descriptive monthly regime map
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.monthly_regime_map import run_monthly_regime_map
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          out = run_monthly_regime_map(
+              bars,
+              {
+                  "kind": "EMA_CROSS",
+                  "capital": 10000,
+                  "fee": 0.001,
+                  "slippage": 0.0005,
+                  "ema_fast": 10,
+                  "ema_slow": 30,
+                  "bb_period": 20,
+                  "bb_sigma": 2,
+                  "dca_every": 1440,
+                  "dca_quote": 50,
+              },
+              warmup_hours=720,
+          )
+          assert out["active_months"] == 23
+          assert out["safety"]["orders_real"] == 0
+          print("MONTHLY_REGIME_MAP_2024_2025")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove 2024-2025 inventory stayed ephemeral
         run: |
           set -euo pipefail
