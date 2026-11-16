@@ -169,6 +169,54 @@ jobs:
               print("PASS real public OKX BTC-USDC 240 closed 1h candles; zero orders")
           PY
 
+
+  binance-long-history-real-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Certify three fixed official Binance monthly samples
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-long-history-pilot"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for month in 2019-01 2020-01 2021-05; do
+            file="BTCUSDT-1h-$month.zip"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+            bytes=$(stat -c%s "$root/$file")
+            if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+              echo "Unexpected archive size for $file: $bytes" >&2
+              exit 1
+            fi
+            echo "Downloaded bounded official sample: $file ($bytes bytes)"
+          done
+
+          python tools/certify_binance_history.py "$root"
+
+      - name: Prove no pilot files entered repository workspace
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS runner-temp only; repository workspace untouched"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
