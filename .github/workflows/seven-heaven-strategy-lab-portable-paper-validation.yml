@@ -297,3 +297,64 @@ jobs:
             SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
           if-no-files-found: error
           retention-days: 14
+
+
+  publish-v470-rc1-prerelease:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/release/strategy-lab-v4-7-0-rc1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs:
+      - package-v470-rc1
+    permissions:
+      contents: write
+    steps:
+      - name: Download validated RC package
+        uses: actions/download-artifact@v4
+        with:
+          name: seven-heaven-strategy-lab-v4-7-0-rc1
+          path: delivery
+
+      - name: Publish V4.7.0-RC1 GitHub pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG=seven-heaven-strategy-lab-v4-7-0-rc1-native-donchian-2026-11-16
+          TITLE="Seven Heaven Strategy Lab V4.7.0-RC1 — Native Donchian"
+          NOTES_FILE="$RUNNER_TEMP/v470-rc1-notes.md"
+
+          cat > "$NOTES_FILE" <<'EOF'
+          ## V4.7.0-RC1 — Native Donchian
+
+          Release candidate PAPER uniquement.
+
+          ### Donchian natif
+          - Donchian 55/20 par défaut ;
+          - signal sur bougie clôturée ;
+          - canal précédent excluant la bougie signal ;
+          - fill hypothétique à l'ouverture suivante ;
+          - signal_context Forensics ;
+          - septième référence du Comparateur ;
+          - Aether Scientific sans optimisation automatique des périodes ;
+          - parité financière testée contre tools/experimental_donchian.py.
+
+          ### Validation
+          - Linux Python 3.13 : PASS
+          - Windows Python 3.13 + lancement réel .cmd : PASS
+          - OKX public smoke : PASS
+          - packaging : PASS
+          - aucun workspace/, __pycache__, .pytest_cache, .pyc ou .pyo dans l'archive.
+
+          V4.6.2 reste la release stable installée. Cette publication est une PRE-RELEASE et n'autorise aucune installation automatique ni trading réel.
+          EOF
+
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY"               --target "$GITHUB_SHA"               --title "$TITLE"               --notes-file "$NOTES_FILE"               --prerelease               --latest=false
+          else
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY"               --title "$TITLE"               --notes-file "$NOTES_FILE"               --prerelease               --latest=false
+          fi
+
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber             delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip             delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
+
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,tagName,isPrerelease,isLatest,assets,targetCommitish
