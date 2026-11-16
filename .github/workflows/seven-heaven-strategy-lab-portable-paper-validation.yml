@@ -208,7 +208,7 @@ jobs:
             echo "Downloaded bounded official sample: $file ($bytes bytes)"
           done
 
-          python tools/certify_binance_history.py "$root"
+          python -m tools.certify_binance_history "$root"
 
       - name: Prove no pilot files entered repository workspace
         run: |
