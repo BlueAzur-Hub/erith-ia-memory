@@ -397,6 +397,57 @@ jobs:
           print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run preregistered Donchian 55-20 on certified 2019-2021 segments
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2019-2021-inventory" python - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root = Path(os.environ["INVENTORY_ROOT"])
+          blocks = {
+              "A_2019_01_02": ["2019-01", "2019-02"],
+              "B_2019_09_10": ["2019-09", "2019-10"],
+              "C_2020_07_10": ["2020-07", "2020-08", "2020-09", "2020-10"],
+              "D_2021_05_07": ["2021-05", "2021-06", "2021-07"],
+              "E_2021_10_11": ["2021-10", "2021-11"],
+          }
+          selected_root = root / "_selected_segments"
+          selected_root.mkdir(exist_ok=True)
+          out = {}
+
+          for label, months in blocks.items():
+              block_dir = selected_root / label
+              block_dir.mkdir()
+              for month in months:
+                  name = f"BTCUSDT-1h-{month}.zip"
+                  shutil.copy2(root / name, block_dir / name)
+                  shutil.copy2(root / f"{name}.CHECKSUM", block_dir / f"{name}.CHECKSUM")
+
+              hourly = load_certified_contiguous_block(block_dir)
+              bars = aggregate_bars(hourly, "4h", source_timeframe="1h")
+              base = simulate_donchian(bars, fee=0.001, slippage=0.0005)
+              ideal = simulate_donchian(bars, fee=0.0, slippage=0.0)
+              stress = simulate_donchian(bars, fee=0.002, slippage=0.001)
+              out[label] = {
+                  "months": months,
+                  "hourly_candles": len(hourly),
+                  "candles_4h": len(bars),
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+
+          print("DONCHIAN_55_20_4H_SEGMENTED_2019_2021_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove full inventory stayed ephemeral
         run: |
           set -euo pipefail
