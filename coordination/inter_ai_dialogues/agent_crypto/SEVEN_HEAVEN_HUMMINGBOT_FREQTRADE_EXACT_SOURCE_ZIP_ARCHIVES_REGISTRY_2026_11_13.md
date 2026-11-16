@@ -66,3 +66,26 @@ The source ZIPs are placed in **GitHub Releases**, not committed as 24.7 MB of d
 5. Expose validated reports to Interface/Trader/Operator/TRADUS as read-only research assets; no auto-trading deployment by default.
 
 **User preference confirmed by this workflow:** no repeatedly requesting screenshots or fee inputs already canonized; clearly separate real execution evidence from interpretation.
+
+
+## 6. FreqAI documentation preserved — 2026-11-16
+
+The owner supplied the upstream FreqAI design document used during Seven Heaven architecture discussion.
+
+Durable public copy:
+- `coordination/inter_ai_dialogues/agent_crypto/research/external_bots/upstream_docs/freqtrade/freqai.md`
+
+Provenance / Seven Heaven relevance:
+- `coordination/inter_ai_dialogues/agent_crypto/research/external_bots/FREQAI_UPSTREAM_DOC_PROVENANCE_AND_SEVEN_HEAVEN_RELEVANCE_2026_11_16.md`
+
+User-supplied document SHA-256:
+`784af9a1da69638095f6a21b1dd8a2e1b69b47a02370cb51cd69d8467a4211fa`
+
+Observed upstream Git blob on Freqtrade `develop`:
+`ab525e9decfe124ce715356449b30794b5128b67`
+
+The two source ZIPs re-supplied by the owner on 2026-11-16 were also re-hashed and match the canonical GitHub Release assets exactly:
+- Freqtrade: `6143b75fa418362c5de00388faaaff008900a2f778e77a73b31361423e25a453`
+- Hummingbot: `6ceef7884b54ac7b3e2f156411249f58f78a079e2f9b6b6717aabc81f4ea6cfd`
+
+**Continuity policy:** ChatGPT Library / chat attachments are not canonical project storage. Project-critical public material must be preserved or indexed in GitHub so another LLM can resume without access to this chat environment.
