@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V4.6.2 accepted in Firefox/Windows on 2026-11-16. No repeated owner acceptance is required. Before any future installation, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\; keep the Lab PAPER-only.",
-  "next_developer_task": "Post-V4.6.2 research phase: build and verify a long certified Binance Spot BTC/USDT 1h historical corpus, starting with a small official monthly pilot and then extending to 2019-2021 and 2024-2025. Verify publisher .CHECKSUM, timestamp units, continuity, UTC alignment and duplicates; keep Binance BTC/USDT separate from OKX BTC/USDC and do not overwrite workspace. After data quality is proven, run existing strategies across multiple regimes with true chronological out-of-sample/walk-forward tests; only then consider new strategies, risk sizing, Freqtrade/Hummingbot PAPER comparisons or V5 autonomous PAPER bots.",
+  "next_single_owner_check": "Aucun contrôle propriétaire automatique requis après la réception Firefox V4.6.2 du 16/11/2026. Toute nouvelle recette propriétaire ne sera demandée qu'après un nouveau jalon logiciel explicite. Préserver E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ et sa sauvegarde indépendante.",
+  "next_developer_task": "PHASE HISTORIQUE LONGUE: étendre les sources certifiées Binance Spot BTC/USDT 1h en priorité sur 2019-2021, puis 2024-2025, mois par mois avec archive officielle + .CHECKSUM, contrôle d'horodatage, continuité, doublons, trous, alignement UTC et SHA-256 local. Conserver OKX BTC/USDC séparé de Binance BTC/USDT. Une fois la qualité historique établie, lancer des comparaisons multi-régimes, walk-forward plus profond et holdout réellement séparé. Freqtrade/Hummingbot restent facultatifs et PAPER-only; aucune V4.7/V5 automatique.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -867,10 +867,12 @@
     "last_user_firefox_accepted": "4.6.2",
     "release_assets_sha256_sourced_from": "verified GitHub Releases asset digest",
     "metadata_pointers": "This manifesto documents state; README.md in shared strategy_lab folder is the human navigation entry point; Notion links to README.",
-    "last_verified_utc_date": "2026-11-16"
+    "last_verified_utc_date": "2026-11-16",
+    "current_release_status": "LATEST_RELEASE_OWNER_FIREFOX_ACCEPTED",
+    "current_release_tag": "seven-heaven-strategy-lab-v4-6-2-source-context-reset-2026-11-15"
   },
   "v4_6_research_plan": {
-    "status": "SUPERSEDED_BY_RELEASED_AND_OWNER_ACCEPTED_V4_6_2",
+    "status": "COMPLETED_AND_SUPERSEDED_BY_RELEASE_4_6_2",
     "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_6_EXTENDED_HISTORICAL_RESEARCH_SOURCE_PLAN_2026_11_13.md",
     "base_market": "Binance Spot BTC/USDT 1h",
     "planned_windows": [
@@ -888,7 +890,7 @@
     "real_monthly_source_verified": true,
     "main_branch_merged": true,
     "owner_usb_v46_installed": true,
-    "note": "Historical V4.6 planning record retained for traceability. V4.6.0, V4.6.1 and V4.6.2 were subsequently published; V4.6.2 is Latest and owner-accepted in Firefox on 2026-11-16. Continue with long certified historical research rather than rebuilding V4.6."
+    "note": "Le plan V4.6 historique court a été réalisé puis prolongé jusqu'à V4.6.2. Un mois Binance Spot BTC/USDT 1h certifié a été importé; V4.6.2 est publiée Latest et acceptée dans Firefox le 16/11/2026. Ce bloc reste historique. La recherche suivante porte sur les historiques longs 2019-2021 puis 2024-2025, sans mélange avec OKX."
   },
   "current_canonical_release": {
     "version": "4.6.2",
@@ -899,5 +901,15 @@
     "tests_passed": "69/69",
     "zip_sha256": "7137ec9b940f726f60fd8ba04a0f9cb21c51c9b09e680909e64a31155ced378d",
     "handoff_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md"
+  },
+  "v4_6_2_closure": {
+    "status": "CLOSED_RELEASE_OWNER_ACCEPTED",
+    "version": "4.6.2",
+    "owner_firefox_acceptance_date": "2026-11-16",
+    "tests_passed": "69/69",
+    "mode": "LOCAL_PAPER_ONLY",
+    "real_orders": 0,
+    "workspace_policy": "PRIVATE_DO_NOT_DELETE_OR_OVERWRITE",
+    "next_phase": "CERTIFIED_LONG_HISTORY_2019_2021_THEN_2024_2025"
   }
 }
