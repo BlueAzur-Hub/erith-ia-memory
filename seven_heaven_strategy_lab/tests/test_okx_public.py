@@ -79,7 +79,7 @@ class OKXSourceTests(unittest.TestCase):
             c1=compare(bars,{"kind":"EMA_CROSS","timeframe":"1h","capital":1000},
                        source_timeframe="1h",source_label="OKX Spot BTC/USDC")
             self.assertEqual(c1["aggregated_candles"],240)
-            self.assertEqual(len(c1["rows"]),6)
+            self.assertEqual(len(c1["rows"]),7)
             c4=compare(bars,{"kind":"EMA_CROSS","timeframe":"4h","capital":1000},
                        source_timeframe="1h",source_label="OKX Spot BTC/USDC")
             self.assertEqual(c4["aggregated_candles"],60)
