@@ -10,6 +10,7 @@ on:
       - 'seven_heaven_strategy_lab/tools/binance_long_history_diagnostics.py'
       - 'seven_heaven_strategy_lab/tools/binance_2024_2025_replay.py'
       - 'seven_heaven_strategy_lab/tools/binance_2024_2025_aether_scientific.py'
+      - 'seven_heaven_strategy_lab/tools/binance_2024_2025_aether_research_filters.py'
       - 'seven_heaven_strategy_lab/src/binance_monthly_v46.py'
       - '.github/workflows/strategy-lab-binance-long-history-pilot.yml'
   pull_request:
@@ -46,7 +47,7 @@ jobs:
       - name: Compile validator and pilot
         run: |
           set -euo pipefail
-          python -m py_compile src/binance_monthly_v46.py tools/binance_long_history_pilot.py tools/binance_long_history_scan.py tools/binance_long_history_diagnostics.py tools/binance_2024_2025_replay.py tools/binance_2024_2025_aether_scientific.py
+          python -m py_compile src/binance_monthly_v46.py tools/binance_long_history_pilot.py tools/binance_long_history_scan.py tools/binance_long_history_diagnostics.py tools/binance_2024_2025_replay.py tools/binance_2024_2025_aether_scientific.py tools/binance_2024_2025_aether_research_filters.py
       - name: Verify official Binance monthly archives and checksums
         run: |
           set -euo pipefail
@@ -67,6 +68,10 @@ jobs:
         run: |
           set -euo pipefail
           python tools/binance_2024_2025_aether_scientific.py
+      - name: Aether Research controlled filters on clean 2024-2025 corpus
+        run: |
+          set -euo pipefail
+          python tools/binance_2024_2025_aether_research_filters.py
       - name: Strict-parse evidence
         run: |
           set -euo pipefail
@@ -107,10 +112,15 @@ jobs:
           assert sci["summary"]["holdout_windows"] == 2
           assert sci["total_bars"] == 4386
           assert sci["safety"]["orders_real"] == 0
+          filters = json.loads(Path("binance_2024_2025_aether_research_filters.json").read_text(encoding="utf-8"))
+          assert filters["summary"]["verification_windows"] == 2
+          assert filters["summary"]["variants_compared"] <= 5
+          assert filters["total_bars"] == 4386
+          assert filters["safety"]["orders_real"] == 0
           print(
               "PASS: scan classified all 60 target months; "
               f"{full['months_verified']} strict-valid, {full['months_failed']} diagnosed; "
-              "clean 2024-2025 replay + Aether Scientific completed"
+              "clean 2024-2025 replay + Scientific + controlled filters completed"
           )
           PY
       - name: Upload research evidence
@@ -123,5 +133,6 @@ jobs:
             seven_heaven_strategy_lab/binance_long_history_diagnostics.json
             seven_heaven_strategy_lab/binance_2024_2025_replay_evidence.json
             seven_heaven_strategy_lab/binance_2024_2025_aether_scientific.json
+            seven_heaven_strategy_lab/binance_2024_2025_aether_research_filters.json
           retention-days: 30
           if-no-files-found: error
