@@ -54,45 +54,59 @@ def download(url: str, limit: int, attempts: int = 3) -> bytes:
 
 def run() -> dict:
     reports = []
+    failures = []
     total_rows = 0
     for idx, (year, month) in enumerate(MONTHS, 1):
         name = f"BTCUSDT-1h-{year}-{month:02d}.zip"
         zip_url = f"{BASE_URL}/{name}"
         checksum_url = zip_url + ".CHECKSUM"
-        archive = download(zip_url, MAX_ZIP_BYTES)
-        checksum = download(checksum_url, MAX_CHECKSUM_BYTES).decode("utf-8")
-        report = validate_month(archive, checksum, year=year, month=month)
-        expected_rows = calendar.monthrange(year, month)[1] * 24
-        assert report["rows"] == expected_rows
-        assert report["missing_bars"] == 0
-        assert report["timestamp_input_unit"] == (
-            "microseconds" if year >= 2025 else "milliseconds"
-        )
-        total_rows += report["rows"]
-        reports.append({
-            "year": year,
-            "month": month,
-            "rows": report["rows"],
-            "missing_bars": report["missing_bars"],
-            "timestamp_input_unit": report["timestamp_input_unit"],
-            "first_utc": report["first_utc"],
-            "last_utc": report["last_utc"],
-            "archive_sha256": report["archive_sha256"],
-            "normalized_csv_sha256": report["normalized_csv_sha256"],
-        })
-        print(f"PASS {idx:02d}/{len(MONTHS)} {year}-{month:02d} rows={report['rows']} unit={report['timestamp_input_unit']}")
+        try:
+            archive = download(zip_url, MAX_ZIP_BYTES)
+            checksum = download(checksum_url, MAX_CHECKSUM_BYTES).decode("utf-8")
+            report = validate_month(archive, checksum, year=year, month=month)
+            expected_rows = calendar.monthrange(year, month)[1] * 24
+            assert report["rows"] == expected_rows
+            assert report["missing_bars"] == 0
+            assert report["timestamp_input_unit"] == (
+                "microseconds" if year >= 2025 else "milliseconds"
+            )
+            total_rows += report["rows"]
+            reports.append({
+                "year": year,
+                "month": month,
+                "rows": report["rows"],
+                "missing_bars": report["missing_bars"],
+                "timestamp_input_unit": report["timestamp_input_unit"],
+                "first_utc": report["first_utc"],
+                "last_utc": report["last_utc"],
+                "archive_sha256": report["archive_sha256"],
+                "normalized_csv_sha256": report["normalized_csv_sha256"],
+            })
+            print(f"PASS {idx:02d}/{len(MONTHS)} {year}-{month:02d} rows={report['rows']} unit={report['timestamp_input_unit']}")
+        except Exception as exc:
+            failures.append({
+                "year": year,
+                "month": month,
+                "source_zip": name,
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            })
+            print(f"FAIL {idx:02d}/{len(MONTHS)} {year}-{month:02d}: {type(exc).__name__}: {exc}")
     return {
-        "schema": "seven.heaven.strategy_lab.binance_long_history_scan.v1",
-        "status": "PASS",
+        "schema": "seven.heaven.strategy_lab.binance_long_history_scan.v2",
+        "status": "COMPLETE_WITH_SOURCE_GAPS" if failures else "PASS",
         "source": "OFFICIAL_BINANCE_PUBLIC_DATA",
         "pair": "BTC/USDT",
         "timeframe": "1h",
         "target_years": list(YEARS),
+        "months_attempted": len(MONTHS),
         "months_verified": len(reports),
-        "total_rows": total_rows,
-        "first_utc": reports[0]["first_utc"],
-        "last_utc": reports[-1]["last_utc"],
+        "months_failed": len(failures),
+        "total_rows_verified": total_rows,
+        "first_verified_utc": reports[0]["first_utc"] if reports else None,
+        "last_verified_utc": reports[-1]["last_utc"] if reports else None,
         "reports": reports,
+        "failures": failures,
         "safety": {
             "paper_only": True,
             "orders_real": 0,
@@ -111,6 +125,6 @@ if __name__ == "__main__":
         encoding="utf-8",
     )
     print(
-        f"PASS FULL SCAN: {result['months_verified']} months, "
-        f"{result['total_rows']} hourly candles"
+        f"SCAN COMPLETE: {result['months_verified']}/{result['months_attempted']} months verified, "
+        f"{result['months_failed']} failed, {result['total_rows_verified']} hourly candles verified"
     )
