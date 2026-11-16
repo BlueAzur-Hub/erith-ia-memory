@@ -72,6 +72,31 @@ def _discover(root: Path) -> list[tuple[MonthKey, Path, Path]]:
     return found
 
 
+def load_certified_contiguous_block(root: Path) -> list:
+    """Load a fully certified contiguous month block for PAPER replay only."""
+    discovered = _discover(root)
+    for (current, *_), (following, *__) in zip(discovered, discovered[1:]):
+        expected = _next_month(current)
+        if following != expected:
+            raise InventoryError(f"Bloc non contigu: {current.label} -> {following.label}; attendu {expected.label}")
+    bars = []
+    for key, zip_path, checksum_path in discovered:
+        try:
+            report = validate_month(
+                zip_path.read_bytes(),
+                checksum_path.read_text(encoding="ascii"),
+                year=key.year,
+                month=key.month,
+            )
+        except (OSError, UnicodeError, MonthlyArchiveError) as exc:
+            raise InventoryError(f"Mois rejeté {key.label}: {exc}") from exc
+        month_bars = report["bars"]
+        if bars and month_bars[0][0] != bars[-1][0] + 3600:
+            raise InventoryError(f"Rupture UTC entre les mois avant {key.label}")
+        bars.extend(month_bars)
+    return bars
+
+
 def certify_directory(root: Path, *, require_contiguous: bool = False) -> dict:
     rows = []
     rejected = []
