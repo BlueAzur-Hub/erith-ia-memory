@@ -101,13 +101,27 @@ Résultat : BNB **−1,03 % / +14,92 %**, XRP **+142,62 % / −21,40 %**, SOL **
 
 ### Point de reprise produit — V4.8 Knowledge Layer · 16/11/2026
 
-Le propriétaire teste actuellement le **BUILD 4.7.0-RC1** comme base locale tandis que V4.8 est développé par gates ciblés. La Knowledge Layer a maintenant trois fiches professionnelles : **EMA**, **Bandes de Bollinger** et **Donchian 55/20**.
+Le propriétaire teste le **BUILD 4.7.0-RC1** comme base locale tandis que V4.8 progresse par gates ciblés. La base stable publiée reste **V4.6.2**.
 
-Le paquet Step 3 Donchian a passé **127 tests locaux** sans modification du moteur PAPER de référence. Les trois paquets DEV et leurs SHA-256 sont recensés dans [V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md](./V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md).
+La Knowledge Layer comprend désormais les fiches professionnelles **EMA**, **Bandes de Bollinger**, **Donchian 55/20**, puis les quatre références passives **DCA programmé**, **Buy & Hold 50 % BTC**, **Buy & Hold 100 % BTC** et **Conservation USDC**.
 
-**Step 4 Action Help Layer construit en DEV :** le mode `? Aide actions` explique désormais l'effet réel des actions avant le clic, sans modifier le moteur PAPER. Le paquet Step 4 a passé 133 tests ; `src/engine.py` reste byte-identique. La réception Firefox Windows du propriétaire reste le gate suivant. Voir [V4_8_KNOWLEDGE_LAYER_STEP4_ACTION_HELP_2026_11_16.md](./V4_8_KNOWLEDGE_LAYER_STEP4_ACTION_HELP_2026_11_16.md).\n\n**Gate produit prioritaire avant une nouvelle stratégie : aide contextuelle des actions.** Le propriétaire ne doit plus cliquer au hasard. Chaque bouton important doit expliquer avant le clic ce qu'il fait, ce qu'il modifie, les données/règles utilisées et s'il lance ou non une simulation.
+Le **Help Layer V1 global** a remplacé les systèmes d'aide concurrents : un seul bouton `?` dans l'en-tête global, une seule carte contextuelle, et une couverture du Lab entier. Le propriétaire l'a validé visuellement dans Firefox le 16/11/2026 par captures et retour explicite positif.
 
-La continuité Notion correspondante est conservée dans le Plan directeur. La Creator Memory privée reste une couche de routage/continuité à charger selon son protocole ; elle n'est jamais publiée ici.
+Le paquet **Step 5 — Passive References DEV** a ensuite été construit sur ce parent accepté :
+
+- `SEVEN_HEAVEN_STRATEGY_LAB_V4_8_KNOWLEDGE_LAYER_STEP5_PASSIVE_REFERENCES_DEV.zip`
+- SHA-256 : `8871321dde43f22271740e6355cec11235aee0478ca86047e90de549cc0457ca`
+- **137 / 137 tests PASS** ;
+- syntaxe JavaScript PASS ;
+- recette UI Chromium automatisée : clic Help, ouverture des quatre fiches, préparation DCA et console propre ;
+- `src/engine.py` inchangé ;
+- réception Firefox Windows du Step 5 : **en attente**.
+
+Le DCA est documenté selon le contrat réel : l'intervalle saisi en minutes est converti en nombre entier de bougies selon le timeframe avant l'appel au moteur. Les variantes Buy & Hold sont traitées comme baselines d'exposition, et Conservation USDC comme baseline cash nominale ; aucune de ces fiches n'est une recommandation.
+
+[Document Step 5](./V4_8_KNOWLEDGE_LAYER_STEP5_PASSIVE_REFERENCES_2026_11_16.md) · [Manifeste des paquets V4.8](./V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md)
+
+**Gate suivant :** réception Firefox du Step 5 par le propriétaire. Après acceptation, ouvrir le chantier **historiques longs + multi-actifs** avant d'ajouter automatiquement MACD ou SuperTrend.
 
 ### Liens de continuité
 
