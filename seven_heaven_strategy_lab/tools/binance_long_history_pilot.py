@@ -9,8 +9,13 @@ from __future__ import annotations
 import calendar
 import json
 from pathlib import Path
+import sys
 import urllib.parse
 import urllib.request
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from src.binance_monthly_v46 import MAX_ZIP_BYTES, validate_month
 
