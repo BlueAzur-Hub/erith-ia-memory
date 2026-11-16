@@ -1665,6 +1665,86 @@ jobs:
           echo "PASS Donchian multi-asset 2026 replay used runner-temp only"
 
 
+
+  donchian-equal-sleeve-portfolio-2026:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify fixed five-asset Jan-Oct 2026 panel
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-equal-sleeves-2026"
+          mkdir -p "$root"
+          for symbol in BTCUSDT ETHUSDT BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for mm in $(seq -w 1 10); do
+              file="$symbol-1h-2026-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+            done
+          done
+
+      - name: Run fixed equal-sleeve Donchian portfolio
+        run: |
+          set -euo pipefail
+          PANEL_ROOT="$RUNNER_TEMP/donchian-equal-sleeves-2026" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.donchian_equal_sleeve_portfolio import FIXED_SYMBOLS,equal_sleeve_portfolio
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["PANEL_ROOT"])
+          panel={}
+          cert={}
+          for symbol in FIXED_SYMBOLS:
+              hourly=[]; previous_last=None; cert[symbol]=0
+              for month in range(1,11):
+                  name=f"{symbol}-1h-2026-{month:02d}.zip"
+                  r=validate_symbol_month(
+                      (root/symbol/name).read_bytes(),
+                      (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                      symbol=symbol,year=2026,month=month,
+                  )
+                  if previous_last is not None:
+                      assert r["bars"][0][0]==previous_last+3600
+                  previous_last=r["bars"][-1][0]
+                  hourly.extend(r["bars"]); cert[symbol]+=1
+              assert len(hourly)==7296
+              panel[symbol]=aggregate_bars(hourly,"4h",source_timeframe="1h")
+              assert len(panel[symbol])==1824
+          assert all(v==10 for v in cert.values())
+          out=equal_sleeve_portfolio(panel,total_capital=10000,fee=0.001,slippage=0.0005)
+          assert out["safety"]["orders_real"]==0
+          compact={k:out[k] for k in ("schema","status","params","portfolio","sleeves","btc_only_reference","methodology","safety")}
+          print("DONCHIAN_EQUAL_SLEEVE_PORTFOLIO_2026")
+          print(json.dumps(compact,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove portfolio study stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS equal-sleeve portfolio used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
