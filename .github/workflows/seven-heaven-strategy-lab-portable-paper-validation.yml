@@ -244,6 +244,7 @@ jobs:
       - name: Checkout exact RC source
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -300,7 +301,11 @@ jobs:
 
 
   publish-v470-rc1-prerelease:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/release/strategy-lab-v4-7-0-rc1'
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/release/strategy-lab-v4-7-0-rc1') ||
+      (github.event_name == 'pull_request' &&
+       github.head_ref == 'release/strategy-lab-v4-7-0-rc1' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 8
     needs:
@@ -317,6 +322,7 @@ jobs:
       - name: Publish V4.7.0-RC1 GitHub pre-release
         env:
           GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         shell: bash
         run: |
           set -euo pipefail
