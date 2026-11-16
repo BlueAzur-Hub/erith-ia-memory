@@ -6,8 +6,8 @@
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": "2026-11-15T21:01:41.877Z",
-  "last_success_at": "2026-11-15T21:01:41.877Z",
+  "last_attempt_at": "2026-11-16T06:22:31.171Z",
+  "last_success_at": "2026-11-16T06:22:31.171Z",
   "last_error": null,
   "assets_expected": 5,
   "assets_received": 5,
@@ -50,8 +50,8 @@
     "preserved": false,
     "file": "history/public_1y.json",
     "snapshots": 261,
-    "oldest_at": "2025-10-31T04:00:00.000Z",
-    "newest_at": "2026-11-13T05:00:00.000Z",
+    "oldest_at": "2025-11-03T05:00:00.000Z",
+    "newest_at": "2026-11-16T05:00:00.000Z",
     "series_points": {
       "gold": 261,
       "silver": 261,
@@ -67,14 +67,14 @@
     "file": "history/intraday_24h.json",
     "assets": 5,
     "series_points": {
-      "gold": 205,
-      "silver": 205,
-      "platinum": 205,
-      "palladium": 197,
-      "copper": 205
+      "gold": 64,
+      "silver": 64,
+      "platinum": 63,
+      "palladium": 60,
+      "copper": 64
     },
-    "oldest_at": "2026-11-13T05:00:00.000Z",
-    "newest_at": "2026-11-13T21:59:59.000Z",
+    "oldest_at": "2026-11-15T23:10:00.000Z",
+    "newest_at": "2026-11-16T06:12:32.000Z",
     "interval": "5m",
     "window_hours": 24,
     "source_id": "yahoo_finance"
@@ -84,9 +84,9 @@
     "complete_24h": true,
     "file": "history/spot_48h.json",
     "snapshots": 7,
-    "oldest_at": "2026-11-14T00:53:04.559Z",
-    "newest_at": "2026-11-15T21:01:41.877Z",
-    "span_hours": 44.143699,
+    "oldest_at": "2026-11-14T11:27:03.753Z",
+    "newest_at": "2026-11-16T06:22:31.171Z",
+    "span_hours": 42.924283,
     "retention_hours": 48,
     "minimum_complete_hours": 20,
     "source_id": "gold_api"
@@ -116,6 +116,6 @@
     "history_never_fabricated": true,
     "intraday_futures_and_current_spot_separated": true
   },
-  "updated_at": "2026-11-15T21:01:41.877Z",
+  "updated_at": "2026-11-16T06:22:31.171Z",
   "collector": "tools/collect_public_metals.py"
 }
