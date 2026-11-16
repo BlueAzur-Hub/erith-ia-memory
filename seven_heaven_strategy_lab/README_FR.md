@@ -1,8 +1,22 @@
-# Seven Heaven Strategy Lab — V4.6.2 cohérence complète lors du changement de source
+# Seven Heaven Strategy Lab — V4.7.0-RC1 · Donchian natif
 
-**Version 4.6.2 · Windows Python 3.13 · Port 8777 en local · Internet public sur action explicite · PAPER uniquement.**
+**Release candidate 4.7.0-RC1 · Windows Python 3.13 · Port 8777 en local · Internet public sur action explicite · PAPER uniquement.**
 
-Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.6 ajoute une première source mensuelle longue certifiée et corrige la méthode de validation des indicateurs. La V4.6.1 aligne le résumé visuel sur la source active. La V4.6.2 garantit qu'un changement de source efface aussi l'ancienne étude Aether Research affichée, sans modifier le moteur, les fills, les frais ni les résultats.
+Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses reproductibles. Cette RC conserve le socle V4.6.2 et ajoute Donchian comme famille native auditable, sans trading réel.
+
+> **Statut RC :** cette branche n'est pas encore la release stable installée. V4.6.2 reste la référence propriétaire tant que V4.7 n'a pas reçu sa validation et son autorisation de publication/installation.
+
+## V4.7.0-RC1 — Donchian 55/20 natif
+
+- **Nouvelle famille native `DONCHIAN`** : entrée 55 bougies et sortie 20 bougies par défaut, paramètres visibles et bornés dans l'Atelier.
+- **Causalité conservée** : le signal utilise uniquement la bougie déjà clôturée ; le canal de cassure exclut cette bougie ; le fill reste hypothétique à l'ouverture de la bougie suivante.
+- **Traçabilité Forensics** : chaque entrée/sortie expose son `reason_code`, la valeur de clôture signal et le canal Donchian causal dans `signal_context`.
+- **Comparateur** : Donchian devient la septième stratégie de référence, sans favoritisme ni score promotionnel.
+- **Aether Scientific** : Donchian est rejoué comme stratégie fixe ; aucune recherche automatique de périodes n'est introduite.
+- **Aether Research filtres** reste limité aux moteurs EMA/personnalisés : aucun filtre EMA n'est artificiellement appliqué à Donchian.
+- **Parité historique** : un test dédié exige l'identité financière du moteur natif avec `tools/experimental_donchian.py`, utilisé pour les études historiques 55/20.
+- **Sécurité inchangée** : PAPER long-only, aucune clé privée, aucun endpoint d'ordre réel, Spot Grid toujours séparé.
+- **Workspace** : aucune migration requise et aucune donnée personnelle incluse dans l'archive programme.
 
 ## V4.6.2 — remise à zéro de toutes les analyses liées à la source
 
