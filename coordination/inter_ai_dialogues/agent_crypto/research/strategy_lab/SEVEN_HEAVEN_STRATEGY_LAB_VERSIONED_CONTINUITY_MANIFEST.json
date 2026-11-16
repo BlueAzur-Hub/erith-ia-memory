@@ -1225,5 +1225,39 @@
     "rc_prerelease": true,
     "rc_release_tag_ref_sha": "05dc4c7df57fd998d7dcc532e2db1ddebff8d088",
     "rc_release_object_target_commitish_initial": "0d42007bc832dd553d45303a66bd59c67438655d"
+  },
+  "durable_project_storage_policy": {
+    "canonical_public_source": "GitHub public repository / GitHub Releases",
+    "chat_library_canonical": false,
+    "rule": "Any public material required to continue Seven Heaven across AI/LLM providers must be committed to or durably indexed from the public GitHub repository.",
+    "exceptions": [
+      "private owner files",
+      "credentials and API keys",
+      "account data",
+      "private vault/persona material intentionally excluded from the public repository"
+    ],
+    "large_third_party_archives": "Store in GitHub Releases with SHA-256 + registry; do not duplicate large upstream ZIPs in Git history.",
+    "external_bots_index": "coordination/inter_ai_dialogues/agent_crypto/research/external_bots/README.md"
+  },
+  "external_reference_sources": {
+    "hummingbot_source_archive": {
+      "status": "PRESERVED_PUBLIC_GITHUB_RELEASE",
+      "sha256": "6ceef7884b54ac7b3e2f156411249f58f78a079e2f9b6b6717aabc81f4ea6cfd",
+      "registry": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_HUMMINGBOT_FREQTRADE_EXACT_SOURCE_ZIP_ARCHIVES_REGISTRY_2026_11_13.md"
+    },
+    "freqtrade_source_archive": {
+      "status": "PRESERVED_PUBLIC_GITHUB_RELEASE",
+      "sha256": "6143b75fa418362c5de00388faaaff008900a2f778e77a73b31361423e25a453",
+      "registry": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_HUMMINGBOT_FREQTRADE_EXACT_SOURCE_ZIP_ARCHIVES_REGISTRY_2026_11_13.md"
+    },
+    "freqai_document": {
+      "status": "PRESERVED_PUBLIC_GITHUB",
+      "source_path": "coordination/inter_ai_dialogues/agent_crypto/research/external_bots/upstream_docs/freqtrade/freqai.md",
+      "provenance_path": "coordination/inter_ai_dialogues/agent_crypto/research/external_bots/FREQAI_UPSTREAM_DOC_PROVENANCE_AND_SEVEN_HEAVEN_RELEVANCE_2026_11_16.md",
+      "user_supplied_sha256": "784af9a1da69638095f6a21b1dd8a2e1b69b47a02370cb51cd69d8467a4211fa",
+      "upstream_blob_observed": "ab525e9decfe124ce715356449b30794b5128b67",
+      "runtime_dependency": false,
+      "role": "OPTIONAL_ARCHITECTURAL_AND_ML_RESEARCH_REFERENCE"
+    }
   }
 }
