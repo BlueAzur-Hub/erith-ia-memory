@@ -740,11 +740,11 @@
     try {
       const health=await api("/api/health");
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(health.version!=="4.6.2" || !health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled || !health.certified_binance_monthly_enabled || !health.explicit_no_trade_warmup_enabled)throw new Error("Le serveur Python V4.6.2 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
+      if(health.version!=="4.7.0-rc1" || !health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled || !health.certified_binance_monthly_enabled || !health.explicit_no_trade_warmup_enabled)throw new Error("Le serveur Python V4.7.0-RC1 n'est pas actif. Ferme l'ancien serveur puis relance le lanceur.");
       const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory()]);
       await refreshSources();
-      notice(ok?"Seven Heaven V4.6.2 opérationnel · Tous les résultats sont réalignés lors d'un changement de source · Archive V1/V2 conservée · Binance mensuel certifiable · OKX public disponible.":
-        "Seven Heaven V4.6.2 opérationnel. Charge une archive Binance ou OKX publique.","success");
+      notice(ok?"Seven Heaven V4.7.0-RC1 opérationnel · Tous les résultats sont réalignés lors d'un changement de source · Archive V1/V2 conservée · Binance mensuel certifiable · OKX public disponible.":
+        "Seven Heaven V4.7.0-RC1 opérationnel. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();

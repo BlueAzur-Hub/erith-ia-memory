@@ -1,9 +1,9 @@
-name: Seven Heaven Strategy Lab V4.6.2 PAPER validation
+name: Seven Heaven Strategy Lab V4.7.0-RC1 PAPER validation
 
 on:
   push:
     branches:
-      - maintenance/strategy-lab-v4-6-2-ci-20261116
+      - release/strategy-lab-v4-7-0-rc1
       - main
     paths:
       - 'seven_heaven_strategy_lab/**'
@@ -55,9 +55,9 @@ jobs:
           set -euo pipefail
           python -m unittest discover -v -s tests -p 'test_*.py'
 
-      - name: V4.6.2 local API contract smoke
+      - name: V4.7.0-RC1 local API contract smoke
         env:
-          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-v462/workspace
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-v470rc1/workspace
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -71,7 +71,7 @@ jobs:
           print("PASS reference source installed in isolated runner workspace")
           PY
 
-          python -m src.server > "$RUNNER_TEMP/seven-lab-v462.log" 2>&1 &
+          python -m src.server > "$RUNNER_TEMP/seven-lab-v470rc1.log" 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
 
@@ -96,9 +96,9 @@ jobs:
               except Exception:
                   time.sleep(.2)
           else:
-              raise RuntimeError("V4.6.2 local server did not start")
+              raise RuntimeError("V4.7.0-RC1 local server did not start")
 
-          assert health["version"]=="4.6.2"
+          assert health["version"]=="4.7.0-rc1"
           assert health["live_trading"] is False
           assert health["strategy_creator_enabled"] is True
           assert health["market_microscope_enabled"] is True
@@ -128,7 +128,7 @@ jobs:
           assert f["safety"]["orders_real"]==0
           assert f["methodology"]["warmup_fills_allowed"] is False
 
-          print("PASS V4.6.2 local API / Scientific / Research PAPER contracts")
+          print("PASS V4.7.0-RC1 local API / Scientific / Research PAPER contracts")
           PY
 
   okx-public-smoke:
@@ -197,11 +197,11 @@ jobs:
             throw "Missing Windows double-click launcher"
           }
 
-      - name: Launch actual Windows CMD and verify V4.6.2
+      - name: Launch actual Windows CMD and verify V4.7.0-RC1
         shell: pwsh
         run: |
           $env:SEVEN_LAB_OPEN_BROWSER = "0"
-          $env:SEVEN_LAB_WORKSPACE = Join-Path $env:RUNNER_TEMP "seven-lab-v462-workspace"
+          $env:SEVEN_LAB_WORKSPACE = Join-Path $env:RUNNER_TEMP "seven-lab-v470rc1-workspace"
 
           Push-Location "seven_heaven_strategy_lab"
           py -3.13 -c "from pathlib import Path; import os; from src.reference_data import install_reference; s=install_reference(Path(os.environ['SEVEN_LAB_WORKSPACE'])); assert s['available']"
@@ -220,14 +220,152 @@ jobs:
               } catch { }
               Start-Sleep -Milliseconds 250
             }
-            if (-not $ready) { throw "Python CMD launcher failed to start V4.6.2 loopback PAPER server" }
-            if ($health.version -ne "4.6.2") { throw "Expected V4.6.2 health contract" }
+            if (-not $ready) { throw "Python CMD launcher failed to start V4.7.0-RC1 loopback PAPER server" }
+            if ($health.version -ne "4.7.0-rc1") { throw "Expected V4.7.0-RC1 health contract" }
 
             $page = Invoke-WebRequest -Uri "http://127.0.0.1:8777/" -UseBasicParsing -TimeoutSec 5
             if ($page.StatusCode -ne 200 -or -not $page.Content.Contains("SEVEN HEAVEN")) {
               throw "Local UI was not served"
             }
-            Write-Host "PASS actual Windows CMD launched V4.6.2 PAPER UI"
+            Write-Host "PASS actual Windows CMD launched V4.7.0-RC1 PAPER UI"
           } finally {
             taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null
           }
+
+
+  package-v470-rc1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs:
+      - linux-python-313
+      - windows-python-313-double-click
+      - okx-public-smoke
+    steps:
+      - name: Checkout exact RC source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Build source ZIP without workspace or caches
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import zipfile
+
+          root=Path("seven_heaven_strategy_lab")
+          out=Path("SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip")
+          checksum=Path("SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt")
+
+          excluded={"workspace","__pycache__",".pytest_cache"}
+          files=[]
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              rel=path.relative_to(root)
+              if any(part in excluded for part in rel.parts):
+                  continue
+              if path.suffix in {".pyc",".pyo"}:
+                  continue
+              files.append(path)
+
+          with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
+              for path in sorted(files,key=lambda p:p.as_posix()):
+                  arc=(Path("seven_heaven_strategy_lab")/path.relative_to(root)).as_posix()
+                  info=zipfile.ZipInfo(arc,date_time=(2026,11,16,0,0,0))
+                  info.compress_type=zipfile.ZIP_DEFLATED
+                  info.create_system=3
+                  info.external_attr=0o644 << 16
+                  zf.writestr(info,path.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+
+          digest=hashlib.sha256(out.read_bytes()).hexdigest()
+          checksum.write_text(f"{digest}  {out.name}\n",encoding="utf-8")
+
+          if any("workspace/" in name or "__pycache__" in name for name in zipfile.ZipFile(out).namelist()):
+              raise SystemExit("forbidden workspace/cache path found in archive")
+          print(out.name)
+          print(digest)
+          PY
+
+      - name: Upload RC ZIP and SHA-256
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-strategy-lab-v4-7-0-rc1
+          path: |
+            SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip
+            SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
+          if-no-files-found: error
+          retention-days: 14
+
+
+  publish-v470-rc1-prerelease:
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/release/strategy-lab-v4-7-0-rc1') ||
+      (github.event_name == 'pull_request' &&
+       github.head_ref == 'release/strategy-lab-v4-7-0-rc1' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs:
+      - package-v470-rc1
+    permissions:
+      contents: write
+    steps:
+      - name: Download validated RC package
+        uses: actions/download-artifact@v4
+        with:
+          name: seven-heaven-strategy-lab-v4-7-0-rc1
+          path: delivery
+
+      - name: Publish V4.7.0-RC1 GitHub pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG=seven-heaven-strategy-lab-v4-7-0-rc1-native-donchian-2026-11-16
+          TITLE="Seven Heaven Strategy Lab V4.7.0-RC1 — Native Donchian"
+          NOTES_FILE="$RUNNER_TEMP/v470-rc1-notes.md"
+
+          cat > "$NOTES_FILE" <<'EOF'
+          ## V4.7.0-RC1 — Native Donchian
+
+          Release candidate PAPER uniquement.
+
+          ### Donchian natif
+          - Donchian 55/20 par défaut ;
+          - signal sur bougie clôturée ;
+          - canal précédent excluant la bougie signal ;
+          - fill hypothétique à l'ouverture suivante ;
+          - signal_context Forensics ;
+          - septième référence du Comparateur ;
+          - Aether Scientific sans optimisation automatique des périodes ;
+          - parité financière testée contre tools/experimental_donchian.py.
+
+          ### Validation
+          - Linux Python 3.13 : PASS
+          - Windows Python 3.13 + lancement réel .cmd : PASS
+          - OKX public smoke : PASS
+          - packaging : PASS
+          - aucun workspace/, __pycache__, .pytest_cache, .pyc ou .pyo dans l'archive.
+
+          V4.6.2 reste la release stable installée. Cette publication est une PRE-RELEASE et n'autorise aucune installation automatique ni trading réel.
+          EOF
+
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$TARGET_SHA" --title "$TITLE" --notes-file "$NOTES_FILE" --prerelease --latest=false
+          else
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG" -f sha="$TARGET_SHA" -F force=true >/dev/null
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --notes-file "$NOTES_FILE" --prerelease --latest=false
+          fi
+
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
+
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,tagName,isPrerelease,assets,targetCommitish

@@ -143,7 +143,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.6.2"
+    server_version = "SevenHeavenStrategyLab/4.7.0-rc1"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -189,8 +189,9 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.6.2",
-                        "status": "LOCAL_PAPER_ONLY", "live_trading": False,
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.7.0-rc1",
+                        "release_channel": "RC1",
+                        "status": "LOCAL_PAPER_ONLY_RELEASE_CANDIDATE", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
                         "public_pairs": list(ALLOWED_SPOT),
@@ -202,6 +203,7 @@ class Handler(BaseHTTPRequestHandler):
                         "controlled_filter_research_enabled": True,
                         "certified_binance_monthly_enabled": True,
                         "explicit_no_trade_warmup_enabled": True,
+                        "native_donchian_enabled": True,
                         "market_microscope_windows": list(ALLOWED_WINDOWS),
                         "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
                         "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
