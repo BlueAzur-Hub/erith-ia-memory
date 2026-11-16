@@ -1,7 +1,7 @@
 """Research-only Binance monthly validator for an explicit small symbol allowlist.
 
-BTCUSDT delegates to the unchanged V4.6 validator. ETHUSDT uses the same strict
-monthly invariants for the multi-asset research phase. No network or file writes.
+BTCUSDT delegates to the unchanged V4.6 validator. ETHUSDT, BNBUSDT, XRPUSDT
+and SOLUSDT use the same strict monthly invariants for the multi-asset research phase. No network or file writes.
 """
 from __future__ import annotations
 
@@ -28,6 +28,9 @@ from src.binance_monthly_v46 import (
 ALLOWED_SYMBOLS = {
     "BTCUSDT": ("BTC", "USDT"),
     "ETHUSDT": ("ETH", "USDT"),
+    "BNBUSDT": ("BNB", "USDT"),
+    "XRPUSDT": ("XRP", "USDT"),
+    "SOLUSDT": ("SOL", "USDT"),
 }
 
 
