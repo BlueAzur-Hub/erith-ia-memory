@@ -251,13 +251,67 @@ jobs:
           done
 
           PILOT_ROOT="$root" python - <<'PY'
-          import json, os
+          import calendar, csv, hashlib, io, json, os, zipfile
+          from collections import Counter
+          from datetime import datetime, timezone
           from pathlib import Path
           from tools.certify_binance_history import certify_directory
-          out = certify_directory(Path(os.environ["PILOT_ROOT"]))
+
+          root = Path(os.environ["PILOT_ROOT"])
+          out = certify_directory(root)
+          expected_months = {"2019-03", "2020-03", "2021-04"}
+          observed_months = {m["month"] for m in out["months"]} | {m["month"] for m in out["rejected"]}
           assert out["months_seen"] == 3
-          assert all(m["historical_incident_reported"] for m in out["months"])
+          assert observed_months == expected_months
           print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+
+          diagnostics = []
+          for label in sorted(expected_months):
+              year, month = map(int, label.split("-"))
+              name = f"BTCUSDT-1h-{label}"
+              archive = (root / f"{name}.zip").read_bytes()
+              checksum = (root / f"{name}.zip.CHECKSUM").read_text(encoding="ascii").strip()
+              published = checksum.split()[0].lower()
+              observed = hashlib.sha256(archive).hexdigest()
+              assert observed == published
+              with zipfile.ZipFile(io.BytesIO(archive)) as z:
+                  rows = list(csv.reader(io.StringIO(z.read(f"{name}.csv").decode("utf-8"))))
+              factor = 1000
+              first = int(datetime(year, month, 1, tzinfo=timezone.utc).timestamp())
+              count = calendar.monthrange(year, month)[1] * 24
+              expected = {first + i * 3600 for i in range(count)}
+              stamps = [int(r[0]) // factor for r in rows if r and r[0].isdigit()]
+              counts = Counter(stamps)
+              actual = set(stamps)
+              missing = sorted(expected - actual)
+              outside = sorted(actual - expected)
+              duplicates = sorted(t for t, n in counts.items() if n > 1)
+              unordered = sum(1 for a, b in zip(stamps, stamps[1:]) if b <= a)
+              close_bad = []
+              for row in rows:
+                  if len(row) >= 7 and row[0].isdigit() and row[6].isdigit():
+                      open_raw = int(row[0])
+                      expected_close = open_raw + 3_600_000 - 1
+                      if int(row[6]) != expected_close:
+                          close_bad.append((open_raw // factor, int(row[6]), expected_close))
+              diagnostics.append({
+                  "month": label,
+                  "archive_sha256": observed,
+                  "rows": len(rows),
+                  "expected_rows": count,
+                  "missing_count": len(missing),
+                  "missing_utc_sample": [datetime.fromtimestamp(t, timezone.utc).isoformat() for t in missing[:12]],
+                  "duplicate_count": len(duplicates),
+                  "duplicate_utc_sample": [datetime.fromtimestamp(t, timezone.utc).isoformat() for t in duplicates[:12]],
+                  "outside_month_count": len(outside),
+                  "unordered_or_duplicate_transitions": unordered,
+                  "close_time_mismatch_count": len(close_bad),
+                  "close_time_mismatch_open_utc_sample": [
+                      datetime.fromtimestamp(t[0], timezone.utc).isoformat() for t in close_bad[:12]
+                  ],
+              })
+          print("INCIDENT_DIAGNOSTICS")
+          print(json.dumps(diagnostics, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
       - name: Prove incident probe stayed ephemeral
