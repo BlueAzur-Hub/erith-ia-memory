@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "V4.5 Firefox UI accepted on 2026-11-13 based on screenshot and copied page text: OKX BTC/USDC 720 closed 1h candles, two chronological filter comparisons (RSI<60: -3.28% vs -3.40% owner; RSI<45: 0% with ZERO fills vs -9.36% owner). This is owner UI evidence only, not independent rehash of USB archive nor blind out-of-sample success. No new ZIP to install or repeated owner test required. Keep E:\\seven_heaven_strategy_lab\\workspace\\ private and backed up on another device.",
-  "next_developer_task": "V4.6 Extended Historical Research is planned (NOT BUILT): verify official Binance public monthly spot BTCUSDT 1h archives for 2019-2021 and 2024-2025 using publisher .CHECKSUM, handle milliseconds pre-2025 vs microseconds from 2025-01, enforce continuity/time alignment/limits and local USB disk reserve without overwriting workspace; run small separate pilot before integration. Do not merge BTC/USDT with OKX BTC/USDC. Explore risk sizing only after historical data quality. Freqtrade/Hummingbot optional and PAPER-only; V5 autonomous bots not built.",
+  "next_single_owner_check": "V4.6.2 accepted in Firefox/Windows on 2026-11-16. No repeated owner acceptance is required. Before any future installation, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\; keep the Lab PAPER-only.",
+  "next_developer_task": "Post-V4.6.2 research phase: build and verify a long certified Binance Spot BTC/USDT 1h historical corpus, starting with a small official monthly pilot and then extending to 2019-2021 and 2024-2025. Verify publisher .CHECKSUM, timestamp units, continuity, UTC alignment and duplicates; keep Binance BTC/USDT separate from OKX BTC/USDC and do not overwrite workspace. After data quality is proven, run existing strategies across multiple regimes with true chronological out-of-sample/walk-forward tests; only then consider new strategies, risk sizing, Freqtrade/Hummingbot PAPER comparisons or V5 autonomous PAPER bots.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -863,14 +863,14 @@
     "location": "shared_agent_crypto_research_strategy_lab",
     "zip_storage_policy": "ONE_IMMUTABLE_COMPLETE_ZIP_PER_RELEASE_IN_GITHUB_RELEASES; NO_COPY_IN_SHARED_REPO_TREE",
     "local_usb_policy": "ONLY_ONE_ACTIVE_RUNTIME_PLUS_PRIVATE_WORKSPACE; DO_NOT_DELETE_OR_OVERWRITE_WORKSPACE",
-    "current_published": "4.5.0",
-    "last_user_firefox_accepted": "4.5.0",
+    "current_published": "4.6.2",
+    "last_user_firefox_accepted": "4.6.2",
     "release_assets_sha256_sourced_from": "verified GitHub Releases asset digest",
     "metadata_pointers": "This manifesto documents state; README.md in shared strategy_lab folder is the human navigation entry point; Notion links to README.",
-    "last_verified_utc_date": "2026-11-13"
+    "last_verified_utc_date": "2026-11-16"
   },
   "v4_6_research_plan": {
-    "status": "SOURCE_VALIDATOR_PILOT_DRAFT_PR_CI_SUCCESS_NOT_MERGED_NO_REAL_ARCHIVE_VERIFIED",
+    "status": "SUPERSEDED_BY_RELEASED_AND_OWNER_ACCEPTED_V4_6_2",
     "path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_6_EXTENDED_HISTORICAL_RESEARCH_SOURCE_PLAN_2026_11_13.md",
     "base_market": "Binance Spot BTC/USDT 1h",
     "planned_windows": [
@@ -885,9 +885,19 @@
     "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/43493696195",
     "ci_conclusion": "success",
     "local_new_tests_passed": 14,
-    "real_monthly_source_verified": false,
-    "main_branch_merged": false,
-    "owner_usb_v46_installed": false,
-    "note": "Pilot module is isolated in a draft PR; current released and owner accepted product remains V4.5.0. Main's existing CI repackages V4.5 on code pushes; review before merging pilot."
+    "real_monthly_source_verified": true,
+    "main_branch_merged": true,
+    "owner_usb_v46_installed": true,
+    "note": "Historical V4.6 planning record retained for traceability. V4.6.0, V4.6.1 and V4.6.2 were subsequently published; V4.6.2 is Latest and owner-accepted in Firefox on 2026-11-16. Continue with long certified historical research rather than rebuilding V4.6."
+  },
+  "current_canonical_release": {
+    "version": "4.6.2",
+    "name": "Source Context Reset",
+    "status": "LATEST_OWNER_FIREFOX_ACCEPTED",
+    "accepted_date": "2026-11-16",
+    "paper_only": true,
+    "tests_passed": "69/69",
+    "zip_sha256": "7137ec9b940f726f60fd8ba04a0f9cb21c51c9b09e680909e64a31155ced378d",
+    "handoff_path": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md"
   }
 }
