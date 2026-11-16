@@ -68,6 +68,8 @@ def options(raw):
     }
     if result["ema_fast"] >= result["ema_slow"]:
         raise LabError("L'EMA rapide doit être inférieure à l'EMA lente")
+    if result["donchian_exit"] >= result["donchian_entry"]:
+        raise LabError("La période de sortie Donchian doit être inférieure à la période d'entrée")
     if not isinstance(result["entry_rule"], str) or result["entry_rule"] not in ENTRY_RULES:
         raise LabError("Règle d'entrée personnalisée non autorisée")
     if not isinstance(result["filter_rule"], str) or result["filter_rule"] not in FILTER_RULES:
