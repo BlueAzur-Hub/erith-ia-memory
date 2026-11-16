@@ -31,7 +31,7 @@ def write_fixture(root: Path, year: int, month: int, *, missing=False):
     blob = blob_io.getvalue()
     (root / (name + ".zip")).write_bytes(blob)
     (root / (name + ".zip.CHECKSUM")).write_text(
-        hashlib.sha256(blob).hexdigest() + "  " + name + ".zip\\n", encoding="ascii"
+        hashlib.sha256(blob).hexdigest() + "  " + name + ".zip\n", encoding="ascii"
     )
 
 
