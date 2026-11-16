@@ -732,6 +732,47 @@ jobs:
           print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run preregistered research-only SuperTrend 20-4
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from tools.experimental_supertrend import simulate_supertrend
+          from src.observatory import aggregate_bars
+
+          source = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          years = {
+              "2024_RESEARCH_REPLAY": [b for b in source if b[0] < split],
+              "2025_KNOWN_MARKET_VALIDATION": [b for b in source if b[0] >= split],
+          }
+          out = {}
+          for label, hourly in years.items():
+              out[label] = {}
+              for timeframe, bars in (
+                  ("1h", hourly),
+                  ("4h", aggregate_bars(hourly, "4h", source_timeframe="1h")),
+              ):
+                  base = simulate_supertrend(bars, fee=0.001, slippage=0.0005)
+                  ideal = simulate_supertrend(bars, fee=0.0, slippage=0.0)
+                  stress = simulate_supertrend(bars, fee=0.002, slippage=0.001)
+                  out[label][timeframe] = {
+                      "source_candles": len(bars),
+                      "params": {**base["params"], "timeframe": timeframe},
+                      "base": base["results"],
+                      "zero_friction": ideal["results"],
+                      "double_cost": stress["results"],
+                      "safety": base["safety"],
+                  }
+                  assert base["safety"]["orders_real"] == 0
+                  assert base["safety"]["runtime_integration"] is False
+          print("PREREGISTERED_SUPERTREND_20_4_RESULTS")
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove 2024-2025 inventory stayed ephemeral
         run: |
           set -euo pipefail
