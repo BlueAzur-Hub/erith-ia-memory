@@ -1403,6 +1403,106 @@ jobs:
           echo "PASS BNB/XRP/SOL PAPER validation used runner-temp only"
 
 
+
+  donchian-mechanism-regime-2024-2025:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify fixed five-asset 2024-2025 panel
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-regime-panel"
+          mkdir -p "$root"
+          for symbol in BTCUSDT ETHUSDT BNBUSDT XRPUSDT SOLUSDT; do
+            mkdir -p "$root/$symbol"
+            base="https://data.binance.vision/data/spot/monthly/klines/$symbol/1h"
+            for year in 2024 2025; do
+              for mm in $(seq -w 1 12); do
+                file="$symbol-1h-$year-$mm.zip"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$symbol/$file"
+                curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$symbol/$file.CHECKSUM"
+              done
+            done
+          done
+
+      - name: Run preregistered descriptive mechanism/regime study
+        run: |
+          set -euo pipefail
+          PANEL_ROOT="$RUNNER_TEMP/donchian-regime-panel" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.donchian_mechanism_regime import analyze_asset_year,summarize
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["PANEL_ROOT"])
+          reports=[]
+          cert={}
+          for symbol in ("BTCUSDT","ETHUSDT","BNBUSDT","XRPUSDT","SOLUSDT"):
+              cert[symbol]=0
+              for year in (2024,2025):
+                  hourly=[]
+                  previous_last=None
+                  for month in range(1,13):
+                      name=f"{symbol}-1h-{year}-{month:02d}.zip"
+                      r=validate_symbol_month(
+                          (root/symbol/name).read_bytes(),
+                          (root/symbol/f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                          symbol=symbol,year=year,month=month,
+                      )
+                      if previous_last is not None:
+                          assert r["bars"][0][0]==previous_last+3600
+                      previous_last=r["bars"][-1][0]
+                      hourly.extend(r["bars"])
+                      cert[symbol]+=1
+                  expected=8784 if year==2024 else 8760
+                  assert len(hourly)==expected
+                  bars4h=aggregate_bars(hourly,"4h",source_timeframe="1h")
+                  reports.append(analyze_asset_year(symbol,year,bars4h))
+          assert all(v==24 for v in cert.values())
+          out=summarize(reports)
+          assert out["windows"]==10
+          assert out["methodology"]["threshold_search_performed"] is False
+          assert out["safety"]["orders_real"]==0
+          compact={
+              "schema":out["schema"],
+              "status":out["status"],
+              "windows":out["windows"],
+              "closed_trades":out["closed_trades"],
+              "overall_trade_groups":out["overall_trade_groups"],
+              "by_window":out["by_window"],
+              "descriptive_regime_correlations":out["descriptive_regime_correlations"],
+              "methodology":out["methodology"],
+              "safety":out["safety"],
+              "certified_months":cert,
+          }
+          print("DONCHIAN_MECHANISM_REGIME_2024_2025")
+          print(json.dumps(compact,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove mechanism study stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Donchian mechanism/regime study used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
