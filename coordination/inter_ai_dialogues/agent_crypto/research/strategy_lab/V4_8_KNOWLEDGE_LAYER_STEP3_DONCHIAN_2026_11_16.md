@@ -20,6 +20,19 @@ La fiche explique :
 - critères d'analyse après backtest ;
 - références externes + preuves locales Seven.
 
+## Preuves locales intégrées dans la fiche
+
+La fiche ne présente pas Donchian comme une recette universelle. Elle reprend les études déjà archivées dans le Coffre partagé :
+
+- BTC 2019–2021 : 3 blocs positifs sur 5 ;
+- panel BTC/ETH/BNB/XRP/SOL 2024–2025 : 7 fenêtres annuelles positives sur 10 ;
+- panel BTC/ETH/BNB/XRP/SOL janvier→octobre 2026 : 0 fenêtre positive sur 5 ;
+- étude trade-level 2024–2025 : 136 round-trips, 54 gagnants et 82 perdants.
+
+Lecture Seven : les bonnes fenêtres dépendent de quelques tendances longues ; la stratégie reste fortement dépendante du régime et n'est pas présentée comme robuste universellement.
+
+Ces chiffres sont des observations historiques, pas des probabilités futures. Les échecs restent visibles.
+
 ## Contrat moteur Seven
 
 Le moteur n'a pas été modifié.
@@ -48,16 +61,14 @@ Règle native :
 `SEVEN_HEAVEN_STRATEGY_LAB_V4_8_KNOWLEDGE_LAYER_STEP3_DONCHIAN_DEV.zip`
 
 SHA-256 :
-`0e86993149bd654836b85fcafba49e16c7724be24812ba0935614e6f6461197a`
+`50c0e5f21775c51f901fe97c1b519c2923d0113c876367e2a9f6a1359176639c`
 
-## Sources externes
+## Sources documentaires externes
 
 - TradingView Help Center — Donchian Channels (DC)
 - Investopedia — Donchian Channels: Formula, Calculations, and Uses
 
 ## Sources internes Seven Heaven déjà présentes dans ce répertoire
-
-La fiche Donchian doit être lue avec le corpus expérimental déjà archivé :
 
 - `SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_RESULTS_2026_11_16.md`
 - `SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_2019_2021_SEGMENTED_RESULTS_2026_11_16.md`
@@ -69,4 +80,4 @@ La fiche Donchian doit être lue avec le corpus expérimental déjà archivé :
 
 ## Continuité
 
-Étape suivante seulement après contrôle Firefox propriétaire : approfondir la liaison entre la fiche Donchian et les résultats Seven réels, puis poursuivre la Knowledge Layer stratégie par stratégie.
+Étape suivante seulement après contrôle Firefox propriétaire : conserver la profondeur Knowledge Layer et poursuivre stratégie par stratégie, sans modifier le moteur PAPER de référence.
