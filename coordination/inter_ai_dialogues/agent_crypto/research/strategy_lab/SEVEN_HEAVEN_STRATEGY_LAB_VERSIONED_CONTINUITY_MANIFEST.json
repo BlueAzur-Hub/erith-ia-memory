@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Aucun contrôle propriétaire automatique requis après la réception Firefox V4.6.2 du 16/11/2026. Toute nouvelle recette propriétaire ne sera demandée qu'après un nouveau jalon logiciel explicite. Préserver E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ et sa sauvegarde indépendante.",
-  "next_developer_task": "PHASE HISTORIQUE LONGUE: étendre les sources certifiées Binance Spot BTC/USDT 1h en priorité sur 2019-2021, puis 2024-2025, mois par mois avec archive officielle + .CHECKSUM, contrôle d'horodatage, continuité, doublons, trous, alignement UTC et SHA-256 local. Conserver OKX BTC/USDC séparé de Binance BTC/USDT. Une fois la qualité historique établie, lancer des comparaisons multi-régimes, walk-forward plus profond et holdout réellement séparé. Freqtrade/Hummingbot restent facultatifs et PAPER-only; aucune V4.7/V5 automatique.",
+  "next_single_owner_check": "No owner runtime check required now. V4.6.2 remains accepted and unchanged. If a future research candidate survives preregistered validation and becomes a runtime change, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ before installation.",
+  "next_developer_task": "Keep V4.6.2 canonical. Do not promote RSI<45, VOLUME_1_2, or EMA 12/32 from observed training/holdout evidence. Next research priority is preregistered TURNOVER CONTROL on a fresh or properly segmented unused historical corpus: cooldown/minimum-hold, multi-candle confirmation, regime gating, or other fixed cost-aware entry controls. Preserve checksum-gated sources, explicit gap boundaries, fresh portfolio reset across source discontinuities, and no interpolation. Only consider V4.7 after a predeclared method survives later/untouched validation.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -911,5 +911,60 @@
     "real_orders": 0,
     "workspace_policy": "PRIVATE_DO_NOT_DELETE_OR_OVERWRITE",
     "next_phase": "CERTIFIED_LONG_HISTORY_2019_2021_THEN_2024_2025"
+  },
+  "long_history_phase_1": {
+    "status": "COMPLETE_2026_11_16",
+    "canonical_runtime": "4.6.2",
+    "runtime_changed": false,
+    "source_certification": {
+      "target": "Binance Spot BTC/USDT 1h",
+      "windows": [
+        "2019-2021",
+        "2024-2025"
+      ],
+      "months_attempted": 60,
+      "strict_valid_months": 43,
+      "anomalous_months": 17,
+      "clean_continuous_corpus": "2024-2025",
+      "clean_corpus_rows_1h": 17544,
+      "interpolation": false
+    },
+    "current_owner_profile_2024_2025": {
+      "timeframe": "4h",
+      "capital_usdt": 10000,
+      "fee_per_side": 0.001,
+      "slippage_per_side": 0.0005,
+      "continuous_return_pct": -16.71182,
+      "zero_friction_counterfactual_return_pct": 23.75536,
+      "fills": 264,
+      "simulated_fees_usdt": 2891.38,
+      "interpretation": "TURNOVER_AND_FRICTION_ARE_FIRST_ORDER_RESEARCH_PROBLEMS"
+    },
+    "aether_scientific": {
+      "holdout_windows": 2,
+      "positive_windows": 0,
+      "mean_holdout_return_pct": -15.09377,
+      "worst_holdout_return_pct": -26.70224,
+      "mean_double_cost_return_pct": -23.49276,
+      "selected_ema": "12/32",
+      "promoted": false
+    },
+    "aether_research": {
+      "training_selected_filter": "VOLUME_1_2",
+      "mean_selected_holdout_return_pct": -22.70251,
+      "mean_owner_holdout_return_pct": -18.52812,
+      "training_winner_generalized": false
+    },
+    "preregistered_rsi45": {
+      "source_gate_continuous_2022_2023": "FAILED_BEFORE_PERFORMANCE_DUE_TO_REAL_SOURCE_GAP",
+      "replacement_method": "SEGMENT_AND_RESET_NO_GAP_FILLING",
+      "segment_a_owner_return_pct": -1.9572,
+      "segment_a_rsi45_return_pct": -22.34971,
+      "segment_b_owner_return_pct": -1.08757,
+      "segment_b_rsi45_return_pct": -4.10588,
+      "verdict": "PREREGISTERED_SEGMENTED_HYPOTHESIS_FAIL",
+      "adopt_rsi45": false
+    },
+    "durable_report": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_LONG_HISTORY_PHASE_1_RESULTS_2026_11_16.md"
   }
 }
