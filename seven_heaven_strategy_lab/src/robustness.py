@@ -62,6 +62,7 @@ def _warmup_window(bars, train_end, test_end, params):
         60,
         int(params["ema_slow"]) * 3,
         int(params["bb_period"]) + 1,
+        int(params["donchian_entry"]) + 1,
         int(params["rsi_period"]) + 2,
         int(params["volume_period"]) + 2,
     )
@@ -98,7 +99,7 @@ def _metrics(run):
 
 def _grid(params):
     # Parameter variations affect existing EMA and personal-rule logic ONLY;
-    # DCA/Bollinger/HOLD/CASH do not optimize an irrelevant EMA.
+    # Donchian/DCA/Bollinger/HOLD/CASH do not optimize an irrelevant EMA.
     if params["kind"] not in {"EMA_CROSS", "CUSTOM_RULES"}:
         return [dict(params)]
     pairs = [(params["ema_fast"], params["ema_slow"]), *EMA_PRESETS]
