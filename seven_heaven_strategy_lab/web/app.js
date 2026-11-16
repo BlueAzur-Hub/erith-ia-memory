@@ -56,7 +56,8 @@
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare" || id === "filters-run") && !available)
-        || (id === "filters-run" && !["EMA_CROSS","CUSTOM_RULES"].includes($("kind").value));
+        || (id === "filters-run" && !["EMA_CROSS","CUSTOM_RULES"].includes($("kind").value))
+        || (id === "replay-strategy-spec" && !selectedStrategySpec);
       b.textContent = working && (id === "run" || id === "compare") ? label : b.dataset.defaultText;
     }
   }
