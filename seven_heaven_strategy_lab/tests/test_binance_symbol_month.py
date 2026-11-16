@@ -54,10 +54,23 @@ class BinanceSymbolMonthTests(unittest.TestCase):
         with self.assertRaises(MonthlyArchiveError):
             validate_symbol_month(blob, checksum, symbol="ETHUSDT", year=2024, month=1)
 
+    def test_fixed_top5_research_symbols_are_certified(self):
+        expected = {
+            "BNBUSDT": "BNB/USDT",
+            "XRPUSDT": "XRP/USDT",
+            "SOLUSDT": "SOL/USDT",
+        }
+        for symbol, pair in expected.items():
+            with self.subTest(symbol=symbol):
+                blob, checksum = fixture(symbol=symbol)
+                out = validate_symbol_month(blob, checksum, symbol=symbol, year=2024, month=1)
+                self.assertEqual(out["pair"], pair)
+                self.assertEqual(out["rows"], 744)
+
     def test_symbol_outside_allowlist_is_rejected(self):
-        blob, checksum = fixture()
+        blob, checksum = fixture(symbol="ADAUSDT")
         with self.assertRaises(MonthlyArchiveError):
-            validate_symbol_month(blob, checksum, symbol="SOLUSDT", year=2024, month=1)
+            validate_symbol_month(blob, checksum, symbol="ADAUSDT", year=2024, month=1)
 
 
 if __name__ == "__main__":
