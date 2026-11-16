@@ -321,6 +321,89 @@ jobs:
           echo "PASS incident probe used runner-temp only; repository workspace untouched"
 
 
+
+  binance-2019-2021-full-month-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Inventory all official Binance BTCUSDT 1h months from 2019 through 2021
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-2019-2021-inventory"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          total_bytes=0
+          for year in 2019 2020 2021; do
+            for mm in $(seq -w 1 12); do
+              file="BTCUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45                 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20                 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+              bytes=$(stat -c%s "$root/$file")
+              if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                echo "Unexpected archive size for $file: $bytes" >&2
+                exit 1
+              fi
+              total_bytes=$((total_bytes + bytes))
+            done
+          done
+          if [ "$total_bytes" -gt 20000000 ]; then
+            echo "Bounded pilot exceeded 20 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+          INVENTORY_ROOT="$root" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory
+          out = certify_directory(Path(os.environ["INVENTORY_ROOT"]))
+          assert out["months_seen"] == 36
+          certified = [
+              {
+                  "month": m["month"],
+                  "rows": m["rows"],
+                  "archive_sha256": m["archive_sha256"],
+                  "normalized_csv_sha256": m["normalized_csv_sha256"],
+                  "historical_incident_reported": m["historical_incident_reported"],
+              }
+              for m in out["months"]
+          ]
+          summary = {
+              "schema": out["schema"],
+              "certified_at_utc": out["certified_at_utc"],
+              "months_seen": out["months_seen"],
+              "months_certified": out["months_certified"],
+              "months_rejected": out["months_rejected"],
+              "certified": certified,
+              "rejected": out["rejected"],
+              "safety": out["safety"],
+          }
+          print("FULL_2019_2021_INVENTORY")
+          print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove full inventory stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS 36-month inventory used runner-temp only; repository workspace untouched"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
