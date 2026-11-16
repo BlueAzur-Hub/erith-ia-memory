@@ -1503,6 +1503,78 @@ jobs:
           echo "PASS Donchian mechanism/regime study used runner-temp only"
 
 
+
+  donchian-btc-2026-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify BTCUSDT January through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/donchian-btc-2026"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          BTC26_ROOT="$root" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory,load_certified_contiguous_block
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root=Path(os.environ["BTC26_ROOT"])
+          inv=certify_directory(root,require_contiguous=True)
+          assert inv["months_seen"]==10 and inv["months_rejected"]==0
+          hourly=load_certified_contiguous_block(root)
+          assert len(hourly)==7296
+          bars4h=aggregate_bars(hourly,"4h",source_timeframe="1h")
+          assert len(bars4h)==1824
+
+          base=simulate_donchian(bars4h,fee=0.001,slippage=0.0005)
+          ideal=simulate_donchian(bars4h,fee=0.0,slippage=0.0)
+          stress=simulate_donchian(bars4h,fee=0.002,slippage=0.001)
+          assert base["safety"]["orders_real"]==0
+          out={
+              "period":"2026-01-01_to_2026-10-31",
+              "hourly_candles":len(hourly),
+              "candles_4h":len(bars4h),
+              "base":base["results"],
+              "zero_friction":ideal["results"],
+              "double_cost":stress["results"],
+              "safety":base["safety"],
+          }
+          print("DONCHIAN_55_20_4H_BTC_2026_RESULTS")
+          print(json.dumps(out,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove BTC 2026 replay stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Donchian BTC 2026 replay used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
