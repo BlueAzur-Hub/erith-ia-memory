@@ -870,6 +870,34 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-16",
+      "date_utc": "2026-11-16",
+      "first_seen_at_utc": "2026-11-16T07:01:40.530Z",
+      "source_times_utc": [
+        "2026-11-16T06:24:07.524Z",
+        "2026-11-16T06:23:59.526Z"
+      ],
+      "universe_eligible": 349,
+      "policy_matches": 2,
+      "selected": [
+        {
+          "coin_id": "falcon-finance-ff",
+          "symbol": "FF",
+          "source_at_utc": "2026-11-16T06:24:07.524Z",
+          "rank": 115,
+          "price_usd": 0.1008186759706526
+        },
+        {
+          "coin_id": "nesa",
+          "symbol": "NES",
+          "source_at_utc": "2026-11-16T06:23:59.526Z",
+          "rank": 385,
+          "price_usd": 0.18044377744941112
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2034,6 +2062,27 @@
       "sha256": "45b287b4684d8d4705ec7288f24b9e0d7ba31401489bb32a282084233d8afdbb",
       "recorded_at_utc": "2026-11-15T21:09:14.616Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-14",
+      "file": "observations/2026-11-16T070140530Z--2026-11-14.json",
+      "sha256": "4ef1fa197986a40dfba6bbcb1c13b000859689e40c77f599de27f2f084cfb1f9",
+      "recorded_at_utc": "2026-11-16T07:01:40.530Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-15",
+      "file": "observations/2026-11-16T070140530Z--2026-11-15.json",
+      "sha256": "f907ad7b6e38616de3ff4b312aa488db02a6f906e40eb6efaafc12fb708aa23f",
+      "recorded_at_utc": "2026-11-16T07:01:40.530Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-16",
+      "file": "observations/2026-11-16T070140530Z--2026-11-16.json",
+      "sha256": "3b087a398f57022e9f78971474a6a318fb627e89c5a85ac1962a36e806a0bc88",
+      "recorded_at_utc": "2026-11-16T07:01:40.530Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
