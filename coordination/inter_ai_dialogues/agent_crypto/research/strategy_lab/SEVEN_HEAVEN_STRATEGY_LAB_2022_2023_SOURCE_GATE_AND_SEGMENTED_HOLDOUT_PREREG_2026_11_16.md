@@ -66,10 +66,16 @@ Exclude:
 
 ### Segment B
 
-Use only strict-valid hourly candles from:
+The 1h source resumes at 14:00 UTC, but the experiment timeframe is 4h and the accepted V4.6.2 aggregator requires alignment on 00/04/08/12/16/20 UTC boundaries.
 
-- start: 2023-03-24 14:00 UTC;
-- end: 2023-12-31 23:00 UTC inclusive.
+Therefore, before any performance calculation:
+
+- 14:00 and 15:00 UTC are valid source candles but are excluded as a non-traded alignment buffer;
+- Segment B starts at **2023-03-24 16:00 UTC**;
+- Segment B ends at 2023-12-31 23:00 UTC inclusive;
+- no indicator warmup, position or fill crosses the source discontinuity.
+
+This alignment correction is methodological, source-derived and committed before performance is revealed.
 
 ### Portfolio rule
 
@@ -77,7 +83,8 @@ Each segment starts with:
 
 - fresh fictitious capital: 10,000 USDT;
 - zero BTC inventory;
-- no position transfer across the source gap.
+- no position transfer across the source gap;
+- no trading during the excluded 14:00–15:00 alignment buffer.
 
 Results from Segment A and Segment B are **independent experiments**. They are never compounded across the missing-data boundary.
 
