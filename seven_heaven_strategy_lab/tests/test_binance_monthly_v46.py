@@ -51,6 +51,14 @@ class BinanceMonthlyV46Pilot(unittest.TestCase):
         self.assertEqual(out["timestamp_input_unit"], "microseconds")
         self.assertEqual(out["bars"][0][0], 1735689600)
 
+
+    def test_january_2026_microseconds_research_extension(self):
+        blob, checksum = fixture(2026, 1)
+        out = validate_month(blob, checksum, year=2026, month=1)
+        self.assertEqual(out["rows"], 744)
+        self.assertEqual(out["timestamp_input_unit"], "microseconds")
+        self.assertEqual(out["bars"][0][0], 1767225600)
+
     def test_wrong_timestamp_scale_is_not_silently_converted(self):
         def bad(rows):
             rows[0][0] = str(int(rows[0][0]) // 1000)
