@@ -217,6 +217,56 @@ jobs:
           echo "PASS runner-temp only; repository workspace untouched"
 
 
+
+  binance-historical-incident-month-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Probe three historically reported Binance months
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-incident-month-probe"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for month in 2019-03 2020-03 2021-04; do
+            file="BTCUSDT-1h-$month.zip"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          PILOT_ROOT="$root" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory
+          out = certify_directory(Path(os.environ["PILOT_ROOT"]))
+          assert out["months_seen"] == 3
+          assert all(m["historical_incident_reported"] for m in out["months"])
+          print(json.dumps(out, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove incident probe stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS incident probe used runner-temp only; repository workspace untouched"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
