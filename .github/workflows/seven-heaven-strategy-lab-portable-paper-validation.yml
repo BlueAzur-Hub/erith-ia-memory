@@ -974,6 +974,124 @@ jobs:
           echo "PASS 24-month inventory used runner-temp only; repository workspace untouched"
 
 
+
+  binance-ethusdt-2024-2025-donchian-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download bounded official ETHUSDT monthly source set
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-ethusdt-2024-2025"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1h"
+          total_bytes=0
+          for year in 2024 2025; do
+            for mm in $(seq -w 1 12); do
+              file="ETHUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45                 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20                 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+              bytes=$(stat -c%s "$root/$file")
+              if [ "$bytes" -le 0 ] || [ "$bytes" -gt 8000000 ]; then
+                echo "Unexpected ETH archive size for $file: $bytes" >&2
+                exit 1
+              fi
+              total_bytes=$((total_bytes + bytes))
+            done
+          done
+          if [ "$total_bytes" -gt 20000000 ]; then
+            echo "ETH source set exceeded 20 MB: $total_bytes" >&2
+            exit 1
+          fi
+
+      - name: Certify ETHUSDT 2024-2025 and run unchanged Donchian 55-20 4h
+        run: |
+          set -euo pipefail
+          ETH_ROOT="$RUNNER_TEMP/binance-ethusdt-2024-2025" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.binance_symbol_month import validate_symbol_month
+          from tools.experimental_donchian import simulate_donchian
+          from src.observatory import aggregate_bars
+
+          root = Path(os.environ["ETH_ROOT"])
+          yearly = {2024: [], 2025: []}
+          certified = []
+
+          for year in (2024, 2025):
+              previous_last = None
+              for month in range(1, 13):
+                  name = f"ETHUSDT-1h-{year}-{month:02d}.zip"
+                  report = validate_symbol_month(
+                      (root / name).read_bytes(),
+                      (root / f"{name}.CHECKSUM").read_text(encoding="ascii"),
+                      symbol="ETHUSDT",
+                      year=year,
+                      month=month,
+                  )
+                  bars = report["bars"]
+                  if previous_last is not None:
+                      assert bars[0][0] == previous_last + 3600
+                  previous_last = bars[-1][0]
+                  yearly[year].extend(bars)
+                  certified.append({
+                      "month": f"{year}-{month:02d}",
+                      "rows": report["rows"],
+                      "archive_sha256": report["archive_sha256"],
+                      "normalized_csv_sha256": report["normalized_csv_sha256"],
+                      "timestamp_input_unit": report["timestamp_input_unit"],
+                  })
+
+          assert len(certified) == 24
+          assert len(yearly[2024]) == 8784
+          assert len(yearly[2025]) == 8760
+
+          results = {}
+          for year in (2024, 2025):
+              bars4h = aggregate_bars(yearly[year], "4h", source_timeframe="1h")
+              base = simulate_donchian(bars4h, fee=0.001, slippage=0.0005)
+              ideal = simulate_donchian(bars4h, fee=0.0, slippage=0.0)
+              stress = simulate_donchian(bars4h, fee=0.002, slippage=0.001)
+              results[str(year)] = {
+                  "hourly_candles": len(yearly[year]),
+                  "candles_4h": len(bars4h),
+                  "base": base["results"],
+                  "zero_friction": ideal["results"],
+                  "double_cost": stress["results"],
+                  "safety": base["safety"],
+              }
+              assert base["safety"]["orders_real"] == 0
+              assert base["safety"]["runtime_integration"] is False
+
+          print("ETHUSDT_2024_2025_CERTIFIED_MONTHS")
+          print(json.dumps(certified, indent=2, ensure_ascii=False, sort_keys=True))
+          print("DONCHIAN_55_20_4H_ETHUSDT_RESULTS")
+          print(json.dumps(results, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove ETH multi-asset validation stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS ETHUSDT source and PAPER study used runner-temp only; workspace untouched"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
