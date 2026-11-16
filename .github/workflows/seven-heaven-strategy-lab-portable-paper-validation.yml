@@ -231,3 +231,69 @@ jobs:
           } finally {
             taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null
           }
+
+
+  package-v470-rc1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs:
+      - linux-python-313
+      - windows-python-313-double-click
+      - okx-public-smoke
+    steps:
+      - name: Checkout exact RC source
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Build source ZIP without workspace or caches
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import zipfile
+
+          root=Path("seven_heaven_strategy_lab")
+          out=Path("SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip")
+          checksum=Path("SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt")
+
+          excluded={"workspace","__pycache__",".pytest_cache"}
+          files=[]
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              rel=path.relative_to(root)
+              if any(part in excluded for part in rel.parts):
+                  continue
+              if path.suffix in {".pyc",".pyo"}:
+                  continue
+              files.append(path)
+
+          with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
+              for path in sorted(files,key=lambda p:p.as_posix()):
+                  arc=Path("seven_heaven_strategy_lab")/path.relative_to(root)
+                  zf.write(path,arc.as_posix())
+
+          digest=hashlib.sha256(out.read_bytes()).hexdigest()
+          checksum.write_text(f"{digest}  {out.name}\n",encoding="utf-8")
+
+          if any("workspace/" in name or "__pycache__" in name for name in zipfile.ZipFile(out).namelist()):
+              raise SystemExit("forbidden workspace/cache path found in archive")
+          print(out.name)
+          print(digest)
+          PY
+
+      - name: Upload RC ZIP and SHA-256
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-strategy-lab-v4-7-0-rc1
+          path: |
+            SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip
+            SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_SHA256.txt
+          if-no-files-found: error
+          retention-days: 14
