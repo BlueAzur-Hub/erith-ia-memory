@@ -1219,6 +1219,73 @@ jobs:
           echo "PASS 2026 confirmation inventory used runner-temp only"
 
 
+
+  bollinger-age-negative-selection-confirmation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Download and certify 2024 through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-bollinger-age-selection"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for year in 2024 2025; do
+            for mm in $(seq -w 1 12); do
+              file="BTCUSDT-1h-$year-$mm.zip"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+              curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+            done
+          done
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45 "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20 "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+          EXP_ROOT="$root" python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory,load_certified_contiguous_block
+          from tools.bollinger_age_negative_exit import run_selection_experiment
+
+          root=Path(os.environ["EXP_ROOT"])
+          inv=certify_directory(root,require_contiguous=True)
+          assert inv["months_seen"]==34 and inv["months_rejected"]==0
+          bars=load_certified_contiguous_block(root)
+          out=run_selection_experiment(
+              bars,
+              {"kind":"BOLLINGER","capital":10000,"fee":0.001,"slippage":0.0005,"bb_period":20,"bb_sigma":2},
+          )
+          assert out["methodology"]["selection_uses_2024_only"] is True
+          assert out["methodology"]["year_2026_used_for_selection"] is False
+          assert out["safety"]["orders_real"]==0
+          print("BOLLINGER_AGE_NEGATIVE_SELECTION_CONFIRMATION")
+          print(json.dumps(out,indent=2,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Prove experiment stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS Bollinger age-negative experiment used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
