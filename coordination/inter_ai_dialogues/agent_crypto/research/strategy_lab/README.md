@@ -105,7 +105,7 @@ Le propriétaire teste actuellement le **BUILD 4.7.0-RC1** comme base locale tan
 
 Le paquet Step 3 Donchian a passé **127 tests locaux** sans modification du moteur PAPER de référence. Les trois paquets DEV et leurs SHA-256 sont recensés dans [V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md](./V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md).
 
-**Gate produit prioritaire avant une nouvelle stratégie : aide contextuelle des actions.** Le propriétaire ne doit plus cliquer au hasard. Chaque bouton important doit expliquer avant le clic ce qu'il fait, ce qu'il modifie, les données/règles utilisées et s'il lance ou non une simulation.
+**Step 4 Action Help Layer construit en DEV :** le mode `? Aide actions` explique désormais l'effet réel des actions avant le clic, sans modifier le moteur PAPER. Le paquet Step 4 a passé 133 tests ; `src/engine.py` reste byte-identique. La réception Firefox Windows du propriétaire reste le gate suivant. Voir [V4_8_KNOWLEDGE_LAYER_STEP4_ACTION_HELP_2026_11_16.md](./V4_8_KNOWLEDGE_LAYER_STEP4_ACTION_HELP_2026_11_16.md).\n\n**Gate produit prioritaire avant une nouvelle stratégie : aide contextuelle des actions.** Le propriétaire ne doit plus cliquer au hasard. Chaque bouton important doit expliquer avant le clic ce qu'il fait, ce qu'il modifie, les données/règles utilisées et s'il lance ou non une simulation.
 
 La continuité Notion correspondante est conservée dans le Plan directeur. La Creator Memory privée reste une couche de routage/continuité à charger selon son protocole ; elle n'est jamais publiée ici.
 
