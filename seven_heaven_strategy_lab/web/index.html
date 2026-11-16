@@ -69,6 +69,24 @@
       <div id="message" class="notice" role="status" aria-live="polite">Connexion au laboratoire local…</div>
     </div>
 
+    <section id="guided-mode" class="guided-panel" aria-labelledby="guided-title">
+      <div class="section-heading">
+        <div>
+          <div class="overline">V4.8 PREVIEW · PRODUCT FOUNDATION</div>
+          <h2 id="guided-title">Que veux-tu <span class="accent-text">faire ?</span></h2>
+          <p class="panel-lead">Le mode guidé prépare l'expérience ; le mode expert reste disponible plus bas. Aucun bouton de cette zone n'envoie d'ordre réel.</p>
+        </div>
+        <span class="mini-badge gold-badge">STRATEGYSPEC v1</span>
+      </div>
+      <div class="guided-grid">
+        <button id="guide-learn" class="guided-card" type="button"><strong>Comprendre une stratégie</strong><span>Lire son objectif, ses paramètres et ses limites avant de la tester.</span></button>
+        <button id="guide-create" class="guided-card" type="button"><strong>Créer ma stratégie</strong><span>Composer des règles puis les enregistrer dans un StrategySpec Seven.</span></button>
+        <button id="guide-compare" class="guided-card" type="button"><strong>Comparer</strong><span>Préparer une comparaison sur la même source, les mêmes coûts et le même horizon.</span></button>
+        <button id="guide-paper" class="guided-card future-card" type="button"><strong>Robot PAPER</strong><span>Étape V5 · même StrategySpec, marché public, exécution fictive persistante.</span></button>
+        <button id="guide-expert" class="guided-card" type="button"><strong>Mode expert</strong><span>Accéder aux contrôles actuels : sources, frais, horizons, Scientific et Forensics.</span></button>
+      </div>
+    </section>
+
     <section class="source-panel" aria-labelledby="source-title">
       <div class="section-heading">
         <div><div class="overline">01 / ACTIVE DATA INTELLIGENCE</div><h2 id="source-title">Source active &amp; <span class="accent-text">coffre historique</span></h2></div>
@@ -233,6 +251,23 @@
             <button id="save-profile" type="button" class="action-button action-outline">Enregistrer</button>
           </div>
           <label class="field"><span>Recharger un profil existant</span><select id="saved-profiles"><option value="">Choisir une configuration…</option></select></label>
+        </div>
+        <div class="strategy-spec-group">
+          <div class="micro-title">STRATEGYSPEC v1 · FORMAT PORTABLE SEVEN HEAVEN</div>
+          <p class="field-caveat">Un StrategySpec conserve la stratégie, la source, le timeframe, le capital et les coûts dans un format Seven-owned. Aucun moteur externe n'est requis.</p>
+          <div class="profile-save-row">
+            <label class="field"><span>Nom de la stratégie portable</span><input id="strategy-spec-name" maxlength="64" placeholder="Ex. Donchian 55/20 · BTC 4h"></label>
+            <button id="save-strategy-spec" type="button" class="action-button action-outline">Créer StrategySpec</button>
+          </div>
+          <label class="field"><span>Recharger un StrategySpec</span><select id="saved-strategy-specs"><option value="">Choisir un StrategySpec…</option></select></label>
+          <div id="strategy-spec-explanation" class="strategy-spec-explanation" hidden>
+            <strong id="strategy-spec-title">StrategySpec</strong>
+            <span id="strategy-spec-intent">—</span>
+            <span id="strategy-spec-execution">—</span>
+            <span id="strategy-spec-weakness">—</span>
+            <code id="strategy-spec-fingerprint">—</code>
+          </div>
+          <button id="replay-strategy-spec" type="button" class="action-button action-primary" disabled>▶ Rejouer ce StrategySpec avec le moteur Seven</button>
         </div>
       </section>
 
