@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Review PR #773 / V4.7.0-RC1 package. Decide separately whether to merge the RC branch, publish stable V4.7, and/or install on USB.",
-  "next_developer_task": "V4.7.0-RC1 PREPARED AND VALIDATED: PR #773 is ready for review, head 76af279399f77629d5dc068423c007698c94a247. Linux, Windows Python 3.13 real CMD launch, OKX smoke and packaging all PASS. Validated ZIP SHA-256 is 385f64a59581e105705bc6057d09ac8e2a78d4d0df739e3222fc578788f99f84. Keep V4.6.2 stable/installed. NEXT OWNER GATE: explicitly authorize merge/publication/install or request revisions. No automatic stable V4.7 publication.",
+  "next_single_owner_check": "Review the published V4.7.0-RC1 pre-release and PR #773. Decide separately whether to merge the RC branch into main, publish stable V4.7, and/or install it on USB.",
+  "next_developer_task": "V4.7.0-RC1 IS VALIDATED AND PUBLISHED AS A GITHUB PRE-RELEASE. Release tag seven-heaven-strategy-lab-v4-7-0-rc1-native-donchian-2026-11-16; final ZIP SHA-256 cacd60991c62328cb8db108e9cd907a78d2839c801b88326322f07d7966a9289. Workflow run #145 passed Linux, Windows Python 3.13 real CMD launch, OKX smoke, deterministic packaging and prerelease publication. Keep V4.6.2 stable/installed. NEXT OWNER GATE: stable merge/publication and USB install remain separately unauthorized.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -1184,7 +1184,7 @@
   },
   "research_phase_status": {
     "as_of": "2026-11-16",
-    "status": "V4_7_0_RC1_VALIDATED_OWNER_REVIEW_GATE",
+    "status": "V4_7_0_RC1_PUBLISHED_PRERELEASE_OWNER_ACCEPTANCE_GATE",
     "stable_runtime": "4.6.2",
     "stable_runtime_modified": false,
     "recommended_native_candidate": "DONCHIAN_55_20",
@@ -1211,13 +1211,17 @@
     "rc_branch": "release/strategy-lab-v4-7-0-rc1",
     "rc_pr": 773,
     "rc_pr_ready_for_review": true,
-    "rc_head_sha": "76af279399f77629d5dc068423c007698c94a247",
-    "rc_ci_status": "LINUX_PASS_WINDOWS_PASS_OKX_SMOKE_PASS_PACKAGE_PASS",
+    "rc_head_sha": "c56604e42932a31fa640bccb33883e150c7bdf19",
+    "rc_ci_status": "LINUX_PASS_WINDOWS_PASS_OKX_SMOKE_PASS_PACKAGE_PASS_PRERELEASE_PASS",
     "rc_package": "SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip",
-    "rc_package_sha256": "385f64a59581e105705bc6057d09ac8e2a78d4d0df739e3222fc578788f99f84",
+    "rc_package_sha256": "cacd60991c62328cb8db108e9cd907a78d2839c801b88326322f07d7966a9289",
     "rc_github_actions_artifact": "seven-heaven-strategy-lab-v4-7-0-rc1",
-    "rc_workflow_run": 43801189766,
+    "rc_workflow_run": 43802190462,
     "rc_artifact_expires_at": "2026-11-30T03:58:18Z",
-    "stable_release_authorized": false
+    "stable_release_authorized": false,
+    "rc_release_tag": "seven-heaven-strategy-lab-v4-7-0-rc1-native-donchian-2026-11-16",
+    "rc_release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-7-0-rc1-native-donchian-2026-11-16",
+    "rc_release_target": "0d42007bc832dd553d45303a66bd59c67438655d",
+    "rc_prerelease": true
   }
 }
