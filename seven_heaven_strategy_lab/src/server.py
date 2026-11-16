@@ -466,7 +466,8 @@ class Handler(BaseHTTPRequestHandler):
                     "explanation": explain_strategy_spec(spec),
                     "safety": {"paper_only": True, "orders_real": 0},
                 }
-                self._send({"report": report}, 200)
+                _atomic_json(WORKSPACE / "results" / (report["id"] + ".json"), report)
+                self._send({"report": report}, 201)
             elif path == "/api/profiles":
                 name = data.get("name", "")
                 if not isinstance(name, str) or not 1 <= len(name.strip()) <= 64:
