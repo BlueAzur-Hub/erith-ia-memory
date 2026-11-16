@@ -99,6 +99,16 @@ Résultat : BNB **−1,03 % / +14,92 %**, XRP **+142,62 % / −21,40 %**, SOL **
 
 **Décision :** ne pas tuner Donchian. Passer à une analyse descriptive des régimes et de l'anatomie des positions avant toute nouvelle règle.
 
+### Point de reprise produit — V4.8 Knowledge Layer · 16/11/2026
+
+Le propriétaire teste actuellement le **BUILD 4.7.0-RC1** comme base locale tandis que V4.8 est développé par gates ciblés. La Knowledge Layer a maintenant trois fiches professionnelles : **EMA**, **Bandes de Bollinger** et **Donchian 55/20**.
+
+Le paquet Step 3 Donchian a passé **127 tests locaux** sans modification du moteur PAPER de référence. Les trois paquets DEV et leurs SHA-256 sont recensés dans [V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md](./V4_8_KNOWLEDGE_LAYER_PACKAGE_MANIFEST_2026_11_16.md).
+
+**Gate produit prioritaire avant une nouvelle stratégie : aide contextuelle des actions.** Le propriétaire ne doit plus cliquer au hasard. Chaque bouton important doit expliquer avant le clic ce qu'il fait, ce qu'il modifie, les données/règles utilisées et s'il lance ou non une simulation.
+
+La continuité Notion correspondante est conservée dans le Plan directeur. La Creator Memory privée reste une couche de routage/continuité à charger selon son protocole ; elle n'est jamais publiée ici.
+
 ### Liens de continuité
 
 - [Passation finale V4.6.2 — réception propriétaire et reprise hors Work](./SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md)
