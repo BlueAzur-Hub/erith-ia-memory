@@ -10,10 +10,10 @@ import math
 from src.engine import KINDS, LabError, options, simulate
 
 TIMEFRAMES = {"1m": 1, "5m": 5, "15m": 15, "1h": 60, "4h": 240}
-ORDER = ("EMA_CROSS", "BOLLINGER", "DCA", "HOLD_50", "HOLD_100", "CASH")
+ORDER = ("EMA_CROSS", "BOLLINGER", "DONCHIAN", "DCA", "HOLD_50", "HOLD_100", "CASH")
 NAMES = {
     "EMA_CROSS": "Croisement EMA", "BOLLINGER": "Bandes de Bollinger",
-    "DCA": "DCA programmé", "HOLD_50": "Buy & Hold 50 %",
+    "DONCHIAN": "Cassure Donchian", "DCA": "DCA programmé", "HOLD_50": "Buy & Hold 50 %",
     "HOLD_100": "Buy & Hold 100 %", "CASH": "Conservation USDT",
     "CUSTOM_RULES": "Stratégie personnalisée",
 }
@@ -94,7 +94,7 @@ def run_one(source: list, raw_params: dict, *, kind: str | None = None,
 
 
 def compare(source: list, raw_params: dict, *, source_timeframe: str = "1m", source_label: str = "Binance Spot BTC/USDT, 2026-01") -> dict:
-    """Same source/timeframe/cost assumptions for six reference methods and optional custom rules."""
+    """Same source/timeframe/cost assumptions for seven reference methods and optional custom rules."""
     p, timeframe = _request(raw_params)
     rows = []
     kinds = ORDER + (("CUSTOM_RULES",) if p["kind"] == "CUSTOM_RULES" else ())
@@ -115,7 +115,7 @@ def compare(source: list, raw_params: dict, *, source_timeframe: str = "1m", sou
         })
     return {
         "schema": "seven.heaven.strategy_lab.comparison.v2",
-        "status": "SEVEN_MODELS_PAPER_ONLY" if p["kind"] == "CUSTOM_RULES" else "SIX_MODELS_PAPER_ONLY",
+        "status": "EIGHT_MODELS_PAPER_ONLY" if p["kind"] == "CUSTOM_RULES" else "SEVEN_MODELS_PAPER_ONLY",
         "timeframe": timeframe,
         "input_source_candles": len(source),
         "input_1m_candles": len(source) if source_timeframe == "1m" else None,
@@ -125,7 +125,7 @@ def compare(source: list, raw_params: dict, *, source_timeframe: str = "1m", sou
         "params": {**p, "timeframe": timeframe},
         "rows": rows,
         "warnings": [
-            "Six reference models and optionally one personalized model, not a forecast",
+            "Seven reference models and optionally one personalized model, not a forecast",
             "Same EMA lengths in bars imply different clock horizons per timeframe",
             "Fills are assumed at next candle open; no historical orderbook",
             "Instrument rules are observed at collection, NOT historical fill constraints",
