@@ -1150,6 +1150,75 @@ jobs:
           echo "PASS ETHUSDT source and PAPER study used runner-temp only; workspace untouched"
 
 
+
+  binance-2026-independent-confirmation-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab research branch
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Certify official Binance BTCUSDT 1h January through October 2026
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/binance-2026-confirmation"
+          mkdir -p "$root"
+          base="https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h"
+          for mm in $(seq -w 1 10); do
+            file="BTCUSDT-1h-2026-$mm.zip"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 45               "$base/$file" -o "$root/$file"
+            curl --silent --show-error --fail --location --retry 2 --connect-timeout 10 --max-time 20               "$base/$file.CHECKSUM" -o "$root/$file.CHECKSUM"
+          done
+
+          INVENTORY_ROOT="$root" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.certify_binance_history import certify_directory, load_certified_contiguous_block
+
+          root=Path(os.environ["INVENTORY_ROOT"])
+          out=certify_directory(root, require_contiguous=True)
+          assert out["months_seen"]==10
+          assert out["months_certified"]==10
+          assert out["months_rejected"]==0
+          assert all(m["timestamp_input_unit"]=="microseconds" for m in out["months"])
+          bars=load_certified_contiguous_block(root)
+          assert len(bars)==7296
+          summary={
+              "months_seen":out["months_seen"],
+              "months_certified":out["months_certified"],
+              "months_rejected":out["months_rejected"],
+              "first_month":out["months"][0]["month"],
+              "last_month":out["months"][-1]["month"],
+              "rows":len(bars),
+              "first_utc":out["months"][0]["first_utc"],
+              "last_utc":out["months"][-1]["last_utc"],
+              "archive_sha256":[{"month":m["month"],"sha256":m["archive_sha256"]} for m in out["months"]],
+              "safety":out["safety"],
+          }
+          print("BINANCE_2026_INDEPENDENT_CONFIRMATION")
+          print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Prove 2026 inventory stayed ephemeral
+        run: |
+          set -euo pipefail
+          test ! -e workspace
+          echo "PASS 2026 confirmation inventory used runner-temp only"
+
+
   windows-python-313-double-click:
     runs-on: windows-latest
     timeout-minutes: 15
