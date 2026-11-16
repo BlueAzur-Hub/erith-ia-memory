@@ -120,8 +120,6 @@ def run_bollinger_trade_aging(
     horizon_reports = {}
     for h in horizons:
         rows = observations[h]
-        if not rows:
-            raise RegimeMapError(f"Aucune position observable à {h} h")
         horizon_reports[str(h)] = {
             "all": _summary(rows),
             "currently_positive": _summary([r for r in rows if r["currently_positive"]]),
