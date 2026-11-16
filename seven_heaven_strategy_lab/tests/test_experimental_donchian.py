@@ -13,8 +13,10 @@ def synthetic_bars(count=1200):
         base = 35000 + slope + 500 * math.sin(i / 9.0)
         opening = base + 25 * math.sin(i / 4.0)
         closing = base + 40 * math.cos(i / 6.0)
-        high = max(opening, closing) + 110
-        low = min(opening, closing) - 110
+        # Narrow synthetic wicks let the rising/falling regimes produce
+        # confirmed close breakouts beyond the prior Donchian channel.
+        high = max(opening, closing) + 8
+        low = min(opening, closing) - 8
         bars.append((start + i * 3600, opening, high, low, closing, 90 + i % 31))
     return bars
 
