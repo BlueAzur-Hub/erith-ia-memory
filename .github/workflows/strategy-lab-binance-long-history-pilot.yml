@@ -6,6 +6,7 @@ on:
       - research/strategy-lab-binance-long-history-pilot-20261116
     paths:
       - 'seven_heaven_strategy_lab/tools/binance_long_history_pilot.py'
+      - 'seven_heaven_strategy_lab/tools/binance_long_history_scan.py'
       - 'seven_heaven_strategy_lab/src/binance_monthly_v46.py'
       - '.github/workflows/strategy-lab-binance-long-history-pilot.yml'
   pull_request:
@@ -42,11 +43,15 @@ jobs:
       - name: Compile validator and pilot
         run: |
           set -euo pipefail
-          python -m py_compile src/binance_monthly_v46.py tools/binance_long_history_pilot.py
+          python -m py_compile src/binance_monthly_v46.py tools/binance_long_history_pilot.py tools/binance_long_history_scan.py
       - name: Verify official Binance monthly archives and checksums
         run: |
           set -euo pipefail
           python tools/binance_long_history_pilot.py
+      - name: Scan complete target corpus 2019-2021 and 2024-2025
+        run: |
+          set -euo pipefail
+          python tools/binance_long_history_scan.py
       - name: Strict-parse evidence
         run: |
           set -euo pipefail
@@ -62,12 +67,20 @@ jobs:
               "milliseconds", "milliseconds", "milliseconds", "microseconds"
           ]
           assert all(x["missing_bars"] == 0 for x in data["reports"])
-          print("PASS: four official monthly archives independently checksum-validated")
+          full = json.loads(Path("binance_long_history_scan_evidence.json").read_text(encoding="utf-8"))
+          assert full["status"] == "PASS"
+          assert full["months_verified"] == 60
+          assert full["safety"]["orders_real"] == 0
+          assert all(x["missing_bars"] == 0 for x in full["reports"])
+          assert sum(1 for x in full["reports"] if x["timestamp_input_unit"] == "microseconds") == 12
+          print("PASS: four pilot months plus full 60-month target corpus checksum-validated")
           PY
       - name: Upload research evidence
         uses: actions/upload-artifact@v4
         with:
           name: strategy-lab-binance-long-history-pilot-evidence
-          path: seven_heaven_strategy_lab/binance_long_history_pilot_evidence.json
+          path: |
+            seven_heaven_strategy_lab/binance_long_history_pilot_evidence.json
+            seven_heaven_strategy_lab/binance_long_history_scan_evidence.json
           retention-days: 30
           if-no-files-found: error
