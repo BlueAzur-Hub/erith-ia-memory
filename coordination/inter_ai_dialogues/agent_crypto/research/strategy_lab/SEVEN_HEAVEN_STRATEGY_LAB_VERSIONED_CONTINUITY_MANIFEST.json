@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
-  "updated_utc_date": "2026-11-15",
-  "status": "V4_6_2_RELEASE_TECHNICAL_69_TESTS_OWNER_FIREFOX_PENDING",
+  "updated_utc_date": "2026-11-16",
+  "status": "V4_6_2_RELEASE_OWNER_FIREFOX_ACCEPTED",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -410,7 +410,7 @@
     {
       "stage": "C2+++++d",
       "version": "4.6.2",
-      "status": "PUBLISHED_TECHNICAL_69_TESTS_OWNER_FIREFOX_PENDING",
+      "status": "PUBLISHED_OWNER_FIREFOX_ACCEPTED",
       "release_tag": "seven-heaven-strategy-lab-v4-6-2-source-context-reset-2026-11-15",
       "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-6-2-source-context-reset-2026-11-15",
       "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_6_2_SOURCE_CONTEXT_RESET_PYTHON313_WINDOWS_PAPER.zip",
@@ -430,8 +430,28 @@
         "javascript_syntax_passed": true,
         "fresh_zip_boot_passed": true,
         "owner_workspace_files_verified_unchanged": 62,
-        "owner_firefox_verified": false,
-        "github_release_date": "2026-11-15"
+        "owner_firefox_verified": true,
+        "github_release_date": "2026-11-15",
+        "owner_acceptance_date": "2026-11-16",
+        "owner_acceptance_evidence": "Owner-provided Firefox screenshot and full interface text transcription",
+        "owner_observed_build": "4.6.2",
+        "owner_observed_source": {
+          "exchange": "OKX Spot",
+          "pair": "ETH/USDC",
+          "timeframe": "1h",
+          "closed_bars": 2160,
+          "sha256_displayed_verified": true
+        },
+        "owner_observed_modules": [
+          "simulation",
+          "comparison",
+          "market_microscope",
+          "trade_forensics",
+          "aether_scientific",
+          "aether_research",
+          "memory_vault"
+        ],
+        "acceptance_scope": "Functional owner reception and visible source coherence; not an independent real-execution audit or profitability validation"
       }
     },
     {
@@ -871,4 +891,3 @@
     "note": "Pilot module is isolated in a draft PR; current released and owner accepted product remains V4.5.0. Main's existing CI repackages V4.5 on code pushes; review before merging pilot."
   }
 }
-

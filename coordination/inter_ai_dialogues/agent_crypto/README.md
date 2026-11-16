@@ -4,7 +4,8 @@ The directory is now reserved for current coordination.
 
 ## Seven Heaven Strategy Lab — version registry
 
-- **[Central Strategy Lab release index (V1 → V4.5)](./research/strategy_lab/README.md)** — all ten official ZIP download links, full SHA-256 hashes, owner Firefox validation states, protection of local USB `workspace/`, shared workflow, and next handoff.
+- **[Central Strategy Lab release index (V1 → V4.6.2)](./research/strategy_lab/README.md)** — official ZIP download links, full SHA-256 hashes, owner Firefox validation states, protection of local USB `workspace/`, shared workflow, and next handoff.
+- **[V4.6.2 — final owner acceptance and next-thread handoff](./research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md)** — BUILD 4.6.2 executed and accepted in Firefox on 16 November 2026; Work thread closed.
 - [Versioned continuity and provenance manifest](./research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_VERSIONED_CONTINUITY_MANIFEST.json) — machine-readable facts and validation evidence.
 - [Canonical application source](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/seven_heaven_strategy_lab) — developer code; ZIP binaries remain in GitHub Releases, not duplicated in this shared folder.
 
