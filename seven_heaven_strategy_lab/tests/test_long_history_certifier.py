@@ -8,7 +8,7 @@ import tempfile
 import unittest
 import zipfile
 
-from tools.certify_binance_history import InventoryError, certify_directory
+from tools.certify_binance_history import InventoryError, certify_directory, load_certified_contiguous_block
 
 
 def write_fixture(root: Path, year: int, month: int, *, missing=False):
@@ -47,6 +47,18 @@ class LongHistoryCertifierTests(unittest.TestCase):
             self.assertEqual(out["months"][0]["month"], "2019-01")
             self.assertEqual(out["months"][1]["rows"], 672)
             self.assertEqual(out["safety"], {"orders_real": 0, "network_calls": 0, "workspace_writes": 0})
+
+    def test_contiguous_months_replay_in_existing_paper_engine(self):
+        from src.engine import simulate
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for month in (1, 2, 3):
+                write_fixture(root, 2019, month)
+            bars = load_certified_contiguous_block(root)
+            self.assertEqual(len(bars), 2160)
+            out = simulate(bars, {"kind": "CASH", "capital": 10000})
+            self.assertEqual(out["results"]["return_pct"], 0.0)
+            self.assertEqual(out["safety"]["orders_real"], 0)
 
     def test_non_contiguous_block_is_rejected_when_requested(self):
         with tempfile.TemporaryDirectory() as tmp:
