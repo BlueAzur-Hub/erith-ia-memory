@@ -564,6 +564,54 @@ jobs:
           print(json.dumps(summary, indent=2, ensure_ascii=False, sort_keys=True))
           PY
 
+      - name: Run preregistered 2024 versus 2025 PAPER baselines
+        run: |
+          set -euo pipefail
+          INVENTORY_ROOT="$RUNNER_TEMP/binance-2024-2025-inventory" python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from tools.certify_binance_history import load_certified_contiguous_block
+          from src.observatory import compare
+
+          bars = load_certified_contiguous_block(Path(os.environ["INVENTORY_ROOT"]))
+          split = int(datetime(2025, 1, 1, tzinfo=timezone.utc).timestamp())
+          y2024 = [b for b in bars if b[0] < split]
+          y2025 = [b for b in bars if b[0] >= split]
+          assert len(y2024) == 8784
+          assert len(y2025) == 8760
+
+          params = {
+              "kind": "EMA_CROSS",
+              "timeframe": "1h",
+              "capital": 10000,
+              "fee": 0.001,
+              "slippage": 0.0005,
+              "ema_fast": 10,
+              "ema_slow": 30,
+              "bb_period": 20,
+              "bb_sigma": 2,
+              "dca_every": 1440,
+              "dca_quote": 50,
+          }
+          reports = {}
+          for label, sample in (("2024_RESEARCH", y2024), ("2025_HOLDOUT", y2025)):
+              report = compare(
+                  sample,
+                  params,
+                  source_timeframe="1h",
+                  source_label=f"Binance Spot BTC/USDT certified {label}",
+              )
+              reports[label] = {
+                  "source_candles": len(sample),
+                  "timeframe": report["timeframe"],
+                  "rows": report["rows"],
+                  "safety": report["safety"],
+              }
+          print("PREREGISTERED_2024_2025_BASELINES")
+          print(json.dumps(reports, indent=2, ensure_ascii=False, sort_keys=True))
+          PY
+
       - name: Prove 2024-2025 inventory stayed ephemeral
         run: |
           set -euo pipefail
