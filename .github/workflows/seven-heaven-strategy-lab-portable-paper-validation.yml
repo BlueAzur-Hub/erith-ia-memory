@@ -1,11 +1,9 @@
-name: Seven Heaven Strategy Lab V4.5 controlled filter research validation
+name: Seven Heaven Strategy Lab V4.6.2 PAPER validation
 
 on:
   push:
     branches:
-      - feature/seven-heaven-strategy-lab-local-paper
-      - feature/seven-heaven-strategy-lab-v2-observatory-20261113
-      - feature/seven-heaven-strategy-lab-v4-5-controlled-filter-research-20261113
+      - maintenance/strategy-lab-v4-6-2-ci-20261116
       - main
     paths:
       - 'seven_heaven_strategy_lab/**'
@@ -21,412 +19,12 @@ permissions:
   contents: read
 
 jobs:
-  validate-and-package:
+  linux-python-313:
     runs-on: ubuntu-latest
-    timeout-minutes: 26
+    timeout-minutes: 18
     defaults:
       run:
         working-directory: seven_heaven_strategy_lab
-    steps:
-      - name: Checkout independent lab (sparse, avoid large MASTER assets)
-        uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /seven_heaven_strategy_lab/
-            /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Static Python and JavaScript syntax
-        run: |
-          set -euo pipefail
-          python -m compileall -q src tests
-          node --check web/app.js
-          node --check web/microscope.js
-          node --check web/forensics.js
-          node --check web/strategy_research.js
-          docker compose config --quiet
-      - name: Unit tests for causal PAPER engine and data integrity
-        run: |
-          set -euo pipefail
-          python -m unittest discover -v -s tests -p 'test_*.py'
-      - name: Import exact archived January 2026 source and replay six strategies
-        env:
-          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          from src.reference_data import install_reference, dataset_status, CSV_NAME
-          from src.engine import load_bars, simulate
-          root = Path(os.environ["SEVEN_LAB_WORKSPACE"])
-          status = install_reference(root)
-          assert status["available"] and status["rows_expected"] == 44640
-          bars = load_bars(root / "datasets" / CSV_NAME)
-          assert len(bars) == 44640
-          evidence = {}
-          for kind in ("EMA_CROSS", "BOLLINGER", "DCA", "HOLD_50", "HOLD_100", "CASH"):
-              report = simulate(bars, {"kind": kind})
-              r = report["results"]
-              assert report["status"] == "HYPOTHETICAL_PAPER_BACKTEST"
-              assert report["safety"]["orders_real"] == 0
-              assert r["cash_final"] >= 0 and r["base_inventory_btc"] >= 0
-              assert abs(r["equity_final"]-(r["cash_final"]+r["inventory_marked_usdt"])) < 0.00001
-              assert len(report["series"]) >= 200
-              evidence[kind] = {"return_pct":r["return_pct"],
-                                "equity_final":r["equity_final"],
-                                "fees_paid_usdt":r["fees_paid_usdt"],
-                                "drawdown_pct":r["max_drawdown_pct"],
-                                "trades":r["hypothetical_fills"]}
-          file = root.parent / "SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json"
-          file.parent.mkdir(parents=True, exist_ok=True)
-          file.write_text(json.dumps({"schema":"seven.heaven.strategy_lab.six_strategy_smoke.v1",
-                        "data_sha256":status["data_sha256"], "historical":True,
-                        "paper_only":True, "native_freqtrade":False,
-                        "native_hummingbot":False,"cases":evidence},indent=2)+"\n")
-          print("PASS: immutable 44640-minute source; six PAPER models; cash/inventory conserved; no orders")
-          print(json.dumps(evidence,indent=2))
-          PY
-      - name: Run all 30 historical PAPER comparisons over 5 available timeframes
-        env:
-          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import json, os
-          from src.engine import load_bars
-          from src.reference_data import CSV_NAME, CSV_SHA
-          from src.observatory import compare, run_with_diagnostics
-          workspace=Path(os.environ["SEVEN_LAB_WORKSPACE"])
-          bars=load_bars(workspace/"datasets"/CSV_NAME)
-          summaries={}
-          for tf, expected in (("1m",44640),("5m",8928),("15m",2976),("1h",744),("4h",186)):
-              v=compare(bars,{"kind":"EMA_CROSS","timeframe":tf,"capital":1000,
-                              "fee":0.001,"slippage":0.0005})
-              assert len(v["rows"])==6 and v["aggregated_candles"]==expected
-              assert v["safety"]["orders_real"]==0
-              for row in v["rows"]:
-                  assert row["cash_final"]>=0 and row["base_inventory_btc"]>=0
-              summaries[tf]=v
-          original,diag=run_with_diagnostics(bars,{"kind":"EMA_CROSS","timeframe":"1m"})
-          assert original["results"]["return_pct"]==-92.20371
-          assert abs(diag["zero_friction_return_pct"] - (-8.4721)) < .0001
-          result={
-            "schema":"seven.heaven.strategy_lab.v2.aether_observatory.executed.30_cases",
-            "status":"PASS_REAL_V2_INTERNAL_PAPER_REPLAY",
-            "source_sha256":CSV_SHA,"source_rows":len(bars),
-            "engine":"ORIGINAL_PYTHON_PAPER_NOT_FREQTRADE_OR_HUMMINGBOT",
-            "timeframes":summaries,"ema_1m_cost_counterfactual":diag,
-            "actual_order_count":0,"historical":True,
-            "limitations":[
-              "Binance January 2026 OHLCV, not OKX historical book fills",
-              "All fills assumed next-bar open with static slippage",
-              "Different timeframes imply different EMA clock horizons",
-              "No out-of-sample or performance guarantee"
-            ]
-          }
-          target=workspace.parent/"SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json"
-          target.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-          print("PASS: 30 V2 scenario backtests / five timeframes / single SHA-verified source")
-          PY
-      - name: Start real local API and test run/profile/history requests
-        env:
-          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
-        run: |
-          set -euo pipefail
-          python -m src.server > "$RUNNER_TEMP/seven-lab-server.log" 2>&1 &
-          serverpid=$!
-          trap 'kill "$serverpid" 2>/dev/null || true' EXIT
-          python - <<'PY'
-          import json, time, urllib.request, urllib.error
-          import os
-          from pathlib import Path
-          base="http://127.0.0.1:8777"
-          def request(path, data=None):
-              payload=None if data is None else json.dumps(data).encode()
-              req=urllib.request.Request(base+path, data=payload,
-                         headers={"Content-Type":"application/json"} if data is not None else {})
-              with urllib.request.urlopen(req, timeout=20) as res:
-                  return json.loads(res.read())
-          for attempt in range(35):
-              try:
-                  health=request("/api/health")
-                  break
-              except Exception:
-                  time.sleep(.2)
-          assert health["live_trading"] is False
-          assert health["version"] == "4.5.0"
-          assert health["strategy_creator_enabled"] is True
-          assert health["market_microscope_enabled"] is True
-          assert health["walk_forward_research_enabled"] is True
-          assert health["paper_trade_forensics_enabled"] is True
-          assert health["controlled_filter_research_enabled"] is True
-          assert request("/api/datasets")["datasets"][0]["available"]
-          report=request("/api/run",{"params":{"kind":"EMA_CROSS", "fee":0.001}})
-          assert report["report"]["run"]["safety"]["orders_real"]==0
-          metrics=report["report"]["run"]["analytics"]
-          assert metrics["closed_positions"]>=0
-          assert metrics["unclosed_base_units"]>=0
-          assert 0<=metrics["time_in_position_pct"]<=100
-          assert all(isinstance(pt["drawdown_pct"],float) for pt in report["report"]["run"]["series"])
-          assert report["report"]["run"]["data"]["rows"]==44640
-          autopsy=request("/api/trade-forensics?run_id="+report["report"]["id"])
-          forensic=autopsy["forensics"]
-          assert forensic["status"]=="DETERMINISTIC_REPLAY_MATCHES_SAVED_PAPER_FILLS"
-          assert forensic["source"]["sha256"]==report["report"]["source_sha256"]
-          assert forensic["metrics"]["closed_positions"]==report["report"]["run"]["analytics"]["closed_positions"]
-          assert forensic["metrics"]["total_original_fills_verified"]==len(report["report"]["run"]["trades"])
-          assert forensic["safety"]["orders_real"]==0
-          assert all(t["reason_code"] for p in forensic["positions_latest_first"] for t in p["entries"])
-          assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"forensics").exists()
-          try:
-              request("/api/trade-forensics?run_id=INVALID")
-              raise AssertionError("Untrusted run id was accepted")
-          except urllib.error.HTTPError as ex:
-              assert ex.code==400
-          historical=request("/api/microscope?run_id="+report["report"]["id"]+"&limit=90")
-          panel=historical["microscope"]
-          assert panel["source_sha256"]==report["report"]["source_sha256"]
-          assert panel["visible_bars"]==90 and panel["total_bars"]==44640
-          assert panel["safety"]["orders_real"]==0
-          assert all("o" in c and "ema_fast" in c for c in panel["candles"])
-          older=request("/api/microscope?run_id="+report["report"]["id"]+"&limit=90&start_index=0")
-          assert older["microscope"]["start_index"]==0
-          assert older["microscope"]["candles"][0]["t"]==report["report"]["run"]["data"]["first_utc"]
-          try:
-              request("/api/microscope?run_id="+report["report"]["id"]+"&limit=999")
-              raise AssertionError("Invalid microscope viewport accepted")
-          except urllib.error.HTTPError as ex:
-              assert ex.code==400
-          filter_research=request("/api/filters-study",{"params":{
-              "kind":"CUSTOM_RULES","timeframe":"1h","capital":1000,
-              "entry_rule":"EMA_CROSS_UP","exit_rule":"EMA_CROSS_DOWN",
-              "filter_rule":"NONE","fee":0.001,"slippage":0.0005
-          }})
-          experiment=filter_research["research"]
-          assert experiment["status"]=="NONBLIND_PREDECLARED_TRAIN_ONLY_SELECTION_INDEPENDENT_LATER_HOLDOUTS"
-          assert experiment["source"]["sha256"]==report["report"]["source_sha256"]
-          assert experiment["summary"]["verification_windows"]==2
-          assert experiment["summary"]["variants_compared"]<=5
-          assert experiment["safety"]["orders_real"]==0
-          assert experiment["methodology"]["only_entry_filter_changed"] is True
-          assert all(f["selection"]["training_only"] is True
-                     and f["selection"]["holdout_data_used_to_choose"] is False
-                     for f in experiment["folds"])
-          assert all(f["benchmarks"]["cash"]["return_pct"]==0 for f in experiment["folds"])
-          assert all(len(f["candidates"])==f["candidate_count"] for f in experiment["folds"])
-          assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"research").exists()
-          assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"filter_research").exists()
-          try:
-              request("/api/filters-study",{"params":{"kind":"HOLD_50","timeframe":"1h"}})
-              raise AssertionError("Invalid filter research strategy accepted")
-          except urllib.error.HTTPError as ex:
-              assert ex.code==400
-          research=request("/api/robustness",{"params":{"kind":"EMA_CROSS","timeframe":"1h",
-                            "capital":1000,"fee":0.001,"slippage":0.0005}})
-          scientific=research["research"]
-          assert scientific["status"]=="CHRONOLOGICAL_PAPER_RESEARCH_NOT_UNTOUCHED_BLIND_OOS"
-          assert scientific["source"]["sha256"]==report["report"]["source_sha256"]
-          assert scientific["timeframe"]=="1h"
-          assert len(scientific["folds"])==2
-          assert scientific["safety"]["orders_real"]==0
-          assert all(f["selection"]["selected_on_training_only"] for f in scientific["folds"])
-          assert scientific["folds"][0]["holdout"]["last_bar_utc"]<scientific["folds"][1]["holdout"]["first_bar_utc"]
-          assert not (Path(os.environ["SEVEN_LAB_WORKSPACE"])/"robustness").exists()
-          assert report["report"]["counterfactual"]["status"]=="COUNTERFACTUAL_IDEAL_FILLS_ONLY"
-          v2=request("/api/run",{"params":{"kind":"EMA_CROSS","timeframe":"15m","fee":0.001}})
-          assert v2["report"]["run"]["data"]["timeframe"]=="15m"
-          assert v2["report"]["run"]["data"]["rows"]==2976
-          comparison=request("/api/compare",{"params":{"kind":"EMA_CROSS","timeframe":"1h"}})
-          assert comparison["report"]["comparison"]["aggregated_candles"]==744
-          assert len(comparison["report"]["comparison"]["rows"])==6
-          custom_params={"kind":"CUSTOM_RULES","timeframe":"1h","capital":1000,
-                         "entry_rule":"PRICE_ABOVE_EMA","filter_rule":"RSI_BELOW",
-                         "rsi_entry_max":80,"exit_rule":"PRICE_BELOW_EMA",
-                         "stop_loss_pct":4,"take_profit_pct":9}
-          custom=request("/api/run",{"params":custom_params})
-          assert custom["report"]["run"]["params"]["kind"]=="CUSTOM_RULES"
-          assert custom["report"]["run"]["safety"]["orders_real"]==0
-          seven=request("/api/compare",{"params":custom_params})
-          assert len(seven["report"]["comparison"]["rows"])==7
-          assert seven["report"]["comparison"]["rows"][-1]["kind"]=="CUSTOM_RULES"
-          saved_custom=request("/api/profiles",{"name":"Yoann Strategy V4","params":custom_params})
-          assert saved_custom["profile"]["params"]["filter_rule"]=="RSI_BELOW"
-          assert len(request("/api/comparisons")["comparisons"])>=1
-          stored_cmp=request("/api/comparisons/"+comparison["report"]["id"])
-          assert stored_cmp["comparison"]["schema"]=="seven.heaven.strategy_lab.comparison.v2"
-          assert len(request("/api/results")["runs"])>=1
-          saved=request("/api/profiles",{"name":"EMA 10/30 PAPER","params":{"kind":"EMA_CROSS"}})
-          assert saved["profile"]["name"]=="EMA 10/30 PAPER"
-          assert len(request("/api/profiles")["profiles"])>=1
-          assert request("/api/results/"+report["report"]["id"])["id"]==report["report"]["id"]
-          try:
-              request("/api/trade",{})
-              raise AssertionError("Unexpected trade endpoint")
-          except urllib.error.HTTPError as ex:
-              assert ex.code==404
-          print("PASS: real HTTP local API, profiles and reports persisted, /api/trade forbidden")
-          PY
-      - name: Open real premium V4.5 controlled entry filter research cockpit in Chromium, test interaction and capture desktop/mobile
-        env:
-          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-evidence/workspace
-        run: |
-          set -euo pipefail
-          python -m pip install --disable-pip-version-check playwright==1.56.0
-          google-chrome --version
-          python -m src.server > "$RUNNER_TEMP/seven-lab-browser-server.log" 2>&1 &
-          serverpid=$!
-          trap 'kill "$serverpid" 2>/dev/null || true' EXIT
-          python tests/browser_acceptance_v2.py
-          python - <<'PY'
-          import json,os
-          from pathlib import Path
-          root=Path(os.environ["SEVEN_LAB_WORKSPACE"])
-          proven=[]
-          for file in (root/"comparisons").glob("*.json"):
-              record=json.loads(file.read_text(encoding="utf-8"))
-              if record.get("source",{}).get("exchange")=="OKX Spot":
-                  proven.append(record)
-          assert proven, "No real OKX 6-strategy comparison persisted"
-          six=[x for x in proven if len(x["comparison"]["rows"])==6]
-          seven=[x for x in proven if len(x["comparison"]["rows"])==7]
-          assert six and seven, "Missing reference and custom OKX comparisons"
-          assert seven[-1]["comparison"]["rows"][-1]["kind"]=="CUSTOM_RULES"
-          record=max(six,key=lambda x:x["created_utc"])
-          assert record["source"]["pair"]=="BTC/USDC"
-          assert record["source"]["source_timeframe"]=="1h"
-          assert len(record["comparison"]["rows"])==6
-          assert record["comparison"]["aggregated_candles"]==240
-          assert record["comparison"]["safety"]["orders_real"]==0
-          report={
-            "schema":"seven.heaven.v3.public_okx_actual_api_internal_paper_comparison.v1",
-            "status":"PASS_ACTUAL_OKX_CLOSED_CANDLES_AND_LOCAL_PAPER_COMPARATOR",
-            "source":record["source"],
-            "captured_utc":record["created_utc"],
-            "comparison":record["comparison"],
-            "limitations":["Original local simulator only, NOT native Freqtrade/Hummingbot",
-                          "240 1H closed public OKX candles, not orderbook fills",
-                          "Historical fees 0.10% are a modeling assumption",
-                          "Not an investment signal; no real orders"],
-            "paper_only":True
-          }
-          target=root.parent/"SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json"
-          target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-          print("PASS: 240 real public OKX closed 1H candles through browser, 6 internal PAPER models")
-          PY
-      - name: Build Docker local image and smoke HTTP health
-        run: |
-          set -euo pipefail
-          mkdir -p workspace
-          docker compose build --pull
-          docker compose up -d
-          trap 'docker compose down --remove-orphans || true' EXIT
-          python - <<'PY'
-          import json, time, urllib.request
-          url="http://127.0.0.1:8777/api/health"
-          for i in range(60):
-              try:
-                  with urllib.request.urlopen(url,timeout=3) as f:
-                      j=json.loads(f.read())
-                  assert j["status"]=="LOCAL_PAPER_ONLY"
-                  assert j["version"]=="4.5.0"
-                  print("PASS: Docker on localhost:8777, live trading disabled")
-                  break
-              except Exception:
-                  if i==59: raise
-                  time.sleep(.5)
-          PY
-      - name: Build complete long-name portable ZIP and checksum
-        run: |
-          set -euo pipefail
-          cd ..
-          zip -q -r "$RUNNER_TEMP/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PYTHON313_WINDOWS_PAPER.zip" \
-            seven_heaven_strategy_lab/src seven_heaven_strategy_lab/web \
-            seven_heaven_strategy_lab/README_FR.md \
-            seven_heaven_strategy_lab/START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd \
-            -x '*/__pycache__/*' '*.pyc'
-          cd "$RUNNER_TEMP"
-          sha256sum SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PYTHON313_WINDOWS_PAPER.zip \
-            > SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_SHA256.txt
-          cat SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_SHA256.txt
-      - name: Strict-parse every packaged JSON proof before upload
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json,os
-          from pathlib import Path
-          root=Path(os.environ["RUNNER_TEMP"])/"seven-lab-evidence"
-          proofs=[
-              root/"SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json",
-              root/"SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json",
-              root/"SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json"
-          ]
-          for file in proofs:
-              raw=file.read_text(encoding="utf-8")
-              loaded=json.loads(raw)
-              assert isinstance(loaded,dict) and loaded.get("schema"),file
-              assert raw and ord(raw[-1])==10,file
-              print("PASS strict JSON and final newline:",file.name)
-          PY
-      - name: Upload standalone ZIP, hash and measured historical smoke results
-        uses: actions/upload-artifact@v4
-        with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PAPER_DELIVERY
-          path: |
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PYTHON313_WINDOWS_PAPER.zip
-            ${{ runner.temp }}/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_SHA256.txt
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_SIX_STRATEGIES_FIRST_REPLAY_EVIDENCE.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V2_AETHER_OBSERVATORY_30_CASES_VERIFIED.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_DESKTOP_COCKPIT.png
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V3_OKX_BTCUSDC_240_HOURLY_6_PAPER_CASES.json
-            ${{ runner.temp }}/seven-lab-evidence/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_MOBILE_COCKPIT.png
-          retention-days: 30
-          if-no-files-found: error
-
-  okx-public-live-smoke:
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    defaults:
-      run:
-        working-directory: seven_heaven_strategy_lab
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /seven_heaven_strategy_lab/
-            /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Contact actual PUBLIC OKX Spot metadata and page through confirmed historical candles
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json,tempfile
-          from pathlib import Path
-          from src.okx_public import collect,read_source
-          with tempfile.TemporaryDirectory() as d:
-              root=Path(d)
-              meta=collect(root,"BTC-USDC")
-              m,bars=read_source(root,meta["id"])
-              assert len(bars)==240 and meta["base"]=="BTC" and meta["quote"]=="USDC"
-              assert all(bars[i][0]-bars[i-1][0]==3600 for i in range(1,len(bars)))
-              assert meta["status"]=="COMPLETE_CLOSED_240_1H_CANDLES"
-              assert meta["live_orders"]==0
-              print("PASS real OKX 240 consecutive completed public Spot BTC-USDC 1H candles")
-              print(json.dumps(meta,indent=2,ensure_ascii=False))
-          PY
-
-  windows-python-313-double-click:
-    runs-on: windows-latest
-    timeout-minutes: 12
     steps:
       - name: Checkout Strategy Lab only
         uses: actions/checkout@v4
@@ -436,27 +34,183 @@ jobs:
           sparse-checkout: |
             /seven_heaven_strategy_lab/
             /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
-      - name: Set up Python matching Christophe's existing Windows installation
+
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Verify Python 3.13 and PAPER unit tests
+
+      - name: Static syntax
+        run: |
+          set -euo pipefail
+          python -m compileall -q src tests
+          node --check web/app.js
+          node --check web/microscope.js
+          node --check web/forensics.js
+          node --check web/strategy_research.js
+          docker compose config --quiet
+
+      - name: Full PAPER unit suite
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s tests -p 'test_*.py'
+
+      - name: V4.6.2 local API contract smoke
+        env:
+          SEVEN_LAB_WORKSPACE: ${{ runner.temp }}/seven-lab-v462/workspace
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from src.reference_data import install_reference
+          root=Path(os.environ["SEVEN_LAB_WORKSPACE"])
+          status=install_reference(root)
+          assert status["available"] is True
+          assert status["rows_expected"]==44640
+          print("PASS reference source installed in isolated runner workspace")
+          PY
+
+          python -m src.server > "$RUNNER_TEMP/seven-lab-v462.log" 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+
+          python - <<'PY'
+          import json,time,urllib.request,urllib.error
+          base="http://127.0.0.1:8777"
+
+          def req(path,data=None):
+              payload=None if data is None else json.dumps(data).encode()
+              r=urllib.request.Request(
+                  base+path,
+                  data=payload,
+                  headers={"Content-Type":"application/json"} if data is not None else {},
+              )
+              with urllib.request.urlopen(r,timeout=20) as res:
+                  return json.loads(res.read())
+
+          for _ in range(50):
+              try:
+                  health=req("/api/health")
+                  break
+              except Exception:
+                  time.sleep(.2)
+          else:
+              raise RuntimeError("V4.6.2 local server did not start")
+
+          assert health["version"]=="4.6.2"
+          assert health["live_trading"] is False
+          assert health["strategy_creator_enabled"] is True
+          assert health["market_microscope_enabled"] is True
+          assert health["walk_forward_research_enabled"] is True
+          assert health["paper_trade_forensics_enabled"] is True
+          assert health["controlled_filter_research_enabled"] is True
+
+          datasets=req("/api/datasets")
+          assert datasets["datasets"][0]["available"] is True
+
+          run=req("/api/run",{"params":{"kind":"EMA_CROSS","timeframe":"1h","capital":1000,"fee":0.001,"slippage":0.0005}})
+          assert run["report"]["run"]["safety"]["orders_real"]==0
+
+          scientific=req("/api/robustness",{"params":{"kind":"EMA_CROSS","timeframe":"1h","capital":1000,"fee":0.001,"slippage":0.0005}})
+          s=scientific["research"]
+          assert s["status"]=="CHRONOLOGICAL_PAPER_RESEARCH_EXPLICIT_NO_TRADE_WARMUP_NOT_UNTOUCHED_BLIND_OOS"
+          assert s["safety"]["orders_real"]==0
+          assert all(f["warmup"]["fills_allowed_during_warmup"]==0 for f in s["folds"])
+
+          filters=req("/api/filters-study",{"params":{
+              "kind":"CUSTOM_RULES","timeframe":"1h","capital":1000,
+              "entry_rule":"EMA_CROSS_UP","exit_rule":"EMA_CROSS_DOWN",
+              "filter_rule":"NONE","fee":0.001,"slippage":0.0005
+          }})
+          f=filters["research"]
+          assert f["status"]=="NONBLIND_PREDECLARED_TRAIN_ONLY_SELECTION_LATER_HOLDOUTS_EXPLICIT_NO_TRADE_WARMUP"
+          assert f["safety"]["orders_real"]==0
+          assert f["methodology"]["warmup_fills_allowed"] is False
+
+          print("PASS V4.6.2 local API / Scientific / Research PAPER contracts")
+          PY
+
+  okx-public-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: seven_heaven_strategy_lab
+    steps:
+      - name: Checkout Strategy Lab only
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Verify public OKX source remains PAPER-only and continuous
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import tempfile
+          from pathlib import Path
+          from src.okx_public import collect,read_source
+          with tempfile.TemporaryDirectory() as d:
+              root=Path(d)
+              meta=collect(root,"BTC-USDC")
+              manifest,bars=read_source(root,meta["id"])
+              assert len(bars)==240
+              assert meta["status"]=="COMPLETE_CLOSED_240_1H_CANDLES"
+              assert meta["live_orders"]==0
+              assert all(bars[i][0]-bars[i-1][0]==3600 for i in range(1,len(bars)))
+              print("PASS real public OKX BTC-USDC 240 closed 1h candles; zero orders")
+          PY
+
+  windows-python-313-double-click:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Strategy Lab only
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /seven_heaven_strategy_lab/
+            /.github/workflows/seven-heaven-strategy-lab-portable-paper-validation.yml
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run full PAPER unit suite on Windows
         shell: pwsh
         working-directory: seven_heaven_strategy_lab
         run: |
           py -3.13 --version
           py -3.13 -m unittest discover -v -s tests -p 'test_*.py'
           if (-not (Test-Path "START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd")) {
-            throw "Missing double-click launcher"
+            throw "Missing Windows double-click launcher"
           }
-      - name: Launch actual Windows CMD double-click script and test local server
+
+      - name: Launch actual Windows CMD and verify V4.6.2
         shell: pwsh
         run: |
           $env:SEVEN_LAB_OPEN_BROWSER = "0"
+          $env:SEVEN_LAB_WORKSPACE = Join-Path $env:RUNNER_TEMP "seven-lab-v462-workspace"
+
+          Push-Location "seven_heaven_strategy_lab"
+          py -3.13 -c "from pathlib import Path; import os; from src.reference_data import install_reference; s=install_reference(Path(os.environ['SEVEN_LAB_WORKSPACE'])); assert s['available']"
+          Pop-Location
+
           $process = Start-Process -FilePath "cmd.exe" -ArgumentList '/c START_SEVEN_HEAVEN_STRATEGY_LAB_PYTHON_WINDOWS.cmd' -WorkingDirectory "seven_heaven_strategy_lab" -PassThru
           try {
             $ready = $false
-            for ($i = 0; $i -lt 50; $i++) {
+            for ($i = 0; $i -lt 60; $i++) {
               try {
                 $health = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/health" -TimeoutSec 2
                 if ($health.name -eq "Seven Heaven Strategy Lab" -and $health.live_trading -eq $false) {
@@ -466,50 +220,14 @@ jobs:
               } catch { }
               Start-Sleep -Milliseconds 250
             }
-            if (-not $ready) { throw "Python CMD launcher failed to start loopback PAPER server" }
+            if (-not $ready) { throw "Python CMD launcher failed to start V4.6.2 loopback PAPER server" }
+            if ($health.version -ne "4.6.2") { throw "Expected V4.6.2 health contract" }
+
             $page = Invoke-WebRequest -Uri "http://127.0.0.1:8777/" -UseBasicParsing -TimeoutSec 5
             if ($page.StatusCode -ne 200 -or -not $page.Content.Contains("SEVEN HEAVEN")) {
-              throw "Local French UI was not served"
+              throw "Local UI was not served"
             }
-            $datasets = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/datasets" -TimeoutSec 5
-            if ($datasets.datasets.Count -ne 1) { throw "Data API unavailable" }
-            if ($health.version -ne "4.5.0") { throw "V4.5 Python health not active" }
-            $sources = Invoke-RestMethod -Uri "http://127.0.0.1:8777/api/okx-sources" -TimeoutSec 5
-            if ($null -eq $sources.reserve_bytes -or $health.public_okx_enabled -ne $true) { throw "V4.5 OKX source API unavailable" }
-            if (-not $page.Content.Contains("Matrice de")) { throw "Premium V4.5 cockpit HTML not served" }
-            Write-Host "PASS: Actual CMD launched Python 3.13 and served PAPER UI on Windows localhost"
+            Write-Host "PASS actual Windows CMD launched V4.6.2 PAPER UI"
           } finally {
             taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null
           }
-
-  publish-standalone-release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [validate-and-package, windows-python-313-double-click, okx-public-live-smoke]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PAPER_DELIVERY
-          path: delivery
-      - name: Publish executable prototype without changing MASTER or Operator
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          TAG=seven-heaven-strategy-lab-v4-5-controlled-filter-research-2026-11-13
-          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
-              --target "$GITHUB_SHA" \
-              --title "Seven Heaven Strategy Lab V4.5 — Aether Controlled Research PAPER cockpit" \
-              --notes "V4.5 controlled filter research for declarative EMA strategies on immutable verified public historical Spot candles. Train-only selection, 1-2 strictly later validation windows with all fixed variants visible and honest no-trade/multiple-testing caveats. Includes full previous V4.4 PAPER forensics, microscope, Scientific and risk workstation, Windows Python 3.13. Never real orders, private keys or third-party bot dependencies; never write analysis files to USB." \
-              --latest=false
-          fi
-          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --title "Seven Heaven Strategy Lab V4.5 — Aether Controlled Research · Python 3.13" \
-            --notes "V4.5 Aether Research adds a nonblind controlled entry-filter comparison to the owner-accepted V4.4 transaction forensics. Five or fewer predeclared variants (owner settings, none, RSI below 60/45, volume at least 1.2x) share EXACTLY the same EMA, entry/exit, quote capital, fee, slippage, date window and SHA-verified Binance/OKX source. Selection uses earlier training only; tests on one or two chronological later segments show all candidates without choosing after the fact. A no-trade candidate cannot be crowned a winner. Independent windows reset capital, indicators and open inventory; their averages are not compounded forecasts. Premium responsive cockpit, unchanged V4.4 forensics, V4.3 scientific, V4.2 microscope, V4.1 risk desk and V4 creator. Native Windows Python 3.13, Chromium, public OKX smoke CI, no account/orders/Freqtrade/Hummingbot dependency or new USB research JSON. One complete standalone ZIP; backup workspace separately before replacing runtime files. PAPER only."
-          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_PYTHON313_WINDOWS_PAPER.zip \
-            delivery/SEVEN_HEAVEN_STRATEGY_LAB_V4_5_CONTROLLED_FILTER_RESEARCH_SHA256.txt
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url,assets
