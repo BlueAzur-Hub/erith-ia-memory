@@ -135,7 +135,7 @@ def simulate_donchian(
             "return_pct": round(100 * (final / capital - 1), 5),
             "max_drawdown_pct": round(max_dd, 5),
             "cash_final": round(cash, 6),
-            "base_inventory_btc": round(quantity, 8),
+            "base_inventory_units": round(quantity, 8),
             "inventory_marked_usdt": round(quantity * bars[-1][4], 6),
             "fees_paid_usdt": round(paid_fees, 6),
             "hypothetical_fills": len(trades),
