@@ -76,6 +76,18 @@ Une empreinte SHA-256 de fichier ZIP doit être comparée à **l'archive téléc
 - **V4.5 confirmée dans Firefox par le propriétaire le 13/11/2026 :** BTC/USDC OKX Spot, 720 bougies 1h ; cinq variantes de filtres, deux fenêtres de vérification. RSI<60 : -3,28 % contre -3,40 % pour le profil original (fenêtre 1) ; RSI<45 : 0 % et zéro fill contre -9,36 % pour le profil original (fenêtre 2). La deuxième variante est restée en liquidités, ce n'est PAS un profit ni un holdout aveugle. [Rapport de réception détaillé](./SEVEN_HEAVEN_STRATEGY_LAB_V4_5_OWNER_FIREFOX_ACCEPTANCE_AND_RESEARCH_HANDOFF_2026_11_13.md).
 - **État courant : V4.6.2 publiée comme Latest et acceptée dans Firefox par le propriétaire le 16/11/2026.** La preuve de réception montre BUILD 4.6.2, OKX Spot ETH/USDC, 2 160 bougies 1h clôturées, SHA-256 vérifié, 70 positions clôturées / 140 fills PAPER et les modules Simulation, Comparaison, Scientific, Research, Microscope et Forensics sur la même source active. Ce constat valide la réception fonctionnelle et la cohérence visible ; il ne constitue ni un audit d'exécution réelle ni une preuve de rentabilité. [Passation finale V4.6.2](./SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md). La suite de recherche a été ouverte explicitement le 16/11/2026 : [phase de certification historique longue 2019–2021](./SEVEN_HEAVEN_STRATEGY_LAB_LONG_HISTORY_CERTIFICATION_PHASE_2019_2021_2026_11_16.md), puis 2024–2025. Cette ouverture ne crée pas automatiquement une V4.7 : V4.6.2 reste la base stable. Freqtrade/Hummingbot restent facultatifs et aucun ordre réel n'est autorisé. Le protocole de comparaison est pré-enregistré dans [l'étude 2019–2021](./SEVEN_HEAVEN_STRATEGY_LAB_2019_2021_PREREGISTERED_EXPERIMENT_PROTOCOL_2026_11_16.md) avant lecture des performances longues. Le balayage réel a ensuite établi 19/36 mois strictement certifiés sur 2019–2021, contre 24/24 sur 2024–2025 ; voir [l'inventaire 2019–2021](./SEVEN_HEAVEN_STRATEGY_LAB_BINANCE_2019_2021_REAL_MONTHLY_INVENTORY_2026_11_16.md) et [les baselines 2024–2025](./SEVEN_HEAVEN_STRATEGY_LAB_2024_2025_CERTIFIED_BASELINES_AND_FRICTION_RESULTS_2026_11_16.md).
 
+### Recherche active — Donchian 55/20 4h
+
+Le candidat actuel n'est pas intégré au runtime V4.6.2 : il reste en **recherche PAPER isolée**.
+
+- [Résultats Donchian BTC 2024–2025](./SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_RESULTS_2026_11_16.md)
+- [Contre-épreuve BTC segmentée 2019–2021](./SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_2019_2021_SEGMENTED_RESULTS_2026_11_16.md)
+- [Validation multi-actif ETH/USDT 2024–2025](./SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_ETHUSDT_RESULTS_2026_11_16.md)
+
+État scientifique : BTC ancien **3/5 blocs positifs**, BTC 2024–2025 **2/2**, ETH 2024–2025 **2/2**. Les deux blocs BTC anciens négatifs sont conservés. Cela justifie une falsification supplémentaire, pas une revendication de robustesse future.
+
+**Prochaine étape gelée :** conserver Donchian 55/20 en 4h inchangé et tester BNB/USDT, XRP/USDT et SOL/USDT après certification stricte des sources. Aucun tuning, aucune V4.7 automatique.
+
 ### Liens de continuité
 
 - [Passation finale V4.6.2 — réception propriétaire et reprise hors Work](./SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md)
