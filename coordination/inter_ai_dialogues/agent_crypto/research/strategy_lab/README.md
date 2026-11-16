@@ -88,6 +88,17 @@ Le candidat actuel n'est pas intégré au runtime V4.6.2 : il reste en **recherc
 
 **Prochaine étape gelée :** conserver Donchian 55/20 en 4h inchangé et tester BNB/USDT, XRP/USDT et SOL/USDT après certification stricte des sources. Aucun tuning, aucune V4.7 automatique.
 
+### Falsification Top 5 — Donchian 55/20 4h
+
+Le panier BNB/USDT, XRP/USDT et SOL/USDT a été fixé avant résultat puis certifié sur **72/72 mois 2024–2025**. La règle 55/20 4h est restée inchangée.
+
+- [Protocole BNB/XRP/SOL](./SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_BNB_XRP_SOL_PREREGISTRATION_2026_11_16.md)
+- [Résultats BNB/XRP/SOL](./SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_BNB_XRP_SOL_RESULTS_2026_11_16.md)
+
+Résultat : BNB **−1,03 % / +14,92 %**, XRP **+142,62 % / −21,40 %**, SOL **+33,72 % / −17,72 %** pour 2024 / 2025. Avec BTC et ETH, cela donne 7 fenêtres annuelles positives et 3 négatives sur 10, chiffre descriptif uniquement.
+
+**Décision :** ne pas tuner Donchian. Passer à une analyse descriptive des régimes et de l'anatomie des positions avant toute nouvelle règle.
+
 ### Liens de continuité
 
 - [Passation finale V4.6.2 — réception propriétaire et reprise hors Work](./SEVEN_HEAVEN_STRATEGY_LAB_V4_5_1_TO_V4_6_2_RELEASE_AND_OWNER_ACCEPTANCE_HANDOFF_2026_11_15.md)
