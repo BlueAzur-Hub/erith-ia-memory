@@ -835,7 +835,7 @@
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
   "next_single_owner_check": "No owner runtime check required now. V4.6.2 remains accepted and unchanged. If a future research candidate survives preregistered validation and becomes a runtime change, preserve and independently back up E:\\\\seven_heaven_strategy_lab\\\\workspace\\\\ before installation.",
-  "next_developer_task": "RESEARCH ONLY: falsifier Donchian 55/20 4h sans tuning. Étendre la validation multi-actif à un panier fixé avant résultat (BNB/USDT, XRP/USDT, SOL/USDT après BTC/ETH), certifier chaque source avant simulation, conserver tous les échecs et caractériser les régimes des fenêtres positives/négatives. Donchian reste RESEARCH_CANDIDATE_NOT_RUNTIME_INTEGRATED. Ne pas intégrer au runtime V4.6.2, ne pas créer V4.7 automatiquement. VWAP et Spot Grid restent en attente.",
+  "next_developer_task": "RESEARCH ONLY: Donchian 55/20 4h a été falsifié sur BTC/ETH/BNB/XRP/SOL et n'est pas universel. Prochaine étape: diagnostic descriptif de régime et anatomie des positions, sans modifier la règle. Mesurer sur les fenêtres déjà certifiées des caractéristiques pré-entrée fixées à l'avance (efficacité directionnelle, largeur du canal, volatilité/ATR, exposition/durée) et les MFE/MAE rétrospectifs. Aucun filtre ne doit être créé avant d'avoir documenté ces mécanismes. Donchian reste RESEARCH_CANDIDATE_NOT_RUNTIME_INTEGRATED; aucune V4.7 automatique.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -1106,6 +1106,80 @@
       "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_RESULTS_2026_11_16.md",
       "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_2019_2021_SEGMENTED_RESULTS_2026_11_16.md",
       "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_ETHUSDT_RESULTS_2026_11_16.md"
-    ]
+    ],
+    "fixed_top5_basket": {
+      "status": "FALSIFICATION_COMPLETED_MIXED_RESULTS",
+      "data_gate": {
+        "assets": [
+          "BTC/USDT",
+          "ETH/USDT",
+          "BNB/USDT",
+          "XRP/USDT",
+          "SOL/USDT"
+        ],
+        "recent_months_per_asset": 24
+      },
+      "bnb_usdt": {
+        "2024": {
+          "return_pct": -1.02587,
+          "double_cost_pct": -5.52263,
+          "fills": 31,
+          "max_drawdown_pct": -43.04245,
+          "underlying_return_pct": 125.16832
+        },
+        "2025": {
+          "return_pct": 14.92308,
+          "double_cost_pct": 10.52734,
+          "fills": 26,
+          "max_drawdown_pct": -19.13099,
+          "underlying_return_pct": 23.06531
+        },
+        "normalized_manifest_sha256": "6c17c3b7db746a6fae4c4d701aa8586474df8a8c4bf98718893602e4f9536474"
+      },
+      "xrp_usdt": {
+        "2024": {
+          "return_pct": 142.61747,
+          "double_cost_pct": 133.3375,
+          "fills": 26,
+          "max_drawdown_pct": -42.63946,
+          "underlying_return_pct": 238.52153
+        },
+        "2025": {
+          "return_pct": -21.40303,
+          "double_cost_pct": -24.63574,
+          "fills": 28,
+          "max_drawdown_pct": -51.95996,
+          "underlying_return_pct": -11.58092
+        },
+        "normalized_manifest_sha256": "197adb30ca53f43f7e22fe3a6be40bf129eb0d79873b0ceb0ba6abea27c7cbc4"
+      },
+      "sol_usdt": {
+        "2024": {
+          "return_pct": 33.72143,
+          "double_cost_pct": 27.83734,
+          "fills": 30,
+          "max_drawdown_pct": -44.05002,
+          "underlying_return_pct": 86.10893
+        },
+        "2025": {
+          "return_pct": -17.71511,
+          "double_cost_pct": -21.33586,
+          "fills": 30,
+          "max_drawdown_pct": -41.85797,
+          "underlying_return_pct": -34.15562
+        },
+        "normalized_manifest_sha256": "f7d157001e82a6b1784f773de8fef269ef1a431c14649fd48ffedf3a8f62320b"
+      },
+      "annual_windows_summary": {
+        "recent_top5_windows": 10,
+        "recent_top5_positive": 7,
+        "recent_top5_negative": 3,
+        "old_btc_segments": 5,
+        "old_btc_positive": 3,
+        "old_btc_negative": 2,
+        "claim_limit": "Counts are descriptive only, not probabilities, not trade win rates, and not future robustness scores."
+      },
+      "evidence": "SEVEN_HEAVEN_STRATEGY_LAB_DONCHIAN_55_20_4H_BNB_XRP_SOL_RESULTS_2026_11_16.md"
+    }
   }
 }
