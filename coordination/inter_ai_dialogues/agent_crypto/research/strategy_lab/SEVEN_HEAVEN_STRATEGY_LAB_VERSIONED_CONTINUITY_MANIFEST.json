@@ -834,8 +834,8 @@
   },
   "notion_page": "https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72",
   "github_master_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_MASTER_ARCHITECTURE_PROFESSIONAL_BOTS_USB_STORAGE_VERSIONED_ROADMAP_2026_11_13.md",
-  "next_single_owner_check": "Review the published V4.7.0-RC1 pre-release and PR #773. Stable V4.7 merge/publication and USB installation require separate owner authorization.",
-  "next_developer_task": "V4.7.0-RC1 IS PUBLISHED AS A VERIFIED GITHUB PRE-RELEASE. Final RC branch head and tag ref: 05dc4c7df57fd998d7dcc532e2db1ddebff8d088. Final deterministic ZIP SHA-256: cacd60991c62328cb8db108e9cd907a78d2839c801b88326322f07d7966a9289. Workflow run #147 passed Linux, Windows Python 3.13 real CMD launch, OKX smoke, deterministic packaging and prerelease publication. V4.6.2 remains stable/installed. NEXT OWNER GATE: stable V4.7 merge/publication and USB install remain separately unauthorized.",
+  "next_single_owner_check": "Review the new product architecture and approve the first V4.8 engineering gate: StrategySpec v1 + Guided Mode + Composer end-to-end proof. V4.7 stable publication/USB replacement remains a separate decision.",
+  "next_developer_task": "PRODUCT PHASE: do not add another strategy family. On an isolated branch, design seven.strategy_spec.v1 and prove one end-to-end owner flow: Guided Mode -> Strategy Composer -> saved StrategySpec -> Seven internal deterministic replay -> human-readable explanation. Preserve current V4.7-RC1 financial engine behavior and keep external engines optional.",
   "explicit_non_claims": [
     "V2 not independently running Freqtrade/Hummingbot",
     "V2 has no dynamic OKX source selection",
@@ -1259,5 +1259,56 @@
       "runtime_dependency": false,
       "role": "OPTIONAL_ARCHITECTURAL_AND_ML_RESEARCH_REFERENCE"
     }
+  },
+  "product_orientation_2026_11_16": {
+    "status": "CANONICAL_NEXT_PHASE",
+    "rationale": "V4.7.0-RC1 validated engine capability but exposed owner UX/product limitations; stop random strategy accumulation and turn existing research engine into a coherent owner-facing product.",
+    "canonical_doc": "coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_PRODUCT_ARCHITECTURE_STRATEGYSPEC_COMPOSER_PAPER_BOT_ROADMAP_2026_11_16.md",
+    "principles": [
+      "SEVEN_HEAVEN_PRIMARY_RUNTIME_INDEPENDENT",
+      "EXTERNAL_ENGINES_OPTIONAL_ONLY",
+      "STRATEGYSPEC_SEVEN_OWNED_PORTABILITY_BOUNDARY",
+      "GUIDED_MODE_DEFAULT_EXPERT_MODE_PRESERVED",
+      "SOURCE_CATALOG_REPLACES_LONG_TERM_HARDCODED_SOURCE_UI",
+      "ATLAS_BECOMES_ACTIVE_COMPOSER_KNOWLEDGE_LAYER",
+      "ENGINE_CALCULATES_AETHER_EXPLAINS",
+      "V5_SEVEN_OWNED_PAPER_BOT",
+      "REAL_OKX_EXECUTION_SEPARATE_FUTURE_AUTHORIZATION_GATE",
+      "PUBLIC_PROJECT_CONTINUITY_GITHUB_FIRST"
+    ],
+    "strategy_spec": {
+      "schema_target": "seven.strategy_spec.v1",
+      "status": "DESIGN_NEXT",
+      "role": "portable strategy definition independent of UI, exchange and optional external engines",
+      "consumers_planned": [
+        "seven_internal_backtester",
+        "seven_paper_bot",
+        "optional_freqtrade_adapter_when_compatible",
+        "optional_hummingbot_adapter_when_compatible",
+        "future_aether_ml"
+      ]
+    },
+    "roadmap": {
+      "4.7.0-rc1": "ENGINE_PROOF_NATIVE_DONCHIAN_OWNER_FIREFOX_RECEIVED",
+      "4.8": "PRODUCT_FOUNDATION_GUIDED_MODE_STRATEGYSPEC_COMPOSER_SOURCE_CATALOG",
+      "4.9": "STRATEGY_WORKSHOP_ATLAS_TEMPLATES_EXPERIMENT_ORCHESTRATOR",
+      "5.0": "SEVEN_OWNED_PAPER_BOT",
+      "5.x": "OPTIONAL_EXTERNAL_VALIDATORS_AND_AETHER_ML_RESEARCH",
+      "future_real_execution": "ISOLATED_OKX_CONNECTOR_SEPARATE_OWNER_AUTHORIZATION"
+    },
+    "immediate_engineering_gate": [
+      "design_strategy_spec_v1_schema_and_parser",
+      "map_existing_native_strategies_to_strategy_spec_without_changing_financial_results",
+      "build_guided_mode_home",
+      "make_strategy_composer_emit_strategy_spec",
+      "prove_create_save_reload_replay_determinism_with_one_existing_strategy"
+    ],
+    "stop_rules": [
+      "no_new_strategy_family_just_to_increase_count",
+      "no_large_research_campaign_without_product_question",
+      "no_unexplained_technical_parameter_in_default_guided_flow",
+      "no_mandatory_external_bot_dependency",
+      "no_llm_chat_as_only_project_decision_storage"
+    ]
   }
 }
