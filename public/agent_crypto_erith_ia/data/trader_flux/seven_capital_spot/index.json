@@ -898,6 +898,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-17",
+      "date_utc": "2026-11-17",
+      "first_seen_at_utc": "2026-11-17T03:02:31.461Z",
+      "source_times_utc": [
+        "2026-11-17T02:54:11.914Z",
+        "2026-11-17T02:55:23.368Z"
+      ],
+      "universe_eligible": 361,
+      "policy_matches": 4,
+      "selected": [
+        {
+          "coin_id": "layerzero",
+          "symbol": "ZRO",
+          "source_at_utc": "2026-11-17T02:54:11.914Z",
+          "rank": 89,
+          "price_usd": 1.5242111365488455
+        },
+        {
+          "coin_id": "internet-computer",
+          "symbol": "ICP",
+          "source_at_utc": "2026-11-17T02:54:11.914Z",
+          "rank": 57,
+          "price_usd": 2.461346004354926
+        },
+        {
+          "coin_id": "sentient",
+          "symbol": "SENT",
+          "source_at_utc": "2026-11-17T02:54:11.914Z",
+          "rank": 212,
+          "price_usd": 0.01757249950931827
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2082,6 +2117,27 @@
       "file": "observations/2026-11-16T070140530Z--2026-11-16.json",
       "sha256": "3b087a398f57022e9f78971474a6a318fb627e89c5a85ac1962a36e806a0bc88",
       "recorded_at_utc": "2026-11-16T07:01:40.530Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
+    },
+    {
+      "cohort_id": "2026-11-15",
+      "file": "observations/2026-11-17T030231461Z--2026-11-15.json",
+      "sha256": "1fdd4f754caeec6495c3ffeb629f6ada03904f0ccb34128d577cd149271bc608",
+      "recorded_at_utc": "2026-11-17T03:02:31.461Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-16",
+      "file": "observations/2026-11-17T030231461Z--2026-11-16.json",
+      "sha256": "2f3211d687c1c9f544d9d5e159eef2bdc3068f86354957fa13b1c6ec6c1dbb6b",
+      "recorded_at_utc": "2026-11-17T03:02:31.461Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-17",
+      "file": "observations/2026-11-17T030231461Z--2026-11-17.json",
+      "sha256": "de0aa3e5e3ad639872b94e38349546b600e5478def7f93a47ee801ba8803b422",
+      "recorded_at_utc": "2026-11-17T03:02:31.461Z",
       "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
