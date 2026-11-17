@@ -1,0 +1,206 @@
+name: Build Strategy Lab V4.9 Historical Vault V3
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/build-v49-strategy-lab.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-v49:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore exact V4.8 delivered source
+        shell: bash
+        run: |
+          set -euo pipefail
+          V48="coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip"
+          test -f "$V48"
+          rm -rf /tmp/v48 seven_heaven_strategy_lab
+          mkdir -p /tmp/v48
+          unzip -q "$V48" -d /tmp/v48
+          test -d /tmp/v48/seven_heaven_strategy_lab
+          cp -a /tmp/v48/seven_heaven_strategy_lab ./seven_heaven_strategy_lab
+          rm -rf seven_heaven_strategy_lab/.pytest_cache
+          find seven_heaven_strategy_lab -type d -name __pycache__ -prune -exec rm -rf {} +
+
+      - name: Apply bounded V4.9 migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/tools/v49_upgrade.py
+
+      - name: Inject ten canonical annual shards from shared Seven vault
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards"
+          DST="seven_heaven_strategy_lab/data/historical_bundle_v3"
+          files=(
+            bitcoin-2024-span13-5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5.json.gz
+            bitcoin-2025-span13-291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f.json.gz
+            ethereum-2024-span13-12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e.json.gz
+            ethereum-2025-span13-a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6.json.gz
+            binancecoin-2024-span12-71f3bdf96f2cbcf5b5cf7bf8d748305e65348cc6156bb8e31246377cfe2d96ab.json.gz
+            binancecoin-2025-span12-d375d3e3998eb7a026ab3c63251af0cfea2b711b68fd3bd91da081a356ea1101.json.gz
+            ripple-2024-span11-08b34cc0934cccca851e4040bf552cb30250d96947001a2eff19b87f95bcd983.json.gz
+            ripple-2025-span11-7844ff01623f7ed959f4bd87e782504a448ad6de863f64964bcdc594539391dd.json.gz
+            solana-2024-span5-6001789aadec0df0153e076c2dd0f652250c7123afac5757e257a730af3a9b59.json.gz
+            solana-2025-span5-f3be42dcc50d4ff898a835128dbaa47a0e79a0a7501ca1f222c6eb92e0031da3.json.gz
+          )
+          for f in "${files[@]}"; do
+            test -f "$SRC/$f"
+            cp "$SRC/$f" "$DST/$f"
+          done
+          cd "$DST"
+          sha256sum -c SHA256SUMS.txt
+
+      - name: Regression and bundle validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd seven_heaven_strategy_lab
+          test "$(sha256sum src/engine.py | awk '{print $1}')" = "f4de4a9cb8dbfd17a665785b6b06cfff3473039624457e721d3f3fd9e2aeb7c2"
+          python -m pytest -q | tee /tmp/v49-tests.txt
+          node --check web/app.js
+          node --check web/historical-vault.js
+          node --check web/lab-help-layer.js
+
+      - name: Rebuild canonical workspace V4 with ten long asset-years
+        shell: bash
+        run: |
+          set -euo pipefail
+          W48="coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip"
+          rm -rf /tmp/v49-workspace /tmp/workspace_rebuild_backups
+          mkdir -p /tmp/v49-workspace
+          unzip -q "$W48" -d /tmp/v49-workspace
+          test -d /tmp/v49-workspace/workspace
+          cd seven_heaven_strategy_lab
+          python tools/workspace_rebuild_v1.py --workspace /tmp/v49-workspace/workspace --execute | tee /tmp/v49-rebuild.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          w=Path('/tmp/v49-workspace/workspace')
+          m=json.loads((w/'CANONICAL_REBUILD_MANIFEST.json').read_text(encoding='utf-8'))
+          g=m['generated']
+          assert len(g['profiles'])==52
+          assert len(g['strategy_specs'])==52
+          assert len(g['runs'])==52
+          assert len(g['comparisons'])==16
+          for s in ('BNB','XRP','SOL'):
+              for y in (2024,2025):
+                  p=w/'catalog_sources'/f'CAT_BINANCE_{s}USDT_1H_{y}'/'manifest.json'
+                  x=json.loads(p.read_text(encoding='utf-8'))
+                  assert x['rows']==(8784 if y==2024 else 8760)
+                  assert x['historical_vault']['schema']=='seven.historical_vault.installed_year.v3'
+          print('WORKSPACE_V4_ACCEPTANCE_OK')
+          PY
+
+      - name: Package DEV, workspace and Historical Bundle V3
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=/tmp/v49-out
+          rm -rf "$OUT"
+          mkdir -p "$OUT"
+          find seven_heaven_strategy_lab -type d -name __pycache__ -prune -exec rm -rf {} +
+          rm -rf seven_heaven_strategy_lab/.pytest_cache
+          DEV="$OUT/SEVEN_HEAVEN_STRATEGY_LAB_V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_DEV.zip"
+          WORK="$OUT/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_BTC_ETH_BNB_XRP_SOL_2024_2025_2026_11_17.zip"
+          BUNDLE="$OUT/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_TOP5_2024_2025_2026_11_17.zip"
+          zip -qr "$DEV" seven_heaven_strategy_lab -x '*/__pycache__/*' '*/.pytest_cache/*' '*.pyc' '*.pyo'
+          (cd /tmp/v49-workspace && zip -qr "$WORK" workspace)
+          (cd seven_heaven_strategy_lab/data && zip -qr "$BUNDLE" historical_bundle_v3)
+          sha256sum "$DEV" "$WORK" "$BUNDLE" | tee /tmp/v49-artifacts.sha256
+
+      - name: Generate continuity report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path('.')
+          w=Path('/tmp/v49-workspace/workspace')
+          m=json.loads((w/'CANONICAL_REBUILD_MANIFEST.json').read_text(encoding='utf-8'))
+          bundle=json.loads((root/'seven_heaven_strategy_lab/data/historical_bundle_v3/MANIFEST.json').read_text(encoding='utf-8'))
+          outs=[
+            Path('/tmp/v49-out/SEVEN_HEAVEN_STRATEGY_LAB_V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_DEV.zip'),
+            Path('/tmp/v49-out/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_BTC_ETH_BNB_XRP_SOL_2024_2025_2026_11_17.zip'),
+            Path('/tmp/v49-out/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_TOP5_2024_2025_2026_11_17.zip'),
+          ]
+          hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in outs}
+          runs=[r for r in m['generated']['runs'] if any(f'CAT_BINANCE_{s}USDT_1H_' in r['source_id'] for s in ('BNB','XRP','SOL'))]
+          runs=sorted(runs,key=lambda r:(r['source_id'],r['kind']))
+          lines=[
+          '# Seven Heaven Strategy Lab — V4.9 Historical Vault V3 + Multi-Asset Corpus V1',
+          '',
+          'Date : 17 novembre 2026',
+          '',
+          '## Résultat',
+          '',
+          '- Historical Bundle V3 : 10 années-actifs BTC/ETH/BNB/XRP/SOL × 2024/2025.',
+          '- Six nouveaux shards BNB/XRP/SOL pris directement dans le Coffre public Seven et revalidés localement.',
+          '- Moteur PAPER SHA-256 inchangé : f4de4a9cb8dbfd17a665785b6b06cfff3473039624457e721d3f3fd9e2aeb7c2.',
+          '- Workspace canonique : 52 profils + 52 StrategySpecs + 52 simulations + 16 comparaisons.',
+          '- Aucun ordre réel, aucune clé de compte, aucune lecture de compte.',
+          '',
+          '## Bundle V3',
+          '',
+          '| Actif | Année | Bougies 1h | Span | SHA-256 |',
+          '|---|---:|---:|---:|---|',
+          ]
+          for d in bundle['datasets']:
+              lines.append(f"| {d['symbol']} | {d['year']} | {d['rows']} | {d['source_span']} | {d['sha256']} |")
+          lines += ['', '## Résultats canoniques nouveaux — BNB / XRP / SOL', '',
+                    '| Source | Méthode | Rendement PAPER | Drawdown max | Frais | Fills |',
+                    '|---|---|---:|---:|---:|---:|']
+          for r in runs:
+              lines.append(f"| {r['source_id']} | {r['kind']} | {r['return_pct']:+.2f} % | {r['max_drawdown_pct']:.2f} % | {r['fees_paid_quote']:.2f} | {r['fills']} |")
+          lines += ['', '## Artefacts', '']
+          for name,sha in hashes.items(): lines.append(f"- {name} — SHA-256 {sha}")
+          lines += ['', '## Validation', '',
+                    '- Suite Python : voir GitHub Actions du build V4.9.',
+                    '- JavaScript : node --check PASS sur app.js, historical-vault.js, lab-help-layer.js.',
+                    '- Rebuild : les dix années sont installées avant reset/rejeu ; les sources sont préservées pendant la reconstruction.',
+                    '- Réception visuelle Firefox Windows propriétaire : encore requise ; elle reste distincte des tests automatisés.',
+                    '',
+                    '## Gate suivant',
+                    '',
+                    'Exploiter ce corpus 5×2 pour une comparaison transversale de la même StrategySpec entre actifs, années et régimes. Ne pas ouvrir V5 Robot PAPER avant cette lecture multi-actifs.',
+                    '']
+          out=root/'coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_2026_11_17.md'
+          out.write_text('\n'.join(lines),encoding='utf-8')
+          PY
+
+      - name: Publish source tree and versioned artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          DEST="coordination/inter_ai_dialogues/agent_crypto"
+          cp /tmp/v49-out/*.zip "$DEST/"
+          while read -r sha file; do
+            base="$(basename "$file")"
+            printf '%s  %s\n' "$sha" "$base" > "$DEST/$base.sha256"
+          done < /tmp/v49-artifacts.sha256
+          git config user.name "Seven Heaven"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A seven_heaven_strategy_lab
+          git add "$DEST"/SEVEN_HEAVEN_STRATEGY_LAB_V4_9_*.zip "$DEST"/SEVEN_HEAVEN_STRATEGY_LAB_V4_9_*.zip.sha256
+          git add "$DEST"/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_*.zip "$DEST"/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_*.zip.sha256
+          git add "$DEST"/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_*.zip "$DEST"/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_*.zip.sha256
+          git add coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_2026_11_17.md
+          git commit -m "Build Strategy Lab V4.9 Historical Vault V3 multi-asset corpus"
+          git push origin HEAD:main
+          TAG="seven-heaven-strategy-lab-v4-9-0-dev1-historical-v3-2026-11-17"
+          gh release create "$TAG"             "$DEST/SEVEN_HEAVEN_STRATEGY_LAB_V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_DEV.zip"             "$DEST/SEVEN_HEAVEN_STRATEGY_LAB_V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_DEV.zip.sha256"             "$DEST/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_BTC_ETH_BNB_XRP_SOL_2024_2025_2026_11_17.zip"             "$DEST/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_BTC_ETH_BNB_XRP_SOL_2024_2025_2026_11_17.zip.sha256"             "$DEST/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_TOP5_2024_2025_2026_11_17.zip"             "$DEST/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_TOP5_2024_2025_2026_11_17.zip.sha256"             --title "Seven Heaven Strategy Lab V4.9.0-DEV1 — Historical Vault V3"             --notes-file coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_2026_11_17.md             --prerelease
