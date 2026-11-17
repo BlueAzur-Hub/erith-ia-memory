@@ -1,7 +1,7 @@
 {
   "schema": "seven.heaven.strategy_lab.versioned_continuity.v1",
-  "updated_utc_date": "2026-11-16",
-  "status": "V4_6_2_RELEASE_OWNER_FIREFOX_ACCEPTED",
+  "updated_utc_date": "2026-11-17",
+  "status": "V4_9_0_DEV1_CI_VERIFIED_OWNER_FIREFOX_PENDING",
   "product": {
     "name": "Seven Heaven Strategy Lab",
     "mode": "LOCAL_PYTHON_WITH_PUBLIC_INTERNET_PAPER_DEFAULT",
@@ -20,7 +20,9 @@
       "caution": "Do not copy private archives or protected Aerith files to public GitHub; check actual free space and USB filesystem before large dependencies",
       "last_owner_reported_free_gb": 4.07
     },
-    "version": "4.6.2"
+    "version": "4.9.0-dev1",
+    "latest_owner_firefox_accepted_version": "4.6.2",
+    "latest_developer_verified_version": "4.9.0-dev1"
   },
   "release_train": [
     {
@@ -455,17 +457,110 @@
       }
     },
     {
+      "stage": "C3",
+      "version": "4.7.0-rc1",
+      "status": "PUBLISHED_PRERELEASE_NATIVE_DONCHIAN_CI_VERIFIED",
+      "features": [
+        "native_donchian_55_20",
+        "closed_bar_signal_next_open_paper_fill",
+        "seven_method_comparison",
+        "paper_only_zero_real_orders"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v4-7-0-rc1-native-donchian-2026-11-16",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_7_0_RC1_NATIVE_DONCHIAN_PYTHON313_WINDOWS_PAPER.zip",
+      "size_bytes": 142109,
+      "sha256": "cacd60991c62328cb8db108e9cd907a78d2839c801b88326322f07d7966a9289",
+      "provenance": {
+        "github_release_date": "2026-11-16",
+        "owner_firefox_verified": false,
+        "note": "Pre-release; V4.6.2 remained the last explicit owner-accepted release at publication."
+      }
+    },
+    {
+      "stage": "C4",
+      "version": "4.8-dev",
+      "status": "DEVELOPER_VERIFIED_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_ARCHIVED",
+      "features": [
+        "knowledge_layer_and_help_layer",
+        "strategyspec_v1",
+        "historical_vault_v2",
+        "btc_eth_2024_2025_installed",
+        "workspace_steward_v3_user_and_canonical_separation",
+        "28_profiles_28_specs_28_runs_10_comparisons",
+        "paper_only_zero_real_orders"
+      ],
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip",
+      "size_bytes": 1821960,
+      "sha256": "f21c8b1660d6139ac5987a4eaa979926065c1540c4447118335ed78844745893",
+      "artifacts": {
+        "workspace": {
+          "name": "SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip",
+          "sha256": "69caebebd77a3d1c644dced24416a8147f58b1956ee4618d7b5925b77ba8de7d"
+        },
+        "historical_bundle": {
+          "name": "SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip",
+          "sha256": "c0637023bf3f6aeb38f25b38602d65510dc16d65bda476e37240b5ef40d2d0df"
+        }
+      },
+      "provenance": {
+        "report": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_2026_11_17.md",
+        "direct_archive_commit": "92b6422e1b8341772ce423bfe6b5b5d8ba1cf2b9",
+        "python_tests_passed": 155,
+        "subtests_passed": 12,
+        "owner_firefox_verified": false,
+        "note": "Developer/DOM/API validation recorded; explicit owner acceptance remains distinct."
+      }
+    },
+    {
+      "stage": "C5",
+      "version": "4.9.0-dev1",
+      "status": "PUBLISHED_PRERELEASE_CI_VERIFIED_OWNER_FIREFOX_PENDING",
+      "features": [
+        "historical_vault_v3_five_asset_annual_bundle",
+        "btc_eth_bnb_xrp_sol_2024_2025_ten_asset_years",
+        "ten_shards_size_sha_schema_provenance_continuity_validation",
+        "52_profiles_52_strategyspecs_52_paper_runs_16_comparisons",
+        "github_source_tree_resynchronized_from_exact_v4_8_delivery",
+        "server_and_ui_build_marker_4_9_0_dev1",
+        "paper_engine_byte_identical_to_v4_8",
+        "paper_only_zero_real_orders"
+      ],
+      "release_tag": "seven-heaven-strategy-lab-v4-9-0-dev1-historical-v3-2026-11-17",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v4-9-0-dev1-historical-v3-2026-11-17",
+      "zip_name": "SEVEN_HEAVEN_STRATEGY_LAB_V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_DEV.zip",
+      "size_bytes": 4392425,
+      "sha256": "d7e7aee85c44c583d6eb0de55256dee443bbb603853dd29cbc853b393d8cfd16",
+      "artifacts": {
+        "workspace": {
+          "name": "SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V4_BTC_ETH_BNB_XRP_SOL_2024_2025_2026_11_17.zip",
+          "size_bytes": 4432688,
+          "sha256": "b9a80821ea97a7a3c8c60c0efb9eb2e33a8c4927f4f1a634ad11d485441195c5"
+        },
+        "historical_bundle": {
+          "name": "SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_V3_TOP5_2024_2025_2026_11_17.zip",
+          "size_bytes": 2867548,
+          "sha256": "733fa799f5f3121c04935d99a356b4e519db908f2b4496df5d9b7f0aea04d7ad"
+        }
+      },
+      "provenance": {
+        "commit": "9d6503c",
+        "ci": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/44005225174",
+        "all_workflow_jobs_success": true,
+        "python_313": true,
+        "python_tests_passed": 160,
+        "subtests_passed": 12,
+        "javascript_syntax_passed": true,
+        "canonical_workspace_rebuild_verified": true,
+        "paper_engine_sha256": "f4de4a9cb8dbfd17a665785b6b06cfff3473039624457e721d3f3fd9e2aeb7c2",
+        "report": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_2026_11_17.md",
+        "owner_firefox_verified": false
+      }
+    },
+    {
       "stage": "D",
       "version": "5.0-planned",
       "status": "NOT_BUILT",
-      "features": [
-        "live_public_market_paper_monitor_without_orders",
-        "independent_strategy_scheduler",
-        "strict_risk_engine_and_kill_switch",
-        "walk_forward_out_of_sample",
-        "user_defined_no_code_models_extended",
-        "separate_future_okx_spot_execution_only_after_explicit_authorization"
-      ]
+      "gate": "Complete multi-asset/multi-regime analysis on V4.9 corpus before opening Robot PAPER."
     }
   ],
   "engines": {
