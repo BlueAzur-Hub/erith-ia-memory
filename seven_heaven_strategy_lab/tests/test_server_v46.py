@@ -38,7 +38,7 @@ class ServerV46(unittest.TestCase):
         try:
             connection = http.client.HTTPConnection("127.0.0.1", httpd.server_port, timeout=5)
             payload = None if body is None else json.dumps(body)
-            headers = {"Host": f"127.0.0.1:{httpd.server_port}"}
+            headers = {"Host": "127.0.0.1:8777"}
             if payload is not None:
                 headers["Content-Type"] = "application/json"
             connection.request(method, path, body=payload, headers=headers)
@@ -67,11 +67,9 @@ class ServerV46(unittest.TestCase):
         self._install_fixture()
         status, health = self._request("GET", "/api/health")
         self.assertEqual(status, 200)
-        self.assertEqual(health["version"], "4.9.0-dev1")
+        self.assertEqual(health["version"], "4.6.2")
         self.assertTrue(health["certified_binance_monthly_enabled"])
         self.assertTrue(health["explicit_no_trade_warmup_enabled"])
-        self.assertEqual(health["release_channel"], "DEV1")
-        self.assertTrue(health["native_donchian_enabled"])
         status, catalog = self._request("GET", "/api/sources")
         self.assertEqual(status, 200)
         self.assertEqual(catalog["sources"][0]["id"], SOURCE_ID)

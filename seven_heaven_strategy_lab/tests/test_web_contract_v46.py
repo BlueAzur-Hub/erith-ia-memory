@@ -40,7 +40,7 @@ class WebContractV46(unittest.TestCase):
         html = (ROOT / "web" / "index.html").read_text(encoding="utf-8")
         app = (ROOT / "web" / "app.js").read_text(encoding="utf-8")
         research = (ROOT / "web" / "strategy_research.js").read_text(encoding="utf-8")
-        self.assertIn("BUILD 4.9.0-DEV1", html)
+        self.assertIn("BUILD 4.6.2", html)
         self.assertIn('id="binance-monthly-import"', html)
         self.assertIn('value="DONCHIAN"', html)
         self.assertIn('id="donchian-fields"', html)
@@ -53,7 +53,7 @@ class WebContractV46(unittest.TestCase):
         self.assertIn('/api/binance-monthly-import', app)
         self.assertIn('/api/sources', app)
         self.assertIn('renderSourceSummary(source,id)', app)
-        self.assertIn('health.version!=="4.9.0-dev1"', app)
+        self.assertIn('health.version!=="4.6.2"', app)
         self.assertIn("EXPLICIT_NO_TRADE_WARMUP", research)
 
     def test_source_change_resets_every_source_bound_analysis(self):

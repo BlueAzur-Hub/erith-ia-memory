@@ -16,59 +16,22 @@
     if (typeof value === "number") return whenUTC(value);
     return String(value || "").slice(0,16).replace("T"," ");
   };
-  const assetName = base => ({BTC:"Bitcoin",ETH:"Ethereum",SOL:"Solana",XRP:"XRP",BNB:"BNB"})[base] || base || "Actif";
-  const assetIcon = base => ({BTC:"₿",ETH:"Ξ",SOL:"◎",XRP:"✕",BNB:"◆"})[base] || "◇";
-  const shortDate = value => {
-    if(!value)return "—";
-    const d=new Date(value);
-    if(Number.isNaN(d.getTime()))return String(value).slice(0,10);
-    return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"});
-  };
-  const coverageLabel = source => {
-    const c=source?.coverage||{};
-    const first=c.first_utc||source?.first_utc, last=c.last_utc||source?.last_utc;
-    if(first&&last)return shortDate(first)+" → "+shortDate(last);
-    if(source?.close_boundary_utc)return "jusqu’au "+shortDate(source.close_boundary_utc);
-    return "Période non précisée";
-  };
-  const certificationLabel = status => ({
-    OFFICIAL_CHECKSUM_MATCHED_COMPLETE_MONTH:"Checksum officiel vérifié",
-    SHA256_CONTIGUOUS_CLOSED_CANDLES:"Bougies closes continues · SHA-256 vérifié",
-    SHA256_REFERENCE_ARCHIVE:"Archive de référence · SHA-256 vérifié",
-    VERIFIED_LOCAL_SOURCE:"Source locale vérifiée"
-  })[status] || String(status||"Source vérifiée").replaceAll("_"," ");
-  const familyLabel = entry => entry?.family_label || ({TREND:"Suivi de tendance",MEAN_REVERSION:"Retour à la moyenne",ACCUMULATION:"Accumulation",BASELINE:"Référence",COMPOSER:"Personnalisée"})[entry?.family] || entry?.family || "Méthode";
+  const assetName = base => ({BTC:"Bitcoin",ETH:"Ethereum"})[base] || base || "Actif";
+  const assetIcon = base => ({BTC:"₿",ETH:"Ξ"})[base] || "◇";
   const kinds = {
     EMA_CROSS:"Croisement EMA", BOLLINGER:"Bandes Bollinger", DONCHIAN:"Cassure Donchian", DCA:"DCA programmé",
-    HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver le cash",
+    HOLD_50:"Buy & Hold 50 %", HOLD_100:"Buy & Hold 100 %", CASH:"Conserver les USDT",
     CUSTOM_RULES:"Ma stratégie personnalisée"
-  };
-  const strategyLabel = (kind, source=null) => {
-    const base=source?.base || "";
-    const quote=source?.quote || "";
-    if(kind==="HOLD_50") return "Buy & Hold 50 %"+(base?" "+base:"");
-    if(kind==="HOLD_100") return "Buy & Hold 100 %"+(base?" "+base:"");
-    if(kind==="CASH") return quote?"Conserver les "+quote:"Conserver le cash";
-    return kinds[kind]||kind;
   };
   let profiles = [];
   let strategySpecs = [];
-  let workspaceManaged = false;
   let selectedStrategySpec = null;
-  let sourceCatalog = null;
-  let strategyAtlas = [];
-  let emaKnowledge = null;
-  let bollingerKnowledge = null;
-  let donchianKnowledge = null;
-  const passiveKnowledgeCache = {};
-  let passiveKnowledgeCurrentId = null;
   let busy = false;
   let available=false;
   let binanceAvailable=false;
   let connectedSources=[];
   let selectedSourceId=BINANCE;
   let lastRenderedReport=null;
-  let guidedAtlasApplied=false;
 
   async function api(path, data) {
     const init = data === undefined
@@ -87,33 +50,14 @@
     $("message").textContent = message;
     $("message").className = "notice" + (tone ? " " + tone : "");
   }
-  function guidedStep(id, state, detail) {
-    const node=$(id);
-    if(!node)return;
-    node.classList.remove("ready","active");
-    if(state)node.classList.add(state);
-    const small=node.querySelector("small");
-    if(small)small.textContent=detail;
-  }
-  function syncGuidedProgress() {
-    const sourceId=$("guided-source")?.value || $("source-choice")?.value || "";
-    const atlasId=$("guided-atlas-template")?.value || "";
-    const source=connectedSources.find(x=>x.id===sourceId);
-    const atlas=strategyAtlas.find(x=>x.atlas_id===atlasId);
-    guidedStep("guided-step-source", sourceId ? "ready" : "active", source ? source.pair+" · "+source.exchange : (sourceId===BINANCE ? "BTC/USDT · Binance" : "À choisir"));
-    guidedStep("guided-step-atlas", atlasId ? "ready" : (sourceId ? "active" : ""), atlas ? atlas.title : "À choisir");
-    guidedStep("guided-step-composer", guidedAtlasApplied ? "ready" : (atlasId ? "active" : ""), guidedAtlasApplied ? "Réglages prêts" : (atlasId ? "Prêt à préparer" : "En attente"));
-    guidedStep("guided-step-spec", selectedStrategySpec ? "ready" : "", selectedStrategySpec ? selectedStrategySpec.name : "Facultative");
-  }
   function setBusy(working, label="Calcul en cours…") {
     busy = working;
-    for (const id of ["import","binance-monthly-import","okx-import","run","compare","robustness-run","filters-run","save-profile","save-strategy-spec","replay-strategy-spec","guided-atlas-apply"]) {
+    for (const id of ["import","binance-monthly-import","okx-import","run","compare","robustness-run","filters-run","save-profile","save-strategy-spec","replay-strategy-spec"]) {
       const b = $(id);
       if (!b.dataset.defaultText) b.dataset.defaultText = b.textContent;
       b.disabled = working || ((id === "run" || id === "compare" || id === "filters-run") && !available)
         || (id === "filters-run" && !["EMA_CROSS","CUSTOM_RULES"].includes($("kind").value))
-        || (id === "replay-strategy-spec" && !selectedStrategySpec)
-        || (id === "guided-atlas-apply" && !$("guided-atlas-template").value);
+        || (id === "replay-strategy-spec" && !selectedStrategySpec);
       b.textContent = working && (id === "run" || id === "compare") ? label : b.dataset.defaultText;
     }
   }
@@ -171,11 +115,10 @@
   function renderSourceSummary(source,id){
     const legacy=id===BINANCE;
     const monthly=source.source_kind==="BINANCE_MONTHLY_CERTIFIED";
-    const generic=source.source_kind==="CATALOG_REGISTERED_V1";
     $("summary-asset-icon").textContent=assetIcon(source.base);
     $("summary-market").textContent=assetName(source.base)+" · "+source.pair;
     $("summary-exchange").textContent=source.exchange+" · "+
-      (legacy?"archive V1/V2":monthly?"mois public certifié":generic?"source certifiée du catalogue":"archive publique clôturée");
+      (legacy?"archive V1/V2":monthly?"mois public certifié":"archive publique clôturée");
     if(legacy){
       $("summary-window").textContent="Janvier 2026 · mois complet";
       $("summary-window-range").textContent="2026-01-01 → 2026-02-01 UTC · borne de fin exclue";
@@ -188,16 +131,6 @@
       $("dataset-badge").textContent=binanceAvailable?"V1/V2 · SHA-256 ✓":"V1/V2 · NON CHARGÉE";
       $("dataset-badge").className="mini-badge"+(binanceAvailable?"":" gold-badge");
       return;
-    }
-    if(generic){
-      const c=source.coverage||{};
-      $("summary-window").textContent=print(c.rows||source.rows,0)+" bougies · "+source.source_timeframe;
-      $("summary-window-range").textContent=sourceTime(c.first_utc)+" → "+sourceTime(c.close_boundary_utc||c.last_utc)+" UTC";
-      $("summary-coverage").textContent=print(c.rows||source.rows,0)+" bougies continues";
-      $("summary-resolution").textContent="Résolution native : "+source.source_timeframe;
-      $("summary-integrity").textContent=source.integrity.status;
-      $("summary-provenance").textContent=source.exchange+" · Source Catalog v1 · SHA-256 "+source.sha256.slice(0,18)+"…";
-      $("dataset-badge").textContent="CATALOGUE · SHA-256 ✓"; $("dataset-badge").className="mini-badge"; return;
     }
     if(monthly){
       $("summary-window").textContent="Janvier 2020 · mois complet";
@@ -262,139 +195,46 @@
     }
     $("source-active-title").textContent=source.exchange+" · "+source.pair;
     const monthly=source.source_kind==="BINANCE_MONTHLY_CERTIFIED";
-    const generic=source.source_kind==="CATALOG_REGISTERED_V1";
     $("source-active-detail").textContent=id===BINANCE
       ?"Janvier 2026 · archive V1/V2 intégralement préservée"
       :monthly
         ?source.rows+" bougies 1h · janvier 2020 complet · CHECKSUM officiel concordant"
-        :generic
-          ?source.rows+" bougies "+source.source_timeframe+" · "+source.integrity.status
-          :source.rows+" bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
+        :source.rows+" bougies 1h closes · fin "+source.close_boundary_utc.slice(0,16).replace("T"," ")+" UTC";
     $("source-active-hash").textContent=id===BINANCE
       ?"Empreinte de référence du coffre V2"
       :monthly
         ?"ZIP SHA-256 "+source.source_archive_sha256.slice(0,18)+"… · CSV "+source.sha256.slice(0,18)+"…"
-        :generic
-          ?"Source Catalog v1 · SHA-256 "+source.sha256.slice(0,24)+"…"
-          :"SHA-256 "+source.sha256.slice(0,24)+"…";
+        :"SHA-256 "+source.sha256.slice(0,24)+"…";
     $("available-timeframe-label").textContent=id===BINANCE
       ?"sur l'archive Binance vérifiée 1m"
       :monthly
         ?"source Binance mensuelle native 1h : horizons 1h et 4h seulement"
-        :generic
-          ?"source cataloguée native "+source.source_timeframe+" : "+source.available_timeframes.join(", ")
-          :"source OKX native 1h : horizons 1h et 4h seulement";
+        :"source OKX native 1h : horizons 1h et 4h seulement";
     $("capital-unit").textContent=source.quote;
     $("dca-unit").textContent=source.quote;
     $("nav-source").textContent=source.pair+" · "+source.exchange+" · "+
       (id===BINANCE?"Jan 2026":monthly?"Jan 2020 certifié":source.rows+" bougies closes");
     $("active-source-badge").textContent=id===BINANCE?"ARCHIVE V1/V2":
-      monthly?"BINANCE CERTIFIÉ ACTIF":generic?"SOURCE CATALOGUE ACTIVE":"ARCHIVE OKX ACTIVE";
-    syncGuidedProgress();
+      monthly?"BINANCE CERTIFIÉ ACTIF":"ARCHIVE OKX ACTIVE";
     if(!busy)setBusy(false);
-  }
-  function populateSelect(id, values, firstLabel="Tous") {
-    const node=$(id); node.replaceChildren(new Option(firstLabel,""));
-    for(const value of values||[]) node.add(new Option(value,value));
-  }
-  function filteredCatalogSources(){
-    const asset=$("guided-asset").value, exchange=$("guided-exchange").value, tf=$("guided-timeframe").value;
-    return connectedSources.filter(source => {
-      if(asset && source.base!==asset)return false;
-      if(exchange && source.exchange!==exchange)return false;
-      if(tf && !source.available_timeframes.includes(tf))return false;
-      return true;
-    });
-  }
-  function marketSourceDescription(source){
-    const c=source.coverage||{};
-    const rows=c.rows||source.rows||"?";
-    return `${source.pair} · ${source.exchange} · ${coverageLabel(source)} · ${rows} bougies · ${source.source_timeframe}`;
-  }
-  function renderMarketLibrary(){
-    const list=$("market-library-list");
-    if(!list)return;
-    list.replaceChildren();
-    const filtered=filteredCatalogSources();
-    const active=$("source-choice")?.value || selectedSourceId;
-    $("market-library-count").textContent=`${filtered.length} historique${filtered.length>1?"s":""} affiché${filtered.length>1?"s":""} / ${connectedSources.length}`;
-    const dates=connectedSources.flatMap(source=>{
-      const c=source.coverage||{}; return [c.first_utc||source.first_utc,c.last_utc||source.last_utc].filter(Boolean).map(x=>new Date(x));
-    }).filter(d=>!Number.isNaN(d.getTime())).sort((a,b)=>a-b);
-    $("market-library-range").textContent=dates.length
-      ?`Couverture recensée : ${dates[0].toLocaleDateString("fr-FR",{month:"short",year:"numeric"})} → ${dates.at(-1).toLocaleDateString("fr-FR",{month:"short",year:"numeric"})} · périodes non nécessairement continues`
-      :"Couverture historique non renseignée";
-    if(!filtered.length){
-      const empty=el("div","Aucun historique ne correspond à ces filtres.","market-library-empty"); list.append(empty); return;
-    }
-    for(const source of filtered){
-      const row=el("article",undefined,"market-source-row"+(source.id===active?" active":""));
-      row.setAttribute("role","listitem");
-      const identity=el("div",undefined,"market-source-identity");
-      const title=el("strong",`${source.pair} · ${source.exchange}`);
-      const period=el("span",coverageLabel(source));
-      identity.append(title,period);
-      const metrics=el("div",undefined,"market-source-metrics");
-      const c=source.coverage||{};
-      metrics.append(
-        el("span",`${c.rows||source.rows||"?"} bougies`),
-        el("span",`natif ${source.source_timeframe}`),
-        el("span",`disponible ${source.available_timeframes.join(" / ")}`)
-      );
-      const integrity=el("div",undefined,"market-source-integrity");
-      integrity.append(el("span","✓ "+certificationLabel(source.integrity?.status),"integrity-ok"));
-      const button=el("button",source.id===active?"Source active":"Utiliser","market-use-button");
-      button.type="button"; button.dataset.sourceId=source.id; button.disabled=source.id===active;
-      button.addEventListener("click",()=>selectMarketSource(source.id));
-      row.append(identity,metrics,integrity,button); list.append(row);
-    }
-  }
-  function updateSelectedSourceHelp(source){
-    if(!source){
-      $("guided-source-proof").textContent="Choisis un historique pour afficher sa période et sa provenance.";
-      $("guided-source-tech").textContent="Aucune source sélectionnée."; return;
-    }
-    const c=source.coverage||{};
-    $("guided-source-proof").textContent=`Source active : ${marketSourceDescription(source)} · ${certificationLabel(source.integrity?.status)}.`;
-    $("guided-source-tech").textContent=`ID : ${source.id} · Type : ${source.source_kind} · SHA-256 : ${source.sha256} · Marché : ${source.market_type||"SPOT"} · Chemins absolus privés non exposés.`;
-  }
-  function selectMarketSource(sourceId){
-    const source=connectedSources.find(x=>x.id===sourceId);
-    if(!source)return;
-    const guided=$("guided-source"), main=$("source-choice");
-    if([...guided.options].some(x=>x.value===sourceId))guided.value=sourceId;
-    if([...main.options].some(x=>x.value===sourceId))main.value=sourceId;
-    selectedSourceId=sourceId;
-    updateSource(); updateSelectedSourceHelp(source); renderMarketLibrary();
-    notice(`Historique actif : ${source.pair} · ${source.exchange} · ${coverageLabel(source)}.`,"success");
-  }
-  function renderGuidedSourceOptions(){
-    const select=$("guided-source");
-    select.replaceChildren(new Option("Choisir une source…",""));
-    for(const source of filteredCatalogSources()) select.add(new Option(marketSourceDescription(source),source.id));
-    const active=$("source-choice")?.value || selectedSourceId;
-    if(active && [...select.options].some(x=>x.value===active)) select.value=active;
-    updateSelectedSourceHelp(connectedSources.find(x=>x.id===active)||null);
-    renderMarketLibrary();
-    syncGuidedProgress();
   }
   async function refreshSources(prefer){
     const d=await api("/api/sources");
-    sourceCatalog=d; connectedSources=d.sources||[];
-    $("catalog-schema-badge").textContent=connectedSources.length+" historiques disponibles";
-    $("usb-storage").textContent="Libre : "+print(d.free_bytes/1e9,2)+" Go · réserve : "+print(d.reserve_bytes/1e9,1)+" Go";
+    connectedSources=d.sources;
+    $("usb-storage").textContent="Libre : "+print(d.free_bytes/1e9,2)+" Go · réserve : "+
+      print(d.reserve_bytes/1e9,1)+" Go";
     $("usb-storage").classList.toggle("storage-low",d.free_bytes<d.reserve_bytes);
-    populateSelect("guided-asset",d.facets?.assets||[],"Toutes"); populateSelect("guided-exchange",d.facets?.exchanges||[],"Toutes"); populateSelect("guided-timeframe",d.facets?.timeframes||[],"Toutes");
     const select=$("source-choice"), chosen=prefer||select.value||BINANCE;
-    select.replaceChildren(new Option("Binance BTC/USDT · Janvier 2026 · archive V1/V2",BINANCE));
+    select.replaceChildren(new Option("Binance BTC/USDT · Janvier 2026 · 44 640 × 1m",BINANCE));
     for(const source of connectedSources) {
-      if(source.id===BINANCE)continue;
-      const c=source.coverage||{};
-      const label=marketSourceDescription(source);
+      const label=source.source_kind==="BINANCE_MONTHLY_CERTIFIED"
+        ?"Binance BTC/USDT · Janvier 2020 · 744 × 1h · CHECKSUM certifié"
+        :source.exchange+" "+source.pair+" · "+source.rows+
+          " × "+source.bar+" · "+source.close_boundary_utc.slice(0,16);
       select.add(new Option(label,source.id));
     }
     select.value=[...select.options].some(x=>x.value===chosen)?chosen:BINANCE;
-    renderGuidedSourceOptions(); updateSource();
+    updateSource();
   }
 
   function resetScientific(){
@@ -541,7 +381,7 @@
   function updateReadout(record) {
     const r=record.run.results;
     $("readout-mode").textContent="SIMULATION TERMINÉE · "+(record.run.data.timeframe||"1m");
-    $("readout-name").textContent=strategyLabel(record.run.params.kind,record.source);
+    $("readout-name").textContent=kinds[record.run.params.kind]||record.run.params.kind;
     $("readout-equity").textContent=money(r.equity_final);
     $("readout-performance").textContent=signed(r.return_pct)+" %";
     $("readout-performance").style.color=r.return_pct<0?"#ffabb9":"#9bf2d2";
@@ -562,7 +402,7 @@
     $("holdcash-label").textContent="CONSERVER LES "+source.quote;
     $("empty-result").hidden=true;
     $("result").hidden=false;
-    $("run-id").textContent=strategyLabel(report.params.kind,source)+" · "+timeframe;
+    $("run-id").textContent=(kinds[report.params.kind]||report.params.kind)+" · "+timeframe;
     $("equity").textContent=money(r.equity_final);
     $("return").textContent=signed(r.return_pct)+" %";
     $("return").className="return-chip"+(r.return_pct<0?" negative":"");
@@ -641,261 +481,39 @@
     for (const profile of profiles) select.append(new Option(
       profile.name+" · "+(profile.params.timeframe||"1m"),profile.id));
   }
-  function renderStrategySpec(payload){
-    const spec=payload.strategy_spec, e=payload.explanation; selectedStrategySpec=spec;
-    $("strategy-spec-explanation").hidden=false; $("strategy-spec-title").textContent=e.title+" · "+e.kind+" · "+e.timeframe;
-    $("strategy-spec-intent").textContent="Objectif : "+e.intent; $("strategy-spec-execution").textContent=e.execution;
-    $("strategy-spec-weakness").textContent="Limite : "+e.weakness; $("strategy-spec-fingerprint").textContent="SHA-256 "+spec.fingerprint_sha256;
+  function renderStrategySpec(payload) {
+    const spec=payload.strategy_spec;
+    const explanation=payload.explanation;
+    selectedStrategySpec=spec;
+    $("strategy-spec-explanation").hidden=false;
+    $("strategy-spec-title").textContent=explanation.title+" · "+explanation.kind+" · "+explanation.timeframe;
+    $("strategy-spec-intent").textContent="Objectif : "+explanation.intent;
+    $("strategy-spec-execution").textContent=explanation.execution;
+    $("strategy-spec-weakness").textContent="Limite : "+explanation.weakness;
+    $("strategy-spec-fingerprint").textContent="SHA-256 "+spec.fingerprint_sha256;
     $("replay-strategy-spec").disabled=busy;
-    syncGuidedProgress();
   }
-  async function refreshStrategySpecs(preferId=null){
-    const d=await api("/api/strategy-specs"); strategySpecs=d.strategy_specs||[]; const select=$("saved-strategy-specs");
-    const current=preferId||select.value; select.replaceChildren(new Option("Choisir un StrategySpec…",""));
-    for(const spec of strategySpecs) select.add(new Option(spec.name+" · "+(kinds[spec.kind]||spec.kind)+" · "+spec.timeframe,spec.id));
-    if(current && strategySpecs.some(x=>x.id===current)){ select.value=current; const payload=await api("/api/strategy-specs/"+current); renderStrategySpec(payload); if(payload.params)chooseParams(payload.params); $("strategy-spec-name").value=payload.strategy_spec.name; }
-  }
-  function defaultsLabel(entry){
-    if(!entry)return "—";
-    const d=entry.defaults||{};
-    if(entry.kind==="EMA_CROSS")return `EMA rapide ${d.ema_fast} / EMA lente ${d.ema_slow} bougies`;
-    if(entry.kind==="DONCHIAN")return `Entrée ${d.donchian_entry} / sortie ${d.donchian_exit} bougies`;
-    if(entry.kind==="BOLLINGER")return `${d.bb_period} bougies · écart ${d.bb_sigma}`;
-    if(entry.kind==="DCA")return `Achat périodique · montant ${d.dca_quote}`;
-    if(entry.kind==="CUSTOM_RULES")return "Réglages personnalisables dans l’Atelier";
-    return "Aucun réglage de signal";
-  }
-  function renderAtlasEntry(entry){
-    $("guided-atlas-explanation").hidden=!entry; $("guided-atlas-apply").disabled=!entry;
-    if(!entry){guidedAtlasApplied=false;$("guided-atlas-knowledge").hidden=true;syncGuidedProgress();return;}
-    $("guided-atlas-title").textContent=entry.title;
-    $("guided-atlas-family").textContent=familyLabel(entry);
-    $("guided-atlas-definition").textContent=entry.definition||entry.intent||"—";
-    $("guided-atlas-how").textContent=entry.how_it_works||entry.intent||"—";
-    $("guided-atlas-regime").textContent=entry.regime||"—";
-    $("guided-atlas-weakness").textContent=entry.weakness||"—";
-    $("guided-atlas-params").textContent=(entry.parameter_note?entry.parameter_note+" ":"")+defaultsLabel(entry);
-    const knowledgeKinds=["EMA_CROSS","BOLLINGER","DONCHIAN","DCA","HOLD_50","HOLD_100","CASH"];
-    $("guided-atlas-knowledge").hidden=!knowledgeKinds.includes(entry.kind);
-    const knowledgeLabels={EMA_CROSS:"EMA",BOLLINGER:"Bollinger",DONCHIAN:"Donchian",DCA:"DCA",HOLD_50:"Buy & Hold 50 %",HOLD_100:"Buy & Hold 100 %",CASH:"Conservation du cash"};
-    $("guided-atlas-knowledge").textContent="Ouvrir la fiche professionnelle "+(knowledgeLabels[entry.kind]||entry.title);
-    syncGuidedProgress();
-  }
-  async function refreshStrategyAtlas(){
-    const d=await api("/api/strategy-atlas"); strategyAtlas=d.entries||[]; const select=$("guided-atlas-template");
-    select.replaceChildren(new Option("Choisir une méthode…",""));
-    for(const entry of strategyAtlas) select.add(new Option(entry.title+" · "+familyLabel(entry),entry.atlas_id));
-    syncGuidedProgress();
-  }
-
-  function durationLabel(minutes){
-    const total=Math.round(minutes);
-    if(total<60)return total+" min";
-    const h=Math.floor(total/60), m=total%60;
-    if(h<24)return h+" h"+(m?" "+m+" min":"");
-    const d=Math.floor(h/24), rh=h%24;
-    return d+" j"+(rh?" "+rh+" h":"");
-  }
-  function timeframeMinutes(tf){ return ({"1m":1,"5m":5,"15m":15,"1h":60,"4h":240})[tf]||60; }
-  function fillList(id,items){
-    const root=$(id); root.replaceChildren();
-    for(const item of (items||[])){ const li=document.createElement("li"); li.textContent=item; root.append(li); }
-  }
-  function updateEmaKnowledgeNumbers(){
-    if(!$("ema-knowledge-panel"))return;
-    let fast=10,slow=30,tf="1h";
-    try{ fast=number(form.elements.ema_fast.value); slow=number(form.elements.ema_slow.value); tf=form.querySelector('input[name="timeframe"]:checked')?.value||"1h"; }catch(_){ }
-    const aFast=100*(2/(fast+1)),aSlow=100*(2/(slow+1));
-    $("ema-current-weights").textContent=`EMA ${fast} : poids du prix récent ${print(aFast,2)} % · EMA ${slow} : ${print(aSlow,2)} %`;
-    $("ema-fast-header").textContent="EMA "+fast; $("ema-slow-header").textContent="EMA "+slow;
-    for(const [id,min] of [["1m",1],["15m",15],["1h",60],["4h",240]]){
-      $("ema-tf-"+id+"-fast").textContent=durationLabel(fast*min);
-      $("ema-tf-"+id+"-slow").textContent=durationLabel(slow*min);
+  async function refreshStrategySpecs(preferId=null) {
+    const d=await api("/api/strategy-specs");
+    strategySpecs=d.strategy_specs||[];
+    const select=$("saved-strategy-specs");
+    const current=preferId||select.value;
+    select.replaceChildren(new Option("Choisir un StrategySpec…",""));
+    for(const spec of strategySpecs){
+      select.append(new Option(spec.name+" · "+(kinds[spec.kind]||spec.kind)+" · "+spec.timeframe,spec.id));
     }
-    $("ema-active-timeframe").textContent=`${tf} : EMA ${fast} couvre environ ${durationLabel(fast*timeframeMinutes(tf))} ; EMA ${slow} environ ${durationLabel(slow*timeframeMinutes(tf))}.`;
-  }
-  function renderEmaKnowledge(article){
-    emaKnowledge=article;
-    $("ema-knowledge-subtitle").textContent=article.subtitle;
-    $("ema-knowledge-summary").textContent=article.summary;
-    $("ema-knowledge-measure").textContent=article.what_it_measures;
-    $("ema-knowledge-sma").textContent=article.sma_difference;
-    $("ema-formula-alpha").textContent=article.formula.alpha;
-    $("ema-formula-main").textContent=article.formula.ema;
-    $("ema-formula-note").textContent=article.formula.note;
-    fillList("ema-reading-list",article.reading);
-    $("ema-bullish-text").textContent=article.crossover.bullish;
-    $("ema-bearish-text").textContent=article.crossover.bearish;
-    $("ema-crossover-warning").textContent=article.crossover.warning;
-    fillList("ema-strengths-list",article.strengths); fillList("ema-limits-list",article.limits);
-    $("ema-seven-entry").textContent=article.seven_engine.entry;
-    $("ema-seven-exit").textContent=article.seven_engine.exit;
-    $("ema-seven-execution").textContent=article.seven_engine.execution;
-    $("ema-seven-position").textContent=article.seven_engine.positioning+" "+article.seven_engine.warmup;
-    const checklist=$("ema-analysis-checklist"); checklist.replaceChildren();
-    for(const item of article.analysis_checklist||[]){const div=document.createElement("div");div.textContent=item;checklist.append(div);}
-    const refs=$("ema-reference-list"); refs.replaceChildren();
-    for(const ref of article.references||[]){const row=document.createElement("div");row.className="reference-item";const strong=document.createElement("strong");strong.textContent=ref.label;const span=document.createElement("span");span.textContent=ref.scope;row.append(strong,span);refs.append(row);}
-    updateEmaKnowledgeNumbers();
-  }
-  async function openEmaKnowledge(){
-    try{
-      if(!emaKnowledge){const d=await api("/api/strategy-knowledge/ema");renderEmaKnowledge(d.article);}
-      const panel=$("ema-knowledge-panel");hideOtherKnowledgePanels("ema-knowledge-panel");panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"start"});
-      notice("Fiche EMA professionnelle ouverte · définition, calcul, lecture, limites et règles exactes Seven.","success");
-    }catch(e){notice(e.message,"error");}
-  }
-  function closeEmaKnowledge(){ $("ema-knowledge-panel").hidden=true; }
-  function updateBollingerKnowledgeNumbers(){
-    if(!$("bollinger-knowledge-panel"))return;
-    let period=20,sigma=2,tf="1h";
-    try{period=number(form.elements.bb_period.value);sigma=number(form.elements.bb_sigma.value);tf=form.querySelector('input[name="timeframe"]:checked')?.value||"1h";}catch(_){ }
-    $("bollinger-current-settings").textContent=`${period} bougies · ${print(sigma,2)} écart${sigma===1?"":"s"}-type${sigma===1?"":"s"}`;
-    $("bollinger-active-timeframe").textContent=`${tf} : ${period} bougies couvrent environ ${durationLabel(period*timeframeMinutes(tf))}. Les bandes sont placées à ± ${print(sigma,2)} σ autour de la moyenne.`;
-  }
-  function renderBollingerKnowledge(article){
-    bollingerKnowledge=article;
-    $("bollinger-knowledge-subtitle").textContent=article.subtitle;
-    $("bollinger-knowledge-summary").textContent=article.summary;
-    $("bollinger-knowledge-measure").textContent=article.what_it_measures;
-    $("bollinger-formula-middle").textContent=article.formula.middle;
-    $("bollinger-formula-upper").textContent=article.formula.upper;
-    $("bollinger-formula-lower").textContent=article.formula.lower;
-    $("bollinger-formula-note").textContent=article.formula.note;
-    fillList("bollinger-reading-list",article.reading);
-    $("bollinger-squeeze-text").textContent=article.patterns.squeeze;
-    $("bollinger-walk-text").textContent=article.patterns.walk;
-    $("bollinger-pattern-warning").textContent=article.patterns.warning;
-    fillList("bollinger-strengths-list",article.strengths);fillList("bollinger-limits-list",article.limits);
-    $("bollinger-seven-entry").textContent=article.seven_engine.entry;
-    $("bollinger-seven-exit").textContent=article.seven_engine.exit;
-    $("bollinger-seven-execution").textContent=article.seven_engine.execution;
-    $("bollinger-seven-position").textContent=article.seven_engine.positioning+" "+article.seven_engine.warmup;
-    const checklist=$("bollinger-analysis-checklist");checklist.replaceChildren();
-    for(const item of article.analysis_checklist||[]){const div=document.createElement("div");div.textContent=item;checklist.append(div);}
-    const refs=$("bollinger-reference-list");refs.replaceChildren();
-    for(const ref of article.references||[]){const row=document.createElement("div");row.className="reference-item";const strong=document.createElement("strong");strong.textContent=ref.label;const span=document.createElement("span");span.textContent=ref.scope;row.append(strong,span);refs.append(row);}
-    updateBollingerKnowledgeNumbers();
-  }
-  async function openBollingerKnowledge(){
-    try{
-      if(!bollingerKnowledge){const d=await api("/api/strategy-knowledge/bollinger");renderBollingerKnowledge(d.article);}
-      const panel=$("bollinger-knowledge-panel");hideOtherKnowledgePanels("bollinger-knowledge-panel");panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"start"});
-      notice("Fiche Bollinger professionnelle ouverte · volatilité, calcul, pièges et règles exactes Seven.","success");
-    }catch(e){notice(e.message,"error");}
-  }
-  function closeBollingerKnowledge(){ $("bollinger-knowledge-panel").hidden=true; }
-  function updateDonchianKnowledgeNumbers(){
-    if(!$("donchian-knowledge-panel"))return;
-    let entry=55,exit=20,tf="1h";
-    try{entry=number(form.elements.donchian_entry.value);exit=number(form.elements.donchian_exit.value);tf=form.querySelector('input[name="timeframe"]:checked')?.value||"1h";}catch(_){ }
-    $("donchian-current-settings").textContent=`Entrée ${entry} · sortie ${exit} bougies`;
-    $("donchian-entry-header").textContent="Entrée "+entry; $("donchian-exit-header").textContent="Sortie "+exit;
-    for(const [id,min] of [["1m",1],["15m",15],["1h",60],["4h",240]]){
-      $("donchian-tf-"+id+"-entry").textContent=durationLabel(entry*min);
-      $("donchian-tf-"+id+"-exit").textContent=durationLabel(exit*min);
-    }
-    $("donchian-active-timeframe").textContent=`${tf} : l'entrée regarde environ ${durationLabel(entry*timeframeMinutes(tf))} d'historique ; la sortie environ ${durationLabel(exit*timeframeMinutes(tf))}.`;
-  }
-  function renderDonchianKnowledge(article){
-    donchianKnowledge=article;
-    $("donchian-knowledge-subtitle").textContent=article.subtitle;
-    $("donchian-knowledge-summary").textContent=article.summary;
-    $("donchian-knowledge-measure").textContent=article.what_it_measures;
-    $("donchian-formula-upper").textContent=article.formula.upper;
-    $("donchian-formula-lower").textContent=article.formula.lower;
-    $("donchian-formula-middle").textContent=article.formula.middle;
-    $("donchian-formula-note").textContent=article.formula.note;
-    fillList("donchian-reading-list",article.reading);
-    $("donchian-breakout-confirmed").textContent=article.breakouts.confirmed;
-    $("donchian-breakout-false").textContent=article.breakouts.false;
-    $("donchian-breakout-warning").textContent=article.breakouts.warning;
-    $("donchian-parameter-asymmetry").textContent=article.parameters.entry+" "+article.parameters.exit+" "+article.parameters.asymmetry;
-    fillList("donchian-strengths-list",article.strengths);fillList("donchian-limits-list",article.limits);
-    $("donchian-seven-entry").textContent=article.seven_engine.entry;
-    $("donchian-seven-exit").textContent=article.seven_engine.exit;
-    $("donchian-seven-execution").textContent=article.seven_engine.execution;
-    $("donchian-seven-position").textContent=article.seven_engine.positioning+" "+article.seven_engine.warmup;
-    $("donchian-evidence-warning").textContent=article.local_evidence.warning;
-    const evidence=$("donchian-evidence-grid");evidence.replaceChildren();
-    for(const item of article.local_evidence.items||[]){
-      const card=document.createElement("div");card.className="evidence-item";
-      const label=document.createElement("small");label.textContent=item.label;
-      const value=document.createElement("strong");value.textContent=item.value;
-      const detail=document.createElement("span");detail.textContent=item.detail;
-      card.append(label,value,detail);evidence.append(card);
-    }
-    $("donchian-evidence-conclusion").textContent=article.local_evidence.conclusion;
-    const checklist=$("donchian-analysis-checklist");checklist.replaceChildren();
-    for(const item of article.analysis_checklist||[]){const div=document.createElement("div");div.textContent=item;checklist.append(div);}
-    const refs=$("donchian-reference-list");refs.replaceChildren();
-    for(const ref of article.references||[]){const row=document.createElement("div");row.className="reference-item";const strong=document.createElement("strong");strong.textContent=ref.label;const span=document.createElement("span");span.textContent=ref.scope;row.append(strong,span);refs.append(row);}
-    updateDonchianKnowledgeNumbers();
-  }
-  async function openDonchianKnowledge(){
-    try{
-      if(!donchianKnowledge){const d=await api("/api/strategy-knowledge/donchian");renderDonchianKnowledge(d.article);}
-      const panel=$("donchian-knowledge-panel");hideOtherKnowledgePanels("donchian-knowledge-panel");panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"start"});
-      notice("Fiche Donchian professionnelle ouverte · canal, cassure, 55/20, faux breakouts et règles exactes Seven.","success");
-    }catch(e){notice(e.message,"error");}
-  }
-  function closeDonchianKnowledge(){ $("donchian-knowledge-panel").hidden=true; }
-  function passiveArticleId(kind){ return ({DCA:"dca",HOLD_50:"hold_50",HOLD_100:"hold_100",CASH:"cash"})[kind] || null; }
-  function hideOtherKnowledgePanels(exceptId){
-    for(const id of ["ema-knowledge-panel","bollinger-knowledge-panel","donchian-knowledge-panel","passive-knowledge-panel"]){
-      if(id!==exceptId && $(id))$(id).hidden=true;
+    if(current && strategySpecs.some(x=>x.id===current)){
+      select.value=current;
+      const payload=await api("/api/strategy-specs/"+current);
+      renderStrategySpec(payload);
+      if(payload.params)chooseParams(payload.params);
+      $("strategy-spec-name").value=payload.strategy_spec.name;
+    } else if(!strategySpecs.length) {
+      selectedStrategySpec=null;
+      $("strategy-spec-explanation").hidden=true;
+      $("replay-strategy-spec").disabled=true;
     }
   }
-  function passiveVisual(article){
-    const invested=$("passive-track-invested"), cash=$("passive-track-cash");
-    const steps=$("passive-visual-steps"); steps.replaceChildren();
-    let investedPct=50, cashPct=50, label="Référence Seven", investedLabel="Exposition", cashLabel="Cash";
-    if(article.id==="hold_100"){investedPct=100;cashPct=0;label="Exposition initiale complète";investedLabel="≈ 100 % actif";cashLabel="Reliquat";}
-    else if(article.id==="hold_50"){label="Allocation initiale 50 / 50";investedLabel="≈ 50 % actif";cashLabel="≈ 50 % cash";}
-    else if(article.id==="cash"){investedPct=0;cashPct=100;label="Baseline sans exposition";investedLabel="0 % actif";cashLabel="100 % cash";}
-    else {investedPct=35;cashPct=65;label="Accumulation progressive";investedLabel="Achats successifs";cashLabel="Cash restant";}
-    invested.style.width=investedPct+"%"; cash.style.width=cashPct+"%";
-    $("passive-visual-label").textContent=label; $("passive-invested-label").textContent=investedLabel; $("passive-cash-label").textContent=cashLabel;
-    for(const text of (article.mechanics||[]).slice(0,3)){const div=document.createElement("div");div.textContent=text;steps.append(div);}
-  }
-  function renderPassiveKnowledge(article){
-    passiveKnowledgeCurrentId=article.id;
-    $("passive-knowledge-title").textContent=article.title;
-    $("passive-knowledge-subtitle").textContent=article.subtitle;
-    $("passive-family-badge").textContent="Famille · "+article.family;
-    $("passive-technical-badge").textContent=article.technical_name;
-    $("passive-knowledge-summary").textContent=article.summary;
-    $("passive-knowledge-role").textContent=article.role;
-    fillList("passive-mechanics-list",article.mechanics); fillList("passive-reading-list",article.reading);
-    fillList("passive-strengths-list",article.strengths); fillList("passive-limits-list",article.limits);
-    const params=$("passive-parameters");params.replaceChildren();
-    for(const [key,value] of Object.entries(article.parameters||{})){const row=document.createElement("div");const strong=document.createElement("strong");strong.textContent=({interval:"Intervalle",amount:"Montant",timeframe:"Timeframe",allocation:"Allocation",signals:"Signaux"})[key]||key.replaceAll("_"," ");const span=document.createElement("span");span.textContent=value;row.append(strong,span);params.append(row);}
-    $("passive-seven-entry").textContent=article.seven_engine.entry; $("passive-seven-exit").textContent=article.seven_engine.exit;
-    $("passive-seven-execution").textContent=article.seven_engine.execution; $("passive-seven-position").textContent=article.seven_engine.positioning;
-    $("passive-seven-valuation").textContent=article.seven_engine.valuation;
-    const checklist=$("passive-analysis-checklist");checklist.replaceChildren();
-    for(const item of article.analysis_checklist||[]){const div=document.createElement("div");div.textContent=item;checklist.append(div);}
-    const refs=$("passive-reference-list");refs.replaceChildren();
-    for(const ref of article.references||[]){const row=document.createElement("div");row.className="reference-item";const strong=document.createElement("strong");strong.textContent=ref.label;const span=document.createElement("span");span.textContent=ref.scope;row.append(strong,span);refs.append(row);}
-    passiveVisual(article);
-  }
-  async function openPassiveKnowledge(articleId){
-    try{
-      if(!passiveKnowledgeCache[articleId]){const d=await api("/api/strategy-knowledge/"+articleId);passiveKnowledgeCache[articleId]=d.article;}
-      renderPassiveKnowledge(passiveKnowledgeCache[articleId]);hideOtherKnowledgePanels("passive-knowledge-panel");
-      const panel=$("passive-knowledge-panel");panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"start"});
-      notice("Fiche professionnelle ouverte · "+passiveKnowledgeCache[articleId].title+".","success");
-    }catch(e){notice(e.message,"error");}
-  }
-  function closePassiveKnowledge(){ $("passive-knowledge-panel").hidden=true; }
-  function openSelectedKnowledge(){
-    const entry=strategyAtlas.find(x=>x.atlas_id===$("guided-atlas-template").value);
-    if(entry?.kind==="EMA_CROSS")return openEmaKnowledge();
-    if(entry?.kind==="BOLLINGER")return openBollingerKnowledge();
-    if(entry?.kind==="DONCHIAN")return openDonchianKnowledge();
-    const passiveId=passiveArticleId(entry?.kind); if(passiveId)return openPassiveKnowledge(passiveId);
-  }
-
   async function refreshHistory() {
     const list=await api("/api/results");
     const root=$("history");root.replaceChildren();
@@ -903,7 +521,7 @@
     for(const run of list.runs.slice(0,12)){
       const button=el("button",undefined,"history-item");
       button.type="button";
-      button.append(el("span",strategyLabel(run.kind,run.source)+" · "+
+      button.append(el("span",(kinds[run.kind]||run.kind)+" · "+
         (run.timeframe||"1m")+" · "+whenLocal(run.created_utc)));
       button.append(el("strong",signed(run.results.return_pct)+" %"));
       button.addEventListener("click",async()=>{
@@ -1070,10 +688,9 @@
     try {
       const d=await api("/api/run",{params});
       renderRun(d.report);
-      const persisted=d.report?.workspace_persistence?.persisted!==false;
-      if(persisted)await refreshHistory();
-      notice((persisted?"Simulation PAPER enregistrée : ":"Simulation PAPER exploratoire · non enregistrée : ")+params.timeframe+
-        " · "+strategyLabel(params.kind,connectedSources.find(x=>x.id===params.source_id))+". Aucun ordre envoyé.","success");
+      await refreshHistory();
+      notice("Simulation PAPER enregistrée : "+params.timeframe+
+        " · "+(kinds[params.kind]||params.kind)+". Aucun ordre envoyé.","success");
     }catch(e){notice(e.message,"error");}
     finally{setBusy(false);}
   }
@@ -1086,9 +703,8 @@
     try{
       const d=await api("/api/compare",{params});
       renderComparison(d.report);
-      const persisted=d.report?.workspace_persistence?.persisted!==false;
-      if(persisted)await refreshComparisonHistory();
-      notice(d.report.comparison.rows.length+" méthodes comparées · "+(persisted?"rapport enregistré localement":"lecture exploratoire non enregistrée")+". Résultats fictifs.","success");
+      await refreshComparisonHistory();
+      notice(d.report.comparison.rows.length+" méthodes comparées et rapport enregistré localement. Résultats fictifs.","success");
       $("comparison").scrollIntoView({behavior:"smooth",block:"start"});
     }catch(e){notice(e.message,"error");}
     finally {setBusy(false);}
@@ -1096,12 +712,6 @@
   $("kind").addEventListener("change",showFields);
   form.addEventListener("change",markDraftChanged);
   form.addEventListener("input",markDraftChanged);
-  window.addEventListener("seven-historical-source-installed", async event=>{
-    const sourceId=event.detail?.source_id; if(!sourceId)return;
-    try{await refreshSources(sourceId); selectMarketSource(sourceId);
-      notice("Historique long installé/sélectionné : la source locale vérifiée est prête dans l’Atelier.","success");
-    }catch(e){notice(e.message,"error");}
-  });
   $("source-choice").addEventListener("change",updateSource);
   $("binance-monthly-import").addEventListener("click",async()=>{
     if(busy)return;
@@ -1137,118 +747,68 @@
     const profile=profiles.find(p=>p.id===event.target.value);
     if(profile){chooseParams(profile.params);$("profile-name").value=profile.name;}
   });
-  for(const id of ["guided-asset","guided-exchange","guided-timeframe"]) $(id).addEventListener("change",renderGuidedSourceOptions);
-  $("guided-source").addEventListener("change",event=>{ if(!event.target.value){syncGuidedProgress();return;} selectMarketSource(event.target.value); });
-  $("guided-atlas-template").addEventListener("change",event=>{guidedAtlasApplied=false;renderAtlasEntry(strategyAtlas.find(x=>x.atlas_id===event.target.value)||null);});
-  $("guided-atlas-apply").addEventListener("click",()=>{
-    const entry=strategyAtlas.find(x=>x.atlas_id===$("guided-atlas-template").value); if(!entry)return;
-    const current=requestParams(); chooseParams({...current,kind:entry.kind,...entry.defaults});
-    guidedAtlasApplied=true; syncGuidedProgress();
-    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"}); notice("Méthode préparée : "+entry.title+". Vérifie les réglages dans l’Atelier avant de lancer le test.","success");
-  });
   $("saved-strategy-specs").addEventListener("change",async event=>{
-    if(!event.target.value){selectedStrategySpec=null;$("strategy-spec-explanation").hidden=true;$("replay-strategy-spec").disabled=true;syncGuidedProgress();return;}
-    try{const payload=await api("/api/strategy-specs/"+event.target.value);renderStrategySpec(payload);chooseParams(payload.params);$("strategy-spec-name").value=payload.strategy_spec.name;}catch(e){notice(e.message,"error");}
+    const id=event.target.value;
+    if(!id){
+      selectedStrategySpec=null;
+      $("strategy-spec-explanation").hidden=true;
+      $("replay-strategy-spec").disabled=true;
+      return;
+    }
+    try{
+      const payload=await api("/api/strategy-specs/"+id);
+      renderStrategySpec(payload);
+      if(payload.params)chooseParams(payload.params);
+      $("strategy-spec-name").value=payload.strategy_spec.name;
+      notice("StrategySpec rechargé : la stratégie, la source, le timeframe et les coûts ont été restaurés.","success");
+    }catch(e){notice(e.message,"error");}
   });
   $("save-strategy-spec").addEventListener("click",async()=>{
-    const name=$("strategy-spec-name").value.trim(); if(!name){notice("Donne un nom au StrategySpec.","error");return;}
-    let params; try{params=requestParams();}catch(e){notice(e.message,"error");return;} setBusy(true,"Création StrategySpec…");
-    try{const payload=await api("/api/strategy-specs",{name,params});renderStrategySpec(payload);await refreshStrategySpecs(payload.strategy_spec.id);notice("StrategySpec v1 créé dans le Coffre local · PAPER uniquement.","success");}catch(e){notice(e.message,"error");}finally{setBusy(false);}
+    if(busy)return;
+    const name=$("strategy-spec-name").value.trim();
+    if(!name){notice("Donne un nom au StrategySpec avant de l'enregistrer.","error");return;}
+    let params;try{params=requestParams();}catch(e){notice(e.message,"error");return;}
+    setBusy(true,"Création StrategySpec…");
+    try{
+      const payload=await api("/api/strategy-specs",{name,params});
+      renderStrategySpec(payload);
+      await refreshStrategySpecs(payload.strategy_spec.id);
+      notice("StrategySpec v1 créé et conservé localement. Aucun moteur externe requis.","success");
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
   });
   $("replay-strategy-spec").addEventListener("click",async()=>{
-    if(!selectedStrategySpec)return; setBusy(true,"Replay StrategySpec…");
-    try{const payload=await api("/api/strategy-spec-run",{strategy_spec_id:selectedStrategySpec.id});renderRun(payload.report);const persisted=payload.report?.workspace_persistence?.persisted!==false;if(persisted)await refreshHistory();notice("StrategySpec rejoué par le moteur Seven · "+(persisted?"rapport enregistré":"lecture exploratoire non enregistrée")+" · zéro ordre réel.","success");}catch(e){notice(e.message,"error");}finally{setBusy(false);}
-  });
-  $("guide-learn").addEventListener("click",()=>{
-    const entry=strategyAtlas.find(x=>x.atlas_id===$("guided-atlas-template").value);
-    if(!entry){$("guided-atlas-template").focus();notice("Comprendre : choisis d’abord une méthode dans la Bibliothèque de stratégies.");return;}
-    renderAtlasEntry(entry);
-    if(entry.kind==="EMA_CROSS"){openEmaKnowledge();return;}
-    if(entry.kind==="BOLLINGER"){openBollingerKnowledge();return;}
-    if(entry.kind==="DONCHIAN"){openDonchianKnowledge();return;}
-    const passiveId=passiveArticleId(entry.kind); if(passiveId){openPassiveKnowledge(passiveId);return;}
-    $("guided-atlas-explanation").scrollIntoView({behavior:"smooth",block:"center"});
-    notice("Fiche synthétique affichée. Les fiches professionnelles complètes couvrent désormais EMA, Bollinger, Donchian, DCA, Buy & Hold et Cash.","success");
+    if(busy||!selectedStrategySpec)return;
+    setBusy(true,"Replay StrategySpec…");
+    notice("Rejeu du StrategySpec par le moteur Seven existant, sans modification de sa logique financière…");
+    try{
+      const payload=await api("/api/strategy-spec-run",{strategy_spec_id:selectedStrategySpec.id});
+      renderRun(payload.report);
+      await refreshHistory();
+      notice("StrategySpec rejoué et rapport enregistré dans le Coffre local. Même moteur Seven, zéro ordre réel.","success");
+      $("results").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){notice(e.message,"error");}
+    finally{setBusy(false);}
   });
   $("guide-create").addEventListener("click",()=>{
-    if(!$("guided-source").value){$("market-library-list").scrollIntoView({behavior:"smooth",block:"center"});notice("Préparer l’étude : choisis d’abord un historique dans la Bibliothèque de marchés.");return;}
-    if(!$("guided-atlas-template").value){$("guided-atlas-template").focus();notice("Préparer l’étude : choisis ensuite une méthode dans la Bibliothèque de stratégies.");return;}
-    if(!guidedAtlasApplied){$("guided-atlas-apply").click();return;}
-    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});notice("Étude prête : les réglages de départ sont dans l’Atelier. Tu peux les ajuster puis lancer la simulation PAPER.","success");
+    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode guidé : compose d'abord la stratégie, puis crée son StrategySpec v1.","success");
+  });
+  $("guide-learn").addEventListener("click",()=>{
+    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode guidé : choisis une famille. Une fois le StrategySpec créé, Seven affiche son objectif, son exécution et sa faiblesse principale.","success");
   });
   $("guide-compare").addEventListener("click",()=>{
-    if(!$("guided-source").value){$("market-library-list").scrollIntoView({behavior:"smooth",block:"center"});notice("Comparer : choisis d’abord l’historique à utiliser.");return;}
-    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"}); $("compare").focus();
-    notice("Comparer : Seven conservera la même source, le même capital et les mêmes hypothèses de coût.","success");
+    $("laboratory").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode guidé : choisis la source et la stratégie ; le Comparateur conservera les mêmes bougies, coûts et capital.","success");
   });
-  $("guide-paper").addEventListener("click",()=>notice("Robot PAPER Seven : étape future séparée. Aucun automate temps réel n’est activé ici."));
-  $("guide-expert").addEventListener("click",()=>{document.querySelector(".source-panel").scrollIntoView({behavior:"smooth",block:"start"});notice("Atelier complet : tous les contrôles scientifiques restent disponibles sous le navigateur de recherche.","success");});
-  $("guided-atlas-knowledge").addEventListener("click",openSelectedKnowledge);
-  $("ema-knowledge-close").addEventListener("click",closeEmaKnowledge);
-  $("bollinger-knowledge-close").addEventListener("click",closeBollingerKnowledge);
-  $("donchian-knowledge-close").addEventListener("click",closeDonchianKnowledge);
-  $("passive-knowledge-close").addEventListener("click",closePassiveKnowledge);
-  $("ema-action-prepare").addEventListener("click",()=>{
-    const ema=strategyAtlas.find(x=>x.kind==="EMA_CROSS"); if(ema){$("guided-atlas-template").value=ema.atlas_id;renderAtlasEntry(ema);$("guided-atlas-apply").click();}
+  $("guide-paper").addEventListener("click",()=>{
+    notice("Robot PAPER Seven : étape V5 planifiée. Aucun automate temps réel n'est activé dans cette branche V4.8.","success");
   });
-  $("ema-action-compare").addEventListener("click",()=>{
-    const ema=strategyAtlas.find(x=>x.kind==="EMA_CROSS"); if(ema){$("guided-atlas-template").value=ema.atlas_id;renderAtlasEntry(ema);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("laboratory").scrollIntoView({behavior:"smooth",block:"start"});$("compare").focus();notice("EMA prête. Le bouton Comparer utilise la même source, le même capital et les mêmes coûts pour les 7 modèles.","success");},120);
+  $("guide-expert").addEventListener("click",()=>{
+    document.querySelector(".source-panel").scrollIntoView({behavior:"smooth",block:"start"});
+    notice("Mode expert : accès aux sources, coûts, timeframes, Scientific, Forensics et contrôles détaillés.","success");
   });
-  $("ema-action-chart").addEventListener("click",()=>{
-    if(lastRenderedReport && lastRenderedReport.run?.params?.kind==="EMA_CROSS" && !$("market-microscope").hidden){$("market-microscope").scrollIntoView({behavior:"smooth",block:"start"});notice("Microscope EMA : mêmes bougies, mêmes fills PAPER et mêmes paramètres que le rapport affiché.","success");return;}
-    const ema=strategyAtlas.find(x=>x.kind==="EMA_CROSS"); if(ema){$("guided-atlas-template").value=ema.atlas_id;renderAtlasEntry(ema);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("run").focus();notice("Pour voir EMA sur le graphique du Lab, lance d’abord ce test PAPER ; Seven ouvrira ensuite le Microscope des bougies.","success");},120);
-  });
-  $("ema-action-results").addEventListener("click",()=>{$("vault").scrollIntoView({behavior:"smooth",block:"start"});notice("Coffre local : ouvre une simulation EMA enregistrée pour relire son résultat sans recalcul.","success");});
-  $("bollinger-action-prepare").addEventListener("click",()=>{
-    const bb=strategyAtlas.find(x=>x.kind==="BOLLINGER");if(bb){$("guided-atlas-template").value=bb.atlas_id;renderAtlasEntry(bb);$("guided-atlas-apply").click();}
-  });
-  $("bollinger-action-compare").addEventListener("click",()=>{
-    const bb=strategyAtlas.find(x=>x.kind==="BOLLINGER");if(bb){$("guided-atlas-template").value=bb.atlas_id;renderAtlasEntry(bb);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("laboratory").scrollIntoView({behavior:"smooth",block:"start"});$("compare").focus();notice("Bollinger prête. Le comparateur conserve la même source, le même capital et les mêmes coûts.","success");},120);
-  });
-  $("bollinger-action-chart").addEventListener("click",()=>{
-    if(lastRenderedReport && lastRenderedReport.run?.params?.kind==="BOLLINGER" && !$("market-microscope").hidden){$("market-microscope").scrollIntoView({behavior:"smooth",block:"start"});notice("Microscope Bollinger : mêmes bougies et mêmes fills PAPER que le rapport affiché.","success");return;}
-    const bb=strategyAtlas.find(x=>x.kind==="BOLLINGER");if(bb){$("guided-atlas-template").value=bb.atlas_id;renderAtlasEntry(bb);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("run").focus();notice("Pour voir Bollinger sur le graphique du Lab, lance d’abord ce test PAPER ; Seven ouvrira ensuite le Microscope des bougies.","success");},120);
-  });
-  $("bollinger-action-results").addEventListener("click",()=>{$("vault").scrollIntoView({behavior:"smooth",block:"start"});notice("Coffre local : ouvre une simulation Bollinger enregistrée pour relire son résultat sans recalcul.","success");});
-  $("donchian-action-prepare").addEventListener("click",()=>{
-    const dc=strategyAtlas.find(x=>x.kind==="DONCHIAN");if(dc){$("guided-atlas-template").value=dc.atlas_id;renderAtlasEntry(dc);$("guided-atlas-apply").click();}
-  });
-  $("donchian-action-compare").addEventListener("click",()=>{
-    const dc=strategyAtlas.find(x=>x.kind==="DONCHIAN");if(dc){$("guided-atlas-template").value=dc.atlas_id;renderAtlasEntry(dc);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("laboratory").scrollIntoView({behavior:"smooth",block:"start"});$("compare").focus();notice("Donchian 55/20 prête. Le comparateur conserve la même source, le même capital et les mêmes coûts.","success");},120);
-  });
-  $("donchian-action-chart").addEventListener("click",()=>{
-    if(lastRenderedReport && lastRenderedReport.run?.params?.kind==="DONCHIAN" && !$("market-microscope").hidden){$("market-microscope").scrollIntoView({behavior:"smooth",block:"start"});notice("Microscope Donchian : mêmes bougies, mêmes cassures et mêmes fills PAPER que le rapport affiché.","success");return;}
-    const dc=strategyAtlas.find(x=>x.kind==="DONCHIAN");if(dc){$("guided-atlas-template").value=dc.atlas_id;renderAtlasEntry(dc);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("run").focus();notice("Pour voir Donchian sur le graphique du Lab, lance d'abord ce test PAPER ; Seven ouvrira ensuite le Microscope des bougies.","success");},120);
-  });
-  $("donchian-action-results").addEventListener("click",()=>{$("vault").scrollIntoView({behavior:"smooth",block:"start"});notice("Coffre local : ouvre une simulation Donchian enregistrée pour relire son résultat sans recalcul.","success");});
-  $("passive-action-prepare").addEventListener("click",()=>{
-    const kind=({dca:"DCA",hold_50:"HOLD_50",hold_100:"HOLD_100",cash:"CASH"})[passiveKnowledgeCurrentId];
-    const entry=strategyAtlas.find(x=>x.kind===kind); if(entry){$("guided-atlas-template").value=entry.atlas_id;renderAtlasEntry(entry);$("guided-atlas-apply").click();}
-  });
-  $("passive-action-compare").addEventListener("click",()=>{
-    const kind=({dca:"DCA",hold_50:"HOLD_50",hold_100:"HOLD_100",cash:"CASH"})[passiveKnowledgeCurrentId];
-    const entry=strategyAtlas.find(x=>x.kind===kind); if(entry){$("guided-atlas-template").value=entry.atlas_id;renderAtlasEntry(entry);if(!guidedAtlasApplied)$("guided-atlas-apply").click();}
-    setTimeout(()=>{$("laboratory").scrollIntoView({behavior:"smooth",block:"start"});$("compare").focus();notice("Référence prête. Le Comparateur utilisera la même source, le même capital et les mêmes hypothèses de coût pour les 7 modèles.","success");},120);
-  });
-  $("passive-action-results").addEventListener("click",()=>{$("vault").scrollIntoView({behavior:"smooth",block:"start"});notice("Coffre local : relis les simulations déjà enregistrées sans recalculer.","success");});
-  for(const el of [form.elements.ema_fast,form.elements.ema_slow]) el.addEventListener("input",updateEmaKnowledgeNumbers);
-  for(const el of [form.elements.bb_period,form.elements.bb_sigma]) el.addEventListener("input",updateBollingerKnowledgeNumbers);
-  for(const el of [form.elements.donchian_entry,form.elements.donchian_exit]) el.addEventListener("input",updateDonchianKnowledgeNumbers);
-  for(const el of form.querySelectorAll('input[name="timeframe"]')) el.addEventListener("change",()=>{updateEmaKnowledgeNumbers();updateBollingerKnowledgeNumbers();updateDonchianKnowledgeNumbers();});
-  const toggleGlossary = show => {
-    const panel=$("glossary-panel"); panel.hidden=!show;
-    $("open-glossary").setAttribute("aria-expanded",show?"true":"false");
-    if(show)panel.scrollIntoView({behavior:"smooth",block:"center"});
-  };
-  $("open-glossary").addEventListener("click",()=>toggleGlossary($("glossary-panel").hidden));
-  $("close-glossary").addEventListener("click",()=>toggleGlossary(false));
-
   $("import").addEventListener("click",async()=>{
     if(busy)return;
     setBusy(true,"Vérification des données…");
@@ -1277,19 +837,12 @@
     showFields();
     try {
       const health=await api("/api/health");
-      workspaceManaged=health.workspace?.managed===true;
-      if(workspaceManaged){
-        const badge=$("workspace-mode-badge"); if(badge)badge.textContent="WORKSPACE CANONIQUE · GÉRÉ PAR SEVEN";
-        const note=$("workspace-mode-note"); if(note)note.innerHTML="Le Coffre affiche les expériences canoniques reconstruites par Seven. <strong>Tes simulations et comparaisons restent exploratoires ; tes profils et StrategySpecs personnels sont sauvegardés séparément et restent modifiables.</strong>";
-        $("save-profile").title="Sauvegarde personnelle séparée du corpus canonique";
-        $("save-strategy-spec").title="StrategySpec personnel séparé du corpus canonique";
-      }
       if(!health.comparisons_enabled)throw new Error("Le serveur Python V2 n'est pas actif. Ferme l'ancienne instance et relance le lanceur V2.");
-      if(health.version!=="4.9.0-dev1" || !health.strategy_spec_v1_enabled || !health.source_catalog_v1_enabled || !health.strategy_atlas_v1_enabled || !health.guided_workflow_v1_enabled || !health.strategy_knowledge_v1_enabled || !health.historical_vault_v1_enabled || health.live_trading)throw new Error("Le serveur Seven Heaven avec Guided Workflow n'est pas actif. Relance cette version.");
-      const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory(),refreshStrategySpecs(),refreshStrategyAtlas()]);
+      if(health.version!=="4.6.2" || !health.public_okx_enabled || !health.walk_forward_research_enabled || !health.paper_trade_forensics_enabled || !health.controlled_filter_research_enabled || !health.certified_binance_monthly_enabled || !health.explicit_no_trade_warmup_enabled || !health.strategy_spec_v1_enabled)throw new Error("Le serveur de développement V4.8 StrategySpec n'est pas actif. Ferme l'ancien serveur puis relance cette branche.");
+      const [ok]=await Promise.all([refreshDataset(),refreshProfiles(),refreshHistory(),refreshComparisonHistory(),refreshStrategySpecs()]);
       await refreshSources();
-      notice(ok?"Seven Heaven · Guided Workflow actif · Source Catalog + Strategy Atlas + StrategySpec · moteur PAPER préservé.":
-        "Seven Heaven · Guided Workflow actif. Charge ou sélectionne une source vérifiée.","success");
+      notice(ok?"Seven Heaven V4.8 DEV · StrategySpec v1 actif · moteur financier V4.6.2 préservé · archives et Coffre conservés.":
+        "Seven Heaven V4.8 DEV · StrategySpec v1 actif. Charge une archive Binance ou OKX publique.","success");
     }catch(e){setBusy(false);available=false;setBusy(false);notice(e.message,"error");}
   })();
 })();

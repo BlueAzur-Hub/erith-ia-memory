@@ -132,7 +132,7 @@ class ObservatoryV2Tests(unittest.TestCase):
         src=Path(server.__file__).read_text(encoding="utf-8")
         self.assertIn('"/api/compare"',src)
         self.assertNotIn('"/api/trade",',src)
-        self.assertEqual(server.Handler.server_version,"SevenHeavenStrategyLab/4.9.0-dev1")
+        self.assertEqual(server.Handler.server_version,"SevenHeavenStrategyLab/4.6.2")
 
 
 if __name__=="__main__":

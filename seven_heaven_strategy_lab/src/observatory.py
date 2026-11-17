@@ -14,7 +14,7 @@ ORDER = ("EMA_CROSS", "BOLLINGER", "DONCHIAN", "DCA", "HOLD_50", "HOLD_100", "CA
 NAMES = {
     "EMA_CROSS": "Croisement EMA", "BOLLINGER": "Bandes de Bollinger",
     "DONCHIAN": "Cassure Donchian", "DCA": "DCA programmé", "HOLD_50": "Buy & Hold 50 %",
-    "HOLD_100": "Buy & Hold 100 %", "CASH": "Conservation cash",
+    "HOLD_100": "Buy & Hold 100 %", "CASH": "Conservation USDT",
     "CUSTOM_RULES": "Stratégie personnalisée",
 }
 
