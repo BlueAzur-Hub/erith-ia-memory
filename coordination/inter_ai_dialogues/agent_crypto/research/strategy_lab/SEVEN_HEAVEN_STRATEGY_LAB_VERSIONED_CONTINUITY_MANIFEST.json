@@ -520,7 +520,7 @@
         "btc_eth_bnb_xrp_sol_2024_2025_ten_asset_years",
         "ten_shards_size_sha_schema_provenance_continuity_validation",
         "52_profiles_52_strategyspecs_52_paper_runs_16_comparisons",
-        "github_source_tree_resynchronized_from_exact_v4_8_delivery",
+        "build_started_from_exact_v4_8_delivery_in_isolated_ci",
         "server_and_ui_build_marker_4_9_0_dev1",
         "paper_engine_byte_identical_to_v4_8",
         "paper_only_zero_real_orders"
@@ -553,7 +553,10 @@
         "canonical_workspace_rebuild_verified": true,
         "paper_engine_sha256": "f4de4a9cb8dbfd17a665785b6b06cfff3473039624457e721d3f3fd9e2aeb7c2",
         "report": "coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/V4_9_HISTORICAL_VAULT_V3_MULTI_ASSET_CORPUS_V1_2026_11_17.md",
-        "owner_firefox_verified": false
+        "owner_firefox_verified": false,
+        "public_dev_tree_published": false,
+        "public_tree_restoration_commit": "d524ee9a79f3e4adbaaaf3e5e65b825585250c51",
+        "dev_environment_policy": "LOCAL_ISOLATED_NOT_PUBLIC_MAIN"
       }
     },
     {
@@ -1431,6 +1434,37 @@
       "merged_to": "main",
       "stable_runtime_modified": false,
       "product_phase": "V4_8_FOUNDATION_IN_MAIN_NOT_RELEASED"
+    }
+  },
+  "development_environment_policy": {
+    "mode": "LOCAL_ISOLATED_RECREATED_FROM_LAST_ACCEPTED_OR_DEV_ZIP",
+    "public_repo_is_not_dev_workspace": true,
+    "publish_to_public": [
+      "versioned_zip_artifacts",
+      "sha256_files",
+      "continuity_reports",
+      "manifests_protocols",
+      "synthetic_results"
+    ],
+    "never_publish_by_reflex": [
+      "live_dev_tree",
+      "private_workspace",
+      "account_data",
+      "private_keys"
+    ],
+    "ui_test_contract": [
+      "launch_real_local_server",
+      "automated_browser_interactions",
+      "javascript_console_and_network_errors",
+      "reload_cache_check",
+      "screenshots_on_key_interactions",
+      "python_and_javascript_regression_tests"
+    ],
+    "owner_firefox_windows_remains_final_local_reception": true,
+    "incident_2026_11_17": {
+      "description": "V4.9 build temporarily synchronized the live DEV tree into public main.",
+      "remediation_commit": "d524ee9a79f3e4adbaaaf3e5e65b825585250c51",
+      "remediation": "public seven_heaven_strategy_lab tree restored exactly to pre-V4.9 state; V4.9 ZIP/SHA/report artifacts retained"
     }
   }
 }
