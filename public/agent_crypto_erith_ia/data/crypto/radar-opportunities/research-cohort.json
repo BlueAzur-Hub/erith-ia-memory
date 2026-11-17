@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-17T03:06:32Z",
+  "source_qualification_at_utc": "2026-11-17T17:01:32Z",
   "source_observation_date_utc": "2026-11-17",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -61,8 +61,8 @@
         "venue": "Binance",
         "pair": "ASTERUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.72726,
-        "roundtrip_cost_pct_assumed": 0.21714
+        "spread_bps_at_snapshot": 3.71885,
+        "roundtrip_cost_pct_assumed": 0.23701
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -88,8 +88,8 @@
         "venue": "Binance",
         "pair": "BANANAS31USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.63484,
-        "roundtrip_cost_pct_assumed": 0.31503
+        "spread_bps_at_snapshot": 7.82626,
+        "roundtrip_cost_pct_assumed": 0.31638
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -115,8 +115,8 @@
         "venue": "Bitget",
         "pair": "BLESSUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.91446,
-        "roundtrip_cost_pct_assumed": 0.40873
+        "spread_bps_at_snapshot": 14.97409,
+        "roundtrip_cost_pct_assumed": 0.41527
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -142,14 +142,41 @@
         "venue": "Bitget",
         "pair": "DGAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 3.87485,
-        "roundtrip_cost_pct_assumed": 0.23856
+        "spread_bps_at_snapshot": 4.14326,
+        "roundtrip_cost_pct_assumed": 0.24124
       },
       "detections_archived": 3,
       "j1_observed": 2,
       "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "goplus-security",
+      "symbol": "GPS",
+      "name": "GoPlus Security",
+      "group": "primary_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 391,
+      "change24h_pct_at_snapshot": 5.43493,
+      "change7d_pct_at_snapshot": 6.3167,
+      "volume24h_aggregate_usd": 3315023,
+      "spot": {
+        "venue": "Binance",
+        "pair": "GPSUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 24.0096,
+        "roundtrip_cost_pct_assumed": 0.43923
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -168,8 +195,8 @@
         "venue": "Binance",
         "pair": "ICPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.07103,
-        "roundtrip_cost_pct_assumed": 0.28042
+        "spread_bps_at_snapshot": 4.49135,
+        "roundtrip_cost_pct_assumed": 0.24841
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -195,8 +222,8 @@
         "venue": "Bitget",
         "pair": "LABUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.94321,
-        "roundtrip_cost_pct_assumed": 0.32477
+        "spread_bps_at_snapshot": 6.21504,
+        "roundtrip_cost_pct_assumed": 0.29238
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -221,8 +248,8 @@
         "venue": "Binance",
         "pair": "ZROUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.50407,
-        "roundtrip_cost_pct_assumed": 0.26479
+        "spread_bps_at_snapshot": 7.12504,
+        "roundtrip_cost_pct_assumed": 0.27098
       },
       "detections_archived": 4,
       "j1_observed": 2,
@@ -248,41 +275,14 @@
         "venue": "OKX",
         "pair": "LIT-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.40614,
-        "roundtrip_cost_pct_assumed": 0.25649
+        "spread_bps_at_snapshot": 4.52938,
+        "roundtrip_cost_pct_assumed": 0.24509
       },
       "detections_archived": 4,
       "j1_observed": 3,
       "j7_observed": 3,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "pha",
-      "symbol": "PHA",
-      "name": "PHALA",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 596,
-      "change24h_pct_at_snapshot": 7.49694,
-      "change7d_pct_at_snapshot": -3.8636,
-      "volume24h_aggregate_usd": 21959228,
-      "spot": {
-        "venue": "Binance",
-        "pair": "PHAUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 29.5421,
-        "roundtrip_cost_pct_assumed": 0.4943
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -301,39 +301,12 @@
         "venue": "Binance",
         "pair": "ZAMAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.98446,
-        "roundtrip_cost_pct_assumed": 0.28115
+        "spread_bps_at_snapshot": 5.25256,
+        "roundtrip_cost_pct_assumed": 0.2608
       },
       "detections_archived": 4,
       "j1_observed": 2,
       "j7_observed": 2,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "goplus-security",
-      "symbol": "GPS",
-      "name": "GoPlus Security",
-      "group": "additional_spot_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 391,
-      "change24h_pct_at_snapshot": 5.43493,
-      "change7d_pct_at_snapshot": 6.3167,
-      "volume24h_aggregate_usd": 3315023,
-      "spot": {
-        "venue": "Binance",
-        "pair": "GPSUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 23.4192,
-        "roundtrip_cost_pct_assumed": 0.54303
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -355,8 +328,8 @@
         "venue": "Bitget",
         "pair": "UMXMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 404.35459,
-        "roundtrip_cost_pct_assumed": 4.77307
+        "spread_bps_at_snapshot": 183.48624,
+        "roundtrip_cost_pct_assumed": 3.47132
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -383,15 +356,41 @@
         "venue": "Bitget",
         "pair": "OUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 63.41642,
-        "roundtrip_cost_pct_assumed": 0.92496
+        "spread_bps_at_snapshot": 25.01192,
+        "roundtrip_cost_pct_assumed": 0.45065
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "pha",
+      "symbol": "PHA",
+      "name": "PHALA",
+      "group": "additional_spot_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 596,
+      "change24h_pct_at_snapshot": 7.49694,
+      "change7d_pct_at_snapshot": -3.8636,
+      "volume24h_aggregate_usd": 21959228,
+      "spot": {
+        "venue": "Binance",
+        "pair": "PHAUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 30.53435,
+        "roundtrip_cost_pct_assumed": 0.50417
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 1,
+      "risks_and_missing_evidence": [
         "token_contract_not_verified",
-        "high_hypothetical_cost"
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
