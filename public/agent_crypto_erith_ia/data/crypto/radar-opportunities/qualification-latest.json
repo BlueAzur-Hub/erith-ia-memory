@@ -5,7 +5,7 @@
     "core": "2026-11-17T02:54:11.914Z",
     "extended": "2026-11-17T02:55:23.368Z"
   },
-  "qualified_at_utc": "2026-11-17T17:34:55Z",
+  "qualified_at_utc": "2026-11-17T22:33:44Z",
   "universe_preselected": 20,
   "venues": {
     "Binance": {
@@ -22,18 +22,18 @@
     }
   },
   "markets_with_public_evidence": 13,
-  "priority_eligible_count": 13,
+  "priority_eligible_count": 12,
   "priority_research_ids": [
-    "dgrid-ai",
+    "lighter",
     "zama",
     "aster-2",
-    "internet-computer",
-    "lighter",
-    "layerzero",
+    "dgrid-ai",
     "lab",
+    "internet-computer",
     "banana-for-scale-2",
-    "bless-2",
-    "pha"
+    "layerzero",
+    "goplus-security",
+    "bless-2"
   ],
   "limits": {
     "max_spread_bps": 150.0,
@@ -76,22 +76,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.5387
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.5762
         },
         "book": {
-          "best_bid_usdt": 0.5475,
-          "best_ask_usdt": 0.5476,
-          "spread_bps": 1.82632,
+          "best_bid_usdt": 0.5838,
+          "best_ask_usdt": 0.5839,
+          "spread_bps": 1.71277,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:34:59Z",
-          "public_book_roundtrip_loss_pct": 0.040982
+          "observed_at_utc": "2026-11-17T22:33:47Z",
+          "public_book_roundtrip_loss_pct": 0.033347
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.2408,
+        "estimated_roundtrip_cost_pct": 0.23318,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -112,7 +112,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -122,12 +122,12 @@
           "source": "OKX_PUBLIC_SPOT_BOOK",
           "pair": "ASTER-USDT",
           "quote": "USDT",
-          "exchange_time_utc": "2026-11-17T17:35:11Z",
-          "collected_at_utc": "2026-11-17T17:35:10Z",
+          "exchange_time_utc": "2026-11-17T22:33:54Z",
+          "collected_at_utc": "2026-11-17T22:33:54Z",
           "book_age_seconds": 0,
-          "best_bid_usdt": "0.5472",
-          "best_ask_usdt": "0.5475",
-          "best_bid_qty": "914.746",
+          "best_bid_usdt": "0.5835",
+          "best_ask_usdt": "0.5836",
+          "best_bid_qty": "231.983",
           "best_ask_qty": "1",
           "market_execution_proven": false,
           "fees_verified": false,
@@ -155,22 +155,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 2.8619
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 2.8312
         },
         "book": {
-          "best_bid_usdt": 2.8624,
-          "best_ask_usdt": 2.8637,
-          "spread_bps": 4.54061,
-          "book_age_seconds": -0.34,
+          "best_bid_usdt": 2.8676,
+          "best_ask_usdt": 2.8678,
+          "spread_bps": 0.69742,
+          "book_age_seconds": -0.27,
           "exchange_timestamp_verified": true,
-          "observed_at_utc": "2026-11-17T17:35:00Z",
-          "public_book_roundtrip_loss_pct": 0.045396
+          "observed_at_utc": "2026-11-17T22:33:47Z",
+          "public_book_roundtrip_loss_pct": 0.006974
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.24521,
+        "estimated_roundtrip_cost_pct": 0.20686,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -191,7 +191,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -201,13 +201,13 @@
           "source": "OKX_PUBLIC_SPOT_BOOK",
           "pair": "LIT-USDT",
           "quote": "USDT",
-          "exchange_time_utc": "2026-11-17T17:35:11Z",
-          "collected_at_utc": "2026-11-17T17:35:10Z",
+          "exchange_time_utc": "2026-11-17T22:33:54Z",
+          "collected_at_utc": "2026-11-17T22:33:54Z",
           "book_age_seconds": 0,
-          "best_bid_usdt": "2.8647",
-          "best_ask_usdt": "2.8657",
-          "best_bid_qty": "104.843",
-          "best_ask_qty": "102.279",
+          "best_bid_usdt": "2.8694",
+          "best_ask_usdt": "2.8696",
+          "best_bid_qty": "104.663",
+          "best_ask_qty": "46.235",
           "market_execution_proven": false,
           "fees_verified": false,
           "orders_enabled": false
@@ -234,22 +234,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 2.234
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 2.264
         },
         "book": {
-          "best_bid_usdt": 2.254,
-          "best_ask_usdt": 2.255,
-          "spread_bps": 4.43557,
+          "best_bid_usdt": 2.268,
+          "best_ask_usdt": 2.269,
+          "spread_bps": 4.4082,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:35:01Z",
-          "public_book_roundtrip_loss_pct": 0.044346
+          "observed_at_utc": "2026-11-17T22:33:48Z",
+          "public_book_roundtrip_loss_pct": 0.081492
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.24416,
+        "estimated_roundtrip_cost_pct": 0.28123,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -270,7 +270,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -280,13 +280,13 @@
           "source": "OKX_PUBLIC_SPOT_BOOK",
           "pair": "ICP-USDT",
           "quote": "USDT",
-          "exchange_time_utc": "2026-11-17T17:35:11Z",
-          "collected_at_utc": "2026-11-17T17:35:10Z",
+          "exchange_time_utc": "2026-11-17T22:33:54Z",
+          "collected_at_utc": "2026-11-17T22:33:54Z",
           "book_age_seconds": 0,
-          "best_bid_usdt": "2.251",
-          "best_ask_usdt": "2.252",
-          "best_bid_qty": "111.425359",
-          "best_ask_qty": "479.362267",
+          "best_bid_usdt": "2.268",
+          "best_ask_usdt": "2.269",
+          "best_bid_qty": "1062.694293",
+          "best_ask_qty": "26.46",
           "market_execution_proven": false,
           "fees_verified": false,
           "orders_enabled": false
@@ -343,22 +343,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 1.405
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 1.404
         },
         "book": {
-          "best_bid_usdt": 1.413,
-          "best_ask_usdt": 1.414,
-          "spread_bps": 7.07464,
+          "best_bid_usdt": 1.416,
+          "best_ask_usdt": 1.418,
+          "spread_bps": 14.11433,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:35:02Z",
-          "public_book_roundtrip_loss_pct": 0.070721
+          "observed_at_utc": "2026-11-17T22:33:49Z",
+          "public_book_roundtrip_loss_pct": 0.141044
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.27048,
+        "estimated_roundtrip_cost_pct": 0.34066,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -379,7 +379,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -389,13 +389,13 @@
           "source": "OKX_PUBLIC_SPOT_BOOK",
           "pair": "ZRO-USDT",
           "quote": "USDT",
-          "exchange_time_utc": "2026-11-17T17:35:11Z",
-          "collected_at_utc": "2026-11-17T17:35:10Z",
+          "exchange_time_utc": "2026-11-17T22:33:54Z",
+          "collected_at_utc": "2026-11-17T22:33:54Z",
           "book_age_seconds": 0,
-          "best_bid_usdt": "1.4125",
-          "best_ask_usdt": "1.4133",
-          "best_bid_qty": "73.394",
-          "best_ask_qty": "14",
+          "best_bid_usdt": "1.4159",
+          "best_ask_usdt": "1.4168",
+          "best_bid_qty": "1145.517",
+          "best_ask_qty": "94.451",
           "market_execution_proven": false,
           "fees_verified": false,
           "orders_enabled": false
@@ -444,7 +444,7 @@
       "aggregated_volume24h_usd": 35326499,
       "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
       "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
-      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "status": "EXCESSIVE_OBSERVED_COST",
       "errors": [],
       "market": {
         "provider": "Bitget",
@@ -452,22 +452,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.01123
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.01083
         },
         "book": {
-          "best_bid_usdt": 0.01081,
-          "best_ask_usdt": 0.01087,
-          "spread_bps": 55.35055,
-          "book_age_seconds": -0.37,
+          "best_bid_usdt": 0.01063,
+          "best_ask_usdt": 0.01079,
+          "spread_bps": 149.39309,
+          "book_age_seconds": -0.21,
           "exchange_timestamp_verified": true,
-          "observed_at_utc": "2026-11-17T17:35:04Z",
-          "public_book_roundtrip_loss_pct": 1.581904
+          "observed_at_utc": "2026-11-17T22:33:49Z",
+          "public_book_roundtrip_loss_pct": 1.845463
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 1.77864,
+        "estimated_roundtrip_cost_pct": 2.04167,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -507,22 +507,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.691705
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.676989
         },
         "book": {
-          "best_bid_usdt": 0.68916,
-          "best_ask_usdt": 0.689327,
-          "spread_bps": 2.42295,
-          "book_age_seconds": -0.38,
+          "best_bid_usdt": 0.677224,
+          "best_ask_usdt": 0.677225,
+          "spread_bps": 0.01477,
+          "book_age_seconds": -0.2,
           "exchange_timestamp_verified": true,
-          "observed_at_utc": "2026-11-17T17:35:04Z",
-          "public_book_roundtrip_loss_pct": 0.024227
+          "observed_at_utc": "2026-11-17T22:33:50Z",
+          "public_book_roundtrip_loss_pct": 0.061707
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.22408,
+        "estimated_roundtrip_cost_pct": 0.26148,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -562,22 +562,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.010052
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.0099527
         },
         "book": {
-          "best_bid_usdt": 0.0099549,
-          "best_ask_usdt": 0.0099658,
-          "spread_bps": 10.94339,
-          "book_age_seconds": -0.38,
+          "best_bid_usdt": 0.0099621,
+          "best_ask_usdt": 0.0099689,
+          "spread_bps": 6.82354,
+          "book_age_seconds": -0.2,
           "exchange_timestamp_verified": true,
-          "observed_at_utc": "2026-11-17T17:35:04Z",
-          "public_book_roundtrip_loss_pct": 0.190869
+          "observed_at_utc": "2026-11-17T22:33:50Z",
+          "public_book_roundtrip_loss_pct": 0.180031
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.39039,
+        "estimated_roundtrip_cost_pct": 0.37957,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -617,22 +617,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.0328
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.0325
         },
         "book": {
-          "best_bid_usdt": 0.0327,
-          "best_ask_usdt": 0.0328,
-          "spread_bps": 30.53435,
+          "best_bid_usdt": 0.0325,
+          "best_ask_usdt": 0.0326,
+          "spread_bps": 30.72197,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:35:05Z",
-          "public_book_roundtrip_loss_pct": 0.304878
+          "observed_at_utc": "2026-11-17T22:33:50Z",
+          "public_book_roundtrip_loss_pct": 0.306748
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.50417,
+        "estimated_roundtrip_cost_pct": 0.50604,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -653,7 +653,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -663,13 +663,13 @@
           "source": "OKX_PUBLIC_SPOT_BOOK",
           "pair": "PHA-USDT",
           "quote": "USDT",
-          "exchange_time_utc": "2026-11-17T17:35:11Z",
-          "collected_at_utc": "2026-11-17T17:35:11Z",
+          "exchange_time_utc": "2026-11-17T22:33:54Z",
+          "collected_at_utc": "2026-11-17T22:33:54Z",
           "book_age_seconds": 0,
-          "best_bid_usdt": "0.03275",
-          "best_ask_usdt": "0.0328",
-          "best_bid_qty": "6490.267705",
-          "best_ask_qty": "28527.648285",
+          "best_bid_usdt": "0.03253",
+          "best_ask_usdt": "0.03259",
+          "best_bid_qty": "1797.71256",
+          "best_ask_qty": "26872.647953",
           "market_execution_proven": false,
           "fees_verified": false,
           "orders_enabled": false
@@ -739,7 +739,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -767,22 +767,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.005125
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.005226
         },
         "book": {
-          "best_bid_usdt": 0.005161,
-          "best_ask_usdt": 0.005167,
-          "spread_bps": 11.6189,
+          "best_bid_usdt": 0.005231,
+          "best_ask_usdt": 0.005235,
+          "spread_bps": 7.6438,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:35:06Z",
-          "public_book_roundtrip_loss_pct": 0.15822
+          "observed_at_utc": "2026-11-17T22:33:51Z",
+          "public_book_roundtrip_loss_pct": 0.094849
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.3578,
+        "estimated_roundtrip_cost_pct": 0.29456,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -822,22 +822,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.0323
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.03254
         },
         "book": {
-          "best_bid_usdt": 0.03236,
-          "best_ask_usdt": 0.03239,
-          "spread_bps": 9.26641,
-          "book_age_seconds": -0.45,
+          "best_bid_usdt": 0.03276,
+          "best_ask_usdt": 0.03277,
+          "spread_bps": 3.05204,
+          "book_age_seconds": -0.21,
           "exchange_timestamp_verified": true,
-          "observed_at_utc": "2026-11-17T17:35:07Z",
-          "public_book_roundtrip_loss_pct": 0.101334
+          "observed_at_utc": "2026-11-17T22:33:52Z",
+          "public_book_roundtrip_loss_pct": 0.064512
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.30103,
+        "estimated_roundtrip_cost_pct": 0.26428,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -907,22 +907,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.05707
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.05868
         },
         "book": {
-          "best_bid_usdt": 0.05767,
-          "best_ask_usdt": 0.05769,
-          "spread_bps": 3.46741,
+          "best_bid_usdt": 0.05925,
+          "best_ask_usdt": 0.05926,
+          "spread_bps": 1.68762,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:35:08Z",
-          "public_book_roundtrip_loss_pct": 0.034668
+          "observed_at_utc": "2026-11-17T22:33:52Z",
+          "public_book_roundtrip_loss_pct": 0.016875
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.2345,
+        "estimated_roundtrip_cost_pct": 0.21674,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -943,7 +943,7 @@
           "account_access_proven": false,
           "orders_enabled": false
         },
-        "observation_utc": "2026-11-17T17:34:55Z",
+        "observation_utc": "2026-11-17T22:33:44Z",
         "contract_identity_proven": false,
         "account_access_proven": false,
         "real_fees_proven": false,
@@ -953,13 +953,13 @@
           "source": "OKX_PUBLIC_SPOT_BOOK",
           "pair": "ZAMA-USDT",
           "quote": "USDT",
-          "exchange_time_utc": "2026-11-17T17:35:11Z",
-          "collected_at_utc": "2026-11-17T17:35:11Z",
+          "exchange_time_utc": "2026-11-17T22:33:54Z",
+          "collected_at_utc": "2026-11-17T22:33:54Z",
           "book_age_seconds": 0,
-          "best_bid_usdt": "0.05761",
-          "best_ask_usdt": "0.05766",
-          "best_bid_qty": "400",
-          "best_ask_qty": "1159.4",
+          "best_bid_usdt": "0.05924",
+          "best_ask_usdt": "0.05929",
+          "best_bid_qty": "2254.2",
+          "best_ask_qty": "1806",
           "market_execution_proven": false,
           "fees_verified": false,
           "orders_enabled": false
@@ -986,22 +986,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.55061
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.55585
         },
         "book": {
-          "best_bid_usdt": 0.55348,
-          "best_ask_usdt": 0.55519,
-          "spread_bps": 30.84777,
-          "book_age_seconds": -0.37,
+          "best_bid_usdt": 0.55127,
+          "best_ask_usdt": 0.55319,
+          "spread_bps": 34.76812,
+          "book_age_seconds": -0.2,
           "exchange_timestamp_verified": true,
-          "observed_at_utc": "2026-11-17T17:35:09Z",
-          "public_book_roundtrip_loss_pct": 0.310696
+          "observed_at_utc": "2026-11-17T22:33:53Z",
+          "public_book_roundtrip_loss_pct": 0.811832
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.50998,
+        "estimated_roundtrip_cost_pct": 1.01011,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
@@ -1041,22 +1041,22 @@
         "quote": "USDT",
         "candles": {
           "closed_bars": 20,
-          "first_hour_utc": "2026-11-16T21:00:00Z",
-          "last_closed_hour_utc": "2026-11-17T16:00:00Z",
-          "last_close_usdt": 0.00834
+          "first_hour_utc": "2026-11-17T02:00:00Z",
+          "last_closed_hour_utc": "2026-11-17T21:00:00Z",
+          "last_close_usdt": 0.00865
         },
         "book": {
-          "best_bid_usdt": 0.0083,
-          "best_ask_usdt": 0.00833,
-          "spread_bps": 36.07937,
+          "best_bid_usdt": 0.00868,
+          "best_ask_usdt": 0.00869,
+          "spread_bps": 11.5141,
           "book_age_seconds": null,
           "exchange_timestamp_verified": false,
-          "observed_at_utc": "2026-11-17T17:35:09Z",
-          "public_book_roundtrip_loss_pct": 0.360144
+          "observed_at_utc": "2026-11-17T22:33:53Z",
+          "public_book_roundtrip_loss_pct": 0.165232
         },
         "illustrative_ticket_usdt": 100.0,
         "assumed_fee_pct_each_side": 0.1,
-        "estimated_roundtrip_cost_pct": 0.55932,
+        "estimated_roundtrip_cost_pct": 0.3648,
         "real_fees_known": false,
         "minimum_order_verified": false,
         "slippage_future_guaranteed": false
