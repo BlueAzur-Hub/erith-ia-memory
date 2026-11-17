@@ -4,7 +4,7 @@
 
 **Version de développement publiée la plus récente : V4.9.0-DEV1.** Elle est validée par GitHub Actions sous Python 3.13 (160 tests + 12 sous-tests), mais sa réception visuelle Firefox Windows par le propriétaire reste à faire. **Dernière version explicitement enregistrée comme acceptée par le propriétaire dans le manifeste : V4.6.2 le 16/11/2026.** Les recettes automatiques ne remplacent jamais cette réception locale.
 
-Ce document sert de **point d'entrée unique à toutes les IA de recherche, à Christophe et à Yoann**. Depuis V4.8, les livraisons importantes sont archivées à la fois dans la racine partagée `coordination/inter_ai_dialogues/agent_crypto/` avec leur `.sha256` et, lorsqu'une Release existe, dans GitHub Releases. Le code source actif reste dans son dossier dédié ; les preuves et décisions restent ici/Notion ; les données privées restent uniquement dans le `workspace/` local.
+Ce document sert de **point d'entrée unique à toutes les IA de recherche, à Christophe et à Yoann**. Depuis V4.8, les livraisons importantes sont archivées dans la racine partagée `coordination/inter_ai_dialogues/agent_crypto/` avec leur `.sha256` et, lorsqu'une Release existe, dans GitHub Releases. **Le dépôt public n'est pas l'environnement de développement de Seven : ne jamais y recopier l'arbre DEV complet.** Le travail vivant reste dans un environnement local/isolé recréé depuis une livraison ; GitHub public reçoit les artefacts de version, hashes, rapports et continuité. Les données privées restent uniquement dans le `workspace/` local.
 
 ## 1. Versions du laboratoire — téléchargements vérifiés
 
@@ -63,9 +63,17 @@ Une empreinte SHA-256 de fichier ZIP doit être comparée à **l'archive téléc
 | **Ce dossier partagé** `coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/` | **Présent README**, [manifeste de continuité](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/research/strategy_lab/SEVEN_HEAVEN_STRATEGY_LAB_VERSIONED_CONTINUITY_MANIFEST.json), preuves et notes transversales de recherche | Point de consultation durable des versions et rapports |
 | [Racine de coordination Agent-Crypto](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/coordination/inter_ai_dialogues/agent_crypto) | Routage entre Administrator, Trader, Operator, Yoann et Strategy Lab + archive directe des livraisons récentes | Depuis V4.8 : ZIP importants + `.sha256` conservés ici pour continuité inter-LLM |
 | [GitHub Releases — archives officielles](https://github.com/BlueAzur-Hub/erith-ia-memory/releases) | **Un ZIP intégral de programme par version**, sommes SHA-256, éventuelles captures ou preuves annexes | Historique des versions téléchargeables, non intégré au `workspace/` |
-| [Code source actif](https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/seven_heaven_strategy_lab) | `src/`, `web/`, `tests/`, lanceurs Windows, README de développement | Dossier de **développement**, non répertoire privé utilisateur |
+| `seven_heaven_strategy_lab/` sur `main` public | Ancien arbre public conservé pour continuité historique | **Ne pas l'utiliser ni le synchroniser comme environnement DEV vivant.** Les nouvelles DEV sont construites localement/isolées puis livrées en ZIP + SHA + rapport. |
 | [Plan directeur Notion](https://app.notion.com/p/4177754fe08481b0ac48e2dc00eaed72) | Feuille de route, validations Firefox, décisions de recherche avec Yoann | Document de pilotage, pointant vers cet index plutôt que recopiant les ZIP |
 | `E:\seven_heaven_strategy_lab\workspace\` | Archives téléchargées sur la clé, expériences, profils, journaux et rapports locaux | **Privé, non suivi dans Git ; ne pas supprimer ni écraser** |
+
+## 3 bis. Frontière DEV / GitHub public
+
+- **Environnement DEV Seven** : local/isolé, recréé depuis le dernier ZIP retenu ; serveur local, tests Python/JS et navigateur automatisé.
+- **GitHub public partagé** : versions ZIP, fichiers `.sha256`, rapports, manifests/protocoles de continuité et résultats synthétiques utiles aux autres IA.
+- **Interdit** : recopier ou synchroniser automatiquement l'arbre de développement vivant dans `seven_heaven_strategy_lab/` sur `main`.
+- **Workspace utilisateur** : reste privé/local ; jamais publié par réflexe.
+- Incident du 17/11/2026 : la V4.9 a brièvement synchronisé l'arbre DEV sur `main`. Le répertoire public a été restauré à son état pré-V4.9 par le commit `d524ee9a79f3e4adbaaaf3e5e65b825585250c51`. Les ZIP/rapports V4.9 restent les livrables officiels.
 
 ## 4. Continuité et protocole de livraison
 
