@@ -1,20 +1,20 @@
-# Seven Heaven — suivi public BTC : 2026-11-16T20:35:56Z
+# Seven Heaven — suivi public BTC : 2026-11-17T04:01:12Z
 
 **Statut : OPERATIONAL_PARTIAL_COVERAGE** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-15T20:35:56Z au 2026-11-16T20:35:56Z.
+Fenêtre UTC : 2026-11-16T04:01:12Z au 2026-11-17T04:01:12Z.
 
 ## Santé et provenance
 
-- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-16T19:00:00Z ; source fraîche : OUI.
-- **Liquidations dérivées** : 41 messages observés dans les archives ; 12 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
-- **Actualités de l'Interface** : 7 événements BTC ; relevé source 2026-11-16T12:06:58.867794+00:00.
+- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-17T03:00:00Z ; source fraîche : OUI.
+- **Liquidations dérivées** : 31 messages observés dans les archives ; 9 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
+- **Actualités de l'Interface** : 14 événements BTC ; relevé source 2026-11-16T22:33:57.015830+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
-| bybit | 7 | 4 |
-| binance | 22 | 4 |
-| okx | 12 | 4 |
+| bybit | 6 | 3 |
+| binance | 19 | 3 |
+| okx | 6 | 3 |
 
 ## Interprétation autorisée
 
@@ -26,23 +26,23 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 
 | UTC | Ouverture (USDC) | Clôture (USDC) | Volume Spot BTC | Messages de liquidations observés | Couverture |
 |---|---:|---:|---:|---:|---|
-| 2026-11-16T08:00:00Z | 64934.3 | 64415.2 | 37.72069018 | 24 | SAMPLED_WITH_GAPS |
-| 2026-11-16T09:00:00Z | 64415.3 | 64285.1 | 33.85211654 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-16T10:00:00Z | 64301.2 | 64528.1 | 22.41907742 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-16T11:00:00Z | 64539.9 | 64394.3 | 21.02746882 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-16T12:00:00Z | 64394.8 | 64114.3 | 47.40112889 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-16T13:00:00Z | 64104.8 | 64134 | 83.42003084 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-16T14:00:00Z | 64134 | 65122.2 | 147.82156172 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-16T15:00:00Z | 65131.5 | 64428 | 139.69420167 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-16T16:00:00Z | 64417.1 | 64877.1 | 33.5674469 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-16T17:00:00Z | 64873.2 | 64856.4 | 39.45015961 | 0 | NO_DOCUMENTED_OBSERVATION |
 | 2026-11-16T18:00:00Z | 64847.1 | 64997.2 | 79.36534081 | 7 | SAMPLED_WITH_GAPS |
 | 2026-11-16T19:00:00Z | 65000 | 65019.3 | 28.13713056 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-16T20:00:00Z | 65017.5 | 65025.2 | 30.77181506 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-16T21:00:00Z | 65025.2 | 65251.8 | 29.04955301 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-16T22:00:00Z | 65251.8 | 65274.7 | 17.76780225 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-16T23:00:00Z | 65274.6 | 64828.1 | 24.17582774 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-17T00:00:00Z | 64828.3 | 64580.3 | 22.42401344 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-17T01:00:00Z | 64582.9 | 64701.1 | 22.16090157 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-17T02:00:00Z | 64689.1 | 64457.6 | 13.10573632 | 0 | SAMPLED_WITH_GAPS |
+| 2026-11-17T03:00:00Z | 64457.8 | 65005.5 | 19.33148254 | 0 | NO_DOCUMENTED_OBSERVATION |
 
 ## Étude de stratégie — structure EMA 5/13/34 (observation, pas backtest)
 
-- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-13T21:00:00Z au 2026-11-16T19:00:00Z.
-- Dernière clôture : 65019.3 USDC/BTC ; EMA 5 : 64877.56 ; EMA 13 : 64746.68 ; EMA 34 : 64913.56 USDC.
+- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-14T05:00:00Z au 2026-11-17T03:00:00Z.
+- Dernière clôture : 65005.5 USDC/BTC ; EMA 5 : 64799.39 ; EMA 13 : 64811.84 ; EMA 34 : 64864.81 USDC.
 - Structure horaire observée : **STRUCTURE_HORAIRE_MIXTE**.
 - **Stratégie Swing Trading NON validée** : cet échantillon horaire ne démontre ni rentabilité, ni règles de sortie, ni tenue sur plusieurs jours. Aucun conseil d'achat ou de vente.
 
