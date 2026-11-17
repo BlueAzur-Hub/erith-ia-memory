@@ -129,7 +129,7 @@ class PaperEngineTests(unittest.TestCase):
     def test_static_files_allowlist(self):
         self.assertEqual(set(STATIC), {
             "/", "/index.html", "/app.js", "/styles.css",
-            "/microscope.js", "/forensics.js", "/strategy_research.js",
+            "/microscope.js", "/forensics.js", "/strategy_research.js", "/lab-help-layer.js", "/historical-vault.js",
         })
         self.assertNotIn("/api/trade", STATIC)
 

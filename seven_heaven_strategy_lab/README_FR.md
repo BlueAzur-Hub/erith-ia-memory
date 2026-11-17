@@ -1,8 +1,52 @@
-# Seven Heaven Strategy Lab — V4.6.2 cohérence complète lors du changement de source
+## V4.9.0-DEV1 — Historical Vault V3 · corpus multi-actifs 5×2
 
-**Version 4.6.2 · Windows Python 3.13 · Port 8777 en local · Internet public sur action explicite · PAPER uniquement.**
+La couche scientifique installe localement les dix années longues BTC/ETH/BNB/XRP/SOL 2024–2025 depuis des shards annuels Seven vérifiés. Le rebuild canonique passe de 28 à 52 profils/StrategySpecs/simulations et de 10 à 16 comparaisons. Le moteur PAPER reste inchangé et aucun ordre réel n'existe.
 
-Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows, en développement progressif : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses professionnelles. La V4.6 ajoute une première source mensuelle longue certifiée et corrige la méthode de validation des indicateurs. La V4.6.1 aligne le résumé visuel sur la source active. La V4.6.2 garantit qu'un changement de source efface aussi l'ancienne étude Aether Research affichée, sans modifier le moteur, les fills, les frais ni les résultats.
+Voir `docs/HISTORICAL_VAULT_V3.md`.
+
+## V4.8 — Audit correctif + Historical Vault V1 · historiques longs / multi-actifs
+
+Cette DEV part de la Knowledge Layer Step 5 validée et commence par un audit de non-régression. Le moteur PAPER canonique reste byte-identique (`f4de4a9c…`). Les corrections portent sur les libellés dynamiques de devise, la provenance des avertissements, le contrôle loopback et le harness de tests.
+
+Le **Historical Vault V1** ajoute ensuite un pont explicite vers le coffre historique canonique : 122 actifs archivés, 108 avec au moins 12 mois consécutifs et 90 avec au moins 24 mois dans le snapshot épinglé. Le Lab affiche la profondeur BTC/ETH/BNB/XRP/SOL et sépare strictement `INDEXÉ` de `LOCAL · UTILISABLE`.
+
+- **Installable V1** : BTC, ETH, BNB, XRP, SOL · années complètes 2024 et 2025.
+- **Installation explicite** : Binance Public Data uniquement ; 12 ZIP mensuels 1m + `.CHECKSUM`, continuité stricte, agrégation 1h, aucune archive brute conservée.
+- **Source Catalog** : une année acceptée rejoint `workspace/catalog_sources/` et devient utilisable en 1h / 4h par le moteur existant.
+- **Historique ancien** : 2019–2021 reste affiché comme profondeur indexée partielle lorsque les 12 mois ne sont pas présents ; aucun trou n'est comblé artificiellement.
+- **Aucun trading réel** : aucune clé, aucun compte, aucun endpoint d'ordre.
+
+Voir `docs/CODE_AUDIT_V48_2026_11_16.md` et `docs/HISTORICAL_VAULT_V1.md`.
+
+
+## V4.8 — Knowledge Layer Step 5 · Références passives
+
+La Knowledge Layer couvre désormais **DCA programmé, Buy & Hold 50 %, Buy & Hold 100 % et Conservation du cash**, en plus d’EMA, Bollinger et Donchian. Ces fiches expliquent le rôle de chaque baseline dans le Comparateur, les règles exactes du moteur PAPER, les coûts, l’exposition et les questions à poser après un backtest.
+
+- **DCA** : intervalle saisi en minutes, converti explicitement en bougies entières du timeframe par `observatory.py`, achats multiples PAPER, aucun exit automatique, inventaire final marqué à la dernière clôture.
+- **Hold 50/100** : un seul achat PAPER au début de la fenêtre active, aucune sortie automatique, frais/glissement appliqués à l’entrée, inventaire final conservé.
+- **Cash** : aucun fill, aucun frais de trading, capital nominal inchangé dans le modèle ; aucun rendement du cash, inflation ou risque de stablecoin n’est simulé.
+- **Moteur protégé** : `src/engine.py` n’est pas modifié par Step 5.
+
+# Seven Heaven Strategy Lab — V4.7.0-RC1 · Donchian natif
+
+**Release candidate 4.7.0-RC1 · Windows Python 3.13 · Port 8777 en local · Internet public sur action explicite · PAPER uniquement.**
+
+Seven Heaven Strategy Lab est un laboratoire autonome Python/Windows : archives publiques authentifiées, stratégies composables, simulations PAPER et analyses reproductibles. Cette RC conserve le socle V4.6.2 et ajoute Donchian comme famille native auditable, sans trading réel.
+
+> **Statut RC :** cette branche n'est pas encore la release stable installée. V4.6.2 reste la référence propriétaire tant que V4.7 n'a pas reçu sa validation et son autorisation de publication/installation.
+
+## V4.7.0-RC1 — Donchian 55/20 natif
+
+- **Nouvelle famille native `DONCHIAN`** : entrée 55 bougies et sortie 20 bougies par défaut, paramètres visibles et bornés dans l'Atelier.
+- **Causalité conservée** : le signal utilise uniquement la bougie déjà clôturée ; le canal de cassure exclut cette bougie ; le fill reste hypothétique à l'ouverture de la bougie suivante.
+- **Traçabilité Forensics** : chaque entrée/sortie expose son `reason_code`, la valeur de clôture signal et le canal Donchian causal dans `signal_context`.
+- **Comparateur** : Donchian devient la septième stratégie de référence, sans favoritisme ni score promotionnel.
+- **Aether Scientific** : Donchian est rejoué comme stratégie fixe ; aucune recherche automatique de périodes n'est introduite.
+- **Aether Research filtres** reste limité aux moteurs EMA/personnalisés : aucun filtre EMA n'est artificiellement appliqué à Donchian.
+- **Parité historique** : un test dédié exige l'identité financière du moteur natif avec `tools/experimental_donchian.py`, utilisé pour les études historiques 55/20.
+- **Sécurité inchangée** : PAPER long-only, aucune clé privée, aucun endpoint d'ordre réel, Spot Grid toujours séparé.
+- **Workspace** : aucune migration requise et aucune donnée personnelle incluse dans l'archive programme.
 
 ## V4.6.2 — remise à zéro de toutes les analyses liées à la source
 
@@ -182,3 +226,41 @@ https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_
 - V2 : https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/seven-heaven-strategy-lab-v2-aether-observatory-2026-11-13
 
 **Les dossiers `workspace/` ne sont inclus dans aucune de ces archives de programme. Ce sont les données et résultats personnels de l'utilisateur.**
+
+## V4.8 Knowledge Layer — Step 4 · Aide contextuelle unifiée
+
+Le Lab utilise désormais un seul bouton `?` d'aide contextuelle, selon le modèle éprouvé de l'Administrator/Trader.
+
+- un clic active l'aide et affiche immédiatement une carte de confirmation ;
+- le survol d'une zone expliquée remplace la carte par son aide propre ;
+- l'aide indique `À quoi ça sert ?`, `Que regarder ?`, `Action possible` et, si nécessaire, `Attention` ;
+- un second clic, `Échap` ou la touche `?` ferme le mode ;
+- aucune action de l'aide n'appelle le réseau, le moteur PAPER, le stockage ou un ordre réel ;
+- le moteur financier reste inchangé.
+
+Les anciens petits `?` et le deuxième bouton de lexique ne sont plus présentés comme systèmes concurrents : le Lab n'expose qu'un seul déclencheur d'aide.
+
+## V4.8 DEV · Help Layer V1 global
+
+Le mode Aide possède désormais un **unique déclencheur `?` dans l’en-tête global** du Strategy Lab. Une fois activé, il reste actif pendant la navigation et explique les grandes zones du Lab : Observatoire, Navigateur, sources, Atelier, résultats, Microscope, Quant, Forensics, Comparateur, Aether Scientific, Aether Research, StrategySpec et Coffre local.
+
+Le Help Layer est une couche de présentation : aucun appel réseau propre, aucune écriture, aucun moteur financier et aucun ordre réel. `Échap` ou un second clic sur `?` ferment le mode.
+
+## Workspace canonique reproductible
+
+Le développement peut maintenant repartir d’un `workspace/` propre sans perdre les sources vérifiées. `tools/workspace_rebuild_v1.py` fonctionne en **dry-run par défaut**, sauvegarde l’ancien état généré, conserve les données source byte-for-byte puis rejoue une matrice canonique de profils, StrategySpecs, simulations PAPER et comparaisons via le vrai serveur local. Voir `docs/WORKSPACE_REBUILD_V1.md`.
+
+
+
+## Workspace Steward V2
+
+Quand `CANONICAL_REBUILD_MANIFEST.json` existe, les simulations/comparaisons lancées depuis l’UI restent exploratoires et ne sont pas enregistrées. Les profils et StrategySpecs de référence sont reconstruits par Seven avec `tools/workspace_rebuild_v1.py --execute`. Voir `docs/WORKSPACE_STEWARD_V2.md`.
+
+
+## DEV 17 novembre 2026 — Historical Vault V2 + Workspace Steward V3
+
+- Bundle local vérifié BTC/ETH 2024/2025 (1h, 4 années complètes).
+- Installation SHA-256 + provenance mensuelle, sans ordre réel.
+- Rebuild canonique étendu aux quatre années longues.
+- Sauvegardes personnelles de profils et StrategySpecs réactivées dans des namespaces séparés.
+- Les runs/comparaisons manuels restent exploratoires lorsqu'un manifest canonique est actif.

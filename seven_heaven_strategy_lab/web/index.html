@@ -6,11 +6,13 @@
   <meta name="color-scheme" content="dark">
   <meta name="description" content="Seven Heaven Strategy Lab — observatoire de recherches Spot PAPER, local, connecté à des archives publiques authentifiées.">
   <title>Seven Heaven Strategy Lab · Aether Research Console</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/styles.css?v=v48-historical-v2-steward-v3-20261117">
   <script src="/microscope.js" defer></script>
   <script src="/forensics.js" defer></script>
   <script src="/strategy_research.js" defer></script>
-  <script src="/app.js" defer></script>
+  <script src="/lab-help-layer.js?v=v48-historical-v2-steward-v3-20261117" defer></script>
+  <script src="/historical-vault.js?v=v49-historical-v3-five-assets-20261117" defer></script>
+  <script src="/app.js?v=v48-historical-v2-steward-v3-20261117" defer></script>
 </head>
 <body>
 <div class="shell">
@@ -23,14 +25,16 @@
       </div>
     </div>
     <div class="masthead-status" aria-label="État du laboratoire">
-      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.6.2</span>
+      <span class="status-pill version-pill"><span class="symbol">◇</span> BUILD 4.9.0-DEV1</span>
       <span class="status-pill connection-pill"><span class="online-dot"></span> LOCAL · CONNECTÉ</span>
       <span class="status-pill paper-pill">◈ PAPER ONLY</span>
+      <button id="labHelpToggle" class="lab-help-toggle" type="button" aria-controls="labHelpLayer" aria-pressed="false" aria-label="Activer l’aide contextuelle globale du Strategy Lab" title="Aide contextuelle globale">?</button>
     </div>
   </header>
   <nav class="commandbar" aria-label="Navigation du laboratoire">
     <a href="#observatory" class="nav-link selected">⌁ <span>Observatoire</span></a>
     <a href="#laboratory" class="nav-link">◇ <span>Laboratoire</span></a>
+    <a href="#historical-vault" class="nav-link">⌁ <span>Historique</span></a>
     <a href="#comparison" class="nav-link">≋ <span>Comparateur</span></a>
     <a href="#vault" class="nav-link">▤ <span>Coffre local</span></a>
     <div class="nav-meta" id="nav-source"><span class="mini-led"></span> BTC / USDT <span class="meta-divider">·</span> Binance Spot <span class="meta-divider">·</span> Jan 2026</div>
@@ -69,23 +73,574 @@
       <div id="message" class="notice" role="status" aria-live="polite">Connexion au laboratoire local…</div>
     </div>
 
-    <section id="guided-mode" class="guided-panel" aria-labelledby="guided-title">
-      <div class="section-heading">
+    <section id="guided-mode" class="guided-panel professional-navigator" aria-labelledby="guided-title">
+      <div class="section-heading navigator-heading">
         <div>
-          <div class="overline">V4.8 PREVIEW · PRODUCT FOUNDATION</div>
-          <h2 id="guided-title">Que veux-tu <span class="accent-text">faire ?</span></h2>
-          <p class="panel-lead">Le mode guidé prépare l'expérience ; le mode expert reste disponible plus bas. Aucun bouton de cette zone n'envoie d'ordre réel.</p>
+          <div class="overline">V4.8 · NAVIGATEUR DE RECHERCHE · MODE GUIDÉ PROFESSIONNEL</div>
+          <h2 id="guided-title">Préparer une <span class="accent-text">étude de marché</span></h2>
+          <p class="panel-lead">Choisis d’abord les données à étudier, puis une méthode. Seven prépare l’Atelier existant sans masquer les paramètres, les coûts ni la provenance.</p>
         </div>
-        <span class="mini-badge gold-badge">STRATEGYSPEC v1</span>
+        <div class="navigator-tools">
+          <span id="catalog-schema-badge" class="mini-badge gold-badge">Historiques disponibles</span>
+          <button id="open-glossary" class="help-button" type="button" aria-controls="glossary-panel" aria-expanded="false" hidden tabindex="-1">Aide &amp; lexique</button>
+        </div>
       </div>
-      <div class="guided-grid">
-        <button id="guide-learn" class="guided-card" type="button"><strong>Comprendre une stratégie</strong><span>Lire son objectif, ses paramètres et ses limites avant de la tester.</span></button>
-        <button id="guide-create" class="guided-card" type="button"><strong>Créer ma stratégie</strong><span>Composer des règles puis les enregistrer dans un StrategySpec Seven.</span></button>
-        <button id="guide-compare" class="guided-card" type="button"><strong>Comparer</strong><span>Préparer une comparaison sur la même source, les mêmes coûts et le même horizon.</span></button>
-        <button id="guide-paper" class="guided-card future-card" type="button"><strong>Robot PAPER</strong><span>Étape V5 · même StrategySpec, marché public, exécution fictive persistante.</span></button>
-        <button id="guide-expert" class="guided-card" type="button"><strong>Mode expert</strong><span>Accéder aux contrôles actuels : sources, frais, horizons, Scientific et Forensics.</span></button>
+
+      <div class="guided-progress" aria-label="État de préparation de l'étude">
+        <div id="guided-step-source" class="guided-step"><span>01</span><strong>Données</strong><small>À choisir</small></div>
+        <div id="guided-step-atlas" class="guided-step"><span>02</span><strong>Méthode</strong><small>À choisir</small></div>
+        <div id="guided-step-composer" class="guided-step"><span>03</span><strong>Atelier</strong><small>En attente</small></div>
+        <div id="guided-step-spec" class="guided-step"><span>04</span><strong>Sauvegarde</strong><small>Facultative</small></div>
+      </div>
+
+      <div class="guided-grid professional-actions" aria-label="Actions rapides">
+        <button id="guide-learn" class="guided-card" type="button"><strong>Comprendre la méthode</strong><span>Définition, logique, marché adapté et principal risque.</span></button>
+        <button id="guide-create" class="guided-card" type="button"><strong>Préparer l’étude</strong><span>Envoie la source et les réglages de départ dans l’Atelier.</span></button>
+        <button id="guide-compare" class="guided-card" type="button"><strong>Comparer</strong><span>Même source, même capital et mêmes coûts pour les méthodes comparées.</span></button>
+        <button id="guide-expert" class="guided-card" type="button"><strong>Atelier complet</strong><span>Accéder à tous les paramètres scientifiques et au moteur PAPER.</span></button>
+        <button id="guide-paper" class="guided-card future-card" type="button" aria-disabled="true"><strong>Robot PAPER</strong><span>Étape V5 future · aucun automate temps réel dans cette version.</span></button>
+      </div>
+
+      <div class="guided-foundation-grid professional-foundation-grid">
+        <div class="guided-foundation-card market-library-card">
+          <div class="card-heading-row">
+            <div>
+              <div class="micro-title">BIBLIOTHÈQUE DE MARCHÉS</div>
+              <h3>Historiques disponibles</h3>
+              <p>Les filtres réduisent la liste. <strong>Utiliser</strong> choisit l’historique réellement employé par l’Atelier.</p>
+            </div>
+            
+          </div>
+          <div id="market-library-stats" class="market-library-stats" aria-live="polite">
+            <span id="market-library-count">— historiques</span>
+            <span id="market-library-range">Couverture en cours de lecture…</span>
+          </div>
+          <div class="guided-filter-grid">
+            <label class="field"><span>Crypto</span><select id="guided-asset"><option value="">Toutes</option></select></label>
+            <label class="field"><span>Plateforme</span><select id="guided-exchange"><option value="">Toutes</option></select></label>
+            <label class="field"><span>Résolution</span><select id="guided-timeframe"><option value="">Toutes</option></select></label>
+          </div>
+          <label class="field source-select-fallback"><span>Source vérifiée</span><select id="guided-source"><option value="">Choisir une source…</option></select></label>
+          <div id="market-library-list" class="market-library-list" role="list" aria-label="Historiques correspondant aux filtres"></div>
+          <div id="guided-source-proof" class="guided-proof">Le catalogue local sera lu depuis le serveur Seven.</div>
+          <details class="technical-details"><summary>Détails techniques de la source sélectionnée</summary><div id="guided-source-tech">Aucune source sélectionnée.</div></details>
+        </div>
+
+        <div class="guided-foundation-card strategy-library-card">
+          <div class="card-heading-row">
+            <div>
+              <div class="micro-title">BIBLIOTHÈQUE DE STRATÉGIES</div>
+              <h3>Choisir une méthode</h3>
+              <p>Le nom technique reste visible, mais Seven explique ce qu’il signifie avant le test.</p>
+            </div>
+            
+          </div>
+          <label class="field"><span>Méthode / famille</span><select id="guided-atlas-template"><option value="">Choisir une méthode…</option></select></label>
+          <div id="guided-atlas-explanation" class="atlas-explanation professional-explanation" hidden>
+            <div class="strategy-title-row"><strong id="guided-atlas-title">—</strong><span id="guided-atlas-family" class="family-chip">—</span></div>
+            <p id="guided-atlas-definition">—</p>
+            <div class="strategy-explain-grid">
+              <div><small>COMMENT ÇA FONCTIONNE</small><span id="guided-atlas-how">—</span></div>
+              <div><small>MARCHÉ RECHERCHÉ</small><span id="guided-atlas-regime">—</span></div>
+              <div><small>POINT FAIBLE</small><span id="guided-atlas-weakness">—</span></div>
+              <div><small>RÉGLAGES DE DÉPART</small><span id="guided-atlas-params">—</span></div>
+            </div>
+          </div>
+          <div class="strategy-library-actions">
+            <button id="guided-atlas-knowledge" type="button" class="action-button action-secondary" hidden>Ouvrir la fiche professionnelle EMA</button>
+            <button id="guided-atlas-apply" type="button" class="action-button action-outline" disabled>Préparer cette méthode dans l’Atelier</button>
+          </div>
+        </div>
       </div>
     </section>
+
+    <section id="historical-vault" class="panel historical-vault-panel" aria-labelledby="historical-vault-title">
+      <div class="section-heading historical-vault-heading">
+        <div>
+          <div class="overline">V4.9 · HISTORICAL VAULT V3 · 5 ACTIFS × 2 ANNÉES</div>
+          <h2 id="historical-vault-title">Profondeur historique <span class="accent-text">vérifiée</span></h2>
+          <p class="panel-lead">Le Coffre distingue ce qui est indexé dans les archives Seven de ce qui est réellement installé et simulable dans ce Lab local.</p>
+        </div>
+        <span id="historical-vault-state" class="mini-badge gold-badge">Lecture du Coffre…</span>
+      </div>
+
+      <div class="historical-vault-stats" aria-label="Couverture du coffre historique">
+        <div><small>ACTIFS ARCHIVÉS</small><strong id="historical-vault-assets">—</strong><span>sur 250 identités de référence</span></div>
+        <div><small>≥ 12 MOIS CONSÉCUTIFS</small><strong id="historical-vault-12m">—</strong><span>sources closes vérifiées</span></div>
+        <div><small>≥ 24 MOIS CONSÉCUTIFS</small><strong id="historical-vault-24m">—</strong><span>profondeur longue disponible</span></div>
+        <div><small>MINUTES SOURCES INDEXÉES</small><strong id="historical-vault-minutes">—</strong><span>catalogue Binance Spot canonique</span></div>
+      </div>
+
+      <div class="historical-vault-contract">
+        <div>
+          <strong>Ce que V1 peut installer</strong>
+          <p>BTC, ETH, BNB, XRP et SOL · années complètes 2024 ou 2025. Installation explicite depuis Binance Public Data, contrôle mensuel <code>.CHECKSUM</code>, continuité 1m stricte, agrégation 1h puis relecture SHA-256 locale.</p>
+        </div>
+        <div class="historical-vault-safety"><span>INDEXÉ ≠ INSTALLÉ</span><span>1m SOURCE → 1h LAB</span><span>PAPER ONLY</span></div>
+      </div>
+
+      <div id="historical-vault-message" class="historical-vault-message" role="status" aria-live="polite">Chargement de l’index historique local…</div>
+      <div id="historical-vault-list" class="historical-vault-list" role="list" aria-label="Actifs historiques vérifiés"></div>
+
+      <details class="historical-vault-proof">
+        <summary>Provenance et limites du pont historique</summary>
+        <div id="historical-vault-proof-body">Le snapshot de provenance sera chargé depuis le serveur local.</div>
+      </details>
+    </section>
+
+    <aside id="ema-knowledge-panel" class="knowledge-panel ema-knowledge-panel" hidden aria-labelledby="ema-knowledge-title">
+      <div class="knowledge-head">
+        <div>
+          <div class="overline">SEVEN HEAVEN · KNOWLEDGE LAYER · FICHE PROFESSIONNELLE</div>
+          <h2 id="ema-knowledge-title">EMA — <span class="accent-text">Moyenne Mobile Exponentielle</span></h2>
+          <p id="ema-knowledge-subtitle" class="knowledge-subtitle">Indicateur de tendance réactif, fondé sur les prix passés.</p>
+        </div>
+        <button id="ema-knowledge-close" type="button" class="glossary-close" aria-label="Fermer la fiche EMA">×</button>
+      </div>
+
+      <div class="knowledge-badges" aria-label="Caractéristiques de l'EMA">
+        <span>Famille · Suivi de tendance</span><span>Réactif</span><span>Retardé</span><span>PAPER Seven · Long only</span>
+      </div>
+
+      <section class="knowledge-hero-grid" aria-label="Résumé EMA">
+        <div class="knowledge-summary-card">
+          <div class="micro-title">EN UNE PHRASE</div>
+          <p id="ema-knowledge-summary">Chargement de la fiche EMA…</p>
+          <div class="knowledge-keypoint"><strong>À retenir</strong><span>Une EMA aide à lire et confirmer une tendance. Elle ne prédit pas le prochain mouvement.</span></div>
+        </div>
+        <div class="ema-visual-card" aria-label="Schéma pédagogique d'un croisement EMA">
+          <div class="ema-visual-head"><strong>Lecture visuelle</strong><span>Prix + EMA rapide + EMA lente</span></div>
+          <svg viewBox="0 0 620 250" role="img" aria-labelledby="ema-svg-title ema-svg-desc">
+            <title id="ema-svg-title">Exemple de croisement EMA</title>
+            <desc id="ema-svg-desc">Le prix monte, l'EMA rapide passe au-dessus de l'EMA lente puis repasse dessous.</desc>
+            <g class="ema-grid-lines"><path d="M20 50H600M20 100H600M20 150H600M20 200H600"/><path d="M100 20V225M200 20V225M300 20V225M400 20V225M500 20V225"/></g>
+            <g class="ema-candles">
+              <path d="M45 178v-48M75 170v-52M105 164v-60M135 150V92M165 145V82M195 130V72M225 120V58M255 108V48M285 100V57M315 112V66M345 120V78M375 132V88M405 142V104M435 150V114M465 158V126M495 150V118M525 142V105M555 132V92"/>
+              <rect x="38" y="145" width="14" height="22"/><rect x="68" y="136" width="14" height="24"/><rect x="98" y="128" width="14" height="25"/><rect x="128" y="110" width="14" height="28"/><rect x="158" y="102" width="14" height="27"/><rect x="188" y="88" width="14" height="29"/><rect x="218" y="76" width="14" height="30"/><rect x="248" y="66" width="14" height="28"/><rect x="278" y="72" width="14" height="18" class="down"/><rect x="308" y="86" width="14" height="18" class="down"/><rect x="338" y="96" width="14" height="18" class="down"/><rect x="368" y="108" width="14" height="18" class="down"/><rect x="398" y="120" width="14" height="18" class="down"/><rect x="428" y="132" width="14" height="17" class="down"/><rect x="458" y="138" width="14" height="15" class="down"/><rect x="488" y="132" width="14" height="14"/><rect x="518" y="122" width="14" height="15"/><rect x="548" y="108" width="14" height="17"/>
+            </g>
+            <path class="ema-fast-line" d="M30 170 C90 166,125 145,175 120 S250 78,305 84 S395 132,455 142 S530 124,590 100"/>
+            <path class="ema-slow-line" d="M30 176 C90 172,135 158,190 140 S265 108,320 104 S400 118,465 130 S535 128,590 116"/>
+            <circle class="ema-cross-up" cx="154" cy="128" r="9"/><circle class="ema-cross-down" cx="375" cy="126" r="9"/>
+            <text x="168" y="112" class="ema-svg-label up">Croisement haussier</text><text x="388" y="156" class="ema-svg-label down">Croisement baissier</text>
+          </svg>
+          <div class="ema-visual-legend"><span><i class="legend-fast"></i>EMA rapide</span><span><i class="legend-slow"></i>EMA lente</span><span><i class="legend-price"></i>Prix</span></div>
+        </div>
+      </section>
+
+      <div class="knowledge-section-grid">
+        <section class="knowledge-card">
+          <div class="micro-title">01 · COMPRENDRE</div><h3>Qu'est-ce qu'une EMA ?</h3>
+          <p id="ema-knowledge-measure">—</p>
+          <div class="knowledge-compare"><div><strong>SMA</strong><span id="ema-knowledge-sma">—</span></div><div><strong>EMA</strong><span>Donne davantage de poids aux prix récents : elle réagit plus vite, mais reste retardée.</span></div></div>
+        </section>
+
+        <section class="knowledge-card formula-card">
+          <div class="micro-title">02 · CALCUL</div><h3>Comment elle est calculée</h3>
+          <div class="formula-line" id="ema-formula-alpha">α = 2 / (N + 1)</div>
+          <div class="formula-line" id="ema-formula-main">EMA(t) = EMA(t−1) + α × [Prix(t) − EMA(t−1)]</div>
+          <p id="ema-formula-note">—</p>
+          <div class="formula-example"><strong>Réglages actuels Seven</strong><span id="ema-current-weights">EMA 10 : poids récent 18,18 % · EMA 30 : 6,45 %</span></div>
+        </section>
+
+        <section class="knowledge-card">
+          <div class="micro-title">03 · LECTURE</div><h3>Comment lire l'EMA sur un graphique</h3>
+          <ul id="ema-reading-list" class="knowledge-list"></ul>
+        </section>
+
+        <section class="knowledge-card crossover-card">
+          <div class="micro-title">04 · CROISEMENTS</div><h3>Ce que signifie un croisement</h3>
+          <div class="signal-box bullish"><strong>↗ Croisement haussier</strong><span id="ema-bullish-text">—</span></div>
+          <div class="signal-box bearish"><strong>↘ Croisement baissier</strong><span id="ema-bearish-text">—</span></div>
+          <div class="knowledge-warning" id="ema-crossover-warning">—</div>
+        </section>
+
+        <section class="knowledge-card timeframe-card">
+          <div class="micro-title">05 · TIMEFRAME</div><h3>10/30 ne veut pas dire la même chose partout</h3>
+          <p>Les périodes sont comptées en <strong>bougies</strong>. La durée réelle dépend donc du timeframe.</p>
+          <div class="timeframe-table" role="table" aria-label="Impact du timeframe sur EMA 10/30">
+            <div class="tf-head" role="row"><span>Timeframe</span><span id="ema-fast-header">EMA 10</span><span id="ema-slow-header">EMA 30</span></div>
+            <div role="row"><span>1 min</span><span id="ema-tf-1m-fast">10 min</span><span id="ema-tf-1m-slow">30 min</span></div>
+            <div role="row"><span>15 min</span><span id="ema-tf-15m-fast">2 h 30</span><span id="ema-tf-15m-slow">7 h 30</span></div>
+            <div role="row"><span>1 h</span><span id="ema-tf-1h-fast">10 h</span><span id="ema-tf-1h-slow">30 h</span></div>
+            <div role="row"><span>4 h</span><span id="ema-tf-4h-fast">40 h</span><span id="ema-tf-4h-slow">120 h</span></div>
+          </div>
+          <div class="knowledge-keypoint"><strong>Timeframe actif</strong><span id="ema-active-timeframe">—</span></div>
+        </section>
+
+        <section class="knowledge-card">
+          <div class="micro-title">06 · FORCES / LIMITES</div><h3>Quand elle aide — et quand elle piège</h3>
+          <div class="pros-cons"><div><strong>Forces</strong><ul id="ema-strengths-list" class="knowledge-list compact"></ul></div><div><strong>Limites</strong><ul id="ema-limits-list" class="knowledge-list compact"></ul></div></div>
+        </section>
+      </div>
+
+      <section class="seven-engine-card">
+        <div class="seven-engine-title"><div><div class="micro-title">07 · DANS SEVEN HEAVEN</div><h3>Règles exactes du moteur PAPER</h3></div><span class="mini-badge">engine.py inchangé</span></div>
+        <div class="engine-rule-grid">
+          <div><small>ENTRÉE</small><span id="ema-seven-entry">—</span></div>
+          <div><small>SORTIE</small><span id="ema-seven-exit">—</span></div>
+          <div><small>EXÉCUTION</small><span id="ema-seven-execution">—</span></div>
+          <div><small>POSITION</small><span id="ema-seven-position">—</span></div>
+        </div>
+        <div class="engine-warning"><strong>Important</strong><span>Le volume, les supports/résistances et le contexte peuvent aider à interpréter un mouvement, mais ils ne font pas partie de la règle EMA 10/30 native tant que tu ne les ajoutes pas dans une stratégie personnalisée.</span></div>
+      </section>
+
+      <section class="knowledge-analysis-card">
+        <div class="micro-title">08 · APRÈS LE BACKTEST</div><h3>Comment juger le résultat comme un laboratoire</h3>
+        <div id="ema-analysis-checklist" class="analysis-checklist"></div>
+      </section>
+
+      <section class="knowledge-reference-card">
+        <div>
+          <div class="micro-title">RÉFÉRENCES</div>
+          <h3>Sources documentaires et vérité locale</h3>
+          <p>Les notions générales s'appuient sur TradingView et Fidelity. Les règles d'exécution décrites ici viennent du moteur local Seven Heaven.</p>
+          <div id="ema-reference-list" class="reference-list"></div>
+        </div>
+        <div class="knowledge-actions">
+          <button id="ema-action-chart" type="button" class="action-button action-outline">Voir sur le graphique</button>
+          <button id="ema-action-prepare" type="button" class="action-button action-primary">Préparer EMA dans l’Atelier</button>
+          <button id="ema-action-compare" type="button" class="action-button action-secondary">Comparer les méthodes</button>
+          <button id="ema-action-results" type="button" class="action-button action-outline">Voir mes résultats</button>
+        </div>
+      </section>
+    </aside>
+
+    <aside id="bollinger-knowledge-panel" class="knowledge-panel bollinger-knowledge-panel" hidden aria-labelledby="bollinger-knowledge-title">
+      <div class="knowledge-head">
+        <div>
+          <div class="overline">SEVEN HEAVEN · KNOWLEDGE LAYER · FICHE PROFESSIONNELLE</div>
+          <h2 id="bollinger-knowledge-title">Bandes de Bollinger — <span class="accent-text">Volatilité &amp; retour à la moyenne</span></h2>
+          <p id="bollinger-knowledge-subtitle" class="knowledge-subtitle">Enveloppe dynamique autour d'une moyenne, basée sur la dispersion récente des prix.</p>
+        </div>
+        <button id="bollinger-knowledge-close" type="button" class="glossary-close" aria-label="Fermer la fiche Bollinger">×</button>
+      </div>
+
+      <div class="knowledge-badges" aria-label="Caractéristiques des Bandes de Bollinger">
+        <span>Famille · Volatilité</span><span>Retour à la moyenne</span><span>20 × 2 par défaut</span><span>PAPER Seven · Long only</span>
+      </div>
+
+      <section class="knowledge-hero-grid" aria-label="Résumé Bollinger">
+        <div class="knowledge-summary-card">
+          <div class="micro-title">EN UNE PHRASE</div>
+          <p id="bollinger-knowledge-summary">Chargement de la fiche Bollinger…</p>
+          <div class="knowledge-keypoint"><strong>À retenir</strong><span>Une bande touchée n'est pas un ordre d'achat ou de vente. Les bandes décrivent surtout une position relative et la volatilité récente.</span></div>
+        </div>
+        <div class="ema-visual-card bb-visual-card" aria-label="Schéma pédagogique des Bandes de Bollinger">
+          <div class="ema-visual-head"><strong>Lecture visuelle</strong><span>Moyenne + bande haute + bande basse</span></div>
+          <svg viewBox="0 0 620 250" role="img" aria-labelledby="bb-svg-title bb-svg-desc">
+            <title id="bb-svg-title">Exemple de Bandes de Bollinger</title>
+            <desc id="bb-svg-desc">Le prix oscille entre des bandes qui se resserrent puis s'élargissent.</desc>
+            <g class="ema-grid-lines"><path d="M20 50H600M20 100H600M20 150H600M20 200H600"/><path d="M100 20V225M200 20V225M300 20V225M400 20V225M500 20V225"/></g>
+            <path class="bb-area" d="M30 62 C105 38 165 45 225 70 S330 95 390 77 S500 25 590 52 L590 202 C500 214 440 190 390 176 S290 165 225 182 S105 210 30 188 Z"/>
+            <path class="bb-upper" d="M30 62 C105 38 165 45 225 70 S330 95 390 77 S500 25 590 52"/>
+            <path class="bb-middle" d="M30 128 C95 115 160 118 225 126 S325 135 390 126 S500 111 590 125"/>
+            <path class="bb-lower" d="M30 188 C105 210 165 200 225 182 S330 165 390 176 S500 214 590 202"/>
+            <path class="bb-price" d="M32 142 C70 110 110 150 145 112 S210 145 245 125 S315 120 345 132 S405 155 440 105 S505 78 542 110 S570 86 592 92"/>
+            <text x="240" y="94" class="bb-svg-label squeeze">Squeeze · bandes serrées</text>
+            <text x="447" y="42" class="bb-svg-label expansion">Expansion · volatilité ↑</text>
+          </svg>
+          <div class="ema-visual-legend"><span><i class="legend-bb-upper"></i>Bande haute</span><span><i class="legend-bb-mid"></i>Moyenne</span><span><i class="legend-bb-lower"></i>Bande basse</span><span><i class="legend-price"></i>Prix</span></div>
+        </div>
+      </section>
+
+      <div class="knowledge-section-grid">
+        <section class="knowledge-card">
+          <div class="micro-title">01 · COMPRENDRE</div><h3>Qu'est-ce qu'une Bande de Bollinger ?</h3>
+          <p id="bollinger-knowledge-measure">—</p>
+          <div class="knowledge-compare"><div><strong>Bande haute</strong><span>Zone située au-dessus de la moyenne selon la volatilité récente.</span></div><div><strong>Bande basse</strong><span>Zone située sous la moyenne selon la volatilité récente.</span></div></div>
+        </section>
+
+        <section class="knowledge-card formula-card">
+          <div class="micro-title">02 · CALCUL</div><h3>Comment les bandes sont calculées</h3>
+          <div class="formula-line" id="bollinger-formula-middle">Bande médiane = SMA(N)</div>
+          <div class="formula-line" id="bollinger-formula-upper">Bande haute = SMA(N) + k × σ(N)</div>
+          <div class="formula-line" id="bollinger-formula-lower">Bande basse = SMA(N) − k × σ(N)</div>
+          <p id="bollinger-formula-note">—</p>
+          <div class="formula-example"><strong>Réglages actuels Seven</strong><span id="bollinger-current-settings">20 bougies · 2 écarts-types</span></div>
+        </section>
+
+        <section class="knowledge-card">
+          <div class="micro-title">03 · LECTURE</div><h3>Comment lire les bandes</h3>
+          <ul id="bollinger-reading-list" class="knowledge-list"></ul>
+        </section>
+
+        <section class="knowledge-card crossover-card">
+          <div class="micro-title">04 · VOLATILITÉ</div><h3>Squeeze, expansion et tendance</h3>
+          <div class="signal-box bullish"><strong>↔ Squeeze</strong><span id="bollinger-squeeze-text">—</span></div>
+          <div class="signal-box bearish"><strong>↕ Walking the band</strong><span id="bollinger-walk-text">—</span></div>
+          <div class="knowledge-warning" id="bollinger-pattern-warning">—</div>
+        </section>
+
+        <section class="knowledge-card timeframe-card">
+          <div class="micro-title">05 · PARAMÈTRES</div><h3>20 × 2 : ce que cela veut réellement dire</h3>
+          <p><strong>20</strong> = nombre de bougies utilisées pour la moyenne et la dispersion. <strong>2</strong> = distance des bandes en écarts-types.</p>
+          <div class="timeframe-table" role="table" aria-label="Impact du timeframe sur Bollinger 20 x 2">
+            <div class="tf-head" role="row"><span>Timeframe</span><span>Fenêtre de 20 bougies</span><span>Lecture</span></div>
+            <div role="row"><span>1 min</span><span>20 min</span><span>Très sensible au bruit</span></div>
+            <div role="row"><span>15 min</span><span>5 h</span><span>Intraday</span></div>
+            <div role="row"><span>1 h</span><span>20 h</span><span>Session / swing court</span></div>
+            <div role="row"><span>4 h</span><span>3 j 8 h</span><span>Swing plus lent</span></div>
+          </div>
+          <div class="knowledge-keypoint"><strong>Timeframe actif</strong><span id="bollinger-active-timeframe">—</span></div>
+        </section>
+
+        <section class="knowledge-card">
+          <div class="micro-title">06 · FORCES / LIMITES</div><h3>Quand elles aident — et quand elles piègent</h3>
+          <div class="pros-cons"><div><strong>Forces</strong><ul id="bollinger-strengths-list" class="knowledge-list compact"></ul></div><div><strong>Limites</strong><ul id="bollinger-limits-list" class="knowledge-list compact"></ul></div></div>
+        </section>
+      </div>
+
+      <section class="seven-engine-card">
+        <div class="seven-engine-title"><div><div class="micro-title">07 · DANS SEVEN HEAVEN</div><h3>Règles exactes du moteur PAPER</h3></div><span class="mini-badge">engine.py inchangé</span></div>
+        <div class="engine-rule-grid">
+          <div><small>ENTRÉE</small><span id="bollinger-seven-entry">—</span></div>
+          <div><small>SORTIE</small><span id="bollinger-seven-exit">—</span></div>
+          <div><small>EXÉCUTION</small><span id="bollinger-seven-execution">—</span></div>
+          <div><small>POSITION</small><span id="bollinger-seven-position">—</span></div>
+        </div>
+        <div class="engine-warning"><strong>Important</strong><span>La règle native Seven est une expérience précise : clôture sous la bande basse pour l'entrée, clôture au-dessus de la bande haute pour la sortie. Elle ne résume pas toutes les utilisations possibles des Bandes de Bollinger.</span></div>
+      </section>
+
+      <section class="knowledge-analysis-card">
+        <div class="micro-title">08 · APRÈS LE BACKTEST</div><h3>Comment juger cette expérience</h3>
+        <div id="bollinger-analysis-checklist" class="analysis-checklist"></div>
+      </section>
+
+      <section class="knowledge-reference-card">
+        <div>
+          <div class="micro-title">RÉFÉRENCES</div>
+          <h3>Sources documentaires et vérité locale</h3>
+          <p>La théorie générale est documentée par TradingView et Fidelity. Les règles d'exécution décrites ici viennent du moteur local Seven Heaven.</p>
+          <div id="bollinger-reference-list" class="reference-list"></div>
+        </div>
+        <div class="knowledge-actions">
+          <button id="bollinger-action-chart" type="button" class="action-button action-outline">Voir sur le graphique</button>
+          <button id="bollinger-action-prepare" type="button" class="action-button action-primary">Préparer Bollinger dans l’Atelier</button>
+          <button id="bollinger-action-compare" type="button" class="action-button action-secondary">Comparer les méthodes</button>
+          <button id="bollinger-action-results" type="button" class="action-button action-outline">Voir mes résultats</button>
+        </div>
+      </section>
+    </aside>
+
+
+    <aside id="donchian-knowledge-panel" class="knowledge-panel donchian-knowledge-panel" hidden aria-labelledby="donchian-knowledge-title">
+      <div class="knowledge-head">
+        <div>
+          <div class="overline">SEVEN HEAVEN · KNOWLEDGE LAYER · FICHE PROFESSIONNELLE</div>
+          <h2 id="donchian-knowledge-title">Canal de Donchian — <span class="accent-text">Cassure &amp; suivi de tendance</span></h2>
+          <p id="donchian-knowledge-subtitle" class="knowledge-subtitle">Canal des extrêmes récents : attendre une sortie confirmée avant de suivre le mouvement.</p>
+        </div>
+        <button id="donchian-knowledge-close" type="button" class="glossary-close" aria-label="Fermer la fiche Donchian">×</button>
+      </div>
+
+      <div class="knowledge-badges" aria-label="Caractéristiques du canal de Donchian">
+        <span>Famille · Cassure / tendance</span><span>Prix pur</span><span>55 / 20 par défaut</span><span>PAPER Seven · Long only</span>
+      </div>
+
+      <section class="knowledge-hero-grid" aria-label="Résumé Donchian">
+        <div class="knowledge-summary-card">
+          <div class="micro-title">EN UNE PHRASE</div>
+          <p id="donchian-knowledge-summary">Chargement de la fiche Donchian…</p>
+          <div class="knowledge-keypoint"><strong>À retenir</strong><span>Donchian ne cherche pas à acheter le plus bas. Il attend qu'une clôture dépasse un extrême récent pour considérer qu'un mouvement mérite d'être suivi.</span></div>
+        </div>
+        <div class="ema-visual-card donchian-visual-card" aria-label="Schéma pédagogique du canal de Donchian">
+          <div class="ema-visual-head"><strong>Lecture visuelle</strong><span>Canal précédent + clôture de cassure + sortie</span></div>
+          <svg viewBox="0 0 620 250" role="img" aria-labelledby="donchian-svg-title donchian-svg-desc">
+            <title id="donchian-svg-title">Exemple de canal de Donchian et de cassure haussière</title>
+            <desc id="donchian-svg-desc">Le prix évolue sous un canal haut, clôture au-dessus, tend puis sort sous un canal bas plus court.</desc>
+            <g class="ema-grid-lines"><path d="M20 50H600M20 100H600M20 150H600M20 200H600"/><path d="M100 20V225M200 20V225M300 20V225M400 20V225M500 20V225"/></g>
+            <path class="donchian-area" d="M30 75 H330 L390 62 H590 V188 H470 L410 175 H30 Z"/>
+            <path class="donchian-upper" d="M30 75 H330 L390 62 H590"/>
+            <path class="donchian-lower" d="M30 188 H315 L375 175 H590"/>
+            <path class="donchian-price" d="M32 150 L68 132 L105 145 L140 118 L176 136 L212 105 L250 121 L288 96 L322 108 L350 70 L378 55 L410 75 L445 66 L480 84 L515 105 L548 130 L590 182"/>
+            <circle cx="350" cy="70" r="8" class="donchian-break-circle"/><text x="365" y="49" class="donchian-svg-label breakout">Clôture &gt; canal haut · entrée</text>
+            <circle cx="590" cy="182" r="8" class="donchian-exit-circle"/><text x="410" y="215" class="donchian-svg-label exit">Clôture &lt; canal bas · sortie</text>
+            <text x="50" y="65" class="donchian-svg-label upper">Plus haut des bougies précédentes</text>
+          </svg>
+          <div class="ema-visual-legend"><span><i class="legend-donchian-upper"></i>Canal haut</span><span><i class="legend-donchian-lower"></i>Canal bas</span><span><i class="legend-price"></i>Prix / clôture</span></div>
+        </div>
+      </section>
+
+      <div class="knowledge-section-grid">
+        <section class="knowledge-card">
+          <div class="micro-title">01 · COMPRENDRE</div><h3>Qu'est-ce qu'un canal de Donchian ?</h3>
+          <p id="donchian-knowledge-measure">—</p>
+          <div class="knowledge-compare"><div><strong>Canal haut</strong><span>Le plus haut observé sur la fenêtre passée choisie.</span></div><div><strong>Canal bas</strong><span>Le plus bas observé sur la fenêtre passée choisie.</span></div></div>
+        </section>
+
+        <section class="knowledge-card formula-card">
+          <div class="micro-title">02 · CALCUL</div><h3>Comment le canal est calculé</h3>
+          <div class="formula-line" id="donchian-formula-upper">Canal haut(N) = max(plus hauts des N bougies précédentes)</div>
+          <div class="formula-line" id="donchian-formula-lower">Canal bas(N) = min(plus bas des N bougies précédentes)</div>
+          <div class="formula-line" id="donchian-formula-middle">Milieu = (Canal haut + Canal bas) / 2</div>
+          <p id="donchian-formula-note">—</p>
+          <div class="formula-example"><strong>Réglages actuels Seven</strong><span id="donchian-current-settings">Entrée 55 · Sortie 20 bougies</span></div>
+        </section>
+
+        <section class="knowledge-card">
+          <div class="micro-title">03 · LECTURE</div><h3>Comment lire le canal</h3>
+          <ul id="donchian-reading-list" class="knowledge-list"></ul>
+        </section>
+
+        <section class="knowledge-card crossover-card">
+          <div class="micro-title">04 · BREAKOUTS</div><h3>Cassure confirmée ou faux départ</h3>
+          <div class="signal-box bullish"><strong>↗ Cassure confirmée</strong><span id="donchian-breakout-confirmed">—</span></div>
+          <div class="signal-box bearish"><strong>↘ Faux breakout</strong><span id="donchian-breakout-false">—</span></div>
+          <div class="knowledge-warning" id="donchian-breakout-warning">—</div>
+        </section>
+
+        <section class="knowledge-card timeframe-card">
+          <div class="micro-title">05 · PARAMÈTRES</div><h3>Pourquoi 55 / 20 n'est pas un simple chiffre</h3>
+          <p id="donchian-parameter-asymmetry">—</p>
+          <div class="timeframe-table" role="table" aria-label="Impact du timeframe sur Donchian 55 20">
+            <div class="tf-head" role="row"><span>Timeframe</span><span id="donchian-entry-header">Entrée 55</span><span id="donchian-exit-header">Sortie 20</span></div>
+            <div role="row"><span>1 min</span><span id="donchian-tf-1m-entry">55 min</span><span id="donchian-tf-1m-exit">20 min</span></div>
+            <div role="row"><span>15 min</span><span id="donchian-tf-15m-entry">13 h 45</span><span id="donchian-tf-15m-exit">5 h</span></div>
+            <div role="row"><span>1 h</span><span id="donchian-tf-1h-entry">2 j 7 h</span><span id="donchian-tf-1h-exit">20 h</span></div>
+            <div role="row"><span>4 h</span><span id="donchian-tf-4h-entry">9 j 4 h</span><span id="donchian-tf-4h-exit">3 j 8 h</span></div>
+          </div>
+          <div class="knowledge-keypoint"><strong>Timeframe actif</strong><span id="donchian-active-timeframe">—</span></div>
+        </section>
+
+        <section class="knowledge-card">
+          <div class="micro-title">06 · FORCES / LIMITES</div><h3>Pourquoi une stratégie de cassure peut être rude à suivre</h3>
+          <div class="pros-cons"><div><strong>Forces</strong><ul id="donchian-strengths-list" class="knowledge-list compact"></ul></div><div><strong>Limites</strong><ul id="donchian-limits-list" class="knowledge-list compact"></ul></div></div>
+        </section>
+      </div>
+
+      <section class="seven-engine-card">
+        <div class="seven-engine-title"><div><div class="micro-title">07 · DANS SEVEN HEAVEN</div><h3>Règles exactes du moteur PAPER</h3></div><span class="mini-badge">Donchian natif · moteur inchangé</span></div>
+        <div class="engine-rule-grid">
+          <div><small>ENTRÉE</small><span id="donchian-seven-entry">—</span></div>
+          <div><small>SORTIE</small><span id="donchian-seven-exit">—</span></div>
+          <div><small>EXÉCUTION</small><span id="donchian-seven-execution">—</span></div>
+          <div><small>POSITION</small><span id="donchian-seven-position">—</span></div>
+        </div>
+        <div class="engine-warning"><strong>Important</strong><span>Seven utilise ici une version propriétaire précise : confirmation par la clôture, canal causal construit uniquement avec les bougies précédentes, entrée 55 / sortie 20, spot long-only. Ce n'est pas une copie automatique de toutes les variantes « Turtle » ou Donchian existantes.</span></div>
+      </section>
+
+      <section class="knowledge-analysis-card donchian-evidence-card">
+        <div class="micro-title">08 · PREUVES LOCALES SEVEN</div><h3>Ce que le Lab a déjà observé</h3>
+        <p id="donchian-evidence-warning" class="evidence-warning">—</p>
+        <div id="donchian-evidence-grid" class="evidence-grid"></div>
+        <div class="knowledge-keypoint evidence-conclusion"><strong>Conclusion Seven</strong><span id="donchian-evidence-conclusion">—</span></div>
+      </section>
+
+      <section class="knowledge-analysis-card">
+        <div class="micro-title">09 · APRÈS LE BACKTEST</div><h3>Comment juger une stratégie de cassure</h3>
+        <div id="donchian-analysis-checklist" class="analysis-checklist"></div>
+      </section>
+
+      <section class="knowledge-reference-card">
+        <div>
+          <div class="micro-title">RÉFÉRENCES</div><h3>Documentation externe + preuves Seven</h3>
+          <p>La théorie générale vient de références de marché ; la règle 55/20 et son comportement exact sont audités dans le moteur local et les études Seven Heaven.</p>
+          <div id="donchian-reference-list" class="reference-list"></div>
+        </div>
+        <div class="knowledge-actions">
+          <button id="donchian-action-chart" type="button" class="action-button action-outline">Voir sur le graphique</button>
+          <button id="donchian-action-prepare" type="button" class="action-button action-primary">Préparer Donchian dans l’Atelier</button>
+          <button id="donchian-action-compare" type="button" class="action-button action-secondary">Comparer les méthodes</button>
+          <button id="donchian-action-results" type="button" class="action-button action-outline">Voir mes résultats Donchian</button>
+        </div>
+      </section>
+    </aside>
+
+    <aside id="passive-knowledge-panel" class="knowledge-panel passive-knowledge-panel" hidden aria-labelledby="passive-knowledge-title">
+      <div class="knowledge-head">
+        <div>
+          <div class="overline">SEVEN HEAVEN · KNOWLEDGE LAYER · STEP 5 · RÉFÉRENCES PASSIVES</div>
+          <h2 id="passive-knowledge-title">Référence passive</h2>
+          <p id="passive-knowledge-subtitle" class="knowledge-subtitle">Chargement de la fiche…</p>
+        </div>
+        <button id="passive-knowledge-close" type="button" class="glossary-close" aria-label="Fermer la fiche de référence">×</button>
+      </div>
+
+      <div class="knowledge-badges" aria-label="Caractéristiques de la référence">
+        <span id="passive-family-badge">Famille · Référence</span><span id="passive-technical-badge">Baseline</span><span>Comparaison</span><span>PAPER Seven · Long only</span>
+      </div>
+
+      <section class="knowledge-hero-grid passive-hero-grid" aria-label="Résumé de la référence">
+        <div class="knowledge-summary-card">
+          <div class="micro-title">EN UNE PHRASE</div>
+          <p id="passive-knowledge-summary">Chargement de la fiche…</p>
+          <div class="knowledge-keypoint"><strong>Rôle dans le Lab</strong><span id="passive-knowledge-role">—</span></div>
+        </div>
+        <div class="passive-visual-card">
+          <div class="ema-visual-head"><strong>Lecture comparative</strong><span id="passive-visual-label">Référence Seven</span></div>
+          <div class="passive-allocation" aria-label="Schéma de la logique passive">
+            <div class="passive-track"><span id="passive-track-invested"></span><i id="passive-track-cash"></i></div>
+            <div class="passive-track-labels"><span id="passive-invested-label">Exposition</span><span id="passive-cash-label">Cash</span></div>
+          </div>
+          <div id="passive-visual-steps" class="passive-steps"></div>
+        </div>
+      </section>
+
+      <div class="knowledge-section-grid">
+        <section class="knowledge-card">
+          <div class="micro-title">01 · MÉCANIQUE</div><h3>Ce que fait réellement la méthode</h3>
+          <ul id="passive-mechanics-list" class="knowledge-list"></ul>
+        </section>
+        <section class="knowledge-card">
+          <div class="micro-title">02 · LECTURE</div><h3>Comment interpréter cette référence</h3>
+          <ul id="passive-reading-list" class="knowledge-list"></ul>
+        </section>
+        <section class="knowledge-card formula-card">
+          <div class="micro-title">03 · RÉGLAGES</div><h3>Paramètres réellement utilisés</h3>
+          <div id="passive-parameters" class="passive-parameter-list"></div>
+        </section>
+        <section class="knowledge-card">
+          <div class="micro-title">04 · FORCES / LIMITES</div><h3>Ce que cette baseline montre — et ce qu'elle ne montre pas</h3>
+          <div class="pros-cons"><div><strong>Forces</strong><ul id="passive-strengths-list" class="knowledge-list compact"></ul></div><div><strong>Limites</strong><ul id="passive-limits-list" class="knowledge-list compact"></ul></div></div>
+        </section>
+      </div>
+
+      <section class="seven-engine-card">
+        <div class="seven-engine-title"><div><div class="micro-title">05 · DANS SEVEN HEAVEN</div><h3>Contrat exact du moteur PAPER</h3></div><span class="mini-badge">engine.py préservé</span></div>
+        <div class="engine-rule-grid">
+          <div><small>ENTRÉE</small><span id="passive-seven-entry">—</span></div>
+          <div><small>SORTIE</small><span id="passive-seven-exit">—</span></div>
+          <div><small>EXÉCUTION</small><span id="passive-seven-execution">—</span></div>
+          <div><small>POSITION</small><span id="passive-seven-position">—</span></div>
+        </div>
+        <div class="engine-warning"><strong>Valorisation finale</strong><span id="passive-seven-valuation">—</span></div>
+      </section>
+
+      <section class="knowledge-analysis-card">
+        <div class="micro-title">06 · APRÈS LE BACKTEST</div><h3>Questions à poser avant de conclure</h3>
+        <div id="passive-analysis-checklist" class="analysis-checklist"></div>
+      </section>
+
+      <section class="knowledge-reference-card">
+        <div>
+          <div class="micro-title">RÉFÉRENCES</div><h3>Documentation générale + contrat Seven</h3>
+          <p>Les références externes expliquent le principe général. Le comportement exact de cette ligne dans le Lab vient du code local Seven.</p>
+          <div id="passive-reference-list" class="reference-list"></div>
+        </div>
+        <div class="knowledge-actions">
+          <button id="passive-action-prepare" type="button" class="action-button action-primary">Préparer cette méthode dans l’Atelier</button>
+          <button id="passive-action-compare" type="button" class="action-button action-secondary">Comparer les méthodes</button>
+          <button id="passive-action-results" type="button" class="action-button action-outline">Voir mes résultats</button>
+        </div>
+      </section>
+    </aside>
+
+    <aside id="glossary-panel" class="glossary-panel" hidden aria-labelledby="glossary-title">
+      <div class="glossary-head"><div><div class="overline">AIDE CONTEXTUELLE</div><h2 id="glossary-title">Lexique du Lab</h2></div><button id="close-glossary" type="button" class="glossary-close" aria-label="Fermer">×</button></div>
+      <div class="glossary-grid">
+        <div><strong>EMA</strong><span>Moyenne Mobile Exponentielle : moyenne du prix qui donne davantage de poids aux données récentes.</span></div>
+        <div><strong>Résolution / timeframe</strong><span>Durée représentée par une bougie : 1 minute, 1 heure, 4 heures, etc.</span></div>
+        <div><strong>PAPER</strong><span>Simulation : le moteur calcule des achats/ventes fictifs. Aucun ordre réel n’est envoyé.</span></div>
+        <div><strong>Drawdown</strong><span>Plus forte baisse du capital depuis un sommet précédent pendant le test.</span></div>
+        <div><strong>SHA-256</strong><span>Empreinte de contrôle utilisée pour vérifier que le fichier historique n’a pas changé.</span></div>
+        <div><strong>StrategySpec</strong><span>Fichier de sauvegarde portable d’une stratégie et de ses réglages, que Seven peut recharger et rejouer.</span></div>
+        <div><strong>Backtest</strong><span>Test d’une stratégie sur des données historiques déjà connues.</span></div>
+        <div><strong>Walk-forward</strong><span>Méthode qui choisit les réglages sur une période passée puis les vérifie sur une période ultérieure.</span></div>
+      </div>
+    </aside>
+
+    <aside id="labHelpLayer" class="lab-help-layer" hidden aria-hidden="true"></aside>
+    <div id="labHelpLive" class="lab-help-live" aria-live="polite"></div>
 
     <section class="source-panel" aria-labelledby="source-title">
       <div class="section-heading">
@@ -156,7 +711,7 @@
       </div>
     </section>
 
-    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.6.2</span></div>
+    <div class="workspace-heading"><span class="overline">AETHER RESEARCH · SIMULATION WORKSPACE</span><div class="heading-rule"></div><span class="workspace-index">STRATEGY LAB / 04.9.0-DEV1</span></div>
 
     <div class="workspace-grid">
       <section id="laboratory" class="panel strategy-panel" aria-labelledby="strategy-title">
@@ -253,21 +808,19 @@
           <label class="field"><span>Recharger un profil existant</span><select id="saved-profiles"><option value="">Choisir une configuration…</option></select></label>
         </div>
         <div class="strategy-spec-group">
-          <div class="micro-title">STRATEGYSPEC v1 · FORMAT PORTABLE SEVEN HEAVEN</div>
-          <p class="field-caveat">Un StrategySpec conserve la stratégie, la source, le timeframe, le capital et les coûts dans un format Seven-owned. Aucun moteur externe n'est requis.</p>
+          <div class="micro-title">SAUVEGARDE PORTABLE DE STRATÉGIE <span class="technical-name">· StrategySpec v1</span></div>
+          <p class="field-caveat"><strong>À quoi ça sert :</strong> enregistrer la source, la résolution, les règles, le capital et les coûts afin de pouvoir recharger puis rejouer la même configuration plus tard.</p>
           <div class="profile-save-row">
-            <label class="field"><span>Nom de la stratégie portable</span><input id="strategy-spec-name" maxlength="64" placeholder="Ex. Donchian 55/20 · BTC 4h"></label>
-            <button id="save-strategy-spec" type="button" class="action-button action-outline">Créer StrategySpec</button>
+            <label class="field"><span>Nom de cette sauvegarde</span><input id="strategy-spec-name" maxlength="64" placeholder="Ex. Donchian 55/20 · BTC 4h"></label>
+            <button id="save-strategy-spec" type="button" class="action-button action-outline">Sauvegarder la stratégie</button>
           </div>
-          <label class="field"><span>Recharger un StrategySpec</span><select id="saved-strategy-specs"><option value="">Choisir un StrategySpec…</option></select></label>
+          <label class="field"><span>Recharger une stratégie sauvegardée <small>FORMAT TECHNIQUE : STRATEGYSPEC</small></span><select id="saved-strategy-specs"><option value="">Choisir une sauvegarde…</option></select></label>
           <div id="strategy-spec-explanation" class="strategy-spec-explanation" hidden>
-            <strong id="strategy-spec-title">StrategySpec</strong>
-            <span id="strategy-spec-intent">—</span>
-            <span id="strategy-spec-execution">—</span>
-            <span id="strategy-spec-weakness">—</span>
+            <strong id="strategy-spec-title">StrategySpec</strong><span id="strategy-spec-intent">—</span>
+            <span id="strategy-spec-execution">—</span><span id="strategy-spec-weakness">—</span>
             <code id="strategy-spec-fingerprint">—</code>
           </div>
-          <button id="replay-strategy-spec" type="button" class="action-button action-primary" disabled>▶ Rejouer ce StrategySpec avec le moteur Seven</button>
+          <button id="replay-strategy-spec" type="button" class="action-button action-primary" disabled>▶ Rejouer cette stratégie avec Seven</button>
         </div>
       </section>
 
@@ -541,17 +1094,17 @@
     <section id="vault" class="panel vault-panel" aria-labelledby="vault-title">
       <div class="section-heading">
         <div><div class="overline">07 / AETHER MEMORY VAULT</div><h2 id="vault-title">Coffre de <span class="accent-text">tes expériences</span></h2></div>
-        <span class="mini-badge">ENREGISTRÉ SUR TA CLÉ USB</span>
+        <span id="workspace-mode-badge" class="mini-badge">COFFRE LOCAL</span>
       </div>
       <div class="vault-columns">
         <div><div class="micro-title">JOURNAL DES SIMULATIONS</div><div id="history" class="history-items"><span class="muted">Aucune simulation enregistrée.</span></div></div>
         <div><div class="micro-title">COMPARAISONS ENREGISTRÉES</div><div id="comparison-history" class="history-items"><span class="muted">Aucune comparaison enregistrée.</span></div></div>
       </div>
-      <p class="vault-foot">Les fichiers sont enregistrés dans <code>workspace/</code> à côté du programme. Tes anciens résultats V1 restent lisibles. Sauvegarde ce dossier avant de retirer ou remplacer la clé.</p>
+      <p id="workspace-mode-note" class="vault-foot">Les fichiers de référence vivent dans <code>workspace/</code>. Seven vérifie leur statut avant toute écriture.</p>
     </section>
     <footer class="footer">
       <div><strong>SEVEN HEAVEN</strong><span>STRATEGY LAB · AETHER RESEARCH CONSOLE</span></div>
-      <div>BUILD 4.6.2 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
+      <div>BUILD 4.9.0-DEV1 <span>·</span> LOCAL + DONNÉES PUBLIQUES <span>·</span> PAPER UNIQUEMENT <span>·</span> 0 ORDRE RÉEL</div>
     </footer>
   </main>
 </div>

@@ -1,0 +1,165 @@
+{
+  "schema": "seven.historical_vault.v1",
+  "generated_utc": "2026-11-16T23:00:00+00:00",
+  "source": {
+    "repository": "BlueAzur-Hub/erith-ia-memory",
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json",
+    "git_blob_sha": "f97dc90291ec67661ff2b263de1de78a56f8a100",
+    "schema": "aerith.public.ohlcv.top250.verifiable-year-depth.v1",
+    "label": "Verified Binance Spot monthly ZIP catalog",
+    "quote": "USDT"
+  },
+  "summary": {
+    "ranked_identities": 250,
+    "archive_assets": 122,
+    "assets_with_12_consecutive_months": 108,
+    "assets_with_24_consecutive_months": 90,
+    "assets_without_verified_year": 142,
+    "source_catalog_minutes": 248087520
+  },
+  "install_contract": {
+    "exchange": "Binance Spot",
+    "source_timeframe": "1m",
+    "installed_timeframe": "1h",
+    "available_timeframes": [
+      "1h",
+      "4h"
+    ],
+    "installable_years": [
+      2024,
+      2025
+    ],
+    "raw_archives_retained": false,
+    "explicit_user_action_required": true,
+    "paper_only": true,
+    "orders_real": 0,
+    "note": "Manual UI installation remains explicit. Canonical rebuilds may install the shipped BTC/ETH/BNB/XRP/SOL 2024-2025 verified annual bundle automatically; the Binance Public Data path remains a bounded fallback.",
+    "canonical_rebuild_bundle_install_allowed": true
+  },
+  "assets": [
+    {
+      "id": "bitcoin",
+      "rank": 1,
+      "symbol": "BTC",
+      "pair": "BTC/USDT",
+      "first_verified_closed_month": "2017-10",
+      "last_verified_closed_month": "2026-10",
+      "verified_months": 85,
+      "native_minutes": 3731040,
+      "longest_contiguous_months": 43,
+      "installable_years": [
+        2024,
+        2025
+      ],
+      "indexed_years": {
+        "2019": 7,
+        "2020": 6,
+        "2021": 7,
+        "2022": 12,
+        "2023": 11,
+        "2024": 12,
+        "2025": 12,
+        "2026": 10
+      }
+    },
+    {
+      "id": "ethereum",
+      "rank": 2,
+      "symbol": "ETH",
+      "pair": "ETH/USDT",
+      "first_verified_closed_month": "2017-10",
+      "last_verified_closed_month": "2026-10",
+      "verified_months": 85,
+      "native_minutes": 3731040,
+      "longest_contiguous_months": 43,
+      "installable_years": [
+        2024,
+        2025
+      ],
+      "indexed_years": {
+        "2019": 7,
+        "2020": 6,
+        "2021": 7,
+        "2022": 12,
+        "2023": 11,
+        "2024": 12,
+        "2025": 12,
+        "2026": 10
+      }
+    },
+    {
+      "id": "binancecoin",
+      "rank": 4,
+      "symbol": "BNB",
+      "pair": "BNB/USDT",
+      "first_verified_closed_month": "2018-03",
+      "last_verified_closed_month": "2026-10",
+      "verified_months": 83,
+      "native_minutes": 3643200,
+      "longest_contiguous_months": 43,
+      "installable_years": [
+        2024,
+        2025
+      ],
+      "indexed_years": {
+        "2019": 7,
+        "2020": 6,
+        "2021": 7,
+        "2022": 12,
+        "2023": 11,
+        "2024": 12,
+        "2025": 12,
+        "2026": 10
+      }
+    },
+    {
+      "id": "ripple",
+      "rank": 5,
+      "symbol": "XRP",
+      "pair": "XRP/USDT",
+      "first_verified_closed_month": "2018-08",
+      "last_verified_closed_month": "2026-10",
+      "verified_months": 80,
+      "native_minutes": 3510720,
+      "longest_contiguous_months": 43,
+      "installable_years": [
+        2024,
+        2025
+      ],
+      "indexed_years": {
+        "2019": 7,
+        "2020": 6,
+        "2021": 7,
+        "2022": 12,
+        "2023": 11,
+        "2024": 12,
+        "2025": 12,
+        "2026": 10
+      }
+    },
+    {
+      "id": "solana",
+      "rank": 7,
+      "symbol": "SOL",
+      "pair": "SOL/USDT",
+      "first_verified_closed_month": "2020-09",
+      "last_verified_closed_month": "2026-10",
+      "verified_months": 64,
+      "native_minutes": 2809440,
+      "longest_contiguous_months": 43,
+      "installable_years": [
+        2024,
+        2025
+      ],
+      "indexed_years": {
+        "2020": 2,
+        "2021": 6,
+        "2022": 12,
+        "2023": 10,
+        "2024": 12,
+        "2025": 12,
+        "2026": 10
+      }
+    }
+  ]
+}

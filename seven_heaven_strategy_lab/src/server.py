@@ -11,9 +11,12 @@ from urllib.parse import parse_qs, urlsplit
 
 from src.engine import LabError, load_bars, options
 from src.strategy_spec import (
-    build_strategy_spec, explain_strategy_spec, strategy_spec_to_params,
-    validate_strategy_spec,
+    build_strategy_spec, explain_strategy_spec, strategy_spec_to_params, validate_strategy_spec,
 )
+from src.source_catalog import build_catalog
+from src.strategy_atlas import catalog as strategy_atlas_catalog
+from src.strategy_knowledge import catalog as strategy_knowledge_catalog, article as strategy_knowledge_article
+from src.catalog_source_v48 import (CatalogSourceError, list_sources as catalog_registered_sources, read_source as read_catalog_registered_source)
 from src.observatory import TIMEFRAMES, compare, run_one, run_with_diagnostics
 from src.microscope import build_microscope, ALLOWED_WINDOWS
 from src.robustness import study as study_robustness
@@ -31,6 +34,7 @@ from src.binance_monthly_source_v46 import (
     read_source as read_binance_monthly_source,
 )
 from src.reference_data import CSV_NAME, SourceError, dataset_status, install_reference
+from src.historical_vault_v1 import HistoricalVaultError, vault_status as historical_vault_status, install_year as install_historical_year
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
@@ -43,9 +47,89 @@ STATIC = {
     "/microscope.js": ("microscope.js", "text/javascript; charset=utf-8"),
     "/forensics.js": ("forensics.js", "text/javascript; charset=utf-8"),
     "/strategy_research.js": ("strategy_research.js", "text/javascript; charset=utf-8"),
+    "/lab-help-layer.js": ("lab-help-layer.js", "text/javascript; charset=utf-8"),
+    "/historical-vault.js": ("historical-vault.js", "text/javascript; charset=utf-8"),
     "/styles.css": ("styles.css", "text/css; charset=utf-8"),
 }
 
+
+
+def _public_error_message(exc: Exception) -> str:
+    """Keep the canonical engine untouched while presenting quote-agnostic errors."""
+    return (str(exc)
+            .replace("Capital USDT", "Capital (devise de cotation)")
+            .replace("DCA montant USDT", "DCA montant (devise de cotation)"))
+
+
+def _source_warnings(source: dict) -> list[str]:
+    """Human warnings bound to the resolved source, never to a stale default pair."""
+    kind=source.get("source_kind")
+    identity=f"{source.get('exchange','Source')} · {source.get('pair','paire inconnue')}"
+    if kind=="BINANCE_MONTHLY_CERTIFIED":
+        provenance=identity+" · archive mensuelle publique certifiée par checksum"
+    elif kind=="OKX_PUBLIC_ARCHIVE":
+        provenance=identity+" · bougies publiques clôturées, empreinte SHA-256 locale"
+    elif kind=="CATALOG_REGISTERED_V1":
+        provenance=identity+" · source cataloguée locale vérifiée, empreinte SHA-256"
+    elif kind=="LEGACY_BINANCE_V1_V2":
+        provenance=identity+" · archive de référence locale vérifiée"
+    else:
+        provenance=identity+" · source locale vérifiée"
+    return [
+        provenance,
+        "Aucun carnet d'ordres historique, position de file ou remplissage réel garanti",
+        "Frais et glissement configurés = hypothèses PAPER, pas frais historiques certifiés",
+        "Fills fictifs à l'ouverture de la bougie suivante ; zéro ordre réel",
+    ]
+
+CANONICAL_MANIFEST_NAME = "CANONICAL_REBUILD_MANIFEST.json"
+USER_PROFILE_DIR = "user_profiles"
+USER_STRATEGY_SPEC_DIR = "user_strategy_specs"
+
+def _workspace_is_managed() -> bool:
+    return (WORKSPACE / CANONICAL_MANIFEST_NAME).is_file()
+
+def _workspace_write_mode() -> str:
+    return os.environ.get("SEVEN_LAB_WORKSPACE_WRITE_MODE", "explore").strip().lower()
+
+def _workspace_can_persist() -> bool:
+    return (not _workspace_is_managed()) or _workspace_write_mode() == "canonical"
+
+def _workspace_status() -> dict:
+    managed = _workspace_is_managed()
+    manifest = None
+    if managed:
+        try:
+            manifest = json.loads((WORKSPACE / CANONICAL_MANIFEST_NAME).read_text(encoding="utf-8"))
+        except (OSError, ValueError, TypeError):
+            manifest = None
+    generated = manifest.get("generated", {}) if isinstance(manifest, dict) else {}
+    return {
+        "managed": managed,
+        "write_mode": _workspace_write_mode(),
+        "ui_persistence_allowed": _workspace_can_persist(),
+        "manual_configuration_persistence_allowed": True,
+        "manual_results_persistence_allowed": _workspace_can_persist(),
+        "canonical_schema": manifest.get("schema") if isinstance(manifest, dict) else None,
+        "canonical_created_utc": manifest.get("created_utc") if isinstance(manifest, dict) else None,
+        "canonical_counts": {
+            "profiles": len(generated.get("profiles", [])) if isinstance(generated, dict) else 0,
+            "strategy_specs": len(generated.get("strategy_specs", [])) if isinstance(generated, dict) else 0,
+            "runs": len(generated.get("runs", [])) if isinstance(generated, dict) else 0,
+            "comparisons": len(generated.get("comparisons", [])) if isinstance(generated, dict) else 0,
+        },
+        "user_counts": {
+            "profiles": len(list((WORKSPACE/USER_PROFILE_DIR).glob("*.json"))) if (WORKSPACE/USER_PROFILE_DIR).is_dir() else 0,
+            "strategy_specs": len(list((WORKSPACE/USER_STRATEGY_SPEC_DIR).glob("*.json"))) if (WORKSPACE/USER_STRATEGY_SPEC_DIR).is_dir() else 0,
+        },
+    }
+
+def _managed_write_guard(action: str):
+    if _workspace_is_managed() and not _workspace_can_persist():
+        raise LabError(
+            "Workspace canonique géré par Seven : " + action +
+            " est désactivée en mode exploration. Le rebuild canonique est la seule écriture de référence."
+        )
 
 def _atomic_json(path: Path, data: dict):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -82,6 +166,13 @@ def _resolve_source(source_id: str | None):
                  "available_timeframes": manifest["available_timeframes"],
                  "close_boundary_utc": manifest["close_boundary_utc"],
                  "source_kind": "BINANCE_MONTHLY_CERTIFIED"}, bars)
+    if source_id.startswith("CAT_"):
+        manifest,bars=read_catalog_registered_source(WORKSPACE,source_id)
+        return ({"id":manifest["id"],"pair":manifest["pair"],"base":manifest["base"],"quote":manifest["quote"],
+                 "exchange":manifest["exchange"],"source_timeframe":manifest["source_timeframe"],"sha256":manifest["sha256"],
+                 "label":manifest["exchange"]+" "+manifest["pair"]+" · source cataloguée certifiée",
+                 "available_timeframes":manifest["available_timeframes"],"close_boundary_utc":manifest.get("close_boundary_utc"),
+                 "certification":manifest.get("certification"),"source_kind":"CATALOG_REGISTERED_V1"},bars)
     manifest, bars = read_okx_source(WORKSPACE, source_id)
     return ({"id": manifest["id"], "pair": manifest["pair"],
              "base": manifest["base"], "quote": manifest["quote"],
@@ -95,61 +186,86 @@ def _resolve_source(source_id: str | None):
 
 
 def _sources_catalog() -> dict:
-    """Return verified 1h archives without mixing their storage namespaces."""
+    """Build Source Catalog v1 from verified local namespaces only."""
     okx = okx_sources(WORKSPACE)
-    monthly = [
-        {**source, "source_kind": "BINANCE_MONTHLY_CERTIFIED"}
-        for source in binance_monthly_sources(WORKSPACE)
-    ]
-    public_okx = [
-        {**source, "source_kind": "OKX_PUBLIC_ARCHIVE"}
-        for source in okx["sources"]
-    ]
-    return {
-        "sources": monthly + public_okx,
-        "free_bytes": okx["free_bytes"],
-        "reserve_bytes": okx["reserve_bytes"],
+    entries = []
+    status = dataset_status(WORKSPACE)
+    if status.get("available"):
+        entries.append({
+            "id": status["id"], "source_kind": "LEGACY_BINANCE_V1_V2",
+            "exchange": "Binance Spot", "pair": "BTC/USDT", "base": "BTC", "quote": "USDT",
+            "source_timeframe": "1m", "available_timeframes": list(TIMEFRAMES),
+            "rows": status.get("rows", 44640), "sha256": status["data_sha256"],
+            "certification": "SHA256_REFERENCE_ARCHIVE",
+        })
+    entries.extend({**source, "source_kind": "BINANCE_MONTHLY_CERTIFIED", "source_timeframe": source.get("bar", "1h")}
+                   for source in binance_monthly_sources(WORKSPACE))
+    entries.extend({**source, "source_kind": "OKX_PUBLIC_ARCHIVE", "source_timeframe": source.get("bar", "1h"),
+                    "exchange": source.get("exchange", "OKX Spot")} for source in okx["sources"])
+    entries.extend(catalog_registered_sources(WORKSPACE))
+    result = build_catalog(entries, free_bytes=okx["free_bytes"], reserve_bytes=okx["reserve_bytes"])
+    result.update({
         "public_connected": True,
-        "binance_monthly_pilot": {
-            "id": BINANCE_MONTHLY_SOURCE_ID,
-            "pair": "BTC/USDT", "bar": "1h", "year": 2020, "month": 1,
-            "installed": bool(monthly),
-        },
-    }
+        "binance_monthly_pilot": {"id": BINANCE_MONTHLY_SOURCE_ID, "pair": "BTC/USDT", "bar": "1h",
+                                  "year": 2020, "month": 1,
+                                  "installed": any(x["source_id"] == BINANCE_MONTHLY_SOURCE_ID for x in result["sources"])},
+    })
+    return result
 
+
+def _strategy_spec_folders():
+    folders=[("canonical",WORKSPACE/"strategy_specs")]
+    if _workspace_is_managed(): folders.append(("user",WORKSPACE/USER_STRATEGY_SPEC_DIR))
+    return folders
 
 def _list_strategy_specs() -> list:
-    folder = WORKSPACE / "strategy_specs"
-    if not folder.is_dir():
-        return []
-    records = []
-    for file in sorted(folder.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)[:100]:
+    records=[]
+    files=[]
+    for namespace,folder in _strategy_spec_folders():
+        if folder.is_dir():
+            files.extend((f.stat().st_mtime,namespace,f) for f in folder.glob("*.json"))
+    for _,namespace,file in sorted(files,key=lambda x:x[0],reverse=True)[:150]:
         try:
-            spec = validate_strategy_spec(json.loads(file.read_text(encoding="utf-8")))
-            records.append({
-                "id": spec["id"],
-                "name": spec["name"],
-                "kind": spec["strategy"]["kind"],
-                "timeframe": spec["market"]["timeframe"],
-                "source_id": spec["market"]["source_id"],
-                "fingerprint_sha256": spec["fingerprint_sha256"],
-                "explanation": explain_strategy_spec(spec),
-            })
-        except (OSError, ValueError, KeyError, TypeError, LabError):
+            spec=validate_strategy_spec(json.loads(file.read_text(encoding="utf-8")))
+            records.append({"id":spec["id"],"name":spec["name"],"kind":spec["strategy"]["kind"],
+                            "timeframe":spec["market"]["timeframe"],"source_id":spec["market"]["source_id"],
+                            "fingerprint_sha256":spec["fingerprint_sha256"],"namespace":namespace,
+                            "explanation":explain_strategy_spec(spec)})
+        except (OSError,ValueError,KeyError,TypeError,LabError):
             continue
     return records
 
-
 def _load_strategy_spec(spec_id: str) -> dict:
-    if not isinstance(spec_id, str) or not re.fullmatch(r"[0-9a-f]{32}", spec_id):
-        raise LabError("StrategySpec : identifiant non autorisé")
-    file = WORKSPACE / "strategy_specs" / (spec_id + ".json")
-    if not file.is_file():
-        raise LabError("StrategySpec introuvable")
-    spec = validate_strategy_spec(json.loads(file.read_text(encoding="utf-8")))
-    if spec["id"] != spec_id:
-        raise LabError("StrategySpec : identifiant incohérent")
-    return spec
+    if not isinstance(spec_id,str) or not re.fullmatch(r"[0-9a-f]{32}",spec_id): raise LabError("StrategySpec : identifiant non autorisé")
+    for _,folder in _strategy_spec_folders():
+        file=folder/(spec_id+".json")
+        if not file.is_file(): continue
+        spec=validate_strategy_spec(json.loads(file.read_text(encoding="utf-8")))
+        if spec["id"]!=spec_id: raise LabError("StrategySpec : identifiant incohérent")
+        return spec
+    raise LabError("StrategySpec introuvable")
+
+def _profile_folders():
+    folders=[("canonical",WORKSPACE/"profiles")]
+    if _workspace_is_managed(): folders.append(("user",WORKSPACE/USER_PROFILE_DIR))
+    return folders
+
+def _list_profiles() -> list:
+    rows=[]
+    files=[]
+    for namespace,folder in _profile_folders():
+        if folder.is_dir(): files.extend((f.stat().st_mtime,namespace,f) for f in folder.glob("*.json"))
+    for _,namespace,file in sorted(files,key=lambda x:x[0],reverse=True)[:150]:
+        try:
+            data=json.loads(file.read_text(encoding="utf-8")); data["namespace"]=namespace; rows.append(data)
+        except (OSError,ValueError,KeyError,TypeError): continue
+    return rows
+
+def _manual_profile_folder()->Path:
+    return WORKSPACE/(USER_PROFILE_DIR if _workspace_is_managed() and _workspace_write_mode()!="canonical" else "profiles")
+
+def _manual_strategy_spec_folder()->Path:
+    return WORKSPACE/(USER_STRATEGY_SPEC_DIR if _workspace_is_managed() and _workspace_write_mode()!="canonical" else "strategy_specs")
 
 
 def _list_records(category: str) -> list:
@@ -181,7 +297,7 @@ def _list_records(category: str) -> list:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "SevenHeavenStrategyLab/4.6.2"
+    server_version = "SevenHeavenStrategyLab/4.9.0-dev1"
 
     def _headers(self, status, mime, size):
         self.send_response(status)
@@ -202,12 +318,15 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _safe_origin(self):
+        port = int(getattr(self.server, "server_port", 8777))
+        allowed_hosts = {f"127.0.0.1:{port}", f"localhost:{port}"}
         host = self.headers.get("Host", "")
-        if host not in ("127.0.0.1:8777", "localhost:8777"):
+        if host not in allowed_hosts:
             self._send({"error": "Accès local uniquement"}, 403)
             return False
         origin = self.headers.get("Origin")
-        if origin and origin not in ("http://127.0.0.1:8777", "http://localhost:8777"):
+        allowed_origins = {f"http://127.0.0.1:{port}", f"http://localhost:{port}"}
+        if origin and origin not in allowed_origins:
             self._send({"error": "Origine refusée"}, 403)
             return False
         return True
@@ -227,8 +346,9 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(blob)
             return
         if path == "/api/health":
-            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.6.2",
-                        "status": "LOCAL_PAPER_ONLY", "live_trading": False,
+            self._send({"name": "Seven Heaven Strategy Lab", "version": "4.9.0-dev1",
+                        "release_channel": "DEV1",
+                        "status": "LOCAL_PAPER_ONLY_DEVELOPMENT", "live_trading": False,
                         "timeframes": list(TIMEFRAMES), "comparisons_enabled": True,
                         "public_okx_enabled": True,
                         "public_pairs": list(ALLOWED_SPOT),
@@ -236,16 +356,26 @@ class Handler(BaseHTTPRequestHandler):
                         "strategy_creator_enabled": True,
                         "strategy_spec_v1_enabled": True,
                         "strategy_spec_external_engine_required": False,
+                        "source_catalog_v1_enabled": True,
+                        "strategy_atlas_v1_enabled": True,
+                        "guided_workflow_v1_enabled": True,
+                        "strategy_knowledge_v1_enabled": True,
+                        "historical_vault_v1_enabled": True,
+                        "historical_vault_v2_bundle_enabled": True,
+                        "historical_vault_v3_bundle_enabled": True,
+                        "workspace_steward_v3_enabled": True,
                         "market_microscope_enabled": True,
                         "walk_forward_research_enabled": True,
                         "paper_trade_forensics_enabled": True,
                         "controlled_filter_research_enabled": True,
                         "certified_binance_monthly_enabled": True,
                         "explicit_no_trade_warmup_enabled": True,
+                        "native_donchian_enabled": True,
                         "market_microscope_windows": list(ALLOWED_WINDOWS),
                         "custom_rule_entry": ["EMA_CROSS_UP", "PRICE_ABOVE_EMA"],
                         "custom_rule_filters": ["NONE", "RSI_BELOW", "VOLUME_ABOVE"],
-                        "source": "SHA-verified Binance BTCUSDT January 2026",
+                        "source": "catalogue local de sources vérifiées",
+                        "workspace": _workspace_status(),
                         "engines": {"internal_paper": True, "freqtrade": False, "hummingbot": False}})
         elif path == "/api/datasets":
             self._send({"datasets": [dataset_status(WORKSPACE)]})
@@ -253,6 +383,25 @@ class Handler(BaseHTTPRequestHandler):
             self._send(okx_sources(WORKSPACE))
         elif path == "/api/sources":
             self._send(_sources_catalog())
+        elif path == "/api/historical-vault":
+            self._send(historical_vault_status(WORKSPACE))
+        elif path == "/api/strategy-atlas":
+            self._send(strategy_atlas_catalog())
+        elif path == "/api/strategy-knowledge":
+            self._send(strategy_knowledge_catalog())
+        elif re.fullmatch(r"/api/strategy-knowledge/[a-z0-9_-]+", path):
+            try:
+                self._send(strategy_knowledge_article(path.rsplit("/",1)[-1]))
+            except KeyError:
+                self._send({"error":"Fiche de connaissance introuvable"},404)
+        elif path == "/api/strategy-specs":
+            self._send({"strategy_specs": _list_strategy_specs()})
+        elif re.fullmatch(r"/api/strategy-specs/[0-9a-f]{32}", path):
+            try:
+                spec=_load_strategy_spec(path.rsplit("/",1)[-1])
+                self._send({"strategy_spec":spec,"params":strategy_spec_to_params(spec),"explanation":explain_strategy_spec(spec)})
+            except (LabError,ValueError,TypeError,OSError) as exc:
+                self._send({"error":str(exc)},404)
         elif path == "/api/trade-forensics":
             # Postmortem only; exact saved result + same SHA-verified candles.
             # Replay causes without changing prior JSON or touching exchange APIs.
@@ -318,21 +467,9 @@ class Handler(BaseHTTPRequestHandler):
                 )
                 self._send({"microscope": data})
             except (LabError, SourceError, PublicMarketError, ValueError, TypeError, OSError) as exc:
-                self._send({"error": str(exc)}, 400)
-        elif path == "/api/strategy-specs":
-            self._send({"strategy_specs": _list_strategy_specs()})
-        elif re.fullmatch(r"/api/strategy-specs/[0-9a-f]{32}", path):
-            try:
-                spec = _load_strategy_spec(path.rsplit("/", 1)[-1])
-                self._send({
-                    "strategy_spec": spec,
-                    "params": strategy_spec_to_params(spec),
-                    "explanation": explain_strategy_spec(spec),
-                })
-            except (LabError, ValueError, TypeError, OSError) as exc:
-                self._send({"error": str(exc)}, 404)
+                self._send({"error": _public_error_message(exc)}, 400)
         elif path == "/api/profiles":
-            self._send({"profiles": _list_records("profiles")})
+            self._send({"profiles": _list_profiles()})
         elif path == "/api/results":
             self._send({"runs": _list_records("results")})
         elif path == "/api/comparisons":
@@ -356,7 +493,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self._safe_origin():
             return
         path = urlsplit(self.path).path
-        if path not in ("/api/import-reference", "/api/binance-monthly-import", "/api/okx-import", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study", "/api/strategy-specs", "/api/strategy-spec-run"):
+        if path not in ("/api/import-reference", "/api/binance-monthly-import", "/api/okx-import", "/api/historical-vault-install", "/api/run", "/api/compare", "/api/profiles", "/api/robustness", "/api/filters-study", "/api/strategy-specs", "/api/strategy-spec-run"):
             self._send({"error": "Action interdite"}, 404)
             return
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
@@ -383,6 +520,13 @@ class Handler(BaseHTTPRequestHandler):
                 with IMPORT_LOCK:
                     self._send({"source": collect_okx(WORKSPACE, data.get("pair"),
                         days=data.get("days",10), end_date=data.get("end_date"))}, 201)
+            elif path == "/api/historical-vault-install":
+                symbol=data.get("symbol"); year=data.get("year")
+                if not isinstance(symbol,str) or type(year) is not int:
+                    raise HistoricalVaultError("Historical Vault : actif et année requis")
+                with IMPORT_LOCK:
+                    source=install_historical_year(WORKSPACE,symbol,year)
+                self._send({"source":source,"vault":historical_vault_status(WORKSPACE)},201)
             elif path == "/api/filters-study":
                 # Scientific train-only experiment, memory-only, no USB files
                 # or account endpoints. Always verify source SHA via resolver.
@@ -402,72 +546,41 @@ class Handler(BaseHTTPRequestHandler):
                 report = study_robustness(historical, requested, source)
                 self._send({"research": report}, 200)
             elif path == "/api/strategy-specs":
-                name = data.get("name", "")
-                requested = data.get("params")
-                if not isinstance(requested, dict):
-                    raise LabError("StrategySpec : paramètres manquants")
-                source, _ = _resolve_source(requested.get("source_id"))
-                timeframe = requested.get("timeframe", "1m")
-                if timeframe not in source["available_timeframes"]:
-                    raise LabError("StrategySpec : timeframe indisponible pour cette source")
-                bound = {**requested, "source_id": source["id"], "timeframe": timeframe}
-                spec = build_strategy_spec(name, bound, spec_id=uuid.uuid4().hex)
-                _atomic_json(WORKSPACE / "strategy_specs" / (spec["id"] + ".json"), spec)
-                self._send({
-                    "strategy_spec": spec,
-                    "params": strategy_spec_to_params(spec),
-                    "explanation": explain_strategy_spec(spec),
-                }, 201)
+                name=data.get("name",""); requested=data.get("params")
+                if not isinstance(requested,dict): raise LabError("StrategySpec : paramètres manquants")
+                source,_=_resolve_source(requested.get("source_id"))
+                timeframe=requested.get("timeframe","1m")
+                if timeframe not in source["available_timeframes"]: raise LabError("StrategySpec : timeframe indisponible pour cette source")
+                spec=build_strategy_spec(name,{**requested,"source_id":source["id"],"timeframe":timeframe},spec_id=uuid.uuid4().hex)
+                _atomic_json(_manual_strategy_spec_folder()/(spec["id"]+".json"),spec)
+                self._send({"strategy_spec":spec,"params":strategy_spec_to_params(spec),"explanation":explain_strategy_spec(spec)},201)
             elif path == "/api/strategy-spec-run":
-                spec = _load_strategy_spec(data.get("strategy_spec_id"))
-                requested = strategy_spec_to_params(spec)
-                source, historical = _resolve_source(requested.get("source_id"))
-                timeframe = requested["timeframe"]
-                if timeframe not in source["available_timeframes"]:
-                    raise LabError("StrategySpec : timeframe indisponible pour cette source")
-                run, counterfactual = run_with_diagnostics(
-                    historical, requested, source_timeframe=source["source_timeframe"]
-                )
-                run["data"]["pair"] = source["pair"]
-                run["data"]["base"] = source["base"]
-                run["data"]["quote"] = source["quote"]
-                run["data"]["exchange"] = source["exchange"]
-                run["data"]["source_id"] = source["id"]
-                run["data"]["source_sha256"] = source["sha256"]
-                run["params"]["source_id"] = source["id"]
-                run["results"]["asset_units"] = {"base": source["base"], "quote": source["quote"]}
-                run["results"]["base_inventory"] = run["results"]["base_inventory_btc"]
-                run["results"]["fees_paid_quote"] = run["results"]["fees_paid_usdt"]
-                run["results"]["inventory_marked_quote"] = run["results"]["inventory_marked_usdt"]
-                run["results"]["cash_quote"] = run["results"]["cash_final"]
-                baselines = {}
-                for kind in ("HOLD_50", "CASH"):
-                    if run["params"]["kind"] == kind:
-                        baselines[kind] = run["results"]
-                    else:
-                        baselines[kind] = run_one(
-                            historical,
-                            {**run["params"], "timeframe": run["data"]["timeframe"]},
-                            kind=kind,
-                            source_timeframe=source["source_timeframe"],
-                        )["results"]
-                from datetime import datetime, timezone
-                report = {
-                    "id": uuid.uuid4().hex,
-                    "created_utc": datetime.now(timezone.utc).isoformat(),
-                    "source_sha256": source["sha256"],
-                    "source": source,
-                    "strategy_spec_id": spec["id"],
-                    "strategy_spec_fingerprint_sha256": spec["fingerprint_sha256"],
-                    "strategy_spec_name": spec["name"],
-                    "run": run,
-                    "baselines": baselines,
-                    "counterfactual": counterfactual,
-                    "explanation": explain_strategy_spec(spec),
-                    "safety": {"paper_only": True, "orders_real": 0},
-                }
-                _atomic_json(WORKSPACE / "results" / (report["id"] + ".json"), report)
-                self._send({"report": report}, 201)
+                spec=_load_strategy_spec(data.get("strategy_spec_id")); requested=strategy_spec_to_params(spec)
+                source,historical=_resolve_source(requested.get("source_id")); timeframe=requested["timeframe"]
+                if timeframe not in source["available_timeframes"]: raise LabError("StrategySpec : timeframe indisponible pour cette source")
+                run,counterfactual=run_with_diagnostics(historical,requested,source_timeframe=source["source_timeframe"])
+                run["data"].update({"pair":source["pair"],"base":source["base"],"quote":source["quote"],"exchange":source["exchange"],
+                                    "source_id":source["id"],"source_sha256":source["sha256"]})
+                run["params"]["source_id"]=source["id"]
+                run["results"]["asset_units"]={"base":source["base"],"quote":source["quote"]}
+                run["results"]["base_inventory"]=run["results"]["base_inventory_btc"]
+                run["results"]["fees_paid_quote"]=run["results"]["fees_paid_usdt"]
+                run["results"]["inventory_marked_quote"]=run["results"]["inventory_marked_usdt"]
+                run["results"]["cash_quote"]=run["results"]["cash_final"]
+                run["warnings"]=_source_warnings(source)
+                baselines={}
+                for kind in ("HOLD_50","CASH"):
+                    baselines[kind]=run["results"] if run["params"]["kind"]==kind else run_one(historical,{**run["params"],"timeframe":run["data"]["timeframe"]},kind=kind,source_timeframe=source["source_timeframe"])["results"]
+                from datetime import datetime,timezone
+                report={"id":uuid.uuid4().hex,"created_utc":datetime.now(timezone.utc).isoformat(),"source_sha256":source["sha256"],
+                        "source":source,"strategy_spec_id":spec["id"],"strategy_spec_fingerprint_sha256":spec["fingerprint_sha256"],
+                        "strategy_spec_name":spec["name"],"run":run,"baselines":baselines,"counterfactual":counterfactual,
+                        "explanation":explain_strategy_spec(spec),"safety":{"paper_only":True,"orders_real":0}}
+                persisted=_workspace_can_persist()
+                if persisted:
+                    _atomic_json(WORKSPACE/"results"/(report["id"]+".json"),report)
+                report["workspace_persistence"]={"persisted":persisted,"managed":_workspace_is_managed(),"mode":_workspace_write_mode()}
+                self._send({"report":report},201)
             elif path == "/api/profiles":
                 name = data.get("name", "")
                 if not isinstance(name, str) or not 1 <= len(name.strip()) <= 64:
@@ -488,7 +601,7 @@ class Handler(BaseHTTPRequestHandler):
                 saved = {"id": uuid.uuid4().hex,
                          "created_utc": datetime.now(timezone.utc).isoformat(),
                          "name": name.strip(), "params": config}
-                _atomic_json(WORKSPACE / "profiles" / (saved["id"] + ".json"), saved)
+                _atomic_json(_manual_profile_folder() / (saved["id"] + ".json"), saved)
                 self._send({"profile": saved}, 201)
             else:
                 requested = data.get("params", {})
@@ -509,6 +622,7 @@ class Handler(BaseHTTPRequestHandler):
                                          source_label=source["label"])
                     comparison["params"]["source_id"] = source["id"]
                     comparison["asset_units"] = {"base": source["base"], "quote": source["quote"]}
+                    comparison["warnings"].insert(0, _source_warnings(source)[0])
                     for row in comparison["rows"]:
                         row["base_inventory"] = row["base_inventory_btc"]
                         row["fees_paid_quote"] = row["fees_paid_usdt"]
@@ -528,7 +642,10 @@ class Handler(BaseHTTPRequestHandler):
                                       "Configured fees are a PAPER assumption; historical realized fees are not verified")
                             for w in comparison["warnings"]]
                     record = {**metadata, "comparison": comparison}
-                    _atomic_json(WORKSPACE / "comparisons" / (record["id"] + ".json"), record)
+                    persisted=_workspace_can_persist()
+                    if persisted:
+                        _atomic_json(WORKSPACE / "comparisons" / (record["id"] + ".json"), record)
+                    record["workspace_persistence"]={"persisted":persisted,"managed":_workspace_is_managed(),"mode":_workspace_write_mode()}
                     self._send({"report": record}, 201)
                 else:
                     result, counterfactual = run_with_diagnostics(historical, requested,
@@ -545,19 +662,7 @@ class Handler(BaseHTTPRequestHandler):
                     result["results"]["inventory_marked_quote"] = result["results"]["inventory_marked_usdt"]
                     result["results"]["cash_quote"] = result["results"]["cash_final"]
                     result["params"]["source_id"] = source["id"]
-                    if base_tf == "1h":
-                        if source["source_kind"] == "BINANCE_MONTHLY_CERTIFIED":
-                            result["warnings"] = [
-                                "Binance public monthly Spot 1h archive matched its published checksum and UTC continuity",
-                                "No historical order book, queue position or full fill proof",
-                                "Configured fees and slippage are PAPER assumptions, not verified historical charges",
-                                "Next-bar-open hypothetical fills; zero real orders"]
-                        else:
-                            result["warnings"] = [
-                                "OKX public Spot CLOSED hourly candles, no historical order book or full fill proof",
-                                "Instrument lot/tick/min size retrieved but not applied to this internal PAPER engine",
-                                "Configured fees and slippage are PAPER assumptions, not verified historical charges",
-                                "Next-bar-open hypothetical fills; zero real orders"]
+                    result["warnings"] = _source_warnings(source)
                     baselines = {}
                     for kind in ("HOLD_50", "CASH"):
                         if result["params"]["kind"] == kind:
@@ -568,10 +673,13 @@ class Handler(BaseHTTPRequestHandler):
                             }, kind=kind, source_timeframe=base_tf)["results"]
                     record = {**metadata, "run": result,
                               "baselines": baselines, "counterfactual": counterfactual}
-                    _atomic_json(WORKSPACE / "results" / (record["id"] + ".json"), record)
+                    persisted=_workspace_can_persist()
+                    if persisted:
+                        _atomic_json(WORKSPACE / "results" / (record["id"] + ".json"), record)
+                    record["workspace_persistence"]={"persisted":persisted,"managed":_workspace_is_managed(),"mode":_workspace_write_mode()}
                     self._send({"report": record}, 201)
-        except (LabError, SourceError, PublicMarketError, ValueError, OverflowError) as exc:
-            self._send({"error": str(exc)}, 400)
+        except (LabError, SourceError, PublicMarketError, CatalogSourceError, HistoricalVaultError, ValueError, OverflowError) as exc:
+            self._send({"error": _public_error_message(exc)}, 400)
         except (TimeoutError, OSError) as exc:
             self._send({"error": "Échec d'accès aux fichiers ou au téléchargement : " + str(exc)}, 503)
         except Exception:
@@ -588,7 +696,7 @@ def main():
         if os.environ.get("SEVEN_LAB_OPEN_BROWSER") == "1":
             import webbrowser
             if not webbrowser.open(f"http://127.0.0.1:{port}/"):
-                print("Ouvre le laboratoire dans Firefox : http://127.0.0.1:8777", flush=True)
+                print(f"Ouvre le laboratoire dans Firefox : http://127.0.0.1:{port}", flush=True)
         server.serve_forever()
 
 
