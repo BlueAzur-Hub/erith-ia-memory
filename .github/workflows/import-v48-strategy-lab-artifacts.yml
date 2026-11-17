@@ -1,0 +1,52 @@
+name: Import Strategy Lab V4.8 artifacts
+
+on:
+  push:
+    paths:
+      - '.github/workflows/import-v48-strategy-lab-artifacts.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download verified V4.8 artifacts from Notion
+        env:
+          URL_DEV: 'https://prod-files-secure.s3.us-west-2.amazonaws.com/221660b6-1160-4358-b032-decc24418e13/ae53376b-0131-4cc0-bfd3-4bb3f8c01505/SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4663MMCAF4G%2F20261117%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20261117T022153Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBEaCXVzLXdlc3QtMiJGMEQCICXBJUeT42vQi79QalVRFuoYfgmXZiA2NBYr7surRWQDAiAw9JVEdhA9WcTVHtirNcm9f5IHi4Prj9VB6eIIJO3uQiqIBAja%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMky0nvg7Yo1sM%2BK5xKtwD4xjU%2FLpNYgYZqyppdlCMR20%2FNabzMEppMmjWpMM5IEGNg0bso7Cb6%2Fqkr3CL0Y5%2FC97o1Y621ah6Ih7zfE2gWd%2FjObipF%2F5vk7rYk6Ajc%2B3hkJ%2Ft2%2FMhKM1h2pDvZvuGlAFvKZEhGjpePCnVdjxoINhEFCbg1T2wJ7HdrGF96%2BknGZGQtlVG4GUIM3diNlLUBXal%2FZgQTnWObf1%2BTwSx3u6k14bBrtkmNwjIPlv%2B0r5L3i4HA15MZfcN95RT%2FX9sMlTgeZoEEEBgUytOH%2BDIa%2BqOsANFi8iCmZY%2BIRxs7NYdJyyhdjii7RrlZeHW8JQKtU7y%2BgTKfAtPTEIShtmkfTjscokoNXE5BJG84Zt5608z4SsCIUgr1W8yOs4cj%2FuAenwlyN6HR7RVapx4Iq6K92H4mQ4qR1QROgWTLtuZIHsrEwV6jL0ROstg4XZKFqy0UW4k1xAKj4gdl7S8oG51LMqRDLkwKbD8ieZE070H%2Fx6XOsbRqtKVBSfghiQtSq3HDeqLbUhuUAEPKr7BNwxkpp2mpM9d%2FYhY7yE7Q8fMbSxSHNilinFXEDlZ5%2BwqcqZOWsZWlLSqz9vrbav4Skv6IXSpFuPP%2B%2Fa3XjpRnswH0WFir%2F%2FiUZJcAsCT0pEwycnu1wY6pgHCqkzLoIH6mrrhtzUfMfbUr9DEZmiE1LhecqXxsau8%2Bgs%2F5481uVzUDeUjpmIaadVslUizzWxE06K9DIXCS4IR2UkfgUjRz72eQ3NbJQ8qTP3sCoOGu0ZrInyVImvg4oyW97BZQZvn41RDQSPHxn6KtrCA9Hl39Gkmxll1IDLRWQwDFHPRjvuvtS4SVzzikEI6C9kEt44teCbqitQUA3BlSLL%2BnRMd&X-Amz-Signature=4a7c0ee7a0f3afb01ab948d56b1f63fbfa5084837d00659dea89ba7e80487dad&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject#notion_record=block.41b7754f-e084-8003-ae3b-f488d5d58744.221660b6-1160-4358-b032-decc24418e13'
+          URL_WORKSPACE: 'https://prod-files-secure.s3.us-west-2.amazonaws.com/221660b6-1160-4358-b032-decc24418e13/60cc725c-32b6-4da1-a3a9-2b621e9a03fe/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4663MMCAF4G%2F20261117%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20261117T022153Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBEaCXVzLXdlc3QtMiJGMEQCICXBJUeT42vQi79QalVRFuoYfgmXZiA2NBYr7surRWQDAiAw9JVEdhA9WcTVHtirNcm9f5IHi4Prj9VB6eIIJO3uQiqIBAja%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMky0nvg7Yo1sM%2BK5xKtwD4xjU%2FLpNYgYZqyppdlCMR20%2FNabzMEppMmjWpMM5IEGNg0bso7Cb6%2Fqkr3CL0Y5%2FC97o1Y621ah6Ih7zfE2gWd%2FjObipF%2F5vk7rYk6Ajc%2B3hkJ%2Ft2%2FMhKM1h2pDvZvuGlAFvKZEhGjpePCnVdjxoINhEFCbg1T2wJ7HdrGF96%2BknGZGQtlVG4GUIM3diNlLUBXal%2FZgQTnWObf1%2BTwSx3u6k14bBrtkmNwjIPlv%2B0r5L3i4HA15MZfcN95RT%2FX9sMlTgeZoEEEBgUytOH%2BDIa%2BqOsANFi8iCmZY%2BIRxs7NYdJyyhdjii7RrlZeHW8JQKtU7y%2BgTKfAtPTEIShtmkfTjscokoNXE5BJG84Zt5608z4SsCIUgr1W8yOs4cj%2FuAenwlyN6HR7RVapx4Iq6K92H4mQ4qR1QROgWTLtuZIHsrEwV6jL0ROstg4XZKFqy0UW4k1xAKj4gdl7S8oG51LMqRDLkwKbD8ieZE070H%2Fx6XOsbRqtKVBSfghiQtSq3HDeqLbUhuUAEPKr7BNwxkpp2mpM9d%2FYhY7yE7Q8fMbSxSHNilinFXEDlZ5%2BwqcqZOWsZWlLSqz9vrbav4Skv6IXSpFuPP%2B%2Fa3XjpRnswH0WFir%2F%2FiUZJcAsCT0pEwycnu1wY6pgHCqkzLoIH6mrrhtzUfMfbUr9DEZmiE1LhecqXxsau8%2Bgs%2F5481uVzUDeUjpmIaadVslUizzWxE06K9DIXCS4IR2UkfgUjRz72eQ3NbJQ8qTP3sCoOGu0ZrInyVImvg4oyW97BZQZvn41RDQSPHxn6KtrCA9Hl39Gkmxll1IDLRWQwDFHPRjvuvtS4SVzzikEI6C9kEt44teCbqitQUA3BlSLL%2BnRMd&X-Amz-Signature=c97a1e13e49743f3e41897629a5b51c78eb3e1dffe08c6dfb11f108777a88837&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject#notion_record=block.41b7754f-e084-80c9-9813-d87b3d8b8a44.221660b6-1160-4358-b032-decc24418e13'
+          URL_BUNDLE: 'https://prod-files-secure.s3.us-west-2.amazonaws.com/221660b6-1160-4358-b032-decc24418e13/869a7652-8d51-4a31-a5cf-6eb8f985f65e/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4663MMCAF4G%2F20261117%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20261117T022153Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBEaCXVzLXdlc3QtMiJGMEQCICXBJUeT42vQi79QalVRFuoYfgmXZiA2NBYr7surRWQDAiAw9JVEdhA9WcTVHtirNcm9f5IHi4Prj9VB6eIIJO3uQiqIBAja%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMky0nvg7Yo1sM%2BK5xKtwD4xjU%2FLpNYgYZqyppdlCMR20%2FNabzMEppMmjWpMM5IEGNg0bso7Cb6%2Fqkr3CL0Y5%2FC97o1Y621ah6Ih7zfE2gWd%2FjObipF%2F5vk7rYk6Ajc%2B3hkJ%2Ft2%2FMhKM1h2pDvZvuGlAFvKZEhGjpePCnVdjxoINhEFCbg1T2wJ7HdrGF96%2BknGZGQtlVG4GUIM3diNlLUBXal%2FZgQTnWObf1%2BTwSx3u6k14bBrtkmNwjIPlv%2B0r5L3i4HA15MZfcN95RT%2FX9sMlTgeZoEEEBgUytOH%2BDIa%2BqOsANFi8iCmZY%2BIRxs7NYdJyyhdjii7RrlZeHW8JQKtU7y%2BgTKfAtPTEIShtmkfTjscokoNXE5BJG84Zt5608z4SsCIUgr1W8yOs4cj%2FuAenwlyN6HR7RVapx4Iq6K92H4mQ4qR1QROgWTLtuZIHsrEwV6jL0ROstg4XZKFqy0UW4k1xAKj4gdl7S8oG51LMqRDLkwKbD8ieZE070H%2Fx6XOsbRqtKVBSfghiQtSq3HDeqLbUhuUAEPKr7BNwxkpp2mpM9d%2FYhY7yE7Q8fMbSxSHNilinFXEDlZ5%2BwqcqZOWsZWlLSqz9vrbav4Skv6IXSpFuPP%2B%2Fa3XjpRnswH0WFir%2F%2FiUZJcAsCT0pEwycnu1wY6pgHCqkzLoIH6mrrhtzUfMfbUr9DEZmiE1LhecqXxsau8%2Bgs%2F5481uVzUDeUjpmIaadVslUizzWxE06K9DIXCS4IR2UkfgUjRz72eQ3NbJQ8qTP3sCoOGu0ZrInyVImvg4oyW97BZQZvn41RDQSPHxn6KtrCA9Hl39Gkmxll1IDLRWQwDFHPRjvuvtS4SVzzikEI6C9kEt44teCbqitQUA3BlSLL%2BnRMd&X-Amz-Signature=d60197558fcfa56bdc283d4bac380c8f408f954f074e2bd7ad4de21c57263fba&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject#notion_record=block.41b7754f-e084-807c-bb0c-f6d4fa2c8fe3.221660b6-1160-4358-b032-decc24418e13'
+        run: |
+          set -euo pipefail
+          mkdir -p 'coordination/inter_ai_dialogues/agent_crypto'
+          curl --fail --location --retry 3 --retry-delay 1 "$URL_DEV" -o 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip'
+          curl --fail --location --retry 3 --retry-delay 1 "$URL_WORKSPACE" -o 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip'
+          curl --fail --location --retry 3 --retry-delay 1 "$URL_BUNDLE" -o 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip'
+
+      - name: Verify SHA-256
+        run: |
+          set -euo pipefail
+          cd 'coordination/inter_ai_dialogues/agent_crypto'
+          printf '%s  %s\n' 'f21c8b1660d6139ac5987a4eaa979926065c1540c4447118335ed78844745893' 'SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip' > 'SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip.sha256'
+          printf '%s  %s\n' '69caebebd77a3d1c644dced24416a8147f58b1956ee4618d7b5925b77ba8de7d' 'SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip' > 'SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip.sha256'
+          printf '%s  %s\n' 'c0637023bf3f6aeb38f25b38602d65510dc16d65bda476e37240b5ef40d2d0df' 'SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip' > 'SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip.sha256'
+          sha256sum -c 'SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip.sha256'
+          sha256sum -c 'SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip.sha256'
+          sha256sum -c 'SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip.sha256'
+
+      - name: Publish alongside existing Agent-Crypto archives
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven'
+          git config user.email 'actions@users.noreply.github.com'
+          git add 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip' 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_V4_8_HISTORICAL_VAULT_V2_WORKSPACE_STEWARD_V3_DEV.zip.sha256'
+          git add 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip' 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_WORKSPACE_CANONICAL_V3_BTC_ETH_2024_2025_2026_11_17.zip.sha256'
+          git add 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip' 'coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_STRATEGY_LAB_HISTORICAL_BUNDLE_BTC_ETH_2024_2025_2026_11_17.zip.sha256'
+          git commit -m 'Publish Strategy Lab V4.8 artifacts'
+          git push origin HEAD:main
