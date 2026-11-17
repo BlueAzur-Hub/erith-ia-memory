@@ -1,0 +1,58 @@
+name: Seven Heaven Strategy Lab Historical Bundle
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-heaven-strategy-lab-historical-bundle.yml'
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and stage BTC/ETH 2024-2025 canonical hourly shards
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards
+          out="$RUNNER_TEMP/seven-heaven-historical-bundle"
+          mkdir -p "$out"
+
+          declare -A expected=(
+            ["bitcoin-2024-span13-5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5.json.gz"]="5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5"
+            ["bitcoin-2025-span13-291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f.json.gz"]="291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f"
+            ["ethereum-2024-span13-12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e.json.gz"]="12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e"
+            ["ethereum-2025-span13-a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6.json.gz"]="a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6"
+          )
+
+          for file in "${!expected[@]}"; do
+            test -f "$src/$file"
+            observed=$(sha256sum "$src/$file" | cut -d' ' -f1)
+            test "$observed" = "${expected[$file]}"
+            cp "$src/$file" "$out/$file"
+          done
+
+          cat > "$out/MANIFEST.json" <<'JSON'
+          {
+            "schema": "seven.strategy_lab.historical_bundle.v1",
+            "source": "BlueAzur-Hub/erith-ia-memory calendar_year_hourly_shards",
+            "pair_quote": "USDT",
+            "timeframe": "1h",
+            "paper_only": true,
+            "datasets": [
+              {"symbol":"BTC","year":2024,"rows":8784,"sha256":"5add63d3d29bd8a8ef80b6ec16f288fe36de5c9db0ff8d8119bcd732129f9ef5"},
+              {"symbol":"BTC","year":2025,"rows":8760,"sha256":"291bc87ca5aace394fde51a43edc7f5fdb25da1213fd8343b19ff154ff370d0f"},
+              {"symbol":"ETH","year":2024,"rows":8784,"sha256":"12f5c738eac80ba281614e1f20fb42d3d255514a87bb1af90828a917e8133f4e"},
+              {"symbol":"ETH","year":2025,"rows":8760,"sha256":"a1abd476dd694759650799a51c6450c4614a085623b1b7c8e7a17b7ba4640ba6"}
+            ]
+          }
+          JSON
+          sha256sum "$out"/*.json.gz | sort > "$out/SHA256SUMS.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seven-heaven-strategy-lab-btc-eth-2024-2025
+          path: ${{ runner.temp }}/seven-heaven-historical-bundle
+          if-no-files-found: error
+          retention-days: 30
