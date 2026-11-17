@@ -322,6 +322,15 @@
       "cost_evaluable": 3,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-17|2026-11-17T03:06:32Z",
+      "qualified_at_utc": "2026-11-17T03:06:32Z",
+      "candidates": 20,
+      "okx_pairs": 7,
+      "cost_evaluable": 3,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -2352,6 +2361,63 @@
           "elapsed_hours": 52.36
         }
       ]
+    },
+    {
+      "id": "aster-2|2026-11-17",
+      "coin_id": "aster-2",
+      "symbol": "ASTER",
+      "pair": "ASTER-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-17T03:06:44Z",
+      "entry_bid_usdt": "0.5784",
+      "entry_ask_usdt": "0.5787",
+      "entry_investment_usdt": "99.9998877744",
+      "net_sellable_qty": "172.283",
+      "break_even_bid_rise_pct": 0.6546,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "lighter|2026-11-17",
+      "coin_id": "lighter",
+      "symbol": "LIT",
+      "pair": "LIT-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-17T03:06:44Z",
+      "entry_bid_usdt": "2.9639",
+      "entry_ask_usdt": "2.9652",
+      "entry_investment_usdt": "99.9993358728",
+      "net_sellable_qty": "33.623",
+      "break_even_bid_rise_pct": 0.6473,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "internet-computer|2026-11-17",
+      "coin_id": "internet-computer",
+      "symbol": "ICP",
+      "pair": "ICP-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-17T03:06:44Z",
+      "entry_bid_usdt": "2.483",
+      "entry_ask_usdt": "2.485",
+      "entry_investment_usdt": "99.99999890622",
+      "net_sellable_qty": "40.120964",
+      "break_even_bid_rise_pct": 0.6831,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
     }
   ]
 }
