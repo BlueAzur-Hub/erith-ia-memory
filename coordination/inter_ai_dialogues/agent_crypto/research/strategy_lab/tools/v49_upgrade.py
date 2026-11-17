@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 
-ROOT=Path(__file__).resolve().parents[5]
+ROOT=Path(__file__).resolve().parents[6]
 LAB=ROOT/"seven_heaven_strategy_lab"
 
 ENTRIES=[
