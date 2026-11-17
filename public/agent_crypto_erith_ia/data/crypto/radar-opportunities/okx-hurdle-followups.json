@@ -340,6 +340,15 @@
       "cost_evaluable": 3,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-17|2026-11-17T17:34:55Z",
+      "qualified_at_utc": "2026-11-17T17:34:55Z",
+      "candidates": 20,
+      "okx_pairs": 7,
+      "cost_evaluable": 3,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -2440,6 +2449,25 @@
       "entry_investment_usdt": "99.9996760518",
       "net_sellable_qty": "71.107",
       "break_even_bid_rise_pct": 0.6176,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
+    },
+    {
+      "id": "pha|2026-11-17",
+      "coin_id": "pha",
+      "symbol": "PHA",
+      "pair": "PHA-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-17T17:35:11Z",
+      "entry_bid_usdt": "0.03275",
+      "entry_ask_usdt": "0.0328",
+      "entry_investment_usdt": "99.9999999799632",
+      "net_sellable_qty": "3039.652401",
+      "break_even_bid_rise_pct": 0.7557,
       "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
       "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
       "contract_identity_proven": false,
