@@ -1,10 +1,10 @@
 {
   "schema": "atlas_news_sentinel_status_v1",
   "version": "V1.1-alpha.26.47.6",
-  "updated_at": "2026-11-18T03:54:21.570287+00:00",
+  "updated_at": "2026-11-18T13:29:48.172369+00:00",
   "status": "ok",
   "events_count": 120,
-  "events_24h": 31,
+  "events_24h": 24,
   "sources_ok": 16,
   "sources_total": 16,
   "sources_failed": 0,
@@ -13,11 +13,11 @@
   "driver_coverage_build": "40.4.291",
   "driver_coverage": {
     "macro_liquidity": {
-      "events_72h": 11,
+      "events_72h": 12,
       "distinct_sources": 3
     },
     "institutional_flows": {
-      "events_72h": 7,
+      "events_72h": 8,
       "distinct_sources": 4
     },
     "regulation": {
@@ -25,8 +25,8 @@
       "distinct_sources": 2
     },
     "leverage": {
-      "events_72h": 2,
-      "distinct_sources": 2
+      "events_72h": 1,
+      "distinct_sources": 1
     }
   },
   "causal_claim": false,
@@ -34,8 +34,8 @@
     "build": "40.6.418",
     "schema": "atlas_news_event_core_v1",
     "unique_events": 120,
-    "articles": 147,
-    "clustered_articles": 27,
+    "articles": 148,
+    "clustered_articles": 28,
     "contract": "one real event = one operator story; articles = confirmations"
   },
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique."
