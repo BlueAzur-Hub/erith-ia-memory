@@ -1,0 +1,616 @@
+{
+  "derivatives": {
+    "claim_24_7": false,
+    "claim_market_total": false,
+    "connection_windows_in_24h": 9,
+    "coverage": "SAMPLED_WINDOWS_WITH_UNOBSERVED_GAPS",
+    "events_observed_in_24h": 73,
+    "fresh_coverage_evidence": false,
+    "last_window_end_utc": "2026-11-19T18:27:16Z",
+    "okx_notional_usdt_unavailable": true,
+    "providers": {
+      "binance": {
+        "last_event_utc": "2026-11-19T18:26:49.100Z",
+        "market_total_certified": false,
+        "observed_windows": 3,
+        "recorded_events": 21,
+        "stream_has_gaps": true
+      },
+      "bybit": {
+        "last_event_utc": "2026-11-19T18:26:51.265Z",
+        "market_total_certified": false,
+        "observed_windows": 3,
+        "recorded_events": 18,
+        "stream_has_gaps": true
+      },
+      "okx": {
+        "last_event_utc": "2026-11-19T18:26:47.905Z",
+        "market_total_certified": false,
+        "observed_windows": 3,
+        "recorded_events": 34,
+        "stream_has_gaps": true
+      }
+    }
+  },
+  "generated_at_utc": "2026-11-19T22:20:12Z",
+  "hourly": [
+    {
+      "causal_claim": false,
+      "close_usdc": "62994.7",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-18T23:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62177.5",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "73.88057492",
+      "spot_volume_usdc": "4640992.071253018"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63130.5",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T00:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62995.4",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "41.89439946",
+      "spot_volume_usdc": "2635614.572039104"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62796.6",
+      "coverage_status": "SAMPLED_WITH_GAPS",
+      "hour_utc": "2026-11-19T01:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 8,
+        "bybit": 6,
+        "okx": 8
+      },
+      "open_usdc": "63125.3",
+      "providers_with_any_connection_in_hour": [
+        "binance",
+        "bybit",
+        "okx"
+      ],
+      "spot_volume_btc": "22.69284515",
+      "spot_volume_usdc": "1424336.169732592"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62549.4",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T02:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62786.1",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "16.73406494",
+      "spot_volume_usdc": "1048615.645482824"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63147.7",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T03:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62551.5",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "15.23115295",
+      "spot_volume_usdc": "956679.0036544"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63533.7",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T04:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63158.7",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "22.50077738",
+      "spot_volume_usdc": "1427054.026901698"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63308.3",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T05:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63525.2",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "18.37407321",
+      "spot_volume_usdc": "1164926.978977614"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63698.1",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T06:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63290.4",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "16.27309029",
+      "spot_volume_usdc": "1032981.953578246"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63687.6",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T07:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63698.4",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "23.03379409",
+      "spot_volume_usdc": "1465264.809669978"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63688.8",
+      "coverage_status": "SAMPLED_WITH_GAPS",
+      "hour_utc": "2026-11-19T08:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 3,
+        "bybit": 1,
+        "okx": 0
+      },
+      "open_usdc": "63671.3",
+      "providers_with_any_connection_in_hour": [
+        "binance",
+        "bybit",
+        "okx"
+      ],
+      "spot_volume_btc": "16.8989894",
+      "spot_volume_usdc": "1075505.482766896"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63801.7",
+      "coverage_status": "SAMPLED_WITH_GAPS",
+      "hour_utc": "2026-11-19T09:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63673.3",
+      "providers_with_any_connection_in_hour": [
+        "binance",
+        "bybit",
+        "okx"
+      ],
+      "spot_volume_btc": "21.63149177",
+      "spot_volume_usdc": "1379755.212894387"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63737.1",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T10:00:00Z",
+      "news_published_in_hour": 3,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63806.7",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "12.78201754",
+      "spot_volume_usdc": "815459.036044971"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63892",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T11:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63737.1",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "14.49725916",
+      "spot_volume_usdc": "926101.979569938"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63818.6",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T12:00:00Z",
+      "news_published_in_hour": 3,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63903.7",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "23.47466731",
+      "spot_volume_usdc": "1496185.956263021"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63978",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T13:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63818.5",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "24.52594741",
+      "spot_volume_usdc": "1563629.621036156"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63506.4",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T14:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63983",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "42.83084766",
+      "spot_volume_usdc": "2733195.188779082"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "63053.6",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T15:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63494",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "105.49430422",
+      "spot_volume_usdc": "6675181.719380187"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62722.8",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T16:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "63046",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "43.78738694",
+      "spot_volume_usdc": "2758163.181084254"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62688.9",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T17:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 12
+      },
+      "open_usdc": "62713.5",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "85.88605142",
+      "spot_volume_usdc": "5384312.354866263"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62832.8",
+      "coverage_status": "SAMPLED_WITH_GAPS",
+      "hour_utc": "2026-11-19T18:00:00Z",
+      "news_published_in_hour": 1,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 10,
+        "bybit": 11,
+        "okx": 14
+      },
+      "open_usdc": "62688.8",
+      "providers_with_any_connection_in_hour": [
+        "binance",
+        "bybit",
+        "okx"
+      ],
+      "spot_volume_btc": "32.69299821",
+      "spot_volume_usdc": "2057401.725363577"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62299.2",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T19:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62831.9",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "39.87944268",
+      "spot_volume_usdc": "2493632.433772623"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "62062",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T20:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62300.1",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "136.63837864",
+      "spot_volume_usdc": "8486485.620687114"
+    },
+    {
+      "causal_claim": false,
+      "close_usdc": "61482.9",
+      "coverage_status": "NO_DOCUMENTED_OBSERVATION",
+      "hour_utc": "2026-11-19T21:00:00Z",
+      "news_published_in_hour": 0,
+      "observed_derivative_liquidation_messages_by_provider": {
+        "binance": 0,
+        "bybit": 0,
+        "okx": 0
+      },
+      "open_usdc": "62067",
+      "providers_with_any_connection_in_hour": [],
+      "spot_volume_btc": "93.65831292",
+      "spot_volume_usdc": "5767836.962342304"
+    }
+  ],
+  "limitations": [
+    "GitHub cron may be delayed or dropped; no 24/7 claim",
+    "Derivatives subscriptions are partial or venue-sampled; not market totals",
+    "No recorded feed event does not imply no liquidation",
+    "News event timestamp is not proof of a price catalyst",
+    "Exchange original market samples not cryptographically signed",
+    "Spot quote USDC is not derivatives notional USDT",
+    "Not personal financial advice and never an order"
+  ],
+  "news": {
+    "causality_proven": false,
+    "event_examples": [
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity"
+        ],
+        "event_at_utc": "2026-11-19T06:00:00Z",
+        "event_id": "feed_6e3f3724a6464960",
+        "event_ms": 1795068000000,
+        "headline": "Bitcoin carry trades could beat Treasury bills in 2027, Sygnum predicts",
+        "source_name": "Cointelegraph",
+        "source_url": "https://cointelegraph.com/markets/sygnum-bitcoin-carry-trades-2027"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "institutional_flows"
+        ],
+        "event_at_utc": "2026-11-19T08:26:19Z",
+        "event_id": "feed_c4f928449e0e4613",
+        "event_ms": 1795076779000,
+        "headline": "Bitcoin ETF assets fall to three-month low as 2026 net outflows top $2.5B",
+        "source_name": "Cointelegraph",
+        "source_url": "https://cointelegraph.com/markets/bitcoin-etf-assets-three-month-low-78-billion"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity",
+          "institutional_flows"
+        ],
+        "event_at_utc": "2026-11-19T10:25:05Z",
+        "event_id": "feed_2d333e7860e82328",
+        "event_ms": 1795083905000,
+        "headline": "Bitcoin Struggles to Hold $64,000 as ETF Outflows Hit $2.9B in November",
+        "source_name": "Decrypt",
+        "source_url": "https://decrypt.co/383597/bitcoin-struggles-to-hold-64000-as-etf-outflows-hit-2-9b-in-november"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [],
+        "event_at_utc": "2026-11-19T10:47:00Z",
+        "event_id": "feed_c85fbefc74a3ebfa",
+        "event_ms": 1795085220000,
+        "headline": "Le Bitcoin pourrait chuter sous 60 000 $ alors que les ventes d'ETF s'intensifient - Invezz",
+        "source_name": "Google News FR · ETF / flux institutionnels",
+        "source_url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxON3lYTVhFaGZiaU1OaXZfbG5YSGl0QWlzbmpSZUs3T09HMWNmV3VBcGNUUmVCd0k2YmtkUjZ3Q0s4TjJzMFFtZGltV2lYTG0xSV9FVUdtMDNpRmt4c01CMDRKTXpWdGdyQUZkN2NvMVE5cS1fZTJ5SFdrV2JIQ0NwVjd5MlVZMEloWG5rTk12VTBkWW05Q3M1akdmd291d3V5QVBaRkdLR2h6Z3Y3TTM3NzQtRlpEV0Q1UVpqRE1WZWg2ZmY4SFhqTGpB?oc=5"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [],
+        "event_at_utc": "2026-11-19T10:48:26Z",
+        "event_id": "feed_84e4f15d95c825a4",
+        "event_ms": 1795085306000,
+        "headline": "Live updates: Bitcoin falls as strong Anthropic opening fails to lift animal spirits",
+        "source_name": "CoinDesk",
+        "source_url": "https://www.coindesk.com/markets/2026/11/19/live-updates-bitcoin-nears-usd64-000-as-anthropic-s-record-ipo-lifts-tech"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity"
+        ],
+        "event_at_utc": "2026-11-19T11:19:58Z",
+        "event_id": "feed_4631a06c3d8ab0ea",
+        "event_ms": 1795087198000,
+        "headline": "Sweden’s H100 could tap Bitcoin trading pool to fund share buybacks",
+        "source_name": "Cointelegraph",
+        "source_url": "https://cointelegraph.com/news/swedens-h100-13m-q3-loss-share-buyback-approval"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity",
+          "institutional_flows"
+        ],
+        "event_at_utc": "2026-11-19T12:08:06Z",
+        "event_id": "feed_e2fbe28221dc1268",
+        "event_ms": 1795090086000,
+        "headline": "Bitcoin holds above $63,750 but Fed rate-hike threats loom large",
+        "source_name": "CoinDesk",
+        "source_url": "https://www.coindesk.com/markets/2026/11/19/bitcoin-holds-above-usd63-750-but-fed-rate-hike-threats-loom-large"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "institutional_flows"
+        ],
+        "event_at_utc": "2026-11-19T12:20:39Z",
+        "event_id": "feed_73207d006086be6c",
+        "event_ms": 1795090839000,
+        "headline": "Bitcoin ETF outflows show waning crypto appetite ahead of Anthropic's Nasdaq debut",
+        "source_name": "CoinDesk",
+        "source_url": "https://www.coindesk.com/daybook-us/2026/11/19/bitcoin-etf-outflows-show-waning-crypto-appetite-ahead-of-anthropic-s-nasdaq-debut"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [],
+        "event_at_utc": "2026-11-19T12:40:12Z",
+        "event_id": "feed_ad6b36504b968dd8",
+        "event_ms": 1795092012000,
+        "headline": "Trump Media wants to clear $884 million of debt without selling its bitcoin",
+        "source_name": "CoinDesk",
+        "source_url": "https://www.coindesk.com/markets/2026/11/19/trump-media-wants-to-clear-usd884-million-of-debt-without-selling-its-bitcoin"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [],
+        "event_at_utc": "2026-11-19T13:48:14Z",
+        "event_id": "feed_719d54f7c8af2bfb",
+        "event_ms": 1795096094000,
+        "headline": "Here’s what happened in crypto today",
+        "source_name": "Cointelegraph",
+        "source_url": "https://cointelegraph.com/news/what-happened-in-crypto-today"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [],
+        "event_at_utc": "2026-11-19T15:20:38Z",
+        "event_id": "feed_b0e459a140751492",
+        "event_ms": 1795101638000,
+        "headline": "Binance wins $6.5 billion feezing order against hackers behind crypto's largest theft",
+        "source_name": "CoinDesk",
+        "source_url": "https://www.coindesk.com/business/2026/11/19/binance-wins-usd6-5-billion-feezing-order-against-hackers-behind-crypto-s-largest-theft"
+      },
+      {
+        "causal_claim": false,
+        "driver_domains": [
+          "macro_liquidity"
+        ],
+        "event_at_utc": "2026-11-19T18:09:32Z",
+        "event_id": "feed_1b694a33006467ef",
+        "event_ms": 1795111772000,
+        "headline": "Why higher rates could slow Bitcoin buying at treasury firms",
+        "source_name": "Cointelegraph",
+        "source_url": "https://cointelegraph.com/news/why-higher-rates-could-slow-bitcoin-buying-at-treasury-firms"
+      }
+    ],
+    "events_relevant_to_btc_24h": 13,
+    "owner": "Interface Administrator",
+    "source_generated_at": "2026-11-19T19:11:56.529889+00:00"
+  },
+  "observation_only": true,
+  "orders_enabled": false,
+  "real_orders": 0,
+  "schema": "seven.crypto.btc-evidence-monitor.v1",
+  "spot": {
+    "age_after_close_ms": 1212919,
+    "archive_last_success_at": "2026-11-19T22:20:12.700000+00:00",
+    "bar": "1H",
+    "closed_hours_in_window": 23,
+    "fresh": true,
+    "instrument": "BTC-USDC",
+    "latest_hour_utc": "2026-11-19T21:00:00Z",
+    "market_type": "SPOT",
+    "source_exchange_signed": false,
+    "venue": "OKX"
+  },
+  "status": "DEGRADED_OR_UNVERIFIED",
+  "strategy_context": {
+    "bar": "1H",
+    "ema_13_usdc": 62742.69,
+    "ema_34_usdc": 63200.42,
+    "ema_5_usdc": 62176.93,
+    "from_utc": "2026-11-16T23:00:00Z",
+    "instrument": "BTC-USDC",
+    "last_close_usdc": 61482.9,
+    "limitations": [
+      "Hourly EMA structure, not a tested multi-day swing strategy",
+      "No entry/exit decisions, fees, slippage or performance backtest",
+      "Observations are not a signal or investment recommendation"
+    ],
+    "observed_condition": "ALIGNEMENT_BAISSIER_HORAIRE",
+    "observed_hours": 71,
+    "orders_enabled": false,
+    "status": "OBSERVED_NOT_BACKTESTED",
+    "strategy": "SWING_EMA_5_13_34",
+    "strategy_validated": false,
+    "to_utc": "2026-11-19T21:00:00Z",
+    "venue": "OKX"
+  },
+  "window_end_utc": "2026-11-19T22:20:12Z",
+  "window_start_utc": "2026-11-18T22:20:12Z"
+}
