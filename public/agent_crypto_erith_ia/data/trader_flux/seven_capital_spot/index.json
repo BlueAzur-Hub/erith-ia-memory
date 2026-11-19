@@ -968,6 +968,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-19",
+      "date_utc": "2026-11-19",
+      "first_seen_at_utc": "2026-11-19T01:57:32.750Z",
+      "source_times_utc": [
+        "2026-11-19T01:55:34.257Z",
+        "2026-11-19T01:28:59.544Z"
+      ],
+      "universe_eligible": 361,
+      "policy_matches": 4,
+      "selected": [
+        {
+          "coin_id": "megaeth",
+          "symbol": "MEGA",
+          "source_at_utc": "2026-11-19T01:28:59.544Z",
+          "rank": 339,
+          "price_usd": 0.0575234267678437
+        },
+        {
+          "coin_id": "terra-luna",
+          "symbol": "LUNC",
+          "source_at_utc": "2026-11-19T01:55:34.257Z",
+          "rank": 143,
+          "price_usd": 0.00004398812536467454
+        },
+        {
+          "coin_id": "kite-2",
+          "symbol": "KITE",
+          "source_at_utc": "2026-11-19T01:55:34.257Z",
+          "rank": 120,
+          "price_usd": 0.13281626117071554
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2251,6 +2286,27 @@
       "sha256": "e64ca5c019a3446cde3513c9e674f0a4bd77a26e3962f1674bf5d023ef159238",
       "recorded_at_utc": "2026-11-18T17:26:12.663Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-17",
+      "file": "observations/2026-11-19T015732750Z--2026-11-17.json",
+      "sha256": "6f5a65cc82108c03a1564b4038b6a43479ba3aa759b4b47507fcc52028988b80",
+      "recorded_at_utc": "2026-11-19T01:57:32.750Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-18",
+      "file": "observations/2026-11-19T015732750Z--2026-11-18.json",
+      "sha256": "37861e394c2be14e6db3ea58930192d884d12d937cce3c27713ff30b51969ac3",
+      "recorded_at_utc": "2026-11-19T01:57:32.750Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-19",
+      "file": "observations/2026-11-19T015732750Z--2026-11-19.json",
+      "sha256": "f24685f319b34e169ab1ce9d74606561aa63ad03cf330dda731efb99d52c09b4",
+      "recorded_at_utc": "2026-11-19T01:57:32.750Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
