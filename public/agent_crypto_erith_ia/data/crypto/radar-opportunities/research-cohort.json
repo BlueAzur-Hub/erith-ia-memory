@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-19T16:46:02Z",
+  "source_qualification_at_utc": "2026-11-19T17:20:06Z",
   "source_observation_date_utc": "2026-11-19",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -63,8 +63,8 @@
         "venue": "Bitget",
         "pair": "BTWUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.26083,
-        "roundtrip_cost_pct_assumed": 0.33216
+        "spread_bps_at_snapshot": 11.46375,
+        "roundtrip_cost_pct_assumed": 0.31424
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -89,8 +89,8 @@
         "venue": "Bitget",
         "pair": "DGAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.93953,
-        "roundtrip_cost_pct_assumed": 0.23216
+        "spread_bps_at_snapshot": 1.05217,
+        "roundtrip_cost_pct_assumed": 0.2104
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -115,8 +115,8 @@
         "venue": "Bitget",
         "pair": "EVAAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.70229,
-        "roundtrip_cost_pct_assumed": 0.29712
+        "spread_bps_at_snapshot": 5.25778,
+        "roundtrip_cost_pct_assumed": 0.28162
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -142,8 +142,8 @@
         "venue": "Bitget",
         "pair": "ICNTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.39607,
-        "roundtrip_cost_pct_assumed": 0.25149
+        "spread_bps_at_snapshot": 7.2789,
+        "roundtrip_cost_pct_assumed": 0.279
       },
       "detections_archived": 12,
       "j1_observed": 10,
@@ -168,8 +168,8 @@
         "venue": "OKX",
         "pair": "IRYS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.68301,
-        "roundtrip_cost_pct_assumed": 0.33636
+        "spread_bps_at_snapshot": 13.73312,
+        "roundtrip_cost_pct_assumed": 0.33686
       },
       "detections_archived": 5,
       "j1_observed": 3,
@@ -195,8 +195,8 @@
         "venue": "Bitget",
         "pair": "LABUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.84455,
-        "roundtrip_cost_pct_assumed": 0.22828
+        "spread_bps_at_snapshot": 5.80889,
+        "roundtrip_cost_pct_assumed": 0.30157
       },
       "detections_archived": 5,
       "j1_observed": 4,
@@ -221,8 +221,8 @@
         "venue": "Bitget",
         "pair": "MAGMAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.81876,
-        "roundtrip_cost_pct_assumed": 0.34952
+        "spread_bps_at_snapshot": 6.17093,
+        "roundtrip_cost_pct_assumed": 0.34887
       },
       "detections_archived": 12,
       "j1_observed": 10,
@@ -247,12 +247,38 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.31532,
-        "roundtrip_cost_pct_assumed": 0.40834
+        "spread_bps_at_snapshot": 14.26873,
+        "roundtrip_cost_pct_assumed": 0.42463
       },
       "detections_archived": 8,
       "j1_observed": 7,
       "j7_observed": 6,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "stable-2",
+      "symbol": "STABLE",
+      "name": "​​Stable",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 110,
+      "change24h_pct_at_snapshot": 9.82057,
+      "change7d_pct_at_snapshot": -14.6354,
+      "volume24h_aggregate_usd": 13598672,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "STABLEUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 13.33037,
+        "roundtrip_cost_pct_assumed": 0.36355
+      },
+      "detections_archived": 3,
+      "j1_observed": 2,
+      "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -273,41 +299,14 @@
         "venue": "Bitget",
         "pair": "UPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.73345,
-        "roundtrip_cost_pct_assumed": 0.40588
+        "spread_bps_at_snapshot": 21.19093,
+        "roundtrip_cost_pct_assumed": 0.43329
       },
       "detections_archived": 8,
       "j1_observed": 6,
       "j7_observed": 5,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "velvet",
-      "symbol": "VELVET",
-      "name": "Velvet",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 527,
-      "change24h_pct_at_snapshot": 32.08585,
-      "change7d_pct_at_snapshot": 55.2074,
-      "volume24h_aggregate_usd": 7036428,
-      "spot": {
-        "venue": "Bitget",
-        "pair": "VELVETUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 17.56401,
-        "roundtrip_cost_pct_assumed": 0.41645
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "extreme_24h_move"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -326,8 +325,8 @@
         "venue": "Binance",
         "pair": "MARSCOINUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 30.16591,
-        "roundtrip_cost_pct_assumed": 0.5005
+        "spread_bps_at_snapshot": 30.9119,
+        "roundtrip_cost_pct_assumed": 0.50793
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -353,8 +352,8 @@
         "venue": "OKX",
         "pair": "NES-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 20.06689,
-        "roundtrip_cost_pct_assumed": 0.46082
+        "spread_bps_at_snapshot": 23.33722,
+        "roundtrip_cost_pct_assumed": 0.47123
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -366,27 +365,28 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "stable-2",
-      "symbol": "STABLE",
-      "name": "​​Stable",
+      "coin_id": "velvet",
+      "symbol": "VELVET",
+      "name": "Velvet",
       "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 110,
-      "change24h_pct_at_snapshot": 9.82057,
-      "change7d_pct_at_snapshot": -14.6354,
-      "volume24h_aggregate_usd": 13598672,
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 527,
+      "change24h_pct_at_snapshot": 32.08585,
+      "change7d_pct_at_snapshot": 55.2074,
+      "volume24h_aggregate_usd": 7036428,
       "spot": {
         "venue": "Bitget",
-        "pair": "STABLEUSDT",
+        "pair": "VELVETUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.32445,
-        "roundtrip_cost_pct_assumed": 0.41937
+        "spread_bps_at_snapshot": 23.38538,
+        "roundtrip_cost_pct_assumed": 0.45749
       },
-      "detections_archived": 3,
-      "j1_observed": 2,
-      "j7_observed": 2,
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified"
+        "token_contract_not_verified",
+        "extreme_24h_move"
       ],
       "identity_certified": false,
       "trade_authorized": false
