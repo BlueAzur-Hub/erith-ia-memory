@@ -367,6 +367,15 @@
       "cost_evaluable": 0,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-19|2026-11-19T16:46:02Z",
+      "qualified_at_utc": "2026-11-19T16:46:02Z",
+      "candidates": 20,
+      "okx_pairs": 4,
+      "cost_evaluable": 1,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -2644,6 +2653,25 @@
           "elapsed_hours": 34.12
         }
       ]
+    },
+    {
+      "id": "irys|2026-11-19",
+      "coin_id": "irys",
+      "symbol": "IRYS",
+      "pair": "IRYS-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-19T16:46:09Z",
+      "entry_bid_usdt": "0.0219",
+      "entry_ask_usdt": "0.02193",
+      "entry_investment_usdt": "99.998642088",
+      "net_sellable_qty": "4546.2",
+      "break_even_bid_rise_pct": 0.741,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
     }
   ]
 }
