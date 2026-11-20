@@ -1003,6 +1003,34 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-20",
+      "date_utc": "2026-11-20",
+      "first_seen_at_utc": "2026-11-20T07:36:49.857Z",
+      "source_times_utc": [
+        "2026-11-20T07:10:05.748Z",
+        "2026-11-20T07:10:11.448Z"
+      ],
+      "universe_eligible": 361,
+      "policy_matches": 2,
+      "selected": [
+        {
+          "coin_id": "pharos-network",
+          "symbol": "PROS",
+          "source_at_utc": "2026-11-20T07:10:11.448Z",
+          "rank": 279,
+          "price_usd": 0.5914959875577057
+        },
+        {
+          "coin_id": "just",
+          "symbol": "JST",
+          "source_at_utc": "2026-11-20T07:10:05.748Z",
+          "rank": 62,
+          "price_usd": 0.147279116192165
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2335,6 +2363,27 @@
       "sha256": "186ae5fada7cebdf4d10088c4016adba317291a73a0db86081dcdde85db095a5",
       "recorded_at_utc": "2026-11-19T23:09:06.525Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-18",
+      "file": "observations/2026-11-20T073649857Z--2026-11-18.json",
+      "sha256": "e785cc8e22caa60748692ffe14719645aee1b818246d387acdabf2f9ddb59ad3",
+      "recorded_at_utc": "2026-11-20T07:36:49.857Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-19",
+      "file": "observations/2026-11-20T073649857Z--2026-11-19.json",
+      "sha256": "cadbd59caa69857c5459578bb263154978456dad7c6fe85f564fd7cbb8161304",
+      "recorded_at_utc": "2026-11-20T07:36:49.857Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-20",
+      "file": "observations/2026-11-20T073649857Z--2026-11-20.json",
+      "sha256": "968052230a7ce02b70ec9672846803c56fe511c21a0b0e122861c92bc0dbf14d",
+      "recorded_at_utc": "2026-11-20T07:36:49.857Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
