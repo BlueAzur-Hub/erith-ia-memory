@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-20T16:20:01Z",
+  "source_qualification_at_utc": "2026-11-20T16:55:47Z",
   "source_observation_date_utc": "2026-11-20",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -64,12 +64,38 @@
         "venue": "Bitget",
         "pair": "ARIAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.0092,
-        "roundtrip_cost_pct_assumed": 0.42099
+        "spread_bps_at_snapshot": 6.83761,
+        "roundtrip_cost_pct_assumed": 0.31266
       },
       "detections_archived": 6,
       "j1_observed": 5,
       "j7_observed": 3,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "dappos",
+      "symbol": "DOS",
+      "name": "DAPPOS",
+      "group": "primary_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 489,
+      "change24h_pct_at_snapshot": 10.28272,
+      "change7d_pct_at_snapshot": 10.6906,
+      "volume24h_aggregate_usd": 8232811,
+      "spot": {
+        "venue": "OKX",
+        "pair": "DOS-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 16.38002,
+        "roundtrip_cost_pct_assumed": 0.36324
+      },
+      "detections_archived": 4,
+      "j1_observed": 3,
+      "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -90,8 +116,8 @@
         "venue": "Bitget",
         "pair": "EVAAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.62415,
-        "roundtrip_cost_pct_assumed": 0.28519
+        "spread_bps_at_snapshot": 6.90203,
+        "roundtrip_cost_pct_assumed": 0.28836
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -117,8 +143,8 @@
         "venue": "Binance",
         "pair": "SNXUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.49528,
-        "roundtrip_cost_pct_assumed": 0.33449
+        "spread_bps_at_snapshot": 6.74536,
+        "roundtrip_cost_pct_assumed": 0.2672
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -144,8 +170,8 @@
         "venue": "Bitget",
         "pair": "ICNTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.32511,
-        "roundtrip_cost_pct_assumed": 0.27638
+        "spread_bps_at_snapshot": 7.33048,
+        "roundtrip_cost_pct_assumed": 0.28689
       },
       "detections_archived": 13,
       "j1_observed": 11,
@@ -171,8 +197,8 @@
         "venue": "Bitget",
         "pair": "MAGMAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.71264,
-        "roundtrip_cost_pct_assumed": 0.40102
+        "spread_bps_at_snapshot": 4.76965,
+        "roundtrip_cost_pct_assumed": 0.39086
       },
       "detections_archived": 13,
       "j1_observed": 11,
@@ -197,38 +223,12 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.6881,
-        "roundtrip_cost_pct_assumed": 0.41442
+        "spread_bps_at_snapshot": 8.726,
+        "roundtrip_cost_pct_assumed": 0.32115
       },
       "detections_archived": 9,
       "j1_observed": 8,
       "j7_observed": 6,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "nesa",
-      "symbol": "NES",
-      "name": "Nesa",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 266,
-      "change24h_pct_at_snapshot": 22.52276,
-      "change7d_pct_at_snapshot": 112.8349,
-      "volume24h_aggregate_usd": 8972123,
-      "spot": {
-        "venue": "OKX",
-        "pair": "NES-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 17.0911,
-        "roundtrip_cost_pct_assumed": 0.41799
-      },
-      "detections_archived": 5,
-      "j1_observed": 4,
-      "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -249,8 +249,8 @@
         "venue": "Binance",
         "pair": "NMRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.43183,
-        "roundtrip_cost_pct_assumed": 0.33386
+        "spread_bps_at_snapshot": 13.4499,
+        "roundtrip_cost_pct_assumed": 0.33404
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -276,8 +276,8 @@
         "venue": "Bitget",
         "pair": "RAVEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 11.72174,
-        "roundtrip_cost_pct_assumed": 0.33028
+        "spread_bps_at_snapshot": 9.01388,
+        "roundtrip_cost_pct_assumed": 0.30692
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -302,8 +302,8 @@
         "venue": "Binance",
         "pair": "LUNCUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.07297,
-        "roundtrip_cost_pct_assumed": 0.27046
+        "spread_bps_at_snapshot": 7.02001,
+        "roundtrip_cost_pct_assumed": 0.26994
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -311,32 +311,6 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "dappos",
-      "symbol": "DOS",
-      "name": "DAPPOS",
-      "group": "additional_spot_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 489,
-      "change24h_pct_at_snapshot": 10.28272,
-      "change7d_pct_at_snapshot": 10.6906,
-      "volume24h_aggregate_usd": 8232811,
-      "spot": {
-        "venue": "OKX",
-        "pair": "DOS-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 27.25538,
-        "roundtrip_cost_pct_assumed": 0.47154
-      },
-      "detections_archived": 4,
-      "j1_observed": 3,
-      "j7_observed": 2,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -355,15 +329,14 @@
         "venue": "OKX",
         "pair": "DEGEN-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 44.11116,
-        "roundtrip_cost_pct_assumed": 0.64652
+        "spread_bps_at_snapshot": 37.51782,
+        "roundtrip_cost_pct_assumed": 0.57363
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "high_hypothetical_cost"
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -382,12 +355,39 @@
         "venue": "Bitget",
         "pair": "UMXMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 68.44627,
-        "roundtrip_cost_pct_assumed": 2.17223
+        "spread_bps_at_snapshot": 69.39625,
+        "roundtrip_cost_pct_assumed": 1.39199
       },
       "detections_archived": 5,
       "j1_observed": 4,
       "j7_observed": 3,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "high_hypothetical_cost"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "nesa",
+      "symbol": "NES",
+      "name": "Nesa",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 266,
+      "change24h_pct_at_snapshot": 22.52276,
+      "change7d_pct_at_snapshot": 112.8349,
+      "volume24h_aggregate_usd": 8972123,
+      "spot": {
+        "venue": "OKX",
+        "pair": "NES-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 23.70872,
+        "roundtrip_cost_pct_assumed": 0.65165
+      },
+      "detections_archived": 5,
+      "j1_observed": 4,
+      "j7_observed": 2,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "high_hypothetical_cost"
@@ -409,8 +409,8 @@
         "venue": "Binance",
         "pair": "WINUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 19.26614,
-        "roundtrip_cost_pct_assumed": 0.54205
+        "spread_bps_at_snapshot": 16.05852,
+        "roundtrip_cost_pct_assumed": 0.44046
       },
       "detections_archived": 3,
       "j1_observed": 2,
