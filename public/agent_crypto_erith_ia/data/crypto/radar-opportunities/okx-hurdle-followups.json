@@ -430,6 +430,15 @@
       "cost_evaluable": 2,
       "orders_enabled": false,
       "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
+    },
+    {
+      "id": "2026-11-22|2026-11-22T00:37:08Z",
+      "qualified_at_utc": "2026-11-22T00:37:08Z",
+      "candidates": 20,
+      "okx_pairs": 3,
+      "cost_evaluable": 1,
+      "orders_enabled": false,
+      "selection": "ALL_20_RADAR_CANDIDATES_NO_BACKFILL"
     }
   ],
   "studies": [
@@ -2934,6 +2943,25 @@
           "elapsed_hours": 30.34
         }
       ]
+    },
+    {
+      "id": "venice-token|2026-11-22",
+      "coin_id": "venice-token",
+      "symbol": "VVV",
+      "pair": "VVV-USDT",
+      "quote": "USDT",
+      "entry_book_at_utc": "2026-11-22T00:37:21Z",
+      "entry_bid_usdt": "25.27",
+      "entry_ask_usdt": "25.29",
+      "entry_investment_usdt": "99.998996796",
+      "net_sellable_qty": "3.9422",
+      "break_even_bid_rise_pct": 0.6831,
+      "fee_assumption": "BASE buy 10 bps; USDT sell 10 bps; stress 20 bps each side",
+      "status": "HYPOTHETICAL_COST_STUDY_NO_FILL",
+      "contract_identity_proven": false,
+      "orders_enabled": false,
+      "executed_order": false,
+      "followups": []
     }
   ]
 }
