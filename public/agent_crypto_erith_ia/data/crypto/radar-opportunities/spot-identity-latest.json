@@ -63,23 +63,23 @@
     },
     {
       "coin_id": "meet48",
-      "contract_address": null,
+      "contract_address": "0x3b4de3c7855c03bb9f50ea252cd2c9fa1125ab07",
       "detected_at_utc": null,
-      "identity_proven": false,
-      "min_order_usdt": null,
-      "pair": null,
-      "paper_entry_decision": "BLOCKED",
+      "identity_proven": true,
+      "min_order_usdt": "1",
+      "pair": "IDOLUSDT",
+      "paper_entry_decision": "AWAIT_NEXT_DATED_BOOK_AND_COST_CHECK",
       "paper_entry_price_usdt": null,
       "paper_exit_price_usdt": null,
       "paper_orders": 0,
       "paper_pnl_usdt": null,
-      "platform": null,
-      "quote": null,
+      "platform": "binance-smart-chain",
+      "quote": "USDT",
       "real_orders": 0,
       "spot_exit_rules": null,
-      "status": "NO_PUBLIC_SPOT_EVIDENCE",
+      "status": "CONTRACT_MATCH_AT_COLLECTION",
       "symbol": "IDOL",
-      "venue": null
+      "venue": "Bitget"
     },
     {
       "coin_id": "pieverse",
@@ -403,13 +403,13 @@
       "venue": null
     }
   ],
-  "catalog_size": 21341,
+  "catalog_size": 21311,
   "coin_source": "https://api.coingecko.com/api/v3/coins/list?include_platform=true",
-  "collected_at_utc": "2026-11-22T00:37:21Z",
+  "collected_at_utc": "2026-11-22T15:35:06Z",
   "decisions_not_executions": true,
   "exchange_coin_source": "https://api.bitget.com/api/v3/market/coins",
   "exchange_instrument_source": "https://api.bitget.com/api/v3/market/instruments",
-  "identity_proven_count": 4,
+  "identity_proven_count": 5,
   "no_prior_trades_reconstructed": true,
   "notes": [
     "Contrats EVM vérifiés uniquement par adresse et réseau identiques, propriétaire CoinGecko unique.",
@@ -420,7 +420,7 @@
   ],
   "orders_enabled": false,
   "paper_orders": 0,
-  "qualification_at_utc": "2026-11-22T00:37:08Z",
+  "qualification_at_utc": "2026-11-22T15:34:54Z",
   "real_orders": 0,
   "schema": "erith.radar.spot-identity-prospective.v1",
   "source_radar_day_utc": "2026-11-22"

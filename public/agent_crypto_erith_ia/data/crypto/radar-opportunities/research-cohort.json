@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-22T00:37:08Z",
+  "source_qualification_at_utc": "2026-11-22T15:34:54Z",
   "source_observation_date_utc": "2026-11-22",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -40,9 +40,9 @@
     "2026-11-22"
   ],
   "count": 20,
-  "spot_documented": 12,
-  "additional_spot": 2,
-  "unpaired": 8,
+  "spot_documented": 13,
+  "additional_spot": 3,
+  "unpaired": 7,
   "reference": {
     "coin_id": "bitcoin",
     "role": "benchmark",
@@ -53,25 +53,25 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
-      "coin_id": "collector-crypt",
-      "symbol": "CARDS",
-      "name": "Collector Crypt",
+      "coin_id": "beam-2",
+      "symbol": "BEAM",
+      "name": "Beam",
       "group": "primary_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 188,
-      "change24h_pct_at_snapshot": 6.78715,
-      "change7d_pct_at_snapshot": -4.5792,
-      "volume24h_aggregate_usd": 3355507,
+      "rank_at_snapshot": 164,
+      "change24h_pct_at_snapshot": 4.72776,
+      "change7d_pct_at_snapshot": -15.2023,
+      "volume24h_aggregate_usd": 9534638,
       "spot": {
-        "venue": "OKX",
-        "pair": "CARDS-USDT",
+        "venue": "Bitget",
+        "pair": "BEAMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.77139,
-        "roundtrip_cost_pct_assumed": 0.37304
+        "spread_bps_at_snapshot": 17.17721,
+        "roundtrip_cost_pct_assumed": 0.37118
       },
-      "detections_archived": 5,
-      "j1_observed": 4,
-      "j7_observed": 4,
+      "detections_archived": 7,
+      "j1_observed": 6,
+      "j7_observed": 6,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -92,8 +92,8 @@
         "venue": "Bitget",
         "pair": "DGAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.13941,
-        "roundtrip_cost_pct_assumed": 0.28122
+        "spread_bps_at_snapshot": 4.05372,
+        "roundtrip_cost_pct_assumed": 0.28987
       },
       "detections_archived": 5,
       "j1_observed": 4,
@@ -118,8 +118,8 @@
         "venue": "Binance",
         "pair": "DODOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.6036,
-        "roundtrip_cost_pct_assumed": 0.27576
+        "spread_bps_at_snapshot": 5.04668,
+        "roundtrip_cost_pct_assumed": 0.31056
       },
       "detections_archived": 4,
       "j1_observed": 2,
@@ -145,8 +145,8 @@
         "venue": "Binance",
         "pair": "ETHFIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.27156,
-        "roundtrip_cost_pct_assumed": 0.26247
+        "spread_bps_at_snapshot": 2.03314,
+        "roundtrip_cost_pct_assumed": 0.23738
       },
       "detections_archived": 4,
       "j1_observed": 2,
@@ -172,12 +172,38 @@
         "venue": "Bitget",
         "pair": "MAGMAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.76846,
-        "roundtrip_cost_pct_assumed": 0.29371
+        "spread_bps_at_snapshot": 9.26904,
+        "roundtrip_cost_pct_assumed": 0.38966
       },
       "detections_archived": 14,
       "j1_observed": 12,
       "j7_observed": 11,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "meet48",
+      "symbol": "IDOL",
+      "name": "MEET48",
+      "group": "primary_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 321,
+      "change24h_pct_at_snapshot": 24.99203,
+      "change7d_pct_at_snapshot": 78.5453,
+      "volume24h_aggregate_usd": 45221033,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "IDOLUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 12.77955,
+        "roundtrip_cost_pct_assumed": 0.32736
+      },
+      "detections_archived": 11,
+      "j1_observed": 10,
+      "j7_observed": 6,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -198,8 +224,8 @@
         "venue": "Binance",
         "pair": "ORCAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.32293,
-        "roundtrip_cost_pct_assumed": 0.28293
+        "spread_bps_at_snapshot": 16.94915,
+        "roundtrip_cost_pct_assumed": 0.36891
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -225,38 +251,11 @@
         "venue": "Binance",
         "pair": "PROMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.95061,
-        "roundtrip_cost_pct_assumed": 0.29647
+        "spread_bps_at_snapshot": 13.84905,
+        "roundtrip_cost_pct_assumed": 0.33802
       },
       "detections_archived": 3,
       "j1_observed": 2,
-      "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "siacoin",
-      "symbol": "SC",
-      "name": "Siacoin",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 546,
-      "change24h_pct_at_snapshot": 14.72054,
-      "change7d_pct_at_snapshot": 10.342,
-      "volume24h_aggregate_usd": 20179698,
-      "spot": {
-        "venue": "Binance",
-        "pair": "SCUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 16.40689,
-        "roundtrip_cost_pct_assumed": 0.36351
-      },
-      "detections_archived": 2,
-      "j1_observed": 0,
       "j7_observed": 1,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
@@ -279,8 +278,8 @@
         "venue": "Bitget",
         "pair": "SKYAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.99883,
-        "roundtrip_cost_pct_assumed": 0.32954
+        "spread_bps_at_snapshot": 15.97019,
+        "roundtrip_cost_pct_assumed": 0.35916
       },
       "detections_archived": 3,
       "j1_observed": 1,
@@ -306,8 +305,8 @@
         "venue": "OKX",
         "pair": "VVV-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.90826,
-        "roundtrip_cost_pct_assumed": 0.28319
+        "spread_bps_at_snapshot": 3.91619,
+        "roundtrip_cost_pct_assumed": 0.27824
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -319,25 +318,25 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "beam-2",
-      "symbol": "BEAM",
-      "name": "Beam",
+      "coin_id": "collector-crypt",
+      "symbol": "CARDS",
+      "name": "Collector Crypt",
       "group": "additional_spot_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 164,
-      "change24h_pct_at_snapshot": 4.72776,
-      "change7d_pct_at_snapshot": -15.2023,
-      "volume24h_aggregate_usd": 9534638,
+      "rank_at_snapshot": 188,
+      "change24h_pct_at_snapshot": 6.78715,
+      "change7d_pct_at_snapshot": -4.5792,
+      "volume24h_aggregate_usd": 3355507,
       "spot": {
-        "venue": "Bitget",
-        "pair": "BEAMUSDT",
+        "venue": "OKX",
+        "pair": "CARDS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 23.04147,
-        "roundtrip_cost_pct_assumed": 0.45471
+        "spread_bps_at_snapshot": 19.2123,
+        "roundtrip_cost_pct_assumed": 0.41005
       },
-      "detections_archived": 7,
-      "j1_observed": 6,
-      "j7_observed": 6,
+      "detections_archived": 5,
+      "j1_observed": 4,
+      "j7_observed": 4,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
       ],
@@ -358,35 +357,41 @@
         "venue": "Bitget",
         "pair": "NPCUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 43.48027,
-        "roundtrip_cost_pct_assumed": 0.71005
+        "spread_bps_at_snapshot": 37.83509,
+        "roundtrip_cost_pct_assumed": 0.59493
       },
       "detections_archived": 5,
       "j1_observed": 2,
       "j7_observed": 4,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "high_hypothetical_cost"
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
     },
     {
-      "coin_id": "meet48",
-      "symbol": "IDOL",
-      "name": "MEET48",
-      "group": "spot_evidence_incomplete",
+      "coin_id": "siacoin",
+      "symbol": "SC",
+      "name": "Siacoin",
+      "group": "additional_spot_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 321,
-      "change24h_pct_at_snapshot": 24.99203,
-      "change7d_pct_at_snapshot": 78.5453,
-      "volume24h_aggregate_usd": 45221033,
-      "spot": null,
-      "detections_archived": 11,
-      "j1_observed": 10,
-      "j7_observed": 6,
+      "rank_at_snapshot": 546,
+      "change24h_pct_at_snapshot": 14.72054,
+      "change7d_pct_at_snapshot": 10.342,
+      "volume24h_aggregate_usd": 20179698,
+      "spot": {
+        "venue": "Binance",
+        "pair": "SCUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 17.62115,
+        "roundtrip_cost_pct_assumed": 0.43928
+      },
+      "detections_archived": 2,
+      "j1_observed": 0,
+      "j7_observed": 1,
       "risks_and_missing_evidence": [
-        "spot_pair_observed_market_data_missing"
+        "token_contract_not_verified",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
