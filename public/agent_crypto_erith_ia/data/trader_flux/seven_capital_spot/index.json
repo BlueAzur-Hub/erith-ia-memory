@@ -1101,6 +1101,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-23",
+      "date_utc": "2026-11-23",
+      "first_seen_at_utc": "2026-11-23T15:08:06.151Z",
+      "source_times_utc": [
+        "2026-11-23T14:55:11.088Z",
+        "2026-11-23T14:53:56.592Z"
+      ],
+      "universe_eligible": 347,
+      "policy_matches": 28,
+      "selected": [
+        {
+          "coin_id": "the-graph",
+          "symbol": "GRT",
+          "source_at_utc": "2026-11-23T14:55:11.088Z",
+          "rank": 153,
+          "price_usd": 0.017709985813220648
+        },
+        {
+          "coin_id": "melania-meme",
+          "symbol": "MELANIA",
+          "source_at_utc": "2026-11-23T14:53:56.592Z",
+          "rank": 382,
+          "price_usd": 0.05198699223082779
+        },
+        {
+          "coin_id": "terra-luna",
+          "symbol": "LUNC",
+          "source_at_utc": "2026-11-23T14:55:11.088Z",
+          "rank": 142,
+          "price_usd": 0.00004289150366216238
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2552,6 +2587,20 @@
       "sha256": "92f6d9b5bbb1b6b3abc94aa6a0da3ba2856b56ac7ddcd4f6b6f529927ea0ed15",
       "recorded_at_utc": "2026-11-23T01:02:13.519Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-22",
+      "file": "observations/2026-11-23T150806151Z--2026-11-22.json",
+      "sha256": "aef46b60bfa5a079f993923b9ef4e6a6e24b20b2ba82f53d7951cf84d47e1824",
+      "recorded_at_utc": "2026-11-23T15:08:06.151Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-23",
+      "file": "observations/2026-11-23T150806151Z--2026-11-23.json",
+      "sha256": "80cf23e0d5da408c3601230bb1dbaed0de30c5b9a149b36586b2d7a273779683",
+      "recorded_at_utc": "2026-11-23T15:08:06.151Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
