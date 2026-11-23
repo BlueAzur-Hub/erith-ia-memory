@@ -1,20 +1,20 @@
-# Seven Heaven — suivi public BTC : 2026-11-23T03:50:53Z
+# Seven Heaven — suivi public BTC : 2026-11-23T15:00:55Z
 
-**Statut : OPERATIONAL_PARTIAL_COVERAGE** — lecture seule, couverture partielle documentée, aucune exécution réelle.
+**Statut : DEGRADED_OR_UNVERIFIED** — lecture seule, couverture partielle documentée, aucune exécution réelle.
 
-Fenêtre UTC : 2026-11-22T03:50:53Z au 2026-11-23T03:50:53Z.
+Fenêtre UTC : 2026-11-22T15:00:55Z au 2026-11-23T15:00:55Z.
 
 ## Santé et provenance
 
-- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-23T02:00:00Z ; source fraîche : OUI.
-- **Liquidations dérivées** : 18 messages observés dans les archives ; 12 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
-- **Actualités de l'Interface** : 4 événements BTC ; relevé source 2026-11-23T03:14:29.222120+00:00.
+- **OKX Spot BTC-USDC 1H** : 23 bougies clôturées dans cette fenêtre ; dernière bougie 2026-11-23T14:00:00Z ; source fraîche : OUI.
+- **Liquidations dérivées** : 17 messages observés dans les archives ; 12 fenêtres de connexion par fournisseur (les périodes sans connexion sont inconnues, **pas des liquidations nulles**).
+- **Actualités de l'Interface** : 12 événements BTC ; relevé source 2026-11-23T13:42:45.967159+00:00.
 
 | Source dérivés | Messages observés | Fenêtres de connexion |
 |---|---:|---:|
 | bybit | 3 | 4 |
-| binance | 12 | 4 |
-| okx | 3 | 4 |
+| binance | 13 | 4 |
+| okx | 1 | 4 |
 
 ## Interprétation autorisée
 
@@ -26,23 +26,23 @@ Les montants OKX en contrats ne sont pas convertis en USDT sans multiplicateur v
 
 | UTC | Ouverture (USDC) | Clôture (USDC) | Volume Spot BTC | Messages de liquidations observés | Couverture |
 |---|---:|---:|---:|---:|---|
-| 2026-11-22T15:00:00Z | 60867.6 | 60817.4 | 16.18087757 | 15 | SAMPLED_WITH_GAPS |
-| 2026-11-22T16:00:00Z | 60807.6 | 61176.8 | 36.56837923 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-22T17:00:00Z | 61176.8 | 60747.8 | 23.54566434 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-22T18:00:00Z | 60747.8 | 60700 | 19.16560143 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-22T19:00:00Z | 60678 | 60658.3 | 21.03080592 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-22T20:00:00Z | 60658.2 | 60834.7 | 19.49093172 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-22T21:00:00Z | 60834.7 | 60846.3 | 22.85245735 | 0 | SAMPLED_WITH_GAPS |
-| 2026-11-22T22:00:00Z | 60852.7 | 61011.2 | 35.91241691 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-22T23:00:00Z | 61011.7 | 61184.6 | 47.81366041 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-23T00:00:00Z | 61196.5 | 61259.2 | 26.48706236 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-23T01:00:00Z | 61264.3 | 60780.9 | 10.76581822 | 0 | NO_DOCUMENTED_OBSERVATION |
-| 2026-11-23T02:00:00Z | 60784.3 | 60537.4 | 22.77742559 | 0 | SAMPLED_WITH_GAPS |
+| 2026-11-23T03:00:00Z | 60510.8 | 61203.6 | 31.1143714 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T04:00:00Z | 61205.9 | 61180.1 | 12.13954138 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T05:00:00Z | 61148.5 | 61603.2 | 16.32118919 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T06:00:00Z | 61607.9 | 61392.4 | 18.16342823 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T07:00:00Z | 61396.2 | 61381.4 | 19.78413846 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T08:00:00Z | 61396.2 | 61443.8 | 70.30241498 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T09:00:00Z | 61451.1 | 61367.2 | 151.87105887 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T10:00:00Z | 61367.3 | 61355.9 | 12.54797496 | 2 | SAMPLED_WITH_GAPS |
+| 2026-11-23T11:00:00Z | 61356.9 | 61361.9 | 21.40636182 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T12:00:00Z | 61370.5 | 61269.3 | 16.82794306 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T13:00:00Z | 61249.8 | 63811.4 | 182.9696863 | 0 | NO_DOCUMENTED_OBSERVATION |
+| 2026-11-23T14:00:00Z | 63788.6 | 62858.2 | 409.95098594 | 0 | NO_DOCUMENTED_OBSERVATION |
 
 ## Étude de stratégie — structure EMA 5/13/34 (observation, pas backtest)
 
-- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-20T04:00:00Z au 2026-11-23T02:00:00Z.
-- Dernière clôture : 60537.4 USDC/BTC ; EMA 5 : 60827.97 ; EMA 13 : 60780.79 ; EMA 34 : 60425.09 USDC.
+- Source : OKX Spot BTC-USDC 1H ; 71 bougies consécutives du 2026-11-20T16:00:00Z au 2026-11-23T14:00:00Z.
+- Dernière clôture : 62858.2 USDC/BTC ; EMA 5 : 62390.61 ; EMA 13 : 61780.12 ; EMA 34 : 61018.23 USDC.
 - Structure horaire observée : **ALIGNEMENT_HAUSSIER_HORAIRE**.
 - **Stratégie Swing Trading NON validée** : cet échantillon horaire ne démontre ni rentabilité, ni règles de sortie, ni tenue sur plusieurs jours. Aucun conseil d'achat ou de vente.
 
