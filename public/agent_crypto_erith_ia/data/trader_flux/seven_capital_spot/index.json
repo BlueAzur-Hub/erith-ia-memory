@@ -1136,6 +1136,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-24",
+      "date_utc": "2026-11-24",
+      "first_seen_at_utc": "2026-11-24T02:59:48.036Z",
+      "source_times_utc": [
+        "2026-11-24T02:20:44.552Z",
+        "2026-11-24T02:19:14.391Z"
+      ],
+      "universe_eligible": 363,
+      "policy_matches": 17,
+      "selected": [
+        {
+          "coin_id": "collector-crypt",
+          "symbol": "CARDS",
+          "source_at_utc": "2026-11-24T02:20:44.552Z",
+          "rank": 176,
+          "price_usd": 0.17495010729030905
+        },
+        {
+          "coin_id": "quant-network",
+          "symbol": "QNT",
+          "source_at_utc": "2026-11-24T02:20:44.552Z",
+          "rank": 37,
+          "price_usd": 154.37050486878033
+        },
+        {
+          "coin_id": "algorand",
+          "symbol": "ALGO",
+          "source_at_utc": "2026-11-24T02:20:44.552Z",
+          "rank": 81,
+          "price_usd": 0.08107363478824862
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2600,6 +2635,27 @@
       "file": "observations/2026-11-23T150806151Z--2026-11-23.json",
       "sha256": "80cf23e0d5da408c3601230bb1dbaed0de30c5b9a149b36586b2d7a273779683",
       "recorded_at_utc": "2026-11-23T15:08:06.151Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
+    },
+    {
+      "cohort_id": "2026-11-22",
+      "file": "observations/2026-11-24T025948036Z--2026-11-22.json",
+      "sha256": "bf611560da92abcd98233f602cf12024516a85618edaba7d6c0c968465c3862b",
+      "recorded_at_utc": "2026-11-24T02:59:48.036Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-23",
+      "file": "observations/2026-11-24T025948036Z--2026-11-23.json",
+      "sha256": "66ee063a2972cf3cebc06dbba469fecebb4ad023d551cf1367f588ce4cfd093d",
+      "recorded_at_utc": "2026-11-24T02:59:48.036Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-24",
+      "file": "observations/2026-11-24T025948036Z--2026-11-24.json",
+      "sha256": "a076bce1b74048b8ca044b7cf09cd1f2e074a6d06baca41f8074087d7b6a9b92",
+      "recorded_at_utc": "2026-11-24T02:59:48.036Z",
       "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
