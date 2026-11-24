@@ -1,16 +1,16 @@
 {
   "analysis_is_retroactive": true,
-  "blocked_paper_candidates": 14,
+  "blocked_paper_candidates": 24,
   "candidates": [
     {
-      "aggregate_change_pct_observed": 36.79594,
-      "coin_id": "bless-2",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": 0.64349,
+      "coin_id": "derive",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 0.014069422856644498,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.019246398807780955,
-      "name": "Bless",
+      "entry_day_aggregate_price_usd": 0.3346064097927528,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 0.3367595640591164,
+      "name": "Derive",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -28,73 +28,17 @@
         "later_spot_qualification": null,
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "BLESS"
+      "symbol": "DRV"
     },
     {
-      "aggregate_change_pct_observed": -48.33658,
-      "coin_id": "evaa-protocol",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": -5.60706,
+      "coin_id": "skyai",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 6.302407678400242,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 3.2560393229037334,
-      "name": "EVAA Protocol",
-      "outcome_state": "OBSERVED_LATER",
-      "paper": {
-        "decision": "BLOCKED",
-        "entry_at_utc": null,
-        "entry_price_usdt": null,
-        "executed_order": false,
-        "exit_price_usdt": null,
-        "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
-        "trade_count": 0
-      },
-      "spot": {
-        "contract_identity_proven": false,
-        "early_public_spot_book": null,
-        "later_spot_qualification": null,
-        "quote_conversion_usd_to_usdt_proven": false
-      },
-      "symbol": "EVAA"
-    },
-    {
-      "aggregate_change_pct_observed": 0.45142,
-      "coin_id": "folks",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
-      "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 2.5187150756742986,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 2.530085119722364,
-      "name": "FOLKS",
-      "outcome_state": "OBSERVED_LATER",
-      "paper": {
-        "decision": "BLOCKED",
-        "entry_at_utc": null,
-        "entry_price_usdt": null,
-        "executed_order": false,
-        "exit_price_usdt": null,
-        "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
-        "trade_count": 0
-      },
-      "spot": {
-        "contract_identity_proven": false,
-        "early_public_spot_book": null,
-        "later_spot_qualification": null,
-        "quote_conversion_usd_to_usdt_proven": false
-      },
-      "symbol": "FOLKS"
-    },
-    {
-      "aggregate_change_pct_observed": 17.05338,
-      "coin_id": "dodo",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
-      "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 0.03403061751713803,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.03983398912233279,
-      "name": "DODO",
+      "entry_day_aggregate_price_usd": 0.03825913643872538,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.03611392268162675,
+      "name": "SkyAI",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -112,25 +56,25 @@
         "later_spot_qualification": {
           "identity_certified": false,
           "later_than_detection": true,
-          "pair": "DODOUSDT",
-          "public_spread_bps_at_snapshot": 5.00125,
+          "pair": "SKYAIUSDT",
+          "public_spread_bps_at_snapshot": 11.00715,
           "quote": "USDT",
           "recorded_at_utc": "2026-11-22T20:48:37Z",
           "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
-          "venue": "Binance"
+          "venue": "Bitget"
         },
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "DODO"
+      "symbol": "SKYAI"
     },
     {
-      "aggregate_change_pct_observed": -30.65211,
+      "aggregate_change_pct_observed": -45.41763,
       "coin_id": "meet48",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 0.02390287138435901,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.016576137508801114,
+      "entry_day_aggregate_price_usd": 0.029893909582371883,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.016316803328457204,
       "name": "MEET48",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
@@ -161,14 +105,88 @@
       "symbol": "IDOL"
     },
     {
-      "aggregate_change_pct_observed": -11.57445,
-      "coin_id": "unitas",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": 1.38543,
+      "coin_id": "venice-token",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 0.2461531354579688,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.2176622578561987,
-      "name": "Unitas",
+      "entry_day_aggregate_price_usd": 24.79827519714325,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 25.141838228558402,
+      "name": "Venice Token",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "VVV-USDT",
+          "public_spread_bps_at_snapshot": 3.83803,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "OKX"
+        },
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "VVV"
+    },
+    {
+      "aggregate_change_pct_observed": 1.01353,
+      "coin_id": "dodo",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "momentum_24h_7d",
+      "entry_day_aggregate_price_usd": 0.03985264741204876,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.04025656724467371,
+      "name": "DODO",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "DODOUSDT",
+          "public_spread_bps_at_snapshot": 5.00125,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Binance"
+        },
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "DODO"
+    },
+    {
+      "aggregate_change_pct_observed": -1.30541,
+      "coin_id": "diem",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "momentum_24h_7d",
+      "entry_day_aggregate_price_usd": 1963.2081124360689,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 1937.5802060436326,
+      "name": "Diem",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -186,17 +204,17 @@
         "later_spot_qualification": null,
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "UP"
+      "symbol": "DIEM"
     },
     {
-      "aggregate_change_pct_observed": -6.22893,
-      "coin_id": "ape-and-pepe",
-      "detected_at_utc": "2026-11-21T01:30:49.484Z",
+      "aggregate_change_pct_observed": 29.92094,
+      "coin_id": "dgrid-ai",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 1.4935109699975063e-06,
-      "last_day_aggregate_at_utc": "2026-11-23T14:55:11.088Z",
-      "last_day_aggregate_price_usd": 1.4004812528319297e-06,
-      "name": "Ape and Pepe",
+      "entry_day_aggregate_price_usd": 0.8101525601117706,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 1.0525578493182717,
+      "name": "DGrid AI",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -205,26 +223,35 @@
         "executed_order": false,
         "exit_price_usdt": null,
         "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
         "trade_count": 0
       },
       "spot": {
         "contract_identity_proven": false,
         "early_public_spot_book": null,
-        "later_spot_qualification": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "DGAIUSDT",
+          "public_spread_bps_at_snapshot": 14.49153,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Bitget"
+        },
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "APEPE"
+      "symbol": "DGAI"
     },
     {
-      "aggregate_change_pct_observed": 1.01429,
-      "coin_id": "o1-exchange",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": -3.10125,
+      "coin_id": "siacoin",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 0.5705655376969775,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.5763527010209062,
-      "name": "o1.exchange",
+      "entry_day_aggregate_price_usd": 0.0006158747610432207,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.0005967749148179958,
+      "name": "Siacoin",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -233,25 +260,34 @@
         "executed_order": false,
         "exit_price_usdt": null,
         "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
         "trade_count": 0
       },
       "spot": {
         "contract_identity_proven": false,
         "early_public_spot_book": null,
-        "later_spot_qualification": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "SCUSDT",
+          "public_spread_bps_at_snapshot": 34.78261,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Binance"
+        },
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "O"
+      "symbol": "SC"
     },
     {
-      "aggregate_change_pct_observed": 5.55072,
+      "aggregate_change_pct_observed": -0.40313,
       "coin_id": "pieverse",
-      "detected_at_utc": "2026-11-21T01:30:49.484Z",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 3.055894365023544,
-      "last_day_aggregate_at_utc": "2026-11-23T14:55:11.088Z",
-      "last_day_aggregate_price_usd": 3.2255185787277703,
+      "entry_day_aggregate_price_usd": 3.3994432655688342,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 3.385738937008419,
       "name": "Pieverse",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
@@ -273,14 +309,14 @@
       "symbol": "PIEVERSE"
     },
     {
-      "aggregate_change_pct_observed": -29.4262,
-      "coin_id": "momentum-3",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": -2.91085,
+      "coin_id": "orca",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
       "detected_group": "momentum_24h_7d",
-      "entry_day_aggregate_price_usd": 0.2744343494464895,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.193678736442744,
-      "name": "Momentum",
+      "entry_day_aggregate_price_usd": 1.218063190149889,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 1.1826072235294223,
+      "name": "Orca",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -289,26 +325,35 @@
         "executed_order": false,
         "exit_price_usdt": null,
         "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
         "trade_count": 0
       },
       "spot": {
         "contract_identity_proven": false,
         "early_public_spot_book": null,
-        "later_spot_qualification": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "ORCAUSDT",
+          "public_spread_bps_at_snapshot": 16.8492,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Binance"
+        },
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "MMT"
+      "symbol": "ORCA"
     },
     {
-      "aggregate_change_pct_observed": -9.41065,
-      "coin_id": "lombard-protocol",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
-      "detected_group": "rebound_24h_only",
-      "entry_day_aggregate_price_usd": 0.0981053092264357,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.08887296262695092,
-      "name": "Lombard",
+      "aggregate_change_pct_observed": 2.00426,
+      "coin_id": "prometeus",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "momentum_24h_7d",
+      "entry_day_aggregate_price_usd": 5.034175154224155,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 5.135073202516208,
+      "name": "Prom",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -317,26 +362,35 @@
         "executed_order": false,
         "exit_price_usdt": null,
         "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
         "trade_count": 0
       },
       "spot": {
         "contract_identity_proven": false,
         "early_public_spot_book": null,
-        "later_spot_qualification": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "PROMUSDT",
+          "public_spread_bps_at_snapshot": 6.48018,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Binance"
+        },
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "BARD"
+      "symbol": "PROM"
     },
     {
-      "aggregate_change_pct_observed": -5.84387,
-      "coin_id": "status",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
-      "detected_group": "rebound_24h_only",
-      "entry_day_aggregate_price_usd": 0.005958045494977234,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.005609864817310275,
-      "name": "Status",
+      "aggregate_change_pct_observed": -8.35867,
+      "coin_id": "ritual",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "momentum_24h_7d",
+      "entry_day_aggregate_price_usd": 0.03272144041198991,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.029986363713485058,
+      "name": "Ritual",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -354,17 +408,17 @@
         "later_spot_qualification": null,
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "SNT"
+      "symbol": "RITUAL"
     },
     {
-      "aggregate_change_pct_observed": 0.73331,
-      "coin_id": "comedian",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": -3.63733,
+      "coin_id": "non-playable-coin",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
       "detected_group": "rebound_24h_only",
-      "entry_day_aggregate_price_usd": 0.04263431042224758,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.042946953166885085,
-      "name": "Comedian",
+      "entry_day_aggregate_price_usd": 0.01090599903514588,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.010509311885006424,
+      "name": "Non-Playable Coin",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -373,26 +427,35 @@
         "executed_order": false,
         "exit_price_usdt": null,
         "net_profit_usdt": null,
-        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
         "trade_count": 0
       },
       "spot": {
         "contract_identity_proven": false,
         "early_public_spot_book": null,
-        "later_spot_qualification": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "NPCUSDT",
+          "public_spread_bps_at_snapshot": 33.82548,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Bitget"
+        },
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "BAN"
+      "symbol": "NPC"
     },
     {
-      "aggregate_change_pct_observed": 1.52717,
-      "coin_id": "jelly-my-jelly",
-      "detected_at_utc": "2026-11-21T01:30:48.952Z",
+      "aggregate_change_pct_observed": -10.99179,
+      "coin_id": "neet",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
       "detected_group": "rebound_24h_only",
-      "entry_day_aggregate_price_usd": 0.03882033807401691,
-      "last_day_aggregate_at_utc": "2026-11-23T14:53:56.592Z",
-      "last_day_aggregate_price_usd": 0.0394131924944809,
-      "name": "Jelly-My-Jelly",
+      "entry_day_aggregate_price_usd": 0.025089730773122213,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.02233192056548667,
+      "name": "Not in Employment, Education, or Training",
       "outcome_state": "OBSERVED_LATER",
       "paper": {
         "decision": "BLOCKED",
@@ -410,25 +473,341 @@
         "later_spot_qualification": null,
         "quote_conversion_usd_to_usdt_proven": false
       },
-      "symbol": "JELLYJELLY"
+      "symbol": "NEET"
+    },
+    {
+      "aggregate_change_pct_observed": -18.47706,
+      "coin_id": "geodnet",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.21954326438712943,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 0.178978132862051,
+      "name": "Geodnet",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": null,
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "GEOD"
+    },
+    {
+      "aggregate_change_pct_observed": 1.13904,
+      "coin_id": "magma-finance",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.251204835514475,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.25406615987504816,
+      "name": "Magma Finance",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "MAGMAUSDT",
+          "public_spread_bps_at_snapshot": 5.74262,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Bitget"
+        },
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "MAGMA"
+    },
+    {
+      "aggregate_change_pct_observed": 3.66448,
+      "coin_id": "stonk-3",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.03471823531611511,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.0359904772578034,
+      "name": "STONK",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": null,
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "STONK"
+    },
+    {
+      "aggregate_change_pct_observed": -3.71331,
+      "coin_id": "useless-3",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.08029960578121574,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.07731783424844763,
+      "name": "Useless Coin",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": null,
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "USELESS"
+    },
+    {
+      "aggregate_change_pct_observed": 2.53731,
+      "coin_id": "ether-fi",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.474209735571146,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 0.48624191702195485,
+      "name": "Ether.fi",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "ETHFIUSDT",
+          "public_spread_bps_at_snapshot": 5.98146,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Binance"
+        },
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "ETHFI"
+    },
+    {
+      "aggregate_change_pct_observed": 8.00054,
+      "coin_id": "collector-crypt",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.15659468955991354,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 0.16912310990260698,
+      "name": "Collector Crypt",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "CARDS-USDT",
+          "public_spread_bps_at_snapshot": 19.15097,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "OKX"
+        },
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "CARDS"
+    },
+    {
+      "aggregate_change_pct_observed": -0.84216,
+      "coin_id": "purr-2",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.0734566917583991,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.07283806765633724,
+      "name": "Purr",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": null,
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "PURR"
+    },
+    {
+      "aggregate_change_pct_observed": 0.71447,
+      "coin_id": "spx6900",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.2789661953385739,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 0.2809593362607943,
+      "name": "SPX6900",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": null,
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "SPX"
+    },
+    {
+      "aggregate_change_pct_observed": 1.87849,
+      "coin_id": "vethor-token",
+      "detected_at_utc": "2026-11-22T00:19:31.332Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.0004246995591347621,
+      "last_day_aggregate_at_utc": "2026-11-24T04:46:44.427Z",
+      "last_day_aggregate_price_usd": 0.00043267750326413356,
+      "name": "VeThor",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": null,
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "VTHO"
+    },
+    {
+      "aggregate_change_pct_observed": 0.71936,
+      "coin_id": "beam-2",
+      "detected_at_utc": "2026-11-22T00:18:20.869Z",
+      "detected_group": "rebound_24h_only",
+      "entry_day_aggregate_price_usd": 0.003444589846118414,
+      "last_day_aggregate_at_utc": "2026-11-24T04:48:36.422Z",
+      "last_day_aggregate_price_usd": 0.003469368794701325,
+      "name": "Beam",
+      "outcome_state": "OBSERVED_LATER",
+      "paper": {
+        "decision": "BLOCKED",
+        "entry_at_utc": null,
+        "entry_price_usdt": null,
+        "executed_order": false,
+        "exit_price_usdt": null,
+        "net_profit_usdt": null,
+        "reason": "CONTRACT_IDENTITY_UNVERIFIED",
+        "trade_count": 0
+      },
+      "spot": {
+        "contract_identity_proven": false,
+        "early_public_spot_book": null,
+        "later_spot_qualification": {
+          "identity_certified": false,
+          "later_than_detection": true,
+          "pair": "BEAMUSDT",
+          "public_spread_bps_at_snapshot": 22.75313,
+          "quote": "USDT",
+          "recorded_at_utc": "2026-11-22T20:48:37Z",
+          "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+          "venue": "Bitget"
+        },
+        "quote_conversion_usd_to_usdt_proven": false
+      },
+      "symbol": "BEAM"
     }
   ],
-  "later_price_rises": 7,
-  "later_prices_comparable": 14,
+  "later_price_rises": 12,
+  "later_prices_comparable": 24,
   "no_eligible_paper_trade_without_contract_and_timestamp_proof": true,
   "note": "Variations CoinGecko USD sur deux jours ≠ rendement Spot USDT exécuté. Qualif Spot du dernier jour = preuve TARDIVE, jamais preuve à l'entrée. Toutes les entrées PAPER restent bloquées en l'absence d'identité de contrat certifiée, carnet au bon instant et hypothèses de frais vérifiables. Les baisses et dossiers sans cotation restent visibles.",
   "orders_enabled": false,
   "paper_trades_opened": 0,
-  "public_spot_evidence_candidates": 2,
+  "public_spot_evidence_candidates": 13,
   "qualification_observed_at_utc": "2026-11-22T20:48:37Z",
   "qualification_time_is_not_entry_time": true,
   "read_only": true,
   "schema": "erith.radar.spot-paper-decision-audit.v1",
   "source_basis": "Archived Radar CoinGecko USD groups plus later Spot USDT evidence",
-  "source_first_day_utc": "2026-11-21",
-  "source_intermediate_day_utc": "2026-11-22",
-  "source_last_day_utc": "2026-11-23",
+  "source_first_day_utc": "2026-11-22",
+  "source_intermediate_day_utc": "2026-11-23",
+  "source_last_day_utc": "2026-11-24",
   "strategy_certified": false,
-  "total_detected": 14,
+  "total_detected": 24,
   "trades_executed": 0
 }
