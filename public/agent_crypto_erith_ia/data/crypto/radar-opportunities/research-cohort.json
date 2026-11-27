@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-11-27T18:08:19Z",
+  "source_qualification_at_utc": "2026-11-27T22:52:02Z",
   "source_observation_date_utc": "2026-11-27",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -71,39 +71,12 @@
         "venue": "Binance",
         "pair": "FETUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.91452,
-        "roundtrip_cost_pct_assumed": 0.27886
+        "spread_bps_at_snapshot": 7.95229,
+        "roundtrip_cost_pct_assumed": 0.27923
       },
       "detections_archived": 2,
       "j1_observed": 1,
       "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "layerzero",
-      "symbol": "ZRO",
-      "name": "LayerZero",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 103,
-      "change24h_pct_at_snapshot": 10.13784,
-      "change7d_pct_at_snapshot": -12.1891,
-      "volume24h_aggregate_usd": 70013237,
-      "spot": {
-        "venue": "Binance",
-        "pair": "ZROUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 9.51928,
-        "roundtrip_cost_pct_assumed": 0.29486
-      },
-      "detections_archived": 5,
-      "j1_observed": 3,
-      "j7_observed": 4,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -125,8 +98,8 @@
         "venue": "Binance",
         "pair": "MEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.70487,
-        "roundtrip_cost_pct_assumed": 0.34027
+        "spread_bps_at_snapshot": 2.55722,
+        "roundtrip_cost_pct_assumed": 0.23341
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -152,8 +125,8 @@
         "venue": "Binance",
         "pair": "OPGUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 11.45475,
-        "roundtrip_cost_pct_assumed": 0.31415
+        "spread_bps_at_snapshot": 16.92525,
+        "roundtrip_cost_pct_assumed": 0.36867
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -179,8 +152,8 @@
         "venue": "OKX",
         "pair": "PONS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.97967,
-        "roundtrip_cost_pct_assumed": 0.33108
+        "spread_bps_at_snapshot": 4.85366,
+        "roundtrip_cost_pct_assumed": 0.28899
       },
       "detections_archived": 5,
       "j1_observed": 3,
@@ -205,8 +178,8 @@
         "venue": "Binance",
         "pair": "SEIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.14403,
-        "roundtrip_cost_pct_assumed": 0.25122
+        "spread_bps_at_snapshot": 5.22739,
+        "roundtrip_cost_pct_assumed": 0.27663
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -232,8 +205,8 @@
         "venue": "Binance",
         "pair": "SOXLBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.49602,
-        "roundtrip_cost_pct_assumed": 0.25474
+        "spread_bps_at_snapshot": 2.81254,
+        "roundtrip_cost_pct_assumed": 0.22797
       },
       "detections_archived": 13,
       "j1_observed": 12,
@@ -259,12 +232,39 @@
         "venue": "Binance",
         "pair": "SKYUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.4357,
-        "roundtrip_cost_pct_assumed": 0.27624
+        "spread_bps_at_snapshot": 9.49577,
+        "roundtrip_cost_pct_assumed": 0.32453
       },
       "detections_archived": 2,
       "j1_observed": 1,
       "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "spark-2",
+      "symbol": "SPK",
+      "name": "Spark",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 438,
+      "change24h_pct_at_snapshot": 8.39611,
+      "change7d_pct_at_snapshot": -9.4083,
+      "volume24h_aggregate_usd": 7721902,
+      "spot": {
+        "venue": "Binance",
+        "pair": "SPKUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 7.12279,
+        "roundtrip_cost_pct_assumed": 0.29186
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 1,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -286,8 +286,8 @@
         "venue": "Binance",
         "pair": "SSVUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.82837,
-        "roundtrip_cost_pct_assumed": 0.31578
+        "spread_bps_at_snapshot": 7.51033,
+        "roundtrip_cost_pct_assumed": 0.31019
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -313,12 +313,39 @@
         "venue": "Binance",
         "pair": "WUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.85187,
-        "roundtrip_cost_pct_assumed": 0.30814
+        "spread_bps_at_snapshot": 10.99505,
+        "roundtrip_cost_pct_assumed": 0.31811
       },
       "detections_archived": 2,
       "j1_observed": 1,
       "j7_observed": 1,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "layerzero",
+      "symbol": "ZRO",
+      "name": "LayerZero",
+      "group": "additional_spot_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 103,
+      "change24h_pct_at_snapshot": 10.13784,
+      "change7d_pct_at_snapshot": -12.1891,
+      "volume24h_aggregate_usd": 70013237,
+      "spot": {
+        "venue": "Binance",
+        "pair": "ZROUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 9.28936,
+        "roundtrip_cost_pct_assumed": 0.3758
+      },
+      "detections_archived": 5,
+      "j1_observed": 3,
+      "j7_observed": 4,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
@@ -340,8 +367,8 @@
         "venue": "Bitget",
         "pair": "IDOLUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.12856,
-        "roundtrip_cost_pct_assumed": 0.37186
+        "spread_bps_at_snapshot": 11.87648,
+        "roundtrip_cost_pct_assumed": 0.39388
       },
       "detections_archived": 12,
       "j1_observed": 11,
@@ -366,41 +393,14 @@
         "venue": "OKX",
         "pair": "NES-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 24.37043,
-        "roundtrip_cost_pct_assumed": 0.44282
+        "spread_bps_at_snapshot": 7.19424,
+        "roundtrip_cost_pct_assumed": 0.50885
       },
       "detections_archived": 7,
       "j1_observed": 6,
       "j7_observed": 5,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "spark-2",
-      "symbol": "SPK",
-      "name": "Spark",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 438,
-      "change24h_pct_at_snapshot": 8.39611,
-      "change7d_pct_at_snapshot": -9.4083,
-      "volume24h_aggregate_usd": 7721902,
-      "spot": {
-        "venue": "Binance",
-        "pair": "SPKUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 9.30449,
-        "roundtrip_cost_pct_assumed": 0.34709
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 1,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -419,8 +419,8 @@
         "venue": "Binance",
         "pair": "TFUELUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 29.94012,
-        "roundtrip_cost_pct_assumed": 0.79907
+        "spread_bps_at_snapshot": 29.5421,
+        "roundtrip_cost_pct_assumed": 0.64945
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -447,8 +447,8 @@
         "venue": "Bitget",
         "pair": "VELVETUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 14.26152,
-        "roundtrip_cost_pct_assumed": 0.39422
+        "spread_bps_at_snapshot": 10.81178,
+        "roundtrip_cost_pct_assumed": 0.39141
       },
       "detections_archived": 4,
       "j1_observed": 3,
