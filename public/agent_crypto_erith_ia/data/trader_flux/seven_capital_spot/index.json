@@ -1206,6 +1206,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-11-27",
+      "date_utc": "2026-11-27",
+      "first_seen_at_utc": "2026-11-27T00:43:56.548Z",
+      "source_times_utc": [
+        "2026-11-27T00:39:19.176Z",
+        "2026-11-27T00:06:30.992Z"
+      ],
+      "universe_eligible": 330,
+      "policy_matches": 13,
+      "selected": [
+        {
+          "coin_id": "pieverse",
+          "symbol": "PIEVERSE",
+          "source_at_utc": "2026-11-27T00:39:19.176Z",
+          "rank": 67,
+          "price_usd": 3.8623463009802705
+        },
+        {
+          "coin_id": "dogwifcoin",
+          "symbol": "WIF",
+          "source_at_utc": "2026-11-27T00:39:19.176Z",
+          "rank": 192,
+          "price_usd": 0.13584694519590193
+        },
+        {
+          "coin_id": "sentient",
+          "symbol": "SENT",
+          "source_at_utc": "2026-11-27T00:39:19.176Z",
+          "rank": 175,
+          "price_usd": 0.021627185553874943
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -2740,6 +2775,20 @@
       "file": "observations/2026-11-26T141152122Z--2026-11-26.json",
       "sha256": "0702917faa98b998ae0eafaa5835666e4af3e78c25751cd51c877244eba534ec",
       "recorded_at_utc": "2026-11-26T14:11:52.122Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
+    },
+    {
+      "cohort_id": "2026-11-26",
+      "file": "observations/2026-11-27T004356548Z--2026-11-26.json",
+      "sha256": "3cf02923a488383c394c73a4dc509286d017500b9f9f27a8c534287118e590d8",
+      "recorded_at_utc": "2026-11-27T00:43:56.548Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-11-27",
+      "file": "observations/2026-11-27T004356548Z--2026-11-27.json",
+      "sha256": "442f3d191c36dd5759fef3b38b679edec820bff78d820d14e3ca17bd4702149f",
+      "recorded_at_utc": "2026-11-27T00:43:56.548Z",
       "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
