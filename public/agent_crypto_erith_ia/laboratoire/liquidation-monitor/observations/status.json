@@ -9,7 +9,7 @@
     "Never aggregate this feed as all-market total or compare directly with OKX Spot volume"
   ],
   "observation_only": true,
-  "observed_events_this_run": 94,
+  "observed_events_this_run": 15,
   "orders_enabled": false,
   "real_orders": 0,
   "schema": "seven.crypto.public-liquidation-witness.v1",
@@ -20,49 +20,50 @@
   ],
   "this_run": [
     {
-      "coverage_ratio_within_run": 0.9984,
+      "coverage_ratio_within_run": 0.9982,
       "errors": [],
-      "finished_at_utc": "2026-11-27T05:31:19.395Z",
-      "observed_connection_ms": 359556,
+      "finished_at_utc": "2026-11-27T15:44:52.872Z",
+      "observed_connection_ms": 359525,
       "provider": "bybit",
       "reconnects": 0,
-      "recorded_events": 67,
+      "recorded_events": 1,
       "rejected_details": 0,
       "source_completeness": "bybit_per_instrument_reported_all",
-      "started_at_utc": "2026-11-27T05:25:19.253Z",
+      "started_at_utc": "2026-11-27T15:38:52.698Z",
       "status": "OBSERVED_PARTIAL_EXCHANGE_FEED",
-      "window_ms": 360142
+      "window_ms": 360174
     },
     {
-      "coverage_ratio_within_run": 0.9986,
+      "coverage_ratio_within_run": 0.9987,
       "errors": [],
-      "finished_at_utc": "2026-11-27T05:31:23.283Z",
-      "observed_connection_ms": 363491,
+      "finished_at_utc": "2026-11-27T15:44:56.719Z",
+      "observed_connection_ms": 363549,
       "provider": "binance",
       "reconnects": 0,
-      "recorded_events": 16,
+      "recorded_events": 8,
       "rejected_details": 0,
       "source_completeness": "underreported_by_provider",
-      "started_at_utc": "2026-11-27T05:25:19.277Z",
+      "started_at_utc": "2026-11-27T15:38:52.713Z",
       "status": "OBSERVED_PARTIAL_EXCHANGE_FEED",
       "window_ms": 364006
     },
     {
-      "coverage_ratio_within_run": 0.9983,
+      "coverage_ratio_within_run": 0.9984,
       "errors": [
+        "BAD_DETAIL:OKX_INVALID_NUMERIC_OR_TIMESTAMP",
         "BAD_RECORD:ValueError"
       ],
-      "finished_at_utc": "2026-11-27T05:31:19.435Z",
-      "observed_connection_ms": 359541,
+      "finished_at_utc": "2026-11-27T15:44:52.866Z",
+      "observed_connection_ms": 359576,
       "provider": "okx",
       "reconnects": 0,
-      "recorded_events": 11,
-      "rejected_details": 0,
+      "recorded_events": 6,
+      "rejected_details": 1,
       "source_completeness": "underreported_by_provider",
-      "started_at_utc": "2026-11-27T05:25:19.278Z",
+      "started_at_utc": "2026-11-27T15:38:52.713Z",
       "status": "OBSERVED_PARTIAL_EXCHANGE_FEED",
-      "window_ms": 360157
+      "window_ms": 360153
     }
   ],
-  "updated_at_utc": "2026-11-27T05:31:23.284Z"
+  "updated_at_utc": "2026-11-27T15:44:56.721Z"
 }
