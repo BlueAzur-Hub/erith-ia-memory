@@ -3121,7 +3121,21 @@
       "contract_identity_proven": false,
       "orders_enabled": false,
       "executed_order": false,
-      "followups": []
+      "followups": [
+        {
+          "observed_at_utc": "2026-11-28T08:51:51Z",
+          "observed_bid_usdt": "0.1225",
+          "observed_bid_change_pct": -0.8899,
+          "status": "INSUFFICIENT_BEST_BID_DEPTH",
+          "real_orders": 0,
+          "orders_enabled": false,
+          "execution_proven": false,
+          "liquidity_at_other_levels_unknown": true,
+          "hypothetical_pnl_usdt": null,
+          "window": "24h",
+          "elapsed_hours": 29.7
+        }
+      ]
     },
     {
       "id": "wormhole|2026-11-27",
@@ -3140,7 +3154,23 @@
       "contract_identity_proven": false,
       "orders_enabled": false,
       "executed_order": false,
-      "followups": []
+      "followups": [
+        {
+          "observed_at_utc": "2026-11-28T08:51:51Z",
+          "observed_bid_usdt": "0.00921",
+          "observed_bid_change_pct": -2.1357,
+          "status": "QUOTE_BELOW_HYPOTHETICAL_HURDLE",
+          "real_orders": 0,
+          "orders_enabled": false,
+          "execution_proven": false,
+          "liquidity_at_other_levels_unknown": true,
+          "hypothetical_pnl_usdt": "-2.8247757852252",
+          "hypothetical_pnl_pct": -2.8248,
+          "bid_depth_proven_for_hypothetical_size": true,
+          "window": "24h",
+          "elapsed_hours": 29.7
+        }
+      ]
     },
     {
       "id": "sei-network|2026-11-27",
